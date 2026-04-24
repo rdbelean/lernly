@@ -207,9 +207,12 @@ export default function Home() {
           error={error}
           onGenerate={handleGenerate}
         />
+        <SocialProof />
         <ShowcaseSection />
+        <ResultPreview />
         <BentoFeatures />
         <HowItWorks />
+        <PipelineCta onActivateUpload={activateUpload} />
         {pack && (
           <section ref={resultRef} id="result" className="scroll-mt-24">
             <ResultSection pack={pack} onReset={clearPack} />
@@ -219,6 +222,7 @@ export default function Home() {
           onActivateUpload={activateUpload}
           onOpenConnect={openConnect}
         />
+        <FAQSection />
         <BottomCta />
       </main>
       <SiteFooter />
@@ -331,7 +335,7 @@ function Hero(props: HeroProps) {
             ● Jedes Fach
           </span>
           <span className="ln-hero-badge" style={{ color: "rgb(159, 212, 184)" }}>
-            ● Bleibt bei dir
+            ● Kostenlos
           </span>
         </div>
       </div>
@@ -778,7 +782,7 @@ function BentoFeatures() {
             className="mt-4 max-w-2xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            Alles was du brauchst, um zu bestehen.
+            Schluss mit Durchscrollen und Hoffen.
           </h2>
         </div>
 
@@ -921,8 +925,7 @@ function BentoFeatures() {
                   }}
                 >
                   Reicht für deine nächste Klausurenwoche. Keine Kreditkarte,
-                  kein Trial-Countdown. Wenn&rsquo;s nix für dich ist,
-                  verlierst du nur 2 Min Upload-Zeit.
+                  kein Trial-Countdown.
                 </p>
               </div>
             </div>
@@ -1053,9 +1056,9 @@ function HowItWorks() {
             className="mt-4 max-w-2xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            PDFs rein. Lernpaket raus.{" "}
+            Vom Chaos zum Plan.{" "}
             <span className="lernly-italic" style={{ color: "var(--color-ln-ink-soft)" }}>
-              Bereit für die Klausur.
+              In drei Schritten.
             </span>
           </h2>
         </div>
@@ -1072,14 +1075,14 @@ function HowItWorks() {
 
         <p className="ln-reveal ln-pipeline-caption">
           Aus deinem Material, für deine Prüfung. In 2 Minuten fertig —
-          gebaut mit{" "}
+          gebaut mit der{" "}
           <a
             href="https://www.anthropic.com/claude"
             target="_blank"
             rel="noopener noreferrer"
             className="ln-accent-link"
           >
-            Claude
+            KI, die dein Material wirklich versteht
           </a>
           .
         </p>
@@ -2176,9 +2179,9 @@ function BottomCta() {
             fontSize: "clamp(34px, 5.5vw, 64px)",
           }}
         >
-          2 Minuten.{" "}
+          Die Prüfung wartet nicht.{" "}
           <span className="lernly-italic text-white">
-            Mehr brauchst du nicht.
+            Dein Lernpaket auch nicht.
           </span>
         </h2>
         <a
@@ -2194,6 +2197,246 @@ function BottomCta() {
         >
           Gratis · Ohne Login · Ohne Kreditkarte
         </p>
+      </div>
+    </section>
+  );
+}
+
+/* ========== SOCIAL PROOF STRIP ========== */
+
+function SocialProof() {
+  return (
+    <div
+      className="ln-reveal px-6 text-center"
+      style={{
+        padding: "24px 24px",
+        borderTop: "1px solid rgba(255,255,255,0.06)",
+      }}
+    >
+      <span
+        style={{
+          fontSize: "14px",
+          color: "rgba(255,255,255,0.5)",
+        }}
+      >
+        Bereits an der Uppsala Universität getestet · 120+ Lernpakete erstellt
+      </span>
+    </div>
+  );
+}
+
+/* ========== RESULT PREVIEW (3 static mockups) ========== */
+
+function ResultPreview() {
+  return (
+    <section className="px-6 py-24 md:py-28">
+      <div className="mx-auto max-w-[1200px]">
+        <div className="ln-reveal">
+          <span className="ln-section-label">Dein Ergebnis</span>
+          <h2
+            className="mt-4 max-w-3xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
+            style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
+          >
+            Das bekommst du.{" "}
+            <span className="lernly-italic" style={{ color: "var(--color-ln-ink-soft)" }}>
+              In 2 Minuten.
+            </span>
+          </h2>
+        </div>
+
+        <div className="ln-stagger mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <PreviewCard title="Karteikarten" icon="🎴">
+            <div className="ln-mini-flashcard">
+              <div className="ln-mini-flashcard-q">
+                Was sind die 5 Kräfte nach Porter?
+              </div>
+              <div className="ln-mini-flashcard-divider" />
+              <div className="ln-mini-flashcard-a">
+                Neue Anbieter · Verhandlungsmacht Lieferanten · Verhandlungsmacht
+                Abnehmer · Substitute · Wettbewerbsintensität.
+              </div>
+            </div>
+            <div
+              className="mt-4 flex items-center gap-2 text-[12px]"
+              style={{ color: "var(--color-ln-mute)" }}
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M21 2v6h-6" />
+                <path d="M3 12a9 9 0 0115-6.7L21 8" />
+                <path d="M3 22v-6h6" />
+                <path d="M21 12a9 9 0 01-15 6.7L3 16" />
+              </svg>
+              <span>Klicken zum Umdrehen</span>
+            </div>
+          </PreviewCard>
+
+          <PreviewCard title="Prüfungssimulator" icon="🎮">
+            <div className="ln-mini-quiz-q">
+              Welcher Muskel ist primär für die Armbeugung zuständig?
+            </div>
+            <div className="ln-mini-quiz-opt is-correct">✓ M. biceps brachii</div>
+            <div className="ln-mini-quiz-opt">M. triceps brachii</div>
+            <div className="ln-mini-quiz-opt">M. deltoideus</div>
+          </PreviewCard>
+
+          <PreviewCard title="Essay-Blueprint" icon="📐">
+            <div className="ln-mini-bp-row">
+              <span className="ln-mini-bp-part is-active">Einl.</span>
+              <span className="ln-mini-bp-bar" style={{ flex: "0 0 22%" }} aria-hidden />
+              <span className="ln-mini-bp-words">~200 W.</span>
+            </div>
+            <div className="ln-mini-bp-row">
+              <span className="ln-mini-bp-part">Teil 1</span>
+              <span className="ln-mini-bp-bar" style={{ flex: "0 0 36%" }} aria-hidden />
+              <span className="ln-mini-bp-words">~350 W.</span>
+            </div>
+            <div className="ln-mini-bp-row">
+              <span className="ln-mini-bp-part">Teil 2</span>
+              <span className="ln-mini-bp-bar" style={{ flex: "0 0 40%" }} aria-hidden />
+              <span className="ln-mini-bp-words">~400 W.</span>
+            </div>
+            <div className="ln-mini-bp-row">
+              <span className="ln-mini-bp-part">Schluss</span>
+              <span className="ln-mini-bp-bar" style={{ flex: "0 0 18%" }} aria-hidden />
+              <span className="ln-mini-bp-words">~180 W.</span>
+            </div>
+          </PreviewCard>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PreviewCard({
+  title,
+  icon,
+  children,
+}: {
+  title: string;
+  icon: string;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      className="ln-reveal flex min-h-[280px] flex-col rounded-[22px] border p-7"
+      style={{
+        background: "var(--color-ln-hero-card-bg)",
+        borderColor: "rgba(255, 255, 255, 0.22)",
+        backdropFilter: "blur(8px)",
+        WebkitBackdropFilter: "blur(8px)",
+      }}
+    >
+      <div className="flex items-center gap-2 text-[13px]" style={{ color: "var(--color-ln-ink-soft)" }}>
+        <span>{icon}</span>
+        <span>{title}</span>
+      </div>
+      <div className="mt-5 flex-1">{children}</div>
+    </div>
+  );
+}
+
+/* ========== PIPELINE CTA (after HowItWorks) ========== */
+
+function PipelineCta({ onActivateUpload }: { onActivateUpload: () => void }) {
+  return (
+    <div className="ln-reveal px-6 pb-10 text-center">
+      <button
+        type="button"
+        onClick={onActivateUpload}
+        className="rounded-full px-7 py-[14px] text-[16px] font-semibold transition hover:bg-white/90"
+        style={{ background: "#ffffff", color: "#1a2647" }}
+      >
+        Jetzt mit deinem Material testen →
+      </button>
+    </div>
+  );
+}
+
+/* ========== FAQ ========== */
+
+const FAQ_ITEMS: { q: string; a: string }[] = [
+  {
+    q: "Was passiert mit meinen Dateien?",
+    a: "Nichts. Deine PDFs werden nur für die Generierung verarbeitet und danach gelöscht. Nichts wird dauerhaft gespeichert.",
+  },
+  {
+    q: "Welche Dateiformate funktionieren?",
+    a: "PDF, TXT und MD. PowerPoint-Support kommt bald.",
+  },
+  {
+    q: "Wie gut sind die Karteikarten?",
+    a: "Besser als die meisten selbstgeschriebenen. Die KI extrahiert nicht nur Definitionen — sie versteht Zusammenhänge, markiert Prüfungsrelevanz und gibt dir Template-Sätze zum direkt Verwenden.",
+  },
+  {
+    q: "Was ist der Unterschied zu ChatGPT?",
+    a: "ChatGPT gibt dir eine Textwand. Lernly gibt dir ein Lernsystem — interaktive Karteikarten zum Flippen, einen Prüfungssimulator mit Feedback, und einen Essay-Blueprint mit fertigen Formulierungen.",
+  },
+  {
+    q: "Kann ich mein Lernpaket bearbeiten?",
+    a: "Du kannst es als HTML runterladen und offline nutzen. Bearbeitung innerhalb der App kommt bald.",
+  },
+];
+
+function FAQSection() {
+  const [open, setOpen] = useState<number | null>(0);
+  return (
+    <section id="faq" className="scroll-mt-24 px-6 py-24 md:py-32">
+      <div className="mx-auto max-w-[820px]">
+        <div className="ln-reveal">
+          <span className="ln-section-label">Fragen?</span>
+          <h2
+            className="mt-4 font-bold leading-[1.05] tracking-[-1.92px] text-white"
+            style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
+          >
+            Kurz beantwortet.
+          </h2>
+        </div>
+
+        <div className="ln-reveal ln-glass-card mt-10 overflow-hidden">
+          {FAQ_ITEMS.map((item, i) => {
+            const isOpen = open === i;
+            return (
+              <div
+                key={item.q}
+                style={{
+                  borderBottom:
+                    i === FAQ_ITEMS.length - 1
+                      ? "none"
+                      : "1px solid rgba(255,255,255,0.06)",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setOpen(isOpen ? null : i)}
+                  className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left md:px-8"
+                  aria-expanded={isOpen}
+                >
+                  <span className="text-[15px] font-semibold text-white md:text-[16px]">
+                    {item.q}
+                  </span>
+                  <span
+                    className="shrink-0 text-[18px] transition"
+                    style={{
+                      color: "rgba(255,255,255,0.5)",
+                      transform: isOpen ? "rotate(45deg)" : "rotate(0deg)",
+                    }}
+                    aria-hidden
+                  >
+                    +
+                  </span>
+                </button>
+                {isOpen && (
+                  <div
+                    className="px-6 pb-5 text-[14px] leading-[1.6] md:px-8 md:pb-6"
+                    style={{ color: "rgba(255,255,255,0.6)" }}
+                  >
+                    {item.a}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
