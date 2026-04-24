@@ -294,8 +294,29 @@ function Hero(props: HeroProps) {
             So geht&rsquo;s
           </a>
           <a href="#connect" className="claude-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              aria-hidden
+            >
+              <path
+                d="M12 2 C12 2, 14 10, 22 12 C14 14, 12 22, 12 22 C12 22, 10 14, 2 12 C10 10, 12 2, 12 2Z"
+                fill="currentColor"
+                stroke="none"
+                opacity="0.9"
+              />
+              <circle
+                cx="18"
+                cy="6"
+                r="1.5"
+                fill="currentColor"
+                opacity="0.5"
+              />
             </svg>
             Mit Claude verbinden
           </a>
