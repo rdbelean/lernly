@@ -1776,6 +1776,7 @@ function EmailCapture({ pack }: { pack: StudyPack }) {
 
 type PricingTier = {
   name: string;
+  tagline: string;
   price: string;
   priceSize: string;
   subtitle: string;
@@ -1789,50 +1790,52 @@ type PricingTier = {
 const PRICING_TIERS: PricingTier[] = [
   {
     name: "Gratis",
+    tagline: "Zum Ausprobieren",
     price: "0€",
     priceSize: "40px",
     subtitle: "für immer",
     features: [
-      "3 Lernpakete",
-      "15 Karteikarten pro Paket",
-      "Prüfungssimulator (8 Fragen)",
-      "Übersicht & Konzepte",
+      "3 Klausuren komplett vorbereiten",
+      "15 Karten pro Klausur (die Basics)",
+      "8-Fragen-Prüfungssimulator",
+      "Alle Konzepte nach Wichtigkeit sortiert",
     ],
-    ctaLabel: "Kostenlos starten",
+    ctaLabel: "Erstes Paket erstellen",
     ctaFilled: false,
   },
   {
-    name: "Pro",
+    name: "Klausurphase",
+    tagline: "Wenn mehrere Klausuren anstehen",
     price: "6.99€",
     priceSize: "48px",
     subtitle: "/ Monat",
     badge: "BELIEBT",
     features: [
-      "20 Lernpakete / Monat",
-      "30+ Karteikarten mit Kategorien",
-      "Essay-Blueprint mit Templates",
-      "Prüfungssimulator (12+ Fragen)",
-      "Quizlet Export + HTML Download",
-      "Danach 0.49€ pro Extra-Paket",
+      "20 Klausuren im Monat",
+      "30+ Karten, nach Themen sortiert",
+      "Essay-Blueprint mit fertigen Formulierungen",
+      "12+ Simulator-Fragen pro Klausur",
+      "Offline speichern + Quizlet-Export",
+      "Extra-Pakete für 0,49€ falls's mehr wird",
     ],
-    ctaLabel: "Pro starten",
+    ctaLabel: "Klausurphase holen",
     ctaFilled: true,
     highlighted: true,
   },
   {
-    name: "Team",
+    name: "Semester",
+    tagline: "Fürs ganze Studienjahr",
     price: "14.99€",
     priceSize: "40px",
     subtitle: "/ Monat",
     features: [
-      "50 Lernpakete / Monat",
-      "Alles aus Pro",
-      "Priority Queue (schneller)",
-      "PDF-Spickzettel Generator",
-      "Lernplan-Generator",
-      "Team-Sharing (bald)",
+      "50 Klausuren im Monat (mehr als genug)",
+      "Alles aus Klausurphase",
+      "Ohne Warten — deine Pakete zuerst",
+      "PDF-Spickzettel fürs Handy",
+      "Automatischer Lernplan bis zur Prüfung",
     ],
-    ctaLabel: "Team starten",
+    ctaLabel: "Semester holen",
     ctaFilled: false,
   },
 ];
@@ -1842,17 +1845,17 @@ function PricingSection({ onActivateUpload }: { onActivateUpload: () => void }) 
     <section id="pricing" className="scroll-mt-24 px-6 py-24 md:py-32">
       <div className="mx-auto max-w-[1200px]">
         <div className="ln-reveal">
-          <span className="ln-section-label">Pricing</span>
+          <span className="ln-section-label">Was brauchst du?</span>
           <h2
             className="mt-4 max-w-2xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            Drei Pakete gratis.{" "}
+            Probier&rsquo;s gratis.{" "}
             <span
               className="lernly-italic"
               style={{ color: "var(--color-ln-ink-soft)" }}
             >
-              Danach fair.
+              Upgrade nur wenn&rsquo;s sitzt.
             </span>
           </h2>
         </div>
@@ -1885,7 +1888,7 @@ function PricingCard({
   tier: PricingTier;
   onCta: () => void;
 }) {
-  const { name, price, priceSize, subtitle, badge, features, ctaLabel, ctaFilled, highlighted } =
+  const { name, tagline, price, priceSize, subtitle, badge, features, ctaLabel, ctaFilled, highlighted } =
     tier;
   return (
     <div
@@ -1923,6 +1926,13 @@ function PricingCard({
         style={{ color: "var(--color-ln-mute)", letterSpacing: "2.2px" }}
       >
         {name}
+      </div>
+
+      <div
+        className="mt-2 text-[13px] leading-[1.35]"
+        style={{ color: "rgba(255,255,255,0.7)" }}
+      >
+        {tagline}
       </div>
 
       <div className="mt-4 flex items-baseline gap-2">
