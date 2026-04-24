@@ -710,17 +710,17 @@ const SHOWCASE: ShowcaseItem[] = [
   {
     badge: "BWL",
     context: "Strategisches Management, WS 2025",
-    result: "24 Karteikarten · Essay-Blueprint · 8 Quiz-Fragen",
+    result: "Porter, SWOT, BCG — alles sitzt. Essay-Blueprint steht.",
   },
   {
     badge: "MED",
     context: "Anatomie II, Sommersemester 2026",
-    result: "48 Karteikarten · Entscheidungsbaum · 15 MC-Fragen",
+    result: "Jeden Muskel im Schlaf. 15 MC-Fragen zum Üben.",
   },
   {
     badge: "JURA",
     context: "Staatsrecht I, Klausur März 2026",
-    result: "32 Karteikarten · Definitions-Guide · 12 Fallbeispiele",
+    result: "Jede Definition im Kopf. 12 Fälle durchdacht.",
   },
 ];
 
@@ -729,14 +729,14 @@ function ShowcaseSection() {
     <section className="px-6 py-24 md:py-28">
       <div className="mx-auto max-w-[1200px]">
         <div className="ln-reveal">
-          <span className="ln-section-label">Jedes Fach</span>
+          <span className="ln-section-label">Vor deinem Stoffberg</span>
           <h2
             className="mt-4 max-w-3xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            Egal welches Fach. Egal wie viel Material.{" "}
+            Zu viel Material. Null Plan.{" "}
             <span className="lernly-italic" style={{ color: "var(--color-ln-ink-soft)" }}>
-              Ein Lernpaket.
+              Paket in 2 Minuten.
             </span>
           </h2>
         </div>
