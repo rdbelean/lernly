@@ -884,6 +884,24 @@
     rgba(191, 86, 49, 0.08)
   );
   border: 1px solid rgba(217, 119, 87, 0.25);
+  color: #d97757;
+}
+
+/* ========== NAV: Claude link (terracotta, icon + text) ========== */
+
+.nav-claude {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #d97757;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.nav-claude:hover {
+  color: #e8956a;
 }
 
 .modal h3 {

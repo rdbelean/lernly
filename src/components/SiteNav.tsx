@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import ClaudeLogo from "@/components/ClaudeLogo";
 
 type Props = {
   onActivateUpload?: () => void;
@@ -42,6 +43,10 @@ export default function SiteNav({ onActivateUpload }: Props) {
             className="text-[14px] font-medium text-white transition hover:opacity-70"
           >
             So geht&rsquo;s
+          </a>
+          <a href={`${prefix}#connect`} className="nav-claude">
+            <ClaudeLogo size={14} />
+            Claude verbinden
           </a>
           {onActivateUpload ? (
             <button
@@ -88,6 +93,14 @@ export default function SiteNav({ onActivateUpload }: Props) {
               className="text-[14px] font-medium text-white"
             >
               So geht&rsquo;s
+            </a>
+            <a
+              href={`${prefix}#connect`}
+              onClick={() => setOpen(false)}
+              className="nav-claude"
+            >
+              <ClaudeLogo size={14} />
+              Claude verbinden
             </a>
             {onActivateUpload ? (
               <button
