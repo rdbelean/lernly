@@ -76,7 +76,11 @@ export default function Home() {
   const [pack, setPack] = useState<StudyPack | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [apiKey, setApiKey] = useState<string | null>(null);
+  const [isConnectOpen, setConnectOpen] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
+
+  const openConnect = useCallback(() => setConnectOpen(true), []);
+  const closeConnect = useCallback(() => setConnectOpen(false), []);
 
   const activateUpload = () => {
     setMode("upload");
@@ -191,6 +195,7 @@ export default function Home() {
         <Hero
           mode={mode}
           onActivateUpload={activateUpload}
+          onOpenConnect={openConnect}
           files={files}
           examType={examType}
           setExamType={setExamType}
@@ -210,11 +215,20 @@ export default function Home() {
             <ResultSection pack={pack} onReset={clearPack} />
           </section>
         )}
-        <PricingSection onActivateUpload={activateUpload} />
-        <ConnectSection apiKey={apiKey} setApiKey={setApiKey} />
+        <PricingSection
+          onActivateUpload={activateUpload}
+          onOpenConnect={openConnect}
+        />
         <BottomCta />
       </main>
       <SiteFooter />
+      {isConnectOpen && (
+        <ConnectModal
+          apiKey={apiKey}
+          setApiKey={setApiKey}
+          onClose={closeConnect}
+        />
+      )}
     </div>
   );
 }
@@ -224,6 +238,7 @@ export default function Home() {
 type HeroProps = {
   mode: "demo" | "upload";
   onActivateUpload: () => void;
+  onOpenConnect: () => void;
   files: File[];
   examType: ExamType;
   setExamType: Dispatch<SetStateAction<ExamType>>;
@@ -243,7 +258,7 @@ function formatElapsed(sec: number) {
 }
 
 function Hero(props: HeroProps) {
-  const { mode, onActivateUpload } = props;
+  const { mode, onActivateUpload, onOpenConnect } = props;
   return (
     <section className="relative overflow-hidden px-6 pt-24 pb-28 md:pt-32 md:pb-36">
       <div
@@ -293,22 +308,10 @@ function Hero(props: HeroProps) {
           >
             So geht&rsquo;s
           </a>
-          <a href="#connect" className="claude-btn">
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden
-            >
-              <path
-                d="M4.709 15.955l4.72-2.647.08-.23-.08-.128H9.2l-.79-.048-2.698-.073-2.339-.097-2.266-.122-.571-.121L0 11.784l.055-.352.48-.321.686.06 1.52.103 2.278.158 1.652.097 2.449.255h.389l.055-.157-.134-.098-.103-.097-2.358-1.596-2.552-1.688-1.336-.972-.724-.491-.364-.462-.158-1.008.656-.722.881.06.225.061.893.686 1.908 1.476 2.491 1.833.365.304.145-.103.019-.073-.164-.274-1.355-2.446-1.446-2.49-.644-1.032-.17-.619a2.97 2.97 0 01-.104-.729L6.283.134 6.696 0l.996.134.42.364.62 1.414 1.002 2.229 1.555 3.03.456.898.243.832.091.255h.158V9.01l.128-1.706.237-2.095.23-2.695.08-.76.376-.91.747-.492.584.28.48.685-.067.444-.286 1.851-.559 2.903-.364 1.942h.212l.243-.242.985-1.306 1.652-2.064.73-.82.85-.904.547-.431h1.033l.76 1.129-.34 1.166-1.064 1.347-.881 1.142-1.264 1.7-.79 1.36.073.11.188-.02 2.856-.606 1.543-.28 1.841-.315.833.388.091.395-.328.807-1.969.486-2.309.462-3.439.813-.042.03.049.061 1.549.146.662.036h1.622l3.02.225.79.522.474.638-.079.485-1.215.62-1.64-.389-3.829-.91-1.312-.329h-.182v.11l1.093 1.068 2.006 1.81 2.509 2.33.127.578-.322.455-.34-.049-2.205-1.657-.851-.747-1.926-1.62h-.128v.17l.444.649 2.345 3.521.122 1.08-.17.353-.608.213-.668-.122-1.374-1.925-1.415-2.167-1.143-1.943-.14.08-.674 7.254-.316.37-.729.28-.607-.461-.322-.747.322-1.476.389-1.924.315-1.53.286-1.9.17-.632-.012-.042-.14.018-1.434 1.967-2.18 2.945-1.726 1.845-.414.164-.717-.37.067-.662.401-.589 2.388-3.036 1.44-1.882.93-1.086-.006-.158h-.055L4.132 18.56l-1.13.146-.487-.456.061-.746.231-.243 1.908-1.312-.006.006z"
-                fill="#D97757"
-                fillRule="nonzero"
-              />
-            </svg>
+          <button type="button" onClick={onOpenConnect} className="claude-btn">
+            <ClaudeLogo size={18} />
             Mit Claude verbinden
-          </a>
+          </button>
         </div>
 
         <div id="upload" className="mx-auto mt-10 max-w-[881px] scroll-mt-24">
@@ -1778,7 +1781,13 @@ const PRICING_TIERS: PricingTier[] = [
   },
 ];
 
-function PricingSection({ onActivateUpload }: { onActivateUpload: () => void }) {
+function PricingSection({
+  onActivateUpload,
+  onOpenConnect,
+}: {
+  onActivateUpload: () => void;
+  onOpenConnect: () => void;
+}) {
   return (
     <section id="pricing" className="scroll-mt-24 px-6 py-24 md:py-32">
       <div className="mx-auto max-w-[1200px]">
@@ -1798,7 +1807,7 @@ function PricingSection({ onActivateUpload }: { onActivateUpload: () => void }) 
           </h2>
         </div>
 
-        <div className="ln-stagger mt-14 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="ln-stagger mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
           {PRICING_TIERS.map((tier) => (
             <PricingCard
               key={tier.name}
@@ -1806,26 +1815,11 @@ function PricingSection({ onActivateUpload }: { onActivateUpload: () => void }) 
               onCta={onActivateUpload}
             />
           ))}
+          <UnlimitedCard onOpenConnect={onOpenConnect} />
         </div>
 
         <p
-          className="ln-reveal mt-10 text-center text-[14px]"
-          style={{ color: "rgba(255,255,255,0.6)" }}
-        >
-          Oder:{" "}
-          <a
-            href="#connect"
-            style={{ color: "#d97757" }}
-            className="underline-offset-2 hover:underline"
-          >
-            Eigenen Claude API Key verbinden
-          </a>{" "}
-          → unbegrenzte Pakete, du zahlst nur ~0,01€ pro Generierung direkt an
-          Anthropic.
-        </p>
-
-        <p
-          className="ln-reveal mt-4 text-center text-[12px]"
+          className="ln-reveal mt-10 text-center text-[12px]"
           style={{ color: "rgba(255,255,255,0.3)" }}
         >
           Alle Preise inkl. MwSt. Jederzeit kündbar. Keine versteckten Kosten.
@@ -1835,20 +1829,140 @@ function PricingSection({ onActivateUpload }: { onActivateUpload: () => void }) 
   );
 }
 
-/* ========== CONNECT SECTION (Claude API key) ========== */
+/* ========== UNLIMITED (Claude BYO key) CARD ========== */
 
-function ConnectSection({
+function UnlimitedCard({ onOpenConnect }: { onOpenConnect: () => void }) {
+  const features = [
+    "Unbegrenzte Lernpakete",
+    "Alle Tools & Exports",
+    "Du zahlst Anthropic direkt",
+    "Kein Abo bei Lernly",
+  ];
+  return (
+    <div
+      className="ln-reveal ln-glass-card pricing-unlimited relative flex flex-col"
+      style={{ padding: "36px 32px" }}
+    >
+      <div
+        className="text-[11px] font-semibold uppercase"
+        style={{ color: "#d97757", letterSpacing: "2.2px" }}
+      >
+        Unlimited
+      </div>
+
+      <div
+        className="mt-2 text-[13px] leading-[1.35]"
+        style={{ color: "rgba(255,255,255,0.7)" }}
+      >
+        Dein eigener Claude Key
+      </div>
+
+      <div className="mt-4 flex items-baseline gap-2">
+        <span
+          className="ln-stat-gradient-terracotta font-bold leading-none"
+          style={{ fontSize: "64px", letterSpacing: "-1.6px" }}
+        >
+          ∞
+        </span>
+      </div>
+      <div
+        className="mt-1 text-[13px]"
+        style={{ color: "var(--color-ln-mute)" }}
+      >
+        pro Paket ab ~0,01€
+      </div>
+
+      <ul className="mt-6 flex-1">
+        {features.map((f, i) => (
+          <li
+            key={f}
+            className="flex items-start gap-3 text-[14px]"
+            style={{
+              color: "rgba(255,255,255,0.6)",
+              padding: "6px 0",
+              borderBottom:
+                i === features.length - 1
+                  ? "none"
+                  : "1px solid rgba(255,255,255,0.04)",
+            }}
+          >
+            <span
+              className="mt-[2px]"
+              style={{ color: "#d97757" }}
+              aria-hidden
+            >
+              ✓
+            </span>
+            <span>{f}</span>
+          </li>
+        ))}
+      </ul>
+
+      <button
+        type="button"
+        onClick={onOpenConnect}
+        className="pricing-unlimited-cta mt-6 flex items-center justify-center gap-2"
+      >
+        <ClaudeLogo size={14} />
+        <span>Key verbinden →</span>
+      </button>
+    </div>
+  );
+}
+
+/* ========== CLAUDE LOGO ========== */
+
+function ClaudeLogo({ size = 18 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+    >
+      <path
+        d="M4.709 15.955l4.72-2.647.08-.23-.08-.128H9.2l-.79-.048-2.698-.073-2.339-.097-2.266-.122-.571-.121L0 11.784l.055-.352.48-.321.686.06 1.52.103 2.278.158 1.652.097 2.449.255h.389l.055-.157-.134-.098-.103-.097-2.358-1.596-2.552-1.688-1.336-.972-.724-.491-.364-.462-.158-1.008.656-.722.881.06.225.061.893.686 1.908 1.476 2.491 1.833.365.304.145-.103.019-.073-.164-.274-1.355-2.446-1.446-2.49-.644-1.032-.17-.619a2.97 2.97 0 01-.104-.729L6.283.134 6.696 0l.996.134.42.364.62 1.414 1.002 2.229 1.555 3.03.456.898.243.832.091.255h.158V9.01l.128-1.706.237-2.095.23-2.695.08-.76.376-.91.747-.492.584.28.48.685-.067.444-.286 1.851-.559 2.903-.364 1.942h.212l.243-.242.985-1.306 1.652-2.064.73-.82.85-.904.547-.431h1.033l.76 1.129-.34 1.166-1.064 1.347-.881 1.142-1.264 1.7-.79 1.36.073.11.188-.02 2.856-.606 1.543-.28 1.841-.315.833.388.091.395-.328.807-1.969.486-2.309.462-3.439.813-.042.03.049.061 1.549.146.662.036h1.622l3.02.225.79.522.474.638-.079.485-1.215.62-1.64-.389-3.829-.91-1.312-.329h-.182v.11l1.093 1.068 2.006 1.81 2.509 2.33.127.578-.322.455-.34-.049-2.205-1.657-.851-.747-1.926-1.62h-.128v.17l.444.649 2.345 3.521.122 1.08-.17.353-.608.213-.668-.122-1.374-1.925-1.415-2.167-1.143-1.943-.14.08-.674 7.254-.316.37-.729.28-.607-.461-.322-.747.322-1.476.389-1.924.315-1.53.286-1.9.17-.632-.012-.042-.14.018-1.434 1.967-2.18 2.945-1.726 1.845-.414.164-.717-.37.067-.662.401-.589 2.388-3.036 1.44-1.882.93-1.086-.006-.158h-.055L4.132 18.56l-1.13.146-.487-.456.061-.746.231-.243 1.908-1.312-.006.006z"
+        fill="#D97757"
+        fillRule="nonzero"
+      />
+    </svg>
+  );
+}
+
+/* ========== CONNECT MODAL (Claude API key) ========== */
+
+function ConnectModal({
   apiKey,
   setApiKey,
+  onClose,
 }: {
   apiKey: string | null;
   setApiKey: (k: string | null) => void;
+  onClose: () => void;
 }) {
   const [draft, setDraft] = useState("");
   const [editing, setEditing] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
 
   const connected = Boolean(apiKey);
+  const showForm = !connected || editing;
+  const maskedKey = apiKey
+    ? `${apiKey.slice(0, 12)}…${apiKey.slice(-4)}`
+    : "";
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [onClose]);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1874,112 +1988,123 @@ function ConnectSection({
     setLocalError(null);
   };
 
-  const showForm = !connected || editing;
-  const maskedKey = apiKey
-    ? `${apiKey.slice(0, 12)}…${apiKey.slice(-4)}`
-    : "";
-
   return (
-    <section id="connect" className="scroll-mt-24 px-6 py-20 md:py-24">
-      <div className="mx-auto max-w-[720px]">
-        <div className="ln-reveal connect-section">
-          <h3>Eigenen Claude API Key verbinden</h3>
-          <p>
-            Verbinde deinen Anthropic API Key und generiere unbegrenzt
-            Lernpakete — ohne Abo, ohne Limits. Du zahlst nur die API-Kosten
-            direkt an Anthropic (~0,01–0,03 € pro Paket).
-          </p>
+    <div
+      className="modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Claude API Key verbinden"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="modal">
+        <button
+          type="button"
+          className="modal-close"
+          aria-label="Schließen"
+          onClick={onClose}
+        >
+          ✕
+        </button>
 
-          {showForm ? (
-            <form onSubmit={handleSave}>
-              <div className="key-input-row">
-                <input
-                  type="password"
-                  autoComplete="off"
-                  spellCheck={false}
-                  placeholder="sk-ant-api03-…"
-                  className="api-key-input"
-                  value={draft}
-                  onChange={(e) => {
-                    setDraft(e.target.value);
-                    if (localError) setLocalError(null);
-                  }}
-                />
-                <button
-                  type="submit"
-                  className="save-key-btn"
-                  disabled={draft.trim().length === 0}
-                >
-                  Verbinden
-                </button>
-              </div>
-              {localError && (
-                <p
-                  className="mt-2 text-[13px]"
-                  style={{ color: "rgba(255, 140, 140, 0.9)" }}
-                >
-                  {localError}
-                </p>
-              )}
-              <a
-                href="https://console.anthropic.com/settings/keys"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="key-help-link"
-              >
-                API Key erstellen auf console.anthropic.com →
-              </a>
-              <p className="key-privacy-note">
-                Dein Key wird nur in deinem Browser (localStorage) gespeichert
-                und bei jedem Generieren direkt an die Claude API gesendet.
-                Lernly speichert ihn nicht.
-              </p>
-              {connected && editing && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEditing(false);
-                    setDraft("");
-                    setLocalError(null);
-                  }}
-                  className="mt-3 block text-[12px]"
-                  style={{ color: "rgba(255,255,255,0.5)" }}
-                >
-                  Abbrechen
-                </button>
-              )}
-            </form>
-          ) : (
-            <div>
-              <div className="key-status">
-                <span>✓ Verbunden</span>
-                <code style={{ fontFamily: "ui-monospace, monospace" }}>
-                  {maskedKey}
-                </code>
-                <button
-                  type="button"
-                  onClick={() => setEditing(true)}
-                  className="key-disconnect"
-                >
-                  ändern
-                </button>
-                <button
-                  type="button"
-                  onClick={handleDisconnect}
-                  className="key-disconnect"
-                >
-                  trennen
-                </button>
-              </div>
-              <p className="key-privacy-note">
-                Alle Generierungen laufen jetzt über deinen eigenen Key.
-                Lernly-Kontingent wird nicht verbraucht.
-              </p>
-            </div>
-          )}
+        <div className="modal-icon">
+          <ClaudeLogo size={28} />
         </div>
+
+        <h3>Claude API Key verbinden</h3>
+        <p>
+          Verbinde deinen eigenen Anthropic API Key. Keine Limits, keine
+          monatlichen Kosten bei uns — du zahlst nur was du nutzt, direkt
+          an Anthropic.
+        </p>
+
+        {showForm ? (
+          <form onSubmit={handleSave}>
+            <div className="modal-input-row">
+              <input
+                type="password"
+                autoComplete="off"
+                spellCheck={false}
+                placeholder="sk-ant-api03-…"
+                className="api-key-input"
+                value={draft}
+                autoFocus
+                onChange={(e) => {
+                  setDraft(e.target.value);
+                  if (localError) setLocalError(null);
+                }}
+              />
+              <button
+                type="submit"
+                className="save-key-btn"
+                disabled={draft.trim().length === 0}
+              >
+                Verbinden
+              </button>
+            </div>
+            {localError && (
+              <p
+                className="mt-2 text-[13px]"
+                style={{ color: "rgba(255, 140, 140, 0.9)" }}
+              >
+                {localError}
+              </p>
+            )}
+            <a
+              href="https://console.anthropic.com/settings/keys"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="key-help-link"
+            >
+              Key erstellen auf console.anthropic.com →
+            </a>
+            <p className="small">
+              Dein Key bleibt lokal in deinem Browser. Lernly speichert ihn
+              nicht.
+            </p>
+            {connected && editing && (
+              <button
+                type="button"
+                onClick={() => {
+                  setEditing(false);
+                  setDraft("");
+                  setLocalError(null);
+                }}
+                className="text-link mt-3"
+              >
+                Abbrechen
+              </button>
+            )}
+          </form>
+        ) : (
+          <div>
+            <div className="connected-row">
+              <span>✓ Verbunden</span>
+              <code>{maskedKey}</code>
+              <button
+                type="button"
+                onClick={() => setEditing(true)}
+                className="text-link"
+              >
+                ändern
+              </button>
+              <button
+                type="button"
+                onClick={handleDisconnect}
+                className="text-link"
+              >
+                trennen
+              </button>
+            </div>
+            <p className="small">
+              Alle Generierungen laufen jetzt über deinen eigenen Key.
+              Lernly-Kontingent wird nicht verbraucht.
+            </p>
+          </div>
+        )}
       </div>
-    </section>
+    </div>
   );
 }
 

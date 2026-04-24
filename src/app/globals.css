@@ -719,9 +719,11 @@
   );
   border: 1px solid rgba(217, 119, 87, 0.35);
   color: #d97757;
+  font-family: inherit;
   font-size: 16px;
   font-weight: 500;
   text-decoration: none;
+  cursor: pointer;
   transition: all 0.2s ease;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -738,45 +740,11 @@
   box-shadow: 0 8px 24px rgba(217, 119, 87, 0.15);
 }
 
-/* ========== CONNECT SECTION (API key form) ========== */
-
-.connect-section {
-  position: relative;
-  overflow: hidden;
-  border-radius: 24px;
-  border: 1px solid rgba(217, 119, 87, 0.25);
-  background: linear-gradient(
-    135deg,
-    rgba(217, 119, 87, 0.06),
-    rgba(255, 255, 255, 0.02)
-  );
-  padding: 40px 36px;
-}
-
-.connect-section h3 {
-  font-size: clamp(22px, 3vw, 28px);
-  font-weight: 600;
-  color: #fff;
-  letter-spacing: -0.4px;
-  line-height: 1.2;
-}
-
-.connect-section p {
-  margin-top: 10px;
-  font-size: 15px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.key-input-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 22px;
-}
+/* ========== API KEY FORM (shared: modal uses these) ========== */
 
 .api-key-input {
   flex: 1 1 240px;
+  width: 100%;
   padding: 14px 18px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -803,6 +771,7 @@
   border: none;
   background: #d97757;
   color: #fff;
+  font-family: inherit;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
@@ -833,39 +802,187 @@
   color: #d97757;
 }
 
-.key-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 18px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  background: rgba(107, 182, 137, 0.1);
-  border: 1px solid rgba(107, 182, 137, 0.25);
-  color: rgba(180, 230, 200, 0.95);
-  font-size: 13px;
-}
-
-.key-disconnect {
-  margin-left: 8px;
-  padding: 0;
-  background: transparent;
-  border: none;
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 12px;
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.key-disconnect:hover {
-  color: #fff;
-}
-
 .key-privacy-note {
   margin-top: 10px;
   font-size: 12px;
   color: rgba(255, 255, 255, 0.4);
   line-height: 1.5;
+}
+
+/* ========== CONNECT MODAL ========== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+.modal {
+  position: relative;
+  background: rgba(8, 12, 28, 0.95);
+  border: 1px solid rgba(217, 119, 87, 0.25);
+  border-radius: 28px;
+  padding: 40px 36px 32px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+  animation: modalPopIn 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes modalPopIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.modal-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 18px;
+  border-radius: 16px;
+  background: linear-gradient(
+    135deg,
+    rgba(217, 119, 87, 0.15),
+    rgba(191, 86, 49, 0.08)
+  );
+  border: 1px solid rgba(217, 119, 87, 0.25);
+}
+
+.modal h3 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+
+.modal p {
+  margin-top: 10px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.modal p.small {
+  margin-top: 14px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.5;
+}
+
+.modal .modal-input-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.modal .save-key-btn {
+  width: 100%;
+}
+
+.modal .connected-row {
+  margin-top: 18px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(107, 182, 137, 0.1);
+  border: 1px solid rgba(107, 182, 137, 0.25);
+  color: rgba(180, 230, 200, 0.95);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.modal .connected-row code {
+  font-family: ui-monospace, monospace;
+}
+
+.modal .text-link {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.modal .text-link:hover {
+  color: #fff;
+}
+
+/* ========== PRICING: UNLIMITED (Claude BYO-key) card ========== */
+
+.pricing-unlimited {
+  border-color: rgba(217, 119, 87, 0.2) !important;
+  box-shadow: 0 0 40px rgba(217, 119, 87, 0.06);
+}
+
+.ln-stat-gradient-terracotta {
+  background: linear-gradient(135deg, #d97757, #e8956a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.pricing-unlimited-cta {
+  margin-top: 6px;
+  padding: 14px 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(217, 119, 87, 0.35);
+  background: transparent;
+  color: #d97757;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.pricing-unlimited-cta:hover {
+  background: rgba(217, 119, 87, 0.08);
+  border-color: rgba(217, 119, 87, 0.6);
 }
 
