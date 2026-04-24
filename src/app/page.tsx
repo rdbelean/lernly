@@ -64,6 +64,8 @@ function useScrollReveal() {
 
 const GENERATE_TIMEOUT_MS = 4 * 60 * 1000;
 
+const API_KEY_STORAGE = "lernly-claude-api-key";
+
 export default function Home() {
   const [mode, setMode] = useState<"demo" | "upload">("demo");
   const [files, setFiles] = useState<File[]>([]);
@@ -73,6 +75,7 @@ export default function Home() {
   const [elapsedSec, setElapsedSec] = useState(0);
   const [pack, setPack] = useState<StudyPack | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [apiKey, setApiKey] = useState<string | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
 
   const activateUpload = () => {
@@ -96,6 +99,8 @@ export default function Home() {
         /* ignore */
       }
     }
+    const savedKey = localStorage.getItem(API_KEY_STORAGE);
+    if (savedKey) setApiKey(savedKey);
   }, []);
 
   const onDrop = useCallback((accepted: File[], rejected: FileRejection[]) => {
@@ -127,6 +132,7 @@ export default function Home() {
 
     const fd = new FormData();
     fd.append("examType", examType);
+    if (apiKey) fd.append("userApiKey", apiKey);
     for (const f of files) fd.append("files", f);
 
     const controller = new AbortController();
@@ -205,6 +211,7 @@ export default function Home() {
           </section>
         )}
         <PricingSection onActivateUpload={activateUpload} />
+        <ConnectSection apiKey={apiKey} setApiKey={setApiKey} />
         <BottomCta />
       </main>
       <SiteFooter />
@@ -285,6 +292,12 @@ function Hero(props: HeroProps) {
             }}
           >
             So geht&rsquo;s
+          </a>
+          <a href="#connect" className="claude-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+            </svg>
+            Mit Claude verbinden
           </a>
         </div>
 
@@ -1786,11 +1799,175 @@ function PricingSection({ onActivateUpload }: { onActivateUpload: () => void }) 
         </div>
 
         <p
-          className="ln-reveal mt-10 text-center text-[13px]"
+          className="ln-reveal mt-10 text-center text-[14px]"
+          style={{ color: "rgba(255,255,255,0.6)" }}
+        >
+          Oder:{" "}
+          <a
+            href="#connect"
+            style={{ color: "#d97757" }}
+            className="underline-offset-2 hover:underline"
+          >
+            Eigenen Claude API Key verbinden
+          </a>{" "}
+          → unbegrenzte Pakete, du zahlst nur ~0,01€ pro Generierung direkt an
+          Anthropic.
+        </p>
+
+        <p
+          className="ln-reveal mt-4 text-center text-[12px]"
           style={{ color: "rgba(255,255,255,0.3)" }}
         >
           Alle Preise inkl. MwSt. Jederzeit kündbar. Keine versteckten Kosten.
         </p>
+      </div>
+    </section>
+  );
+}
+
+/* ========== CONNECT SECTION (Claude API key) ========== */
+
+function ConnectSection({
+  apiKey,
+  setApiKey,
+}: {
+  apiKey: string | null;
+  setApiKey: (k: string | null) => void;
+}) {
+  const [draft, setDraft] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [localError, setLocalError] = useState<string | null>(null);
+
+  const connected = Boolean(apiKey);
+
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = draft.trim();
+    if (!trimmed.startsWith("sk-ant-")) {
+      setLocalError(
+        "Der Key sieht nicht richtig aus. Anthropic-Keys beginnen mit sk-ant-.",
+      );
+      return;
+    }
+    localStorage.setItem(API_KEY_STORAGE, trimmed);
+    setApiKey(trimmed);
+    setDraft("");
+    setEditing(false);
+    setLocalError(null);
+  };
+
+  const handleDisconnect = () => {
+    localStorage.removeItem(API_KEY_STORAGE);
+    setApiKey(null);
+    setDraft("");
+    setEditing(false);
+    setLocalError(null);
+  };
+
+  const showForm = !connected || editing;
+  const maskedKey = apiKey
+    ? `${apiKey.slice(0, 12)}…${apiKey.slice(-4)}`
+    : "";
+
+  return (
+    <section id="connect" className="scroll-mt-24 px-6 py-20 md:py-24">
+      <div className="mx-auto max-w-[720px]">
+        <div className="ln-reveal connect-section">
+          <h3>Eigenen Claude API Key verbinden</h3>
+          <p>
+            Verbinde deinen Anthropic API Key und generiere unbegrenzt
+            Lernpakete — ohne Abo, ohne Limits. Du zahlst nur die API-Kosten
+            direkt an Anthropic (~0,01–0,03 € pro Paket).
+          </p>
+
+          {showForm ? (
+            <form onSubmit={handleSave}>
+              <div className="key-input-row">
+                <input
+                  type="password"
+                  autoComplete="off"
+                  spellCheck={false}
+                  placeholder="sk-ant-api03-…"
+                  className="api-key-input"
+                  value={draft}
+                  onChange={(e) => {
+                    setDraft(e.target.value);
+                    if (localError) setLocalError(null);
+                  }}
+                />
+                <button
+                  type="submit"
+                  className="save-key-btn"
+                  disabled={draft.trim().length === 0}
+                >
+                  Verbinden
+                </button>
+              </div>
+              {localError && (
+                <p
+                  className="mt-2 text-[13px]"
+                  style={{ color: "rgba(255, 140, 140, 0.9)" }}
+                >
+                  {localError}
+                </p>
+              )}
+              <a
+                href="https://console.anthropic.com/settings/keys"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="key-help-link"
+              >
+                API Key erstellen auf console.anthropic.com →
+              </a>
+              <p className="key-privacy-note">
+                Dein Key wird nur in deinem Browser (localStorage) gespeichert
+                und bei jedem Generieren direkt an die Claude API gesendet.
+                Lernly speichert ihn nicht.
+              </p>
+              {connected && editing && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditing(false);
+                    setDraft("");
+                    setLocalError(null);
+                  }}
+                  className="mt-3 block text-[12px]"
+                  style={{ color: "rgba(255,255,255,0.5)" }}
+                >
+                  Abbrechen
+                </button>
+              )}
+            </form>
+          ) : (
+            <div>
+              <div className="key-status">
+                <span>✓ Verbunden</span>
+                <code style={{ fontFamily: "ui-monospace, monospace" }}>
+                  {maskedKey}
+                </code>
+                <button
+                  type="button"
+                  onClick={() => setEditing(true)}
+                  className="key-disconnect"
+                >
+                  ändern
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDisconnect}
+                  className="key-disconnect"
+                >
+                  trennen
+                </button>
+              </div>
+              <p className="key-privacy-note">
+                Alle Generierungen laufen jetzt über deinen eigenen Key.
+                Lernly-Kontingent wird nicht verbraucht.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

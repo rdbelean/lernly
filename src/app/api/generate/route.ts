@@ -6,7 +6,7 @@ import { StudyPackSchema, type ExamType } from "@/lib/schema";
 export const runtime = "nodejs";
 export const maxDuration = 300;
 
-const client = new Anthropic();
+const defaultClient = new Anthropic();
 
 const EXAM_LABEL: Record<ExamType, string> = {
   essay: "Essay-Klausur (geschriebener Aufsatz in der Prüfung)",
@@ -60,6 +60,8 @@ export async function POST(request: Request) {
 
     const examType = formData.get("examType") as ExamType | null;
     const extraInfo = (formData.get("extraInfo") as string | null) ?? "";
+    const userApiKeyRaw = (formData.get("userApiKey") as string | null) ?? "";
+    const userApiKey = userApiKeyRaw.trim();
     const files = formData.getAll("files").filter((v): v is File => v instanceof File);
 
     if (!examType || !EXAM_LABEL[examType]) {
@@ -68,6 +70,15 @@ export async function POST(request: Request) {
     if (files.length === 0) {
       return NextResponse.json({ error: "Mindestens eine Datei erforderlich" }, { status: 400 });
     }
+    if (userApiKey && !userApiKey.startsWith("sk-ant-")) {
+      return NextResponse.json(
+        { error: "Ungültiger API Key — Anthropic-Keys beginnen mit sk-ant-." },
+        { status: 400 },
+      );
+    }
+
+    const client = userApiKey ? new Anthropic({ apiKey: userApiKey }) : defaultClient;
+    const usingUserKey = Boolean(userApiKey);
 
     const contentBlocks: UserBlock[] = [
       {
@@ -105,7 +116,12 @@ export async function POST(request: Request) {
       }
     }
 
-    console.log("[/api/generate] starting stream, files:", files.map((f) => f.name));
+    console.log(
+      "[/api/generate] starting stream, files:",
+      files.map((f) => f.name),
+      "key:",
+      usingUserKey ? "user" : "lernly",
+    );
 
     // Stream to avoid SDK HTTP timeout on long generations.
     // Disable adaptive thinking — not needed for this task and saves ~50% time.
