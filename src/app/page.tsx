@@ -1093,18 +1093,18 @@ function HowItWorks() {
   const steps = [
     {
       label: "Schritt 1",
-      title: "Hochladen",
-      desc: "Wirf rein was du hast. PDFs, Slides, Mitschriften. Bis zu 3 Dateien auf einmal — Lernly liest alles.",
+      title: "Reinwerfen",
+      desc: "8 PDFs offen? Wirf sie alle rein — Slides, Mitschriften, Skripte. Lernly liest alles, du musst nichts sortieren.",
     },
     {
       label: "Schritt 2",
-      title: "KI generiert",
-      desc: "Keine Textwand wie bei ChatGPT. Du bekommst ein fertiges Lernsystem: Karteikarten, Quiz, Essay-Blueprint — alles interaktiv.",
+      title: "Bauen",
+      desc: "Keine Textwand wie bei ChatGPT. Kein weiteres PDF. Ein fertiges Lernsystem: Karteikarten, Quiz, Essay-Blueprint — alles interaktiv.",
     },
     {
       label: "Schritt 3",
-      title: "Lernen & bestehen",
-      desc: "Flippen, testen, wiederholen. Du lernst aktiv — nicht nochmal die gleiche PDF passiv durchscrollen.",
+      title: "Bestehen",
+      desc: "Flippen, testen, wiederholen — bis es sitzt. Dann gehst du in die Klausur und weißt: du hast das Richtige gelernt.",
     },
   ];
 
@@ -1112,14 +1112,14 @@ function HowItWorks() {
     <section id="how" className="scroll-mt-24 px-6 py-24 md:py-32">
       <div className="mx-auto max-w-[1200px]">
         <div className="ln-reveal">
-          <span className="ln-section-label">So geht&rsquo;s</span>
+          <span className="ln-section-label">Vom Chaos zur Prüfung</span>
           <h2
             className="mt-4 max-w-2xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            Drei Schritte.{" "}
+            PDFs rein. Lernpaket raus.{" "}
             <span className="lernly-italic" style={{ color: "var(--color-ln-ink-soft)" }}>
-              Ein Ergebnis.
+              Bereit für die Klausur.
             </span>
           </h2>
         </div>
@@ -1135,7 +1135,8 @@ function HowItWorks() {
         </div>
 
         <p className="ln-reveal ln-pipeline-caption">
-          Läuft auf{" "}
+          Aus deinem Material, für deine Prüfung. In 2 Minuten fertig —
+          gebaut mit{" "}
           <a
             href="https://www.anthropic.com/claude"
             target="_blank"
@@ -1144,8 +1145,7 @@ function HowItWorks() {
           >
             Claude
           </a>
-          {" "}— der KI, die dein Material wirklich liest, nicht nur Wörter
-          zählt. Personalisiert auf deine Prüfung, in unter 2 Minuten fertig.
+          .
         </p>
       </div>
     </section>
