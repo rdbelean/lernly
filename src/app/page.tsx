@@ -251,7 +251,7 @@ function Nav({ onActivateUpload }: { onActivateUpload: () => void }) {
             onClick={onActivateUpload}
             className="rounded-lg bg-white px-4 py-1.5 text-[14px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
           >
-            Jetzt testen →
+            Paket erstellen →
           </button>
         </div>
 
@@ -283,7 +283,7 @@ function Nav({ onActivateUpload }: { onActivateUpload: () => void }) {
               }}
               className="rounded-lg bg-white px-4 py-2 text-center text-[14px] font-medium text-[color:var(--color-ln-bg-bot)]"
             >
-              Jetzt testen →
+              Paket erstellen →
             </button>
           </div>
         </div>
@@ -483,7 +483,7 @@ function DemoCycle({ onActivate }: { onActivate: () => void }) {
         className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 text-[15px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
       >
         <span>✦</span>
-        <span>Mit meinem Material testen</span>
+        <span>Jetzt mit meinen PDFs testen</span>
       </button>
       <p
         className="mt-3 text-center text-[12px]"
@@ -588,7 +588,7 @@ function UploadDemo({
             </svg>
           </div>
           <div className="text-[15px] font-medium text-white">
-            {isDragActive ? "Loslassen!" : "Dateien hierher ziehen oder klicken"}
+            {isDragActive ? "Loslassen!" : "PDFs hier reinwerfen (oder klicken)"}
           </div>
           <div className="text-[12px]" style={{ color: "var(--color-ln-mute)" }}>
             PDF · TXT · MD · bis zu {MAX_FILES} Dateien
@@ -685,7 +685,7 @@ function UploadDemo({
         className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 text-[15px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90 disabled:cursor-not-allowed disabled:bg-white/20 disabled:text-white/40"
       >
         <span>✦</span>
-        <span>Lernpaket generieren</span>
+        <span>Paket erstellen (ca. 2 Min)</span>
       </button>
 
       <p
@@ -842,7 +842,7 @@ function BentoFeatures() {
             className="mt-4 max-w-2xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            Gebaut für dein Gehirn.
+            Alles was du brauchst, um zu bestehen.
           </h2>
         </div>
 
@@ -852,8 +852,8 @@ function BentoFeatures() {
             <CardEyebrow>Privatsphäre by design</CardEyebrow>
             <CardTitle>Kein Account. Kein Tracking.</CardTitle>
             <CardDesc>
-              Lade hoch, Paket generieren, fertig. Nichts wird dauerhaft
-              gespeichert. Kein Login, keine Cookies für Dritte.
+              Kein Mail-Verifizieren um 2 Uhr nachts. Lade hoch, Paket
+              generieren, fertig. Nichts wird dauerhaft gespeichert.
             </CardDesc>
             <div className="mt-6 flex flex-wrap gap-2">
               <span className="ln-mono-tag ln-mono-tag-pill ln-mono-tag-accent">Session-only</span>
@@ -864,7 +864,7 @@ function BentoFeatures() {
 
           {/* Card 2 — span 3 (big stat) */}
           <div className="ln-reveal ln-glass-card relative overflow-hidden p-8 md:col-span-3 md:p-9">
-            <CardEyebrow>In Minuten fertig</CardEyebrow>
+            <CardEyebrow>Schluss mit Karten schreiben</CardEyebrow>
             <div className="mt-8 flex items-end gap-3">
               <div
                 className="ln-stat-gradient-blue font-bold leading-none"
@@ -883,10 +883,11 @@ function BentoFeatures() {
               </div>
             </div>
             <CardTitle className="mt-6">
-              Karteikarten, Blueprint, Simulator.
+              30 Karten in der Zeit eines Kaffees.
             </CardTitle>
             <CardDesc>
-              In unter zwei Minuten ist alles bereit — je nach Materialmenge.
+              Was dich sonst einen Abend kostet, macht Lernly bevor dein Kaffee
+              kalt ist. Karteikarten, Blueprint, Simulator — fertig.
             </CardDesc>
             <WaveBars className="mt-6" />
           </div>
@@ -908,15 +909,16 @@ function BentoFeatures() {
                 <path d="M12 20h.01" />
               </svg>
             </div>
-            <CardTitle className="mt-6">Offline-fähig.</CardTitle>
+            <CardTitle className="mt-6">Lernt wo du lernst.</CardTitle>
             <CardDesc>
-              Exportiere als HTML — lerne im Zug, in der Bib, ohne Internet.
+              Lade dein Paket als HTML runter. Im Zug, in der Bib, auf dem Klo —
+              läuft ohne Internet.
             </CardDesc>
           </div>
 
           {/* Card 4 — span 2 (mono stats) */}
           <div className="ln-reveal ln-glass-card p-8 md:col-span-2">
-            <CardEyebrow>Datenminimalismus</CardEyebrow>
+            <CardEyebrow>Keine Datensammlung</CardEyebrow>
             <CardTitle className="mt-3">Bleibt bei dir.</CardTitle>
             <div className="mt-5">
               <PrivacyRow label="Dateien gespeichert" value="0 B" />
@@ -928,16 +930,17 @@ function BentoFeatures() {
 
           {/* Card 5 — span 2 (preview) */}
           <div className="ln-reveal ln-glass-card p-8 md:col-span-2">
-            <CardEyebrow>Universell</CardEyebrow>
-            <CardTitle className="mt-3">Jedes Fach.</CardTitle>
+            <CardEyebrow>Jedes Fach, jede Sprache</CardEyebrow>
+            <CardTitle className="mt-3">Jedes Fach. Jede Sprache.</CardTitle>
             <CardDesc>
-              Von BWL bis Medizin, von Jura bis Literatur. Essay, MC oder
-              mündlich — Lernly passt sich an.
+              BWL, Medizin, Jura, Literatur. Deutsch, Englisch, gemischt.
+              Essay, MC oder mündlich — Lernly liest alles.
             </CardDesc>
             <div className="mt-5 flex flex-wrap gap-1.5">
               <span className="ln-mono-tag">BWL</span>
               <span className="ln-mono-tag">Medizin</span>
               <span className="ln-mono-tag">Jura</span>
+              <span className="ln-mono-tag">DE/EN</span>
               <span className="ln-mono-tag">+alle</span>
             </div>
           </div>
@@ -979,8 +982,8 @@ function BentoFeatures() {
                     margin: "6px 0 0",
                   }}
                 >
-                  Keine Kreditkarte, kein Trial-Countdown. Ausprobieren,
-                  nutzen, weiterziehen — oder wiederkommen.
+                  Keine Kreditkarte. Kein Trial-Countdown. Genug um die nächste
+                  Klausur zu packen — ohne Risiko.
                 </p>
               </div>
             </div>
@@ -1129,16 +1132,17 @@ function HowItWorks() {
         </div>
 
         <p className="ln-reveal ln-pipeline-caption">
-          Alle drei Schritte laufen über die{" "}
+          Läuft auf{" "}
           <a
             href="https://www.anthropic.com/claude"
             target="_blank"
             rel="noopener noreferrer"
             className="ln-accent-link"
           >
-            Claude API
+            Claude
           </a>
-          . Dein Lernpaket wird in unter 2 Minuten generiert — personalisiert auf dein Prüfungsformat.
+          {" "}— der KI, die dein Material wirklich liest, nicht nur Wörter
+          zählt. Personalisiert auf deine Prüfung, in unter 2 Minuten fertig.
         </p>
       </div>
     </section>
@@ -1733,9 +1737,8 @@ function EmailCapture({ pack }: { pack: StudyPack }) {
         className="mt-2 text-[14px]"
         style={{ color: "var(--color-ln-mute)" }}
       >
-        Speichere dein Paket als HTML — offline, druckbar, für immer dein.
-        Oder trag deine E-Mail ein; wir melden uns, sobald Speichern per Link
-        live ist.
+        Lade es offline runter — druckbar, für immer dein. Oder trag deine
+        E-Mail ein; wir sagen dir Bescheid, sobald Speichern per Link live ist.
       </p>
 
       <div className="mt-5 flex flex-col gap-3 sm:flex-row">
@@ -1759,7 +1762,7 @@ function EmailCapture({ pack }: { pack: StudyPack }) {
           onClick={handleDownload}
           className="rounded-lg bg-white px-5 py-2.5 text-[13.5px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
         >
-          Als HTML herunterladen
+          Offline speichern
         </button>
       </div>
     </div>
@@ -2009,14 +2012,14 @@ function BottomCta() {
           href="#upload"
           className="mt-10 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-[15px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
         >
-          Jetzt kostenlos testen
+          Erstes Lernpaket erstellen
           <span>↓</span>
         </a>
         <p
           className="mt-5 text-[13px]"
           style={{ color: "var(--color-ln-mute)" }}
         >
-          Jedes Fach · Jede Prüfung · Gratis
+          3 Pakete gratis · Kein Login · In 2 Min fertig
         </p>
       </div>
     </section>
