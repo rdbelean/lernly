@@ -1,0 +1,21 @@
+<svg width="16" height="16" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4A6CF7"/>
+      <stop offset="50%" stop-color="#3B5CE0"/>
+      <stop offset="100%" stop-color="#2845B8"/>
+    </linearGradient>
+    <linearGradient id="starGrad" x1="340" y1="80" x2="400" y2="180" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFD76E"/>
+      <stop offset="100%" stop-color="#F0A830"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="url(#bgGrad)"/>
+  <rect x="120" y="195" width="272" height="36" rx="18" fill="white"/>
+  <rect x="120" y="262" width="290" height="36" rx="18" fill="white"/>
+  <rect x="120" y="329" width="240" height="36" rx="18" fill="white"/>
+  <g transform="translate(370, 130)">
+    <path d="M0,-42 C4,-14 14,-4 42,0 C14,4 4,14 0,42 C-4,14 -14,4 -42,0 C-14,-4 -4,-14 0,-42Z" fill="url(#starGrad)"/>
+    <circle cx="30" cy="-30" r="6" fill="url(#starGrad)"/>
+  </g>
+</svg>

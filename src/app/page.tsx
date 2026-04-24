@@ -224,8 +224,13 @@ function Nav({ onActivateUpload }: { onActivateUpload: () => void }) {
       }}
     >
       <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between px-6 py-[18px]">
-        <a href="#" className="text-[20px] font-semibold tracking-[-0.3px] text-white">
-          Lernly
+        <a
+          href="#"
+          className="flex items-center gap-[10px] text-[20px] font-semibold tracking-[-0.3px] text-white"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/lernly-icon-nav.svg" alt="Lernly logo" width={28} height={28} />
+          <span>Lernly</span>
         </a>
 
         <div className="hidden items-center gap-8 md:flex">
@@ -2012,7 +2017,11 @@ function Footer() {
   return (
     <footer className="border-t border-white/5 px-6 py-10">
       <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 md:flex-row">
-        <div className="text-[14px] font-semibold text-white">Lernly</div>
+        <div className="flex items-center gap-2 text-[14px] font-semibold text-white">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/lernly-icon-nav.svg" alt="Lernly logo" width={20} height={20} />
+          <span>Lernly</span>
+        </div>
         <div className="flex items-center gap-5 text-[13px]" style={{ color: "var(--color-ln-mute)" }}>
           <a href="#" className="transition hover:text-white">Datenschutz</a>
           <a href="#" className="transition hover:text-white">AGB</a>

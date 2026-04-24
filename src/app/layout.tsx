@@ -2,9 +2,26 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Lernly — Ein Upload. Deine komplette Prüfungsvorbereitung.",
+  title: "Lernly — Lade hoch. Lerne smart.",
   description:
-    "Lade deine Unterlagen hoch, und Lernly baut dir Karteikarten, Essay-Blueprints und einen Lernplan. 3 Lernpakete gratis.",
+    "Wirf deine PDFs rein — Lernly baut dir Karteikarten, einen Essay-Blueprint und einen Prüfungssimulator. In Minuten.",
+  icons: {
+    icon: "/lernly-favicon.svg",
+    apple: "/lernly-logo.svg",
+  },
+  openGraph: {
+    title: "Lernly — Lade hoch. Lerne smart.",
+    description: "KI-Lernpakete für Studenten. Kostenlos.",
+    images: ["/lernly-logo.svg"],
+    type: "website",
+    url: "https://lernly-app.de",
+  },
+  twitter: {
+    card: "summary",
+    title: "Lernly",
+    description: "KI-Lernpakete für Studenten.",
+    images: ["/lernly-logo.svg"],
+  },
 };
 
 export default function RootLayout({

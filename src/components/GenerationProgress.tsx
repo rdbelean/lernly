@@ -43,6 +43,16 @@ export default function GenerationProgress({ completed = false }: { completed?: 
 
   return (
     <div style={{ padding: "32px 0", textAlign: "center" }}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/lernly-logo.svg"
+        alt="Lernly"
+        width={64}
+        height={64}
+        style={{ display: "block", margin: "0 auto 24px" }}
+        className="ln-loading-logo"
+      />
+
       <div
         style={{
           width: "100%",
@@ -134,6 +144,13 @@ export default function GenerationProgress({ completed = false }: { completed?: 
       <style>{`
         @keyframes ln-progress-spin {
           to { transform: rotate(360deg); }
+        }
+        @keyframes ln-logo-pulse {
+          0%, 100% { opacity: 0.6; transform: scale(1); }
+          50%      { opacity: 1;   transform: scale(1.05); }
+        }
+        .ln-loading-logo {
+          animation: ln-logo-pulse 2s ease-in-out infinite;
         }
       `}</style>
     </div>
