@@ -340,6 +340,18 @@ function Hero(props: HeroProps) {
           <span style={{ color: "rgb(255, 255, 255)" }}>Lerne smart.</span>
         </h1>
 
+        <p
+          className="ln-reveal mx-auto mt-8 max-w-[680px] text-center leading-[1.4]"
+          style={{
+            color: "rgba(255, 255, 255, 0.72)",
+            fontSize: "clamp(18px, 2.2vw, 22px)",
+          }}
+        >
+          <span className="text-white">8 PDFs. 3 Tage. Kein Plan?</span>{" "}
+          Wirf dein Material rein. In 2 Minuten hast du Karteikarten, einen
+          Prüfungssimulator und weißt genau, was du lernen musst.
+        </p>
+
         <div className="ln-reveal mt-8 flex flex-wrap items-center justify-center gap-3">
           <button
             type="button"
@@ -347,7 +359,7 @@ function Hero(props: HeroProps) {
             className="rounded-full px-7 py-[14px] text-[16px] font-semibold transition hover:bg-white/90"
             style={{ background: "#ffffff", color: "#1a2647" }}
           >
-            Kostenlos testen ↓
+            Erstes Lernpaket erstellen →
           </button>
           <a
             href="#how"
@@ -371,19 +383,19 @@ function Hero(props: HeroProps) {
 
         <div className="ln-reveal mt-8 flex flex-wrap items-center justify-center gap-[14px]">
           <span className="ln-hero-badge" style={{ color: "rgb(111, 199, 227)" }}>
-            ● Visuell
+            ● 2 Min
           </span>
           <span className="ln-hero-badge" style={{ color: "rgb(127, 169, 245)" }}>
-            ● Offline
+            ● Kein Login
           </span>
           <span className="ln-hero-badge" style={{ color: "rgb(143, 139, 229)" }}>
-            ● Privat
+            ● 3 Pakete gratis
           </span>
           <span className="ln-hero-badge" style={{ color: "rgb(178, 156, 240)" }}>
             ● Jedes Fach
           </span>
           <span className="ln-hero-badge" style={{ color: "rgb(159, 212, 184)" }}>
-            ● Kostenlos
+            ● Bleibt bei dir
           </span>
         </div>
       </div>
@@ -722,7 +734,7 @@ function ShowcaseSection() {
             className="mt-4 max-w-3xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            Jedes Fach. Jede Prüfung.{" "}
+            Egal welches Fach. Egal wie viel Material.{" "}
             <span className="lernly-italic" style={{ color: "var(--color-ln-ink-soft)" }}>
               Ein Lernpaket.
             </span>
@@ -1076,17 +1088,17 @@ function HowItWorks() {
     {
       label: "Schritt 1",
       title: "Hochladen",
-      desc: "PDFs, Slides und Kursmaterial hochladen. Lernly liest und versteht alles.",
+      desc: "Wirf rein was du hast. PDFs, Slides, Mitschriften. Bis zu 3 Dateien auf einmal — Lernly liest alles.",
     },
     {
       label: "Schritt 2",
       title: "KI generiert",
-      desc: "Claude analysiert dein Material und baut Karteikarten, Blueprints und Quizzes.",
+      desc: "Keine Textwand wie bei ChatGPT. Du bekommst ein fertiges Lernsystem: Karteikarten, Quiz, Essay-Blueprint — alles interaktiv.",
     },
     {
       label: "Schritt 3",
       title: "Lernen & bestehen",
-      desc: "Interaktive Tools nutzen, Fortschritt tracken, selbstbewusst in die Prüfung gehen.",
+      desc: "Flippen, testen, wiederholen. Du lernst aktiv — nicht nochmal die gleiche PDF passiv durchscrollen.",
     },
   ];
 
@@ -1989,9 +2001,9 @@ function BottomCta() {
             fontSize: "clamp(34px, 5.5vw, 64px)",
           }}
         >
-          Dein persönlicher KI-Tutor.
+          Die Prüfung kommt.
           <br />
-          <span className="text-white">Wartet auf dein Material.</span>
+          <span className="text-white">Dein Lernpaket auch. In 2 Minuten.</span>
         </h2>
         <a
           href="#upload"

@@ -4,22 +4,23 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Lernly — Lade hoch. Lerne smart.",
   description:
-    "Wirf deine PDFs rein — Lernly baut dir Karteikarten, einen Essay-Blueprint und einen Prüfungssimulator. In Minuten.",
+    "8 PDFs und kein Plan? Lernly macht in 2 Minuten dein komplettes Lernpaket — Karteikarten, Simulator, Essay-Blueprint. Kostenlos, kein Login.",
   icons: {
     icon: "/lernly-favicon.svg",
     apple: "/lernly-logo.svg",
   },
   openGraph: {
     title: "Lernly — Lade hoch. Lerne smart.",
-    description: "KI-Lernpakete für Studenten. Kostenlos.",
+    description:
+      "8 PDFs und kein Plan? In 2 Minuten dein komplettes Lernpaket. Kostenlos, kein Login.",
     images: ["/lernly-logo.svg"],
     type: "website",
     url: "https://lernly-app.de",
   },
   twitter: {
     card: "summary",
-    title: "Lernly",
-    description: "KI-Lernpakete für Studenten.",
+    title: "Lernly — Lade hoch. Lerne smart.",
+    description: "8 PDFs und kein Plan? In 2 Minuten dein komplettes Lernpaket.",
     images: ["/lernly-logo.svg"],
   },
 };
