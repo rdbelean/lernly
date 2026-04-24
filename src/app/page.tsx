@@ -2244,22 +2244,23 @@ function BottomCta() {
             fontSize: "clamp(34px, 5.5vw, 64px)",
           }}
         >
-          Die Prüfung kommt.
-          <br />
-          <span className="text-white">Dein Lernpaket auch. In 2 Minuten.</span>
+          2 Minuten.{" "}
+          <span className="lernly-italic text-white">
+            Mehr brauchst du nicht.
+          </span>
         </h2>
         <a
           href="#upload"
           className="mt-10 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-[15px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
         >
-          Erstes Lernpaket erstellen
+          Jetzt anfangen
           <span>↓</span>
         </a>
         <p
           className="mt-5 text-[13px]"
           style={{ color: "var(--color-ln-mute)" }}
         >
-          3 Pakete gratis · Kein Login · In 2 Min fertig
+          Gratis · Ohne Login · Ohne Kreditkarte
         </p>
       </div>
     </section>
