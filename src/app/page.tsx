@@ -849,15 +849,15 @@ function BentoFeatures() {
         <div className="ln-stagger mt-14 grid grid-cols-1 gap-4 md:grid-cols-6">
           {/* Card 1 — span 3 */}
           <div className="ln-reveal ln-glass-card p-8 md:col-span-3 md:p-9">
-            <CardEyebrow>Privatsphäre by design</CardEyebrow>
+            <CardEyebrow>Sofort loslegen</CardEyebrow>
             <CardTitle>Kein Account. Kein Tracking.</CardTitle>
             <CardDesc>
               Kein Mail-Verifizieren um 2 Uhr nachts. Lade hoch, Paket
               generieren, fertig. Nichts wird dauerhaft gespeichert.
             </CardDesc>
             <div className="mt-6 flex flex-wrap gap-2">
-              <span className="ln-mono-tag ln-mono-tag-pill ln-mono-tag-accent">Session-only</span>
-              <span className="ln-mono-tag ln-mono-tag-pill">Keine DB</span>
+              <span className="ln-mono-tag ln-mono-tag-pill ln-mono-tag-accent">Nur deine Session</span>
+              <span className="ln-mono-tag ln-mono-tag-pill">Kein Speicher</span>
               <span className="ln-mono-tag ln-mono-tag-pill">0 Tracker</span>
             </div>
           </div>
@@ -921,7 +921,7 @@ function BentoFeatures() {
             <CardEyebrow>Keine Datensammlung</CardEyebrow>
             <CardTitle className="mt-3">Bleibt bei dir.</CardTitle>
             <div className="mt-5">
-              <PrivacyRow label="Dateien gespeichert" value="0 B" />
+              <PrivacyRow label="Gespeicherte Dateien" value="0" />
               <PrivacyRow label="Accounts nötig" value="0" />
               <PrivacyRow label="Tracker" value="0" />
               <PrivacyRow label="Cookies" value="1" note="nur session" />
