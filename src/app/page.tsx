@@ -195,7 +195,6 @@ export default function Home() {
         <Hero
           mode={mode}
           onActivateUpload={activateUpload}
-          onOpenConnect={openConnect}
           files={files}
           examType={examType}
           setExamType={setExamType}
@@ -238,7 +237,6 @@ export default function Home() {
 type HeroProps = {
   mode: "demo" | "upload";
   onActivateUpload: () => void;
-  onOpenConnect: () => void;
   files: File[];
   examType: ExamType;
   setExamType: Dispatch<SetStateAction<ExamType>>;
@@ -258,7 +256,7 @@ function formatElapsed(sec: number) {
 }
 
 function Hero(props: HeroProps) {
-  const { mode, onActivateUpload, onOpenConnect } = props;
+  const { mode, onActivateUpload } = props;
   return (
     <section className="relative overflow-hidden px-6 pt-24 pb-28 md:pt-32 md:pb-36">
       <div
@@ -308,10 +306,6 @@ function Hero(props: HeroProps) {
           >
             So geht&rsquo;s
           </a>
-          <button type="button" onClick={onOpenConnect} className="claude-btn">
-            <ClaudeLogo size={18} />
-            Mit Claude verbinden
-          </button>
         </div>
 
         <div id="upload" className="mx-auto mt-10 max-w-[881px] scroll-mt-24">
@@ -1807,7 +1801,7 @@ function PricingSection({
           </h2>
         </div>
 
-        <div className="ln-stagger mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+        <div className="ln-stagger mt-14 grid grid-cols-1 gap-4 md:grid-cols-3">
           {PRICING_TIERS.map((tier) => (
             <PricingCard
               key={tier.name}
@@ -1815,97 +1809,53 @@ function PricingSection({
               onCta={onActivateUpload}
             />
           ))}
-          <UnlimitedCard onOpenConnect={onOpenConnect} />
+        </div>
+
+        <div className="ln-reveal">
+          <BYOKBanner onOpenConnect={onOpenConnect} />
         </div>
 
         <p
-          className="ln-reveal mt-10 text-center text-[12px]"
+          className="ln-reveal mt-6 text-center text-[12px]"
           style={{ color: "rgba(255,255,255,0.3)" }}
         >
-          Alle Preise inkl. MwSt. Jederzeit kündbar. Keine versteckten Kosten.
+          Alle Preise inkl. MwSt. Jederzeit kündbar.
         </p>
       </div>
     </section>
   );
 }
 
-/* ========== UNLIMITED (Claude BYO key) CARD ========== */
+/* ========== BYOK BANNER (under the pricing cards) ========== */
 
-function UnlimitedCard({ onOpenConnect }: { onOpenConnect: () => void }) {
-  const features = [
-    "Unbegrenzte Lernpakete",
-    "Alle Tools & Exports",
-    "Du zahlst Anthropic direkt",
-    "Kein Abo bei Lernly",
-  ];
+function BYOKBanner({ onOpenConnect }: { onOpenConnect: () => void }) {
   return (
-    <div
-      className="ln-reveal ln-glass-card pricing-unlimited relative flex flex-col"
-      style={{ padding: "36px 32px" }}
-    >
-      <div
-        className="text-[11px] font-semibold uppercase"
-        style={{ color: "#d97757", letterSpacing: "2.2px" }}
-      >
-        Unlimited
+    <div className="byok-banner">
+      <div className="byok-left">
+        <div className="byok-icon">
+          <ClaudeLogo size={22} />
+        </div>
+        <div>
+          <h4>Du hast einen Anthropic API Key?</h4>
+          <p>
+            Verbinde ihn mit deinem Plan — 30% günstiger und unbegrenzte
+            Pakete.
+          </p>
+        </div>
       </div>
-
-      <div
-        className="mt-2 text-[13px] leading-[1.35]"
-        style={{ color: "rgba(255,255,255,0.7)" }}
-      >
-        Dein eigener Claude Key
+      <div className="byok-right">
+        <div className="byok-prices">
+          <span>
+            Pro + Key: <strong>4.99€</strong> <s>6.99€</s>
+          </span>
+          <span>
+            Team + Key: <strong>9.99€</strong> <s>14.99€</s>
+          </span>
+        </div>
+        <button type="button" onClick={onOpenConnect} className="byok-btn">
+          Key verbinden →
+        </button>
       </div>
-
-      <div className="mt-4 flex items-baseline gap-2">
-        <span
-          className="ln-stat-gradient-terracotta font-bold leading-none"
-          style={{ fontSize: "64px", letterSpacing: "-1.6px" }}
-        >
-          ∞
-        </span>
-      </div>
-      <div
-        className="mt-1 text-[13px]"
-        style={{ color: "var(--color-ln-mute)" }}
-      >
-        pro Paket ab ~0,01€
-      </div>
-
-      <ul className="mt-6 flex-1">
-        {features.map((f, i) => (
-          <li
-            key={f}
-            className="flex items-start gap-3 text-[14px]"
-            style={{
-              color: "rgba(255,255,255,0.6)",
-              padding: "6px 0",
-              borderBottom:
-                i === features.length - 1
-                  ? "none"
-                  : "1px solid rgba(255,255,255,0.04)",
-            }}
-          >
-            <span
-              className="mt-[2px]"
-              style={{ color: "#d97757" }}
-              aria-hidden
-            >
-              ✓
-            </span>
-            <span>{f}</span>
-          </li>
-        ))}
-      </ul>
-
-      <button
-        type="button"
-        onClick={onOpenConnect}
-        className="pricing-unlimited-cta mt-6 flex items-center justify-center gap-2"
-      >
-        <ClaudeLogo size={14} />
-        <span>Key verbinden →</span>
-      </button>
     </div>
   );
 }

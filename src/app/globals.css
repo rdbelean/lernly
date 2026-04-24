@@ -952,37 +952,118 @@
   color: #fff;
 }
 
-/* ========== PRICING: UNLIMITED (Claude BYO-key) card ========== */
+/* ========== BYOK BANNER (below the 3 pricing cards) ========== */
 
-.pricing-unlimited {
-  border-color: rgba(217, 119, 87, 0.2) !important;
-  box-shadow: 0 0 40px rgba(217, 119, 87, 0.06);
+.byok-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  margin-top: 40px;
+  padding: 24px 32px;
+  border: 1px solid rgba(217, 119, 87, 0.2);
+  border-radius: 20px;
+  background: rgba(217, 119, 87, 0.04);
 }
 
-.ln-stat-gradient-terracotta {
-  background: linear-gradient(135deg, #d97757, #e8956a);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+.byok-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.pricing-unlimited-cta {
-  margin-top: 6px;
-  padding: 14px 24px;
+.byok-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(217, 119, 87, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d97757;
+}
+
+.byok-left h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 4px;
+}
+
+.byok-left p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.byok-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-shrink: 0;
+}
+
+.byok-prices {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.byok-prices strong {
+  color: #d97757;
+  font-weight: 600;
+}
+
+.byok-prices s {
+  opacity: 0.4;
+  font-size: 13px;
+  margin-left: 4px;
+}
+
+.byok-btn {
+  padding: 10px 20px;
   border-radius: 999px;
   border: 1px solid rgba(217, 119, 87, 0.35);
   background: transparent;
   color: #d97757;
   font-family: inherit;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
+  white-space: nowrap;
   transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-.pricing-unlimited-cta:hover {
-  background: rgba(217, 119, 87, 0.08);
-  border-color: rgba(217, 119, 87, 0.6);
+.byok-btn:hover {
+  background: rgba(217, 119, 87, 0.1);
+  border-color: rgba(217, 119, 87, 0.5);
+}
+
+@media (max-width: 768px) {
+  .byok-banner {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+    padding: 24px 20px;
+  }
+  .byok-left {
+    flex-direction: column;
+    gap: 14px;
+  }
+  .byok-right {
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+  .byok-prices {
+    align-items: center;
+  }
+  .byok-btn {
+    width: 100%;
+  }
 }
 
