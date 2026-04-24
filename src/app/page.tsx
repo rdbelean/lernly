@@ -849,16 +849,17 @@ function BentoFeatures() {
         <div className="ln-stagger mt-14 grid grid-cols-1 gap-4 md:grid-cols-6">
           {/* Card 1 — span 3 */}
           <div className="ln-reveal ln-glass-card p-8 md:col-span-3 md:p-9">
-            <CardEyebrow>Sofort loslegen</CardEyebrow>
-            <CardTitle>Kein Account. Kein Tracking.</CardTitle>
+            <CardEyebrow>Wenn du jetzt anfangen musst</CardEyebrow>
+            <CardTitle>Kein Setup. Kein Login. Keine Ausreden.</CardTitle>
             <CardDesc>
-              Kein Mail-Verifizieren um 2 Uhr nachts. Lade hoch, Paket
-              generieren, fertig. Nichts wird dauerhaft gespeichert.
+              Öffne Lernly, wirf deine PDFs rein, in 2 Minuten hast du ein
+              Paket. Genau in dem Moment, wo du sonst wieder was anderes
+              machen würdest.
             </CardDesc>
             <div className="mt-6 flex flex-wrap gap-2">
-              <span className="ln-mono-tag ln-mono-tag-pill ln-mono-tag-accent">Nur deine Session</span>
-              <span className="ln-mono-tag ln-mono-tag-pill">Kein Speicher</span>
-              <span className="ln-mono-tag ln-mono-tag-pill">0 Tracker</span>
+              <span className="ln-mono-tag ln-mono-tag-pill ln-mono-tag-accent">Ohne Login</span>
+              <span className="ln-mono-tag ln-mono-tag-pill">Ohne Kreditkarte</span>
+              <span className="ln-mono-tag ln-mono-tag-pill">Ohne App-Install</span>
             </div>
           </div>
 
@@ -909,32 +910,33 @@ function BentoFeatures() {
                 <path d="M12 20h.01" />
               </svg>
             </div>
-            <CardTitle className="mt-6">Lernt wo du lernst.</CardTitle>
+            <CardEyebrow>Auch wenn&rsquo;s WLAN streikt</CardEyebrow>
+            <CardTitle className="mt-3">Lernt wo du lernst.</CardTitle>
             <CardDesc>
-              Lade dein Paket als HTML runter. Im Zug, in der Bib, auf dem Klo —
-              läuft ohne Internet.
+              Download als HTML. Läuft im Zug, in der Bib, auf dem Klo —
+              selbst wenn das WLAN streikt.
             </CardDesc>
           </div>
 
           {/* Card 4 — span 2 (mono stats) */}
           <div className="ln-reveal ln-glass-card p-8 md:col-span-2">
-            <CardEyebrow>Keine Datensammlung</CardEyebrow>
-            <CardTitle className="mt-3">Bleibt bei dir.</CardTitle>
+            <CardEyebrow>Nicht alles, nur das Richtige</CardEyebrow>
+            <CardTitle className="mt-3">Was wirklich geprüft wird.</CardTitle>
             <div className="mt-5">
-              <PrivacyRow label="Gespeicherte Dateien" value="0" />
-              <PrivacyRow label="Accounts nötig" value="0" />
-              <PrivacyRow label="Tracker" value="0" />
-              <PrivacyRow label="Cookies" value="1" note="nur session" />
+              <PrivacyRow label="Dein Skript" value="400 Slides" />
+              <PrivacyRow label="Prüfungsrelevant" value="~40" />
+              <PrivacyRow label="Lernly zeigt" value="welche" />
+              <PrivacyRow label="Zeit gespart" value="Stunden" />
             </div>
           </div>
 
           {/* Card 5 — span 2 (preview) */}
           <div className="ln-reveal ln-glass-card p-8 md:col-span-2">
-            <CardEyebrow>Jedes Fach, jede Sprache</CardEyebrow>
+            <CardEyebrow>Skript auf Englisch? Egal.</CardEyebrow>
             <CardTitle className="mt-3">Jedes Fach. Jede Sprache.</CardTitle>
             <CardDesc>
-              BWL, Medizin, Jura, Literatur. Deutsch, Englisch, gemischt.
-              Essay, MC oder mündlich — Lernly liest alles.
+              Skript auf Deutsch, Folien auf Englisch? Egal. Lernly liest
+              alles und baut dein Paket — BWL, Medizin, Jura, was auch immer.
             </CardDesc>
             <div className="mt-5 flex flex-wrap gap-1.5">
               <span className="ln-mono-tag">BWL</span>
@@ -982,8 +984,9 @@ function BentoFeatures() {
                     margin: "6px 0 0",
                   }}
                 >
-                  Keine Kreditkarte. Kein Trial-Countdown. Genug um die nächste
-                  Klausur zu packen — ohne Risiko.
+                  Reicht für deine nächste Klausurenwoche. Keine Kreditkarte,
+                  kein Trial-Countdown. Wenn&rsquo;s nix für dich ist,
+                  verlierst du nur 2 Min Upload-Zeit.
                 </p>
               </div>
             </div>
