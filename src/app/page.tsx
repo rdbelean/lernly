@@ -261,15 +261,10 @@ function Hero(props: HeroProps) {
         </h1>
 
         <p
-          className="ln-reveal mx-auto mt-8 max-w-[680px] text-center leading-[1.4]"
-          style={{
-            color: "rgba(255, 255, 255, 0.72)",
-            fontSize: "clamp(18px, 2.2vw, 22px)",
-          }}
+          className="ln-reveal mx-auto mt-8 max-w-[680px] text-center leading-[1.4] text-white"
+          style={{ fontSize: "clamp(18px, 2.2vw, 22px)" }}
         >
-          <span className="text-white">8 PDFs. 3 Tage. Kein Plan?</span>{" "}
-          Wirf dein Material rein. In 2 Minuten hast du Karteikarten, einen
-          Prüfungssimulator und weißt genau, was du lernen musst.
+          8 PDFs. 3 Tage. Kein Plan.
         </p>
 
         <div className="ln-reveal mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -279,7 +274,7 @@ function Hero(props: HeroProps) {
             className="rounded-full px-7 py-[14px] text-[16px] font-semibold transition hover:bg-white/90"
             style={{ background: "#ffffff", color: "#1a2647" }}
           >
-            Erstes Lernpaket erstellen →
+            Paket erstellen →
           </button>
           <a
             href="#how"
@@ -289,7 +284,7 @@ function Hero(props: HeroProps) {
               borderColor: "rgba(255, 255, 255, 0.12)",
             }}
           >
-            So funktioniert&rsquo;s
+            So geht&rsquo;s
           </a>
         </div>
 
