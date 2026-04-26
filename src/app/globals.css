@@ -162,11 +162,9 @@
   font-weight: 500;
 }
 
-/* Lernly background: flat deep navy with a single subtle hero glow. */
+/* Lernly background: pure flat navy. Visual interest lives in sections, not the bg. */
 .ln-page-bg {
-  background:
-    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(74, 108, 247, 0.22), transparent 75%),
-    #0e1430;
+  background: #0e1430;
   min-height: 100vh;
 }
 
