@@ -24,10 +24,17 @@ export default function SiteNav({ onActivateUpload }: Props) {
       <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between px-6 py-[18px]">
         <a
           href="/"
-          className="flex items-center gap-[10px] text-[20px] font-semibold tracking-[-0.3px] text-white"
+          className="flex items-center gap-3 text-white"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "26px",
+            fontWeight: 700,
+            letterSpacing: "-0.9px",
+            lineHeight: 1,
+          }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/lernly-symbol-transparent.svg" alt="Lernly logo" width={52} height={52} />
+          <img src="/lernly-symbol-transparent.svg" alt="Lernly logo" width={64} height={64} />
           <span>Lernly</span>
         </a>
 

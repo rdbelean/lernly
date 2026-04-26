@@ -2,9 +2,18 @@ export default function SiteFooter() {
   return (
     <footer className="border-t border-white/5 px-6 py-10">
       <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 md:flex-row">
-        <div className="flex items-center gap-2 text-[14px] font-semibold text-white">
+        <div
+          className="flex items-center gap-2.5 text-white"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "16px",
+            fontWeight: 600,
+            letterSpacing: "-0.4px",
+            lineHeight: 1,
+          }}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/lernly-symbol-transparent.svg" alt="Lernly logo" width={36} height={36} />
+          <img src="/lernly-symbol-transparent.svg" alt="Lernly logo" width={40} height={40} />
           <span>Lernly</span>
         </div>
         <div
