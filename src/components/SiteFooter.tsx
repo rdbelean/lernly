@@ -13,7 +13,7 @@ export default function SiteFooter() {
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/lernly-symbol-transparent.svg" alt="Lernly logo" width={40} height={40} />
+          <img src="/lernly-symbol-transparent.svg" alt="Lernly logo" width={30} height={30} />
           <span>Lernly</span>
         </div>
         <div

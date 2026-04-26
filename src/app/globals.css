@@ -14,10 +14,10 @@
   --tracking-hero: -2px;
   --tracking-h2: -1px;
 
-  /* Lernly — muted indigo → deep navy theme */
-  --color-ln-bg-top: #1c2658;
-  --color-ln-bg-mid: #131a44;
-  --color-ln-bg-bot: #0a0f2c;
+  /* Lernly — flat deep navy base */
+  --color-ln-bg-top: #0e1430;
+  --color-ln-bg-mid: #0e1430;
+  --color-ln-bg-bot: #0e1430;
 
   --color-ln-cyan: #5bb8d8;
   --color-ln-sky: #6a95e8;
@@ -36,7 +36,7 @@
   --color-ln-card-border: rgba(255, 255, 255, 0.22);
   --color-ln-card-border-strong: rgba(255, 255, 255, 0.3);
 
-  --color-ln-nav-bg: rgba(10, 15, 44, 0.78);
+  --color-ln-nav-bg: rgba(14, 20, 48, 0.78);
   --color-ln-hero-card-bg: rgba(20, 22, 28, 0.78);
   --color-ln-stage-bg-top: rgba(10, 14, 28, 0.45);
   --color-ln-stage-bg-bot: rgba(10, 14, 28, 0.3);
@@ -162,19 +162,11 @@
   font-weight: 500;
 }
 
-/* Lernly background: muted indigo → deep navy. Calm, not cobalt. */
+/* Lernly background: flat deep navy with a single subtle hero glow. */
 .ln-page-bg {
   background:
-    radial-gradient(circle at 68% 12%, rgba(255, 255, 255, 0.08), transparent 30%),
-    radial-gradient(circle at 18% 0%, rgba(74, 108, 247, 0.28), transparent 38%),
-    linear-gradient(
-      180deg,
-      #2a3a8a 0%,
-      #1a2466 42%,
-      #101638 75%,
-      #080c25 100%
-    );
-  background-attachment: fixed;
+    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(74, 108, 247, 0.22), transparent 75%),
+    #0e1430;
   min-height: 100vh;
 }
 
