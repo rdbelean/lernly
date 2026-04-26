@@ -27,7 +27,7 @@ export default function SiteNav({ onActivateUpload }: Props) {
           className="flex items-center gap-[10px] text-[20px] font-semibold tracking-[-0.3px] text-white"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/lernly-icon-nav.svg" alt="Lernly logo" width={28} height={28} />
+          <img src="/lernly-symbol-transparent.svg" alt="Lernly logo" width={52} height={52} />
           <span>Lernly</span>
         </a>
 

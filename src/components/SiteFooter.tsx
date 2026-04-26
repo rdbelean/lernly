@@ -4,7 +4,7 @@ export default function SiteFooter() {
       <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 md:flex-row">
         <div className="flex items-center gap-2 text-[14px] font-semibold text-white">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/lernly-icon-nav.svg" alt="Lernly logo" width={20} height={20} />
+          <img src="/lernly-symbol-transparent.svg" alt="Lernly logo" width={36} height={36} />
           <span>Lernly</span>
         </div>
         <div
