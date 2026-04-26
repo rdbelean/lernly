@@ -1,37 +1,57 @@
-<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="1024" height="1024">
   <defs>
-    <!-- Background gradient — shifted to indigo to match new site -->
-    <linearGradient id="bgGrad" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#4A6CF7"/>
-      <stop offset="50%" stop-color="#3B5CE0"/>
-      <stop offset="100%" stop-color="#2845B8"/>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2A38E8"/>
+      <stop offset="55%" stop-color="#1421C5"/>
+      <stop offset="100%" stop-color="#0A129E"/>
     </linearGradient>
-    
-    <!-- Star gradient — warm gold/amber -->
-    <linearGradient id="starGrad" x1="340" y1="80" x2="400" y2="180" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#FFD76E"/>
-      <stop offset="100%" stop-color="#F0A830"/>
+
+    <linearGradient id="frontCardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.98"/>
+      <stop offset="100%" stop-color="#DDE2FF" stop-opacity="0.92"/>
     </linearGradient>
+
+    <linearGradient id="backCardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.42"/>
+      <stop offset="100%" stop-color="#9CAAFF" stop-opacity="0.22"/>
+    </linearGradient>
+
+    <filter id="cardShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="18"/>
+      <feOffset dx="0" dy="14"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.38"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
-  
-  <!-- Rounded square background -->
-  <rect width="512" height="512" rx="108" fill="url(#bgGrad)"/>
-  
-  <!-- Three text lines (document icon) -->
-  <!-- Line 1 — top, slightly shorter -->
-  <rect x="120" y="195" width="272" height="32" rx="16" fill="white"/>
-  
-  <!-- Line 2 — middle, widest -->
-  <rect x="120" y="260" width="290" height="32" rx="16" fill="white"/>
-  
-  <!-- Line 3 — bottom, shortest -->
-  <rect x="120" y="325" width="240" height="32" rx="16" fill="white"/>
-  
-  <!-- 4-pointed star (AI sparkle) -->
-  <g transform="translate(370, 130)">
-    <!-- Main star -->
-    <path d="M0,-42 C4,-14 14,-4 42,0 C14,4 4,14 0,42 C-4,14 -14,4 -42,0 C-14,-4 -4,-14 0,-42Z" fill="url(#starGrad)"/>
-    <!-- Small dot top-right of star -->
-    <circle cx="30" cy="-30" r="5" fill="url(#starGrad)"/>
+
+  <!-- Hintergrund -->
+  <rect width="1024" height="1024" rx="230" fill="url(#bgGradient)"/>
+
+  <!-- Komposition zentriert auf (512, 512) -->
+  <!-- Hintere Karte -->
+  <g transform="rotate(-12 460 560)">
+    <rect x="250" y="350" width="420" height="420" rx="72"
+          fill="url(#backCardGradient)"
+          stroke="#FFFFFF" stroke-opacity="0.28" stroke-width="2"/>
+  </g>
+
+  <!-- Vordere Karte -->
+  <g transform="rotate(7 580 480)">
+    <g filter="url(#cardShadow)">
+      <rect x="360" y="260" width="440" height="440" rx="75" fill="url(#frontCardGradient)"/>
+    </g>
+    <rect x="430" y="428" width="300" height="38" rx="19" fill="#5566F5"/>
+    <rect x="430" y="496" width="225" height="38" rx="19" fill="#5566F5"/>
+    <circle cx="718" cy="630" r="44" fill="#5566F5"/>
+    <path d="M 694 630 L 710 647 L 740 616"
+          stroke="#FFFFFF" stroke-width="7"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
   </g>
 </svg>
