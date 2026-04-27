@@ -162,9 +162,20 @@
   font-weight: 500;
 }
 
-/* Lernly background: pure flat navy. Visual interest lives in sections, not the bg. */
+/* Lernly atmosphere: three ambient light sources, all centers off-screen.
+   Viewer sees only the soft falloff into deep navy — no visible edges,
+   no rectangles, no horizon. Studio-lit feel. */
 .ln-page-bg {
-  background: #0e1430;
+  background:
+    /* Indigo brand wash from upper-left, source above viewport */
+    radial-gradient(ellipse 95% 75% at 5% -15%, rgba(74, 100, 220, 0.22), transparent 60%),
+    /* Violet undertone from lower-right, source below viewport — warms scroll */
+    radial-gradient(ellipse 85% 65% at 105% 115%, rgba(140, 130, 220, 0.12), transparent 65%),
+    /* Cyan glint from mid-right, source past right edge — echoes hero glow */
+    radial-gradient(ellipse 60% 50% at 115% 50%, rgba(91, 184, 216, 0.06), transparent 70%),
+    /* Warm-leaning deep navy base */
+    #0e1430;
+  background-attachment: fixed;
   min-height: 100vh;
 }
 
