@@ -3,8 +3,8 @@ import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "Impressum — Lernly",
-  description: "Impressum und Kontaktangaben zu Lernly.",
+  title: "Legal Notice — Lernly",
+  description: "Legal notice and contact details for Lernly.",
 };
 
 const sectionStyle = { marginBottom: "32px" } as const;
@@ -30,30 +30,30 @@ export default function ImpressumPage() {
             className="font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            Impressum
+            Legal Notice
           </h1>
 
           <div className="mt-10">
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>Angaben gemäß § 5 TMG</h2>
+              <h2 style={headingStyle}>Information according to Section 5 TMG</h2>
               <p style={bodyStyle}>
-                {/* TODO: Namen des Betreibers eintragen */}
+                {/* TODO: Add operator name */}
                 [Name]
                 <br />
-                {/* TODO: Straße + Hausnummer eintragen */}
-                [Straße + Hausnummer]
+                {/* TODO: Add street and house number */}
+                [Street + house number]
                 <br />
-                {/* TODO: PLZ + Ort eintragen */}
-                [PLZ + Ort]
+                {/* TODO: Add postal code and city */}
+                [Postal code + city]
                 <br />
-                [Land]
+                [Country]
               </p>
             </section>
 
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>Kontakt</h2>
+              <h2 style={headingStyle}>Contact</h2>
               <p style={bodyStyle}>
-                E-Mail:{" "}
+                Email:{" "}
                 <a
                   href="mailto:kontakt@lernly-app.de"
                   style={{ color: "var(--color-ln-cyan)" }}
@@ -66,22 +66,22 @@ export default function ImpressumPage() {
 
             <section style={sectionStyle}>
               <h2 style={headingStyle}>
-                Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV
+                Responsible for content according to Section 55(2) RStV
               </h2>
               <p style={bodyStyle}>
-                {/* TODO: Namen des inhaltlich Verantwortlichen eintragen */}
+                {/* TODO: Add content owner name */}
                 [Name]
                 <br />
-                {/* TODO: Adresse (wie oben) eintragen */}
-                [Adresse wie oben]
+                {/* TODO: Add address as above */}
+                [Address as above]
               </p>
             </section>
 
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>Streitschlichtung</h2>
+              <h2 style={headingStyle}>Dispute resolution</h2>
               <p style={bodyStyle}>
-                Die Europäische Kommission stellt eine Plattform zur
-                Online-Streitbeilegung (OS) bereit:{" "}
+                The European Commission provides a platform for online dispute
+                resolution (ODR):{" "}
                 <a
                   href="https://ec.europa.eu/consumers/odr/"
                   target="_blank"
@@ -91,32 +91,29 @@ export default function ImpressumPage() {
                 >
                   https://ec.europa.eu/consumers/odr/
                 </a>
-                . Wir sind nicht bereit oder verpflichtet, an
-                Streitbeilegungsverfahren vor einer
-                Verbraucherschlichtungsstelle teilzunehmen.
+                . We are not willing or obliged to participate in dispute
+                resolution proceedings before a consumer arbitration board.
               </p>
             </section>
 
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>Haftung für Inhalte</h2>
+              <h2 style={headingStyle}>Liability for content</h2>
               <p style={bodyStyle}>
-                Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene
-                Inhalte auf diesen Seiten nach den allgemeinen Gesetzen
-                verantwortlich. Nach §§ 8 bis 10 TMG sind wir als
-                Diensteanbieter jedoch nicht verpflichtet, übermittelte oder
-                gespeicherte fremde Informationen zu überwachen oder nach
-                Umständen zu forschen, die auf eine rechtswidrige Tätigkeit
-                hinweisen.
+                As a service provider, we are responsible for our own content
+                on these pages under general law according to Section 7(1) TMG.
+                According to Sections 8 to 10 TMG, however, we are not obliged
+                to monitor transmitted or stored third-party information or to
+                investigate circumstances that indicate illegal activity.
               </p>
             </section>
 
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>Haftung für Links</h2>
+              <h2 style={headingStyle}>Liability for links</h2>
               <p style={bodyStyle}>
-                Unser Angebot enthält Links zu externen Websites Dritter, auf
-                deren Inhalte wir keinen Einfluss haben. Für die Inhalte der
-                verlinkten Seiten ist stets der jeweilige Anbieter oder
-                Betreiber der Seiten verantwortlich.
+                Our offering contains links to external third-party websites
+                over whose content we have no influence. The respective provider
+                or operator of the linked pages is always responsible for their
+                content.
               </p>
             </section>
           </div>

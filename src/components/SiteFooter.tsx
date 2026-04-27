@@ -1,4 +1,28 @@
-export default function SiteFooter() {
+type Language = "en" | "de";
+
+const FOOTER_COPY: Record<
+  Language,
+  {
+    legalNotice: string;
+    privacy: string;
+    contact: string;
+  }
+> = {
+  en: {
+    legalNotice: "Legal notice",
+    privacy: "Privacy",
+    contact: "Contact",
+  },
+  de: {
+    legalNotice: "Impressum",
+    privacy: "Datenschutz",
+    contact: "Kontakt",
+  },
+};
+
+export default function SiteFooter({ language = "en" }: { language?: Language }) {
+  const copy = FOOTER_COPY[language];
+
   return (
     <footer className="border-t border-white/5 px-6 py-10">
       <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 md:flex-row">
@@ -21,16 +45,16 @@ export default function SiteFooter() {
           style={{ color: "var(--color-ln-mute)" }}
         >
           <a href="/impressum" className="transition hover:text-white">
-            Impressum
+            {copy.legalNotice}
           </a>
           <a href="/datenschutz" className="transition hover:text-white">
-            Datenschutz
+            {copy.privacy}
           </a>
           <a
             href="mailto:kontakt@lernly-app.de"
             className="transition hover:text-white"
           >
-            Kontakt
+            {copy.contact}
           </a>
           {/* TODO: Replace # with the real Instagram URL */}
           <a

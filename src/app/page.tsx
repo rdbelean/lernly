@@ -1,7 +1,9 @@
 "use client";
 
 import {
+  createContext,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -22,10 +24,19 @@ import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
 import ClaudeLogo from "@/components/ClaudeLogo";
 
+type Language = "en" | "de";
+
+const LANGUAGE_STORAGE = "lernly-language";
+const LanguageContext = createContext<Language>("en");
+
+function useLanguage() {
+  return useContext(LanguageContext);
+}
+
 const EXAM_OPTIONS: { value: ExamType; label: string; emoji: string }[] = [
   { value: "essay", label: "Essay", emoji: "📝" },
   { value: "multiple_choice", label: "Multiple Choice", emoji: "✅" },
-  { value: "oral", label: "Mündlich", emoji: "🗣" },
+  { value: "oral", label: "Oral", emoji: "🗣" },
   { value: "open_book", label: "Open Book", emoji: "📋" },
 ];
 
@@ -78,6 +89,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [apiKey, setApiKey] = useState<string | null>(null);
   const [isConnectOpen, setConnectOpen] = useState(false);
+  const [language, setLanguage] = useState<Language>("en");
   const resultRef = useRef<HTMLDivElement>(null);
 
   const openConnect = useCallback(() => setConnectOpen(true), []);
@@ -106,15 +118,27 @@ export default function Home() {
     }
     const savedKey = localStorage.getItem(API_KEY_STORAGE);
     if (savedKey) setApiKey(savedKey);
+    const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE);
+    if (savedLanguage === "en" || savedLanguage === "de") {
+      setLanguage(savedLanguage);
+    }
   }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+    localStorage.setItem(LANGUAGE_STORAGE, language);
+  }, [language]);
 
   const onDrop = useCallback((accepted: File[], rejected: FileRejection[]) => {
     setError(null);
     if (rejected.length > 0) {
-      setError(rejected[0].errors[0]?.message ?? "Datei abgelehnt");
+      setError(
+        rejected[0].errors[0]?.message ??
+          (language === "en" ? "File rejected" : "Datei abgelehnt"),
+      );
     }
     setFiles((prev) => [...prev, ...accepted].slice(0, MAX_FILES));
-  }, []);
+  }, [language]);
 
   const removeFile = (i: number) =>
     setFiles((prev) => prev.filter((_, idx) => idx !== i));
@@ -154,7 +178,11 @@ export default function Home() {
       try {
         data = await res.json();
       } catch {
-        throw new Error(`Server antwortete mit Status ${res.status}, aber kein JSON.`);
+        throw new Error(
+          language === "en"
+            ? `Server responded with status ${res.status}, but no JSON.`
+            : `Server antwortete mit Status ${res.status}, aber kein JSON.`,
+        );
       }
 
       if (!res.ok || "error" in data) {
@@ -171,10 +199,18 @@ export default function Home() {
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") {
         setError(
-          "Das hat länger als 4 Minuten gedauert. Versuch's mit weniger oder kleineren Dateien.",
+          language === "en"
+            ? "This took longer than 4 minutes. Try fewer or smaller files."
+            : "Das hat länger als 4 Minuten gedauert. Versuch's mit weniger oder kleineren Dateien.",
         );
       } else {
-        setError(err instanceof Error ? err.message : "Netzwerkfehler");
+        setError(
+          err instanceof Error
+            ? err.message
+            : language === "en"
+              ? "Network error"
+              : "Netzwerkfehler",
+        );
       }
     } finally {
       clearTimeout(timeoutId);
@@ -190,51 +226,57 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-1 flex-col">
-      <SiteNav onActivateUpload={activateUpload} />
-      <main className="flex flex-1 flex-col">
-        <Hero
-          mode={mode}
+    <LanguageContext.Provider value={language}>
+      <div className="flex flex-1 flex-col">
+        <SiteNav
           onActivateUpload={activateUpload}
-          files={files}
-          examType={examType}
-          setExamType={setExamType}
-          removeFile={removeFile}
-          onDrop={onDrop}
-          isGenerating={isGenerating}
-          completed={completed}
-          elapsedSec={elapsedSec}
-          error={error}
-          onGenerate={handleGenerate}
+          language={language}
+          onLanguageChange={setLanguage}
         />
-        <SocialProof />
-        <ShowcaseSection />
-        <ComparisonSection />
-        <ResultPreview />
-        <BentoFeatures />
-        <HowItWorks />
-        <PipelineCta onActivateUpload={activateUpload} />
-        {pack && (
-          <section ref={resultRef} id="result" className="scroll-mt-24">
-            <ResultSection pack={pack} onReset={clearPack} />
-          </section>
+        <main className="flex flex-1 flex-col">
+          <Hero
+            mode={mode}
+            onActivateUpload={activateUpload}
+            files={files}
+            examType={examType}
+            setExamType={setExamType}
+            removeFile={removeFile}
+            onDrop={onDrop}
+            isGenerating={isGenerating}
+            completed={completed}
+            elapsedSec={elapsedSec}
+            error={error}
+            onGenerate={handleGenerate}
+          />
+          <SocialProof />
+          <ShowcaseSection />
+          <ComparisonSection />
+          <ResultPreview />
+          <BentoFeatures />
+          <HowItWorks />
+          <PipelineCta onActivateUpload={activateUpload} />
+          {pack && (
+            <section ref={resultRef} id="result" className="scroll-mt-24">
+              <ResultSection pack={pack} onReset={clearPack} />
+            </section>
+          )}
+          <PricingSection
+            onActivateUpload={activateUpload}
+            onOpenConnect={openConnect}
+          />
+          <FAQSection />
+          <BottomCta />
+        </main>
+        <SiteFooter language={language} />
+        {isConnectOpen && (
+          <ConnectModal
+            apiKey={apiKey}
+            setApiKey={setApiKey}
+            onClose={closeConnect}
+          />
         )}
-        <PricingSection
-          onActivateUpload={activateUpload}
-          onOpenConnect={openConnect}
-        />
-        <FAQSection />
-        <BottomCta />
-      </main>
-      <SiteFooter />
-      {isConnectOpen && (
-        <ConnectModal
-          apiKey={apiKey}
-          setApiKey={setApiKey}
-          onClose={closeConnect}
-        />
-      )}
-    </div>
+      </div>
+    </LanguageContext.Provider>
   );
 }
 
@@ -263,6 +305,8 @@ function formatElapsed(sec: number) {
 
 function Hero(props: HeroProps) {
   const { mode, onActivateUpload } = props;
+  const language = useLanguage();
+  const isEn = language === "en";
   return (
     <section className="relative overflow-hidden px-6 pt-24 pb-28 md:pt-32 md:pb-36">
       <div
@@ -282,9 +326,9 @@ function Hero(props: HeroProps) {
             fontSize: "clamp(48px, 8vw, 96px)",
           }}
         >
-          <span className="block sm:inline">Lade hoch.</span>{" "}
+          <span className="block sm:inline">{isEn ? "Upload." : "Lade hoch."}</span>{" "}
           <span className="block sm:inline" style={{ color: "rgb(255, 255, 255)" }}>
-            Lerne smart.
+            {isEn ? "Study smart." : "Lerne smart."}
           </span>
         </h1>
 
@@ -292,7 +336,7 @@ function Hero(props: HeroProps) {
           className="ln-reveal mx-auto mt-8 max-w-[680px] text-center leading-[1.4] text-white"
           style={{ fontSize: "clamp(18px, 2.2vw, 22px)" }}
         >
-          8 PDFs. 3 Tage. Kein Plan.
+          {isEn ? "8 PDFs. 3 days. No plan." : "8 PDFs. 3 Tage. Kein Plan."}
         </p>
 
         <div className="ln-hero-actions ln-reveal mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -302,7 +346,7 @@ function Hero(props: HeroProps) {
             className="rounded-full px-7 py-[14px] text-[16px] font-semibold transition hover:bg-white/90"
             style={{ background: "#ffffff", color: "#1a2647" }}
           >
-            Paket erstellen →
+            {isEn ? "Create pack →" : "Paket erstellen →"}
           </button>
           <a
             href="#how"
@@ -312,7 +356,7 @@ function Hero(props: HeroProps) {
               borderColor: "rgba(255, 255, 255, 0.12)",
             }}
           >
-            So geht&rsquo;s
+            {isEn ? "How it works" : "So geht's"}
           </a>
         </div>
 
@@ -332,19 +376,19 @@ function Hero(props: HeroProps) {
 
         <div className="ln-reveal mt-8 flex flex-wrap items-center justify-center gap-[14px]">
           <span className="ln-hero-badge" style={{ color: "rgb(111, 199, 227)" }}>
-            ● 2 Min
+            ● {isEn ? "2 min" : "2 Min"}
           </span>
           <span className="ln-hero-badge" style={{ color: "rgb(127, 169, 245)" }}>
-            ● Kein Login
+            ● {isEn ? "No login" : "Kein Login"}
           </span>
           <span className="ln-hero-badge" style={{ color: "rgb(143, 139, 229)" }}>
-            ● 3 Pakete gratis
+            ● {isEn ? "3 free packs" : "3 Pakete gratis"}
           </span>
           <span className="ln-hero-badge" style={{ color: "rgb(178, 156, 240)" }}>
-            ● Jedes Fach
+            ● {isEn ? "Any subject" : "Jedes Fach"}
           </span>
           <span className="ln-hero-badge" style={{ color: "rgb(159, 212, 184)" }}>
-            ● Kostenlos
+            ● {isEn ? "Free" : "Kostenlos"}
           </span>
         </div>
       </div>
@@ -355,27 +399,33 @@ function Hero(props: HeroProps) {
 /* ========== HERO STUDY PACK COCKPIT ========== */
 
 function StudyPackCockpitMockup({ onActivate }: { onActivate: () => void }) {
+  const isEn = useLanguage() === "en";
   return (
     <div className="ln-hero-card ln-cockpit">
       <div className="ln-cockpit-top">
         <div>
           <div className="ln-card-top-status">
             <span className="ln-pulse-dot-green" aria-hidden />
-            <span>Generiert</span>
+            <span>{isEn ? "Generated" : "Generiert"}</span>
           </div>
           <div className="ln-cockpit-title">
-            Scandinavian Leadership · Essay-Prüfung
+            {isEn
+              ? "Scandinavian Leadership · Essay exam"
+              : "Scandinavian Leadership · Essay-Prüfung"}
           </div>
         </div>
         <div className="ln-cockpit-pack-tags">
-          <span>35 Karten</span>
-          <span>3 Essay-Beispiele</span>
+          <span>{isEn ? "35 cards" : "35 Karten"}</span>
+          <span>{isEn ? "3 essay examples" : "3 Essay-Beispiele"}</span>
           <span>Blueprint</span>
         </div>
       </div>
 
       <div className="ln-cockpit-body">
-        <aside className="ln-cockpit-rail" aria-label="Lernpaket Module">
+        <aside
+          className="ln-cockpit-rail"
+          aria-label={isEn ? "Study pack modules" : "Lernpaket Module"}
+        >
           <div className="ln-cockpit-rail-item is-active">
             <span>01</span>
             <strong>Blueprint</strong>
@@ -390,10 +440,15 @@ function StudyPackCockpitMockup({ onActivate }: { onActivate: () => void }) {
           </div>
         </aside>
 
-        <section className="ln-cockpit-main" aria-label="Essay Blueprint Vorschau">
+        <section
+          className="ln-cockpit-main"
+          aria-label={isEn ? "Essay blueprint preview" : "Essay Blueprint Vorschau"}
+        >
           <div className="ln-cockpit-panel-head">
             <span className="ln-section-label">Essay Blueprint</span>
-            <span className="ln-cockpit-mini-pill">~1500 Wörter · 3h</span>
+            <span className="ln-cockpit-mini-pill">
+              {isEn ? "~1500 words · 3h" : "~1500 Wörter · 3h"}
+            </span>
           </div>
 
           <div className="ln-timebar" aria-hidden>
@@ -443,7 +498,10 @@ function StudyPackCockpitMockup({ onActivate }: { onActivate: () => void }) {
           </div>
         </section>
 
-        <aside className="ln-cockpit-drill" aria-label="Deep Drill Vorschau">
+        <aside
+          className="ln-cockpit-drill"
+          aria-label={isEn ? "Deep Drill preview" : "Deep Drill Vorschau"}
+        >
           <div className="ln-cockpit-panel-head">
             <span className="ln-section-label">Deep Drill</span>
             <span className="ln-cockpit-mini-pill">12 / 35</span>
@@ -485,7 +543,7 @@ function StudyPackCockpitMockup({ onActivate }: { onActivate: () => void }) {
         </div>
         <button type="button" onClick={onActivate} className="ln-cockpit-cta">
           <span>✦</span>
-          <span>Jetzt mit meinen PDFs testen</span>
+          <span>{isEn ? "Try it with my PDFs" : "Jetzt mit meinen PDFs testen"}</span>
         </button>
       </div>
     </div>
@@ -506,6 +564,25 @@ function UploadDemo({
   error,
   onGenerate,
 }: HeroProps) {
+  const language = useLanguage();
+  const isEn = language === "en";
+  const examOptions = EXAM_OPTIONS.map((option) => ({
+    ...option,
+    label:
+      option.value === "essay"
+        ? "Essay"
+        : option.value === "multiple_choice"
+          ? isEn
+            ? "Multiple choice"
+            : "Multiple Choice"
+          : option.value === "oral"
+            ? isEn
+              ? "Oral"
+              : "Mündlich"
+            : isEn
+              ? "Open book"
+              : "Open Book",
+  }));
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     maxFiles: MAX_FILES,
@@ -520,13 +597,15 @@ function UploadDemo({
   if (isGenerating) {
     return (
       <div className="ln-hero-card py-[30px] px-[34px]">
-        <GenerationProgress completed={completed} />
+        <GenerationProgress completed={completed} language={language} />
         {elapsedSec > 90 && (
           <p
             className="mt-2 text-center text-[12px]"
             style={{ color: "var(--color-ln-mute)" }}
           >
-            Bei vielen Seiten kann das 2-3 Minuten dauern. Lass den Tab offen. (Läuft seit {formatElapsed(elapsedSec)})
+            {isEn
+              ? `With many pages this can take 2-3 minutes. Keep this tab open. (Running for ${formatElapsed(elapsedSec)})`
+              : `Bei vielen Seiten kann das 2-3 Minuten dauern. Lass den Tab offen. (Läuft seit ${formatElapsed(elapsedSec)})`}
           </p>
         )}
       </div>
@@ -560,10 +639,18 @@ function UploadDemo({
             </svg>
           </div>
           <div className="text-[15px] font-medium text-white">
-            {isDragActive ? "Loslassen!" : "PDFs hier reinwerfen (oder klicken)"}
+            {isDragActive
+              ? isEn
+                ? "Drop them!"
+                : "Loslassen!"
+              : isEn
+                ? "Drop PDFs here (or click)"
+                : "PDFs hier reinwerfen (oder klicken)"}
           </div>
           <div className="text-[12px]" style={{ color: "var(--color-ln-mute)" }}>
-            PDF · TXT · MD · bis zu {MAX_FILES} Dateien
+            {isEn
+              ? `PDF · TXT · MD · up to ${MAX_FILES} files`
+              : `PDF · TXT · MD · bis zu ${MAX_FILES} Dateien`}
           </div>
         </div>
       </div>
@@ -584,7 +671,7 @@ function UploadDemo({
                   removeFile(i);
                 }}
                 className="ml-1 text-white/50 transition hover:text-white"
-                aria-label="Entfernen"
+                aria-label={isEn ? "Remove" : "Entfernen"}
               >
                 ×
               </button>
@@ -594,7 +681,7 @@ function UploadDemo({
       )}
 
       <div className="mt-5 flex flex-wrap gap-1.5 rounded-xl border border-white/10 bg-black/20 p-1.5">
-        {EXAM_OPTIONS.map((opt) => {
+        {examOptions.map((opt) => {
           const active = examType === opt.value;
           return (
             <button
@@ -646,7 +733,7 @@ function UploadDemo({
               opacity: files.length === 0 ? 0.4 : 1,
             }}
           >
-            ↻ Erneut versuchen
+            ↻ {isEn ? "Try again" : "Erneut versuchen"}
           </button>
         </div>
       )}
@@ -657,14 +744,18 @@ function UploadDemo({
         className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 text-[15px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90 disabled:cursor-not-allowed disabled:bg-white/20 disabled:text-white/40"
       >
         <span>✦</span>
-        <span>Paket erstellen (ca. 2 Min)</span>
+        <span>
+          {isEn ? "Create pack (about 2 min)" : "Paket erstellen (ca. 2 Min)"}
+        </span>
       </button>
 
       <p
         className="mt-3 text-center text-[12px]"
         style={{ color: "var(--color-ln-mute)" }}
       >
-        Kostenlos · Kein Login · Wird nicht dauerhaft gespeichert
+        {isEn
+          ? "Free · No login · Not stored permanently"
+          : "Kostenlos · Kein Login · Wird nicht dauerhaft gespeichert"}
       </p>
     </div>
   );
@@ -679,7 +770,7 @@ type ShowcaseItem = {
   outputs: string[];
 };
 
-const SHOWCASE: ShowcaseItem[] = [
+const SHOWCASE_DE: ShowcaseItem[] = [
   {
     badge: "BWL",
     context: "400 Slides · Strategisches Management",
@@ -700,25 +791,50 @@ const SHOWCASE: ShowcaseItem[] = [
   },
 ];
 
+const SHOWCASE_EN: ShowcaseItem[] = [
+  {
+    badge: "BUS",
+    context: "400 slides · Strategic Management",
+    result: "Porter, SWOT, BCG prioritized. Essay plan + 38 cards ready.",
+    outputs: ["38 cards", "Essay plan", "12 quiz"],
+  },
+  {
+    badge: "MED",
+    context: "Anatomy II · Multiple choice",
+    result: "Origin, insertion, innervation as cards. 15 MC questions included.",
+    outputs: ["42 cards", "15 MC questions", "Feedback"],
+  },
+  {
+    badge: "LAW",
+    context: "Constitutional Law I · Case exam",
+    result: "34 definitions sorted. 12 cases with exam schema to practice.",
+    outputs: ["34 definitions", "12 cases", "Schema"],
+  },
+];
+
 function ShowcaseSection() {
+  const isEn = useLanguage() === "en";
+  const showcase = isEn ? SHOWCASE_EN : SHOWCASE_DE;
   return (
     <section className="px-6 py-24 md:py-28">
       <div className="mx-auto max-w-[1200px]">
         <div className="ln-reveal">
-          <span className="ln-section-label">Vor deinem Stoffberg</span>
+          <span className="ln-section-label">
+            {isEn ? "Before the material mountain" : "Vor deinem Stoffberg"}
+          </span>
           <h2
             className="mt-4 max-w-3xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            Zu viel Material. Null Plan.{" "}
+            {isEn ? "Too much material. Zero plan." : "Zu viel Material. Null Plan."}{" "}
             <span className="lernly-italic" style={{ color: "var(--color-ln-ink-soft)" }}>
-              Paket in 2 Minuten.
+              {isEn ? "A pack in 2 minutes." : "Paket in 2 Minuten."}
             </span>
           </h2>
         </div>
 
         <div className="ln-stagger mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
-          {SHOWCASE.map((item, idx) => (
+          {showcase.map((item, idx) => (
             <ShowcaseCard key={item.badge} item={item} waveSeed={idx} />
           ))}
         </div>
@@ -734,6 +850,7 @@ function ShowcaseCard({
   item: ShowcaseItem;
   waveSeed: number;
 }) {
+  const isEn = useLanguage() === "en";
   return (
     <div
       className="ln-reveal flex min-h-[280px] flex-col justify-between rounded-[22px] border p-7"
@@ -750,7 +867,7 @@ function ShowcaseCard({
           style={{ color: "var(--color-ln-ink-soft)" }}
         >
           <span className="ln-pulse-dot-green" aria-hidden />
-          <span>Generiert</span>
+          <span>{isEn ? "Generated" : "Generiert"}</span>
         </div>
         <span
           className="rounded-lg border px-2.5 py-1 font-mono text-[12px] font-semibold"
@@ -796,18 +913,21 @@ function ShowcaseCard({
 /* ========== COMPARISON ========== */
 
 function ComparisonSection() {
+  const isEn = useLanguage() === "en";
   return (
     <section className="px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[1200px]">
         <div className="ln-reveal">
-          <span className="ln-section-label">Warum nicht einfach ChatGPT?</span>
+          <span className="ln-section-label">
+            {isEn ? "Why not just ChatGPT?" : "Warum nicht einfach ChatGPT?"}
+          </span>
           <h2
             className="mt-4 max-w-3xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            ChatGPT macht Text.{" "}
+            {isEn ? "ChatGPT makes text." : "ChatGPT macht Text."}{" "}
             <span className="lernly-italic" style={{ color: "var(--color-ln-ink-soft)" }}>
-              Lernly macht Training.
+              {isEn ? "Lernly makes training." : "Lernly macht Training."}
             </span>
           </h2>
         </div>
@@ -815,29 +935,35 @@ function ComparisonSection() {
         <div className="ln-stagger mt-12 grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="ln-reveal ln-comparison-card is-muted">
             <div className="ln-section-label" style={{ fontSize: 11, letterSpacing: "2.2px" }}>
-              Noch eine Zusammenfassung
+              {isEn ? "Another summary" : "Noch eine Zusammenfassung"}
             </div>
             <h3 className="mt-4 text-[26px] font-semibold leading-tight tracking-[-0.4px] text-white">
-              2000 Wörter mehr. Und wieder musst du selbst planen.
+              {isEn
+                ? "2000 more words. And you still have to plan the studying."
+                : "2000 Wörter mehr. Und wieder musst du selbst planen."}
             </h3>
             <div className="mt-8 space-y-3">
-              <ComparisonRow label="Output" value="Textwand" tone="muted" />
-              <ComparisonRow label="Nächster Schritt" value="Unklar" tone="muted" />
-              <ComparisonRow label="Lernen" value="Lesen und hoffen" tone="muted" />
+              <ComparisonRow label="Output" value={isEn ? "Wall of text" : "Textwand"} tone="muted" />
+              <ComparisonRow label={isEn ? "Next step" : "Nächster Schritt"} value={isEn ? "Unclear" : "Unklar"} tone="muted" />
+              <ComparisonRow label={isEn ? "Studying" : "Lernen"} value={isEn ? "Read and hope" : "Lesen und hoffen"} tone="muted" />
             </div>
           </div>
 
           <div className="ln-reveal ln-comparison-card is-active">
             <div className="ln-section-label" style={{ fontSize: 11, letterSpacing: "2.2px", color: "var(--color-ln-cyan)" }}>
-              Karteikarten, Simulator, Blueprint
+              {isEn
+                ? "Flashcards, simulator, blueprint"
+                : "Karteikarten, Simulator, Blueprint"}
             </div>
             <h3 className="mt-4 text-[26px] font-semibold leading-tight tracking-[-0.4px] text-white">
-              Ein Paket, das dich direkt abfragt.
+              {isEn
+                ? "A pack that starts testing you immediately."
+                : "Ein Paket, das dich direkt abfragt."}
             </h3>
             <div className="mt-8 space-y-3">
-              <ComparisonRow label="Output" value="Aktive Übungen" tone="active" />
-              <ComparisonRow label="Nächster Schritt" value="Erste Karte flippen" tone="active" />
-              <ComparisonRow label="Lernen" value="Testen, merken, wiederholen" tone="active" />
+              <ComparisonRow label="Output" value={isEn ? "Active drills" : "Aktive Übungen"} tone="active" />
+              <ComparisonRow label={isEn ? "Next step" : "Nächster Schritt"} value={isEn ? "Flip the first card" : "Erste Karte flippen"} tone="active" />
+              <ComparisonRow label={isEn ? "Studying" : "Lernen"} value={isEn ? "Test, remember, repeat" : "Testen, merken, wiederholen"} tone="active" />
             </div>
           </div>
         </div>
@@ -891,39 +1017,56 @@ function Waveform({ seed }: { seed: number }) {
 /* ========== BENTO FEATURES ========== */
 
 function BentoFeatures() {
+  const isEn = useLanguage() === "en";
   return (
     <section id="features" className="scroll-mt-24 px-6 py-24 md:py-32">
       <div className="mx-auto max-w-[1200px]">
         <div className="ln-reveal">
-          <span className="ln-section-label">Warum Lernly</span>
+          <span className="ln-section-label">
+            {isEn ? "Why Lernly" : "Warum Lernly"}
+          </span>
           <h2
             className="mt-4 max-w-2xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            Schluss mit Durchscrollen und Hoffen.
+            {isEn
+              ? "Stop scrolling and hoping."
+              : "Schluss mit Durchscrollen und Hoffen."}
           </h2>
         </div>
 
         <div className="ln-stagger mt-14 grid grid-cols-1 gap-4 md:grid-cols-6">
           {/* Card 1 — span 3 */}
           <div className="ln-reveal ln-glass-card p-8 md:col-span-3 md:p-9">
-            <CardEyebrow>Wenn du jetzt anfangen musst</CardEyebrow>
-            <CardTitle>Kein Setup. Kein Login. Keine Ausreden.</CardTitle>
+            <CardEyebrow>
+              {isEn ? "When you have to start now" : "Wenn du jetzt anfangen musst"}
+            </CardEyebrow>
+            <CardTitle>
+              {isEn ? "No setup. No login. No excuses." : "Kein Setup. Kein Login. Keine Ausreden."}
+            </CardTitle>
             <CardDesc>
-              Öffne Lernly, wirf deine PDFs rein, in 2 Minuten hast du ein
-              Paket. Genau in dem Moment, wo du sonst wieder was anderes
-              machen würdest.
+              {isEn
+                ? "Open Lernly, drop in your PDFs, and 2 minutes later you have a pack. Exactly when you would normally drift into something else."
+                : "Öffne Lernly, wirf deine PDFs rein, in 2 Minuten hast du ein Paket. Genau in dem Moment, wo du sonst wieder was anderes machen würdest."}
             </CardDesc>
             <div className="mt-6 flex flex-wrap gap-2">
-              <span className="ln-mono-tag ln-mono-tag-pill ln-mono-tag-accent">Ohne Login</span>
-              <span className="ln-mono-tag ln-mono-tag-pill">Ohne Kreditkarte</span>
-              <span className="ln-mono-tag ln-mono-tag-pill">Ohne App-Install</span>
+              <span className="ln-mono-tag ln-mono-tag-pill ln-mono-tag-accent">
+                {isEn ? "No login" : "Ohne Login"}
+              </span>
+              <span className="ln-mono-tag ln-mono-tag-pill">
+                {isEn ? "No credit card" : "Ohne Kreditkarte"}
+              </span>
+              <span className="ln-mono-tag ln-mono-tag-pill">
+                {isEn ? "No app install" : "Ohne App-Install"}
+              </span>
             </div>
           </div>
 
           {/* Card 2 — span 3 (big stat) */}
           <div className="ln-reveal ln-glass-card relative overflow-hidden p-8 md:col-span-3 md:p-9">
-            <CardEyebrow>Schluss mit Karten schreiben</CardEyebrow>
+            <CardEyebrow>
+              {isEn ? "Stop writing cards by hand" : "Schluss mit Karten schreiben"}
+            </CardEyebrow>
             <div className="mt-8 flex items-end gap-3">
               <div
                 className="ln-stat-gradient-blue font-bold leading-none"
@@ -938,15 +1081,18 @@ function BentoFeatures() {
                 className="pb-2 text-[14px]"
                 style={{ color: "var(--color-ln-mute)" }}
               >
-                Sek / Fach
+                {isEn ? "sec / subject" : "Sek / Fach"}
               </div>
             </div>
             <CardTitle className="mt-6">
-              30 Karten in der Zeit eines Kaffees.
+              {isEn
+                ? "30 cards in the time it takes to make coffee."
+                : "30 Karten in der Zeit eines Kaffees."}
             </CardTitle>
             <CardDesc>
-              Was dich sonst einen Abend kostet, macht Lernly bevor dein Kaffee
-              kalt ist. Karteikarten, Blueprint, Simulator — fertig.
+              {isEn
+                ? "What usually costs you an evening, Lernly does before your coffee gets cold. Flashcards, blueprint, simulator — done."
+                : "Was dich sonst einen Abend kostet, macht Lernly bevor dein Kaffee kalt ist. Karteikarten, Blueprint, Simulator — fertig."}
             </CardDesc>
             <WaveBars className="mt-6" />
           </div>
@@ -968,40 +1114,54 @@ function BentoFeatures() {
                 <path d="M12 20h.01" />
               </svg>
             </div>
-            <CardEyebrow>Auch wenn&rsquo;s WLAN streikt</CardEyebrow>
-            <CardTitle className="mt-3">Lernt wo du lernst.</CardTitle>
+            <CardEyebrow>
+              {isEn ? "Even when Wi-Fi gives up" : "Auch wenn's WLAN streikt"}
+            </CardEyebrow>
+            <CardTitle className="mt-3">
+              {isEn ? "Studies where you study." : "Lernt wo du lernst."}
+            </CardTitle>
             <CardDesc>
-              Download als HTML. Läuft im Zug, in der Bib, auf dem Klo —
-              selbst wenn das WLAN streikt.
+              {isEn
+                ? "Download as HTML. Runs on the train, in the library, wherever you end up studying — even without Wi-Fi."
+                : "Download als HTML. Läuft im Zug, in der Bib, auf dem Klo — selbst wenn das WLAN streikt."}
             </CardDesc>
           </div>
 
           {/* Card 4 — span 2 (mono stats) */}
           <div className="ln-reveal ln-glass-card p-8 md:col-span-2">
-            <CardEyebrow>Nicht alles, nur das Richtige</CardEyebrow>
-            <CardTitle className="mt-3">Was wirklich geprüft wird.</CardTitle>
+            <CardEyebrow>
+              {isEn ? "Not everything, just what matters" : "Nicht alles, nur das Richtige"}
+            </CardEyebrow>
+            <CardTitle className="mt-3">
+              {isEn ? "What actually gets tested." : "Was wirklich geprüft wird."}
+            </CardTitle>
             <div className="mt-5">
-              <PrivacyRow label="Dein Skript" value="400 Slides" />
-              <PrivacyRow label="Prüfungsrelevant" value="~40" />
-              <PrivacyRow label="Lernly zeigt" value="welche" />
-              <PrivacyRow label="Zeit gespart" value="Stunden" />
+              <PrivacyRow label={isEn ? "Your material" : "Dein Skript"} value="400 slides" />
+              <PrivacyRow label={isEn ? "Exam-relevant" : "Prüfungsrelevant"} value="~40" />
+              <PrivacyRow label={isEn ? "Lernly shows" : "Lernly zeigt"} value={isEn ? "which" : "welche"} />
+              <PrivacyRow label={isEn ? "Time saved" : "Zeit gespart"} value={isEn ? "hours" : "Stunden"} />
             </div>
           </div>
 
           {/* Card 5 — span 2 (preview) */}
           <div className="ln-reveal ln-glass-card p-8 md:col-span-2">
-            <CardEyebrow>Skript auf Englisch? Egal.</CardEyebrow>
-            <CardTitle className="mt-3">Jedes Fach. Jede Sprache.</CardTitle>
+            <CardEyebrow>
+              {isEn ? "Slides in German? No problem." : "Skript auf Englisch? Egal."}
+            </CardEyebrow>
+            <CardTitle className="mt-3">
+              {isEn ? "Any subject. Any language." : "Jedes Fach. Jede Sprache."}
+            </CardTitle>
             <CardDesc>
-              Skript auf Deutsch, Folien auf Englisch? Egal. Lernly liest
-              alles und baut dein Paket — BWL, Medizin, Jura, was auch immer.
+              {isEn
+                ? "German script, English slides? No problem. Lernly reads it all and builds your pack — business, medicine, law, whatever you study."
+                : "Skript auf Deutsch, Folien auf Englisch? Egal. Lernly liest alles und baut dein Paket — BWL, Medizin, Jura, was auch immer."}
             </CardDesc>
             <div className="mt-5 flex flex-wrap gap-1.5">
-              <span className="ln-mono-tag">BWL</span>
-              <span className="ln-mono-tag">Medizin</span>
-              <span className="ln-mono-tag">Jura</span>
+              <span className="ln-mono-tag">{isEn ? "Business" : "BWL"}</span>
+              <span className="ln-mono-tag">{isEn ? "Medicine" : "Medizin"}</span>
+              <span className="ln-mono-tag">{isEn ? "Law" : "Jura"}</span>
               <span className="ln-mono-tag">DE/EN</span>
-              <span className="ln-mono-tag">+alle</span>
+              <span className="ln-mono-tag">{isEn ? "+all" : "+alle"}</span>
             </div>
           </div>
 
@@ -1031,7 +1191,7 @@ function BentoFeatures() {
                     margin: 0,
                   }}
                 >
-                  3 Lernpakete gratis. Kein Abo.
+                  {isEn ? "3 study packs free. No subscription." : "3 Lernpakete gratis. Kein Abo."}
                 </h3>
                 <p
                   style={{
@@ -1042,8 +1202,9 @@ function BentoFeatures() {
                     margin: "6px 0 0",
                   }}
                 >
-                  Reicht für deine nächste Klausurenwoche. Keine Kreditkarte,
-                  kein Trial-Countdown.
+                  {isEn
+                    ? "Enough for your next exam week. No credit card, no trial countdown."
+                    : "Reicht für deine nächste Klausurenwoche. Keine Kreditkarte, kein Trial-Countdown."}
                 </p>
               </div>
             </div>
@@ -1147,36 +1308,57 @@ function WaveBars({ className = "" }: { className?: string }) {
 /* ========== HOW IT WORKS (pipeline) ========== */
 
 function HowItWorks() {
-  const steps = [
-    {
-      label: "Schritt 1",
-      title: "Reinwerfen",
-      desc: "8 PDFs offen? Wirf sie alle rein — Slides, Mitschriften, Skripte. Lernly liest alles, du musst nichts sortieren.",
-    },
-    {
-      label: "Schritt 2",
-      title: "Bauen",
-      desc: "Keine Textwand wie bei ChatGPT. Kein weiteres PDF. Ein fertiges Lernsystem: Karteikarten, Quiz, Essay-Blueprint — alles interaktiv.",
-    },
-    {
-      label: "Schritt 3",
-      title: "Bestehen",
-      desc: "Flippen, testen, wiederholen — bis es sitzt. Dann gehst du in die Klausur und weißt: du hast das Richtige gelernt.",
-    },
-  ];
+  const isEn = useLanguage() === "en";
+  const steps = isEn
+    ? [
+        {
+          label: "Step 1",
+          title: "Drop it in",
+          desc: "8 PDFs open? Drop them all in — slides, notes, scripts. Lernly reads everything, you do not have to sort it first.",
+        },
+        {
+          label: "Step 2",
+          title: "Build",
+          desc: "No ChatGPT-style wall of text. No extra PDF. A finished study system: flashcards, quiz, essay blueprint — all interactive.",
+        },
+        {
+          label: "Step 3",
+          title: "Pass",
+          desc: "Flip, test, repeat — until it sticks. Then you walk into the exam knowing you studied the right things.",
+        },
+      ]
+    : [
+        {
+          label: "Schritt 1",
+          title: "Reinwerfen",
+          desc: "8 PDFs offen? Wirf sie alle rein — Slides, Mitschriften, Skripte. Lernly liest alles, du musst nichts sortieren.",
+        },
+        {
+          label: "Schritt 2",
+          title: "Bauen",
+          desc: "Keine Textwand wie bei ChatGPT. Kein weiteres PDF. Ein fertiges Lernsystem: Karteikarten, Quiz, Essay-Blueprint — alles interaktiv.",
+        },
+        {
+          label: "Schritt 3",
+          title: "Bestehen",
+          desc: "Flippen, testen, wiederholen — bis es sitzt. Dann gehst du in die Klausur und weißt: du hast das Richtige gelernt.",
+        },
+      ];
 
   return (
     <section id="how" className="scroll-mt-24 px-6 py-24 md:py-32">
       <div className="mx-auto max-w-[1200px]">
         <div className="ln-reveal">
-          <span className="ln-section-label">Vom Chaos zur Prüfung</span>
+          <span className="ln-section-label">
+            {isEn ? "From chaos to exam-ready" : "Vom Chaos zur Prüfung"}
+          </span>
           <h2
             className="mt-4 max-w-2xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            Vom Chaos zum Plan.{" "}
+            {isEn ? "From chaos to a plan." : "Vom Chaos zum Plan."}{" "}
             <span className="lernly-italic" style={{ color: "var(--color-ln-ink-soft)" }}>
-              In drei Schritten.
+              {isEn ? "In three steps." : "In drei Schritten."}
             </span>
           </h2>
         </div>
@@ -1192,15 +1374,18 @@ function HowItWorks() {
         </div>
 
         <p className="ln-reveal ln-pipeline-caption">
-          Aus deinem Material, für deine Prüfung. In 2 Minuten fertig —
-          gebaut mit der{" "}
+          {isEn
+            ? "From your material, for your exam. Ready in 2 minutes — built with the "
+            : "Aus deinem Material, für deine Prüfung. In 2 Minuten fertig — gebaut mit der "}
           <a
             href="https://www.anthropic.com/claude"
             target="_blank"
             rel="noopener noreferrer"
             className="ln-accent-link"
           >
-            KI, die dein Material wirklich versteht
+            {isEn
+              ? "AI that actually understands your material"
+              : "KI, die dein Material wirklich versteht"}
           </a>
           .
         </p>
@@ -1221,13 +1406,27 @@ const RESULT_TABS: { id: ResultTab; label: string; emoji: string }[] = [
 
 function ResultSection({ pack, onReset }: { pack: StudyPack; onReset: () => void }) {
   const [tab, setTab] = useState<ResultTab>("flashcards");
+  const isEn = useLanguage() === "en";
+  const tabs = RESULT_TABS.map((item) => ({
+    ...item,
+    label:
+      item.id === "flashcards"
+        ? isEn
+          ? "Flashcards"
+          : "Karteikarten"
+        : item.id === "overview"
+          ? isEn
+            ? "Overview"
+            : "Übersicht"
+          : item.label,
+  }));
   return (
     <div className="px-6 py-20 md:py-24">
       <div className="mx-auto max-w-[920px]">
         <div className="flex items-start justify-between gap-4">
           <div>
             <span className="ln-section-label" style={{ color: "var(--color-ln-sage)" }}>
-              ✓ Dein Lernpaket
+              ✓ {isEn ? "Your study pack" : "Dein Lernpaket"}
             </span>
             <h2
               className="mt-3 font-bold leading-[1.05] tracking-[-1.5px] text-white"
@@ -1236,13 +1435,18 @@ function ResultSection({ pack, onReset }: { pack: StudyPack; onReset: () => void
               {pack.courseTitle}
             </h2>
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="ln-mono-tag">{pack.flashcards.length} Karten</span>
               <span className="ln-mono-tag">
-                {pack.overview.topics.reduce((n, t) => n + t.concepts.length, 0)} Konzepte
+                {pack.flashcards.length} {isEn ? "cards" : "Karten"}
+              </span>
+              <span className="ln-mono-tag">
+                {pack.overview.topics.reduce((n, t) => n + t.concepts.length, 0)}{" "}
+                {isEn ? "concepts" : "Konzepte"}
               </span>
               <span className="ln-mono-tag">{pack.simulator.questions.length} Quiz</span>
               <span className="ln-mono-tag">
-                {pack.essayBlueprint.parts.length}-teiliger Blueprint
+                {isEn
+                  ? `${pack.essayBlueprint.parts.length}-part blueprint`
+                  : `${pack.essayBlueprint.parts.length}-teiliger Blueprint`}
               </span>
             </div>
           </div>
@@ -1250,13 +1454,13 @@ function ResultSection({ pack, onReset }: { pack: StudyPack; onReset: () => void
             onClick={onReset}
             className="text-[13px] text-white/60 transition hover:text-white"
           >
-            Neu starten
+            {isEn ? "Start over" : "Neu starten"}
           </button>
         </div>
 
         <div className="ln-glass-card mt-10 overflow-hidden">
           <div className="flex border-b border-white/10 px-4 md:px-8">
-            {RESULT_TABS.map((t) => {
+            {tabs.map((t) => {
               const active = tab === t.id;
               return (
                 <button
@@ -1295,6 +1499,7 @@ function ResultSection({ pack, onReset }: { pack: StudyPack; onReset: () => void
 type CardStatus = "new" | "again" | "almost" | "known";
 
 function FlashcardDeck({ cards }: { cards: Flashcard[] }) {
+  const isEn = useLanguage() === "en";
   const [statuses, setStatuses] = useState<Record<string, CardStatus>>(() => {
     const init: Record<string, CardStatus> = {};
     for (const c of cards) init[c.id] = "new";
@@ -1338,10 +1543,12 @@ function FlashcardDeck({ cards }: { cards: Flashcard[] }) {
       <div className="flex flex-col items-center gap-5 py-10 text-center">
         <div className="text-[44px]">🎉</div>
         <h3 className="text-[24px] font-semibold tracking-[-0.4px] text-white">
-          Durch!
+          {isEn ? "Done!" : "Durch!"}
         </h3>
         <p className="text-[14px]" style={{ color: "var(--color-ln-mute)" }}>
-          {knownCount} von {cards.length} Karten sitzen.
+          {isEn
+            ? `${knownCount} of ${cards.length} cards are solid.`
+            : `${knownCount} von ${cards.length} Karten sitzen.`}
         </p>
         <div className="flex flex-wrap justify-center gap-2">
           {wrong > 0 && (
@@ -1349,14 +1556,14 @@ function FlashcardDeck({ cards }: { cards: Flashcard[] }) {
               onClick={() => restart("wrong")}
               className="rounded-lg bg-white px-4 py-2 text-[13px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
             >
-              Nur falsche wiederholen ({wrong})
+              {isEn ? `Review missed only (${wrong})` : `Nur falsche wiederholen (${wrong})`}
             </button>
           )}
           <button
             onClick={() => restart("all")}
             className="rounded-lg border border-white/20 bg-transparent px-4 py-2 text-[13px] font-medium text-white transition hover:bg-white/5"
           >
-            Alle nochmal
+            {isEn ? "All again" : "Alle nochmal"}
           </button>
         </div>
       </div>
@@ -1393,7 +1600,7 @@ function FlashcardDeck({ cards }: { cards: Flashcard[] }) {
             className="text-[11px] font-medium uppercase tracking-[2px]"
             style={{ color: "var(--color-ln-mute)" }}
           >
-            {flipped ? "Antwort" : "Frage"}
+            {flipped ? (isEn ? "Answer" : "Antwort") : isEn ? "Question" : "Frage"}
           </div>
           {flipped ? (
             <div
@@ -1407,14 +1614,14 @@ function FlashcardDeck({ cards }: { cards: Flashcard[] }) {
           )}
         </div>
         <div className="mt-5 text-[11px]" style={{ color: "var(--color-ln-mute)" }}>
-          Klicken zum Umdrehen
+          {isEn ? "Click to flip" : "Klicken zum Umdrehen"}
         </div>
       </button>
 
       <div className="mt-4 grid grid-cols-3 gap-2">
-        <RateButton emoji="😕" label="Nochmal" tone="rose" disabled={!flipped} onClick={() => rate("again")} />
-        <RateButton emoji="🤔" label="Fast" tone="amber" disabled={!flipped} onClick={() => rate("almost")} />
-        <RateButton emoji="✅" label="Kann ich" tone="sage" disabled={!flipped} onClick={() => rate("known")} />
+        <RateButton emoji="😕" label={isEn ? "Again" : "Nochmal"} tone="rose" disabled={!flipped} onClick={() => rate("again")} />
+        <RateButton emoji="🤔" label={isEn ? "Almost" : "Fast"} tone="amber" disabled={!flipped} onClick={() => rate("almost")} />
+        <RateButton emoji="✅" label={isEn ? "Got it" : "Kann ich"} tone="sage" disabled={!flipped} onClick={() => rate("known")} />
       </div>
     </div>
   );
@@ -1457,11 +1664,14 @@ function RateButton({
 /* ========== ESSAY BLUEPRINT ========== */
 
 function EssayBlueprintView({ blueprint }: { blueprint: StudyPack["essayBlueprint"] }) {
+  const isEn = useLanguage() === "en";
   const [openPart, setOpenPart] = useState(0);
   return (
     <div>
       <div className="flex flex-wrap gap-2">
-        <span className="ln-mono-tag">{blueprint.totalWords} Wörter</span>
+        <span className="ln-mono-tag">
+          {blueprint.totalWords} {isEn ? "words" : "Wörter"}
+        </span>
         <span className="ln-mono-tag">{blueprint.timeMinutes} min</span>
       </div>
 
@@ -1482,7 +1692,7 @@ function EssayBlueprintView({ blueprint }: { blueprint: StudyPack["essayBlueprin
                     {part.title}
                   </div>
                   <div className="text-[12px]" style={{ color: "var(--color-ln-mute)" }}>
-                    ~{part.words} Wörter · {part.minutes} min
+                    ~{part.words} {isEn ? "words" : "Wörter"} · {part.minutes} min
                   </div>
                 </div>
                 <span style={{ color: "var(--color-ln-mute)" }}>{open ? "–" : "+"}</span>
@@ -1530,7 +1740,9 @@ function EssayBlueprintView({ blueprint }: { blueprint: StudyPack["essayBlueprin
 
       {blueprint.checklist.length > 0 && (
         <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-5">
-          <div className="text-[13px] font-medium text-white">Checkliste</div>
+          <div className="text-[13px] font-medium text-white">
+            {isEn ? "Checklist" : "Checkliste"}
+          </div>
           <ul className="mt-3 space-y-1.5">
             {blueprint.checklist.map((item) => (
               <li
@@ -1552,10 +1764,11 @@ function EssayBlueprintView({ blueprint }: { blueprint: StudyPack["essayBlueprin
 /* ========== OVERVIEW ========== */
 
 function OverviewView({ overview }: { overview: StudyPack["overview"] }) {
+  const isEn = useLanguage() === "en";
   if (overview.topics.length === 0) {
     return (
       <p className="text-[14px]" style={{ color: "var(--color-ln-mute)" }}>
-        Keine Übersicht verfügbar.
+        {isEn ? "No overview available." : "Keine Übersicht verfügbar."}
       </p>
     );
   }
@@ -1630,6 +1843,7 @@ function OverviewView({ overview }: { overview: StudyPack["overview"] }) {
 /* ========== SIMULATOR ========== */
 
 function ExamSimulator({ questions }: { questions: SimulatorQuestion[] }) {
+  const isEn = useLanguage() === "en";
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<(number | null)[]>(() =>
     new Array(questions.length).fill(null),
@@ -1646,10 +1860,12 @@ function ExamSimulator({ questions }: { questions: SimulatorQuestion[] }) {
       <div className="flex flex-col items-center gap-5 py-10 text-center">
         <div className="text-[44px]">🏁</div>
         <h3 className="text-[24px] font-semibold tracking-[-0.4px] text-white">
-          Fertig
+          {isEn ? "Finished" : "Fertig"}
         </h3>
         <p className="text-[14px]" style={{ color: "var(--color-ln-mute)" }}>
-          {correct} von {questions.length} richtig.
+          {isEn
+            ? `${correct} of ${questions.length} correct.`
+            : `${correct} von ${questions.length} richtig.`}
         </p>
         <button
           onClick={() => {
@@ -1659,7 +1875,7 @@ function ExamSimulator({ questions }: { questions: SimulatorQuestion[] }) {
           }}
           className="rounded-lg bg-white px-4 py-2 text-[13px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
         >
-          Nochmal starten
+          {isEn ? "Start again" : "Nochmal starten"}
         </button>
       </div>
     );
@@ -1678,7 +1894,7 @@ function ExamSimulator({ questions }: { questions: SimulatorQuestion[] }) {
   return (
     <div>
       <div className="text-[12px]" style={{ color: "var(--color-ln-mute)" }}>
-        Frage {index + 1} / {questions.length}
+        {isEn ? "Question" : "Frage"} {index + 1} / {questions.length}
       </div>
 
       {q.scenario && (
@@ -1738,7 +1954,7 @@ function ExamSimulator({ questions }: { questions: SimulatorQuestion[] }) {
             className="text-[11px] font-medium uppercase tracking-[2px]"
             style={{ color: "var(--color-ln-cyan)" }}
           >
-            Erklärung
+            {isEn ? "Explanation" : "Erklärung"}
           </div>
           <p
             className="mt-2 text-[14px] leading-relaxed"
@@ -1753,7 +1969,7 @@ function ExamSimulator({ questions }: { questions: SimulatorQuestion[] }) {
             }}
             className="mt-4 rounded-lg bg-white px-4 py-2 text-[13px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
           >
-            Weiter →
+            {isEn ? "Next →" : "Weiter →"}
           </button>
         </div>
       )}
@@ -1764,6 +1980,8 @@ function ExamSimulator({ questions }: { questions: SimulatorQuestion[] }) {
 /* ========== EMAIL CAPTURE + DOWNLOAD ========== */
 
 function EmailCapture({ pack }: { pack: StudyPack }) {
+  const language = useLanguage();
+  const isEn = language === "en";
   const [email, setEmail] = useState("");
   const [saved, setSaved] = useState(false);
 
@@ -1775,7 +1993,7 @@ function EmailCapture({ pack }: { pack: StudyPack }) {
   };
 
   const handleDownload = () => {
-    const html = renderPackAsHtml(pack);
+    const html = renderPackAsHtml(pack, language);
     const blob = new Blob([html], { type: "text/html" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -1790,15 +2008,16 @@ function EmailCapture({ pack }: { pack: StudyPack }) {
       <div className="flex items-center gap-3">
         <span className="text-[24px]">🎉</span>
         <h3 className="text-[22px] font-semibold tracking-[-0.3px] text-white">
-          Dein Lernpaket ist fertig
+          {isEn ? "Your study pack is ready" : "Dein Lernpaket ist fertig"}
         </h3>
       </div>
       <p
         className="mt-2 text-[14px]"
         style={{ color: "var(--color-ln-mute)" }}
       >
-        Lade es offline runter — druckbar, für immer dein. Oder trag deine
-        E-Mail ein; wir sagen dir Bescheid, sobald Speichern per Link live ist.
+        {isEn
+          ? "Download it for offline use — printable, yours forever. Or leave your email; we will tell you when save-by-link is live."
+          : "Lade es offline runter — druckbar, für immer dein. Oder trag deine E-Mail ein; wir sagen dir Bescheid, sobald Speichern per Link live ist."}
       </p>
 
       <div className="mt-5 flex flex-col gap-3 sm:flex-row">
@@ -1807,7 +2026,7 @@ function EmailCapture({ pack }: { pack: StudyPack }) {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="deine@mail.de"
+            placeholder={isEn ? "you@mail.com" : "deine@mail.de"}
             className="flex-1 rounded-lg border border-white/10 bg-black/30 px-3 py-2.5 text-[14px] text-white placeholder:text-white/30 focus:border-[color:var(--color-ln-cyan)] focus:outline-none"
           />
           <button
@@ -1815,14 +2034,14 @@ function EmailCapture({ pack }: { pack: StudyPack }) {
             disabled={saved}
             className="rounded-lg border border-white/20 bg-transparent px-4 py-2.5 text-[13.5px] font-medium text-white transition hover:bg-white/5 disabled:opacity-50"
           >
-            {saved ? "✓ Gemerkt" : "Merken"}
+            {saved ? (isEn ? "✓ Saved" : "✓ Gemerkt") : isEn ? "Save" : "Merken"}
           </button>
         </form>
         <button
           onClick={handleDownload}
           className="rounded-lg bg-white px-5 py-2.5 text-[13.5px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
         >
-          Offline speichern
+          {isEn ? "Save offline" : "Offline speichern"}
         </button>
       </div>
     </div>
@@ -1844,7 +2063,7 @@ type PricingTier = {
   highlighted?: boolean;
 };
 
-const PRICING_TIERS: PricingTier[] = [
+const PRICING_TIERS_DE: PricingTier[] = [
   {
     name: "Gratis",
     tagline: "Zum Ausprobieren",
@@ -1897,6 +2116,59 @@ const PRICING_TIERS: PricingTier[] = [
   },
 ];
 
+const PRICING_TIERS_EN: PricingTier[] = [
+  {
+    name: "Free",
+    tagline: "To try it out",
+    price: "0€",
+    priceSize: "40px",
+    subtitle: "forever",
+    features: [
+      "Prepare 3 exams completely",
+      "15 cards per exam (the basics)",
+      "8-question exam simulator",
+      "All concepts sorted by importance",
+    ],
+    ctaLabel: "Create first pack",
+    ctaFilled: false,
+  },
+  {
+    name: "Pro",
+    tagline: "When several exams are coming up",
+    price: "6.99€",
+    priceSize: "48px",
+    subtitle: "/ month",
+    badge: "POPULAR",
+    features: [
+      "20 exams per month",
+      "30+ cards, sorted by topic",
+      "Essay blueprint with ready-to-use phrasing",
+      "12+ simulator questions per exam",
+      "Offline save + Quizlet export",
+      "Extra packs for 0.49€ if you need more",
+    ],
+    ctaLabel: "Get Pro",
+    ctaFilled: true,
+    highlighted: true,
+  },
+  {
+    name: "Team",
+    tagline: "For the whole study year",
+    price: "14.99€",
+    priceSize: "40px",
+    subtitle: "/ month",
+    features: [
+      "50 exams per month (more than enough)",
+      "Everything in Pro",
+      "No waiting — your packs first",
+      "PDF cheat sheet for your phone",
+      "Automatic study plan until the exam",
+    ],
+    ctaLabel: "Get Team",
+    ctaFilled: false,
+  },
+];
+
 function PricingSection({
   onActivateUpload,
   onOpenConnect,
@@ -1904,27 +2176,31 @@ function PricingSection({
   onActivateUpload: () => void;
   onOpenConnect: () => void;
 }) {
+  const isEn = useLanguage() === "en";
+  const tiers = isEn ? PRICING_TIERS_EN : PRICING_TIERS_DE;
   return (
     <section id="pricing" className="scroll-mt-24 px-6 py-24 md:py-32">
       <div className="mx-auto max-w-[1200px]">
         <div className="ln-reveal">
-          <span className="ln-section-label">Was brauchst du?</span>
+          <span className="ln-section-label">
+            {isEn ? "What do you need?" : "Was brauchst du?"}
+          </span>
           <h2
             className="mt-4 max-w-2xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            Probier&rsquo;s gratis.{" "}
+            {isEn ? "Try it for free." : "Probier's gratis."}{" "}
             <span
               className="lernly-italic"
               style={{ color: "var(--color-ln-ink-soft)" }}
             >
-              Upgrade nur wenn&rsquo;s sitzt.
+              {isEn ? "Upgrade only when it sticks." : "Upgrade nur wenn's sitzt."}
             </span>
           </h2>
         </div>
 
         <div className="ln-stagger mt-14 grid grid-cols-1 gap-4 md:grid-cols-3">
-          {PRICING_TIERS.map((tier) => (
+          {tiers.map((tier) => (
             <PricingCard
               key={tier.name}
               tier={tier}
@@ -1939,7 +2215,9 @@ function PricingSection({
           className="ln-reveal mt-6 text-center text-[12px]"
           style={{ color: "rgba(255,255,255,0.3)" }}
         >
-          Alle Preise inkl. MwSt. Jederzeit kündbar.
+          {isEn
+            ? "All prices include VAT. Cancel anytime."
+            : "Alle Preise inkl. MwSt. Jederzeit kündbar."}
         </p>
       </div>
     </section>
@@ -1949,6 +2227,7 @@ function PricingSection({
 /* ========== BYOK BANNER (under the pricing cards) ========== */
 
 function BYOKBanner({ onOpenConnect }: { onOpenConnect: () => void }) {
+  const isEn = useLanguage() === "en";
   return (
     <div id="connect" className="byok-banner scroll-mt-24">
       <div className="byok-left">
@@ -1956,10 +2235,13 @@ function BYOKBanner({ onOpenConnect }: { onOpenConnect: () => void }) {
           <ClaudeLogo size={22} />
         </div>
         <div>
-          <h4>Du hast einen Anthropic API Key?</h4>
+          <h4>
+            {isEn ? "Have your own Anthropic API key?" : "Du hast einen Anthropic API Key?"}
+          </h4>
           <p>
-            Verbinde ihn mit deinem Plan — 30% günstiger und unbegrenzte
-            Pakete.
+            {isEn
+              ? "Connect it to your plan — 30% cheaper and unlimited packs."
+              : "Verbinde ihn mit deinem Plan — 30% günstiger und unbegrenzte Pakete."}
           </p>
         </div>
       </div>
@@ -1973,7 +2255,7 @@ function BYOKBanner({ onOpenConnect }: { onOpenConnect: () => void }) {
           </span>
         </div>
         <button type="button" onClick={onOpenConnect} className="byok-btn">
-          Key verbinden →
+          {isEn ? "Connect key →" : "Key verbinden →"}
         </button>
       </div>
     </div>
@@ -1981,11 +2263,18 @@ function BYOKBanner({ onOpenConnect }: { onOpenConnect: () => void }) {
 }
 
 function AdvancedKeyDisclosure({ onOpenConnect }: { onOpenConnect: () => void }) {
+  const isEn = useLanguage() === "en";
   return (
     <details className="ln-reveal byok-disclosure">
       <summary>
-        <span>Für Power-User: eigenen Claude API Key verbinden</span>
-        <span className="byok-disclosure-hint">30% günstiger</span>
+        <span>
+          {isEn
+            ? "Advanced: connect your own Claude API key"
+            : "Für Power-User: eigenen Claude API Key verbinden"}
+        </span>
+        <span className="byok-disclosure-hint">
+          {isEn ? "30% cheaper" : "30% günstiger"}
+        </span>
       </summary>
       <BYOKBanner onOpenConnect={onOpenConnect} />
     </details>
@@ -2004,6 +2293,7 @@ function ConnectModal({
   setApiKey: (k: string | null) => void;
   onClose: () => void;
 }) {
+  const isEn = useLanguage() === "en";
   const [draft, setDraft] = useState("");
   const [editing, setEditing] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
@@ -2032,7 +2322,9 @@ function ConnectModal({
     const trimmed = draft.trim();
     if (!trimmed.startsWith("sk-ant-")) {
       setLocalError(
-        "Der Key sieht nicht richtig aus. Anthropic-Keys beginnen mit sk-ant-.",
+        isEn
+          ? "That key does not look right. Anthropic keys start with sk-ant-."
+          : "Der Key sieht nicht richtig aus. Anthropic-Keys beginnen mit sk-ant-.",
       );
       return;
     }
@@ -2056,7 +2348,7 @@ function ConnectModal({
       className="modal-overlay"
       role="dialog"
       aria-modal="true"
-      aria-label="Claude API Key verbinden"
+      aria-label={isEn ? "Connect Claude API key" : "Claude API Key verbinden"}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -2065,7 +2357,7 @@ function ConnectModal({
         <button
           type="button"
           className="modal-close"
-          aria-label="Schließen"
+          aria-label={isEn ? "Close" : "Schließen"}
           onClick={onClose}
         >
           ✕
@@ -2075,11 +2367,11 @@ function ConnectModal({
           <ClaudeLogo size={28} />
         </div>
 
-        <h3>Claude API Key verbinden</h3>
+        <h3>{isEn ? "Connect Claude API key" : "Claude API Key verbinden"}</h3>
         <p>
-          Verbinde deinen eigenen Anthropic API Key. Keine Limits, keine
-          monatlichen Kosten bei uns — du zahlst nur was du nutzt, direkt
-          an Anthropic.
+          {isEn
+            ? "Connect your own Anthropic API key. No limits, no monthly cost from us — you only pay Anthropic for what you use."
+            : "Verbinde deinen eigenen Anthropic API Key. Keine Limits, keine monatlichen Kosten bei uns — du zahlst nur was du nutzt, direkt an Anthropic."}
         </p>
 
         {showForm ? (
@@ -2103,7 +2395,7 @@ function ConnectModal({
                 className="save-key-btn"
                 disabled={draft.trim().length === 0}
               >
-                Verbinden
+                {isEn ? "Connect" : "Verbinden"}
               </button>
             </div>
             {localError && (
@@ -2120,11 +2412,14 @@ function ConnectModal({
               rel="noopener noreferrer"
               className="key-help-link"
             >
-              Key erstellen auf console.anthropic.com →
+              {isEn
+                ? "Create a key on console.anthropic.com →"
+                : "Key erstellen auf console.anthropic.com →"}
             </a>
             <p className="small">
-              Dein Key bleibt lokal in deinem Browser. Lernly speichert ihn
-              nicht.
+              {isEn
+                ? "Your key stays local in your browser. Lernly does not store it."
+                : "Dein Key bleibt lokal in deinem Browser. Lernly speichert ihn nicht."}
             </p>
             {connected && editing && (
               <button
@@ -2136,33 +2431,34 @@ function ConnectModal({
                 }}
                 className="text-link mt-3"
               >
-                Abbrechen
+                {isEn ? "Cancel" : "Abbrechen"}
               </button>
             )}
           </form>
         ) : (
           <div>
             <div className="connected-row">
-              <span>✓ Verbunden</span>
+              <span>✓ {isEn ? "Connected" : "Verbunden"}</span>
               <code>{maskedKey}</code>
               <button
                 type="button"
                 onClick={() => setEditing(true)}
                 className="text-link"
               >
-                ändern
+                {isEn ? "edit" : "ändern"}
               </button>
               <button
                 type="button"
                 onClick={handleDisconnect}
                 className="text-link"
               >
-                trennen
+                {isEn ? "disconnect" : "trennen"}
               </button>
             </div>
             <p className="small">
-              Alle Generierungen laufen jetzt über deinen eigenen Key.
-              Lernly-Kontingent wird nicht verbraucht.
+              {isEn
+                ? "All generations now run through your own key. Your Lernly quota is not used."
+                : "Alle Generierungen laufen jetzt über deinen eigenen Key. Lernly-Kontingent wird nicht verbraucht."}
             </p>
           </div>
         )}
@@ -2289,6 +2585,7 @@ function PricingCard({
 /* ========== BOTTOM CTA ========== */
 
 function BottomCta() {
+  const isEn = useLanguage() === "en";
   return (
     <section className="relative overflow-hidden px-6 py-28 md:py-36">
       <div
@@ -2307,23 +2604,25 @@ function BottomCta() {
             fontSize: "clamp(34px, 5.5vw, 64px)",
           }}
         >
-          Die Prüfung wartet nicht.{" "}
+          {isEn ? "The exam is not waiting." : "Die Prüfung wartet nicht."}{" "}
           <span className="lernly-italic text-white">
-            Dein Lernpaket auch nicht.
+            {isEn ? "Neither is your study pack." : "Dein Lernpaket auch nicht."}
           </span>
         </h2>
         <a
           href="#upload"
           className="mt-10 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-[15px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
         >
-          Jetzt anfangen
+          {isEn ? "Start now" : "Jetzt anfangen"}
           <span>↓</span>
         </a>
         <p
           className="mt-5 text-[13px]"
           style={{ color: "var(--color-ln-mute)" }}
         >
-          Gratis · Ohne Login · Ohne Kreditkarte
+          {isEn
+            ? "Free · No login · No credit card"
+            : "Gratis · Ohne Login · Ohne Kreditkarte"}
         </p>
       </div>
     </section>
@@ -2333,6 +2632,7 @@ function BottomCta() {
 /* ========== SOCIAL PROOF STRIP ========== */
 
 function SocialProof() {
+  const isEn = useLanguage() === "en";
   return (
     <div
       className="ln-reveal px-6 text-center"
@@ -2347,7 +2647,9 @@ function SocialProof() {
           color: "rgba(255,255,255,0.5)",
         }}
       >
-        Bereits an der Uppsala Universität getestet · 120+ Lernpakete erstellt
+        {isEn
+          ? "Already tested at Uppsala University · 120+ study packs created"
+          : "Bereits an der Uppsala Universität getestet · 120+ Lernpakete erstellt"}
       </span>
     </div>
   );
@@ -2356,18 +2658,21 @@ function SocialProof() {
 /* ========== RESULT PREVIEW (3 static mockups) ========== */
 
 function ResultPreview() {
+  const isEn = useLanguage() === "en";
   return (
     <section className="px-6 py-24 md:py-28">
       <div className="mx-auto max-w-[1200px]">
         <div className="ln-reveal">
-          <span className="ln-section-label">Dein Ergebnis</span>
+          <span className="ln-section-label">
+            {isEn ? "Your result" : "Dein Ergebnis"}
+          </span>
           <h2
             className="mt-4 max-w-3xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            Nicht noch ein PDF.{" "}
+            {isEn ? "Not another PDF." : "Nicht noch ein PDF."}{" "}
             <span className="lernly-italic" style={{ color: "var(--color-ln-ink-soft)" }}>
-              Ein Lernmodus.
+              {isEn ? "A study mode." : "Ein Lernmodus."}
             </span>
           </h2>
         </div>
@@ -2375,21 +2680,33 @@ function ResultPreview() {
         <div className="ln-stagger mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
           <PreviewCard
             title="Essay-Blueprint"
-            desc="Zeitplan, Wortzahlen, Templates und Referenzen in einer Struktur."
+            desc={
+              isEn
+                ? "Timing, word counts, templates, and references in one structure."
+                : "Zeitplan, Wortzahlen, Templates und Referenzen in einer Struktur."
+            }
           >
             <BlueprintArtifactMockup />
           </PreviewCard>
 
           <PreviewCard
             title="Deep Drill"
-            desc="Karteikarten mit Kategorien, Fortschritt und Bewertung pro Runde."
+            desc={
+              isEn
+                ? "Flashcards with categories, progress, and round-by-round ratings."
+                : "Karteikarten mit Kategorien, Fortschritt und Bewertung pro Runde."
+            }
           >
             <DeepDrillArtifactMockup />
           </PreviewCard>
 
           <PreviewCard
             title="Example Essays"
-            desc="Fertige Szenarien, damit du Muster statt nur Theorie siehst."
+            desc={
+              isEn
+                ? "Ready scenarios so you see patterns, not just theory."
+                : "Fertige Szenarien, damit du Muster statt nur Theorie siehst."
+            }
           >
             <ExampleEssaysArtifactMockup />
           </PreviewCard>
@@ -2408,10 +2725,13 @@ function PreviewCard({
   desc: string;
   children: ReactNode;
 }) {
+  const isEn = useLanguage() === "en";
   return (
     <div className="ln-reveal ln-preview-artifact-card">
       <div>
-        <div className="ln-preview-artifact-label">Generierte Seite</div>
+        <div className="ln-preview-artifact-label">
+          {isEn ? "Generated page" : "Generierte Seite"}
+        </div>
         <h3>{title}</h3>
         <p>{desc}</p>
       </div>
@@ -2517,6 +2837,7 @@ function ExampleEssaysArtifactMockup() {
 /* ========== PIPELINE CTA (after HowItWorks) ========== */
 
 function PipelineCta({ onActivateUpload }: { onActivateUpload: () => void }) {
+  const isEn = useLanguage() === "en";
   return (
     <div className="ln-reveal px-6 pb-10 text-center">
       <button
@@ -2525,7 +2846,7 @@ function PipelineCta({ onActivateUpload }: { onActivateUpload: () => void }) {
         className="rounded-full px-7 py-[14px] text-[16px] font-semibold transition hover:bg-white/90"
         style={{ background: "#ffffff", color: "#1a2647" }}
       >
-        Jetzt mit deinem Material testen →
+        {isEn ? "Test it with your material →" : "Jetzt mit deinem Material testen →"}
       </button>
     </div>
   );
@@ -2533,7 +2854,7 @@ function PipelineCta({ onActivateUpload }: { onActivateUpload: () => void }) {
 
 /* ========== FAQ ========== */
 
-const FAQ_ITEMS: { q: string; a: string }[] = [
+const FAQ_ITEMS_DE: { q: string; a: string }[] = [
   {
     q: "Was passiert mit meinen Dateien?",
     a: "Nichts. Deine PDFs werden nur für die Generierung verarbeitet und danach gelöscht. Nichts wird dauerhaft gespeichert.",
@@ -2556,30 +2877,55 @@ const FAQ_ITEMS: { q: string; a: string }[] = [
   },
 ];
 
+const FAQ_ITEMS_EN: { q: string; a: string }[] = [
+  {
+    q: "What happens to my files?",
+    a: "Nothing permanent. Your PDFs are processed only to generate the pack and are deleted afterwards. Nothing is stored long term.",
+  },
+  {
+    q: "Which file formats work?",
+    a: "PDF, TXT, and MD. PowerPoint support is coming soon.",
+  },
+  {
+    q: "How good are the flashcards?",
+    a: "Better than most hand-written ones. The AI does not just extract definitions — it understands relationships, marks exam relevance, and gives you ready-to-use template sentences.",
+  },
+  {
+    q: "How is this different from ChatGPT?",
+    a: "ChatGPT gives you a wall of text. Lernly gives you a study system — interactive flashcards to flip, an exam simulator with feedback, and an essay blueprint with ready phrasing.",
+  },
+  {
+    q: "Can I edit my study pack?",
+    a: "You can download it as HTML and use it offline. In-app editing is coming soon.",
+  },
+];
+
 function FAQSection() {
   const [open, setOpen] = useState<number | null>(0);
+  const isEn = useLanguage() === "en";
+  const items = isEn ? FAQ_ITEMS_EN : FAQ_ITEMS_DE;
   return (
     <section id="faq" className="scroll-mt-24 px-6 py-24 md:py-32">
       <div className="mx-auto max-w-[820px]">
         <div className="ln-reveal">
-          <span className="ln-section-label">Fragen?</span>
+          <span className="ln-section-label">{isEn ? "Questions?" : "Fragen?"}</span>
           <h2
             className="mt-4 font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            Kurz beantwortet.
+            {isEn ? "Short answers." : "Kurz beantwortet."}
           </h2>
         </div>
 
         <div className="ln-reveal ln-glass-card mt-10 overflow-hidden">
-          {FAQ_ITEMS.map((item, i) => {
+          {items.map((item, i) => {
             const isOpen = open === i;
             return (
               <div
                 key={item.q}
                 style={{
                   borderBottom:
-                    i === FAQ_ITEMS.length - 1
+                    i === items.length - 1
                       ? "none"
                       : "1px solid rgba(255,255,255,0.06)",
                 }}
@@ -2631,7 +2977,8 @@ function esc(s: string) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-function renderPackAsHtml(pack: StudyPack): string {
+function renderPackAsHtml(pack: StudyPack, language: Language): string {
+  const isEn = language === "en";
   const cards = pack.flashcards
     .map(
       (c) =>
@@ -2650,7 +2997,7 @@ function renderPackAsHtml(pack: StudyPack): string {
           .join(""),
     )
     .join("");
-  return `<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Lernly — ${esc(pack.courseTitle)}</title>
+  return `<!doctype html><html lang="${language}"><head><meta charset="utf-8"><title>Lernly — ${esc(pack.courseTitle)}</title>
 <style>
   body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:760px;margin:40px auto;padding:0 20px;color:#111827;line-height:1.55}
   h1{font-weight:600;letter-spacing:-1px;font-size:32px}
@@ -2663,8 +3010,8 @@ function renderPackAsHtml(pack: StudyPack): string {
   .muted{color:#71717a;font-size:12px}
 </style></head><body>
 <h1>${esc(pack.courseTitle)}</h1>
-<p class="muted">Lernpaket generiert mit Lernly</p>
-<h2>Karteikarten</h2>${cards}
-<h2>Übersicht</h2>${topics}
+<p class="muted">${isEn ? "Study pack generated with Lernly" : "Lernpaket generiert mit Lernly"}</p>
+<h2>${isEn ? "Flashcards" : "Karteikarten"}</h2>${cards}
+<h2>${isEn ? "Overview" : "Übersicht"}</h2>${topics}
 </body></html>`;
 }

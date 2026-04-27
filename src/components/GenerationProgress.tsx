@@ -2,29 +2,56 @@
 
 import { useEffect, useState } from "react";
 
-const STEPS = [
-  { icon: "📄", text: "Dateien werden gelesen...", duration: 3000 },
-  { icon: "🔍", text: "Schlüsselkonzepte werden extrahiert...", duration: 5000 },
-  { icon: "🎴", text: "Karteikarten werden erstellt...", duration: 8000 },
-  { icon: "📐", text: "Essay-Blueprint wird gebaut...", duration: 6000 },
-  { icon: "🎮", text: "Prüfungssimulator wird konfiguriert...", duration: 5000 },
-  { icon: "✨", text: "Lernpaket wird fertiggestellt...", duration: 10000 },
-];
+type Language = "en" | "de";
 
-export default function GenerationProgress({ completed = false }: { completed?: boolean }) {
+const STEPS: Record<
+  Language,
+  { icon: string; text: string; duration: number }[]
+> = {
+  en: [
+    { icon: "📄", text: "Reading your files...", duration: 3000 },
+    { icon: "🔍", text: "Extracting key concepts...", duration: 5000 },
+    { icon: "🎴", text: "Building flashcards...", duration: 8000 },
+    { icon: "📐", text: "Structuring the essay blueprint...", duration: 6000 },
+    { icon: "🎮", text: "Configuring the exam simulator...", duration: 5000 },
+    { icon: "✨", text: "Finishing your study pack...", duration: 10000 },
+  ],
+  de: [
+    { icon: "📄", text: "Dateien werden gelesen...", duration: 3000 },
+    { icon: "🔍", text: "Schlüsselkonzepte werden extrahiert...", duration: 5000 },
+    { icon: "🎴", text: "Karteikarten werden erstellt...", duration: 8000 },
+    { icon: "📐", text: "Essay-Blueprint wird gebaut...", duration: 6000 },
+    { icon: "🎮", text: "Prüfungssimulator wird konfiguriert...", duration: 5000 },
+    { icon: "✨", text: "Lernpaket wird fertiggestellt...", duration: 10000 },
+  ],
+};
+
+const WAIT_COPY: Record<Language, string> = {
+  en: "Average wait time: ~30-60 seconds",
+  de: "Durchschnittliche Wartezeit: ~30-60 Sekunden",
+};
+
+export default function GenerationProgress({
+  completed = false,
+  language = "en",
+}: {
+  completed?: boolean;
+  language?: Language;
+}) {
   const [internalStep, setInternalStep] = useState(0);
   const [internalProgress, setInternalProgress] = useState(0);
+  const steps = STEPS[language];
 
   useEffect(() => {
     const stepTimers: ReturnType<typeof setTimeout>[] = [];
     let accumulated = 0;
 
-    STEPS.forEach((step, i) => {
+    steps.forEach((step, i) => {
       stepTimers.push(setTimeout(() => setInternalStep(i), accumulated));
       accumulated += step.duration;
     });
 
-    const totalDuration = STEPS.reduce((sum, s) => sum + s.duration, 0);
+    const totalDuration = steps.reduce((sum, s) => sum + s.duration, 0);
     const progressInterval = setInterval(() => {
       setInternalProgress((prev) => {
         if (prev >= 90) return 90;
@@ -36,9 +63,9 @@ export default function GenerationProgress({ completed = false }: { completed?: 
       stepTimers.forEach(clearTimeout);
       clearInterval(progressInterval);
     };
-  }, []);
+  }, [steps]);
 
-  const currentStep = completed ? STEPS.length : internalStep;
+  const currentStep = completed ? steps.length : internalStep;
   const progress = completed ? 100 : internalProgress;
 
   return (
@@ -76,7 +103,7 @@ export default function GenerationProgress({ completed = false }: { completed?: 
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-        {STEPS.map((step, i) => {
+        {steps.map((step, i) => {
           const isDone = i < currentStep;
           const isActive = i === currentStep;
           return (
@@ -138,7 +165,7 @@ export default function GenerationProgress({ completed = false }: { completed?: 
           fontFamily: "var(--font-mono, monospace)",
         }}
       >
-        Durchschnittliche Wartezeit: ~30–60 Sekunden
+        {WAIT_COPY[language]}
       </p>
 
       <style>{`

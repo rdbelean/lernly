@@ -4,9 +4,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://lernly-app.de"),
   applicationName: "Lernly",
-  title: "Lernly — Lade hoch. Lerne smart.",
+  title: "Lernly — Upload. Study smart.",
   description:
-    "8 PDFs und kein Plan? Lernly macht in 2 Minuten dein komplettes Lernpaket — Karteikarten, Simulator, Essay-Blueprint. Kostenlos, kein Login.",
+    "8 PDFs and no plan? Lernly turns your material into a complete study pack in 2 minutes — flashcards, simulator, essay blueprint. Free, no login.",
   manifest: "/manifest.webmanifest",
   icons: {
     icon: [
@@ -18,15 +18,15 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
-    title: "Lernly — Lade hoch. Lerne smart.",
+    title: "Lernly — Upload. Study smart.",
     description:
-      "8 PDFs und kein Plan? In 2 Minuten dein komplettes Lernpaket. Kostenlos, kein Login.",
+      "8 PDFs and no plan? Get a complete study pack in 2 minutes. Free, no login.",
     images: [
       {
         url: "/lernly-og.png",
         width: 1200,
         height: 630,
-        alt: "Lernly — Lade hoch. Lerne smart.",
+        alt: "Lernly — Upload. Study smart.",
       },
     ],
     type: "website",
@@ -34,8 +34,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lernly — Lade hoch. Lerne smart.",
-    description: "8 PDFs und kein Plan? In 2 Minuten dein komplettes Lernpaket.",
+    title: "Lernly — Upload. Study smart.",
+    description: "8 PDFs and no plan? Get a complete study pack in 2 minutes.",
     images: ["/lernly-og.png"],
   },
   appleWebApp: {
@@ -55,7 +55,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de" className="h-full antialiased">
+    <html lang="en" className="h-full antialiased">
       <body className="ln-page-bg min-h-full flex flex-col text-[color:var(--color-ln-ink)]">
         {children}
       </body>

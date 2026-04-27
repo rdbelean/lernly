@@ -3,14 +3,73 @@
 import { useState } from "react";
 import ClaudeLogo from "@/components/ClaudeLogo";
 
+type Language = "en" | "de";
+
 type Props = {
   onActivateUpload?: () => void;
+  language?: Language;
+  onLanguageChange?: (language: Language) => void;
 };
 
-export default function SiteNav({ onActivateUpload }: Props) {
+const NAV_COPY: Record<
+  Language,
+  {
+    features: string;
+    how: string;
+    connect: string;
+    create: string;
+    menu: string;
+    languageLabel: string;
+  }
+> = {
+  en: {
+    features: "Features",
+    how: "How it works",
+    connect: "Connect Claude",
+    create: "Create pack →",
+    menu: "Menu",
+    languageLabel: "Language",
+  },
+  de: {
+    features: "Features",
+    how: "So geht's",
+    connect: "Claude verbinden",
+    create: "Paket erstellen →",
+    menu: "Menü",
+    languageLabel: "Sprache",
+  },
+};
+
+export default function SiteNav({
+  onActivateUpload,
+  language = "en",
+  onLanguageChange,
+}: Props) {
   const [open, setOpen] = useState(false);
   const isLanding = Boolean(onActivateUpload);
   const prefix = isLanding ? "" : "/";
+  const copy = NAV_COPY[language];
+
+  const renderLanguageToggle = () =>
+    onLanguageChange ? (
+      <div
+        className="ln-language-toggle"
+        role="group"
+        aria-label={copy.languageLabel}
+      >
+        {(["en", "de"] as const).map((option) => (
+          <button
+            key={option}
+            type="button"
+            aria-pressed={language === option}
+            onClick={() => onLanguageChange(option)}
+            className={language === option ? "is-active" : ""}
+          >
+            {option.toUpperCase()}
+          </button>
+        ))}
+      </div>
+    ) : null;
 
   return (
     <nav
@@ -43,38 +102,39 @@ export default function SiteNav({ onActivateUpload }: Props) {
             href={`${prefix}#features`}
             className="text-[14px] font-medium text-white transition hover:opacity-70"
           >
-            Features
+            {copy.features}
           </a>
           <a
             href={`${prefix}#how`}
             className="text-[14px] font-medium text-white transition hover:opacity-70"
           >
-            So geht&rsquo;s
+            {copy.how}
           </a>
           <a href={`${prefix}#connect`} className="nav-claude">
             <ClaudeLogo size={14} />
-            Claude verbinden
+            {copy.connect}
           </a>
+          {renderLanguageToggle()}
           {onActivateUpload ? (
             <button
               type="button"
               onClick={onActivateUpload}
               className="rounded-lg bg-white px-4 py-1.5 text-[14px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
             >
-              Paket erstellen →
+              {copy.create}
             </button>
           ) : (
             <a
               href="/#upload"
               className="rounded-lg bg-white px-4 py-1.5 text-[14px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
             >
-              Paket erstellen →
+              {copy.create}
             </a>
           )}
         </div>
 
         <button
-          aria-label="Menü"
+          aria-label={copy.menu}
           onClick={() => setOpen((v) => !v)}
           className="text-white md:hidden"
         >
@@ -92,14 +152,14 @@ export default function SiteNav({ onActivateUpload }: Props) {
               onClick={() => setOpen(false)}
               className="text-[14px] font-medium text-white"
             >
-              Features
+              {copy.features}
             </a>
             <a
               href={`${prefix}#how`}
               onClick={() => setOpen(false)}
               className="text-[14px] font-medium text-white"
             >
-              So geht&rsquo;s
+              {copy.how}
             </a>
             <a
               href={`${prefix}#connect`}
@@ -107,8 +167,9 @@ export default function SiteNav({ onActivateUpload }: Props) {
               className="nav-claude"
             >
               <ClaudeLogo size={14} />
-              Claude verbinden
+              {copy.connect}
             </a>
+            {renderLanguageToggle()}
             {onActivateUpload ? (
               <button
                 type="button"
@@ -118,7 +179,7 @@ export default function SiteNav({ onActivateUpload }: Props) {
                 }}
                 className="rounded-lg bg-white px-4 py-2 text-center text-[14px] font-medium text-[color:var(--color-ln-bg-bot)]"
               >
-                Paket erstellen →
+                {copy.create}
               </button>
             ) : (
               <a
@@ -126,7 +187,7 @@ export default function SiteNav({ onActivateUpload }: Props) {
                 onClick={() => setOpen(false)}
                 className="rounded-lg bg-white px-4 py-2 text-center text-[14px] font-medium text-[color:var(--color-ln-bg-bot)]"
               >
-                Paket erstellen →
+                {copy.create}
               </a>
             )}
           </div>

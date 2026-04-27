@@ -3,9 +3,9 @@ import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "Datenschutzerklärung — Lernly",
+  title: "Privacy Policy — Lernly",
   description:
-    "Datenschutzerklärung von Lernly. Welche Daten wir erheben, wofür wir sie nutzen und welche Rechte du hast.",
+    "Lernly privacy policy. What data we collect, why we use it, and which rights you have.",
 };
 
 const sectionStyle = { marginBottom: "32px" } as const;
@@ -40,30 +40,29 @@ export default function DatenschutzPage() {
             className="font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            Datenschutzerklärung
+            Privacy Policy
           </h1>
 
           <div className="mt-10">
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>1. Datenschutz auf einen Blick</h2>
-              <h3 style={subHeadingStyle}>Allgemeine Hinweise</h3>
+              <h2 style={headingStyle}>1. Privacy at a glance</h2>
+              <h3 style={subHeadingStyle}>General notes</h3>
               <p style={bodyStyle}>
-                Diese Datenschutzerklärung gibt Auskunft darüber, was mit
-                Ihren personenbezogenen Daten passiert, wenn Sie diese Website
-                nutzen.
+                This privacy policy explains what happens to your personal data
+                when you use this website.
               </p>
             </section>
 
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>2. Verantwortliche Stelle</h2>
+              <h2 style={headingStyle}>2. Controller</h2>
               <p style={bodyStyle}>
-                {/* TODO: Namen des Verantwortlichen eintragen */}
+                {/* TODO: Add controller name */}
                 [Name]
                 <br />
-                {/* TODO: Adresse eintragen */}
-                [Adresse]
+                {/* TODO: Add address */}
+                [Address]
                 <br />
-                E-Mail:{" "}
+                Email:{" "}
                 <a
                   href="mailto:kontakt@lernly-app.de"
                   style={linkStyle}
@@ -76,32 +75,31 @@ export default function DatenschutzPage() {
 
             <section style={sectionStyle}>
               <h2 style={headingStyle}>
-                3. Datenerfassung auf unserer Website
+                3. Data collection on this website
               </h2>
-              <h3 style={subHeadingStyle}>Wie erfassen wir Ihre Daten?</h3>
+              <h3 style={subHeadingStyle}>How do we collect your data?</h3>
               <p style={bodyStyle}>
-                Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese
-                mitteilen (z.B. E-Mail-Adresse bei der Registrierung). Andere
-                Daten werden automatisch beim Besuch der Website durch unsere
-                IT-Systeme erfasst (z.B. Browser, Betriebssystem, Zeitpunkt
-                des Seitenaufrufs).
+                Some data is collected when you provide it to us, for example
+                an email address during registration. Other data is collected
+                automatically by our IT systems when you visit the website,
+                for example browser type, operating system, and time of access.
               </p>
-              <h3 style={subHeadingStyle}>Wofür nutzen wir Ihre Daten?</h3>
+              <h3 style={subHeadingStyle}>What do we use your data for?</h3>
               <ul style={{ ...bodyStyle, paddingLeft: "20px", listStyle: "disc" }}>
-                <li>Bereitstellung und Verbesserung von Lernly</li>
-                <li>Generierung von Lernpaketen über die Claude API (Anthropic)</li>
-                <li>E-Mail-Kommunikation, sofern Sie sich registriert haben</li>
+                <li>Providing and improving Lernly</li>
+                <li>Generating study packs through the Claude API (Anthropic)</li>
+                <li>Email communication if you have registered</li>
               </ul>
             </section>
 
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>4. Externe Dienste</h2>
+              <h2 style={headingStyle}>4. External services</h2>
 
               <h3 style={subHeadingStyle}>Vercel (Hosting)</h3>
               <p style={bodyStyle}>
-                Unsere Website wird bei Vercel Inc. gehostet. Beim Besuch
-                werden automatisch Informationen (IP-Adresse, Browsertyp) an
-                Vercel-Server übermittelt. Datenschutz:{" "}
+                This website is hosted by Vercel Inc. When you visit the site,
+                technical information such as IP address and browser type may
+                be transmitted to Vercel servers. Privacy policy:{" "}
                 <a
                   href="https://vercel.com/legal/privacy-policy"
                   target="_blank"
@@ -115,10 +113,10 @@ export default function DatenschutzPage() {
 
               <h3 style={subHeadingStyle}>Anthropic Claude API</h3>
               <p style={bodyStyle}>
-                Zur Generierung von Lernpaketen wird Ihr hochgeladenes
-                Kursmaterial an die Claude API (Anthropic, San Francisco, USA)
-                gesendet. Die Daten werden nur zur Verarbeitung verwendet und
-                nicht dauerhaft gespeichert. Datenschutz:{" "}
+                To generate study packs, your uploaded course material is sent
+                to the Claude API (Anthropic, San Francisco, USA). The data is
+                used only for processing and is not stored permanently. Privacy
+                policy:{" "}
                 <a
                   href="https://www.anthropic.com/privacy"
                   target="_blank"
@@ -132,8 +130,8 @@ export default function DatenschutzPage() {
 
               <h3 style={subHeadingStyle}>Supabase (Datenbank &amp; Auth)</h3>
               <p style={bodyStyle}>
-                Für Benutzerkonten und gespeicherte Lernpakete nutzen wir
-                Supabase (Region: Frankfurt, EU). Datenschutz:{" "}
+                For user accounts and saved study packs, we use Supabase
+                (region: Frankfurt, EU). Privacy policy:{" "}
                 <a
                   href="https://supabase.com/privacy"
                   target="_blank"
@@ -147,11 +145,11 @@ export default function DatenschutzPage() {
             </section>
 
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>5. Ihre Rechte</h2>
+              <h2 style={headingStyle}>5. Your rights</h2>
               <p style={bodyStyle}>
-                Sie haben jederzeit das Recht auf Auskunft, Berichtigung,
-                Löschung und Einschränkung der Verarbeitung Ihrer Daten.
-                Wenden Sie sich dazu an:{" "}
+                You have the right to access, correct, delete, and restrict
+                the processing of your data at any time. To exercise these
+                rights, contact:{" "}
                 <a
                   href="mailto:kontakt@lernly-app.de"
                   style={linkStyle}
@@ -165,8 +163,8 @@ export default function DatenschutzPage() {
             <section style={sectionStyle}>
               <h2 style={headingStyle}>6. Cookies</h2>
               <p style={bodyStyle}>
-                Lernly verwendet nur technisch notwendige Session-Cookies.
-                Keine Tracking-Cookies, keine Analyse-Tools, keine Werbung.
+                Lernly uses only technically necessary session cookies. No
+                tracking cookies, no analytics tools, no advertising.
               </p>
             </section>
           </div>
