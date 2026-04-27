@@ -162,10 +162,15 @@
   font-weight: 500;
 }
 
-/* Lernly background: exact logo gradient — 135° diagonal,
-   #2A38E8 → #1421C5 → #0A129E. Page extends the logo's own backdrop. */
+/* Lernly background: original indigo → deep navy vertical gradient. */
 .ln-page-bg {
-  background: linear-gradient(135deg, #2a38e8 0%, #1421c5 55%, #0a129e 100%);
+  background: linear-gradient(
+    180deg,
+    #4a6cf7 0%,
+    #2e45b8 35%,
+    #1b2670 65%,
+    #0f1535 100%
+  );
   background-attachment: fixed;
   min-height: 100vh;
 }
