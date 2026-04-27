@@ -43,6 +43,12 @@ const EXAM_OPTIONS: { value: ExamType; label: string; emoji: string }[] = [
 const MAX_FILES = 3;
 const MAX_SIZE = 10 * 1024 * 1024;
 
+// Founder pricing — first N students get the lower price. Increment manually
+// as real signups come in. When this hits FOUNDER_PRICING_LIMIT, raise the
+// listed Pro/Team prices to the anchorPrice. Honesty is the whole point.
+const FOUNDER_PRICING_TAKEN = 87;
+const FOUNDER_PRICING_LIMIT = 1000;
+
 function useScrollReveal() {
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -2065,14 +2071,24 @@ function EmailCapture({ pack }: { pack: StudyPack }) {
 
 /* ========== PRICING ========== */
 
+type PricingBullet = {
+  text: string;
+  value?: string;
+  bonus?: boolean;
+};
+
 type PricingTier = {
   name: string;
   tagline: string;
+  outcomeHeadline: string;
   price: string;
   priceSize: string;
   subtitle: string;
+  anchorPrice?: string;
+  valueStackTotal?: string;
+  valueStackLabel?: string;
   badge?: string;
-  features: string[];
+  bullets: PricingBullet[];
   ctaLabel: string;
   ctaFilled: boolean;
   highlighted?: boolean;
@@ -2082,14 +2098,17 @@ const PRICING_TIERS_DE: PricingTier[] = [
   {
     name: "Gratis",
     tagline: "Zum Ausprobieren",
+    outcomeHeadline: "Erste Klausur überstehen",
     price: "0€",
     priceSize: "40px",
     subtitle: "für immer",
-    features: [
-      "3 Klausuren komplett vorbereiten",
-      "15 Karten pro Klausur (die Basics)",
-      "8-Fragen-Prüfungssimulator",
-      "Alle Konzepte nach Wichtigkeit sortiert",
+    valueStackTotal: "€96",
+    valueStackLabel: "Wert wenn du's einzeln kaufst:",
+    bullets: [
+      { text: "3 Klausuren komplett vorbereiten", value: "Tutor-Wert: €30" },
+      { text: "15 Karten pro Klausur (die Basics)", value: "Quizlet+: €18" },
+      { text: "8-Fragen-Prüfungssimulator", value: "€29" },
+      { text: "Konzepte nach Wichtigkeit sortiert", value: "€19" },
     ],
     ctaLabel: "Erstes Paket erstellen",
     ctaFilled: false,
@@ -2097,17 +2116,22 @@ const PRICING_TIERS_DE: PricingTier[] = [
   {
     name: "Pro",
     tagline: "Wenn mehrere Klausuren anstehen",
+    outcomeHeadline: "Klausurenphase bestehen",
     price: "6.99€",
     priceSize: "48px",
     subtitle: "/ Monat",
+    anchorPrice: "9.99€",
+    valueStackTotal: "€631 / Monat",
+    valueStackLabel: "Wert wenn du's einzeln kaufst:",
     badge: "BELIEBT",
-    features: [
-      "20 Klausuren im Monat",
-      "30+ Karten, nach Themen sortiert",
-      "Essay-Blueprint mit fertigen Formulierungen",
-      "12+ Simulator-Fragen pro Klausur",
-      "Offline speichern + Quizlet-Export",
-      "Extra-Pakete für 0,49€ falls's mehr wird",
+    bullets: [
+      { text: "20 Klausuren komplett vorbereitet", value: "Tutor-Wert: €200" },
+      { text: "600+ Karteikarten, nach Themen kuratiert", value: "Quizlet+: €36" },
+      { text: "Essay-Blueprint mit fertigen Templates", value: "Schreibcoach: €149" },
+      { text: "Prüfungssimulator (12+ Fragen pro Paket)", value: "Online-Kurs: €99" },
+      { text: "Offline-Modus + Quizlet-Export", value: "€49" },
+      { text: "Spickzettel-PDF zu jedem Paket", value: "€39", bonus: true },
+      { text: "Lernplan-Generator bis zur Prüfung", value: "€59", bonus: true },
     ],
     ctaLabel: "Pro holen",
     ctaFilled: true,
@@ -2116,15 +2140,19 @@ const PRICING_TIERS_DE: PricingTier[] = [
   {
     name: "Team",
     tagline: "Fürs ganze Studienjahr",
+    outcomeHeadline: "Ganzes Semester durchziehen",
     price: "14.99€",
     priceSize: "40px",
     subtitle: "/ Monat",
-    features: [
-      "50 Klausuren im Monat (mehr als genug)",
-      "Alles aus Pro",
-      "Ohne Warten — deine Pakete zuerst",
-      "PDF-Spickzettel fürs Handy",
-      "Automatischer Lernplan bis zur Prüfung",
+    anchorPrice: "19.99€",
+    valueStackTotal: "€1.208 / Monat",
+    valueStackLabel: "Wert wenn du's einzeln kaufst:",
+    bullets: [
+      { text: "50 Klausuren / Monat (statt 20 bei Pro)", value: "Tutor-Wert: €300" },
+      { text: "Alles aus Pro inklusive", value: "Pro-Wert: €631" },
+      { text: "Priorität — deine Pakete werden zuerst gebaut", value: "€99" },
+      { text: "PDF-Spickzettel fürs Handy", value: "€49" },
+      { text: "Automatischer Lernplan bis zur Prüfung", value: "€129", bonus: true },
     ],
     ctaLabel: "Team holen",
     ctaFilled: false,
@@ -2135,14 +2163,17 @@ const PRICING_TIERS_EN: PricingTier[] = [
   {
     name: "Free",
     tagline: "To try it out",
+    outcomeHeadline: "Survive your first exam",
     price: "0€",
     priceSize: "40px",
     subtitle: "forever",
-    features: [
-      "Prepare 3 exams completely",
-      "15 cards per exam (the basics)",
-      "8-question exam simulator",
-      "All concepts sorted by importance",
+    valueStackTotal: "€96",
+    valueStackLabel: "Value if you bought it separately:",
+    bullets: [
+      { text: "Prepare 3 exams completely", value: "Tutor value: €30" },
+      { text: "15 cards per exam (the basics)", value: "Quizlet+: €18" },
+      { text: "8-question exam simulator", value: "€29" },
+      { text: "Concepts sorted by importance", value: "€19" },
     ],
     ctaLabel: "Create first pack",
     ctaFilled: false,
@@ -2150,17 +2181,22 @@ const PRICING_TIERS_EN: PricingTier[] = [
   {
     name: "Pro",
     tagline: "When several exams are coming up",
+    outcomeHeadline: "Make it through exam season",
     price: "6.99€",
     priceSize: "48px",
     subtitle: "/ month",
+    anchorPrice: "9.99€",
+    valueStackTotal: "€631 / month",
+    valueStackLabel: "Value if you bought it separately:",
     badge: "POPULAR",
-    features: [
-      "20 exams per month",
-      "30+ cards, sorted by topic",
-      "Essay blueprint with ready-to-use phrasing",
-      "12+ simulator questions per exam",
-      "Offline save + Quizlet export",
-      "Extra packs for 0.49€ if you need more",
+    bullets: [
+      { text: "20 exams completely prepared", value: "Tutor value: €200" },
+      { text: "600+ flashcards, curated by topic", value: "Quizlet+: €36" },
+      { text: "Essay blueprint with ready-to-use templates", value: "Writing coach: €149" },
+      { text: "Exam simulator (12+ questions per pack)", value: "Online course: €99" },
+      { text: "Offline mode + Quizlet export", value: "€49" },
+      { text: "Cheat-sheet PDF for every pack", value: "€39", bonus: true },
+      { text: "Study plan generator until your exam", value: "€59", bonus: true },
     ],
     ctaLabel: "Get Pro",
     ctaFilled: true,
@@ -2169,15 +2205,19 @@ const PRICING_TIERS_EN: PricingTier[] = [
   {
     name: "Team",
     tagline: "For the whole study year",
+    outcomeHeadline: "Carry the whole semester",
     price: "14.99€",
     priceSize: "40px",
     subtitle: "/ month",
-    features: [
-      "50 exams per month (more than enough)",
-      "Everything in Pro",
-      "No waiting — your packs first",
-      "PDF cheat sheet for your phone",
-      "Automatic study plan until the exam",
+    anchorPrice: "19.99€",
+    valueStackTotal: "€1,208 / month",
+    valueStackLabel: "Value if you bought it separately:",
+    bullets: [
+      { text: "50 exams / month (vs. 20 on Pro)", value: "Tutor value: €300" },
+      { text: "Everything in Pro included", value: "Pro value: €631" },
+      { text: "Priority — your packs get built first", value: "€99" },
+      { text: "PDF cheat sheet for your phone", value: "€49" },
+      { text: "Automatic study plan until your exam", value: "€129", bonus: true },
     ],
     ctaLabel: "Get Team",
     ctaFilled: false,
@@ -2214,7 +2254,42 @@ function PricingSection({
           </h2>
         </div>
 
-        <div className="ln-stagger mt-14 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="ln-reveal ln-founder-eyebrow mt-8">
+          <span className="ln-founder-rocket" aria-hidden>
+            🚀
+          </span>
+          <span className="ln-founder-text">
+            <strong>{isEn ? "Founder pricing" : "Founder-Preis"}</strong>
+            {" — "}
+            {isEn
+              ? "First 1,000 students pay €6.99 instead of €9.99 for Pro. Then the price goes up."
+              : "Die ersten 1.000 Studis zahlen €6,99 statt €9,99 für Pro. Danach steigt der Preis."}
+          </span>
+          <span className="ln-founder-counter">
+            {FOUNDER_PRICING_TAKEN}/{FOUNDER_PRICING_LIMIT}{" "}
+            {isEn ? "spots taken" : "Plätze vergeben"}
+          </span>
+        </div>
+
+        <div className="ln-reveal ln-guarantee-badge mt-4">
+          <span className="ln-guarantee-icon" aria-hidden>
+            🛡️
+          </span>
+          <div className="ln-guarantee-text">
+            <strong>
+              {isEn
+                ? "30-day money-back. One email is enough."
+                : "30 Tage Geld-zurück. Eine Email reicht."}
+            </strong>
+            <p>
+              {isEn
+                ? "If your first pack doesn't help — 100% back. No questions, no forms."
+                : "Wenn dein erstes Paket dir nicht hilft — 100% zurück. Keine Fragen, keine Formulare."}
+            </p>
+          </div>
+        </div>
+
+        <div className="ln-stagger mt-10 grid grid-cols-1 gap-4 md:grid-cols-3">
           {tiers.map((tier) => (
             <PricingCard
               key={tier.name}
@@ -2224,15 +2299,15 @@ function PricingSection({
           ))}
         </div>
 
-        <AdvancedKeyDisclosure onOpenConnect={onOpenConnect} />
+        <BYOKBanner onOpenConnect={onOpenConnect} />
 
         <p
           className="ln-reveal mt-6 text-center text-[12px]"
           style={{ color: "rgba(255,255,255,0.3)" }}
         >
           {isEn
-            ? "All prices include VAT. Cancel anytime."
-            : "Alle Preise inkl. MwSt. Jederzeit kündbar."}
+            ? "All prices include VAT. Cancel anytime. Comparison values reflect typical market prices for equivalent services."
+            : "Alle Preise inkl. MwSt. Jederzeit kündbar. Vergleichswerte basieren auf typischen Marktpreisen für äquivalente Leistungen."}
         </p>
       </div>
     </section>
@@ -2244,19 +2319,24 @@ function PricingSection({
 function BYOKBanner({ onOpenConnect }: { onOpenConnect: () => void }) {
   const isEn = useLanguage() === "en";
   return (
-    <div id="connect" className="byok-banner scroll-mt-24">
+    <div id="connect" className="ln-reveal byok-banner scroll-mt-24 mt-8">
       <div className="byok-left">
         <div className="byok-icon">
           <ClaudeLogo size={22} />
         </div>
         <div>
+          <span className="byok-bonus-eyebrow">
+            🔑 {isEn ? "Bonus for power users" : "Bonus für Power-User"}
+          </span>
           <h4>
-            {isEn ? "Have your own Anthropic API key?" : "Du hast einen Anthropic API Key?"}
+            {isEn
+              ? "Got your own Claude API key?"
+              : "Du hast einen eigenen Claude API Key?"}
           </h4>
           <p>
             {isEn
-              ? "Connect it to your plan — 30% cheaper and unlimited packs."
-              : "Verbinde ihn mit deinem Plan — 30% günstiger und unbegrenzte Pakete."}
+              ? "Save €2/month forever + unlimited packs. Worth €240+/year if you stay 12 months."
+              : "Spar €2/Monat dauerhaft + unbegrenzte Pakete. Wert: €240+/Jahr wenn du 12 Monate bleibst."}
           </p>
         </div>
       </div>
@@ -2274,25 +2354,6 @@ function BYOKBanner({ onOpenConnect }: { onOpenConnect: () => void }) {
         </button>
       </div>
     </div>
-  );
-}
-
-function AdvancedKeyDisclosure({ onOpenConnect }: { onOpenConnect: () => void }) {
-  const isEn = useLanguage() === "en";
-  return (
-    <details className="ln-reveal byok-disclosure">
-      <summary>
-        <span>
-          {isEn
-            ? "Advanced: connect your own Claude API key"
-            : "Für Power-User: eigenen Claude API Key verbinden"}
-        </span>
-        <span className="byok-disclosure-hint">
-          {isEn ? "30% cheaper" : "30% günstiger"}
-        </span>
-      </summary>
-      <BYOKBanner onOpenConnect={onOpenConnect} />
-    </details>
   );
 }
 
@@ -2489,8 +2550,22 @@ function PricingCard({
   tier: PricingTier;
   onCta: () => void;
 }) {
-  const { name, tagline, price, priceSize, subtitle, badge, features, ctaLabel, ctaFilled, highlighted } =
-    tier;
+  const {
+    name,
+    tagline,
+    outcomeHeadline,
+    price,
+    priceSize,
+    subtitle,
+    anchorPrice,
+    valueStackTotal,
+    valueStackLabel,
+    badge,
+    bullets,
+    ctaLabel,
+    ctaFilled,
+    highlighted,
+  } = tier;
   return (
     <div
       className="ln-reveal ln-glass-card relative flex flex-col"
@@ -2530,13 +2605,43 @@ function PricingCard({
       </div>
 
       <div
-        className="mt-2 text-[13px] leading-[1.35]"
-        style={{ color: "rgba(255,255,255,0.7)" }}
+        className="mt-3 text-[18px] font-semibold leading-[1.2] text-white"
+      >
+        {outcomeHeadline}
+      </div>
+
+      <div
+        className="mt-1 text-[12px] leading-[1.35]"
+        style={{ color: "rgba(255,255,255,0.5)" }}
       >
         {tagline}
       </div>
 
-      <div className="mt-4 flex items-baseline gap-2">
+      <ul className="mt-6 ln-value-stack">
+        {bullets.map((b) => (
+          <li key={b.text} className="ln-value-stack-row">
+            <span
+              className="ln-value-stack-icon"
+              style={{ color: b.bonus ? "#fbbf24" : "var(--color-ln-cyan)" }}
+              aria-hidden
+            >
+              {b.bonus ? "🎁" : "✓"}
+            </span>
+            <span className="ln-value-stack-text">{b.text}</span>
+            {b.value && <span className="ln-value-stack-value">{b.value}</span>}
+          </li>
+        ))}
+      </ul>
+
+      {valueStackTotal && (
+        <div className="ln-value-stack-total">
+          <span className="ln-value-stack-total-label">{valueStackLabel}</span>
+          <span className="ln-value-stack-total-amount">{valueStackTotal}</span>
+        </div>
+      )}
+
+      <div className="mt-5 flex items-baseline gap-2">
+        {anchorPrice && <span className="ln-anchor-price">{anchorPrice}</span>}
         <span
           className="ln-stat-gradient-blue font-bold leading-none"
           style={{ fontSize: priceSize, letterSpacing: "-1.6px" }}
@@ -2550,32 +2655,6 @@ function PricingCard({
           {subtitle}
         </span>
       </div>
-
-      <ul className="mt-6 flex-1">
-        {features.map((f, i) => (
-          <li
-            key={f}
-            className="flex items-start gap-3 text-[14px]"
-            style={{
-              color: "rgba(255,255,255,0.6)",
-              padding: "6px 0",
-              borderBottom:
-                i === features.length - 1
-                  ? "none"
-                  : "1px solid rgba(255,255,255,0.04)",
-            }}
-          >
-            <span
-              className="mt-[2px]"
-              style={{ color: "var(--color-ln-cyan)" }}
-              aria-hidden
-            >
-              ✓
-            </span>
-            <span>{f}</span>
-          </li>
-        ))}
-      </ul>
 
       <button
         onClick={onCta}
@@ -2619,9 +2698,9 @@ function BottomCta() {
             fontSize: "clamp(34px, 5.5vw, 64px)",
           }}
         >
-          {isEn ? "The exam is not waiting." : "Die Prüfung wartet nicht."}{" "}
+          {isEn ? "No more studying till 2am." : "Schluss mit Lernen bis 2 Uhr morgens."}{" "}
           <span className="lernly-italic text-white">
-            {isEn ? "Neither is your study pack." : "Dein Lernpaket auch nicht."}
+            {isEn ? "In 2 minutes you've got your pack." : "In 2 Minuten hast du dein Paket."}
           </span>
         </h2>
         <a

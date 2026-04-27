@@ -1508,62 +1508,162 @@
   color: #fff;
 }
 
-/* ========== BYOK BANNER (below the 3 pricing cards) ========== */
+/* ========== PRICING — VALUE STACK, ANCHOR, FOUNDER, GUARANTEE ========== */
 
-.byok-disclosure {
-  margin-top: 32px;
-}
-
-.byok-disclosure summary {
+.ln-founder-eyebrow {
   display: flex;
   align-items: center;
-  justify-content: center;
+  flex-wrap: wrap;
   gap: 12px;
-  width: fit-content;
-  margin: 0 auto;
-  padding: 10px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.62);
-  font-size: 13px;
-  cursor: pointer;
-  list-style: none;
-  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  padding: 14px 20px;
+  border: 1px solid rgba(251, 191, 36, 0.22);
+  border-radius: 14px;
+  background: rgba(251, 191, 36, 0.06);
 }
 
-.byok-disclosure summary::-webkit-details-marker {
-  display: none;
-}
-
-.byok-disclosure summary:hover {
-  border-color: rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.07);
-  color: rgba(255, 255, 255, 0.78);
-}
-
-.byok-disclosure summary::before {
-  content: "+";
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  background: rgba(217, 119, 87, 0.12);
-  color: #d97757;
-  font-size: 14px;
+.ln-founder-rocket {
+  font-size: 18px;
   line-height: 1;
 }
 
-.byok-disclosure[open] summary::before {
-  content: "–";
+.ln-founder-text {
+  flex: 1;
+  min-width: 240px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.4;
 }
 
-.byok-disclosure-hint {
-  color: rgba(217, 119, 87, 0.9);
+.ln-founder-text strong {
+  color: rgb(251, 191, 36);
+  font-weight: 600;
+}
+
+.ln-founder-counter {
   font-family: var(--font-mono);
   font-size: 12px;
+  color: rgba(251, 191, 36, 0.85);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.ln-guarantee-badge {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border: 1px solid rgba(124, 196, 160, 0.22);
+  border-radius: 14px;
+  background: rgba(124, 196, 160, 0.05);
+}
+
+.ln-guarantee-icon {
+  font-size: 24px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.ln-guarantee-text strong {
+  display: block;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.ln-guarantee-text p {
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.ln-value-stack {
+  margin-bottom: 0;
+  list-style: none;
+  padding: 0;
+}
+
+.ln-value-stack-row {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.ln-value-stack-row:last-child {
+  border-bottom: none;
+}
+
+.ln-value-stack-icon {
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.ln-value-stack-text {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13.5px;
+  line-height: 1.4;
+}
+
+.ln-value-stack-value {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.42);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.ln-value-stack-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(91, 184, 216, 0.06);
+  border: 1px solid rgba(91, 184, 216, 0.14);
+}
+
+.ln-value-stack-total-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+}
+
+.ln-value-stack-total-amount {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(91, 184, 216, 0.95);
+  white-space: nowrap;
+}
+
+.ln-anchor-price {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.32);
+  text-decoration: line-through;
+  text-decoration-color: rgba(251, 113, 133, 0.6);
+  text-decoration-thickness: 2px;
+}
+
+/* ========== BYOK BANNER (below the 3 pricing cards) ========== */
+
+.byok-bonus-eyebrow {
+  display: inline-block;
+  margin-bottom: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(217, 119, 87, 0.9);
 }
 
 .byok-banner {
@@ -1759,12 +1859,6 @@
     text-align: left;
   }
 
-  .byok-disclosure summary {
-    width: 100%;
-    flex-wrap: wrap;
-    text-align: center;
-  }
-
   .byok-banner {
     flex-direction: column;
     text-align: center;
@@ -1785,6 +1879,29 @@
   }
   .byok-btn {
     width: 100%;
+  }
+
+  .ln-founder-eyebrow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 14px 18px;
+  }
+  .ln-founder-counter {
+    align-self: flex-start;
+  }
+
+  .ln-guarantee-badge {
+    align-items: flex-start;
+    padding: 14px 18px;
+  }
+
+  .ln-value-stack-row {
+    grid-template-columns: 18px minmax(0, 1fr);
+  }
+  .ln-value-stack-value {
+    grid-column: 2;
+    margin-top: 2px;
   }
 }
 
