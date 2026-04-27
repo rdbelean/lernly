@@ -162,16 +162,10 @@
   font-weight: 500;
 }
 
-/* Lernly background: royal blue with diagonal studio light from upper-left
-   and a soft depth shadow at lower-right. Matches the brand frame. */
+/* Lernly background: exact logo gradient — 135° diagonal,
+   #2A38E8 → #1421C5 → #0A129E. Page extends the logo's own backdrop. */
 .ln-page-bg {
-  background:
-    /* Soft white diagonal light from upper-left, source off-screen */
-    radial-gradient(ellipse 110% 90% at -5% -10%, rgba(255, 255, 255, 0.14), transparent 60%),
-    /* Deep blue depth shadow at lower-right, source off-screen */
-    radial-gradient(ellipse 90% 70% at 110% 115%, rgba(10, 18, 90, 0.45), transparent 65%),
-    /* Royal blue base */
-    #2840d6;
+  background: linear-gradient(135deg, #2a38e8 0%, #1421c5 55%, #0a129e 100%);
   background-attachment: fixed;
   min-height: 100vh;
 }
