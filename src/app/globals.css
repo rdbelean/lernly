@@ -740,11 +740,8 @@
 /* Generated-page preview cards */
 .ln-preview-artifact-card {
   display: flex;
-  min-height: 420px;
   flex-direction: column;
-  justify-content: space-between;
   gap: 24px;
-  overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 24px;
   background:
@@ -1745,7 +1742,6 @@
   }
 
   .ln-preview-artifact-card {
-    min-height: auto;
     padding: 22px;
   }
 

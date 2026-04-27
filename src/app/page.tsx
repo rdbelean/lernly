@@ -57,19 +57,34 @@ function useScrollReveal() {
       },
       { threshold: 0.05, rootMargin: "0px 0px 0px 0px" },
     );
-    document.querySelectorAll(".ln-reveal").forEach((el) => obs.observe(el));
 
-    // Safety net: force-reveal anything still hidden after 1.5s.
-    // Guarantees a broken observer can never leave a whole section invisible.
-    const safety = window.setTimeout(() => {
-      document.querySelectorAll(".ln-reveal:not(.is-visible)").forEach((el) => {
-        el.classList.add("is-visible");
-      });
-    }, 1500);
+    const tracked = new WeakSet<Element>();
+    const trackElement = (el: Element) => {
+      if (tracked.has(el)) return;
+      tracked.add(el);
+      obs.observe(el);
+      // Per-element safety net: force visible after 1.5s if observer never fires.
+      // Covers conditionally rendered sections (e.g. ResultSection after pack
+      // generation), which previously stayed at opacity:0 forever.
+      window.setTimeout(() => {
+        if (!el.classList.contains("is-visible")) {
+          el.classList.add("is-visible");
+          obs.unobserve(el);
+        }
+      }, 1500);
+    };
+
+    const scan = () => {
+      document.querySelectorAll(".ln-reveal").forEach(trackElement);
+    };
+    scan();
+
+    const mut = new MutationObserver(scan);
+    mut.observe(document.body, { childList: true, subtree: true });
 
     return () => {
       obs.disconnect();
-      clearTimeout(safety);
+      mut.disconnect();
     };
   }, []);
 }
