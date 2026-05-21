@@ -1416,14 +1416,10 @@ function BentoFeatures() {
             isEn ? "What makes Lernly different" : "Was Lernly anders macht"
           }
           boldPart={
-            isEn
-              ? "Prepare for your exam"
-              : "Klausur vorbereiten"
+            isEn ? "Exam in 7 days?" : "Klausur in 7 Tagen?"
           }
           italicPart={
-            isEn
-              ? "without scrolling and hoping."
-              : "ohne Durchscrollen und Hoffen."
+            isEn ? "Enough time." : "Reicht."
           }
         />
 
@@ -1436,12 +1432,12 @@ function BentoFeatures() {
             <CardTitle>
               {isEn
                 ? "Actively quizzed, not passively skimmed."
-                : "Aktiv abgefragt, nicht passiv durchgeblättert."}
+                : "Du wirst abgefragt. Nicht berieselt."}
             </CardTitle>
             <CardDesc>
               {isEn
-                ? "Every card tests you. Every quiz explains why each option is right or wrong. The stuff actually sticks instead of sliding off."
-                : "Jede Karte testet dich. Jedes Quiz erklärt, warum jede Option richtig oder falsch ist. Damit es wirklich hängen bleibt — statt nur durchgelesen zu werden."}
+                ? "Every card tests you. Every quiz explains why each option is right or wrong. So the stuff actually sticks."
+                : "Jede Karte testet dich. Jedes Quiz erklärt, warum jede Option richtig oder falsch ist. Damit's wirklich hängen bleibt."}
             </CardDesc>
             <div className="mt-6 flex flex-wrap gap-2">
               <span className="ln-mono-tag ln-mono-tag-pill ln-mono-tag-accent">
@@ -1512,7 +1508,7 @@ function BentoFeatures() {
               {isEn ? "Even when Wi-Fi gives up" : "Auch wenn's WLAN streikt"}
             </CardEyebrow>
             <CardTitle className="mt-3">
-              {isEn ? "Learns offline with you." : "Lernt offline mit dir."}
+              {isEn ? "Runs without WiFi." : "Läuft auch ohne WLAN."}
             </CardTitle>
             <CardDesc>
               {isEn
@@ -1540,15 +1536,15 @@ function BentoFeatures() {
           {/* Card 5 — span 2 (preview) */}
           <div className="ln-reveal ln-glass-card p-8 md:col-span-2">
             <CardEyebrow>
-              {isEn ? "Slides in German? No problem." : "Skript auf Englisch? Egal."}
+              {isEn ? "Slides in English? No problem." : "Folien auf Englisch? Egal."}
             </CardEyebrow>
             <CardTitle className="mt-3">
               {isEn ? "Any subject. Any language." : "Jedes Fach. Jede Sprache."}
             </CardTitle>
             <CardDesc>
               {isEn
-                ? "German script, English slides? No problem. Lernly reads it all and builds your pack — business, medicine, law, whatever you study."
-                : "Skript auf Deutsch, Folien auf Englisch? Egal. Lernly liest alles und baut dein Paket — BWL, Medizin, Jura, was auch immer."}
+                ? "Slides in English, notes in German? Doesn't matter. Lernly reads it all and builds your pack — business, medicine, law, whatever you study."
+                : "Folien auf Englisch, Mitschrift auf Deutsch? Egal. Lernly liest alles und baut dein Paket — BWL, Medizin, Jura, was auch immer."}
             </CardDesc>
             <div className="mt-5 flex flex-wrap gap-1.5">
               <span className="ln-mono-tag">{isEn ? "Business" : "BWL"}</span>
@@ -1585,7 +1581,9 @@ function BentoFeatures() {
                     margin: 0,
                   }}
                 >
-                  {isEn ? "3 study packs free. No subscription." : "3 Lernpakete gratis. Kein Abo."}
+                  {isEn
+                    ? "2 free packs. Every month."
+                    : "2 Pakete gratis. Jeden Monat."}
                 </h3>
                 <p
                   style={{
@@ -1597,8 +1595,8 @@ function BentoFeatures() {
                   }}
                 >
                   {isEn
-                    ? "Enough for your next exam week. No credit card, no trial countdown."
-                    : "Reicht für deine nächste Klausurenwoche. Keine Kreditkarte, kein Trial-Countdown."}
+                    ? "Free Lernly resets every month. No credit card, no commitment."
+                    : "Free-Tier resettet jeden Monat. Keine Kreditkarte, keine Verpflichtung."}
                 </p>
               </div>
             </div>
