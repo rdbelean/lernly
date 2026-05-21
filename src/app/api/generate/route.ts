@@ -41,6 +41,8 @@ const PDF_CHAR_BUDGET = 280_000;
 
 const MODEL = "claude-sonnet-4-6";
 
+const PER_TASK_TIMEOUT_MS = 180_000;
+
 type TaskKey = "cards" | "simulator" | "blueprint" | "meta";
 
 const TASKS: Record<TaskKey, { instruction: string; maxTokens: number }> = {
@@ -120,26 +122,44 @@ async function runTask(
 ): Promise<unknown> {
   const t0 = Date.now();
   const { instruction, maxTokens } = TASKS[key];
-  const stream = client.messages.stream({
-    model: MODEL,
-    max_tokens: maxTokens,
-    thinking: { type: "disabled" },
-    system: BASE_SYSTEM_PROMPT,
-    messages: [
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), PER_TASK_TIMEOUT_MS);
+
+  let final;
+  try {
+    const stream = client.messages.stream(
       {
-        role: "user",
-        content: [
+        model: MODEL,
+        max_tokens: maxTokens,
+        thinking: { type: "disabled" },
+        system: BASE_SYSTEM_PROMPT,
+        messages: [
           {
-            type: "text",
-            text: materialText,
-            cache_control: { type: "ephemeral" },
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: materialText,
+                cache_control: { type: "ephemeral" },
+              },
+              { type: "text", text: instruction },
+            ],
           },
-          { type: "text", text: instruction },
         ],
       },
-    ],
-  });
-  const final = await stream.finalMessage();
+      { signal: controller.signal },
+    );
+    final = await stream.finalMessage();
+  } catch (e) {
+    if (controller.signal.aborted) {
+      throw new Error(
+        `Sub-Task ${key} hat länger als ${PER_TASK_TIMEOUT_MS / 1000}s gedauert — Anthropic ist gerade langsam, bitte erneut versuchen.`,
+      );
+    }
+    throw e;
+  } finally {
+    clearTimeout(timeoutId);
+  }
   const tb = final.content.find((b) => b.type === "text");
   const raw = tb && "text" in tb ? tb.text : "";
   const ms = Date.now() - t0;
