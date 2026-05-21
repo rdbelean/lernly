@@ -1,329 +1,217 @@
 {
-  "courseTitle": "Global Strategic Management — Session 14: Global Strategies",
+  "courseTitle": "Global Strategic Management — Session 14: Global Strategies & International Competitive Advantage",
   "examType": "open_book",
   "flashcards": [
     {
       "id": "1",
-      "category": "Foundations of Global Strategy",
-      "question": "What are the two core goals of a firm's global strategy?",
-      "answer": "<strong>Gain and sustain a competitive advantage while competing against both foreign and domestic companies.</strong><br>Global strategy is part of a firm's corporate strategy and directs how it deploys resources internationally.<br>Example: Samsung competes with Apple (domestic US rival) and Sony (foreign rival) simultaneously through its global strategy.",
-      "difficulty": "easy"
+      "category": "Grundlagen der Internationalisierung",
+      "question": "Was sind die 3 zentralen Vorteile der internationalen Expansion und für welchen Strategietyp ist jeder relevant?",
+      "answer": "<strong>Die 3 Vorteile sind Marktzugang, Kostenfaktoren und neue Kompetenzen</strong> — je nach Strategie unterschiedlich relevant.<br>1. <strong>Größerer Markt</strong> → Economies of Scale/Scope (relevant für alle MNEs, z.B. Netflix expandiert global, um Content-Kosten auf mehr Abonnenten zu verteilen). 2. <strong>Günstige Inputfaktoren</strong> → Low-Cost Leadership (z.B. Apple lässt in China fertigen wegen niedriger Lohnkosten). 3. <strong>Neue Kompetenzen</strong> → Differenzierungsstrategie (z.B. SAP saugt Silicon-Valley-Talent durch US-Büros auf).<br><em>Eselsbrücke:</em> <strong>MKN</strong> — <strong>M</strong>arkt, <strong>K</strong>osten, <strong>N</strong>ew Competencies. \"Mein Kurs N(utzt)\".",
+      "difficulty": "medium"
     },
     {
       "id": "2",
-      "category": "Foundations of Global Strategy",
-      "question": "What defines a Multinational Enterprise (MNE)?",
-      "answer": "<strong>A firm that deploys resources and capabilities in two or more countries.</strong><br>MNEs go beyond simple exporting — they actively commit resources (capital, people, technology) across national borders.<br>Example: Toyota operates manufacturing plants in Japan, the USA, and Germany, making it a classic MNE.",
-      "difficulty": "easy"
+      "category": "Grundlagen der Internationalisierung",
+      "question": "Was sind die 3 zentralen Nachteile der internationalen Expansion? Nenne für jeden ein konkretes Unternehmensbeispiel.",
+      "answer": "<strong>Die 3 Nachteile sind Liability of Foreignness, Reputationsverlust und IP-Verlust.</strong><br>1. <strong>Liability of Foreignness</strong>: Walmart scheiterte in Deutschland, weil es die lokale Kultur (Mitarbeiterrituale, Lächelpflicht) komplett falsch einschätzte. 2. <strong>Reputationsverlust</strong>: Nike verlor Reputation durch Sweatshop-Vorwürfe in Asien — schlechte Arbeitsbedingungen bei Zulieferern. 3. <strong>IP-Verlust</strong>: Westliche Automobilhersteller (z.B. VW in China) mussten Technologie im Joint Venture teilen, chinesische Partner kopierten Konzepte.<br><em>Eselsbrücke:</em> <strong>FRI</strong> — <strong>F</strong>oreignness, <strong>R</strong>eputation, <strong>I</strong>P. \"Frische Risiken International\".",
+      "difficulty": "medium"
     },
     {
       "id": "3",
-      "category": "Foundations of Global Strategy",
-      "question": "What are the four industry types in the Patterns of Internationalization framework, and how do they differ on the two axes?",
-      "answer": "<strong>The four types are: Trading Industries, Global Industries, Multidomestic Industries, and Sheltered Industries — mapped on axes of International Trade (low/high) and Foreign Direct Investment (low/high).</strong><br>Trading Industries: high trade, low FDI (e.g., diamond mining, agriculture). Global Industries: high trade, high FDI (e.g., automobiles, semiconductors). Multidomestic Industries: low trade, high FDI (e.g., retail banking, hotels). Sheltered Industries: low trade, low FDI (e.g., hairdressing, taxi services).<br>Example: The oil industry is Global (high trade + high FDI), while fresh milk is Sheltered (low trade + low FDI) due to perishability.",
+      "category": "Grundlagen der Internationalisierung",
+      "question": "Was ist der Unterschied zwischen einer 'Trading Industry' und einer 'Global Industry' im Internationalisierungsmatrix? Nenne je 2 Beispiele.",
+      "answer": "<strong>Trading Industries haben hohen Außenhandel aber niedrige FDI; Global Industries haben beides hoch.</strong><br><strong>Trading Industries</strong>: Produkte werden exportiert, aber Firmen investieren kaum vor Ort — z.B. Diamantminen (Botswana exportiert, investiert nicht in Abnehmerländer) und Schiffbau. <strong>Global Industries</strong>: Firmen handeln UND investieren massiv weltweit — z.B. Toyota (Handel + Produktionswerke auf allen Kontinenten), Halbleiter (TSMC hat Fabs weltweit).<br><em>Merkhilfe:</em> Die Matrix-Achsen sind <strong>FDI (y-Achse)</strong> und <strong>International Trade (x-Achse)</strong>. Trading = rechts unten, Global = rechts oben.",
       "difficulty": "medium"
     },
     {
       "id": "4",
-      "category": "Foundations of Global Strategy",
-      "question": "What are the five key features of Foreign Direct Investment (FDI)?",
-      "answer": "<strong>1. Substantial resource commitment. 2. Implies local presence and operations. 3. Firms invest where comparative advantages exist. 4. Substantial risk and uncertainty. 5. Requires dealing with specific social and cultural variables in the host market.</strong><br>FDI is the most advanced, expensive, complex, and riskiest entry strategy, involving the establishment of manufacturing plants or marketing subsidiaries abroad.<br>Example: Haier's acquisition of Maytag (US appliance brand) raised patriotic sentiments — illustrating the social/cultural complexity of FDI.",
-      "difficulty": "medium"
-    },
-    {
-      "id": "5",
-      "category": "Foundations of Global Strategy",
-      "question": "How does FDI differ from other modes of foreign market entry in terms of investment and control?",
-      "answer": "<strong>FDI sits at the high end of both investment commitment and control on the Investment-Control Continuum.</strong><br>Lower-commitment modes (exporting, licensing) require less capital but give the firm less control. FDI maximizes control over operations but demands the largest resource commitment and carries the highest risk.<br>Example: A firm licensing its brand to a foreign partner (low investment, low control) vs. building its own factory abroad (high investment, high control via FDI).",
+      "category": "Grundlagen der Internationalisierung",
+      "question": "Was ist eine 'Sheltered Industry' und warum ist dort internationale Expansion nahezu unmöglich? Nenne 3 Beispiele.",
+      "answer": "<strong>Sheltered Industries haben sowohl niedrigen Außenhandel als auch niedrige FDI</strong>, weil ihre Produkte/Services lokal gebunden sind.<br>Beispiele: Taxiservices (man kann keinen deutschen Taxifahrer nach Japan exportieren), Friseure, Frischmilch (verdirbt auf langen Transportwegen). Diese Branchen sind durch Natur des Produkts, Regulierung oder Infrastruktur geschützt — Globalisierung greift hier kaum.<br><em>Klausur-Falle:</em> Uber ist KEIN klassisches Sheltered-Gegenbeispiel — Uber ist eine Plattform, die das Modell exportiert, die Fahrer bleiben lokal. Das zeigt, wie Digitalisierung Sheltered Industries angreift.",
       "difficulty": "easy"
     },
     {
+      "id": "5",
+      "category": "Grundlagen der Internationalisierung",
+      "question": "Wie beeinflusst Internationalisierung die Branchenstruktur (Porter's 5 Forces)? Nenne die 3 wichtigsten Effekte.",
+      "answer": "<strong>Internationalisierung erhöht den Wettbewerbsdruck durch niedrigere Eintrittsbarrieren, mehr Rivalität und höhere Käufermacht.</strong><br>1. <strong>Niedrigere Eintrittsbarrieren</strong>: Nationale Märkte werden für ausländische Konkurrenten zugänglicher (z.B. chinesische E-Auto-Hersteller BYD drängen in den europäischen Markt). 2. <strong>Mehr Rivalität</strong>: Mehr und diversere Wettbewerber (z.B. Smartphone-Markt: Apple vs. Samsung vs. Xiaomi vs. Huawei). 3. <strong>Höhere Käufermacht</strong>: Käufer können aus mehr Lieferanten weltweit wählen (z.B. Einkäufer bei Siemens sourcen Bauteile global).<br><em>Fazit für Klausur:</em> \"Ceteris paribus reduziert Internationalisierung die Branchenmargen und den Return on Capital.\"",
+      "difficulty": "medium"
+    },
+    {
       "id": "6",
-      "category": "Advantages & Disadvantages of International Expansion",
-      "question": "What are the three main advantages of international expansion?",
-      "answer": "<strong>1. Access to a larger market. 2. Access to low-cost input factors. 3. Development of new competencies.</strong><br>Each advantage addresses a different strategic need: market size supports scale/scope economies; low-cost inputs support cost leadership; new competencies support differentiation.<br>Example: India offers well-educated English-speaking workers (new competencies); China offers low labor costs and efficient infrastructure (low-cost inputs).",
+      "category": "Markteintrittsstrategien",
+      "question": "Nenne die 5 Hauptmodi des Markteintritts entlang des Investment-Control-Kontinuums und erkläre das Trade-off.",
+      "answer": "<strong>Von niedrig zu hoch in Kontrolle und Investition: Export → Licensing → Franchising → Joint Venture → Wholly Owned Subsidiary (FDI).</strong><br>Trade-off: Je höher die Kontrolle, desto höher das Risiko und die Investition. Beispiel: <strong>McDonald's</strong> nutzt Franchising (mittlere Kontrolle, skalierbar), <strong>Tesla</strong> betreibt nur eigene Stores (Wholly Owned — maximale Markenkontrolle). <strong>Starbucks</strong> startete in China mit Joint Ventures, bevor es die Kontrolle übernahm.<br><em>Eselsbrücke:</em> <strong>ELFJW</strong> — <strong>E</strong>xport, <strong>L</strong>icensing, <strong>F</strong>ranchising, <strong>J</strong>oint Venture, <strong>W</strong>holly Owned. \"Erst Langsam, Finde Jeden Weg.\"",
       "difficulty": "easy"
     },
     {
       "id": "7",
-      "category": "Advantages & Disadvantages of International Expansion",
-      "question": "What are the three main disadvantages of international expansion?",
-      "answer": "<strong>1. Liability of Foreignness. 2. Loss of Reputation. 3. Loss of Intellectual Property.</strong><br>These disadvantages arise from unfamiliar environments, CSR failures abroad, and IP protection challenges respectively.<br>Example: A firm manufacturing in a country with poor safety standards risks reputational damage (loss of reputation); operating in a country with weak IP laws risks reverse-engineering of its technology (loss of IP).",
-      "difficulty": "easy"
+      "category": "Markteintrittsstrategien",
+      "question": "Was sind die 5 Key Features von Foreign Direct Investment (FDI)?",
+      "answer": "<strong>FDI ist die aufwändigste, teuerste und risikoreichste Markteintrittsform mit 5 Kernmerkmalen.</strong><br>1. <strong>Substantielle Ressourcenbindung</strong> 2. <strong>Lokale Präsenz und Betrieb</strong> 3. <strong>Investition in komparative Vorteile des Ziellandes</strong> 4. <strong>Hohes Risiko und Unsicherheit</strong> 5. <strong>Intensive Auseinandersetzung mit sozialen/kulturellen Variablen</strong>.<br>Beispiel: Als <strong>Haier</strong> (chinesisch) den US-Hersteller Maytag übernahm, löste das patriotische Reaktionen in den USA aus — Punkt 5 in der Praxis.<br><em>Eselsbrücke:</em> <strong>RLRRS</strong> — <strong>R</strong>essourcen, <strong>L</strong>okal, <strong>R</strong>egional (komparative Vorteile), <strong>R</strong>isiko, <strong>S</strong>oziokultur. \"Richtig Lokal Riskant — Respektiere Soziales.\"",
+      "difficulty": "medium"
     },
     {
       "id": "8",
-      "category": "Advantages & Disadvantages of International Expansion",
-      "question": "What is the 'Liability of Foreignness' and what costs does it create?",
-      "answer": "<strong>The Liability of Foreignness refers to the additional costs MNEs face due to their unfamiliarity with foreign cultural and economic environments, and the challenge of coordinating across geographic distances.</strong><br>Domestic firms have an inherent advantage because they understand local customs, regulations, and market dynamics. Foreign firms must invest time and resources to overcome this deficit.<br>Example: A US retailer entering Japan must learn entirely different consumer expectations, store layout norms, and business etiquette — all generating extra costs.",
-      "difficulty": "medium"
+      "category": "Markteintrittsstrategien",
+      "question": "Welche 3 Hauptfaktoren bestimmen den optimalen Produktionsstandort laut dem Location-Framework? Wende sie auf ein Beispiel an.",
+      "answer": "<strong>Die 3 Faktoren sind: nationale Ressourcenbedingungen, firmenspezifische Vorteile und Handelbarkeit (Tradability).</strong><br>1. <strong>Nationale Ressourcen</strong>: Wo sind benötigte Inputs günstig? (z.B. Saudi-Arabien für Öl-Raffinierung). 2. <strong>Firmenspezifische Vorteile</strong>: Kann man die Wettbewerbsvorteile transferieren? (z.B. Apple's Design-Know-how bleibt in Cupertino). 3. <strong>Tradability</strong>: Kann das Produkt wirtschaftlich transportiert werden? Frischmilch → Nein, muss lokal produziert werden. Chips → Ja, werden global verschifft.<br><em>Merkhilfe:</em> Frage dich immer: \"<strong>R</strong>essource, <strong>F</strong>irma, <strong>T</strong>ransport?\" = <strong>RFT</strong>-Check vor jeder Standortentscheidung.",
+      "difficulty": "hard"
     },
     {
       "id": "9",
-      "category": "Advantages & Disadvantages of International Expansion",
-      "question": "Why is Loss of Intellectual Property a significant risk in international expansion, and which industries are most affected?",
-      "answer": "<strong>IP protection varies widely across countries; copyright infringement is common and some partners initially collaborate then reverse-engineer a firm's capabilities.</strong><br>Industries most vulnerable: software, movies, music — where digital copying is easy. The risk is especially high in countries with weak legal enforcement.<br>Example: A tech firm entering a market with a local partner may find that partner launching a competing product using the same technology after the partnership ends.",
-      "difficulty": "medium"
+      "category": "Markteintrittsstrategien",
+      "question": "Was misst Ghemawat's CAGE-Framework und welche Industrien sind von welcher Distanzdimension besonders betroffen?",
+      "answer": "<strong>CAGE misst die Distanz zwischen zwei Ländern über 4 Dimensionen: Cultural, Administrative, Geographic, Economic.</strong><br><strong>C</strong>ultural: Sprache, Religion, Normen — besonders relevant für TV/Publishing, Lebensmittel, Musik (z.B. Netflix passt Inhalte kulturell an). <strong>A</strong>dministrative: Politische Beziehungen, Rechtssysteme — relevant für Energie, Verteidigung, Telekommunikation. <strong>G</strong>eographic: Entfernung, Infrastruktur — relevant für Zement (niedrig Wert-zu-Gewicht), Glas, Frischmilch. <strong>E</strong>conomic: Einkommensunterschiede, Ressourcen — relevant für Luxusgüter und arbeitsintensive Produkte.<br><em>Eselsbrücke:</em> <strong>CAGE</strong> — wie ein Käfig, der die Internationalisierung einschränkt. Je größer der Käfig (Distanz), desto schwieriger der Markteintritt.",
+      "difficulty": "easy"
     },
     {
       "id": "10",
-      "category": "Advantages & Disadvantages of International Expansion",
-      "question": "How does internationalization generally affect industry profitability according to the framework presented?",
-      "answer": "<strong>Internationalization tends to reduce an industry's margins and return on capital by intensifying competition.</strong><br>It lowers entry barriers into national markets, increases industry rivalry (lower seller concentration, more diverse competitors), and increases buyer power (buyers have more potential suppliers). All three forces erode profitability (Porter's Five Forces logic).<br>Example: The entry of South Korean and Chinese automakers into European markets increased rivalry and gave consumers more choices, reducing margins for incumbent manufacturers.",
+      "category": "Markteintrittsstrategien",
+      "question": "Unter welchen 3 Bedingungen muss die Produktion zwingend nahe am Markt stattfinden? Nenne für jede einen Industrie-Fall.",
+      "answer": "<strong>Wenn das Produkt nicht handelbar ist, muss lokal produziert werden — aus 3 Gründen.</strong><br>1. <strong>Hohe Transport-/Gewichtskosten</strong>: Zement hat zu niedriges Wert-zu-Gewicht-Verhältnis für globalen Transport → Lafarge/Holcim produziert regional. 2. <strong>Verderblichkeit</strong>: Frischmilch verdirbt vor Ankunft → jede Region hat eigene Molkerei. 3. <strong>Handelsbeschränkungen</strong>: Zölle, Importverbote → Toyota baut US-Werke, um Zölle zu umgehen (\"Tariff-jumping FDI\").<br><em>Cross-Reference:</em> Das verbindet sich mit der Tradability-Dimension aus dem Location-Framework (Karte #8) und dem Geographic-Faktor aus CAGE (Karte #9).",
       "difficulty": "medium"
     },
     {
       "id": "11",
-      "category": "National Environment & Location Decisions",
-      "question": "What are the four components of Porter's National Diamond Framework?",
-      "answer": "<strong>1. Factor Conditions. 2. Related and Supporting Industries. 3. Demand Conditions. 4. Strategy, Structure, and Rivalry.</strong><br>Porter's National Diamond explains why certain nations develop competitive advantages in specific industries. 'Home-grown' resources matter more than natural endowments (Factor Conditions); industry clusters are key (Related & Supporting); discerning domestic customers drive quality (Demand Conditions); domestic rivalry drives upgrading (Strategy/Structure/Rivalry).<br>Example: Italy's fashion industry benefits from sophisticated local consumers (demand conditions) and a cluster of fabric, leather, and accessory suppliers (related industries). — Porter",
+      "category": "Porter's National Diamond & Theorie",
+      "question": "Was sind die 4 Elemente von Porter's National Diamond und welches ist das kontraintuitivste?",
+      "answer": "<strong>Porter's National Diamond (1990) erklärt, warum bestimmte Nationen in bestimmten Industrien weltweit führend sind.</strong><br>Die 4 Elemente: 1. <strong>Factor Conditions</strong>: Home-grown Ressourcen wichtiger als natürliche Ausstattung (Schlüsseleinsicht!). 2. <strong>Related & Supporting Industries</strong>: Cluster-Effekte (Silicon Valley). 3. <strong>Demand Conditions</strong>: Anspruchsvolle Heimkunden treiben Qualität (deutsche Automobilkäufer → Premium-Autos). 4. <strong>Strategy, Structure & Rivalry</strong>: Harte Inlandskonkurrenz zwingt zu Upgrade.<br><em>Das Kontraintuitive:</em> Factor Conditions — Porter sagt, Länder mit <strong>Ressourcenknappheit</strong> (Deutschland hat kein Öl) innovieren oft mehr als ressourcenreiche Länder (Ressourcenfluch).<br><em>Eselsbrücke:</em> <strong>FRDS</strong> — <strong>F</strong>actors, <strong>R</strong>elated Industries, <strong>D</strong>emand, <strong>S</strong>trategy/Rivalry. \"Früher Ruhm Durch Stärke.\"",
       "difficulty": "medium"
     },
     {
       "id": "12",
-      "category": "National Environment & Location Decisions",
-      "question": "In Porter's National Diamond, why is domestic rivalry considered a driver of competitive advantage rather than a threat?",
-      "answer": "<strong>Intense domestic rivalry forces firms to constantly upgrade their capabilities, innovate, and improve efficiency — creating stronger competitors for international markets.</strong><br>Unlike industries protected from domestic competition, firms in highly rivalrous home markets are 'battle-hardened' and better prepared to compete globally.<br>Example: The fierce competition among Japanese consumer electronics firms (Sony, Panasonic, Sharp) at home contributed to their global dominance in the 1970s–80s. — Porter",
-      "difficulty": "hard"
-    },
-    {
-      "id": "13",
-      "category": "National Environment & Location Decisions",
-      "question": "What are the three sets of factors a firm must consider when deciding where to locate production?",
-      "answer": "<strong>1. National resource conditions (where are required resources available at low cost?). 2. Firm-specific advantages (are the company's competitive advantages transferable?). 3. Tradability issues (can the product be transported economically, or do trade restrictions apply?).</strong><br>If a product cannot be traded economically — due to weight, perishability, or trade barriers — production must be close to the market.<br>Example: Fresh milk (perishable, high weight-to-value) must be produced locally; semiconductors (light, high value) can be produced centrally in one optimal location.",
+      "category": "Porter's National Diamond & Theorie",
+      "question": "Warum sind 'Demand Conditions' in Porter's Diamond so wichtig? Erkläre am Beispiel einer deutschen Industrie.",
+      "answer": "<strong>Anspruchsvolle Heimkunden zwingen Unternehmen zu höherer Qualität und Innovation — das ist der Demand-Conditions-Effekt.</strong><br>Beispiel: Deutsche Automobilkäufer sind extrem anspruchsvoll (Sicherheit, Performance, Qualität). Das zwingt BMW, Mercedes und Audi zur ständigen Innovation → diese Qualitätsstandards machen sie weltweit wettbewerbsfähig. Ähnlich: Japanische Verbraucher sind bei Elektronik extrem qualitätsbewusst → Sony, Toyota wurden Weltmarktführer.<br><em>Klausur-Falle:</em> Demand Conditions bedeutet NICHT \"großer Heimmarkt\" (das wäre Advantage #1 der Internationalisierung). Es bedeutet <strong>qualitative Anspruchshaltung</strong> der Kunden.",
       "difficulty": "medium"
     },
     {
+      "id": "13",
+      "category": "Porter's National Diamond & Theorie",
+      "question": "Was ist der Unterschied zwischen der Theory of Comparative Advantage und Porter's National Diamond? Wann verwendet man welche?",
+      "answer": "<strong>Comparative Advantage (Ricardo) erklärt nationale Ressourcenausstattung; Porter's Diamond erklärt, wie Ressourcen/Fähigkeiten entstehen und sich entwickeln.</strong><br><strong>Comparative Advantage</strong>: Saudi-Arabien hat Öl → Ölproduktion ist ihr komparativer Vorteil (statisch, naturgegeben). Anwendung: Erklärung von Trade-Patterns (warum exportiert wer was?).<br><strong>Porter's Diamond</strong>: Warum ist Deutschland trotz fehlender Ölvorkommen in Premium-Autos führend? Weil Factor Conditions, Demand, Cluster und Rivalität diese Stärke geschaffen haben (dynamisch, konstruiert).<br><em>Faustregel:</em> Comparative Advantage = <strong>\"Was hat ein Land?\"</strong> Porter's Diamond = <strong>\"Warum ist ein Land gut darin?\"</strong>",
+      "difficulty": "hard"
+    },
+    {
       "id": "14",
-      "category": "National Environment & Location Decisions",
-      "question": "What are the four dimensions of Ghemawat's CAGE Framework, and what does each measure?",
-      "answer": "<strong>C = Cultural Distance, A = Administrative and Political Distance, G = Geographical Distance, E = Economic Differences.</strong><br>Each dimension captures a type of 'distance' between two countries that increases the cost and difficulty of doing business across them. Greater CAGE distance = higher barriers to trade and FDI.<br>Example: The US and UK have low cultural (shared language), low administrative (shared legal traditions), moderate geographical, and low economic distance — making bilateral trade and investment relatively easy. — Ghemawat",
+      "category": "Porter's National Diamond & Theorie",
+      "question": "Was sind 'Related and Supporting Industries' in Porter's Diamond und warum sind Cluster so wichtig?",
+      "answer": "<strong>Cluster sind geografische Konzentrationen von verbundenen Unternehmen, die sich gegenseitig verstärken und Wettbewerbsvorteile schaffen.</strong><br>Beispiele: <strong>Silicon Valley</strong> (Tech-Cluster: Google, Apple, VCs, Stanford, Zulieferer — alle nah beieinander → Wissens-Spillovers). <strong>Hollywood</strong> (Film-Cluster: Studios, Schauspieler, Technik, Verleiher). <strong>Deutsches Automobilcluster</strong> (BMW/Mercedes/Audi + BASF + Bosch + Zulieferer).<br>Warum wichtig? Zugang zu spezialisierten Zulieferern, Talentpool, schneller Informationsfluss, gemeinsame Infrastruktur — all das senkt Kosten und beschleunigt Innovation.<br><em>Klausur-Verbindung:</em> Das ist auch ein Argument für FDI-Standortwahl (Karte #8): Firmen ziehen in Cluster, um von Related Industries zu profitieren.",
       "difficulty": "easy"
     },
     {
       "id": "15",
-      "category": "National Environment & Location Decisions",
-      "question": "According to Ghemawat's CAGE Framework, which industries are most sensitive to Cultural Distance?",
-      "answer": "<strong>Industries with high linguistic or cultural content — such as TV, publishing, food, wine, and music.</strong><br>Cultural distance increases costs when products carry meaning, language, or taste preferences that differ across nations. Adapting these products is expensive or sometimes impossible.<br>Example: A French wine brand relies on cultural prestige tied to French identity — in countries with very different cultural references, this perceived value diminishes significantly. — Ghemawat",
-      "difficulty": "medium"
-    },
-    {
-      "id": "16",
-      "category": "National Environment & Location Decisions",
-      "question": "According to Ghemawat's CAGE Framework, which industries are most sensitive to Geographical Distance?",
-      "answer": "<strong>Products with low value-to-weight ratios (cement), fragile products (glass), perishable products (milk), or services requiring real-time communication (financial services).</strong><br>Geographical distance raises transportation costs disproportionately for heavy/bulky/fragile goods and creates latency problems for communication-dependent services.<br>Example: Cement cannot be shipped profitably over long distances — local production is always required, making it a 'Sheltered Industry.' — Ghemawat",
-      "difficulty": "medium"
-    },
-    {
-      "id": "17",
-      "category": "Integration-Responsiveness Framework",
-      "question": "What is the core trade-off captured by the Integration-Responsiveness (IR) Framework?",
-      "answer": "<strong>The IR Framework captures the tension between the need to integrate value chain activities globally (for efficiency) and the need to adapt offerings to local market conditions (for local responsiveness).</strong><br>Firms that maximize global integration minimize costs through standardization and scale economies. Firms that maximize local responsiveness maximize market share by tailoring products to local needs. Most MNEs must find a balance between these two pressures.<br>Example: McDonald's globally standardizes its supply chain and brand (integration) but adapts its menu locally — McAloo Tikki in India (local responsiveness). — Prahalad & Doz (1987); Roth & Morrison (1991)",
+      "category": "Integration-Responsiveness Framework & Strategien",
+      "question": "Was ist das Integration-Responsiveness (IR) Framework und welche 2 Dimensionen hat es?",
+      "answer": "<strong>Das IR-Framework (Prahalad & Doz, 1987) zeigt den Trade-off, den MNEs zwischen globaler Effizienz und lokaler Anpassung managen müssen.</strong><br><strong>Dimension 1 — Global Integration</strong> (y-Achse): Koordination der Wertschöpfungskette global für Effizienz, Synergien, Skaleneffekte. Ziel: Kosten minimieren.<br><strong>Dimension 2 — Local Responsiveness</strong> (x-Achse): Anpassung an lokale Kundenbedürfnisse, Kulturen, Gesetze. Ziel: Marktanteil maximieren.<br>Beispiel: <strong>IKEA</strong> ist tendenziell global integriert (gleiche Möbel weltweit), aber muss lokal reagieren (in Saudi-Arabien keine Frauen in Katalogen — Reputationsrisiko).<br><em>Merkhilfe:</em> IR-Framework = \"<strong>Ich Reagiere</strong>\" auf beide Seiten gleichzeitig — die Kunst ist die Balance.",
       "difficulty": "easy"
     },
     {
+      "id": "16",
+      "category": "Integration-Responsiveness Framework & Strategien",
+      "question": "Was sind die 4 Strategien im IR-Framework? Ordne sie den richtigen Quadranten zu und nenne je ein MNE-Beispiel.",
+      "answer": "<strong>Die 4 Strategien: International, Multidomestic, Global-Standardization, Transnational.</strong><br>📍 <strong>International Strategy</strong> (niedrig/niedrig): Heimvorteil exportieren, kaum Anpassung. Beispiel: Frühe Phase von <strong>Harley-Davidson</strong> — verkauft dasselbe Produkt überall.<br>📍 <strong>Multidomestic Strategy</strong> (niedrig Integration / hoch Responsiveness): Lokale Anpassung maximal. Beispiel: <strong>Nestlé</strong> (verschiedene Kitkat-Geschmäcker je Land).<br>📍 <strong>Global-Standardization Strategy</strong> (hoch Integration / niedrig Responsiveness): Standardprodukt, weltweite Kostenführerschaft. Beispiel: <strong>Intel</strong> — ein Chip, globaler Standard.<br>📍 <strong>Transnational Strategy</strong> (hoch / hoch): \"Think globally, act locally.\" Beispiel: <strong>P&G</strong> — globale Plattformen + lokale Anpassung.<br><em>Eselsbrücke:</em> <strong>IMGT</strong> — \"<strong>I</strong>ch <strong>M</strong>ag <strong>G</strong>lobales <strong>T</strong>ransnational\" (zunehmende Komplexität).",
+      "difficulty": "easy"
+    },
+    {
+      "id": "17",
+      "category": "Integration-Responsiveness Framework & Strategien",
+      "question": "Warum ist die Transnational Strategy die schwierigste zu implementieren? Nenne die 2 Hauptprobleme.",
+      "answer": "<strong>Die Transnational Strategy versucht gleichzeitig hohe globale Integration UND hohe lokale Responsiveness — das erzeugt strukturelle Spannungen.</strong><br>Problem 1: <strong>Doppelarbeit (Duplication of Efforts)</strong>: Lokale Anpassungen erfordern lokale Teams/Ressourcen, aber globale Integration erfordert Zentralisierung — beides gleichzeitig ist teuer. Problem 2: <strong>Organisatorische Komplexität</strong>: Matrix-Strukturen mit globalen und lokalen Berichtslinien sind schwer zu managen — Konflikte zwischen Headquarters und lokalen Managern.<br>Beispiel: <strong>Unilever</strong> versucht Transnational — globale Marken (Dove) + lokale Produktanpassungen — verursacht aber ständige interne Spannungen zwischen globalen Brand-Teams und lokalen Marketing-Teams.<br><em>Cross-Reference:</em> Transnational = Blue Ocean Strategy Thinking (im Kurs erwähnt) — innovativ aber riskant.",
+      "difficulty": "medium"
+    },
+    {
       "id": "18",
-      "category": "Integration-Responsiveness Framework",
-      "question": "What are the four global strategy positions in the IR Framework, and how do they differ on the two dimensions?",
-      "answer": "<strong>1. International Strategy (low integration / low responsiveness). 2. Multidomestic Strategy (low integration / high responsiveness). 3. Global-Standardization Strategy (high integration / low responsiveness). 4. Transnational Strategy (high integration / high responsiveness).</strong><br>Each position represents a distinct strategic logic and set of trade-offs regarding cost efficiency vs. local fit.<br>Example: IKEA pursues Global-Standardization (same products, same store concept worldwide); Nestlé pursues Multidomestic (different product formulations per country). — Prahalad & Doz (1987)",
+      "category": "Integration-Responsiveness Framework & Strategien",
+      "question": "Wann ist eine Multidomestic Strategy sinnvoll und was ist ihr größter Nachteil? Nenne 2 typische Industrien.",
+      "answer": "<strong>Multidomestic Strategy ist sinnvoll, wenn lokale Präferenzen so stark variieren, dass ein Einheitsprodukt scheitern würde — aber sie ist teuer.</strong><br><strong>Wann sinnvoll:</strong> Consumer Products (z.B. <strong>Unilever</strong>: Knorr-Suppen schmecken in Deutschland anders als in Indien) und Retail Banking (regulatorische Unterschiede erzwingen lokale Anpassung; <strong>HSBC</strong> operiert in jedem Land anders).<br><strong>Größter Nachteil:</strong> <strong>Duplizierung von Geschäftsfunktionen</strong> — jedes Land hat eigenes Marketing, eigene Produktion, eigenes Management. Keine Skaleneffekte möglich. Hohe Kosten, niedrige Effizienz.<br><em>Eselsbrücke:</em> Multidomestic = \"<strong>Multi-teuer</strong>\" — viele lokale Strukturen ohne globale Synergien.",
       "difficulty": "medium"
     },
     {
       "id": "19",
-      "category": "Integration-Responsiveness Framework",
-      "question": "What is an International Strategy, and under what conditions is it typically used successfully?",
-      "answer": "<strong>A strategy where a firm sells the same products or services in both domestic and foreign markets, leveraging home-based core competencies with low pressure for both cost reduction and local adaptation.</strong><br>It works best for MNEs with large domestic markets, strong brand reputations, and products that have broad cross-market appeal without needing significant customization.<br>Example: Microsoft historically sold the same software globally with minimal local adaptation, relying on its dominant technology platform as a home-based core competency.",
-      "difficulty": "easy"
-    },
-    {
-      "id": "20",
-      "category": "Integration-Responsiveness Framework",
-      "question": "What is a Multidomestic Strategy, and what is its main cost disadvantage?",
-      "answer": "<strong>A strategy with high local responsiveness and low global integration — local consumers ideally perceive products as locally made; the main disadvantage is costly duplication of business functions across countries.</strong><br>By tailoring everything to each market, the firm forgoes scale economies. Each country operation largely stands alone, increasing overhead.<br>Example: Many consumer goods and food companies (e.g., Unilever adapting product formulations country by country) use multidomestic strategies but pay a premium in operational complexity.",
+      "category": "Integration-Responsiveness Framework & Strategien",
+      "question": "Was ist Global Integration im Sinne des IR-Frameworks und welche 3 Hauptziele verfolgt sie?",
+      "answer": "<strong>Global Integration bedeutet die firmenweite Koordination der Wertschöpfungskette über Ländergrenzen hinweg für maximale Effizienz.</strong><br>Die 3 Ziele: 1. <strong>Worldwide Efficiency</strong>: Kosten minimieren durch zentrale Produktion (z.B. <strong>Boeing</strong> designt zentral, lässt global fertigen). 2. <strong>Synergy & Cross-Fertilization</strong>: Wissen und Best Practices teilen (z.B. Toyota Production System global ausrollen). 3. <strong>Similarities ausnutzen</strong>: Konvergierende Kundenbedürfnisse nutzen (z.B. <strong>Samsung</strong> verkauft dasselbe Galaxy-Smartphone weltweit).<br>Typisch für Global-Standardization Strategy: Standardprodukte, zentrale Wertschöpfung, Preis als Hauptwaffe.<br><em>Klausur-Falle:</em> Global Integration ≠ Transnational. Transnational kombiniert Integration MIT Responsiveness. Global-Standardization opfert Responsiveness für Effizienz.",
       "difficulty": "medium"
     },
     {
+      "id": "20",
+      "category": "Integration-Responsiveness Framework & Strategien",
+      "question": "In welcher Situation würde ein Unternehmen von einer International Strategy zu einer Transnational Strategy wechseln? Was sind die Treiber?",
+      "answer": "<strong>Der Wechsel zur Transnational Strategy erfolgt, wenn gleichzeitig Kostendruck UND lokale Differenzierungsanforderungen zunehmen.</strong><br>Treiber 1: <strong>Steigende globale Konkurrenz</strong> erzwingt Kosteneffizienz (kein Platz mehr für teure Duplikate). Treiber 2: <strong>Heterogene Märkte</strong> — Kunden in Emerging Markets wollen andere Produkte als in Developed Markets (z.B. günstigere Smartphone-Varianten für Indien). Treiber 3: <strong>Lokale Regulierung</strong> erzwingt Anpassung.<br>Beispiel: <strong>McDonald's</strong> begann mit International Strategy (gleiche Burger weltweit), wurde zur Transnational — McAloo Tikki in Indien, Teriyaki-Burger in Japan, aber globale Supply-Chain-Effizienz bleibt.<br><em>Cross-Reference:</em> Dieser Evolutionspfad hängt mit dem Liability of Foreignness (Karte #2) zusammen — mehr Markterfahrung → bessere lokale Anpassung.",
+      "difficulty": "hard"
+    },
+    {
       "id": "21",
-      "category": "Integration-Responsiveness Framework",
-      "question": "What is a Global-Standardization Strategy, and what mechanisms does it use to achieve cost leadership?",
-      "answer": "<strong>A strategy with high global integration and low local responsiveness — the firm achieves cost leadership through economies of scale, location economies, and a global division of labor.</strong><br>Activities are located wherever costs are lowest globally (e.g., manufacturing in China, R&D in the US). Price is the main competitive weapon, with minimal local adaptation.<br>Example: Fast-fashion retailers like Zara concentrate manufacturing in cost-efficient locations and sell largely standardized products worldwide.",
+      "category": "FDI & Standortentscheidungen",
+      "question": "Was sind die 5 Hauptfaktoren bei der Standortwahl für FDI? Ordne sie einem Fallbeispiel zu.",
+      "answer": "<strong>Standortwahl für FDI berücksichtigt: Marktpotenzial, Ressourcen/Kosten, politisches Risiko, Infrastruktur und Cluster-Nähe.</strong><br>Beispiel <strong>Tesla Gigafactory Berlin (2022)</strong>: 1. <strong>Marktpotenzial</strong>: Europa ist größter E-Auto-Markt außerhalb USA. 2. <strong>Kosten</strong>: Günstigere Fertigung als USA für EU-Verkauf. 3. <strong>Politisches Risiko</strong>: Deutschland = stabile Demokratie, EU-Recht. 4. <strong>Infrastruktur</strong>: Autobahn-Netz, Industrieinfrastruktur. 5. <strong>Cluster</strong>: Deutsches Automobilcluster — Zulieferer, Ingenieurtalent in der Nähe.<br><em>Eselsbrücke:</em> <strong>MRPIC</strong> — <strong>M</strong>arket, <strong>R</strong>esources, <strong>P</strong>olitical Risk, <strong>I</strong>nfrastructure, <strong>C</strong>luster. \"<strong>M</strong>eine <strong>R</strong>iesige <strong>P</strong>lanung <strong>I</strong>st <strong>C</strong>lever.\"",
       "difficulty": "medium"
     },
     {
       "id": "22",
-      "category": "Integration-Responsiveness Framework",
-      "question": "What is a Transnational Strategy, what is its guiding motto, and why is it difficult to implement?",
-      "answer": "<strong>'Think globally, act locally' — the Transnational Strategy pursues both high global integration and high local responsiveness simultaneously, using best practices and innovations from everywhere in the network.</strong><br>It is the most complex strategy: it requires firms to share knowledge globally while adapting locally, leading to duplication of efforts and significant organizational complexity.<br>Example: MNEs pursuing a Blue Ocean Strategy (creating new market space) often require transnational capabilities — e.g., P&G transferring product innovations between markets while adapting packaging and marketing locally.",
-      "difficulty": "hard"
+      "category": "FDI & Standortentscheidungen",
+      "question": "Was bedeutet 'Liability of Foreignness' konkret und welche 3 Kostenquellen entstehen daraus?",
+      "answer": "<strong>Liability of Foreignness (Zaheer, 1995) beschreibt die strukturellen Kostennachteile, die ausländische Firmen gegenüber lokalen Wettbewerbern haben.</strong><br>3 Kostenquellen: 1. <strong>Kulturelle Unfamiliärität</strong>: Falsche Kommunikation, Missverständnisse mit Kunden/Mitarbeitern (z.B. Walmart Deutschland: Mitarbeiter mussten täglich lächeln und fremden Kunden helfen — wurde als übergriffig empfunden). 2. <strong>Ökonomische Unfamiliärität</strong>: Lokale Gesetze, Steuern, Regulierungen unbekannt → teure Compliance-Fehler. 3. <strong>Koordinationskosten</strong>: Geografische Distanz erhöht Management-Overhead (Zeitzonenproblem, Reisekosten, langsame Entscheidungen).<br><em>Klausur-Tipp:</em> Liability of Foreignness ist der Hauptgrund, warum Unternehmen oft mit Joint Ventures statt Wholly Owned FDI starten — lokaler Partner kennt das Terrain.",
+      "difficulty": "medium"
     },
     {
       "id": "23",
-      "category": "Integration-Responsiveness Framework",
-      "question": "What is 'Global Integration' as a strategic concept, and what does a firm do to achieve it?",
-      "answer": "<strong>Global Integration is the coordination of a firm's value chain activities across multiple countries to achieve worldwide efficiency, synergy, and cross-fertilization by exploiting similarities between countries.</strong><br>Firms pursuing global integration: standardize products/services for converging global needs; compete on a regional or worldwide basis; centralize value chain activities and emphasize scale economies.<br>Example: Intel manufactures microchips at a small number of highly optimized global fabs rather than building local factories in every country.",
-      "difficulty": "easy"
-    },
-    {
-      "id": "24",
-      "category": "Integration-Responsiveness Framework",
-      "question": "What is 'Local Responsiveness' as a strategic concept, and how does it operate organizationally?",
-      "answer": "<strong>Local Responsiveness means meeting the specific needs of buyers in individual countries by adapting products, marketing, and business practices to suit local conditions.</strong><br>Organizationally, local managers are given freedom to adjust offerings to their markets. This contrasts with centralized global integration where decisions flow from headquarters.<br>Example: A hotel chain allowing country managers to redesign breakfast menus, interior aesthetics, and service rituals to match local cultural expectations (e.g., Hilton in Japan vs. the Middle East).",
-      "difficulty": "easy"
-    },
-    {
-      "id": "25",
-      "category": "National Environment & Location Decisions",
-      "question": "What are the five factors that determine the optimal location of a specific value chain activity, according to the location decision framework?",
-      "answer": "<strong>1. Optimal input cost and availability for that activity. 2. Government incentives or penalties. 3. Internal resources and capabilities the firm has in specific locations. 4. The firm's business strategy (cost vs. differentiation). 5. Coordination benefits from co-locating activities.</strong><br>These five factors must be weighed together — no single factor dominates. A low-cost location may be sub-optimal if it disrupts coordination with linked activities.<br>Example: A firm pursuing differentiation may keep R&D co-located with advanced manufacturing (coordination benefit) even if cheaper R&D talent exists elsewhere.",
+      "category": "FDI & Standortentscheidungen",
+      "question": "Warum ist IP-Verlust im Ausland ein strategisches Risiko und nicht nur ein rechtliches Problem? Nenne einen konkreten Industrie-Fall.",
+      "answer": "<strong>IP-Verlust vernichtet nachhaltig den Wettbewerbsvorteil, weil das wertvollste firmenspezifische Asset kopiert wird — das ist strategisch, nicht nur rechtlich.</strong><br>Beispiel: Westliche Pharmafirmen (z.B. <strong>Pfizer</strong>) mussten in China lokale Partner einbinden → Formeln und Prozesse wurden teils reverse-engineered. Chinesische Unternehmen traten danach als günstigere Konkurrenten auf. Ähnlich: <strong>General Electric</strong> teilte Aviationtechnologie mit chinesischen JV-Partnern (COMAC) → China baut jetzt eigene Passagierflugzeuge (C919).<br>Besonders betroffen: Software, Filme, Musik (einfach kopierbar) und High-Tech-Manufacturing (reverse engineerbar).<br><em>Strategische Implikation:</em> Firmen mit starkem IP-Vorteil (Differenzierer) sollten entweder Wholly Owned FDI wählen oder kritisches Know-how zuhause behalten.",
       "difficulty": "hard"
     },
     {
+      "id": "24",
+      "category": "FDI & Standortentscheidungen",
+      "question": "Wie hängen die CAGE-Distanzdimensionen mit der Standortwahl für FDI zusammen? Erkläre an 2 Dimensionen.",
+      "answer": "<strong>CAGE (Ghemawat) quantifiziert, wie schwierig und kostspielig FDI in ein bestimmtes Land ist — größere Distanz = höheres Risiko und höhere Liability of Foreignness.</strong><br>Beispiel <strong>Cultural Distance (C)</strong>: Deutsche Firmen finden Österreich leichter als China, weil Sprache, Religion und Normen ähnlich sind. Deshalb expandiert <strong>Rewe</strong> zuerst in DACH-Region. Beispiel <strong>Administrative Distance (A)</strong>: Sanktionierte Länder (Russland nach 2022) haben extreme administrative Distanz → <strong>Ikea, H&M</strong> zogen sich vollständig zurück. <br><em>Klausur-Verbindung:</em> CAGE erklärt die Reihenfolge der Internationalisierung (Uppsala-Modell-logik): Firmen gehen zuerst in CAGE-nahe Märkte, dann mit Erfahrung in distantere — reduziert Liability of Foreignness schrittweise.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "25",
+      "category": "FDI & Standortentscheidungen",
+      "question": "Was sind Multidomestic Industries und was macht sie anfällig für lokale Anpassungsanforderungen? Nenne 3 Beispiele.",
+      "answer": "<strong>Multidomestic Industries haben hohe FDI aber geringen Außenhandel — Produkte/Services müssen lokal erbracht werden, können aber nicht exportiert werden.</strong><br>Beispiele: 1. <strong>Retail Banking</strong>: Bankprodukte sind regulatorisch an nationales Recht gebunden (deutsche Konten folgen deutschem Recht). 2. <strong>Hotels</strong>: Standort ist das Produkt — Hilton kann kein Berliner Zimmer nach Tokyo verschiffen. 3. <strong>Wireless Telephony</strong>: Mobilfunklizenzen sind national vergeben, Infrastruktur lokal.<br>Was macht sie anfällig: Kundenerwartungen, Regulierung und Infrastruktur sind lokal — kein Standardprodukt funktioniert. Deshalb immer <strong>hohe Local Responsiveness</strong> erforderlich.<br><em>Cross-Reference:</em> Diese Industrien nutzen zwangsläufig eine Multidomestic Strategy (IR-Framework, Karte #18).",
+      "difficulty": "easy"
+    },
+    {
       "id": "26",
-      "category": "Foundations of Global Strategy",
-      "question": "What distinguishes 'Global Industries' from 'Trading Industries' in the Patterns of Internationalization framework?",
-      "answer": "<strong>Both have high international trade, but Global Industries also have high FDI — meaning firms not only export but also invest directly abroad. Trading Industries have high trade but low FDI.</strong><br>In Global Industries, competitive advantage requires presence in multiple markets through both trade and investment. In Trading Industries, exporting is sufficient and local production is less necessary.<br>Example: Automobiles (Global) — BMW exports cars AND operates factories in South Africa, the US, and China. Diamond mining (Trading) — diamonds are extracted in one location and traded globally without major FDI in consuming markets.",
+      "category": "Integration-Responsiveness Framework & Strategien",
+      "question": "Vergleiche International Strategy vs. Global-Standardization Strategy: Was ist der entscheidende Unterschied?",
+      "answer": "<strong>Beide haben niedrige Local Responsiveness — aber International Strategy hat niedrige Integration, Global-Standardization hat hohe Integration.</strong><br><strong>International Strategy</strong>: Firma exportiert dasselbe Produkt, nutzt Heimvorteile, minimiert aktive globale Koordination. Beispiel: Ein US-Software-Startup verkauft seine App weltweit ohne Anpassung — aber ohne zentrale globale Produktion.<br><strong>Global-Standardization Strategy</strong>: Firma optimiert aktiv die gesamte Wertschöpfungskette global (globale Arbeitsteilung, location economies). Beispiel: <strong>Intel</strong> — Design in USA, Fertigung in Malaysia und Irland, Verkauf überall — maximale globale Effizienz.<br><em>Klausur-Falle:</em> Der Unterschied liegt nicht im Produkt (beide standardisiert), sondern im <strong>Grad der aktiven Koordination der Wertschöpfungskette</strong>.",
       "difficulty": "hard"
     },
     {
       "id": "27",
-      "category": "National Environment & Location Decisions",
-      "question": "How does the Theory of Comparative Advantage relate to a firm's FDI location decisions?",
-      "answer": "<strong>The Theory of Comparative Advantage explains that countries specialize in producing goods/services for which they have relatively lower opportunity costs — firms exploit this by locating value chain activities in countries with the relevant comparative advantage.</strong><br>Resource endowments (raw materials, human capital, infrastructure) shape where each activity can be performed most efficiently. This is the national resource conditions dimension in the location decision framework.<br>Example: A pharmaceutical MNE locates clinical research in India (comparative advantage in scientific labor at lower cost) while keeping headquarters and brand management in Switzerland (comparative advantage in specialized business services and IP law).",
-      "difficulty": "hard"
+      "category": "Porter's National Diamond & Theorie",
+      "question": "Was bedeutet 'Strategy, Structure & Rivalry' in Porter's Diamond und warum fördert harte Inlandskonkurrenz globale Wettbewerbsfähigkeit?",
+      "answer": "<strong>Intense domestic rivalry forces firms to innovate, cut costs and improve quality — the survivors become globally competitive.</strong><br>Beispiel: <strong>Japanische Automobilindustrie</strong> — Toyota, Honda, Nissan, Mazda kämpften extrem hart im japanischen Heimmarkt. Das erzwang Lean Manufacturing (Toyota Production System). Als sie global expandierten, hatten sie einen durch jahrelante Rivalität geschärften Vorteil gegenüber US-Herstellern.<br>Umkehrschluss: Geschützte Monopole zuhause (z.B. staatliche Telekoms in Entwicklungsländern) produzieren selten global konkurrenzfähige Firmen.<br><em>Verbindung:</em> Das erklärt auch, warum Internationalisierung (mehr Wettbewerb) langfristig Branchen effizienter macht — Karte #5 (Industrie-Effekte).",
+      "difficulty": "medium"
     },
     {
       "id": "28",
-      "category": "Advantages & Disadvantages of International Expansion",
-      "question": "What are 'location economies' and how do they relate to Advantage #3 (Develop New Competencies)?",
-      "answer": "<strong>Location economies are the economic benefits a firm gains by placing value chain activities in the optimal geographic location for each activity — enabling access to communities of learning and region-specific capabilities that build competitive advantage.</strong><br>Unlike cost savings from cheap labor, location economies are about accessing unique knowledge clusters and innovation ecosystems that help firms develop new, hard-to-replicate competencies.<br>Example: A tech firm establishing an R&D center in Silicon Valley gains access to talent networks, venture capital ecosystems, and peer knowledge-sharing that would be impossible to replicate elsewhere.",
-      "difficulty": "hard"
+      "category": "Grundlagen der Internationalisierung",
+      "question": "Was ist der Unterschied zwischen Global Integration und Local Responsiveness als strategische Ziele — was maximiert jede?",
+      "answer": "<strong>Global Integration maximiert Effizienz der Wertschöpfungskette weltweit; Local Responsiveness maximiert Umsatz/Marktanteil durch lokale Anpassung.</strong><br>Diese Ziele stehen in Tension: Je mehr du standardisierst (Effizienz), desto weniger kannst du auf lokale Unterschiede reagieren.<br>Beispiel der Tension: <strong>Coca-Cola</strong> hat die globale Marke (Integration) — aber Süßegrad, Geschmack und Marketingbotschaften unterscheiden sich nach Land (Responsiveness). Das Management dieser Tension kostet Ressourcen.<br><em>Klausur-Antwort-Template:</em> \"Unternehmen X verfolgt eine [Strategie], weil der Druck für [Integration/Responsiveness] durch [Faktor] dominiert wird. Dies zeigt sich in [konkretem Verhalten].\"",
+      "difficulty": "easy"
     }
   ],
   "essayBlueprint": {
-    "totalWords": 1800,
+    "totalWords": 1200,
     "timeMinutes": 90,
     "parts": [
       {
-        "title": "Introduction",
-        "words": 150,
+        "title": "Einleitung",
+        "words": 120,
         "minutes": 10,
         "paragraphs": [
           {
-            "label": "Hook & Context",
-            "instruction": "Introduce the relevance of global strategy in today's competitive landscape. Define the core tension between global integration and local responsiveness. State the essay's thesis and roadmap.",
-            "template": "As multinational enterprises (MNEs) expand across borders, they face a fundamental strategic dilemma: how to balance the efficiency gains of global integration against the competitive necessity of local responsiveness. This essay argues that the optimal global strategy depends on industry structure, firm-specific advantages, and the national environment, drawing on the Integration-Responsiveness Framework (Prahalad & Doz, 1987) and Porter's National Diamond to evaluate strategic choices.",
-            "references": [
-              "Prahalad & Doz (1987)",
-              "Porter (National Diamond)"
-            ]
-          }
-        ]
-      },
-      {
-        "title": "Part 1: Why Firms Internationalize — Advantages and Structural Drivers",
-        "words": 350,
-        "minutes": 18,
-        "paragraphs": [
-          {
-            "label": "Advantages of International Expansion",
-            "instruction": "Explain the three main advantages of internationalization: access to larger markets (economies of scale/scope), access to low-cost input factors, and development of new competencies. Use concrete examples from the material.",
-            "template": "Internationalization offers MNEs three core advantages. First, access to larger markets enables economies of scale and scope — firms from smaller economies in particular rely on foreign markets to achieve the critical mass needed for competitive advantage. Second, access to low-cost inputs, most notably labor (e.g., China's cost-efficient infrastructure, India's English-speaking workforce), drives cost-leadership strategies. Third, locating activities in specific geographic clusters — so-called location economies — allows firms to develop new competencies through proximity to communities of learning.",
-            "references": [
-              "Session 14 course material"
-            ]
-          },
-          {
-            "label": "Disadvantages and Risks",
-            "instruction": "Discuss the three key disadvantages: liability of foreignness, loss of reputation (CSR dimension), and loss of intellectual property. Link to the CAGE framework as a diagnostic tool for these risks.",
-            "template": "However, internationalization also entails significant risks. The 'liability of foreignness' — unfamiliarity with cultural, economic, and regulatory environments — generates additional coordination costs. Reputational damage can arise from operating in markets with weak safety standards or corrupt governance, directly threatening a firm's most valuable intangible resource. Furthermore, intellectual property exposure is acute in markets where legal institutions are weak, a risk systematically captured by Ghemawat's CAGE framework under the 'Administrative and Political Distance' dimension.",
-            "references": [
-              "Ghemawat (CAGE Framework)"
-            ]
-          },
-          {
-            "label": "Impact on Industry Structure",
-            "instruction": "Explain how internationalization affects industry profitability using the lens of industry analysis: lower entry barriers, increased rivalry, and increased buyer power.",
-            "template": "At the industry level, internationalization systematically erodes profitability. By lowering entry barriers into national markets, increasing the diversity of competitors, and expanding the pool of suppliers available to buyers, globalization intensifies competitive pressure — a structural shift that requires firms to continuously upgrade their strategic position rather than rely on protected domestic advantages.",
-            "references": [
-              "Session 14 course material"
-            ]
-          }
-        ]
-      },
-      {
-        "title": "Part 2: Where to Compete — Location Decisions and the National Diamond",
-        "words": 400,
-        "minutes": 20,
-        "paragraphs": [
-          {
-            "label": "Ghemawat's CAGE Framework",
-            "instruction": "Explain the four CAGE dimensions (Cultural, Administrative, Geographical, Economic) and how increasing distance along each dimension raises the costs and risks of internationalization. Provide at least one industry example per dimension.",
-            "template": "Ghemawat's CAGE framework identifies four dimensions of 'distance' between countries that systematically affect the viability of international expansion. Cultural distance (e.g., different languages and social norms) particularly affects industries with high cultural content such as food, music, and publishing. Administrative distance (e.g., absence of shared political association, weak legal institutions) is most consequential in strategically sensitive industries like energy and defence. Geographical distance, measured by physical remoteness and transportation links, disproportionately impacts products with low value-to-weight ratios such as cement. Economic differences, particularly in consumer income levels, most strongly affect demand for income-elastic luxury goods and labor-intensive products like clothing.",
-            "references": [
-              "Ghemawat (CAGE Framework)"
-            ]
-          },
-          {
-            "label": "Porter's National Diamond",
-            "instruction": "Explain Porter's four determinants of national competitive advantage and their implications for location decisions: factor conditions, demand conditions, related and supporting industries, and strategy/structure/rivalry.",
-            "template": "Porter's National Diamond provides a complementary lens for understanding why certain nations develop internationally competitive industries. The framework identifies four mutually reinforcing determinants: (1) Factor Conditions — crucially, Porter argues that 'home-grown' resources and capabilities matter more than natural endowments; (2) Demand Conditions — discerning domestic customers drive firms toward quality and innovation; (3) Related and Supporting Industries — geographic industry clusters generate knowledge spillovers and supplier efficiencies; and (4) Strategy, Structure, and Rivalry — intense domestic competition forces firms to continuously upgrade, building the capabilities needed to compete globally.",
-            "references": [
-              "Porter (National Diamond)"
-            ]
-          },
-          {
-            "label": "Optimal Location of Value Chain Activities",
-            "instruction": "Synthesize CAGE and the National Diamond into a practical framework for locating value chain activities. Address national resource conditions, firm-specific advantages, and tradability.",
-            "template": "Integrating these frameworks, optimal location decisions require firms to evaluate three factors simultaneously: national resource conditions (where are required inputs cheapest and most available?), firm-specific advantages (is the competitive advantage based on transferable capabilities?), and tradability (can the product be transported economically, or must production be proximate to the market?). The interaction of these factors explains, for example, why semiconductor manufacturing clusters in East Asia while financial services remain concentrated near major consumer markets.",
-            "references": [
-              "Porter (National Diamond)",
-              "Ghemawat (CAGE Framework)"
-            ]
-          }
-        ]
-      },
-      {
-        "title": "Part 3: How to Compete — The Integration-Responsiveness Framework and Four Global Strategies",
-        "words": 700,
-        "minutes": 32,
-        "paragraphs": [
-          {
-            "label": "The Integration-Responsiveness (IR) Framework",
-            "instruction": "Introduce the IR framework by Prahalad & Doz (1987). Define both axes — pressure for global integration and pressure for local responsiveness — and explain what drives each.",
-            "template": "The Integration-Responsiveness framework, developed by Prahalad and Doz (1987), maps the fundamental trade-off MNEs face between two strategic imperatives. Pressure for global integration arises from the need to minimize costs through centralization, scale economies, and standardized products serving converging global customer needs. Pressure for local responsiveness arises when buyers in different national markets have distinct preferences, when distribution systems vary, when host governments demand local content, or when competitive dynamics differ significantly across markets.",
-            "references": [
-              "Prahalad & Doz (1987)",
-              "Roth & Morrison (1991)"
-            ]
-          },
-          {
-            "label": "International Strategy",
-            "instruction": "Describe the International Strategy (low integration, low responsiveness). Identify its characteristics, conditions under which it is appropriate, and its limitations.",
-            "template": "The International Strategy is appropriate when pressures for both integration and local adaptation are low. Firms leverage home-based core competencies by selling essentially the same products and services abroad as domestically. This strategy is most viable for MNEs with large domestic markets and strong brand reputations — conditions that reduce the need to adapt locally or achieve additional cost reductions through global coordination. Its primary limitation is vulnerability when host-market competition intensifies or local tastes diverge.",
-            "references": [
-              "Prahalad & Doz (1987)"
-            ]
-          },
-          {
-            "label": "Multidomestic Strategy",
-            "instruction": "Describe the Multidomestic Strategy (low integration, high responsiveness). Address its advantages in consumer goods and food industries, and its key weakness of cost inefficiency through duplication.",
-            "template": "The Multidomestic Strategy prioritizes local responsiveness: local managers adapt products, marketing, and business practices to individual market conditions, ideally causing consumers to perceive the offering as a local brand. This approach is prevalent in the consumer products and food industries, where cultural and regulatory differences are pronounced. Its critical weakness is economic inefficiency — duplicating business functions across multiple countries sacrifices scale economies and increases coordination costs, undermining competitiveness against globally integrated rivals.",
-            "references": [
-              "Prahalad & Doz (1987)"
-            ]
-          },
-          {
-            "label": "Global-Standardization Strategy",
-            "instruction": "Describe the Global-Standardization Strategy (high integration, low responsiveness). Explain how it achieves cost leadership through the global division of labor and location economies.",
-            "template": "The Global-Standardization Strategy maximizes efficiency through high global integration and minimal local adaptation. Firms compete primarily on price, achieving cost leadership through economies of scale, a global division of labor, and location economies — placing each value chain activity wherever the required capability is available at lowest cost. This strategy is characteristic of industries such as semiconductors and oil, where products are relatively homogeneous and cost is the primary competitive weapon. The strategy's risk is inflexibility when local demand conditions or regulatory environments shift unexpectedly.",
-            "references": [
-              "Prahalad & Doz (1987)"
-            ]
-          },
-          {
-            "label": "Transnational Strategy",
-            "instruction": "Describe the Transnational Strategy (high integration, high responsiveness). Explain the 'think globally, act locally' logic, its link to blue ocean strategy, and why it is organizationally complex to implement.",
-            "template": "The Transnational Strategy represents the most ambitious position in the IR framework, simultaneously pursuing high global integration and high local responsiveness under the 'think globally, act locally' principle. Best practices, innovations, and ideas are transferred and adapted across the entire global network, making it suitable for MNEs pursuing blue ocean strategies that create new market spaces. However, the transnational strategy is the most difficult to implement: it involves duplication of effort, high organizational complexity, and requires sophisticated cross-cultural management capabilities that are difficult to build and maintain.",
+            "label": "Hook + These",
+            "instruction": "Beginne mit einem konkreten Beispiel (z.B. Apple produziert in China, verkauft weltweit standardisiert) und formuliere im zweiten Satz eine klare These: Welche Strategie ist unter welchen Bedingungen überlegen? Nimm direkt Position — kein 'In dieser Arbeit werde ich...'",
+            "template": "Als <strong>Apple</strong> seine gesamte Produktion nach China verlagerte und gleichzeitig weltweit identische iPhones verkaufte, demonstrierte das Unternehmen die Logik der <strong>Global-Standardization Strategy</strong> — doch nicht jede Industrie erlaubt diesen Ansatz. Ob ein Unternehmen global integriert oder lokal adaptiert, hängt von Industriestruktur, nationalen Standortvorteilen und firmeneigenen Ressourcen ab.",
             "references": [
               "Prahalad & Doz (1987)",
               "Roth & Morrison (1991)"
@@ -332,341 +220,488 @@
         ]
       },
       {
-        "title": "Conclusion",
-        "words": 200,
-        "minutes": 10,
+        "title": "Hauptteil",
+        "words": 900,
+        "minutes": 65,
         "paragraphs": [
           {
-            "label": "Synthesis and Critical Reflection",
-            "instruction": "Synthesize the key argument: there is no universally optimal global strategy. Restate how industry structure (patterns of internationalization), location factors (CAGE, National Diamond), and the IR framework together determine which strategy is appropriate. Offer a brief critical reflection or forward-looking point.",
-            "template": "In conclusion, selecting the right global strategy requires a multi-layered analysis. The patterns of internationalization — ranging from sheltered to truly global industries — establish the structural context. Ghemawat's CAGE framework and Porter's National Diamond identify where value chain activities should be located and what national advantages can be leveraged. The Integration-Responsiveness framework then determines how the firm should configure and coordinate those activities across borders. No single strategy dominates universally: as competitive environments and consumer preferences continue to converge in some markets while diverging in others, MNEs must continuously reassess their position on the IR matrix, balancing efficiency imperatives against the need for genuine local relevance.",
+            "label": "Absatz 1: Das Integration-Responsiveness Framework als Analyserahmen",
+            "instruction": "Erkläre das I-R Framework als zentrales Analysetool — NICHT als reine Definition, sondern als Entscheidungshilfe: Wann zwingt eine Industrie zur globalen Integration, wann zur lokalen Anpassung? Nutze die vier Strategiepositionen als Koordinatensystem.",
+            "template": "Das von <strong>Prahalad und Doz (1987)</strong> entwickelte <strong>Integration-Responsiveness Framework</strong> zeigt, dass Unternehmen zwischen zwei gegensätzlichen Drücken abwägen müssen: <strong>globale Integration</strong> — Kostenreduktion durch standardisierte, zentralisierte Wertschöpfung — und <strong>lokale Responsivität</strong> — Marktanteilsgewinne durch Anpassung an länderspezifische Kundenbedürfnisse. Aus dieser Spannung ergeben sich vier Strategiepositionen: International, Multidomestic, Global-Standardization und Transnational.",
+            "references": [
+              "Prahalad & Doz (1987)",
+              "Roth & Morrison (1991)"
+            ]
+          },
+          {
+            "label": "Absatz 2: Industriestruktur und Internationalisierungsmuster",
+            "instruction": "Verbinde die vier Industriekategorien (Global, Multidomestic, Trading, Sheltered) mit konkreten Branchen und erkläre, warum Internationalisierung grundsätzlich Margen drückt (mehr Wettbewerber, mehr Käufermacht, niedrigere Eintrittsbarrieren). Das ist die Klausurfalle: Internationalisierung ist NICHT automatisch gut.",
+            "template": "Die Internationalisierung verändert die Industriestruktur fundamental: Sie senkt Eintrittsbarrieren, erhöht die Käufermacht und intensiviert den Wettbewerb — <strong>ceteris paribus sinken Margen und Kapitalrenditen</strong>. Während <strong>globale Industrien</strong> wie Halbleiter oder die Automobilindustrie hohe FDI und standardisierten Welthandel erfordern, sind <strong>multidomestic industries</strong> wie Retail Banking oder Hotelketten gezwungen, lokal zu adaptieren, da Kundenpräferenzen und regulatorische Umfelder stark variieren.",
+            "references": [
+              "Porter (1990)"
+            ]
+          },
+          {
+            "label": "Absatz 3: Porters National Diamond und Standortwahl",
+            "instruction": "Erkläre, warum nationale Standortvorteile (nicht nur Kosten) strategische Entscheidungen treiben. Nutze das CAGE-Framework von Ghemawat, um zu zeigen, welche Distanzdimensionen welche Industrien am stärksten betreffen. Verbinde mit konkreten FDI-Standortentscheidungen.",
+            "template": "Nach <strong>Porters (1990) National Diamond</strong> sind es weniger natürliche Ressourcenausstattungen als vielmehr <strong>anspruchsvolle Heimatkunden, Clustereffekte und intensiver Inlandswettbewerb</strong>, die global wettbewerbsfähige Industrien hervorbringen — Deutschlands Automobilindustrie und Silicon Valleys Tech-Cluster illustrieren dies. Ergänzend zeigt <strong>Ghemawats CAGE-Framework</strong>, dass kulturelle, administrative, geographische und ökonomische Distanz systematisch erklären, welche Länderpaare hohe Handels- und Investitionsströme aufweisen: Zementexporte scheitern an geographischer Distanz, TV-Formate an kultureller.",
+            "references": [
+              "Porter (1990)",
+              "Ghemawat (CAGE Framework)"
+            ]
+          },
+          {
+            "label": "Absatz 4: Vor- und Nachteile der Internationalisierung — kritische Abwägung",
+            "instruction": "Gehe über die drei Vorteile (größerer Markt, günstige Inputfaktoren, neue Kompetenzen) hinaus und analysiere die drei Nachteile (Liability of Foreignness, Reputationsverlust, IP-Verlust) als strategische Risiken. Zeige anhand realer Fälle, wann Internationalisierung wertvernichtend sein kann.",
+            "template": "Während <strong>India</strong> mit günstig ausgebildeten Englischsprechern und <strong>China</strong> mit Kosteneffizienz klassische Inputvorteile bieten, drohen multinationalen Unternehmen drei kritische Nachteile: Die <strong>Liability of Foreignness</strong> erzeugt Zusatzkosten durch kulturelle und institutionelle Unvertrautheit; <strong>Reputationsverluste</strong> entstehen, wenn lokale Arbeitsbedingungen (Löhne, Stunden, Sicherheit) westliche CSR-Standards verletzen; und der <strong>IP-Verlust</strong> — besonders in Software, Film und Musik — bedroht langfristige Differenzierungsvorteile, wenn Partner zunächst kooperieren, dann aber Fähigkeiten reverse-engineeren.",
+            "references": [
+              "Session 14 Material"
+            ]
+          },
+          {
+            "label": "Absatz 5: Die vier Strategien im Vergleich — wann welche?",
+            "instruction": "Das ist der Kernabsatz für die Klausur. Zeige für jede der vier Strategien: (1) unter welchen Bedingungen sie optimal ist, (2) ein konkretes Unternehmensbeispiel, (3) den kritischen Nachteil. Nutze die Merkhilfe I-M-G-T (International, Multidomestic, Global-Standardization, Transnational).",
+            "template": "Die <strong>International Strategy</strong> (z.B. <strong>Microsoft</strong> mit standardisierter Software) eignet sich für Unternehmen mit starken Heimatmarkt-Kompetenzen und schwachem lokalem Anpassungsdruck; die <strong>Multidomestic Strategy</strong> (z.B. <strong>Nestlé</strong> mit länderspezifischen Produktvarianten) maximiert lokale Relevanz auf Kosten von Skaleneffekten; die <strong>Global-Standardization Strategy</strong> (z.B. <strong>Samsung</strong> in Halbleitern) priorisiert Kostenführerschaft durch globale Arbeitsteilung; die <strong>Transnational Strategy</strong> ('Think globally, act locally', z.B. <strong>Toyota</strong>) vereint beide Ziele — ist aber organisatorisch am komplexesten und schwierigsten zu implementieren.",
+            "references": [
+              "Prahalad & Doz (1987)",
+              "Roth & Morrison (1991)"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Schluss",
+        "words": 180,
+        "minutes": 15,
+        "paragraphs": [
+          {
+            "label": "Synthese + kritische Reflexion",
+            "instruction": "Fasse nicht einfach zusammen — nimm eine normative Position ein: Gibt es eine 'beste' Strategie oder ist die Antwort immer kontextabhängig? Verweise auf die strukturellen Grenzen des I-R Frameworks (z.B. vernachlässigt institutionelle Dynamiken, übersimpliziert mit nur zwei Achsen). Schließe mit einem Ausblick.",
+            "template": "Das <strong>Integration-Responsiveness Framework</strong> liefert einen mächtigen Analyserahmen, reduziert strategische Komplexität jedoch auf zwei Dimensionen — tatsächlich sind <strong>institutionelle Distanz</strong> (CAGE), nationale Wettbewerbsbedingungen (National Diamond) und firmenspezifische Ressourcen gleichzeitig zu berücksichtigen. Die <strong>Transnational Strategy</strong> erscheint theoretisch überlegen, scheitert in der Praxis häufig an Koordinationskosten und organisatorischer Komplexität; für die meisten Unternehmen ist eine klare Positionierung auf einer der vier Achsen realistischer als das Streben nach dem 'besten aus beiden Welten'. Entscheidend bleibt, dass <strong>Internationalisierung per se kein Wert schafft</strong> — erst die strategische Passung zwischen Industriestruktur, nationalem Kontext und firmeneigenen Fähigkeiten bestimmt den Erfolg.",
             "references": [
               "Prahalad & Doz (1987)",
               "Ghemawat (CAGE Framework)",
-              "Porter (National Diamond)"
+              "Porter (1990)"
             ]
           }
         ]
       }
     ],
     "checklist": [
-      "Have I defined the Integration-Responsiveness framework and attributed it to Prahalad & Doz (1987)?",
-      "Have I clearly distinguished all four global strategy positions (International, Multidomestic, Global-Standardization, Transnational) with examples?",
-      "Have I applied Ghemawat's CAGE framework with at least one industry example per distance dimension?",
-      "Have I explained all four determinants of Porter's National Diamond and their strategic implications?",
-      "Have I discussed all three advantages AND all three disadvantages of international expansion?",
-      "Have I connected location decisions to the three factors: national resource conditions, firm-specific advantages, and tradability?",
-      "Have I explained how internationalization affects industry structure (entry barriers, rivalry, buyer power)?",
-      "Have I cited real authors (Prahalad & Doz, Ghemawat, Porter, Roth & Morrison) rather than generic references?",
-      "Does my conclusion synthesize all three analytical layers (industry structure, location, IR framework) rather than just summarizing?",
-      "Have I avoided mixing strategic positions — e.g., not conflating Multidomestic with Transnational?",
-      "Is my total word count within the 1800-word target?",
-      "Have I proofread for consistent use of the language of the course material (English)?"
+      "Habe ich im ersten Absatz eine klare These formuliert — nicht nur das Thema angekündigt?",
+      "Habe ich das I-R Framework von Prahalad & Doz (1987) explizit als Analyserahmen eingeführt?",
+      "Habe ich alle vier Strategien (International, Multidomestic, Global-Standardization, Transnational) mit je einem echten Unternehmensbeispiel belegt?",
+      "Habe ich Porters National Diamond mit mindestens zwei der vier Faktoren (Factor Conditions, Demand Conditions, Related Industries, Rivalry) erklärt?",
+      "Habe ich Ghemawats CAGE-Framework mit mindestens zwei Distanzdimensionen und konkreten Industriebeispielen angewendet?",
+      "Habe ich erklärt, WARUM Internationalisierung ceteris paribus Margen senkt (mehr Wettbewerber, mehr Käufermacht, niedrigere Eintrittsbarrieren)?",
+      "Habe ich alle drei Nachteile der Internationalisierung (Liability of Foreignness, Reputationsverlust, IP-Verlust) genannt und einen davon vertieft?",
+      "Habe ich die vier Industrietypen (Global, Multidomestic, Trading, Sheltered) korrekt zugeordnet — z.B. Halbleiter = global, Retail Banking = multidomestic?",
+      "Habe ich im Schluss eine normative Position eingenommen (nicht nur 'es kommt drauf an') und die Grenzen des Frameworks benannt?",
+      "Habe ich die Verbindung zwischen nationalem Standortvorteil (Porter National Diamond) und FDI-Standortentscheidung explizit hergestellt?",
+      "Habe ich bei der Transnational Strategy erklärt, warum sie schwer zu implementieren ist (Koordinationskosten, organisatorische Komplexität)?",
+      "Ist mein Essay frei von reinen Definitionen ohne Anwendung — jede Aussage hat ein Beispiel oder eine strategische Implikation?"
     ]
   },
   "simulator": {
     "questions": [
       {
         "id": "q1",
-        "scenario": "A German luxury car manufacturer sells nearly identical vehicles worldwide, centralizes R&D and manufacturing in Germany, and competes primarily on brand prestige and engineering quality rather than price.",
-        "question": "Which strategy position in the Integration-Responsiveness Framework best describes this firm?",
+        "scenario": "McDonald's passt sein Menü in Indien an — kein Rindfleisch, stattdessen McAloo Tikki. In Deutschland gibt es den McRib als Dauerprodukt, in den USA nur saisonal. Jedes Land hat ein eigenes Marketing-Team.",
+        "question": "Welche globale Strategie verfolgt McDonald's hier?",
         "options": [
-          "Multidomestic Strategy",
-          "International Strategy",
           "Global-Standardization Strategy",
+          "International Strategy",
+          "Multidomestic Strategy",
           "Transnational Strategy"
         ],
-        "correctIndex": 1,
-        "explanation": "International Strategy is correct because the firm leverages its home-based core competencies (German engineering, brand reputation), sells largely the same product globally, and does not primarily compete on cost reduction or high local adaptation — hallmarks of the international strategy position (low cost reductions, low local responsiveness with strong home-base leverage). Multidomestic Strategy is wrong because that requires high local responsiveness — adapting products significantly to each market. Global-Standardization Strategy is wrong because its primary driver is aggressive cost reduction through scale and location economies, not brand/prestige leveraging. Transnational Strategy is wrong because it requires both high cost efficiency AND high local responsiveness simultaneously, which this firm does not pursue."
+        "correctIndex": 2,
+        "explanation": "<strong>Multidomestic Strategy</strong> bedeutet: hohe lokale Anpassung, niedrige globale Kostenreduktion. McDonald's behandelt jeden Markt als eigenständig — lokale Produkte, lokale Teams, lokale Entscheidungen. Genau das ist hier der Fall.\n\n<em>Global-Standardization</em> wäre das Gegenteil: ein einheitliches Produkt weltweit (z.B. ein Intel-Chip ist überall gleich).\n\n<em>International Strategy</em> heißt: dasselbe Produkt aus dem Heimatmarkt wird einfach ins Ausland verkauft — kaum Anpassung.\n\n<em>Transnational</em> wäre 'Think globally, act locally' MIT gleichzeitiger weltweiter Kostenoptimierung — McDonald's opfert Effizienz für lokale Relevanz, das ist klassisch Multidomestic.",
+        "category": "Global Strategies"
       },
       {
         "id": "q2",
-        "scenario": "A fast-food chain entering India replaces beef burgers with paneer-based options, adapts spice levels to local tastes, and allows regional managers full authority over the menu.",
-        "question": "Which strategy is this firm applying, and what is a known disadvantage of it?",
+        "scenario": "Apple verkauft das iPhone in über 150 Ländern zum fast identischen Preis und Design. Das iOS-Ökosystem ist weltweit identisch. Apple passt kaum etwas an lokale Märkte an.",
+        "question": "Apples Ansatz beim iPhone entspricht welcher Strategie im Integration-Responsiveness Framework?",
         "options": [
-          "Global-Standardization Strategy; risk of losing economies of scale",
-          "Transnational Strategy; high organizational complexity",
-          "Multidomestic Strategy; duplication of business functions across countries",
-          "International Strategy; liability of foreignness"
+          "Multidomestic Strategy",
+          "Transnational Strategy",
+          "International Strategy",
+          "Global-Standardization Strategy"
         ],
-        "correctIndex": 2,
-        "explanation": "Multidomestic Strategy is correct: the firm gives local managers autonomy to adapt offerings to individual market needs (high local responsiveness, low cost-reduction focus), and a key disadvantage of this strategy is the costly duplication of business functions across countries. Global-Standardization Strategy is wrong because it focuses on cost reduction through standardization, not local adaptation. Transnational Strategy is wrong because it also requires high global integration/cost efficiency alongside local responsiveness — this firm shows no signs of that. International Strategy is wrong because it involves selling the same product at home and abroad with minimal adaptation, opposite to what this firm is doing."
+        "correctIndex": 3,
+        "explanation": "<strong>Global-Standardization Strategy</strong>: hohe globale Integration (Kosteneffizienz, Skaleneffekte), niedrige lokale Anpassung. Apple produziert standardisiert, nutzt globale Lieferketten (z.B. Foxconn in China) und setzt den Preis als zentrales Wettbewerbsinstrument ein.\n\n<em>Multidomestic</em> wäre das Gegenteil: jedes Land kriegt sein eigenes Produkt.\n\n<em>International Strategy</em> ist ähnlich, aber der Unterschied ist wichtig: International Strategy <em>leverages home-based competencies</em> ohne große Kostenoptimierung durch globale Arbeitsteilung. Apple optimiert aktiv seine weltweite Lieferkette — das macht es zur Global-Standardization.\n\n<em>Transnational</em> würde zusätzlich hohe lokale Responsiveness erfordern.",
+        "category": "Global Strategies"
       },
       {
         "id": "q3",
-        "scenario": "A semiconductor company sources silicon from Malaysia (low cost), conducts R&D in Silicon Valley (innovation cluster), and manufactures in Taiwan (skilled labor, ecosystem). Each location is chosen for a specific advantage.",
-        "question": "Which concept most directly explains this firm's location decisions?",
+        "scenario": "Zara (Inditex) designt Kleidung in Spanien, produziert teilweise in Marokko und Asien für Kostenvorteile, passt aber Kollektionen schnell an lokale Modetrends an und teilt Best Practices zwischen allen Märkten.",
+        "question": "Zaras Ansatz — globale Effizienz UND lokale Anpassung — entspricht welcher Strategie?",
         "options": [
-          "Liability of Foreignness",
-          "Location Economies and Global Division of Labor",
-          "Ghemawat's CAGE Framework",
-          "Multidomestic Industry Logic"
+          "Global-Standardization Strategy",
+          "Transnational Strategy",
+          "Multidomestic Strategy",
+          "International Strategy"
         ],
         "correctIndex": 1,
-        "explanation": "Location Economies and Global Division of Labor is correct: the Global-Standardization Strategy logic of placing each value chain activity where it can be performed at lowest cost or highest quality — based on comparative advantages of each location — directly explains this multi-site configuration. Liability of Foreignness is wrong; it refers to the additional costs and disadvantages a foreign firm faces in an unfamiliar market, not to location optimization logic. CAGE Framework is wrong; CAGE analyzes the distance/friction between two countries, not the rationale for distributing value chain activities globally. Multidomestic Industry Logic is wrong; semiconductors are classified as a global industry (high FDI, high trade), not multidomestic."
+        "explanation": "<strong>Transnational Strategy</strong>: SOWOHL hohe Kostenreduktion durch globale Integration ALS AUCH hohe lokale Responsiveness. Das Motto ist 'Think globally, act locally.' Best Practices fließen weltweit, aber lokale Anpassungen passieren trotzdem.\n\nDas ist die <em>schwierigste Strategie</em> zu implementieren — wegen Doppelarbeit und organisatorischer Komplexität.\n\n<em>Global-Standardization</em> würde die lokale Anpassung weglassen.\n\n<em>Multidomestic</em> hätte keine globale Kostenoptimierung — jedes Land arbeitet isoliert.\n\n<em>International</em> leveragt einfach die Heimkompetenz ohne große globale Koordination.",
+        "category": "Global Strategies"
       },
       {
         "id": "q4",
-        "scenario": "A Swiss pharmaceutical firm is considering entering Brazil. It finds that Brazil has different regulatory agencies, a distinct language (Portuguese), and weak IP enforcement compared to Switzerland.",
-        "question": "Using Ghemawat's CAGE Framework, which dimensions of distance are most prominently at play?",
+        "scenario": "Haier, ein chinesischer Haushaltsgerätehersteller, kaufte den amerikanischen Traditionskonzern Maytag auf. Laut Kursmaterial löste dieser Deal 'patriotische Gefühle' bei amerikanischen Bürgern aus.",
+        "question": "Was illustriert dieses Beispiel in Bezug auf Foreign Direct Investment?",
         "options": [
-          "Geographical and Economic distance only",
-          "Cultural and Geographical distance only",
-          "Administrative/Political and Cultural distance",
-          "Economic and Geographical distance only"
+          "Liability of Foreignness",
+          "Loss of Intellectual Property",
+          "Loss of Reputation",
+          "Tradability Issues"
         ],
-        "correctIndex": 2,
-        "explanation": "Administrative/Political and Cultural distance is correct: weak IP enforcement and different regulatory institutions represent Administrative/Political distance (weak legal and financial institutions, different political associations), while different language (Portuguese vs. German/French/Italian) represents Cultural distance. Geographical and Economic distance only is wrong because while physical distance exists, the scenario specifically highlights regulatory and language differences, which map to CAGE's A and C dimensions, not primarily G and E. Cultural and Geographical distance only is wrong because it ignores the prominent administrative/IP enforcement issue. Economic and Geographical distance only is wrong because neither income differences nor physical remoteness are the central issues raised in this scenario."
+        "correctIndex": 0,
+        "explanation": "<strong>Liability of Foreignness</strong>: Unternehmen stoßen auf Widerstand, weil sie aus einem fremden kulturellen und politischen Umfeld kommen. Patriotische Reaktionen der lokalen Bevölkerung sind ein klassisches Beispiel — Haier wird als 'fremd' wahrgenommen, nicht als lokaler Spieler.\n\n<em>Loss of Reputation</em> betrifft schlechte Arbeitsbedingungen oder Korruption — das ist hier nicht das Thema.\n\n<em>Loss of Intellectual Property</em> wäre relevant, wenn Maytag seine Technologie kopiert bekäme — hier geht es um emotionale/gesellschaftliche Reaktion.\n\n<em>Tradability Issues</em> beziehen sich auf Transport und Handelshindernisse, nicht auf gesellschaftliche Sentiments.",
+        "category": "Foreign Direct Investment"
       },
       {
         "id": "q5",
-        "scenario": "South Korea became a global leader in shipbuilding despite having no natural iron ore deposits. Domestic rivalry among Hyundai, Samsung, and Daewoo, demanding domestic clients (Korean shipping companies), and a strong steel cluster drove world-class capabilities.",
-        "question": "Which framework most comprehensively explains South Korea's competitive advantage in shipbuilding?",
+        "scenario": "Nike lässt Schuhe in Vietnam und Indonesien produzieren. Berichte über Niedriglöhne, überlange Arbeitszeiten und schlechte Fabrikbedingungen schädigten Nikes Markenimage massiv in den 1990ern.",
+        "question": "Welcher Nachteil internationaler Expansion wird durch Nikes Situation beschrieben?",
         "options": [
-          "Theory of Comparative Advantage",
-          "Porter's National Diamond Framework",
-          "Integration-Responsiveness Framework",
-          "The CAGE Framework"
+          "Liability of Foreignness",
+          "Loss of Intellectual Property",
+          "Loss of Reputation",
+          "Increased Buyer Power"
         ],
-        "correctIndex": 1,
-        "explanation": "Porter's National Diamond is correct: the scenario illustrates all four diamond elements — demanding domestic customers (demand conditions), fierce domestic rivalry (strategy, structure, rivalry), steel industry cluster (related and supporting industries), and the development of human skills over natural endowments (factor conditions — 'home grown' capabilities). Theory of Comparative Advantage is wrong; it focuses on natural resource endowments, but South Korea lacked iron ore — the advantage came from constructed capabilities, not natural factors. Integration-Responsiveness Framework is wrong; it deals with MNE strategy choices (global integration vs. local responsiveness), not national competitive advantage. CAGE Framework is wrong; CAGE analyzes bilateral distance between countries, not why a nation develops industry-level competitive advantage."
+        "correctIndex": 2,
+        "explanation": "<strong>Loss of Reputation</strong>: Reputation ist eine der wertvollsten Ressourcen eines Unternehmens. Niedriglöhne, lange Arbeitszeiten und schlechte Bedingungen bei ausländischen Lieferanten können das Markenimage global beschädigen — selbst wenn das Unternehmen nicht direkt verantwortlich ist. Das ist direkt mit CSR (Corporate Social Responsibility) verknüpft.\n\n<em>Liability of Foreignness</em> meint den Kostennachteil durch Unbekanntheit im Ausland — nicht den Reputationsschaden im Heimmarkt durch Auslandsverhalten.\n\n<em>Loss of Intellectual Property</em> wäre relevant, wenn Produktionswissen gestohlen würde — hier geht es um Arbeitsbedingungen.\n\n<em>Increased Buyer Power</em> ist ein Branchenstruktureffekt durch Internationalisierung allgemein, kein Nachteil für Nike spezifisch.",
+        "category": "Foreign Direct Investment"
       },
       {
         "id": "q6",
-        "scenario": "A U.S. technology firm licenses its software to a Chinese partner. Within two years, the Chinese partner launches a nearly identical competing product. The U.S. firm loses significant market share in Asia.",
-        "question": "Which disadvantage of international expansion does this scenario illustrate, and what mode of entry contributed to it?",
+        "scenario": "Ein deutsches Pharmaunternehmen will entscheiden, ob es sein nächstes Forschungslabor in Boston (USA), Cambridge (UK) oder Basel (Schweiz) ansiedeln soll. Alle drei Orte sind bekannte Biotech-Cluster mit Universitäten, Zulieferern und Fachkräften.",
+        "question": "Welcher Faktor aus Porters National Diamond erklärt, warum Biotech-Cluster wie Boston besondere Vorteile bieten?",
         "options": [
-          "Liability of Foreignness; Foreign Direct Investment",
-          "Loss of Intellectual Property; Licensing",
-          "Loss of Reputation; Exporting",
-          "Liability of Foreignness; Licensing"
+          "Factor Conditions",
+          "Demand Conditions",
+          "Related and Supporting Industries",
+          "Strategy, Structure, and Rivalry"
         ],
-        "correctIndex": 1,
-        "explanation": "Loss of Intellectual Property via Licensing is correct: the scenario directly describes reverse-engineering/IP theft after a licensing arrangement — exactly the IP exposure risk flagged in the material for licensing and partnership entry modes, especially in markets with weak IP protection. Liability of Foreignness/FDI is wrong because the firm did not establish its own operations abroad (no FDI), and the issue is IP theft, not unfamiliarity costs. Loss of Reputation/Exporting is wrong because the firm's reputation is not damaged here — its IP is stolen — and exporting was not the entry mode used. Liability of Foreignness/Licensing is wrong because while licensing is correctly identified as the mode, the disadvantage manifested is IP loss, not the unfamiliarity and coordination costs that define liability of foreignness."
+        "correctIndex": 2,
+        "explanation": "<strong>Related and Supporting Industries</strong>: Porter betont die Schlüsselrolle von 'Industry Clusters' — konzentrierte Netzwerke aus Zulieferern, Universitäten, Dienstleistern und verwandten Unternehmen, die gemeinsam Innovationen beschleunigen. Boston's Route 128 / Kendall Square ist genau so ein Cluster.\n\n<em>Factor Conditions</em> wären natürliche Ressourcen oder Humankapital allgemein — wichtig, aber nicht spezifisch für die Cluster-Logik.\n\n<em>Demand Conditions</em>: anspruchsvolle lokale Kunden treiben Innovation — hier nicht der Hauptpunkt.\n\n<em>Strategy, Structure, Rivalry</em>: intensiver Inlandswettbewerb treibt Upgrading — auch wichtig, aber erklärt nicht den Cluster-Vorteil als solchen.\n\nMerkhilfe für die 4 Diamond-Faktoren: <strong>FRDS</strong> — Factor, Related industries, Demand, Strategy/Rivalry.",
+        "category": "Porter's National Diamond"
       },
       {
         "id": "q7",
-        "scenario": "A consulting firm is deciding whether to open a full subsidiary in Japan or to enter via a joint venture. The CEO notes that Japan has high cultural distance, strong local networks are needed, and the firm's core methodology is proprietary.",
-        "question": "Based on the Factors Relevant to Selecting Locations for FDI and entry mode logic, what is the primary tension this firm faces?",
+        "scenario": "True/False: Laut CAGE Framework haben sprachliche Unterschiede zwischen zwei Ländern den stärksten negativen Effekt auf Branchen wie Zement und frische Milch.",
+        "question": "Ist diese Aussage wahr oder falsch?",
         "options": [
-          "Balancing economies of scale against local responsiveness",
-          "Choosing between control/IP protection (favoring FDI/subsidiary) and the need for local knowledge/networks (favoring joint venture)",
-          "Deciding between an international strategy and a multidomestic strategy",
-          "Assessing whether consulting is a sheltered or global industry"
+          "True",
+          "False"
         ],
         "correctIndex": 1,
-        "explanation": "The control vs. local knowledge tension is correct: the entry mode continuum shows that wholly-owned subsidiaries (FDI) offer maximum control and IP protection but require full resource commitment and lack local networks, while joint ventures offer local knowledge and relationships but expose proprietary methodologies to a partner — exactly the dilemma described. Balancing economies of scale vs. local responsiveness is wrong; that is the Integration-Responsiveness Framework question, not the entry mode selection dilemma. International vs. multidomestic strategy is wrong; that debate concerns product adaptation levels, not how to enter a specific market legally/structurally. Sheltered vs. global industry classification is wrong; while interesting for internationalization potential, it does not capture the specific control-vs-knowledge tension the CEO is navigating."
+        "explanation": "<strong>Falsch.</strong> Sprachliche/kulturelle Distanz (Cultural Distance im CAGE Framework) betrifft besonders Branchen mit hohem kulturellen oder sprachlichen Inhalt — z.B. <strong>TV, Publishing, Musik, Lebensmittel, Wein</strong>.\n\nZement und frische Milch sind Produkte mit niedrigem Wert-zu-Gewicht-Verhältnis bzw. verderblich — diese werden primär durch <strong>geografische Distanz</strong> (G in CAGE) beeinträchtigt, weil Transport teuer oder physisch unmöglich ist.\n\nDie CAGE-Kategorien: <strong>C</strong>ultural, <strong>A</strong>dministrative/Political, <strong>G</strong>eographic, <strong>E</strong>conomic.",
+        "category": "CAGE Framework"
       },
       {
         "id": "q8",
-        "scenario": "IKEA sells nearly the same furniture catalog globally, sources components from low-cost countries, and maintains centralized design in Sweden — but translates catalogs and adapts some bedroom sizes to local housing norms.",
-        "question": "Which strategy position does IKEA most closely approximate, and why?",
+        "scenario": "Uber kann in vielen Ländern nicht oder nur eingeschränkt operieren, weil lokale Taxigesetze, staatliche Regulierung und politischer Widerstand die Expansion blockieren. In Deutschland kämpfte Uber jahrelang gegen rechtliche Verbote.",
+        "question": "Welche Dimension des CAGE Frameworks erklärt Ubers Probleme in Deutschland am besten?",
         "options": [
-          "Pure Global-Standardization Strategy, because it minimizes all local adaptation",
-          "Transnational Strategy, because it combines cost efficiency with selective local responsiveness",
-          "Multidomestic Strategy, because it adapts products to local markets",
-          "International Strategy, because it leverages a strong home-based brand"
+          "Cultural Distance",
+          "Geographic Distance",
+          "Administrative and Political Distance",
+          "Economic Distance"
         ],
-        "correctIndex": 1,
-        "explanation": "Transnational Strategy is correct: IKEA pursues high cost efficiency (centralized sourcing, standardized design, scale economies) while also incorporating selective local responsiveness (catalog translations, size adaptations) — the 'think globally, act locally' hallmark of the transnational position. Pure Global-Standardization is wrong because IKEA does make local adaptations; a pure global-standardization firm minimizes local adaptation entirely and competes primarily on price. Multidomestic Strategy is wrong because IKEA does not give local managers full autonomy or duplicate business functions per country — its value chain is highly centralized. International Strategy is wrong because while IKEA does leverage its brand, its scale of cost integration and degree of (selective) local adaptation go well beyond the low-low quadrant of the international strategy position."
+        "correctIndex": 2,
+        "explanation": "<strong>Administrative and Political Distance</strong>: Fehlende gemeinsame politische Institutionen, staatliche Regulierung, schwache oder inkompatible Rechtssysteme und politischer Widerstand sind Kernelemente dieser CAGE-Dimension. Taxi-Regulierungen und staatliche Schutzpolitik für bestimmte Branchen sind klassische Beispiele.\n\nInteressant: Das Kursmaterial nennt Taxidienste explizit als <strong>Sheltered Industry</strong> — eine Branche, die typischerweise vor ausländischem Wettbewerb geschützt ist. Das ist kein Zufall!\n\n<em>Cultural Distance</em> wäre relevant bei Sprache, Religion, sozialen Normen.\n\n<em>Geographic Distance</em>: Uber ist ein digitaler Service — Entfernung spielt physisch keine Rolle.\n\n<em>Economic Distance</em>: Einkommensunterschiede oder Ressourcenunterschiede — hier nicht der Hauptfaktor.",
+        "category": "CAGE Framework"
       },
       {
         "id": "q9",
-        "scenario": "A report finds that after a major wave of globalization in the automotive industry, profit margins for car manufacturers have declined industry-wide due to more competitors entering markets, consumers having more supplier choices, and reduced barriers to cross-border production.",
-        "question": "According to the session's framework on what internationalization means for industry analysis, which forces best explain this margin decline?",
+        "scenario": "Samsung produziert Halbleiter in Südkorea und den USA, Smartphones werden in Vietnam assembliert, und R&D findet in mehreren Ländern statt. Jede Aktivität wird dort platziert, wo die spezifischen Inputkosten und Fähigkeiten am günstigsten sind.",
+        "question": "Welches Konzept beschreibt Samsungs Ansatz, Wertschöpfungsaktivitäten global nach komparativen Vorteilen zu verteilen?",
         "options": [
-          "Increased seller concentration and reduced buyer power",
-          "Lower entry barriers, greater diversity of competitors, and increased buyer power",
-          "Higher entry barriers due to FDI complexity and loss of reputation effects",
-          "Location economies and liability of foreignness reducing firm profitability"
+          "Location Economies",
+          "Liability of Foreignness",
+          "Multidomestic Strategy",
+          "Demand Conditions (Porter)"
         ],
-        "correctIndex": 1,
-        "explanation": "Lower entry barriers, greater diversity of competitors, and increased buyer power is correct: the material explicitly states that internationalization tends to reduce industry margins by lowering entry barriers into national markets, increasing industry rivalry through lower seller concentration and more diverse competitors, and empowering buyers who now have more potential suppliers — all three are present in the scenario. Increased seller concentration and reduced buyer power is wrong — it is the direct opposite of what internationalization produces according to the framework. Higher entry barriers due to FDI complexity is wrong; FDI is complex for individual firms, but internationalization as a phenomenon lowers entry barriers at the industry level. Location economies and liability of foreignness is wrong; these are firm-level concepts explaining individual firm costs/advantages, not industry-level margin dynamics."
+        "correctIndex": 0,
+        "explanation": "<strong>Location Economies</strong>: Das Konzept beschreibt die Vorteile, die entstehen, wenn spezifische Wertschöpfungsaktivitäten an dem Ort platziert werden, wo sie am kostengünstigsten oder qualitativ hochwertigen durchgeführt werden können. Samsung optimiert jeden Schritt der Value Chain global.\n\nDas ist eng verbunden mit <strong>Advantage #3 (Develop New Competencies)</strong> und dem Konzept der Global-Standardization Strategy.\n\n<em>Liability of Foreignness</em> ist ein Nachteil internationaler Expansion, kein Vorteil.\n\n<em>Multidomestic Strategy</em> bedeutet lokale Anpassung an Kundenpräferenzen — Samsungs Lieferkette orientiert sich an Produktionsvorteilen, nicht an Kundenpräferenzen.\n\n<em>Demand Conditions (Porter)</em> bezieht sich auf anspruchsvolle Heimkunden als Innovationstreiber.",
+        "category": "Foreign Direct Investment"
       },
       {
         "id": "q10",
-        "scenario": "A local hairdressing chain in Munich considers expanding internationally. An advisor argues this industry is structurally resistant to internationalization.",
-        "question": "Based on the Patterns of Internationalization framework, why is hairdressing classified as a 'sheltered industry', and what does this imply?",
+        "scenario": "True/False: Die Global-Standardization Strategy und die Multidomestic Strategy können gleichzeitig von demselben Unternehmen für dasselbe Produkt im gleichen Markt erfolgreich eingesetzt werden.",
+        "question": "Ist diese Aussage wahr oder falsch?",
         "options": [
-          "Hairdressing has high trade flows but low FDI potential, making it a trading industry",
-          "Hairdressing has low international trade and low FDI because services must be delivered locally and face high cultural/regulatory barriers, limiting internationalization",
-          "Hairdressing is multidomestic because customers in each country have different preferences requiring local adaptation",
-          "Hairdressing is a global industry because standardized techniques can be transferred worldwide"
+          "True",
+          "False"
         ],
         "correctIndex": 1,
-        "explanation": "Sheltered industry classification is correct: hairdressing appears in the low-trade / low-FDI quadrant because the service must be performed face-to-face locally (cannot be exported or easily standardized into a global supply chain), and regulatory, cultural, and economic barriers make large-scale FDI economically impractical. This structurally limits internationalization potential. Trading industry is wrong; trading industries (e.g., shipbuilding, agriculture) have high trade but low FDI — hairdressing has neither significant trade nor FDI. Multidomestic is wrong; multidomestic industries have HIGH FDI (firms do invest abroad) but LOW trade — hairdressing is not characterized by high FDI. Global industry is wrong; global industries (e.g., semiconductors, oil) have both high trade and high FDI with standardized products — hairdressing has neither the scale economics nor the tradability for this classification."
+        "explanation": "<strong>Falsch.</strong> Global-Standardization und Multidomestic sind gegensätzliche Pole im <strong>Integration-Responsiveness Framework</strong>:\n\n- Global-Standardization: hohe Integration, <em>niedrige</em> lokale Anpassung\n- Multidomestic: niedrige Integration, <em>hohe</em> lokale Anpassung\n\nSie schließen sich konzeptionell aus. Ein Unternehmen, das <em>beides</em> gleichzeitig anstrebt, verfolgt die <strong>Transnational Strategy</strong> — die versucht, beide Vorteile zu kombinieren, ist aber die komplexeste und schwierigste Strategie.\n\nMerkhilfe: Stell dir eine 2x2-Matrix vor — Global-Standardization ist oben links, Multidomestic unten rechts, Transnational oben rechts.",
+        "category": "Global Strategies"
       },
       {
         "id": "q11",
-        "scenario": "Haier, a Chinese appliance maker, acquired Maytag, a well-known American brand. Some U.S. consumers and politicians reacted negatively to a foreign company owning an iconic American brand.",
-        "question": "Which concept from the session best explains this reaction, and to which disadvantage of internationalization is it most closely linked?",
+        "scenario": "Toyota beschloss, Produktionsstätten in den USA (Kentucky) aufzubauen, anstatt alle Autos aus Japan zu exportieren. Der US-Markt ist Toyotas wichtigster Absatzmarkt, und Handelshemmnisse sowie lokale Kundenpräferenzen spielen eine Rolle.",
+        "question": "Welche drei Faktorgruppen muss Toyota laut dem 'Where to Locate Production'-Framework berücksichtigen?",
         "options": [
-          "Liability of Foreignness — the acquiring firm faces unfamiliar cultural and economic environments",
-          "Loss of Reputation — the target firm's brand suffers because of association with a foreign owner",
-          "Patriotic sentiments triggered by FDI — an expression of the social and cultural variables firms must manage in host markets",
-          "CAGE Cultural Distance — indicating that U.S. and Chinese business norms are incompatible"
+          "CAGE-Distanz, Porter's Diamond, Integration-Responsiveness",
+          "National Resource Conditions, Firm-specific Advantages, Tradability Issues",
+          "Factor Conditions, Demand Conditions, Related Industries",
+          "Economies of Scale, Location Economies, Liability of Foreignness"
         ],
-        "correctIndex": 2,
-        "explanation": "Patriotic sentiments as a social/cultural variable of FDI is correct: the material specifically cites the Haier/Maytag example under 'Nature of Foreign Direct Investment' to illustrate that FDI can occasionally raise patriotic sentiments among citizens, and that direct investors must deal more intensively with social and cultural variables in the host market. Liability of Foreignness is wrong; that concept refers to the acquiring firm's own cost disadvantages in an unfamiliar market, not the host country population's reaction to foreign ownership. Loss of Reputation is wrong; this disadvantage refers to the MNE's own reputation being damaged by poor labor practices or corruption in host markets — not to nationalistic reactions from consumers. CAGE Cultural Distance is wrong; while cultural distance is real between China and the U.S., the specific phenomenon described — citizens reacting emotionally to foreign ownership of a national brand — is explicitly labeled in the material as 'patriotic sentiments', a distinct FDI-specific concept."
+        "correctIndex": 1,
+        "explanation": "Das 'Where to Locate Production'-Framework nennt genau drei Faktorgruppen:\n\n1. <strong>National Resource Conditions</strong>: Wo sind die benötigten Inputs günstig verfügbar? (Stahl, Arbeit, Infrastruktur)\n2. <strong>Firm-specific Advantages</strong>: Sind Toyotas Kernkompetenzen (Lean Production, TPS) transferierbar?\n3. <strong>Tradability Issues</strong>: Kann das Auto wirtschaftlich von Japan in die USA transportiert werden? Gibt es Handelszölle?\n\n<em>CAGE / Porter's Diamond / IR-Framework</em>: Alle sind relevante Analysetools aus dem Kurs, aber <em>nicht</em> die drei Faktoren dieses spezifischen Frameworks.\n\n<em>Factor Conditions, Demand Conditions, Related Industries</em>: Das sind drei der vier Porter National Diamond-Elemente — anderes Framework.\n\n<em>Economies of Scale, Location Economies, Liability of Foreignness</em>: Wichtige Konzepte, aber keine eigenständige Dreier-Struktur dieses Frameworks.",
+        "category": "Location Strategy"
       },
       {
         "id": "q12",
-        "scenario": "A Scandinavian outdoor apparel brand is deciding where to locate its new manufacturing facility. Its products require high-quality technical fabrics (available cheaply in South Korea), skilled stitching labor (available in Vietnam), and proximity to European retail customers (Germany).",
-        "question": "Which analytical approach from the session should guide this location decision, and what is the key trade-off?",
+        "scenario": "Frische Milch wird kaum international gehandelt. Hairdressing-Salons gibt es nicht als globale Konzerne. Taxidienste operieren meist nur lokal. Diamantenabbau hingegen konzentriert sich in wenigen Ländern und wird global gehandelt.",
+        "question": "Welchem Typ von Industrie gehören Hairdressing-Salons und Taxidienste laut dem Internationalization-Pattern-Framework an?",
         "options": [
-          "Porter's National Diamond — to assess whether Scandinavia has sufficient domestic rivalry to drive quality upgrading",
-          "The Optimal Location of Value Chain Activities framework — balancing input cost/availability, tradability (transport costs), firm-specific advantages, and coordination benefits",
-          "The Integration-Responsiveness Framework — choosing between global standardization and local responsiveness for each factory location",
-          "Ghemawat's CAGE Framework — measuring cultural and administrative distance between Scandinavia and each candidate country"
+          "Trading Industries",
+          "Global Industries",
+          "Multidomestic Industries",
+          "Sheltered Industries"
+        ],
+        "correctIndex": 3,
+        "explanation": "<strong>Sheltered Industries</strong>: Diese Branchen haben sowohl niedrigen internationalen Handel als auch niedrige ausländische Direktinvestitionen — sie sind typischerweise lokal, reguliert oder physisch an den Standort gebunden. Das Kursmaterial nennt explizit: Taxidienste, Wäschereien/Reinigungen, Hairdressing, frische Milch.\n\n<em>Trading Industries</em>: Hoher internationaler Handel, aber wenig FDI — z.B. Schiffbau, Landwirtschaft, Diamantenabbau.\n\n<em>Global Industries</em>: Hoher Handel UND hohe FDI — z.B. Autos, Öl, Halbleiter.\n\n<em>Multidomestic Industries</em>: Wenig Handel, aber viel FDI (lokale Produktion für lokale Märkte) — z.B. Retail Banking, Hotels, Tiefkühlkost.\n\nMerkhilfe für die 4 Typen: <strong>TGMS</strong> — Trading, Global, Multidomestic, Sheltered.",
+        "category": "Patterns of Internationalization"
+      },
+      {
+        "id": "q13",
+        "scenario": "Durch Globalisierung können Kunden von BMW jetzt auch Mercedes, Toyota, Tesla und Hyundai kaufen — alle verfügbar im selben Markt. Gleichzeitig können neue Anbieter aus Ländern mit niedrigen Produktionskosten leichter eintreten.",
+        "question": "Wie beeinflusst Internationalisierung laut dem Kursmaterial die Branchenstruktur aus einer Porter's Five Forces-Perspektive?",
+        "options": [
+          "Höhere Eintrittsbarrieren, geringere Rivalität, höhere Margen",
+          "Niedrigere Eintrittsbarrieren, höhere Rivalität, höhere Käufermacht",
+          "Niedrigere Eintrittsbarrieren, geringere Rivalität, niedrigere Lieferantenmacht",
+          "Höhere Eintrittsbarrieren, höhere Käufermacht, geringere Substitutionsgefahr"
         ],
         "correctIndex": 1,
-        "explanation": "The Optimal Location of Value Chain Activities framework is correct: the session presents a specific framework asking where to locate activity X based on: cost and availability of inputs (fabrics in South Korea, labor in Vietnam), tradability (can finished goods reach German retailers economically?), firm-specific capabilities, government incentives, and coordination benefits from co-locating activities — exactly the multi-factor trade-off this scenario requires. Porter's National Diamond is wrong; it explains why a nation develops competitive advantage in an industry, not how an individual firm should allocate its value chain activities across locations. Integration-Responsiveness Framework is wrong; it guides the strategic posture of the whole MNE (standardize vs. adapt), not the granular factory-location decision. CAGE Framework is wrong; while CAGE is useful for understanding bilateral friction, it is a diagnostic tool for market entry distance, not a prescriptive framework for optimizing production location across multiple criteria."
+        "explanation": "Das Kursmaterial ist hier eindeutig: Internationalisierung führt zu:\n\n- <strong>Niedrigere Eintrittsbarrieren</strong>: Mehr Unternehmen aus mehr Ländern können eintreten\n- <strong>Höhere Rivalität</strong>: Weniger Seller Concentration, größere Vielfalt an Wettbewerbern\n- <strong>Höhere Käufermacht</strong>: Kunden haben mehr potenzielle Lieferanten zur Auswahl\n\nDas Ergebnis: <strong>Margen und Return on Capital sinken tendenziell</strong> durch Globalisierung — ceteris paribus.\n\nAlle anderen Optionen widersprechen direkt dem Kursmaterial. Dieses Konzept verbindet das IR-Framework mit Porter's Five Forces — ein typischer Querbezug in Open-Book-Klausuren.",
+        "category": "Industry Analysis"
+      },
+      {
+        "id": "q14",
+        "scenario": "True/False: Laut Porter's National Diamond sind natürliche Ressourcenausstattungen ('Natural Endowments') wichtiger für nationale Wettbewerbsvorteile als 'home-grown' entwickelte Ressourcen und Fähigkeiten.",
+        "question": "Ist diese Aussage wahr oder falsch?",
+        "options": [
+          "True",
+          "False"
+        ],
+        "correctIndex": 1,
+        "explanation": "<strong>Falsch.</strong> Porter betont ausdrücklich das Gegenteil: <strong>'Home grown' resources and capabilities are more important than natural endowments.'</strong>\n\nBeispiel: Japan hat kaum natürliche Ressourcen, ist aber weltführend in Automobilen und Elektronik — weil Factor Conditions aktiv entwickelt wurden (Bildungssystem, Infrastruktur, Kapital).\n\nSaudi-Arabien hat massive natürliche Ressourcen (Öl), aber keine breite industrielle Wettbewerbsfähigkeit — weil die anderen Diamond-Faktoren schwach sind.\n\nDieses Prinzip ist einer der kontraintuitivsten Punkte in Porter's Diamond — und damit prüfungsrelevant.",
+        "category": "Porter's National Diamond"
+      },
+      {
+        "id": "q15",
+        "scenario": "P&G (Procter & Gamble) etabliert für jede Produktkategorie (Pampers, Gillette, Tide) separate lokale Manager in jedem Land, die eigenständig Marketingentscheidungen treffen. Effizienzgewinne durch globale Koordination werden bewusst geopfert.",
+        "question": "Welchen HAUPTNACHTEIL hat P&Gs Ansatz im Vergleich zu einer Global-Standardization Strategy?",
+        "options": [
+          "Zu geringe lokale Relevanz der Produkte",
+          "Liability of Foreignness steigt stark an",
+          "Doppelarbeit von Geschäftsfunktionen und geringere Kosteneffizienz",
+          "Verlust von Intellectual Property durch lokale Partner"
+        ],
+        "correctIndex": 2,
+        "explanation": "P&G verfolgt eine <strong>Multidomestic Strategy</strong>. Das Kursmaterial nennt explizit den Hauptnachteil: <strong>'Can be costly and inefficient: Duplication of business functions across countries.'</strong>\n\nJedes Land hat eigene Marketing-, HR-, und Management-Funktionen — das ist teuer, weil dieselben Aktivitäten mehrfach ausgeführt werden.\n\n<em>Zu geringe lokale Relevanz</em>: Das Gegenteil ist wahr — Multidomestic maximiert lokale Relevanz.\n\n<em>Liability of Foreignness steigt</em>: Lokale Manager reduzieren eigentlich die Liability of Foreignness.\n\n<em>Loss of IP durch lokale Partner</em>: P&G nutzt eigene Tochtergesellschaften, keine externen Partner — das ist ein FDI-Nachteil bei Joint Ventures, nicht bei Multidomestic per se.",
+        "category": "Global Strategies"
       }
     ]
   },
   "overview": {
     "topics": [
       {
-        "name": "Foundations of Global Strategy",
+        "name": "Grundlagen der Internationalisierung",
         "concepts": [
           {
             "term": "Global Strategy",
-            "definition": "Part of a firm's corporate strategy aimed at gaining and sustaining competitive advantage by competing against both foreign and domestic companies across multiple markets.",
-            "author": "General framework",
+            "definition": "Teil der <strong>Corporate Strategy</strong>, um <strong>Wettbewerbsvorteile</strong> gegenüber in- und ausländischen Konkurrenten zu gewinnen und zu halten. Umfasst <strong>Foreign Direct Investment (FDI)</strong> und die Nutzung von Ressourcen in mehreren Ländern.",
+            "author": "",
             "importance": "high",
-            "examRelevance": "Wird häufig gefragt, weil es das übergeordnete Konzept ist, das alle anderen Strategieentscheidungen (FDI, Integration, Responsiveness) rahmt."
+            "examRelevance": "Wird als Einstiegsfrage in Take-Home-Klausuren genutzt: 'Warum expandiert Apple nach Indien?' — du musst die 3 Advantages (Markt, Kosten, Kompetenzen) nennen und gewichten."
+          },
+          {
+            "term": "Patterns of Internationalization (2×2 Matrix)",
+            "definition": "Klassifikation von Industrien nach <strong>International Trade</strong> (hoch/niedrig) vs. <strong>Foreign Direct Investment</strong> (hoch/niedrig): <strong>Trading Industries</strong> (Schiffbau), <strong>Global Industries</strong> (Autos, Öl), <strong>Multidomestic Industries</strong> (Retail Banking, Hotels), <strong>Sheltered Industries</strong> (Friseure, Taxis).",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Klassische Zuordnungs-/Kurzessay-Frage: 'Ordne Netflix, Toyota und Hairdressing korrekt ein und begründe.' Fehler: Multidomestic mit Global verwechseln — Merkhilfe: <strong>TGMS</strong> (Trading, Global, Multidomestic, Sheltered)."
           },
           {
             "term": "Foreign Direct Investment (FDI)",
-            "definition": "Investments in value chain activities abroad; the most advanced, expensive, complex, and riskiest entry strategy, involving manufacturing plants or marketing subsidiaries in foreign markets.",
-            "author": "General framework",
+            "definition": "<strong>Investitionen in Wertschöpfungsaktivitäten im Ausland</strong> — die aufwendigste, teuerste und risikoreichste Markteintritts-strategie. Beinhaltet Produktionsstätten, Marketing-Tochtergesellschaften oder andere Einrichtungen abroad.",
+            "author": "",
             "importance": "high",
-            "examRelevance": "Wird häufig gefragt, weil Prüfungen konkrete Vor- und Nachteile von FDI sowie dessen Abgrenzung zu anderen Markteintrittsformen verlangen."
+            "examRelevance": "Wird oft kombiniert mit der <strong>Investment & Control Continuum</strong>-Grafik gefragt: 'Warum wählt Haier FDI statt Licensing für den US-Markt?' — Antwort: Kontrolle, IP-Schutz, lokale Präsenz."
           },
           {
             "term": "Multinational Enterprise (MNE)",
-            "definition": "A firm that deploys resources and capabilities in two or more countries, competing on an international scale through various modes of foreign market entry.",
-            "author": "General framework",
+            "definition": "Unternehmen, das <strong>Ressourcen und Fähigkeiten in zwei oder mehr Ländern</strong> einsetzt. Nutzt Internationalisierung zur Skalenerzielung und Wettbewerbsvorteils-Sicherung.",
+            "author": "",
             "importance": "medium",
-            "examRelevance": "Wird gefragt, weil MNEs der zentrale Analysegegenstand in internationalen Strategiefragen sind."
-          },
-          {
-            "term": "Patterns of Internationalization (Trading, Global, Multidomestic, Sheltered Industries)",
-            "definition": "A 2x2-Matrix, die Branchen anhand des Ausmaßes internationalen Handels und ausländischer Direktinvestitionen klassifiziert — von Sheltered Industries (niedrig/niedrig) bis Global Industries (hoch/hoch).",
-            "author": "General framework",
-            "importance": "medium",
-            "examRelevance": "Wird gefragt, weil Prüfungen verlangen, dass Branchen korrekt in die Matrix eingeordnet und begründet werden."
+            "examRelevance": "Hintergrundbegriff — relevant wenn du FDI-Vorteile oder Integration-Responsiveness-Strategien erklären musst."
           }
         ]
       },
       {
-        "name": "Advantages and Disadvantages of International Expansion",
+        "name": "Vor- und Nachteile der Internationalisierung",
         "concepts": [
           {
-            "term": "Liability of Foreignness",
-            "definition": "Additional costs and disadvantages that arise for MNEs due to unfamiliarity with the cultural, economic, and institutional environment of a host country.",
-            "author": "General framework",
-            "importance": "high",
-            "examRelevance": "Wird häufig gefragt, weil es einen zentralen strategischen Nachteil der Internationalisierung darstellt, der in Fallanalysen identifiziert und adressiert werden muss."
+            "term": "Advantage #1: Access to Larger Market",
+            "definition": "Internationalisierung ermöglicht <strong>Economies of Scale und Scope</strong> durch Zugang zu deutlich größeren Märkten. Besonders relevant für Firmen aus <strong>kleinen Heimatmärkten</strong> (z.B. Schweizer Pharma).",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Wird in Fallstudien-Fragen genutzt: 'Welchen Vorteil hat Samsung durch Expansion in Europa?' — Skalierung und Marktanteils-Argument."
           },
           {
-            "term": "Location Economies",
-            "definition": "Economies gained by performing specific value chain activities in the optimal geographic location where cost and quality conditions are most favorable.",
-            "author": "General framework",
+            "term": "Advantage #2: Access to Low-Cost Input Factors",
+            "definition": "Zugang zu <strong>günstigen Rohstoffen</strong> (Holz, Eisenerz, Öl) oder <strong>niedrigen Lohnkosten</strong> — Haupttreiber der Globalisierung. Beispiel: <strong>China</strong> (niedrige Lohnkosten + effiziente Infrastruktur), <strong>Indien</strong> (englischsprachige, gut ausgebildete Arbeitskräfte).",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Verknüpft mit <strong>Low-Cost Leadership Strategy</strong> aus den früheren Sessions — wenn Apple Produktion nach China auslagert, ist das dieser Vorteil, kombiniert mit der <strong>CAGE-Framework</strong>-Analyse (geografische und ökonomische Distanz gering)."
+          },
+          {
+            "term": "Advantage #3: Develop New Competencies",
+            "definition": "Zugang zu <strong>Communities of Learning</strong>, <strong>Location Economies</strong> und regionalen Wissensclustern. Ermöglicht die Entwicklung neuer Fähigkeiten durch Präsenz in innovationsstarken Regionen (z.B. Silicon Valley für Tech).",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Relevant für Differenzierungsstrategie-Fragen — 'Warum hat Tesla ein FuE-Zentrum in Deutschland?' ist eine typische Open-Book-Analyse."
+          },
+          {
+            "term": "Liability of Foreignness",
+            "definition": "<strong>Zusatzkosten durch Unvertrautheit</strong> mit kulturellen, wirtschaftlichen und regulatorischen Rahmenbedingungen im Gastland. Koordinationsaufwand über geografische Distanz erhöht operative Kosten.",
+            "author": "",
             "importance": "high",
-            "examRelevance": "Wird gefragt, weil es direkt mit der Entscheidung verknüpft ist, wo Teile der Wertschöpfungskette angesiedelt werden sollen."
+            "examRelevance": "Wird als Gegengewicht zu FDI-Vorteilen gefragt — 'Warum scheiterte Walmart in Deutschland?' ist der Paradefall. Verknüpft mit <strong>CAGE Framework</strong>: je größer die kulturelle/administrative Distanz, desto höher die Liability."
+          },
+          {
+            "term": "Loss of Reputation",
+            "definition": "<strong>Reputation</strong> ist eine der wertvollsten Unternehmensressourcen. Internationalisierung kann diese gefährden durch: niedrige Löhne, schlechte Arbeitsbedingungen im Gastland, oder korrupte lokale Regierungen — ein <strong>CSR-Problem</strong>.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "CSR-Winkel: 'Welches Reputationsrisiko geht Nike durch Produktion in Bangladesch ein?' — Klausurfrage, die Disadvantage #2 direkt anspricht."
           },
           {
             "term": "Loss of Intellectual Property",
-            "definition": "Das Risiko, dass proprietäre Ressourcen, Technologien oder Fähigkeiten im Auslandsmarkt durch Reverse Engineering oder Urheberrechtsverletzungen gefährdet werden.",
-            "author": "General framework",
+            "definition": "In ausländischen Märkten ist <strong>IP-Schutz</strong> (Software, Filme, Musik) oft schwer durchzusetzen. Gefahr des <strong>Reverse Engineering</strong> durch lokale Partner nach anfänglicher Kooperation.",
+            "author": "",
             "importance": "medium",
-            "examRelevance": "Wird gefragt, weil es ein prüfungsrelevanter Nachteil von FDI und internationalen Kooperationen ist, den Studierende in CSR-Kontexten diskutieren sollen."
+            "examRelevance": "Verknüpft mit Markteintritts-Entscheidung: erklärt, warum Firmen trotz höherer Kosten FDI wählen statt Joint Venture — Kontrolle schützt IP besser."
           }
         ]
       },
       {
-        "name": "Frameworks for Analyzing International Competitive Advantage",
+        "name": "Wettbewerbsvorteile & Standortanalyse",
         "concepts": [
           {
             "term": "Porter's National Diamond",
-            "definition": "Ein Rahmenwerk, das erklärt, warum bestimmte Nationen in bestimmten Branchen wettbewerbsfähiger sind, basierend auf vier Faktoren: Factor Conditions, Demand Conditions, Related & Supporting Industries sowie Firm Strategy, Structure & Rivalry.",
+            "definition": "Framework zur Erklärung, <strong>warum bestimmte Nationen in bestimmten Industrien weltweit führend</strong> sind. Vier Faktoren: <strong>Factor Conditions</strong> (heimische Ressourcen), <strong>Demand Conditions</strong> (anspruchsvolle Heimkunden), <strong>Related & Supporting Industries</strong> (Cluster), <strong>Strategy, Structure & Rivalry</strong> (Inlandswettbewerb treibt Verbesserung).",
             "author": "Michael E. Porter",
             "importance": "high",
-            "examRelevance": "Wird sehr häufig gefragt, weil Prüfungen verlangen, dass die vier Diamanten-Faktoren auf konkrete Länder-/Branchenbeispiele angewendet werden."
+            "examRelevance": "Klassische Essay-Frage: 'Warum ist Deutschland in Automobilbau führend?' — wende alle 4 Diamond-Faktoren an. Merkhilfe: <strong>FDRS</strong> (Factor, Demand, Related, Strategy). Verknüpft mit <strong>Comparative Advantage</strong>: Diamond erklärt den WIE-Mechanismus dahinter."
           },
           {
             "term": "Theory of Comparative Advantage",
-            "definition": "Ökonomische Theorie, die besagt, dass Länder sich auf die Produktion von Gütern spezialisieren sollten, bei denen sie relativ niedrigere Opportunitätskosten haben, was den Ausgangspunkt für internationale Ressourcenallokation bildet.",
-            "author": "General economic theory (Ricardo)",
+            "definition": "Nationen spezialisieren sich auf Güter, die sie <strong>relativ effizienter</strong> produzieren können. Bestimmt nationale Ressourcen-Endowments (Rohstoffe, Humankapital, Infrastruktur) als Grundlage für FDI-Standortentscheidungen.",
+            "author": "",
             "importance": "medium",
-            "examRelevance": "Wird gefragt, weil es die theoretische Grundlage für Standortentscheidungen und die Erklärung nationaler Ressourcenausstattung bildet."
+            "examRelevance": "Hintergrundbegriff für Standortfragen — 'Warum produziert H&M in Bangladesh?' ist die Anwendung: komparativer Vorteil bei Niedriglohn-Textilproduktion."
           },
           {
-            "term": "Ghemawat's CAGE Framework",
-            "definition": "A framework identifying four dimensions of distance between countries — Cultural, Administrative/Political, Geographical, and Economic — that increase the costs and risks of international operations.",
+            "term": "CAGE Framework",
+            "definition": "Analyse der <strong>Distanz zwischen zwei Ländern</strong> entlang vier Dimensionen: <strong>C</strong>ultural, <strong>A</strong>dministrative/Political, <strong>G</strong>eographical, <strong>E</strong>conomic. Größere Distanz = höhere Markteintrittskosten und Risiken.",
             "author": "Pankaj Ghemawat",
             "importance": "high",
-            "examRelevance": "Wird häufig gefragt, weil Prüfungen die vier CAGE-Dimensionen auf Länderpaarvergleiche anwenden und deren strategische Implikationen erläutern lassen."
-          }
-        ]
-      },
-      {
-        "name": "Integration-Responsiveness Framework and Global Strategy Positions",
-        "concepts": [
-          {
-            "term": "Integration-Responsiveness (IR) Framework",
-            "definition": "A framework summarizing the balance firms seek between globally integrating value chain activities for efficiency and adapting to local market needs for responsiveness; yields four strategic positions.",
-            "author": "Prahalad & Doz; Roth & Morrison",
-            "importance": "high",
-            "examRelevance": "Wird sehr häufig gefragt, weil es das zentrale Analysetool für alle vier globalen Strategietypen ist und Fallunternehmen positioniert werden müssen."
+            "examRelevance": "Wird in Open-Book-Klausuren fast immer verlangt für Länder-Vergleiche: 'Analysiere Amazons Expansion nach Indien vs. Deutschland mit CAGE.' Merkhilfe: <strong>CAGE</strong> = wie weit ist das Land 'weg'? Verknüpft mit <strong>Liability of Foreignness</strong>: CAGE quantifiziert, wie groß diese Liability ist."
           },
           {
-            "term": "International Strategy",
-            "definition": "A company sells the same products or services in domestic and foreign markets, leveraging home-based core competencies with low pressure for cost reductions and low local responsiveness.",
-            "author": "General framework",
+            "term": "Location Economies",
+            "definition": "Vorteile, die entstehen, wenn <strong>Wertschöpfungsaktivitäten am kostengünstigsten Standort weltweit</strong> angesiedelt werden. Beispiel: Apple designt in USA (Innovationscluster), produziert in China (Kostencluster).",
+            "author": "",
             "importance": "medium",
-            "examRelevance": "Wird gefragt, weil Prüfungen die Abgrenzung der vier IR-Strategietypen anhand von Unternehmensbeispielen verlangen."
-          },
-          {
-            "term": "Multidomestic Strategy",
-            "definition": "Eine Strategie mit hoher lokaler Anpassung und geringem Kostendruck, bei der Produkte und Praktiken auf die spezifischen Bedürfnisse jedes lokalen Marktes zugeschnitten werden.",
-            "author": "General framework",
-            "importance": "medium",
-            "examRelevance": "Wird gefragt, weil es typische Branchen (Consumer Products, Food) und die Kosten der Duplikation von Geschäftsfunktionen zu erläutern gilt."
-          },
-          {
-            "term": "Global-Standardization Strategy",
-            "definition": "A strategy emphasizing high cost reductions through economies of scale and location economies with minimal local adaptation, using price as the main competitive weapon.",
-            "author": "General framework",
-            "importance": "high",
-            "examRelevance": "Wird häufig gefragt, weil es den Gegenpol zur Multidomestic Strategy bildet und die Logik globaler Arbeitsteilung erklärt werden muss."
-          },
-          {
-            "term": "Transnational Strategy",
-            "definition": "A strategy combining high cost reductions with high local responsiveness ('Think globally, act locally'), transferring best practices, ideas, and innovations across the entire organization.",
-            "author": "Prahalad & Doz",
-            "importance": "high",
-            "examRelevance": "Wird häufig gefragt, weil es als anspruchsvollste und schwierigste Strategie gilt und Prüfungen ihre Implementierungskomplexität und den Blue-Ocean-Bezug thematisieren."
-          }
-        ]
-      },
-      {
-        "name": "Modes of Foreign Market Entry and Location Decisions",
-        "concepts": [
-          {
-            "term": "Modes of Foreign Market Entry (Investment & Control Continuum)",
-            "definition": "Das Spektrum der Markteintrittsmöglichkeiten — von Exporten und Lizenzierung über Joint Ventures bis zu vollständigem FDI — geordnet nach zunehmendem Ressourceneinsatz und Kontrollgrad.",
-            "author": "General framework",
-            "importance": "medium",
-            "examRelevance": "Wird gefragt, weil Prüfungen verlangen, den geeigneten Markteintritt anhand von Unternehmens- und Länderkontextfaktoren zu begründen."
+            "examRelevance": "Teil der <strong>Global-Standardization Strategy</strong>-Argumentation — erklärt die 'Global Division of Labor' die du bei Klausur-Fallstudien nennen musst."
           },
           {
             "term": "Optimal Location of Value Chain Activities",
-            "definition": "The decision framework for placing each activity of the value chain in the location that minimizes costs while considering input availability, government incentives, firm-specific advantages, and coordination benefits.",
-            "author": "General framework",
+            "definition": "Framework zur Standortentscheidung einzelner Wertschöpfungsaktivitäten basierend auf: <strong>Inputkosten</strong>, <strong>Government Incentives</strong>, <strong>Firmenstrategie</strong> (Kosten vs. Differenzierung), <strong>Koordinationsvorteile</strong> durch Co-Location und <strong>Tradability</strong> des Outputs.",
+            "author": "",
             "importance": "medium",
-            "examRelevance": "Wird gefragt, weil Open-Book-Prüfungen konkrete Standortentscheidungen mit dem Rahmenwerk begründen lassen."
+            "examRelevance": "Angewandte Standortfrage: 'Wo sollte Siemens seine Windturbinen-Produktion ansiedeln?' — gehe alle 5 Faktoren durch."
+          }
+        ]
+      },
+      {
+        "name": "Integration-Responsiveness Framework & Strategien",
+        "concepts": [
+          {
+            "term": "Integration-Responsiveness (IR) Framework",
+            "definition": "Zeigt die Balance zwischen <strong>Global Integration</strong> (weltweite Effizienz durch Standardisierung) und <strong>Local Responsiveness</strong> (Anpassung an lokale Märkte). Vier Strategiepositionen entstehen aus der 2×2-Matrix.",
+            "author": "Prahalad & Doz",
+            "importance": "high",
+            "examRelevance": "Das zentrale Klausur-Framework dieser Session — du wirst IMMER gefragt, eine Firma in die Matrix einzuordnen und zu begründen. Merkhilfe: <strong>IMGT</strong> = International, Multidomestic, Global-Standardization, Transnational."
+          },
+          {
+            "term": "International Strategy",
+            "definition": "<strong>Niedrige Kostenreduktion + niedrige lokale Anpassung</strong>: Firma verkauft gleiche Produkte im In- und Ausland. Nutzt <strong>heimische Core Competencies</strong> und starke Marken. Funktioniert gut bei großen Heimatmärkten (Beispiel: früher Microsoft).",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Abgrenzungsfrage: 'Unterscheide International Strategy von Global-Standardization Strategy.' — Antwort: beide niedrige Responsiveness, aber International hat auch niedrige Kostenoptimierung."
+          },
+          {
+            "term": "Multidomestic Strategy",
+            "definition": "<strong>Niedrige Kostenreduktion + hohe lokale Anpassung</strong>: Lokale Konsumenten sollen Produkte als lokal wahrnehmen. Kostspielig durch <strong>Duplikation von Funktionen</strong> in jedem Land. Typisch in: Consumer Products (P&G), Food Industry (Nestlé).",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Häufigste Verwechslung in Klausuren: Multidomestic ≠ Transnational. Unterschied: Transnational optimiert Kosten UND passt lokal an — Multidomestic verzichtet auf Kostenoptimierung. Frage: 'Warum betreibt McDonald's in Indien eine Multidomestic Strategy?'"
+          },
+          {
+            "term": "Global-Standardization Strategy",
+            "definition": "<strong>Hohe Kostenreduktion + niedrige lokale Anpassung</strong>: Maximale <strong>Economies of Scale</strong> durch globale Arbeitsteilung. Preis ist die Hauptwaffe — minimale lokale Anpassung. Beispiel: Intel (Chips sind global identisch), Samsung Commodity Chips.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Verknüpft mit <strong>Location Economies</strong>: Global-Standardization-Firmen nutzen Location Economies maximal aus — das ist dein Argument in der Klausur."
+          },
+          {
+            "term": "Transnational Strategy",
+            "definition": "<strong>Hohe Kostenreduktion + hohe lokale Anpassung</strong>: 'Think globally, act locally.' <strong>Best Practices</strong> werden global geteilt, gleichzeitig lokale Anpassung. Schwer umsetzbar wegen Duplikation und Komplexität. Beispiel: Unilever, Toyota.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Die 'ideale aber schwierige' Strategie — Klausurfrage: 'Warum ist Transnational Strategy schwer zu implementieren?' Antwort: Organisations-komplexität + doppelter Aufwand. Verknüpft mit <strong>Blue Ocean Strategy</strong>: Transnational wird mit Blue-Ocean-Firmen assoziiert."
+          },
+          {
+            "term": "Global Integration",
+            "definition": "<strong>Koordination der Wertschöpfungsaktivitäten über mehrere Länder</strong> hinweg für weltweite Effizienz, Synergien und Cross-Fertilization. Ziel: Standardisierung nutzen, wo Kundenbedürfnisse konvergieren.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Definitionsbaustein für IR-Framework — erkläre immer gemeinsam mit Local Responsiveness als Trade-off."
+          },
+          {
+            "term": "Local Responsiveness",
+            "definition": "<strong>Anpassung an spezifische Bedürfnisse lokaler Käufer</strong>: lokale Manager können Angebote, Marketing und Praktiken an Marktbedingungen anpassen. Ziel: Maximierung von Sales durch lokale Nähe.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Immer im Trade-off mit Global Integration nennen — 'Je mehr Local Responsiveness, desto weniger Skalenvorteile' ist die Kernspannung dieser Session."
+          }
+        ]
+      },
+      {
+        "name": "Internationalisierung & Industriestruktur",
+        "concepts": [
+          {
+            "term": "Auswirkungen auf die Industriestruktur (5 Forces)",
+            "definition": "Internationalisierung <strong>senkt Markteintrittsbarrieren</strong>, erhöht <strong>Rivalität</strong> (mehr Wettbewerber, größere Diversity), stärkt <strong>Käufermacht</strong> (mehr Lieferanten zur Auswahl). Netto-Effekt: <strong>niedrigere Margen und Kapitalrenditen</strong> in der Industrie.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Verknüpft mit <strong>Porter's Five Forces</strong> aus früheren Sessions: Internationalisierung verschlechtert alle drei strukturellen Faktoren gleichzeitig — das ist dein Argument wenn du erklärst, warum globale Industrien hart umkämpft sind."
+          },
+          {
+            "term": "Modes of Foreign Market Entry (Investment-Control Continuum)",
+            "definition": "Spektrum von Markteintritts-Optionen von <strong>niedrig</strong> (Export, Licensing) bis <strong>hoch</strong> (Wholly Owned Subsidiary via FDI). Mehr Investment = mehr Kontrolle = mehr Risiko.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Klassische Take-Home-Frage: 'Welche Eintrittsstrategie empfiehlst du Tesla für den indischen Markt?' — argumentiere entlang IP-Schutz, Kontrollbedarf und CAGE-Distanz."
           }
         ]
       }
@@ -675,23 +710,18 @@
   "authors": [
     {
       "name": "Michael E. Porter",
-      "theory": "Porter's National Diamond: Erklärt nationale Wettbewerbsvorteile durch vier miteinander verbundene Faktoren — (1) Factor Conditions (heimische Ressourcen und Fähigkeiten, die wichtiger sind als natürliche Ausstattung), (2) Demand Conditions (anspruchsvolle Heimkunden treiben Qualität und Innovation), (3) Related & Supporting Industries (Cluster-Effekte), (4) Firm Strategy, Structure & Rivalry (heimischer Wettbewerb erzwingt kontinuierliches Upgrading).",
-      "useInExam": "Cite as: 'According to Porter's National Diamond, [country X] has a competitive advantage in [industry Y] because of [specific diamond factor].' Apply all four factors when analyzing a country-industry combination."
+      "theory": "Nationen erlangen Wettbewerbsvorteile in Industrien durch das Zusammenspiel von vier heimischen Faktoren: Factor Conditions, Demand Conditions, Related & Supporting Industries sowie Strategy/Structure/Rivalry — dargestellt im National Diamond.",
+      "useInExam": "Nimm Porter (Diamond), wenn die Frage lautet 'Warum ist Land X in Industrie Y führend?' oder 'Welche nationalen Faktoren fördern Innovationsstärke?'. Nicht verwechseln mit Porter's Five Forces (Industriestruktur-Analyse) — beides Porter, aber Diamond = National Level, Five Forces = Industrie Level."
     },
     {
       "name": "Pankaj Ghemawat",
-      "theory": "CAGE Framework: Identifiziert vier Distanzdimensionen zwischen Ländern, die internationale Geschäftstätigkeit erschweren — Cultural (Sprache, Religion, Normen), Administrative/Political (politische Feindseligkeit, fehlende Abkommen, schwache Institutionen), Geographical (physische Entfernung, fehlende Infrastruktur, Produkteigenschaften wie Gewicht/Verderblichkeit), Economic (Einkommensunterschiede, Ressourcenunterschiede, Informationsasymmetrien).",
-      "useInExam": "Cite as: 'Ghemawat's CAGE framework suggests that the [cultural/administrative/geographical/economic] distance between [country A] and [country B] increases transaction costs because [specific reason].' Always specify which of the four dimensions is most relevant for the given industry."
+      "theory": "Die Welt ist nicht flach — Distanz zwischen Ländern entlang kultureller, administrativer, geografischer und ökonomischer Dimensionen (CAGE) bestimmt maßgeblich Erfolg und Kosten der Internationalisierung.",
+      "useInExam": "Nimm Ghemawat (CAGE), wenn du zwei Länder vergleichen sollst oder erklären musst, warum eine Internationalisierung scheiterte/teuer war. Beispiel: 'Warum ist Carrefour in Asien gescheitert?' = hohe CAGE-Distanz auf allen 4 Dimensionen."
     },
     {
-      "name": "C.K. Prahalad & Y.L. Doz",
-      "theory": "Integration-Responsiveness Framework (1987): Das I-R-Framework spannt eine 2x2-Matrix auf, die globale Integration (Effizienz durch Standardisierung) gegen lokale Anpassung (Marktrelevanz) abwägt und vier Strategiepositionen (International, Multidomestic, Global-Standardization, Transnational) definiert. Die Transnational Strategy ('Think globally, act locally') gilt als ideales, aber schwer umzusetzendes Modell.",
-      "useInExam": "Cite as: 'Following Prahalad & Doz's Integration-Responsiveness Framework, [company X] pursues a [strategy type] strategy, as evidenced by [high/low integration] and [high/low responsiveness] due to [specific pressures].' Position the company clearly in the 2x2 matrix and justify with evidence from the case."
-    },
-    {
-      "name": "K. Roth & A.J. Morrison",
-      "theory": "Empirical Analysis of the I-R Framework (1991): Lieferten empirische Validierung des Prahalad/Doz-Frameworks in globalen Industrien und präzisierten, wie Firmen sich in der I-R-Matrix positionieren.",
-      "useInExam": "Cite as supporting evidence alongside Prahalad & Doz: 'Roth & Morrison (1991) empirically confirmed that firms in [global industries] tend to cluster in the [high integration/low responsiveness] quadrant.'"
+      "name": "C.K. Prahalad & Yves L. Doz",
+      "theory": "Multinationale Unternehmen stehen vor einem fundamentalen Trade-off zwischen Global Integration (Effizienz) und Local Responsiveness (Marktanpassung), aus dem vier strategische Positionen entstehen.",
+      "useInExam": "Nimm Prahalad & Doz, wenn du das IR-Framework zitieren oder eine Firma strategisch einordnen sollst. Nicht verwechseln mit Porter's Diamond — Prahalad/Doz = FIRM-Level Strategie, Porter Diamond = NATION-Level."
     }
   ],
   "schedule": {
@@ -699,82 +729,76 @@
     "days": [
       {
         "day": 1,
-        "label": "Foundations: Global Strategy, FDI & Internationalization Patterns",
+        "label": "Überblick & Grundbegriffe",
         "tasks": [
-          "Read and annotate the core definitions: Global Strategy, FDI, MNE — write each in your own words (max. 2 sentences each).",
-          "Study the Patterns of Internationalization matrix (Trading/Global/Multidomestic/Sheltered): memorize 2 industry examples per quadrant.",
-          "Review the Investment & Control Continuum: list all entry modes from lowest to highest resource commitment.",
-          "Self-test: Without notes, correctly place 5 industries into the Internationalization matrix and justify each placement.",
-          "Create a one-page summary of FDI's 5 key features and 3 advantages / 3 disadvantages."
+          "Session 14 PDF einmal komplett durchlesen (ca. 45 Min) — nicht lernen, nur orientieren",
+          "Die 4 Patterns of Internationalization (TGMS) mit je einem echten Firmen-Beispiel aufschreiben",
+          "FDI vs. Trade vs. Licensing in 3 Sätzen unterscheiden — ohne Material",
+          "Lernkarten erstellen: Liability of Foreignness, Loss of IP, Loss of Reputation (je Vor-/Rückseite)"
         ]
       },
       {
         "day": 2,
-        "label": "Competitive Advantage: Porter's National Diamond",
+        "label": "Porter's National Diamond meistern",
         "tasks": [
-          "Study all four diamond factors: write a precise definition and one concrete example for each.",
-          "Apply the National Diamond to a country-industry pair of your choice (e.g., Germany/automobiles or Switzerland/pharmaceuticals): fill in all four quadrants.",
-          "Note the key insight: 'home-grown' capabilities > natural endowments for Factor Conditions.",
-          "Explain the role of 'industry clusters' under Related & Supporting Industries with a real example.",
-          "Self-test: Explain Porter's National Diamond to an imaginary audience in 3 minutes without looking at your notes."
+          "Diamond-Framework auswendig skizzieren (4 Faktoren + Pfeile) ohne Vorlage",
+          "Deutschland Automobilindustrie mit allen 4 Faktoren durchanalysieren (schriftlich, 1 Seite)",
+          "Zweites Beispiel: Silicon Valley / USA für Tech-Industrie durchanalysieren",
+          "FDRS-Eselsbrücke einprägen und 3 Klausur-Fragen zum Diamond selbst formulieren + beantworten"
         ]
       },
       {
         "day": 3,
-        "label": "Distance & Location: CAGE Framework and Value Chain Location Decisions",
+        "label": "CAGE Framework & Standortentscheidungen",
         "tasks": [
-          "Study Ghemawat's CAGE Framework: define all four dimensions precisely and write down which industry types are most affected by each.",
-          "Practice applying CAGE to a country pair (e.g., USA–China or Germany–Brazil): identify the most critical distance dimension for a specific product.",
-          "Study the Optimal Location of Value Chain Activities framework: understand the five decision questions (input costs, government incentives, firm-specific advantages, business strategy, coordination benefits).",
-          "Connect CAGE to the Location decision framework: how does cultural or geographical distance affect where you place manufacturing vs. marketing?",
-          "Self-test: Given a hypothetical scenario (e.g., a European food company entering Southeast Asia), identify the dominant CAGE barriers and suggest mitigation strategies."
+          "CAGE-Dimensionen auswendig lernen (Cultural, Administrative, Geographical, Economic)",
+          "Fallstudie schreiben: Amazon-Expansion nach Indien vs. Deutschland — beide Länder mit CAGE analysieren",
+          "Optimal Location of Value Chain: 5 Entscheidungsfaktoren ohne Material aufschreiben",
+          "Verbindung CAGE ↔ Liability of Foreignness in 2 Sätzen erklären"
         ]
       },
       {
         "day": 4,
-        "label": "Core Framework: Integration-Responsiveness (I-R) Matrix",
+        "label": "Integration-Responsiveness Framework (Kernthema)",
         "tasks": [
-          "Study the I-R Framework: draw the 2x2 matrix from memory, label all four quadrants with strategy names and axes.",
-          "For each of the four strategies (International, Multidomestic, Global-Standardization, Transnational): write the definition, key mechanism, and one MNE example.",
-          "Understand the Transnational Strategy in depth: what makes it difficult to implement? (duplication, organizational complexity) — prepare 2-3 sentences for exam use.",
-          "Study how Prahalad & Doz (1987) and Roth & Morrison (1991) are cited — practice writing one exam sentence using each author.",
-          "Self-test: Position 3 real companies (e.g., IKEA, McDonald's, Toyota) in the I-R matrix and justify each position with evidence."
+          "IR-Matrix aus dem Gedächtnis zeichnen: 4 Quadranten mit Namen und Merkmalen",
+          "IMGT-Eselsbrücke einprägen (International, Multidomestic, Global-Standardization, Transnational)",
+          "Für jede der 4 Strategien: 2 echte Firmen-Beispiele + Begründung warum sie dort verortet sind",
+          "Unterschied Multidomestic vs. Transnational in einer Tabelle (3 Kriterien) — häufigste Verwechslung!",
+          "Übungsaufgabe: 'Ordne Netflix ein und begründe' — schriftlich ausformulieren"
         ]
       },
       {
         "day": 5,
-        "label": "Integration: Connecting All Frameworks — Industry Analysis & Strategy",
+        "label": "Verknüpfungen & Cross-References üben",
         "tasks": [
-          "Study how internationalization affects industry analysis: lower entry barriers, increased rivalry, increased buyer power — connect to Porter's Five Forces logic.",
-          "Understand the full analytical framework: National Environment (Comparative Advantage + National Diamond) → Industry KSFs → Firm Resources & Capabilities → Strategy.",
-          "Practice integrating frameworks: given a case, apply (1) CAGE, (2) National Diamond, (3) I-R Matrix in sequence to build a complete strategic analysis.",
-          "Review all three disadvantages of internationalization (Liability of Foreignness, Loss of Reputation, Loss of IP) — for each, think of a real MNE example.",
-          "Self-test: Write a 300-word essay answering: 'Why would a firm choose a Transnational over a Global-Standardization strategy?' using at least two frameworks."
+          "Verbindung IR-Framework ↔ Porter's Five Forces erklären: wie Internationalisierung Industriestruktur verändert",
+          "Verbindung CAGE ↔ Markteintritts-Entscheidung (FDI vs. Licensing): wann welche Eintrittsstrategie?",
+          "Verbindung Diamond ↔ Location Economies: wie nationaler Vorteil in FDI-Standort-Entscheidung einfließt",
+          "Autoren-Cheat-Sheet auswendig lernen: Porter Diamond ≠ Porter Five Forces merken!"
         ]
       },
       {
         "day": 6,
-        "label": "Open-Book Practice: Case Analysis and Exam Simulation",
+        "label": "Klausur-Simulation (Open-Book üben)",
         "tasks": [
-          "Practice open-book exam conditions: select a real MNE (e.g., Unilever, Samsung, or Zara) and write a full strategic analysis using all Session 14 frameworks.",
-          "Focus on precision: use exact author names, framework names, and terminology as found in the material.",
-          "Write one answer applying the CAGE Framework to explain why a specific international expansion succeeded or failed.",
-          "Write one answer positioning a company in the I-R matrix with full justification.",
-          "Identify any gaps or weak spots in your understanding and flag them for Day 7 review."
+          "Open-Book-Simulation: 'Analysiere Teslas Expansion nach China — CAGE, IR-Framework, FDI-Vorteile und -Risiken' (60 Min, mit Materialzugriff, aber zügig)",
+          "Zweite Frage: 'Warum ist Walmart in Deutschland gescheitert? Nutze Liability of Foreignness und CAGE' (30 Min)",
+          "Antworten kritisch prüfen: Sind alle <strong>Schlüsselbegriffe</strong> korrekt verwendet? Sind Beispiele konkret?",
+          "Lücken identifizieren und gezielte Lernkarten nacherstellen"
         ]
       },
       {
         "day": 7,
-        "label": "Final Review: Consolidation and Confidence Check",
+        "label": "Final Review & Entspannung",
         "tasks": [
-          "Review all flagged weak spots from Day 6 — re-read only the relevant sections of the material.",
-          "Reproduce from memory: (1) Porter's National Diamond with all four factors, (2) CAGE with all four dimensions, (3) I-R Matrix with all four strategies.",
-          "Check your author citation formulas: Prahalad & Doz (1987), Roth & Morrison (1991), Porter (National Diamond), Ghemawat (CAGE).",
-          "Re-read your Day 5 integration essay and improve it based on what you know now.",
-          "Final confidence check: for each 'high importance' concept, ask yourself — can I define it, apply it to a case, and cite the correct author? If yes, you are exam-ready."
+          "Alle Frameworks einmal aus dem Gedächtnis skizzieren: Diamond, CAGE, IR-Matrix, Patterns of Internationalization",
+          "Autoren-Zuordnung testen: wer sagt was? (Ghemawat = CAGE, Porter = Diamond, Prahalad/Doz = IR)",
+          "Die 3 Disadvantages (Foreignness, Reputation, IP) und 3 Advantages (Market, Cost, Competencies) ohne Material aufzählen",
+          "Material weglegen, 1 Stunde Pause — Schlaf ist wichtiger als eine weitere Lernsession"
         ]
       }
     ]
   },
-  "quizletExport": "What are the two core goals of a firm's global strategy?\tGain and sustain a competitive advantage while competing against both foreign and domestic companies.Global strategy is part of a firm's corporate strategy and directs how it deploys resources internationally.Example: Samsung competes with Apple (domestic US rival) and Sony (foreign rival) simultaneously through its global strategy.\nWhat defines a Multinational Enterprise (MNE)?\tA firm that deploys resources and capabilities in two or more countries.MNEs go beyond simple exporting — they actively commit resources (capital, people, technology) across national borders.Example: Toyota operates manufacturing plants in Japan, the USA, and Germany, making it a classic MNE.\nWhat are the four industry types in the Patterns of Internationalization framework, and how do they differ on the two axes?\tThe four types are: Trading Industries, Global Industries, Multidomestic Industries, and Sheltered Industries — mapped on axes of International Trade (low/high) and Foreign Direct Investment (low/high).Trading Industries: high trade, low FDI (e.g., diamond mining, agriculture). Global Industries: high trade, high FDI (e.g., automobiles, semiconductors). Multidomestic Industries: low trade, high FDI (e.g., retail banking, hotels). Sheltered Industries: low trade, low FDI (e.g., hairdressing, taxi services).Example: The oil industry is Global (high trade + high FDI), while fresh milk is Sheltered (low trade + low FDI) due to perishability.\nWhat are the five key features of Foreign Direct Investment (FDI)?\t1. Substantial resource commitment. 2. Implies local presence and operations. 3. Firms invest where comparative advantages exist. 4. Substantial risk and uncertainty. 5. Requires dealing with specific social and cultural variables in the host market.FDI is the most advanced, expensive, complex, and riskiest entry strategy, involving the establishment of manufacturing plants or marketing subsidiaries abroad.Example: Haier's acquisition of Maytag (US appliance brand) raised patriotic sentiments — illustrating the social/cultural complexity of FDI.\nHow does FDI differ from other modes of foreign market entry in terms of investment and control?\tFDI sits at the high end of both investment commitment and control on the Investment-Control Continuum.Lower-commitment modes (exporting, licensing) require less capital but give the firm less control. FDI maximizes control over operations but demands the largest resource commitment and carries the highest risk.Example: A firm licensing its brand to a foreign partner (low investment, low control) vs. building its own factory abroad (high investment, high control via FDI).\nWhat are the three main advantages of international expansion?\t1. Access to a larger market. 2. Access to low-cost input factors. 3. Development of new competencies.Each advantage addresses a different strategic need: market size supports scale/scope economies; low-cost inputs support cost leadership; new competencies support differentiation.Example: India offers well-educated English-speaking workers (new competencies); China offers low labor costs and efficient infrastructure (low-cost inputs).\nWhat are the three main disadvantages of international expansion?\t1. Liability of Foreignness. 2. Loss of Reputation. 3. Loss of Intellectual Property.These disadvantages arise from unfamiliar environments, CSR failures abroad, and IP protection challenges respectively.Example: A firm manufacturing in a country with poor safety standards risks reputational damage (loss of reputation); operating in a country with weak IP laws risks reverse-engineering of its technology (loss of IP).\nWhat is the 'Liability of Foreignness' and what costs does it create?\tThe Liability of Foreignness refers to the additional costs MNEs face due to their unfamiliarity with foreign cultural and economic environments, and the challenge of coordinating across geographic distances.Domestic firms have an inherent advantage because they understand local customs, regulations, and market dynamics. Foreign firms must invest time and resources to overcome this deficit.Example: A US retailer entering Japan must learn entirely different consumer expectations, store layout norms, and business etiquette — all generating extra costs.\nWhy is Loss of Intellectual Property a significant risk in international expansion, and which industries are most affected?\tIP protection varies widely across countries; copyright infringement is common and some partners initially collaborate then reverse-engineer a firm's capabilities.Industries most vulnerable: software, movies, music — where digital copying is easy. The risk is especially high in countries with weak legal enforcement.Example: A tech firm entering a market with a local partner may find that partner launching a competing product using the same technology after the partnership ends.\nHow does internationalization generally affect industry profitability according to the framework presented?\tInternationalization tends to reduce an industry's margins and return on capital by intensifying competition.It lowers entry barriers into national markets, increases industry rivalry (lower seller concentration, more diverse competitors), and increases buyer power (buyers have more potential suppliers). All three forces erode profitability (Porter's Five Forces logic).Example: The entry of South Korean and Chinese automakers into European markets increased rivalry and gave consumers more choices, reducing margins for incumbent manufacturers.\nWhat are the four components of Porter's National Diamond Framework?\t1. Factor Conditions. 2. Related and Supporting Industries. 3. Demand Conditions. 4. Strategy, Structure, and Rivalry.Porter's National Diamond explains why certain nations develop competitive advantages in specific industries. 'Home-grown' resources matter more than natural endowments (Factor Conditions); industry clusters are key (Related & Supporting); discerning domestic customers drive quality (Demand Conditions); domestic rivalry drives upgrading (Strategy/Structure/Rivalry).Example: Italy's fashion industry benefits from sophisticated local consumers (demand conditions) and a cluster of fabric, leather, and accessory suppliers (related industries). — Porter\nIn Porter's National Diamond, why is domestic rivalry considered a driver of competitive advantage rather than a threat?\tIntense domestic rivalry forces firms to constantly upgrade their capabilities, innovate, and improve efficiency — creating stronger competitors for international markets.Unlike industries protected from domestic competition, firms in highly rivalrous home markets are 'battle-hardened' and better prepared to compete globally.Example: The fierce competition among Japanese consumer electronics firms (Sony, Panasonic, Sharp) at home contributed to their global dominance in the 1970s–80s. — Porter\nWhat are the three sets of factors a firm must consider when deciding where to locate production?\t1. National resource conditions (where are required resources available at low cost?). 2. Firm-specific advantages (are the company's competitive advantages transferable?). 3. Tradability issues (can the product be transported economically, or do trade restrictions apply?).If a product cannot be traded economically — due to weight, perishability, or trade barriers — production must be close to the market.Example: Fresh milk (perishable, high weight-to-value) must be produced locally; semiconductors (light, high value) can be produced centrally in one optimal location.\nWhat are the four dimensions of Ghemawat's CAGE Framework, and what does each measure?\tC = Cultural Distance, A = Administrative and Political Distance, G = Geographical Distance, E = Economic Differences.Each dimension captures a type of 'distance' between two countries that increases the cost and difficulty of doing business across them. Greater CAGE distance = higher barriers to trade and FDI.Example: The US and UK have low cultural (shared language), low administrative (shared legal traditions), moderate geographical, and low economic distance — making bilateral trade and investment relatively easy. — Ghemawat\nAccording to Ghemawat's CAGE Framework, which industries are most sensitive to Cultural Distance?\tIndustries with high linguistic or cultural content — such as TV, publishing, food, wine, and music.Cultural distance increases costs when products carry meaning, language, or taste preferences that differ across nations. Adapting these products is expensive or sometimes impossible.Example: A French wine brand relies on cultural prestige tied to French identity — in countries with very different cultural references, this perceived value diminishes significantly. — Ghemawat\nAccording to Ghemawat's CAGE Framework, which industries are most sensitive to Geographical Distance?\tProducts with low value-to-weight ratios (cement), fragile products (glass), perishable products (milk), or services requiring real-time communication (financial services).Geographical distance raises transportation costs disproportionately for heavy/bulky/fragile goods and creates latency problems for communication-dependent services.Example: Cement cannot be shipped profitably over long distances — local production is always required, making it a 'Sheltered Industry.' — Ghemawat\nWhat is the core trade-off captured by the Integration-Responsiveness (IR) Framework?\tThe IR Framework captures the tension between the need to integrate value chain activities globally (for efficiency) and the need to adapt offerings to local market conditions (for local responsiveness).Firms that maximize global integration minimize costs through standardization and scale economies. Firms that maximize local responsiveness maximize market share by tailoring products to local needs. Most MNEs must find a balance between these two pressures.Example: McDonald's globally standardizes its supply chain and brand (integration) but adapts its menu locally — McAloo Tikki in India (local responsiveness). — Prahalad & Doz (1987); Roth & Morrison (1991)\nWhat are the four global strategy positions in the IR Framework, and how do they differ on the two dimensions?\t1. International Strategy (low integration / low responsiveness). 2. Multidomestic Strategy (low integration / high responsiveness). 3. Global-Standardization Strategy (high integration / low responsiveness). 4. Transnational Strategy (high integration / high responsiveness).Each position represents a distinct strategic logic and set of trade-offs regarding cost efficiency vs. local fit.Example: IKEA pursues Global-Standardization (same products, same store concept worldwide); Nestlé pursues Multidomestic (different product formulations per country). — Prahalad & Doz (1987)\nWhat is an International Strategy, and under what conditions is it typically used successfully?\tA strategy where a firm sells the same products or services in both domestic and foreign markets, leveraging home-based core competencies with low pressure for both cost reduction and local adaptation.It works best for MNEs with large domestic markets, strong brand reputations, and products that have broad cross-market appeal without needing significant customization.Example: Microsoft historically sold the same software globally with minimal local adaptation, relying on its dominant technology platform as a home-based core competency.\nWhat is a Multidomestic Strategy, and what is its main cost disadvantage?\tA strategy with high local responsiveness and low global integration — local consumers ideally perceive products as locally made; the main disadvantage is costly duplication of business functions across countries.By tailoring everything to each market, the firm forgoes scale economies. Each country operation largely stands alone, increasing overhead.Example: Many consumer goods and food companies (e.g., Unilever adapting product formulations country by country) use multidomestic strategies but pay a premium in operational complexity.\nWhat is a Global-Standardization Strategy, and what mechanisms does it use to achieve cost leadership?\tA strategy with high global integration and low local responsiveness — the firm achieves cost leadership through economies of scale, location economies, and a global division of labor.Activities are located wherever costs are lowest globally (e.g., manufacturing in China, R&D in the US). Price is the main competitive weapon, with minimal local adaptation.Example: Fast-fashion retailers like Zara concentrate manufacturing in cost-efficient locations and sell largely standardized products worldwide.\nWhat is a Transnational Strategy, what is its guiding motto, and why is it difficult to implement?\t'Think globally, act locally' — the Transnational Strategy pursues both high global integration and high local responsiveness simultaneously, using best practices and innovations from everywhere in the network.It is the most complex strategy: it requires firms to share knowledge globally while adapting locally, leading to duplication of efforts and significant organizational complexity.Example: MNEs pursuing a Blue Ocean Strategy (creating new market space) often require transnational capabilities — e.g., P&G transferring product innovations between markets while adapting packaging and marketing locally.\nWhat is 'Global Integration' as a strategic concept, and what does a firm do to achieve it?\tGlobal Integration is the coordination of a firm's value chain activities across multiple countries to achieve worldwide efficiency, synergy, and cross-fertilization by exploiting similarities between countries.Firms pursuing global integration: standardize products/services for converging global needs; compete on a regional or worldwide basis; centralize value chain activities and emphasize scale economies.Example: Intel manufactures microchips at a small number of highly optimized global fabs rather than building local factories in every country.\nWhat is 'Local Responsiveness' as a strategic concept, and how does it operate organizationally?\tLocal Responsiveness means meeting the specific needs of buyers in individual countries by adapting products, marketing, and business practices to suit local conditions.Organizationally, local managers are given freedom to adjust offerings to their markets. This contrasts with centralized global integration where decisions flow from headquarters.Example: A hotel chain allowing country managers to redesign breakfast menus, interior aesthetics, and service rituals to match local cultural expectations (e.g., Hilton in Japan vs. the Middle East).\nWhat are the five factors that determine the optimal location of a specific value chain activity, according to the location decision framework?\t1. Optimal input cost and availability for that activity. 2. Government incentives or penalties. 3. Internal resources and capabilities the firm has in specific locations. 4. The firm's business strategy (cost vs. differentiation). 5. Coordination benefits from co-locating activities.These five factors must be weighed together — no single factor dominates. A low-cost location may be sub-optimal if it disrupts coordination with linked activities.Example: A firm pursuing differentiation may keep R&D co-located with advanced manufacturing (coordination benefit) even if cheaper R&D talent exists elsewhere.\nWhat distinguishes 'Global Industries' from 'Trading Industries' in the Patterns of Internationalization framework?\tBoth have high international trade, but Global Industries also have high FDI — meaning firms not only export but also invest directly abroad. Trading Industries have high trade but low FDI.In Global Industries, competitive advantage requires presence in multiple markets through both trade and investment. In Trading Industries, exporting is sufficient and local production is less necessary.Example: Automobiles (Global) — BMW exports cars AND operates factories in South Africa, the US, and China. Diamond mining (Trading) — diamonds are extracted in one location and traded globally without major FDI in consuming markets.\nHow does the Theory of Comparative Advantage relate to a firm's FDI location decisions?\tThe Theory of Comparative Advantage explains that countries specialize in producing goods/services for which they have relatively lower opportunity costs — firms exploit this by locating value chain activities in countries with the relevant comparative advantage.Resource endowments (raw materials, human capital, infrastructure) shape where each activity can be performed most efficiently. This is the national resource conditions dimension in the location decision framework.Example: A pharmaceutical MNE locates clinical research in India (comparative advantage in scientific labor at lower cost) while keeping headquarters and brand management in Switzerland (comparative advantage in specialized business services and IP law).\nWhat are 'location economies' and how do they relate to Advantage #3 (Develop New Competencies)?\tLocation economies are the economic benefits a firm gains by placing value chain activities in the optimal geographic location for each activity — enabling access to communities of learning and region-specific capabilities that build competitive advantage.Unlike cost savings from cheap labor, location economies are about accessing unique knowledge clusters and innovation ecosystems that help firms develop new, hard-to-replicate competencies.Example: A tech firm establishing an R&D center in Silicon Valley gains access to talent networks, venture capital ecosystems, and peer knowledge-sharing that would be impossible to replicate elsewhere."
+  "quizletExport": "Was sind die 3 zentralen Vorteile der internationalen Expansion und für welchen Strategietyp ist jeder relevant?\tDie 3 Vorteile sind Marktzugang, Kostenfaktoren und neue Kompetenzen — je nach Strategie unterschiedlich relevant.1. Größerer Markt → Economies of Scale/Scope (relevant für alle MNEs, z.B. Netflix expandiert global, um Content-Kosten auf mehr Abonnenten zu verteilen). 2. Günstige Inputfaktoren → Low-Cost Leadership (z.B. Apple lässt in China fertigen wegen niedriger Lohnkosten). 3. Neue Kompetenzen → Differenzierungsstrategie (z.B. SAP saugt Silicon-Valley-Talent durch US-Büros auf).Eselsbrücke: MKN — Markt, Kosten, New Competencies. \"Mein Kurs N(utzt)\".\nWas sind die 3 zentralen Nachteile der internationalen Expansion? Nenne für jeden ein konkretes Unternehmensbeispiel.\tDie 3 Nachteile sind Liability of Foreignness, Reputationsverlust und IP-Verlust.1. Liability of Foreignness: Walmart scheiterte in Deutschland, weil es die lokale Kultur (Mitarbeiterrituale, Lächelpflicht) komplett falsch einschätzte. 2. Reputationsverlust: Nike verlor Reputation durch Sweatshop-Vorwürfe in Asien — schlechte Arbeitsbedingungen bei Zulieferern. 3. IP-Verlust: Westliche Automobilhersteller (z.B. VW in China) mussten Technologie im Joint Venture teilen, chinesische Partner kopierten Konzepte.Eselsbrücke: FRI — Foreignness, Reputation, IP. \"Frische Risiken International\".\nWas ist der Unterschied zwischen einer 'Trading Industry' und einer 'Global Industry' im Internationalisierungsmatrix? Nenne je 2 Beispiele.\tTrading Industries haben hohen Außenhandel aber niedrige FDI; Global Industries haben beides hoch.Trading Industries: Produkte werden exportiert, aber Firmen investieren kaum vor Ort — z.B. Diamantminen (Botswana exportiert, investiert nicht in Abnehmerländer) und Schiffbau. Global Industries: Firmen handeln UND investieren massiv weltweit — z.B. Toyota (Handel + Produktionswerke auf allen Kontinenten), Halbleiter (TSMC hat Fabs weltweit).Merkhilfe: Die Matrix-Achsen sind FDI (y-Achse) und International Trade (x-Achse). Trading = rechts unten, Global = rechts oben.\nWas ist eine 'Sheltered Industry' und warum ist dort internationale Expansion nahezu unmöglich? Nenne 3 Beispiele.\tSheltered Industries haben sowohl niedrigen Außenhandel als auch niedrige FDI, weil ihre Produkte/Services lokal gebunden sind.Beispiele: Taxiservices (man kann keinen deutschen Taxifahrer nach Japan exportieren), Friseure, Frischmilch (verdirbt auf langen Transportwegen). Diese Branchen sind durch Natur des Produkts, Regulierung oder Infrastruktur geschützt — Globalisierung greift hier kaum.Klausur-Falle: Uber ist KEIN klassisches Sheltered-Gegenbeispiel — Uber ist eine Plattform, die das Modell exportiert, die Fahrer bleiben lokal. Das zeigt, wie Digitalisierung Sheltered Industries angreift.\nWie beeinflusst Internationalisierung die Branchenstruktur (Porter's 5 Forces)? Nenne die 3 wichtigsten Effekte.\tInternationalisierung erhöht den Wettbewerbsdruck durch niedrigere Eintrittsbarrieren, mehr Rivalität und höhere Käufermacht.1. Niedrigere Eintrittsbarrieren: Nationale Märkte werden für ausländische Konkurrenten zugänglicher (z.B. chinesische E-Auto-Hersteller BYD drängen in den europäischen Markt). 2. Mehr Rivalität: Mehr und diversere Wettbewerber (z.B. Smartphone-Markt: Apple vs. Samsung vs. Xiaomi vs. Huawei). 3. Höhere Käufermacht: Käufer können aus mehr Lieferanten weltweit wählen (z.B. Einkäufer bei Siemens sourcen Bauteile global).Fazit für Klausur: \"Ceteris paribus reduziert Internationalisierung die Branchenmargen und den Return on Capital.\"\nNenne die 5 Hauptmodi des Markteintritts entlang des Investment-Control-Kontinuums und erkläre das Trade-off.\tVon niedrig zu hoch in Kontrolle und Investition: Export → Licensing → Franchising → Joint Venture → Wholly Owned Subsidiary (FDI).Trade-off: Je höher die Kontrolle, desto höher das Risiko und die Investition. Beispiel: McDonald's nutzt Franchising (mittlere Kontrolle, skalierbar), Tesla betreibt nur eigene Stores (Wholly Owned — maximale Markenkontrolle). Starbucks startete in China mit Joint Ventures, bevor es die Kontrolle übernahm.Eselsbrücke: ELFJW — Export, Licensing, Franchising, Joint Venture, Wholly Owned. \"Erst Langsam, Finde Jeden Weg.\"\nWas sind die 5 Key Features von Foreign Direct Investment (FDI)?\tFDI ist die aufwändigste, teuerste und risikoreichste Markteintrittsform mit 5 Kernmerkmalen.1. Substantielle Ressourcenbindung 2. Lokale Präsenz und Betrieb 3. Investition in komparative Vorteile des Ziellandes 4. Hohes Risiko und Unsicherheit 5. Intensive Auseinandersetzung mit sozialen/kulturellen Variablen.Beispiel: Als Haier (chinesisch) den US-Hersteller Maytag übernahm, löste das patriotische Reaktionen in den USA aus — Punkt 5 in der Praxis.Eselsbrücke: RLRRS — Ressourcen, Lokal, Regional (komparative Vorteile), Risiko, Soziokultur. \"Richtig Lokal Riskant — Respektiere Soziales.\"\nWelche 3 Hauptfaktoren bestimmen den optimalen Produktionsstandort laut dem Location-Framework? Wende sie auf ein Beispiel an.\tDie 3 Faktoren sind: nationale Ressourcenbedingungen, firmenspezifische Vorteile und Handelbarkeit (Tradability).1. Nationale Ressourcen: Wo sind benötigte Inputs günstig? (z.B. Saudi-Arabien für Öl-Raffinierung). 2. Firmenspezifische Vorteile: Kann man die Wettbewerbsvorteile transferieren? (z.B. Apple's Design-Know-how bleibt in Cupertino). 3. Tradability: Kann das Produkt wirtschaftlich transportiert werden? Frischmilch → Nein, muss lokal produziert werden. Chips → Ja, werden global verschifft.Merkhilfe: Frage dich immer: \"Ressource, Firma, Transport?\" = RFT-Check vor jeder Standortentscheidung.\nWas misst Ghemawat's CAGE-Framework und welche Industrien sind von welcher Distanzdimension besonders betroffen?\tCAGE misst die Distanz zwischen zwei Ländern über 4 Dimensionen: Cultural, Administrative, Geographic, Economic.Cultural: Sprache, Religion, Normen — besonders relevant für TV/Publishing, Lebensmittel, Musik (z.B. Netflix passt Inhalte kulturell an). Administrative: Politische Beziehungen, Rechtssysteme — relevant für Energie, Verteidigung, Telekommunikation. Geographic: Entfernung, Infrastruktur — relevant für Zement (niedrig Wert-zu-Gewicht), Glas, Frischmilch. Economic: Einkommensunterschiede, Ressourcen — relevant für Luxusgüter und arbeitsintensive Produkte.Eselsbrücke: CAGE — wie ein Käfig, der die Internationalisierung einschränkt. Je größer der Käfig (Distanz), desto schwieriger der Markteintritt.\nUnter welchen 3 Bedingungen muss die Produktion zwingend nahe am Markt stattfinden? Nenne für jede einen Industrie-Fall.\tWenn das Produkt nicht handelbar ist, muss lokal produziert werden — aus 3 Gründen.1. Hohe Transport-/Gewichtskosten: Zement hat zu niedriges Wert-zu-Gewicht-Verhältnis für globalen Transport → Lafarge/Holcim produziert regional. 2. Verderblichkeit: Frischmilch verdirbt vor Ankunft → jede Region hat eigene Molkerei. 3. Handelsbeschränkungen: Zölle, Importverbote → Toyota baut US-Werke, um Zölle zu umgehen (\"Tariff-jumping FDI\").Cross-Reference: Das verbindet sich mit der Tradability-Dimension aus dem Location-Framework (Karte #8) und dem Geographic-Faktor aus CAGE (Karte #9).\nWas sind die 4 Elemente von Porter's National Diamond und welches ist das kontraintuitivste?\tPorter's National Diamond (1990) erklärt, warum bestimmte Nationen in bestimmten Industrien weltweit führend sind.Die 4 Elemente: 1. Factor Conditions: Home-grown Ressourcen wichtiger als natürliche Ausstattung (Schlüsseleinsicht!). 2. Related & Supporting Industries: Cluster-Effekte (Silicon Valley). 3. Demand Conditions: Anspruchsvolle Heimkunden treiben Qualität (deutsche Automobilkäufer → Premium-Autos). 4. Strategy, Structure & Rivalry: Harte Inlandskonkurrenz zwingt zu Upgrade.Das Kontraintuitive: Factor Conditions — Porter sagt, Länder mit Ressourcenknappheit (Deutschland hat kein Öl) innovieren oft mehr als ressourcenreiche Länder (Ressourcenfluch).Eselsbrücke: FRDS — Factors, Related Industries, Demand, Strategy/Rivalry. \"Früher Ruhm Durch Stärke.\"\nWarum sind 'Demand Conditions' in Porter's Diamond so wichtig? Erkläre am Beispiel einer deutschen Industrie.\tAnspruchsvolle Heimkunden zwingen Unternehmen zu höherer Qualität und Innovation — das ist der Demand-Conditions-Effekt.Beispiel: Deutsche Automobilkäufer sind extrem anspruchsvoll (Sicherheit, Performance, Qualität). Das zwingt BMW, Mercedes und Audi zur ständigen Innovation → diese Qualitätsstandards machen sie weltweit wettbewerbsfähig. Ähnlich: Japanische Verbraucher sind bei Elektronik extrem qualitätsbewusst → Sony, Toyota wurden Weltmarktführer.Klausur-Falle: Demand Conditions bedeutet NICHT \"großer Heimmarkt\" (das wäre Advantage #1 der Internationalisierung). Es bedeutet qualitative Anspruchshaltung der Kunden.\nWas ist der Unterschied zwischen der Theory of Comparative Advantage und Porter's National Diamond? Wann verwendet man welche?\tComparative Advantage (Ricardo) erklärt nationale Ressourcenausstattung; Porter's Diamond erklärt, wie Ressourcen/Fähigkeiten entstehen und sich entwickeln.Comparative Advantage: Saudi-Arabien hat Öl → Ölproduktion ist ihr komparativer Vorteil (statisch, naturgegeben). Anwendung: Erklärung von Trade-Patterns (warum exportiert wer was?).Porter's Diamond: Warum ist Deutschland trotz fehlender Ölvorkommen in Premium-Autos führend? Weil Factor Conditions, Demand, Cluster und Rivalität diese Stärke geschaffen haben (dynamisch, konstruiert).Faustregel: Comparative Advantage = \"Was hat ein Land?\" Porter's Diamond = \"Warum ist ein Land gut darin?\"\nWas sind 'Related and Supporting Industries' in Porter's Diamond und warum sind Cluster so wichtig?\tCluster sind geografische Konzentrationen von verbundenen Unternehmen, die sich gegenseitig verstärken und Wettbewerbsvorteile schaffen.Beispiele: Silicon Valley (Tech-Cluster: Google, Apple, VCs, Stanford, Zulieferer — alle nah beieinander → Wissens-Spillovers). Hollywood (Film-Cluster: Studios, Schauspieler, Technik, Verleiher). Deutsches Automobilcluster (BMW/Mercedes/Audi + BASF + Bosch + Zulieferer).Warum wichtig? Zugang zu spezialisierten Zulieferern, Talentpool, schneller Informationsfluss, gemeinsame Infrastruktur — all das senkt Kosten und beschleunigt Innovation.Klausur-Verbindung: Das ist auch ein Argument für FDI-Standortwahl (Karte #8): Firmen ziehen in Cluster, um von Related Industries zu profitieren.\nWas ist das Integration-Responsiveness (IR) Framework und welche 2 Dimensionen hat es?\tDas IR-Framework (Prahalad & Doz, 1987) zeigt den Trade-off, den MNEs zwischen globaler Effizienz und lokaler Anpassung managen müssen.Dimension 1 — Global Integration (y-Achse): Koordination der Wertschöpfungskette global für Effizienz, Synergien, Skaleneffekte. Ziel: Kosten minimieren.Dimension 2 — Local Responsiveness (x-Achse): Anpassung an lokale Kundenbedürfnisse, Kulturen, Gesetze. Ziel: Marktanteil maximieren.Beispiel: IKEA ist tendenziell global integriert (gleiche Möbel weltweit), aber muss lokal reagieren (in Saudi-Arabien keine Frauen in Katalogen — Reputationsrisiko).Merkhilfe: IR-Framework = \"Ich Reagiere\" auf beide Seiten gleichzeitig — die Kunst ist die Balance.\nWas sind die 4 Strategien im IR-Framework? Ordne sie den richtigen Quadranten zu und nenne je ein MNE-Beispiel.\tDie 4 Strategien: International, Multidomestic, Global-Standardization, Transnational.📍 International Strategy (niedrig/niedrig): Heimvorteil exportieren, kaum Anpassung. Beispiel: Frühe Phase von Harley-Davidson — verkauft dasselbe Produkt überall.📍 Multidomestic Strategy (niedrig Integration / hoch Responsiveness): Lokale Anpassung maximal. Beispiel: Nestlé (verschiedene Kitkat-Geschmäcker je Land).📍 Global-Standardization Strategy (hoch Integration / niedrig Responsiveness): Standardprodukt, weltweite Kostenführerschaft. Beispiel: Intel — ein Chip, globaler Standard.📍 Transnational Strategy (hoch / hoch): \"Think globally, act locally.\" Beispiel: P&G — globale Plattformen + lokale Anpassung.Eselsbrücke: IMGT — \"Ich Mag Globales Transnational\" (zunehmende Komplexität).\nWarum ist die Transnational Strategy die schwierigste zu implementieren? Nenne die 2 Hauptprobleme.\tDie Transnational Strategy versucht gleichzeitig hohe globale Integration UND hohe lokale Responsiveness — das erzeugt strukturelle Spannungen.Problem 1: Doppelarbeit (Duplication of Efforts): Lokale Anpassungen erfordern lokale Teams/Ressourcen, aber globale Integration erfordert Zentralisierung — beides gleichzeitig ist teuer. Problem 2: Organisatorische Komplexität: Matrix-Strukturen mit globalen und lokalen Berichtslinien sind schwer zu managen — Konflikte zwischen Headquarters und lokalen Managern.Beispiel: Unilever versucht Transnational — globale Marken (Dove) + lokale Produktanpassungen — verursacht aber ständige interne Spannungen zwischen globalen Brand-Teams und lokalen Marketing-Teams.Cross-Reference: Transnational = Blue Ocean Strategy Thinking (im Kurs erwähnt) — innovativ aber riskant.\nWann ist eine Multidomestic Strategy sinnvoll und was ist ihr größter Nachteil? Nenne 2 typische Industrien.\tMultidomestic Strategy ist sinnvoll, wenn lokale Präferenzen so stark variieren, dass ein Einheitsprodukt scheitern würde — aber sie ist teuer.Wann sinnvoll: Consumer Products (z.B. Unilever: Knorr-Suppen schmecken in Deutschland anders als in Indien) und Retail Banking (regulatorische Unterschiede erzwingen lokale Anpassung; HSBC operiert in jedem Land anders).Größter Nachteil: Duplizierung von Geschäftsfunktionen — jedes Land hat eigenes Marketing, eigene Produktion, eigenes Management. Keine Skaleneffekte möglich. Hohe Kosten, niedrige Effizienz.Eselsbrücke: Multidomestic = \"Multi-teuer\" — viele lokale Strukturen ohne globale Synergien.\nWas ist Global Integration im Sinne des IR-Frameworks und welche 3 Hauptziele verfolgt sie?\tGlobal Integration bedeutet die firmenweite Koordination der Wertschöpfungskette über Ländergrenzen hinweg für maximale Effizienz.Die 3 Ziele: 1. Worldwide Efficiency: Kosten minimieren durch zentrale Produktion (z.B. Boeing designt zentral, lässt global fertigen). 2. Synergy & Cross-Fertilization: Wissen und Best Practices teilen (z.B. Toyota Production System global ausrollen). 3. Similarities ausnutzen: Konvergierende Kundenbedürfnisse nutzen (z.B. Samsung verkauft dasselbe Galaxy-Smartphone weltweit).Typisch für Global-Standardization Strategy: Standardprodukte, zentrale Wertschöpfung, Preis als Hauptwaffe.Klausur-Falle: Global Integration ≠ Transnational. Transnational kombiniert Integration MIT Responsiveness. Global-Standardization opfert Responsiveness für Effizienz.\nIn welcher Situation würde ein Unternehmen von einer International Strategy zu einer Transnational Strategy wechseln? Was sind die Treiber?\tDer Wechsel zur Transnational Strategy erfolgt, wenn gleichzeitig Kostendruck UND lokale Differenzierungsanforderungen zunehmen.Treiber 1: Steigende globale Konkurrenz erzwingt Kosteneffizienz (kein Platz mehr für teure Duplikate). Treiber 2: Heterogene Märkte — Kunden in Emerging Markets wollen andere Produkte als in Developed Markets (z.B. günstigere Smartphone-Varianten für Indien). Treiber 3: Lokale Regulierung erzwingt Anpassung.Beispiel: McDonald's begann mit International Strategy (gleiche Burger weltweit), wurde zur Transnational — McAloo Tikki in Indien, Teriyaki-Burger in Japan, aber globale Supply-Chain-Effizienz bleibt.Cross-Reference: Dieser Evolutionspfad hängt mit dem Liability of Foreignness (Karte #2) zusammen — mehr Markterfahrung → bessere lokale Anpassung.\nWas sind die 5 Hauptfaktoren bei der Standortwahl für FDI? Ordne sie einem Fallbeispiel zu.\tStandortwahl für FDI berücksichtigt: Marktpotenzial, Ressourcen/Kosten, politisches Risiko, Infrastruktur und Cluster-Nähe.Beispiel Tesla Gigafactory Berlin (2022): 1. Marktpotenzial: Europa ist größter E-Auto-Markt außerhalb USA. 2. Kosten: Günstigere Fertigung als USA für EU-Verkauf. 3. Politisches Risiko: Deutschland = stabile Demokratie, EU-Recht. 4. Infrastruktur: Autobahn-Netz, Industrieinfrastruktur. 5. Cluster: Deutsches Automobilcluster — Zulieferer, Ingenieurtalent in der Nähe.Eselsbrücke: MRPIC — Market, Resources, Political Risk, Infrastructure, Cluster. \"Meine Riesige Planung Ist Clever.\"\nWas bedeutet 'Liability of Foreignness' konkret und welche 3 Kostenquellen entstehen daraus?\tLiability of Foreignness (Zaheer, 1995) beschreibt die strukturellen Kostennachteile, die ausländische Firmen gegenüber lokalen Wettbewerbern haben.3 Kostenquellen: 1. Kulturelle Unfamiliärität: Falsche Kommunikation, Missverständnisse mit Kunden/Mitarbeitern (z.B. Walmart Deutschland: Mitarbeiter mussten täglich lächeln und fremden Kunden helfen — wurde als übergriffig empfunden). 2. Ökonomische Unfamiliärität: Lokale Gesetze, Steuern, Regulierungen unbekannt → teure Compliance-Fehler. 3. Koordinationskosten: Geografische Distanz erhöht Management-Overhead (Zeitzonenproblem, Reisekosten, langsame Entscheidungen).Klausur-Tipp: Liability of Foreignness ist der Hauptgrund, warum Unternehmen oft mit Joint Ventures statt Wholly Owned FDI starten — lokaler Partner kennt das Terrain.\nWarum ist IP-Verlust im Ausland ein strategisches Risiko und nicht nur ein rechtliches Problem? Nenne einen konkreten Industrie-Fall.\tIP-Verlust vernichtet nachhaltig den Wettbewerbsvorteil, weil das wertvollste firmenspezifische Asset kopiert wird — das ist strategisch, nicht nur rechtlich.Beispiel: Westliche Pharmafirmen (z.B. Pfizer) mussten in China lokale Partner einbinden → Formeln und Prozesse wurden teils reverse-engineered. Chinesische Unternehmen traten danach als günstigere Konkurrenten auf. Ähnlich: General Electric teilte Aviationtechnologie mit chinesischen JV-Partnern (COMAC) → China baut jetzt eigene Passagierflugzeuge (C919).Besonders betroffen: Software, Filme, Musik (einfach kopierbar) und High-Tech-Manufacturing (reverse engineerbar).Strategische Implikation: Firmen mit starkem IP-Vorteil (Differenzierer) sollten entweder Wholly Owned FDI wählen oder kritisches Know-how zuhause behalten.\nWie hängen die CAGE-Distanzdimensionen mit der Standortwahl für FDI zusammen? Erkläre an 2 Dimensionen.\tCAGE (Ghemawat) quantifiziert, wie schwierig und kostspielig FDI in ein bestimmtes Land ist — größere Distanz = höheres Risiko und höhere Liability of Foreignness.Beispiel Cultural Distance (C): Deutsche Firmen finden Österreich leichter als China, weil Sprache, Religion und Normen ähnlich sind. Deshalb expandiert Rewe zuerst in DACH-Region. Beispiel Administrative Distance (A): Sanktionierte Länder (Russland nach 2022) haben extreme administrative Distanz → Ikea, H&M zogen sich vollständig zurück. Klausur-Verbindung: CAGE erklärt die Reihenfolge der Internationalisierung (Uppsala-Modell-logik): Firmen gehen zuerst in CAGE-nahe Märkte, dann mit Erfahrung in distantere — reduziert Liability of Foreignness schrittweise.\nWas sind Multidomestic Industries und was macht sie anfällig für lokale Anpassungsanforderungen? Nenne 3 Beispiele.\tMultidomestic Industries haben hohe FDI aber geringen Außenhandel — Produkte/Services müssen lokal erbracht werden, können aber nicht exportiert werden.Beispiele: 1. Retail Banking: Bankprodukte sind regulatorisch an nationales Recht gebunden (deutsche Konten folgen deutschem Recht). 2. Hotels: Standort ist das Produkt — Hilton kann kein Berliner Zimmer nach Tokyo verschiffen. 3. Wireless Telephony: Mobilfunklizenzen sind national vergeben, Infrastruktur lokal.Was macht sie anfällig: Kundenerwartungen, Regulierung und Infrastruktur sind lokal — kein Standardprodukt funktioniert. Deshalb immer hohe Local Responsiveness erforderlich.Cross-Reference: Diese Industrien nutzen zwangsläufig eine Multidomestic Strategy (IR-Framework, Karte #18).\nVergleiche International Strategy vs. Global-Standardization Strategy: Was ist der entscheidende Unterschied?\tBeide haben niedrige Local Responsiveness — aber International Strategy hat niedrige Integration, Global-Standardization hat hohe Integration.International Strategy: Firma exportiert dasselbe Produkt, nutzt Heimvorteile, minimiert aktive globale Koordination. Beispiel: Ein US-Software-Startup verkauft seine App weltweit ohne Anpassung — aber ohne zentrale globale Produktion.Global-Standardization Strategy: Firma optimiert aktiv die gesamte Wertschöpfungskette global (globale Arbeitsteilung, location economies). Beispiel: Intel — Design in USA, Fertigung in Malaysia und Irland, Verkauf überall — maximale globale Effizienz.Klausur-Falle: Der Unterschied liegt nicht im Produkt (beide standardisiert), sondern im Grad der aktiven Koordination der Wertschöpfungskette.\nWas bedeutet 'Strategy, Structure & Rivalry' in Porter's Diamond und warum fördert harte Inlandskonkurrenz globale Wettbewerbsfähigkeit?\tIntense domestic rivalry forces firms to innovate, cut costs and improve quality — the survivors become globally competitive.Beispiel: Japanische Automobilindustrie — Toyota, Honda, Nissan, Mazda kämpften extrem hart im japanischen Heimmarkt. Das erzwang Lean Manufacturing (Toyota Production System). Als sie global expandierten, hatten sie einen durch jahrelante Rivalität geschärften Vorteil gegenüber US-Herstellern.Umkehrschluss: Geschützte Monopole zuhause (z.B. staatliche Telekoms in Entwicklungsländern) produzieren selten global konkurrenzfähige Firmen.Verbindung: Das erklärt auch, warum Internationalisierung (mehr Wettbewerb) langfristig Branchen effizienter macht — Karte #5 (Industrie-Effekte).\nWas ist der Unterschied zwischen Global Integration und Local Responsiveness als strategische Ziele — was maximiert jede?\tGlobal Integration maximiert Effizienz der Wertschöpfungskette weltweit; Local Responsiveness maximiert Umsatz/Marktanteil durch lokale Anpassung.Diese Ziele stehen in Tension: Je mehr du standardisierst (Effizienz), desto weniger kannst du auf lokale Unterschiede reagieren.Beispiel der Tension: Coca-Cola hat die globale Marke (Integration) — aber Süßegrad, Geschmack und Marketingbotschaften unterscheiden sich nach Land (Responsiveness). Das Management dieser Tension kostet Ressourcen.Klausur-Antwort-Template: \"Unternehmen X verfolgt eine [Strategie], weil der Druck für [Integration/Responsiveness] durch [Faktor] dominiert wird. Dies zeigt sich in [konkretem Verhalten].\""
 }
