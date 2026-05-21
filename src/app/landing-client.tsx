@@ -1322,9 +1322,7 @@ function ComparisonSection() {
               : "ChatGPT, Notion, 8 Tabs."
           }
           italicPart={
-            isEn
-              ? "And still alone with 200 pages."
-              : "Trotzdem allein vor 200 Seiten."
+            isEn ? "Still alone." : "Trotzdem allein."
           }
         />
 
@@ -1414,7 +1412,8 @@ function ComparisonSection() {
             </div>
           </div>
 
-          {/* Retention curve — the proof */}
+          {/* Retention curve — the proof. Proper aspect ratio (no stretch),
+              smooth bezier curves, area gradient fills, circular markers. */}
           <div
             className="ln-glass-card mt-4 px-6 py-7 md:px-8"
             style={{
@@ -1422,61 +1421,92 @@ function ComparisonSection() {
               borderColor: "rgba(255,255,255,0.1)",
             }}
           >
-            <div className="flex items-center justify-between text-[11px] font-mono">
-              <span style={{ color: "rgba(255,255,255,0.4)" }}>
-                {isEn ? "Di 23:47" : "Di 23:47"}
-              </span>
+            <div className="mb-1 flex items-center justify-between font-mono text-[11px]">
+              <span style={{ color: "rgba(255,255,255,0.4)" }}>Di 23:47</span>
               <span style={{ color: "rgba(255,255,255,0.55)" }}>
-                {isEn ? "Retention" : "Was hängenbleibt"}
+                {isEn ? "What sticks" : "Was hängenbleibt"}
               </span>
-              <span style={{ color: "rgba(255,255,255,0.4)" }}>
-                {isEn ? "Wed 09:00" : "Mi 09:00"}
-              </span>
+              <span style={{ color: "rgba(255,255,255,0.4)" }}>Mi 09:00</span>
             </div>
 
             <svg
-              className="mt-3 w-full"
-              viewBox="0 0 320 110"
+              className="w-full"
+              viewBox="0 0 800 260"
               fill="none"
-              preserveAspectRatio="none"
-              style={{ height: "110px" }}
-              aria-hidden
+              role="img"
+              aria-label={
+                isEn
+                  ? "Retention over time: reading decays, active recall stays high"
+                  : "Erinnerung über Zeit: Lesen verfällt, aktives Abfragen bleibt hoch"
+              }
+              style={{ height: "auto" }}
             >
-              {/* baseline */}
-              <line
-                x1="6"
-                y1="100"
-                x2="314"
-                y2="100"
-                stroke="rgba(255,255,255,0.08)"
-                strokeWidth="1"
+              <defs>
+                <linearGradient id="ln-rose-fill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="rgba(251,113,133,0.22)" />
+                  <stop offset="100%" stopColor="rgba(251,113,133,0)" />
+                </linearGradient>
+                <linearGradient id="ln-cyan-fill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="rgba(91,184,216,0.28)" />
+                  <stop offset="100%" stopColor="rgba(91,184,216,0)" />
+                </linearGradient>
+                <filter id="ln-dot-glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="4" result="b" />
+                  <feMerge>
+                    <feMergeNode in="b" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* subtle horizontal gridlines */}
+              {[60, 130, 200].map((y) => (
+                <line
+                  key={y}
+                  x1="40"
+                  y1={y}
+                  x2="760"
+                  y2={y}
+                  stroke="rgba(255,255,255,0.05)"
+                  strokeWidth="1"
+                />
+              ))}
+
+              {/* ChatGPT decay — area + line */}
+              <path
+                d="M 40 58 C 240 90 380 200 760 224 L 760 232 L 40 232 Z"
+                fill="url(#ln-rose-fill)"
               />
-              {/* ChatGPT — exponential decay */}
               <path
                 className="ln-curve-line ln-curve-rose"
-                d="M 8 22 C 70 32 150 88 314 100"
+                d="M 40 58 C 240 90 380 200 760 224"
                 stroke="var(--color-ln-rose)"
-                strokeWidth="2.2"
+                strokeWidth="3"
                 strokeLinecap="round"
-                vectorEffect="non-scaling-stroke"
               />
-              {/* Lernly — staircase recall, stays high */}
+
+              {/* Lernly recall — area + smooth wavy line that stays high */}
+              <path
+                d="M 40 58 C 150 96 210 96 280 60 C 380 92 440 92 520 54 C 620 86 660 86 760 46 L 760 232 L 40 232 Z"
+                fill="url(#ln-cyan-fill)"
+              />
               <path
                 className="ln-curve-line ln-curve-sage"
-                d="M 8 22 L 78 42 L 78 18 L 158 38 L 158 14 L 238 30 L 238 12 L 314 20"
+                d="M 40 58 C 150 96 210 96 280 60 C 380 92 440 92 520 54 C 620 86 660 86 760 46"
                 stroke="var(--color-ln-cyan)"
-                strokeWidth="2.2"
+                strokeWidth="3"
                 strokeLinecap="round"
-                strokeLinejoin="round"
-                vectorEffect="non-scaling-stroke"
               />
-              {/* recall markers */}
-              <circle className="ln-curve-dot" cx="78" cy="18" r="3.5" fill="var(--color-ln-cyan)" />
-              <circle className="ln-curve-dot" cx="158" cy="14" r="3.5" fill="var(--color-ln-cyan)" />
-              <circle className="ln-curve-dot" cx="238" cy="12" r="3.5" fill="var(--color-ln-cyan)" />
+
+              {/* recall markers sitting on the cyan line */}
+              <circle className="ln-curve-dot" cx="280" cy="60" r="5" fill="var(--color-ln-cyan)" filter="url(#ln-dot-glow)" />
+              <circle className="ln-curve-dot" cx="520" cy="54" r="5" fill="var(--color-ln-cyan)" filter="url(#ln-dot-glow)" />
+              <circle className="ln-curve-dot" cx="760" cy="46" r="5.5" fill="var(--color-ln-cyan)" filter="url(#ln-dot-glow)" />
+              {/* end marker on the rose line */}
+              <circle className="ln-curve-dot" cx="760" cy="224" r="5" fill="var(--color-ln-rose)" filter="url(#ln-dot-glow)" />
             </svg>
 
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[12px]">
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[12px]">
               <span className="inline-flex items-center gap-1.5" style={{ color: "rgb(252,165,165)" }}>
                 <span className="inline-block h-2 w-2 rounded-full" style={{ background: "var(--color-ln-rose)" }} />
                 {isEn ? "Read a summary" : "Zusammenfassung gelesen"}
