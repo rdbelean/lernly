@@ -28,6 +28,12 @@ const MAX_FILES = 8;
 const MAX_FILE_BYTES = 25 * 1024 * 1024;
 const MAX_TOTAL_BYTES = 50 * 1024 * 1024;
 
+// Anonymous (lead-magnet) hard caps — protect Lernly's Anthropic bill.
+const ANON_MAX_FILES = 1;
+const ANON_MAX_PAGES = 30;
+const ANON_MAX_CHARS = 50_000;
+const ANON_RATE_LIMIT_HOURS = 24;
+
 const EXAM_LABEL: Record<ExamType, string> = {
   essay: "Essay-Klausur (geschriebener Aufsatz in der Prüfung)",
   multiple_choice: "Multiple-Choice-Prüfung",
@@ -185,6 +191,15 @@ async function runTask(
   }
 }
 
+function extractClientIp(request: Request): string | null {
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded) {
+    const first = forwarded.split(",")[0]?.trim();
+    if (first) return first;
+  }
+  return request.headers.get("x-real-ip");
+}
+
 export async function POST(request: Request) {
   const t0 = Date.now();
   try {
@@ -197,6 +212,8 @@ export async function POST(request: Request) {
     const files = formData
       .getAll("files")
       .filter((v): v is File => v instanceof File);
+    const clientIp = extractClientIp(request);
+    const userAgent = request.headers.get("user-agent") ?? "";
 
     if (!examType || !EXAM_LABEL[examType]) {
       return NextResponse.json({ error: "Ungültiger Prüfungstyp" }, { status: 400 });
@@ -207,9 +224,44 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-    if (files.length > MAX_FILES) {
+
+    if (userApiKey && !userApiKey.startsWith("sk-ant-")) {
       return NextResponse.json(
-        { error: `Maximal ${MAX_FILES} Dateien pro Generierung.` },
+        { error: "Ungültiger API Key — Anthropic-Keys beginnen mit sk-ant-." },
+        { status: 400 },
+      );
+    }
+
+    const supabase = await createSupabaseServer();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    const isAnonymous = !user;
+
+    if (
+      isAnonymous &&
+      process.env.ANONYMOUS_GENERATION_ENABLED === "false"
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            "Anonyme Generierung ist gerade deaktiviert. Bitte einloggen, um ein Lernpaket zu erstellen.",
+          reason: "anonymous_disabled",
+        },
+        { status: 503 },
+      );
+    }
+
+    const maxFiles = isAnonymous ? ANON_MAX_FILES : MAX_FILES;
+    if (files.length > maxFiles) {
+      return NextResponse.json(
+        {
+          error: isAnonymous
+            ? `Ohne Account ist nur ${ANON_MAX_FILES} Datei pro Test erlaubt. Logge dich ein, um bis zu ${MAX_FILES} Dateien hochzuladen.`
+            : `Maximal ${MAX_FILES} Dateien pro Generierung.`,
+          reason: isAnonymous ? "anonymous_file_limit" : "file_limit",
+        },
         { status: 400 },
       );
     }
@@ -237,17 +289,38 @@ export async function POST(request: Request) {
       );
     }
 
-    if (userApiKey && !userApiKey.startsWith("sk-ant-")) {
-      return NextResponse.json(
-        { error: "Ungültiger API Key — Anthropic-Keys beginnen mit sk-ant-." },
-        { status: 400 },
-      );
+    if (isAnonymous) {
+      try {
+        const service = createServiceClient();
+        const { data: anonQuota, error: anonErr } = await service.rpc(
+          "check_anonymous_quota",
+          { p_ip: clientIp },
+        );
+        if (anonErr) {
+          console.error("[/api/generate] anon quota check failed", anonErr);
+        } else if (anonQuota && anonQuota.ok === false) {
+          const hours = Math.ceil(
+            (anonQuota.retry_after_seconds ?? ANON_RATE_LIMIT_HOURS * 3600) /
+              3600,
+          );
+          return NextResponse.json(
+            {
+              error: `Du hast heute schon ein anonymes Lernpaket erstellt. Komm in ${hours}h wieder — oder logge dich ein für ${"3"} kostenlose Pakete pro Monat.`,
+              reason: "anonymous_rate_limit",
+              retryAfterSeconds: anonQuota.retry_after_seconds,
+            },
+            {
+              status: 429,
+              headers: {
+                "Retry-After": String(anonQuota.retry_after_seconds ?? 3600),
+              },
+            },
+          );
+        }
+      } catch (e) {
+        console.error("[/api/generate] anon rate-limit threw", e);
+      }
     }
-
-    const supabase = await createSupabaseServer();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
 
     let storedKey: string | null = null;
     if (user) {
@@ -325,10 +398,12 @@ export async function POST(request: Request) {
 
       let text: string;
       let pageInfo = "";
+      let pageCount = 0;
       if (lower.endsWith(".pdf")) {
         try {
           const extracted = await extractPdfText(buffer, name);
           text = extracted.text;
+          pageCount = extracted.pages;
           pageInfo = ` (${extracted.pages} Seiten)`;
         } catch (e) {
           const msg =
@@ -337,6 +412,16 @@ export async function POST(request: Request) {
         }
       } else {
         text = buffer.toString("utf-8");
+      }
+
+      if (isAnonymous && pageCount > ANON_MAX_PAGES) {
+        return NextResponse.json(
+          {
+            error: `Ohne Account ist max. ${ANON_MAX_PAGES} Seiten pro PDF erlaubt — ${name} hat ${pageCount}. Logge dich ein, um größere PDFs hochzuladen.`,
+            reason: "anonymous_page_limit",
+          },
+          { status: 413 },
+        );
       }
 
       if (text.length > PDF_CHAR_BUDGET) {
@@ -349,6 +434,16 @@ export async function POST(request: Request) {
         `${name}${pageInfo}: ${text.length.toLocaleString("de-DE")} Zeichen`,
       );
       fileSections.push(`--- ${name}${pageInfo} ---\n${text}`);
+    }
+
+    if (isAnonymous && totalChars > ANON_MAX_CHARS) {
+      return NextResponse.json(
+        {
+          error: `Ohne Account ist max. ${ANON_MAX_CHARS.toLocaleString("de-DE")} Zeichen erlaubt — du hast ${totalChars.toLocaleString("de-DE")}. Logge dich ein für größere Pakete.`,
+          reason: "anonymous_char_limit",
+        },
+        { status: 413 },
+      );
     }
 
     const materialText = [
@@ -451,6 +546,19 @@ export async function POST(request: Request) {
         }
       } catch (saveErr) {
         console.error("[/api/generate] save threw", saveErr);
+      }
+    } else {
+      try {
+        const service = createServiceClient();
+        const { error: anonBumpErr } = await service.rpc(
+          "bump_anonymous_usage",
+          { p_ip: clientIp, p_user_agent: userAgent.slice(0, 500) },
+        );
+        if (anonBumpErr) {
+          console.error("[/api/generate] anon usage bump failed", anonBumpErr);
+        }
+      } catch (e) {
+        console.error("[/api/generate] anon usage bump threw", e);
       }
     }
 

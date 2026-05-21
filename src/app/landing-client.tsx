@@ -174,6 +174,13 @@ export default function Home() {
     return () => clearInterval(id);
   }, [isGenerating]);
 
+  // Scroll to the result the moment a fresh pack is rendered. Fires after React
+  // commits the DOM, so resultRef.current is guaranteed to be populated.
+  useEffect(() => {
+    if (!pack) return;
+    resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [pack]);
+
   const handleGenerate = async () => {
     if (files.length === 0 || isGenerating) return;
     setIsGenerating(true);
@@ -212,10 +219,12 @@ export default function Home() {
       setCompleted(true);
       await new Promise((r) => setTimeout(r, 500));
       setPack(data.pack);
-      sessionStorage.setItem("lernly-pack", JSON.stringify(data.pack));
-      requestAnimationFrame(() => {
-        resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
+      try {
+        sessionStorage.setItem("lernly-pack", JSON.stringify(data.pack));
+      } catch (storageErr) {
+        // Pack still rendered from in-memory state; storage failure is non-fatal.
+        console.warn("[lernly] sessionStorage.setItem failed", storageErr);
+      }
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") {
         setError(
