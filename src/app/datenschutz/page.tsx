@@ -67,22 +67,28 @@ function DatenschutzContent() {
             className="font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            Privacy Policy
+            Datenschutzerklärung
           </h1>
 
           <div className="mt-10">
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>1. Privacy at a glance</h2>
-              <h3 style={subHeadingStyle}>General notes</h3>
+              <h2 style={headingStyle}>1. Datenschutz auf einen Blick</h2>
+              <h3 style={subHeadingStyle}>Allgemeine Hinweise</h3>
               <p style={bodyStyle}>
-                This privacy policy explains what happens to your personal data
-                when you use this website.
+                Diese Datenschutzerklärung klärt dich über die Art, den Umfang
+                und den Zweck der Verarbeitung personenbezogener Daten auf
+                dieser Website auf. Personenbezogene Daten sind alle Daten,
+                mit denen du persönlich identifiziert werden kannst.
               </p>
             </section>
 
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>2. Controller</h2>
+              <h2 style={headingStyle}>2. Verantwortlicher</h2>
               <p style={bodyStyle}>
+                Verantwortlich im Sinne der Datenschutz-Grundverordnung
+                (DSGVO) ist:
+              </p>
+              <p style={{ ...bodyStyle, marginTop: "12px" }}>
                 Rares Daniel Belean
                 <br />
                 Am Hang 4
@@ -91,7 +97,7 @@ function DatenschutzContent() {
                 <br />
                 Deutschland
                 <br />
-                Phone:{" "}
+                Telefon:{" "}
                 <a
                   href="tel:+4915118164381"
                   style={linkStyle}
@@ -100,7 +106,7 @@ function DatenschutzContent() {
                   +49 151 18164381
                 </a>
                 <br />
-                Email:{" "}
+                E-Mail:{" "}
                 <a
                   href="mailto:info@lernly-app.de"
                   style={linkStyle}
@@ -112,32 +118,34 @@ function DatenschutzContent() {
             </section>
 
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>
-                3. Data collection on this website
-              </h2>
-              <h3 style={subHeadingStyle}>How do we collect your data?</h3>
+              <h2 style={headingStyle}>3. Datenerfassung auf dieser Website</h2>
+              <h3 style={subHeadingStyle}>Wie erfassen wir deine Daten?</h3>
               <p style={bodyStyle}>
-                Some data is collected when you provide it to us, for example
-                an email address during registration. Other data is collected
-                automatically by our IT systems when you visit the website,
-                for example browser type, operating system, and time of access.
+                Manche Daten erheben wir, weil du sie uns mitteilst — zum
+                Beispiel deine E-Mail-Adresse bei der Registrierung oder die
+                Inhalte, die du hochlädst. Andere Daten werden automatisch
+                erfasst, wenn du die Website besuchst — etwa Browsertyp,
+                Betriebssystem und Zugriffszeitpunkt.
               </p>
-              <h3 style={subHeadingStyle}>What do we use your data for?</h3>
+              <h3 style={subHeadingStyle}>Wofür nutzen wir deine Daten?</h3>
               <ul style={{ ...bodyStyle, paddingLeft: "20px", listStyle: "disc" }}>
-                <li>Providing and improving Lernly</li>
-                <li>Generating study packs through the Claude API (Anthropic)</li>
-                <li>Email communication if you have registered</li>
+                <li>Bereitstellung und Verbesserung von Lernly</li>
+                <li>
+                  Generierung deiner Lernpakete über die Claude API
+                  (Anthropic)
+                </li>
+                <li>E-Mail-Kommunikation, sofern du registriert bist</li>
               </ul>
             </section>
 
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>4. External services</h2>
+              <h2 style={headingStyle}>4. Externe Dienste</h2>
 
               <h3 style={subHeadingStyle}>Vercel (Hosting)</h3>
               <p style={bodyStyle}>
-                This website is hosted by Vercel Inc. When you visit the site,
-                technical information such as IP address and browser type may
-                be transmitted to Vercel servers. Privacy policy:{" "}
+                Diese Website wird bei Vercel Inc. gehostet. Beim Aufruf der
+                Seite werden technische Informationen wie deine IP-Adresse und
+                der Browsertyp an Vercel-Server übermittelt. Datenschutz­erklärung:{" "}
                 <a
                   href="https://vercel.com/legal/privacy-policy"
                   target="_blank"
@@ -151,10 +159,10 @@ function DatenschutzContent() {
 
               <h3 style={subHeadingStyle}>Anthropic Claude API</h3>
               <p style={bodyStyle}>
-                To generate study packs, your uploaded course material is sent
-                to the Claude API (Anthropic, San Francisco, USA). The data is
-                used only for processing and is not stored permanently. Privacy
-                policy:{" "}
+                Zur Erstellung deiner Lernpakete werden deine hochgeladenen
+                Dateien an die Claude API (Anthropic, San Francisco, USA)
+                übermittelt. Die Daten werden ausschließlich zur Verarbeitung
+                genutzt und nicht dauerhaft gespeichert. Datenschutz­erklärung:{" "}
                 <a
                   href="https://www.anthropic.com/privacy"
                   target="_blank"
@@ -166,11 +174,11 @@ function DatenschutzContent() {
                 </a>
               </p>
 
-              <h3 style={subHeadingStyle}>Supabase (Datenbank &amp; Auth)</h3>
+              <h3 style={subHeadingStyle}>Supabase (Datenbank &amp; Authentifizierung)</h3>
               <p style={bodyStyle}>
-                For user accounts, sessions, and saved study packs, we use
-                Supabase (region: Frankfurt, EU). Session cookies are set on
-                your device after sign-in. Privacy policy:{" "}
+                Für Nutzerkonten, Sessions und gespeicherte Lernpakete nutzen
+                wir Supabase (Region: Frankfurt, EU). Nach dem Login werden
+                Session-Cookies auf deinem Gerät gesetzt. Datenschutz­erklärung:{" "}
                 <a
                   href="https://supabase.com/privacy"
                   target="_blank"
@@ -184,10 +192,11 @@ function DatenschutzContent() {
 
               <h3 style={subHeadingStyle}>Google Sign-In</h3>
               <p style={bodyStyle}>
-                If you sign in with Google, your email, name, and profile
-                picture are transmitted to us through Google&apos;s OAuth flow.
-                We use these only to create and identify your account. Google
-                privacy policy:{" "}
+                Wenn du dich mit Google anmeldest, werden deine E-Mail-Adresse,
+                dein Name und dein Profilbild über den OAuth-Flow von Google
+                an uns übermittelt. Diese Daten nutzen wir ausschließlich zur
+                Erstellung und Identifikation deines Kontos. Datenschutz­erklärung
+                von Google:{" "}
                 <a
                   href="https://policies.google.com/privacy"
                   target="_blank"
@@ -199,21 +208,27 @@ function DatenschutzContent() {
                 </a>
               </p>
 
-              <h3 style={subHeadingStyle}>BYOK — own Anthropic key</h3>
+              <h3 style={subHeadingStyle}>
+                BYOK — eigener Anthropic-API-Key
+              </h3>
               <p style={bodyStyle}>
-                If you opt in to BYOK and save your own Anthropic API key, it
-                is encrypted with AES-256-GCM before it ever touches our
-                database. Only the Lernly backend can decrypt it. You can
-                delete the key from your settings at any time.
+                Wenn du BYOK aktivierst und deinen eigenen Anthropic-API-Key
+                speicherst, wird dieser vor dem Schreiben in unsere Datenbank
+                mit AES-256-GCM verschlüsselt. Nur das Lernly-Backend kann ihn
+                entschlüsseln. Du kannst den Key jederzeit in deinen
+                Einstellungen löschen.
               </p>
             </section>
 
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>5. Your rights</h2>
+              <h2 style={headingStyle}>5. Deine Rechte</h2>
               <p style={bodyStyle}>
-                You have the right to access, correct, delete, and restrict
-                the processing of your data at any time. To exercise these
-                rights, contact:{" "}
+                Du hast jederzeit das Recht auf Auskunft, Berichtigung,
+                Löschung und Einschränkung der Verarbeitung deiner
+                personenbezogenen Daten. Außerdem hast du das Recht auf
+                Datenübertragbarkeit und das Recht, Beschwerde bei einer
+                Aufsichtsbehörde einzulegen. Für die Ausübung deiner Rechte
+                schreib einfach eine Mail an:{" "}
                 <a
                   href="mailto:info@lernly-app.de"
                   style={linkStyle}
@@ -227,9 +242,32 @@ function DatenschutzContent() {
             <section style={sectionStyle}>
               <h2 style={headingStyle}>6. Cookies</h2>
               <p style={bodyStyle}>
-                Lernly uses only technically necessary session cookies, set by
-                Supabase Auth to keep you signed in. No tracking cookies, no
-                analytics tools, no advertising.
+                Lernly nutzt ausschließlich technisch notwendige
+                Session-Cookies, die von Supabase Auth gesetzt werden, damit
+                du eingeloggt bleibst. Keine Tracking-Cookies, keine
+                Analyse-Tools, keine Werbung.
+              </p>
+            </section>
+
+            <section style={sectionStyle}>
+              <h2 style={headingStyle}>7. Speicherdauer</h2>
+              <p style={bodyStyle}>
+                Hochgeladene Dateien (PDFs, TXT, MD) werden ausschließlich zur
+                Generierung deines Lernpakets verarbeitet und danach gelöscht.
+                Generierte Lernpakete werden so lange in deinem Account
+                gespeichert, wie du Lernly nutzt. Bei Account-Löschung werden
+                alle gespeicherten Pakete sowie dein Profil unwiderruflich
+                entfernt.
+              </p>
+            </section>
+
+            <section style={sectionStyle}>
+              <h2 style={headingStyle}>8. Änderungen dieser Erklärung</h2>
+              <p style={bodyStyle}>
+                Wir behalten uns vor, diese Datenschutzerklärung anzupassen,
+                wenn sich rechtliche Vorgaben oder unsere Funktionen ändern.
+                Die jeweils aktuelle Fassung findest du immer auf dieser
+                Seite.
               </p>
             </section>
           </div>
