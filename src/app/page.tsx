@@ -42,10 +42,10 @@ const EXAM_OPTIONS: { value: ExamType; label: string; emoji: string }[] = [
 const MAX_FILES = 3;
 const MAX_SIZE = 10 * 1024 * 1024;
 
-// Founder pricing — first N students get the lower price. Increment manually
-// as real signups come in. When this hits FOUNDER_PRICING_LIMIT, raise the
+// Founder pricing — cohort-based: as long as Lernly has fewer than
+// FOUNDER_PRICING_LIMIT paying Pro subscribers, the price stays at €6.99.
+// Once we cross the limit, raise the
 // listed Pro/Team prices to the anchorPrice. Honesty is the whole point.
-const FOUNDER_PRICING_TAKEN = 87;
 const FOUNDER_PRICING_LIMIT = 1000;
 
 function useScrollReveal() {
@@ -1042,7 +1042,7 @@ function BentoFeatures() {
       <div className="mx-auto max-w-[1200px]">
         <div className="ln-reveal">
           <span className="ln-section-label">
-            {isEn ? "Why Lernly" : "Warum Lernly"}
+            {isEn ? "What makes Lernly different" : "Was Lernly anders macht"}
           </span>
           <h2
             className="mt-4 max-w-2xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
@@ -1340,7 +1340,7 @@ function HowItWorks() {
         {
           label: "Step 2",
           title: "Lernly sorts",
-          desc: "No ChatGPT-style wall of text. No extra PDF. A finished study system: flashcards, quiz, essay blueprint — all interactive.",
+          desc: "Flashcards to flip, quiz with explanations, essay blueprint with templates. All built straight from your own material.",
         },
         {
           label: "Step 3",
@@ -1357,7 +1357,7 @@ function HowItWorks() {
         {
           label: "Schritt 2",
           title: "Lernly sortiert",
-          desc: "Keine Textwand wie bei ChatGPT. Kein weiteres PDF. Ein fertiges Lernsystem: Karteikarten, Quiz, Essay-Blueprint — alles interaktiv.",
+          desc: "Karteikarten zum Flippen, Quiz mit Erklärung, Essay-Blueprint mit Vorlagen. Alles direkt aus deinem Material.",
         },
         {
           label: "Schritt 3",
@@ -1846,15 +1846,11 @@ function PricingSection({
             🚀
           </span>
           <span className="ln-founder-text">
-            <strong>{isEn ? "Founder pricing" : "Founder-Preis"}</strong>
+            <strong>{isEn ? "Founder pricing" : "Gründerpreis"}</strong>
             {" — "}
             {isEn
-              ? "First 1,000 students pay €6.99 instead of €9.99 for Pro. Then the price goes up."
-              : "Die ersten 1.000 Studis zahlen €6,99 statt €9,99 für Pro. Danach steigt der Preis."}
-          </span>
-          <span className="ln-founder-counter">
-            {FOUNDER_PRICING_TAKEN}/{FOUNDER_PRICING_LIMIT}{" "}
-            {isEn ? "spots taken" : "Plätze vergeben"}
+              ? `Pro stays at €6.99 (instead of €9.99) while we're still under ${FOUNDER_PRICING_LIMIT.toLocaleString()} paying students.`
+              : `Solange wir unter ${FOUNDER_PRICING_LIMIT.toLocaleString("de-DE")} zahlenden Studis sind, bleibt Pro bei €6,99 statt €9,99.`}
           </span>
         </div>
 
