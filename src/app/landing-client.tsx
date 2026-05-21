@@ -22,6 +22,7 @@ import FlashcardDeck from "@/components/pack/FlashcardDeck";
 import EssayBlueprintView from "@/components/pack/EssayBlueprintView";
 import OverviewView from "@/components/pack/OverviewView";
 import ExamSimulator from "@/components/pack/ExamSimulator";
+import DemoPacksSection from "@/components/landing/DemoPacksSection";
 import { track } from "@/lib/analytics";
 
 type Language = "en" | "de";
