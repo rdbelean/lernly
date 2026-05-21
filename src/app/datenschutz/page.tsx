@@ -3,9 +3,23 @@ import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Lernly",
+  title: "Datenschutz",
   description:
-    "Lernly privacy policy. What data we collect, why we use it, and which rights you have.",
+    "Datenschutzerklärung von Lernly. Welche Daten wir verarbeiten, warum, und welche Rechte du hast.",
+};
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Lernly", item: "https://lernly-app.de" },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Datenschutz",
+      item: "https://lernly-app.de/datenschutz",
+    },
+  ],
 };
 
 const sectionStyle = { marginBottom: "32px" } as const;
@@ -31,6 +45,19 @@ const subHeadingStyle = {
 const linkStyle = { color: "var(--color-ln-cyan)" } as const;
 
 export default function DatenschutzPage() {
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <DatenschutzContent />
+    </>
+  );
+}
+
+function DatenschutzContent() {
   return (
     <div className="flex flex-1 flex-col">
       <SiteNav />

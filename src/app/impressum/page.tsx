@@ -3,8 +3,22 @@ import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "Legal Notice — Lernly",
-  description: "Legal notice and contact details for Lernly.",
+  title: "Impressum",
+  description: "Impressum und Kontaktdaten von Lernly.",
+};
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Lernly", item: "https://lernly-app.de" },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Impressum",
+      item: "https://lernly-app.de/impressum",
+    },
+  ],
 };
 
 const sectionStyle = { marginBottom: "32px" } as const;
@@ -21,6 +35,19 @@ const headingStyle = {
 } as const;
 
 export default function ImpressumPage() {
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <ImpressumContent />
+    </>
+  );
+}
+
+function ImpressumContent() {
   return (
     <div className="flex flex-1 flex-col">
       <SiteNav />

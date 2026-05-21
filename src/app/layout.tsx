@@ -4,10 +4,21 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://lernly-app.de"),
   applicationName: "Lernly",
-  title: "Lernly — Upload. Study smart.",
+  title: {
+    default: "Karteikarten aus PDF in 2 Min | Lernly",
+    template: "%s | Lernly",
+  },
   description:
-    "8 PDFs and no plan? Lernly turns your material into a complete study pack in 2 minutes — flashcards, simulator, essay blueprint. Free, no login.",
+    "Lade dein Skript hoch und bekomme in 2 Minuten interaktive Karteikarten, einen Klausur-Simulator und einen Essay-Blueprint. Kostenlos starten, kein Login.",
   manifest: "/manifest.webmanifest",
+  alternates: {
+    canonical: "/",
+    languages: {
+      "de-DE": "/",
+      "en-US": "/?lang=en",
+      "x-default": "/",
+    },
+  },
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -18,15 +29,17 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
-    title: "Lernly — Upload. Study smart.",
+    title: "Karteikarten aus PDF in 2 Min | Lernly",
     description:
-      "8 PDFs and no plan? Get a complete study pack in 2 minutes. Free, no login.",
+      "8 PDFs, 3 Tage, kein Plan? Lernly macht aus deinem Skript ein komplettes Lernpaket — Karteikarten, Klausur-Simulator, Essay-Blueprint. Gratis testen.",
+    locale: "de_DE",
+    alternateLocale: ["en_US"],
     images: [
       {
         url: "/lernly-og.png",
         width: 1200,
         height: 630,
-        alt: "Lernly — Upload. Study smart.",
+        alt: "Lernly — Karteikarten aus PDF in 2 Minuten",
       },
     ],
     type: "website",
@@ -34,8 +47,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lernly — Upload. Study smart.",
-    description: "8 PDFs and no plan? Get a complete study pack in 2 minutes.",
+    title: "Karteikarten aus PDF in 2 Min | Lernly",
+    description:
+      "Skript hoch, Karteikarten und Klausur-Simulator runter. In 2 Minuten. Gratis.",
     images: ["/lernly-og.png"],
   },
   appleWebApp: {
@@ -49,14 +63,30 @@ export const viewport: Viewport = {
   themeColor: "#1421C5",
 };
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Lernly",
+  url: "https://lernly-app.de",
+  logo: "https://lernly-app.de/icon.png",
+  email: "kontakt@lernly-app.de",
+  description:
+    "Lernly verwandelt Vorlesungs-PDFs in interaktive Karteikarten, Klausur-Simulatoren und Essay-Blueprints — in unter 2 Minuten.",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="de" className="h-full antialiased">
       <body className="ln-page-bg min-h-full flex flex-col text-[color:var(--color-ln-ink)]">
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
         {children}
       </body>
     </html>
