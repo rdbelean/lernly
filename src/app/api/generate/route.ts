@@ -47,7 +47,7 @@ const TASKS: Record<TaskKey, { instruction: string; maxTokens: number }> = {
   cards: { instruction: TASK_CARDS, maxTokens: 8000 },
   simulator: { instruction: TASK_SIMULATOR, maxTokens: 5000 },
   blueprint: { instruction: TASK_BLUEPRINT, maxTokens: 4000 },
-  meta: { instruction: TASK_META, maxTokens: 5000 },
+  meta: { instruction: TASK_META, maxTokens: 8000 },
 };
 
 async function extractPdfText(
