@@ -33,6 +33,7 @@ const headingStyle = {
   fontSize: "20px",
   marginBottom: "10px",
 } as const;
+const linkStyle = { color: "var(--color-ln-cyan)" } as const;
 
 export default function ImpressumPage() {
   return (
@@ -57,90 +58,111 @@ function ImpressumContent() {
             className="font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            Legal Notice
+            Impressum
           </h1>
 
           <div className="mt-10">
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>Information according to Section 5 TMG</h2>
+              <h2 style={headingStyle}>Angaben gemäß § 5 TMG</h2>
               <p style={bodyStyle}>
-                {/* TODO: Add operator name */}
-                [Name]
+                Rares Daniel Belean
                 <br />
-                {/* TODO: Add street and house number */}
-                [Street + house number]
+                Am Hang 4
                 <br />
-                {/* TODO: Add postal code and city */}
-                [Postal code + city]
+                69151 Neckargemünd
                 <br />
-                [Country]
+                Deutschland
               </p>
             </section>
 
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>Contact</h2>
+              <h2 style={headingStyle}>Kontakt</h2>
               <p style={bodyStyle}>
-                Email:{" "}
+                Telefon:{" "}
                 <a
-                  href="mailto:kontakt@lernly-app.de"
-                  style={{ color: "var(--color-ln-cyan)" }}
+                  href="tel:+4915118164381"
+                  style={linkStyle}
                   className="underline-offset-2 hover:underline"
                 >
-                  kontakt@lernly-app.de
+                  +49 151 18164381
+                </a>
+                <br />
+                E-Mail:{" "}
+                <a
+                  href="mailto:info@lernly-app.de"
+                  style={linkStyle}
+                  className="underline-offset-2 hover:underline"
+                >
+                  info@lernly-app.de
                 </a>
               </p>
             </section>
 
             <section style={sectionStyle}>
               <h2 style={headingStyle}>
-                Responsible for content according to Section 55(2) RStV
+                Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV
               </h2>
               <p style={bodyStyle}>
-                {/* TODO: Add content owner name */}
-                [Name]
+                Rares Daniel Belean
                 <br />
-                {/* TODO: Add address as above */}
-                [Address as above]
+                Am Hang 4
+                <br />
+                69151 Neckargemünd
               </p>
             </section>
 
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>Dispute resolution</h2>
+              <h2 style={headingStyle}>Streitschlichtung</h2>
               <p style={bodyStyle}>
-                The European Commission provides a platform for online dispute
-                resolution (ODR):{" "}
+                Die Europäische Kommission stellt eine Plattform zur
+                Online-Streitbeilegung (OS) bereit:{" "}
                 <a
                   href="https://ec.europa.eu/consumers/odr/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ color: "var(--color-ln-cyan)" }}
+                  style={linkStyle}
                   className="underline-offset-2 hover:underline"
                 >
                   https://ec.europa.eu/consumers/odr/
                 </a>
-                . We are not willing or obliged to participate in dispute
-                resolution proceedings before a consumer arbitration board.
+                . Wir sind nicht bereit oder verpflichtet, an
+                Streitbeilegungsverfahren vor einer
+                Verbraucherschlichtungsstelle teilzunehmen.
               </p>
             </section>
 
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>Liability for content</h2>
+              <h2 style={headingStyle}>Haftung für Inhalte</h2>
               <p style={bodyStyle}>
-                As a service provider, we are responsible for our own content
-                on these pages under general law according to Section 7(1) TMG.
-                According to Sections 8 to 10 TMG, however, we are not obliged
-                to monitor transmitted or stored third-party information or to
-                investigate circumstances that indicate illegal activity.
+                Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene
+                Inhalte auf diesen Seiten nach den allgemeinen Gesetzen
+                verantwortlich. Nach §§ 8 bis 10 TMG sind wir als
+                Diensteanbieter jedoch nicht verpflichtet, übermittelte oder
+                gespeicherte fremde Informationen zu überwachen oder nach
+                Umständen zu forschen, die auf eine rechtswidrige Tätigkeit
+                hinweisen.
               </p>
             </section>
 
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>Liability for links</h2>
+              <h2 style={headingStyle}>Haftung für Links</h2>
               <p style={bodyStyle}>
-                Our offering contains links to external third-party websites
-                over whose content we have no influence. The respective provider
-                or operator of the linked pages is always responsible for their
-                content.
+                Unser Angebot enthält Links zu externen Webseiten Dritter, auf
+                deren Inhalte wir keinen Einfluss haben. Für die Inhalte der
+                verlinkten Seiten ist stets der jeweilige Anbieter oder
+                Betreiber der Seiten verantwortlich.
+              </p>
+            </section>
+
+            <section style={sectionStyle}>
+              <h2 style={headingStyle}>Urheberrecht</h2>
+              <p style={bodyStyle}>
+                Die durch den Seitenbetreiber erstellten Inhalte und Werke auf
+                diesen Seiten unterliegen dem deutschen Urheberrecht.
+                Vervielfältigung, Bearbeitung, Verbreitung und jede Art der
+                Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen
+                der schriftlichen Zustimmung des jeweiligen Autors bzw.
+                Erstellers.
               </p>
             </section>
           </div>

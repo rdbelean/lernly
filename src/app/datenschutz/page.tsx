@@ -83,19 +83,30 @@ function DatenschutzContent() {
             <section style={sectionStyle}>
               <h2 style={headingStyle}>2. Controller</h2>
               <p style={bodyStyle}>
-                {/* TODO: Add controller name */}
-                [Name]
+                Rares Daniel Belean
                 <br />
-                {/* TODO: Add address */}
-                [Address]
+                Am Hang 4
                 <br />
-                Email:{" "}
+                69151 Neckargemünd
+                <br />
+                Deutschland
+                <br />
+                Phone:{" "}
                 <a
-                  href="mailto:kontakt@lernly-app.de"
+                  href="tel:+4915118164381"
                   style={linkStyle}
                   className="underline-offset-2 hover:underline"
                 >
-                  kontakt@lernly-app.de
+                  +49 151 18164381
+                </a>
+                <br />
+                Email:{" "}
+                <a
+                  href="mailto:info@lernly-app.de"
+                  style={linkStyle}
+                  className="underline-offset-2 hover:underline"
+                >
+                  info@lernly-app.de
                 </a>
               </p>
             </section>
@@ -204,11 +215,11 @@ function DatenschutzContent() {
                 the processing of your data at any time. To exercise these
                 rights, contact:{" "}
                 <a
-                  href="mailto:kontakt@lernly-app.de"
+                  href="mailto:info@lernly-app.de"
                   style={linkStyle}
                   className="underline-offset-2 hover:underline"
                 >
-                  kontakt@lernly-app.de
+                  info@lernly-app.de
                 </a>
               </p>
             </section>

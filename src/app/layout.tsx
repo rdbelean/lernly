@@ -69,7 +69,7 @@ const organizationJsonLd = {
   name: "Lernly",
   url: "https://lernly-app.de",
   logo: "https://lernly-app.de/icon.png",
-  email: "kontakt@lernly-app.de",
+  email: "info@lernly-app.de",
   description:
     "Lernly verwandelt Vorlesungs-PDFs in interaktive Karteikarten, Klausur-Simulatoren und Essay-Blueprints — in unter 2 Minuten.",
 };

@@ -2605,7 +2605,7 @@ const FAQ_ITEMS_DE: { q: string; a: string }[] = [
   },
   {
     q: "Was wenn das Paket nichts taugt?",
-    a: "30 Tage Geld zurück. Eine Email an kontakt@lernly-app.de reicht — kein Formular, keine Rückfragen.",
+    a: "30 Tage Geld zurück. Eine Email an info@lernly-app.de reicht — kein Formular, keine Rückfragen.",
   },
 ];
 
@@ -2628,7 +2628,7 @@ const FAQ_ITEMS_EN: { q: string; a: string }[] = [
   },
   {
     q: "What if the pack is bad?",
-    a: "30-day money-back. One email to kontakt@lernly-app.de — no form, no questions.",
+    a: "30-day money-back. One email to info@lernly-app.de — no form, no questions.",
   },
 ];
 

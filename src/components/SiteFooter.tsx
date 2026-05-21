@@ -51,7 +51,7 @@ export default function SiteFooter({ language = "en" }: { language?: Language })
             {copy.privacy}
           </a>
           <a
-            href="mailto:kontakt@lernly-app.de"
+            href="mailto:info@lernly-app.de"
             className="transition hover:text-white"
           >
             {copy.contact}
