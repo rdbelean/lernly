@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { Toaster } from "sonner";
 
 type RecentPack = {
   id: string;
@@ -330,6 +331,18 @@ export default function DashboardShell({ email, recentPacks, children }: Props) 
         </header>
         <main className="min-w-0 flex-1">{children}</main>
       </div>
+      <Toaster
+        position="bottom-right"
+        theme="dark"
+        toastOptions={{
+          style: {
+            background: "rgba(20, 22, 28, 0.96)",
+            border: "1px solid rgba(255,255,255,0.12)",
+            backdropFilter: "blur(20px)",
+            color: "white",
+          },
+        }}
+      />
     </div>
   );
 }

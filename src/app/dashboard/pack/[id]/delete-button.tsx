@@ -1,11 +1,14 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { deletePack } from "./actions";
 
 export default function DeletePackButton({ id }: { id: string }) {
   const [pending, startTransition] = useTransition();
   const [confirming, setConfirming] = useState(false);
+  const router = useRouter();
 
   if (!confirming) {
     return (
@@ -26,7 +29,15 @@ export default function DeletePackButton({ id }: { id: string }) {
         disabled={pending}
         onClick={() =>
           startTransition(async () => {
-            await deletePack(id);
+            try {
+              await deletePack(id);
+              toast.success("Paket gelöscht");
+              router.push("/dashboard");
+            } catch (e) {
+              toast.error(
+                e instanceof Error ? e.message : "Konnte nicht löschen",
+              );
+            }
           })
         }
         className="rounded-full px-3 py-1.5 text-[13px] font-medium text-white transition disabled:opacity-50"
