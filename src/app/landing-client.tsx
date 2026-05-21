@@ -358,6 +358,7 @@ export default function Home() {
           />
           <DemoPacksSection language={language} onTryYourOwn={activateUpload} />
           <HowItWorks />
+          <PricingPreviewStrip language={language} />
           <ShowcaseSection />
           <BentoFeatures />
           <ComparisonSection />
@@ -1796,6 +1797,58 @@ function EmailCapture({ pack }: { pack: StudyPack }) {
         </a>
       </div>
     </div>
+  );
+}
+
+/* ========== PRICING PREVIEW STRIP (mobile-first anchor between viewports 2 and 3) ========== */
+// TikTok-driven visitors usually decide whether to keep scrolling in the first
+// 2-3 viewports. This 1-line strip surfaces the price anchor early so they
+// don't bounce assuming "probably expensive" before they reach the real
+// PricingSection further down.
+
+function PricingPreviewStrip({ language }: { language: "en" | "de" }) {
+  const isEn = language === "en";
+  return (
+    <section className="mx-auto w-full max-w-[1080px] px-6 py-6">
+      <a
+        href="#pricing"
+        className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border px-5 py-4 transition hover:border-white/30"
+        style={{
+          background: "rgba(20, 22, 28, 0.55)",
+          borderColor: "rgba(255,255,255,0.12)",
+          backdropFilter: "blur(20px)",
+        }}
+      >
+        <div className="flex flex-wrap items-baseline gap-4 text-[14px]">
+          <span
+            className="text-[11px] font-semibold uppercase tracking-[0.18em]"
+            style={{ color: "rgba(255,255,255,0.5)" }}
+          >
+            {isEn ? "Pricing" : "Preise"}
+          </span>
+          <span className="font-medium" style={{ color: "rgba(255,255,255,0.85)" }}>
+            <span className="font-bold text-white">0€</span>{" "}
+            {isEn ? "Free" : "Gratis"}
+          </span>
+          <span className="opacity-30">·</span>
+          <span className="font-medium" style={{ color: "rgba(255,255,255,0.85)" }}>
+            <span className="font-bold text-white">4,99€</span>{" "}
+            {isEn ? "Sprint" : "Sprint"}
+          </span>
+          <span className="opacity-30">·</span>
+          <span className="font-medium" style={{ color: "rgba(255,255,255,0.85)" }}>
+            <span className="font-bold text-white">14,99€</span>/{isEn ? "mo" : "mo"}{" "}
+            Pro
+          </span>
+        </div>
+        <span
+          className="text-[13px] font-semibold transition group-hover:translate-x-0.5"
+          style={{ color: "rgb(165,243,252)" }}
+        >
+          {isEn ? "All plans ↓" : "Alle Pläne ↓"}
+        </span>
+      </a>
+    </section>
   );
 }
 
