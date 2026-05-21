@@ -41,9 +41,12 @@ drop policy if exists users_select_own on public.users;
 create policy users_select_own on public.users
   for select using (auth.uid() = id);
 
+-- Intentionally NO direct UPDATE policy on public.users:
+-- - plan / packs_used_this_month / stripe_*  → only via Stripe webhook
+--   and security-definer functions (consume + bump usage)
+-- - BYOK secrets live in user_secrets (no policy = service role only)
+-- This prevents users from privilege-escalating themselves to pro/team.
 drop policy if exists users_update_own on public.users;
-create policy users_update_own on public.users
-  for update using (auth.uid() = id);
 
 -- Users can CRUD only their own packs.
 drop policy if exists study_packs_select_own on public.study_packs;

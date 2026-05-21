@@ -1662,6 +1662,7 @@ type PricingBullet = {
 };
 
 type PricingTier = {
+  plan: "free" | "pro" | "team";
   name: string;
   tagline: string;
   outcomeHeadline: string;
@@ -1680,6 +1681,7 @@ type PricingTier = {
 
 const PRICING_TIERS_DE: PricingTier[] = [
   {
+    plan: "free",
     name: "Gratis",
     tagline: "Zum Ausprobieren",
     outcomeHeadline: "Erste Klausur überstehen",
@@ -1698,6 +1700,7 @@ const PRICING_TIERS_DE: PricingTier[] = [
     ctaFilled: false,
   },
   {
+    plan: "pro",
     name: "Pro",
     tagline: "Wenn mehrere Klausuren anstehen",
     outcomeHeadline: "Klausurenphase bestehen",
@@ -1722,6 +1725,7 @@ const PRICING_TIERS_DE: PricingTier[] = [
     highlighted: true,
   },
   {
+    plan: "team",
     name: "Team",
     tagline: "Fürs ganze Studienjahr",
     outcomeHeadline: "Ganzes Semester durchziehen",
@@ -1745,6 +1749,7 @@ const PRICING_TIERS_DE: PricingTier[] = [
 
 const PRICING_TIERS_EN: PricingTier[] = [
   {
+    plan: "free",
     name: "Free",
     tagline: "To try it out",
     outcomeHeadline: "Survive your first exam",
@@ -1763,6 +1768,7 @@ const PRICING_TIERS_EN: PricingTier[] = [
     ctaFilled: false,
   },
   {
+    plan: "pro",
     name: "Pro",
     tagline: "When several exams are coming up",
     outcomeHeadline: "Make it through exam season",
@@ -1787,6 +1793,7 @@ const PRICING_TIERS_EN: PricingTier[] = [
     highlighted: true,
   },
   {
+    plan: "team",
     name: "Team",
     tagline: "For the whole study year",
     outcomeHeadline: "Carry the whole semester",
@@ -1816,6 +1823,32 @@ function PricingSection({
   onOpenConnect: () => void;
 }) {
   const isEn = useLanguage() === "en";
+  const [authed, setAuthed] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    import("@/lib/supabase/browser").then(({ createClient }) => {
+      const supabase = createClient();
+      supabase.auth.getUser().then(({ data }) => {
+        if (active) setAuthed(Boolean(data.user));
+      });
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const paidUpgradeHref = authed
+    ? "/dashboard/settings"
+    : "/login?next=/dashboard/settings";
+
+  const handleTierCta = (plan: "free" | "pro" | "team") => {
+    if (plan === "free") {
+      onActivateUpload();
+    } else {
+      window.location.href = paidUpgradeHref;
+    }
+  };
   const tiers = isEn ? PRICING_TIERS_EN : PRICING_TIERS_DE;
   return (
     <section id="pricing" className="scroll-mt-24 px-6 py-24 md:py-32">
@@ -1878,7 +1911,7 @@ function PricingSection({
             <PricingCard
               key={tier.name}
               tier={tier}
-              onCta={onActivateUpload}
+              onCta={() => handleTierCta(tier.plan)}
             />
           ))}
         </div>
@@ -1902,6 +1935,31 @@ function PricingSection({
 
 function BYOKBanner({ onOpenConnect }: { onOpenConnect: () => void }) {
   const isEn = useLanguage() === "en";
+  const [authed, setAuthed] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    import("@/lib/supabase/browser").then(({ createClient }) => {
+      const supabase = createClient();
+      supabase.auth.getUser().then(({ data }) => {
+        if (active) setAuthed(Boolean(data.user));
+      });
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const handleConnect = () => {
+    if (authed === null) {
+      onOpenConnect();
+      return;
+    }
+    window.location.href = authed
+      ? "/dashboard/settings"
+      : "/login?next=/dashboard/settings";
+  };
+
   return (
     <div id="connect" className="ln-reveal byok-banner scroll-mt-24 mt-8">
       <div className="byok-left">
@@ -1933,7 +1991,7 @@ function BYOKBanner({ onOpenConnect }: { onOpenConnect: () => void }) {
             Team + Key: <strong>9.99€</strong> <s>14.99€</s>
           </span>
         </div>
-        <button type="button" onClick={onOpenConnect} className="byok-btn">
+        <button type="button" onClick={handleConnect} className="byok-btn">
           {isEn ? "Connect key →" : "Key verbinden →"}
         </button>
       </div>

@@ -130,8 +130,9 @@ export default function DatenschutzPage() {
 
               <h3 style={subHeadingStyle}>Supabase (Datenbank &amp; Auth)</h3>
               <p style={bodyStyle}>
-                For user accounts and saved study packs, we use Supabase
-                (region: Frankfurt, EU). Privacy policy:{" "}
+                For user accounts, sessions, and saved study packs, we use
+                Supabase (region: Frankfurt, EU). Session cookies are set on
+                your device after sign-in. Privacy policy:{" "}
                 <a
                   href="https://supabase.com/privacy"
                   target="_blank"
@@ -141,6 +142,31 @@ export default function DatenschutzPage() {
                 >
                   https://supabase.com/privacy
                 </a>
+              </p>
+
+              <h3 style={subHeadingStyle}>Google Sign-In</h3>
+              <p style={bodyStyle}>
+                If you sign in with Google, your email, name, and profile
+                picture are transmitted to us through Google&apos;s OAuth flow.
+                We use these only to create and identify your account. Google
+                privacy policy:{" "}
+                <a
+                  href="https://policies.google.com/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={linkStyle}
+                  className="underline-offset-2 hover:underline"
+                >
+                  https://policies.google.com/privacy
+                </a>
+              </p>
+
+              <h3 style={subHeadingStyle}>BYOK — own Anthropic key</h3>
+              <p style={bodyStyle}>
+                If you opt in to BYOK and save your own Anthropic API key, it
+                is encrypted with AES-256-GCM before it ever touches our
+                database. Only the Lernly backend can decrypt it. You can
+                delete the key from your settings at any time.
               </p>
             </section>
 
@@ -163,8 +189,9 @@ export default function DatenschutzPage() {
             <section style={sectionStyle}>
               <h2 style={headingStyle}>6. Cookies</h2>
               <p style={bodyStyle}>
-                Lernly uses only technically necessary session cookies. No
-                tracking cookies, no analytics tools, no advertising.
+                Lernly uses only technically necessary session cookies, set by
+                Supabase Auth to keep you signed in. No tracking cookies, no
+                analytics tools, no advertising.
               </p>
             </section>
           </div>
