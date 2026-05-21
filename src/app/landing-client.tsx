@@ -1313,69 +1313,137 @@ function ComparisonSection() {
     <section className="px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[1200px]">
         <SectionHeading
-          eyebrow={isEn ? "Why not just ChatGPT?" : "Warum nicht einfach ChatGPT?"}
-          boldPart={isEn ? "ChatGPT delivers text." : "ChatGPT liefert Text."}
-          italicPart={isEn ? "Lernly quizzes you." : "Lernly fragt dich ab."}
+          eyebrow={
+            isEn ? "You've already tried it" : "Du hast es schon probiert"
+          }
+          boldPart={
+            isEn
+              ? "ChatGPT, Notion, 8 Tabs."
+              : "ChatGPT, Notion, 8 Tabs."
+          }
+          italicPart={
+            isEn
+              ? "And still alone with 200 pages."
+              : "Trotzdem allein vor 200 Seiten."
+          }
         />
 
-        <div className="ln-stagger mt-12 grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="ln-reveal ln-comparison-card is-muted">
-            <div className="ln-section-label" style={{ fontSize: 11, letterSpacing: "2.2px" }}>
-              {isEn ? "Another summary" : "Noch eine Zusammenfassung"}
+        {/* Narrative block — replaces the old vs-table. The argument shifts
+            from 'ChatGPT bad / Lernly good' to 'reading ≠ knowing — that's a
+            method problem, not a ChatGPT problem'. Validates the user's lived
+            experience instead of attacking a tool they've used. */}
+        <div className="ln-reveal mx-auto mt-12 max-w-[720px]">
+          <div
+            className="rounded-2xl border px-6 py-8 md:px-10 md:py-12"
+            style={{
+              background: "rgba(20, 22, 28, 0.55)",
+              borderColor: "rgba(255,255,255,0.14)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+            }}
+          >
+            <div
+              className="space-y-5 text-[17px] leading-[1.65] md:text-[19px]"
+              style={{ color: "rgba(255,255,255,0.78)" }}
+            >
+              <p>
+                {isEn ? (
+                  <>
+                    <strong className="text-white">Tuesday, 23:47.</strong> You
+                    paste the lecture slides into ChatGPT. Get a summary. Read
+                    it. Close the tab.
+                  </>
+                ) : (
+                  <>
+                    <strong className="text-white">Dienstag, 23:47.</strong> Du
+                    wirfst die VL-Folien in ChatGPT. Bekommst eine
+                    Zusammenfassung. Liest sie. Tab zu.
+                  </>
+                )}
+              </p>
+              <p>
+                {isEn ? (
+                  <>
+                    <strong className="text-white">Wednesday.</strong> You
+                    remember nothing.
+                  </>
+                ) : (
+                  <>
+                    <strong className="text-white">Mittwoch.</strong> Du
+                    erinnerst dich an nichts.
+                  </>
+                )}
+              </p>
+              <p>
+                {isEn ? (
+                  <>
+                    Because{" "}
+                    <em className="lernly-italic" style={{ color: "white" }}>
+                      reading
+                    </em>{" "}
+                    a summary ≠{" "}
+                    <em className="lernly-italic" style={{ color: "white" }}>
+                      knowing
+                    </em>{" "}
+                    the material.
+                    <br />
+                    That's not a ChatGPT problem. It's a method problem.
+                  </>
+                ) : (
+                  <>
+                    Weil eine Zusammenfassung{" "}
+                    <em className="lernly-italic" style={{ color: "white" }}>
+                      lesen
+                    </em>{" "}
+                    ≠ den Stoff{" "}
+                    <em className="lernly-italic" style={{ color: "white" }}>
+                      können
+                    </em>{" "}
+                    ist.
+                    <br />
+                    Das ist kein ChatGPT-Problem. Das ist ein Methoden-Problem.
+                  </>
+                )}
+              </p>
+              <p className="text-white">
+                {isEn ? (
+                  <>
+                    Lernly does the step{" "}
+                    <em className="lernly-italic" style={{ color: "var(--color-ln-cyan)" }}>
+                      you never do yourself
+                    </em>
+                    : it asks you back, until it sticks.
+                  </>
+                ) : (
+                  <>
+                    Lernly macht den Schritt,{" "}
+                    <em className="lernly-italic" style={{ color: "var(--color-ln-cyan)" }}>
+                      den du selbst nie machst
+                    </em>
+                    : es fragt dich zurück, bis es sitzt.
+                  </>
+                )}
+              </p>
             </div>
-            <h3 className="mt-4 text-[26px] font-semibold leading-tight tracking-[-0.4px] text-white">
-              {isEn
-                ? "2000 more words. And you still have to plan the studying."
-                : "2000 Wörter mehr. Und wieder musst du selbst planen."}
-            </h3>
-            <div className="mt-8 space-y-3">
-              <ComparisonRow
-                label="Output"
-                value={isEn ? "Long-form prose" : "Fließtext (1.500+ Wörter)"}
-                tone="muted"
-              />
-              <ComparisonRow label={isEn ? "Next step" : "Nächster Schritt"} value={isEn ? "Unclear" : "Unklar"} tone="muted" />
-              <ComparisonRow label={isEn ? "Studying" : "Lernen"} value={isEn ? "Read and hope" : "Lesen und hoffen"} tone="muted" />
-            </div>
-          </div>
 
-          <div className="ln-reveal ln-comparison-card is-active">
-            <div className="ln-section-label" style={{ fontSize: 11, letterSpacing: "2.2px", color: "var(--color-ln-cyan)" }}>
-              {isEn
-                ? "Flashcards, quiz, blueprint"
-                : "Karteikarten, Quiz, Blueprint"}
-            </div>
-            <h3 className="mt-4 text-[26px] font-semibold leading-tight tracking-[-0.4px] text-white">
-              {isEn
-                ? "A pack that starts testing you immediately."
-                : "Ein Paket, das dich direkt abfragt."}
-            </h3>
-            <div className="mt-8 space-y-3">
-              <ComparisonRow label="Output" value={isEn ? "Active drills" : "Aktive Übungen"} tone="active" />
-              <ComparisonRow label={isEn ? "Next step" : "Nächster Schritt"} value={isEn ? "Flip the first card" : "Erste Karte flippen"} tone="active" />
-              <ComparisonRow label={isEn ? "Studying" : "Lernen"} value={isEn ? "Test, remember, repeat" : "Testen, merken, wiederholen"} tone="active" />
+            <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <a
+                href="#demo"
+                className="rounded-full bg-white px-5 py-2.5 text-[14px] font-semibold text-[#0F1535] transition hover:bg-white/90"
+              >
+                {isEn ? "See a real pack →" : "Echtes Paket ansehen →"}
+              </a>
+              <span
+                className="text-[12px]"
+                style={{ color: "rgba(255,255,255,0.45)" }}
+              >
+                {isEn ? "60 seconds, no signup" : "60 Sekunden, kein Login"}
+              </span>
             </div>
           </div>
         </div>
       </div>
     </section>
-  );
-}
-
-function ComparisonRow({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: string;
-  tone: "active" | "muted";
-}) {
-  return (
-    <div className="ln-comparison-row">
-      <span>{label}</span>
-      <strong className={tone === "active" ? "is-active" : ""}>{value}</strong>
-    </div>
   );
 }
 
