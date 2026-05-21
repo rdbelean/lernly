@@ -1891,6 +1891,13 @@
     flex-direction: column;
   }
 
+  /* In a column, flex-basis is the HEIGHT — reset so chips/CTA size to
+     their content instead of being forced to 150px / 240px tall. */
+  .ln-example-chip,
+  .ln-cockpit-bottom .ln-cockpit-cta {
+    flex: 0 0 auto;
+  }
+
   .ln-cockpit-title {
     font-size: 18px;
   }
