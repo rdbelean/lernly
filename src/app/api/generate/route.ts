@@ -46,10 +46,10 @@ const PER_TASK_TIMEOUT_MS = 180_000;
 type TaskKey = "cards" | "simulator" | "blueprint" | "meta";
 
 const TASKS: Record<TaskKey, { instruction: string; maxTokens: number }> = {
-  cards: { instruction: TASK_CARDS, maxTokens: 8000 },
-  simulator: { instruction: TASK_SIMULATOR, maxTokens: 5000 },
+  cards: { instruction: TASK_CARDS, maxTokens: 12000 },
+  simulator: { instruction: TASK_SIMULATOR, maxTokens: 7000 },
   blueprint: { instruction: TASK_BLUEPRINT, maxTokens: 4000 },
-  meta: { instruction: TASK_META, maxTokens: 8000 },
+  meta: { instruction: TASK_META, maxTokens: 10000 },
 };
 
 async function extractPdfText(
@@ -165,8 +165,13 @@ async function runTask(
   const ms = Date.now() - t0;
   const usage = final.usage;
   console.log(
-    `[/api/generate] task=${key} done in ${(ms / 1000).toFixed(1)}s — in=${usage.input_tokens} cache_read=${usage.cache_read_input_tokens ?? 0} cache_write=${usage.cache_creation_input_tokens ?? 0} out=${usage.output_tokens}`,
+    `[/api/generate] task=${key} done in ${(ms / 1000).toFixed(1)}s — stop=${final.stop_reason} in=${usage.input_tokens} cache_read=${usage.cache_read_input_tokens ?? 0} cache_write=${usage.cache_creation_input_tokens ?? 0} out=${usage.output_tokens}`,
   );
+  if (final.stop_reason === "max_tokens") {
+    throw new Error(
+      `Sub-Task ${key} hat das Token-Budget gesprengt (${usage.output_tokens} tokens). Bitte erneut versuchen oder weniger Material hochladen.`,
+    );
+  }
   try {
     return parseJsonResponse(raw);
   } catch (e) {
