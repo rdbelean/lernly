@@ -36,6 +36,7 @@ export const SimulatorQuestionSchema = z.object({
   options: z.array(z.string()),
   correctIndex: z.number().int(),
   explanation: z.string(),
+  category: z.string().optional(),
 });
 
 export const SimulatorSchema = z.object({
