@@ -13,6 +13,7 @@ import {
   TASK_SIMULATOR,
   TASK_BLUEPRINT,
   TASK_META,
+  TASK_VISUAL_MAP,
 } from "../src/lib/prompts";
 import { StudyPackSchema, type Flashcard } from "../src/lib/schema";
 import "dotenv/config";
@@ -25,6 +26,7 @@ const TASKS = {
   simulator: { instruction: TASK_SIMULATOR, maxTokens: 12000 },
   blueprint: { instruction: TASK_BLUEPRINT, maxTokens: 4000 },
   meta: { instruction: TASK_META, maxTokens: 12000 },
+  visualMap: { instruction: TASK_VISUAL_MAP, maxTokens: 10000 },
 } as const;
 type TaskKey = keyof typeof TASKS;
 
@@ -127,22 +129,29 @@ async function main() {
   ].join("\n");
 
   const client = new Anthropic();
-  const [cards, sim, blueprint, meta] = (await Promise.all([
-    runTask(client, "cards", materialText),
-    runTask(client, "simulator", materialText),
-    runTask(client, "blueprint", materialText),
-    runTask(client, "meta", materialText),
-  ])) as [
-    { flashcards?: Flashcard[] },
-    { simulator?: unknown },
-    { essayBlueprint?: unknown },
-    {
+  const [cards, sim, blueprint, meta, visualMap] = await Promise.all([
+    runTask(client, "cards", materialText) as Promise<{
+      flashcards?: Flashcard[];
+    }>,
+    runTask(client, "simulator", materialText) as Promise<{
+      simulator?: unknown;
+    }>,
+    runTask(client, "blueprint", materialText) as Promise<{
+      essayBlueprint?: unknown;
+    }>,
+    runTask(client, "meta", materialText) as Promise<{
       courseTitle?: string;
       overview?: unknown;
       authors?: unknown;
       schedule?: unknown;
-    },
-  ];
+    }>,
+    runTask(client, "visualMap", materialText)
+      .then((r) => (r as { visualMap?: unknown }).visualMap ?? null)
+      .catch((e) => {
+        console.error(`[${slug}] visualMap soft-failed:`, e);
+        return null;
+      }),
+  ]);
 
   const flashcards = cards?.flashcards ?? [];
   const merged = {
@@ -155,6 +164,7 @@ async function main() {
     authors: meta?.authors,
     schedule: meta?.schedule,
     quizletExport: deriveQuizletExport(flashcards),
+    ...(visualMap ? { visualMap } : {}),
   };
 
   const parsed = StudyPackSchema.safeParse(merged);

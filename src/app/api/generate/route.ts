@@ -7,6 +7,7 @@ import {
   TASK_SIMULATOR,
   TASK_BLUEPRINT,
   TASK_META,
+  TASK_VISUAL_MAP,
 } from "@/lib/prompts";
 import {
   StudyPackSchema,
@@ -49,13 +50,19 @@ const MODEL = "claude-sonnet-4-6";
 
 const PER_TASK_TIMEOUT_MS = 180_000;
 
-type TaskKey = "cards" | "simulator" | "blueprint" | "meta";
+type TaskKey =
+  | "cards"
+  | "simulator"
+  | "blueprint"
+  | "meta"
+  | "visualMap";
 
 const TASKS: Record<TaskKey, { instruction: string; maxTokens: number }> = {
   cards: { instruction: TASK_CARDS, maxTokens: 14000 },
   simulator: { instruction: TASK_SIMULATOR, maxTokens: 12000 },
   blueprint: { instruction: TASK_BLUEPRINT, maxTokens: 4000 },
   meta: { instruction: TASK_META, maxTokens: 12000 },
+  visualMap: { instruction: TASK_VISUAL_MAP, maxTokens: 10000 },
 };
 
 async function extractPdfText(
@@ -511,23 +518,36 @@ export async function POST(request: Request) {
       user?.id ?? "anon",
     );
 
-    const [cardsResult, simulatorResult, blueprintResult, metaResult] =
-      (await Promise.all([
-        runTask(client, "cards", materialText),
-        runTask(client, "simulator", materialText),
-        runTask(client, "blueprint", materialText),
-        runTask(client, "meta", materialText),
-      ])) as [
-        { flashcards?: Flashcard[] },
-        { simulator?: unknown },
-        { essayBlueprint?: unknown },
-        {
-          courseTitle?: string;
-          overview?: unknown;
-          authors?: unknown;
-          schedule?: unknown;
-        },
-      ];
+    const [
+      cardsResult,
+      simulatorResult,
+      blueprintResult,
+      metaResult,
+      visualMapSettled,
+    ] = await Promise.all([
+      runTask(client, "cards", materialText) as Promise<{
+        flashcards?: Flashcard[];
+      }>,
+      runTask(client, "simulator", materialText) as Promise<{
+        simulator?: unknown;
+      }>,
+      runTask(client, "blueprint", materialText) as Promise<{
+        essayBlueprint?: unknown;
+      }>,
+      runTask(client, "meta", materialText) as Promise<{
+        courseTitle?: string;
+        overview?: unknown;
+        authors?: unknown;
+        schedule?: unknown;
+      }>,
+      // VisualMap is best-effort: if Claude fumbles it, we still ship the rest.
+      runTask(client, "visualMap", materialText)
+        .then((r) => (r as { visualMap?: unknown }).visualMap ?? null)
+        .catch((e) => {
+          console.error("[/api/generate] visualMap soft-failed", e);
+          return null;
+        }),
+    ]);
 
     const cards = cardsResult?.flashcards ?? [];
 
@@ -541,6 +561,7 @@ export async function POST(request: Request) {
       authors: metaResult?.authors,
       schedule: metaResult?.schedule,
       quizletExport: deriveQuizletExport(cards),
+      ...(visualMapSettled ? { visualMap: visualMapSettled } : {}),
     };
 
     const parsed = StudyPackSchema.safeParse(merged);

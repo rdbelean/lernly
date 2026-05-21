@@ -106,6 +106,75 @@ JSON-SCHEMA (genau diese Struktur):
   }
 }`;
 
+export const TASK_VISUAL_MAP = `AUFGABE: Erstelle eine VISUAL MAP — die wichtigsten Konzepte des Materials als visuelle Frameworks, nicht als Fließtext. Das ist das HERZSTÜCK des Lernpakets für ADHS-freundliche Wiederholung.
+
+WAS DU BAUST
+Eine Liste von "blocks" (Themenblöcken). Jeder Block bündelt Frameworks zu EINEM Hauptthema (z.B. "Vertical Integration", "Going Global", "Diversification"). Innerhalb eines Blocks: 3-6 Frameworks, die das Thema visuell aufschließen.
+
+FARB-CODIERUNG
+Jeder Block bekommt eine "color": "blue" | "cyan" | "green" | "amber" | "violet" | "rose". Themen mit ähnlicher Logik bekommen ähnliche Farben. Beispiel: drei "Dimensionen einer Sache" → drei verschiedene Farben (cyan/green/amber). Erster Block ist meistens blue (der Big Picture / Einstieg).
+
+DIE 6 FRAMEWORK-TYPEN
+
+1. **flow** — Prozessfluss / Wertschöpfungskette / "von A zu Z" oder "Optionen auf einem Spektrum"
+   Beispiele: "Raw Materials → Manufacturing → Distribution", "Full Integration ↔ Long-term Contracts ↔ Spot Market"
+   Felder: title, boxes (mindestens 2, jeweils { label, sub?, accent? }), arrows ("right" | "bidirectional" | "plus"), explanation?
+
+2. **matrix2x2** — 2x2-Matrix mit zwei Achsen
+   Beispiele: Integration-Responsiveness Framework (Cost Pressure × Local Responsiveness → Global/International/Multidomestic/Transnational), BCG Matrix
+   Felder: title, xAxis { label, low, high }, yAxis { label, low, high }, cells (4 Stück, je { x: "low"|"high", y: "low"|"high", title, sub?, highlight? }), explanation?
+   highlight: setze true auf die EINE wichtigste Zelle (z.B. "Transnational" als holy grail).
+
+3. **comparison** — Gegenüberstellung (Pro/Con, Vor/Nachteile, A vs B)
+   Beispiele: "5 Benefits vs 4 Risks der vertikalen Integration", "Backward vs Forward Integration"
+   Felder: title, left { label, tone: "pro"|"con"|"neutral"?, items[] }, right { label, tone?, items[] }, explanation?
+   tone "pro" → grüner Stil, tone "con" → roter Stil, sonst neutral.
+
+4. **formula** — Kernformel oder eine zentrale Bedingung
+   Beispiele: "If in-house costs < market costs → MAKE", "ALL three Porter tests must pass"
+   Felder: formula (Hauptaussage), sub? (Nebenbedingung), title?
+
+5. **mnemonic** — Eselsbrücke mit Akronym
+   Beispiele: "CLSSS" für Benefits, "MIC" + "LLL" für Internationalization, "VGP" für Vertical/Geographic/Product
+   Felder: title, acronym, expansion[] (je { letter, meaning }), hook? (Analogie/Merksatz: "Wie eine GPS für Strategie")
+
+6. **link_note** — Cross-Reference zwischen Themen ("Das hängt mit X zusammen, weil...")
+   Beispiele: "Principal-Agent aus Session 12 erklärt, warum M&As in Session 15 trotzdem stattfinden"
+   Felder: fromTopic, toTopic, explanation
+
+PRIORISIERUNG
+- mindestens 1 matrix2x2 wenn das Material eine 2x2-Logik hat (sie sind die "wow"-Frames)
+- mindestens 1 mnemonic pro Block, wenn Listen vorkommen
+- mindestens 1 link_note insgesamt, wenn das Material >1 Thema umfasst
+- ECHTE FIRMENBEISPIELE in den Erklärungen (Netflix, Apple, Toyota, Tesla, P&G, Amazon — keine generischen "Firma X")
+
+ANTI-PATTERN
+- ❌ Nur ein Block mit 10 Frameworks alles bunt durcheinander — strukturiere nach Hauptthema
+- ❌ Mnemonic ohne hook ("CLSSS" ohne dass klar wird WIE man sich's merkt)
+- ❌ Comparison ohne tone — du musst sagen welche Seite gut/schlecht/neutral ist
+- ❌ Matrix2x2 mit Achsen-Labels, die man nicht aus dem Material ableiten kann
+
+JSON-SCHEMA (genau diese Struktur):
+{
+  "visualMap": {
+    "blocks": [
+      {
+        "title": "string",
+        "subtitle": "string (optional, kurzer Untertitel)",
+        "color": "blue" | "cyan" | "green" | "amber" | "violet" | "rose",
+        "frameworks": [
+          { "kind": "flow", "title": "string", "boxes": [{"label": "string", "sub": "string", "accent": "blue|cyan|green|amber|violet|rose"}], "arrows": "right|bidirectional|plus", "explanation": "string" },
+          { "kind": "matrix2x2", "title": "string", "xAxis": {"label": "string", "low": "string", "high": "string"}, "yAxis": {"label": "string", "low": "string", "high": "string"}, "cells": [{"x": "low|high", "y": "low|high", "title": "string", "sub": "string", "highlight": true|false}], "explanation": "string" },
+          { "kind": "comparison", "title": "string", "left": {"label": "string", "tone": "pro|con|neutral", "items": ["string"]}, "right": {"label": "string", "tone": "pro|con|neutral", "items": ["string"]}, "explanation": "string" },
+          { "kind": "formula", "title": "string", "formula": "string", "sub": "string" },
+          { "kind": "mnemonic", "title": "string", "acronym": "string", "expansion": [{"letter": "C", "meaning": "Costs lower"}], "hook": "string" },
+          { "kind": "link_note", "fromTopic": "string", "toTopic": "string", "explanation": "string" }
+        ]
+      }
+    ]
+  }
+}`;
+
 export const TASK_META = `AUFGABE: Erstelle Konzept-Übersicht, Autoren-Cheat-Sheet, Lernplan und Kurs-Titel.
 
 COURSE TITLE

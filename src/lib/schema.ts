@@ -77,6 +77,108 @@ export const ScheduleSchema = z.object({
   days: z.array(ScheduleDaySchema),
 });
 
+export const VisualBlockColorSchema = z.enum([
+  "blue",
+  "cyan",
+  "green",
+  "amber",
+  "violet",
+  "rose",
+]);
+
+export const FlowFrameworkSchema = z.object({
+  kind: z.literal("flow"),
+  title: z.string(),
+  boxes: z
+    .array(
+      z.object({
+        label: z.string(),
+        sub: z.string().optional(),
+        accent: VisualBlockColorSchema.optional(),
+      }),
+    )
+    .min(2),
+  arrows: z.enum(["right", "bidirectional", "plus"]).optional(),
+  explanation: z.string().optional(),
+});
+
+export const Matrix2x2CellSchema = z.object({
+  x: z.enum(["low", "high"]),
+  y: z.enum(["low", "high"]),
+  title: z.string(),
+  sub: z.string().optional(),
+  highlight: z.boolean().optional(),
+});
+
+export const Matrix2x2FrameworkSchema = z.object({
+  kind: z.literal("matrix2x2"),
+  title: z.string(),
+  xAxis: z.object({ label: z.string(), low: z.string(), high: z.string() }),
+  yAxis: z.object({ label: z.string(), low: z.string(), high: z.string() }),
+  cells: z.array(Matrix2x2CellSchema),
+  explanation: z.string().optional(),
+});
+
+export const ComparisonFrameworkSchema = z.object({
+  kind: z.literal("comparison"),
+  title: z.string(),
+  left: z.object({
+    label: z.string(),
+    tone: z.enum(["pro", "con", "neutral"]).optional(),
+    items: z.array(z.string()),
+  }),
+  right: z.object({
+    label: z.string(),
+    tone: z.enum(["pro", "con", "neutral"]).optional(),
+    items: z.array(z.string()),
+  }),
+  explanation: z.string().optional(),
+});
+
+export const FormulaFrameworkSchema = z.object({
+  kind: z.literal("formula"),
+  title: z.string().optional(),
+  formula: z.string(),
+  sub: z.string().optional(),
+});
+
+export const MnemonicFrameworkSchema = z.object({
+  kind: z.literal("mnemonic"),
+  title: z.string(),
+  acronym: z.string(),
+  expansion: z.array(
+    z.object({ letter: z.string(), meaning: z.string() }),
+  ),
+  hook: z.string().optional(),
+});
+
+export const LinkNoteFrameworkSchema = z.object({
+  kind: z.literal("link_note"),
+  fromTopic: z.string(),
+  toTopic: z.string(),
+  explanation: z.string(),
+});
+
+export const VisualFrameworkSchema = z.discriminatedUnion("kind", [
+  FlowFrameworkSchema,
+  Matrix2x2FrameworkSchema,
+  ComparisonFrameworkSchema,
+  FormulaFrameworkSchema,
+  MnemonicFrameworkSchema,
+  LinkNoteFrameworkSchema,
+]);
+
+export const VisualBlockSchema = z.object({
+  title: z.string(),
+  subtitle: z.string().optional(),
+  color: VisualBlockColorSchema,
+  frameworks: z.array(VisualFrameworkSchema),
+});
+
+export const VisualMapSchema = z.object({
+  blocks: z.array(VisualBlockSchema),
+});
+
 export const StudyPackSchema = z.object({
   courseTitle: z.string(),
   examType: z.enum(["essay", "multiple_choice", "oral", "open_book"]),
@@ -87,6 +189,7 @@ export const StudyPackSchema = z.object({
   authors: z.array(AuthorSchema),
   schedule: ScheduleSchema,
   quizletExport: z.string(),
+  visualMap: VisualMapSchema.optional(),
 });
 
 export type StudyPack = z.infer<typeof StudyPackSchema>;
