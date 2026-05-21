@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { getUser } from "@/lib/dal";
 import LandingClient from "./landing-client";
 
 const META_DE = {
@@ -73,6 +75,12 @@ export async function generateMetadata({
   };
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Logged-in users belong in /dashboard, not on the marketing landing.
+  // Quizlet/Notion model: once you sign in, the marketing site is gone.
+  const user = await getUser();
+  if (user) {
+    redirect("/dashboard");
+  }
   return <LandingClient />;
 }

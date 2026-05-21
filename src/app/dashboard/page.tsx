@@ -279,12 +279,6 @@ function EmptyState() {
           >
             ✦ Paket erstellen
           </a>
-          <a
-            href="/#demo"
-            className="rounded-full border border-white/15 bg-white/[0.04] px-5 py-3 text-[14px] font-medium text-white transition hover:border-white/30 hover:bg-white/[0.08]"
-          >
-            Erst Demo anschauen
-          </a>
         </div>
       </div>
     </div>
