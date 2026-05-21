@@ -387,10 +387,15 @@ function DemoCard({
         </span>
       </div>
 
-      {/* Preview snippet(s) — "there's more inside" content */}
+      {/* Preview snippet(s) — "there's more inside" content. Featured card
+          lays them out side-by-side on wider viewports so the full-width
+          card doesn't accumulate dead vertical space. */}
       <div
         className={
-          "mt-4 flex flex-col gap-2 " + (entry.featured ? "min-h-[180px]" : "")
+          "mt-4 grid gap-2 " +
+          (entry.featured
+            ? "grid-cols-1 md:grid-cols-2"
+            : "grid-cols-1")
         }
       >
         {entry.preview.map((p, i) => (
@@ -398,9 +403,10 @@ function DemoCard({
         ))}
       </div>
 
-      {/* CTA line */}
+      {/* CTA line — mt-auto pushes it to the bottom whenever the card
+          stretches beyond its natural content height. */}
       <div
-        className="mt-5 flex items-center gap-1.5 text-[13px] font-semibold transition group-hover:translate-x-0.5"
+        className="mt-auto pt-5 flex items-center gap-1.5 text-[13px] font-semibold transition group-hover:translate-x-0.5"
         style={{
           color: entry.featured
             ? "var(--color-ln-sage)"
@@ -706,18 +712,18 @@ export default function DemoPacksSection({ language, onTryYourOwn }: Props) {
             </p>
           </div>
 
-          {/* Grid: featured spans 2 cols on desktop, others stack to right.
-              On tablet/mobile everything stacks vertically. */}
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
-            <div className="lg:col-span-3">
-              <DemoCard
-                entry={featured}
-                language={language}
-                loading={loading && activeSlug === featured.slug}
-                onSelect={() => setActiveSlug(featured.slug)}
-              />
-            </div>
-            <div className="grid grid-cols-1 gap-4 lg:col-span-2 md:grid-cols-2 lg:grid-cols-1">
+          {/* Featured pack lives in its own row (full width). Two secondary
+              packs share a 2-col row below. This avoids the
+              tall-featured-vs-short-secondaries height mismatch that
+              created dead space inside the featured card. */}
+          <div className="flex flex-col gap-4">
+            <DemoCard
+              entry={featured}
+              language={language}
+              loading={loading && activeSlug === featured.slug}
+              onSelect={() => setActiveSlug(featured.slug)}
+            />
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {rest.map((entry) => (
                 <DemoCard
                   key={entry.slug}
