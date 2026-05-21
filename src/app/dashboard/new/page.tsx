@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDropzone, type FileRejection } from "react-dropzone";
 import GenerationProgress from "@/components/GenerationProgress";
@@ -43,6 +43,20 @@ export default function NewPackPage() {
   const [busy, setBusy] = useState(false);
   const [quotaHit, setQuotaHit] = useState<QuotaHitDetails | null>(null);
   const [completed, setCompleted] = useState(false);
+
+  // If the user arrived here from the landing-page login-gate, restore the
+  // exam-type they had picked so they don't have to re-pick it.
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem("lernly-pending-generation");
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as { examType?: ExamType };
+      if (parsed.examType) setExamType(parsed.examType);
+      sessionStorage.removeItem("lernly-pending-generation");
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   const onDrop = useCallback(
     (accepted: File[], rejected: FileRejection[]) => {

@@ -35,11 +35,86 @@ function useLanguage() {
   return useContext(LanguageContext);
 }
 
-const EXAM_OPTIONS: { value: ExamType; label: string; emoji: string }[] = [
-  { value: "essay", label: "Essay", emoji: "📝" },
-  { value: "multiple_choice", label: "Multiple Choice", emoji: "✅" },
-  { value: "oral", label: "Oral", emoji: "🗣" },
-  { value: "open_book", label: "Open Book", emoji: "📋" },
+type ExamIcon = (props: { className?: string }) => React.JSX.Element;
+
+const EssayIcon: ExamIcon = ({ className }) => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    aria-hidden
+  >
+    <path d="M12 20h9" />
+    <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+  </svg>
+);
+
+const MultipleChoiceIcon: ExamIcon = ({ className }) => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    aria-hidden
+  >
+    <polyline points="9 11 12 14 22 4" />
+    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+  </svg>
+);
+
+const OralIcon: ExamIcon = ({ className }) => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    aria-hidden
+  >
+    <rect x="9" y="2" width="6" height="12" rx="3" />
+    <path d="M5 10a7 7 0 0 0 14 0" />
+    <line x1="12" y1="19" x2="12" y2="22" />
+  </svg>
+);
+
+const OpenBookIcon: ExamIcon = ({ className }) => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    aria-hidden
+  >
+    <path d="M2 4.5A1.5 1.5 0 0 1 3.5 3H8a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+    <path d="M22 4.5A1.5 1.5 0 0 0 20.5 3H16a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+  </svg>
+);
+
+const EXAM_OPTIONS: { value: ExamType; label: string; Icon: ExamIcon }[] = [
+  { value: "essay", label: "Essay", Icon: EssayIcon },
+  { value: "multiple_choice", label: "Multiple Choice", Icon: MultipleChoiceIcon },
+  { value: "oral", label: "Oral", Icon: OralIcon },
+  { value: "open_book", label: "Open Book", Icon: OpenBookIcon },
 ];
 
 const MAX_FILES = 3;
@@ -206,94 +281,42 @@ export default function Home() {
 
   const handleGenerate = async () => {
     if (files.length === 0 || isGenerating) return;
+
+    // Login-gate: every generation goes through an account so we can save the
+    // pack + count it against the user's quota (Free/Pro/Team). Anonymous
+    // generation on landing is deprecated — the demo packs section + the
+    // existing live demo modal cover the 'try-before-signup' need.
     setIsGenerating(true);
     setError(null);
-
-    track("anon_generate_started", {
-      file_count: files.length,
-      exam_type: examType,
-      total_bytes: files.reduce((sum, f) => sum + f.size, 0),
-      uses_byok: Boolean(apiKey),
-    });
-
-    const fd = new FormData();
-    fd.append("examType", examType);
-    if (apiKey) fd.append("userApiKey", apiKey);
-    if (turnstileToken) fd.append("cf-turnstile-response", turnstileToken);
-    for (const f of files) fd.append("files", f);
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), GENERATE_TIMEOUT_MS);
-    const t0 = Date.now();
-
     try {
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        body: fd,
-        signal: controller.signal,
-      });
-
-      let data: { id: string; pack: StudyPack } | { error: string; reason?: string };
-      try {
-        data = await res.json();
-      } catch {
-        track("anon_generate_failed", {
-          status: res.status,
-          reason: "no_json",
-          duration_ms: Date.now() - t0,
-        });
-        throw new Error(
-          language === "en"
-            ? `Server responded with status ${res.status}, but no JSON.`
-            : `Server antwortete mit Status ${res.status}, aber kein JSON.`,
-        );
+      const { createClient } = await import("@/lib/supabase/browser");
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        track("signup_started", { source: "landing_generate_click" });
+        // Persist the user's intent so /dashboard/new can prefill the
+        // exam-type after signup (files have to be re-picked because Blob
+        // doesn't survive a navigation).
+        try {
+          sessionStorage.setItem(
+            "lernly-pending-generation",
+            JSON.stringify({ examType }),
+          );
+        } catch {
+          /* ignore quota errors */
+        }
+        window.location.href = "/login?next=/dashboard/new";
+        return;
       }
-
-      if (!res.ok || "error" in data) {
-        track("anon_generate_failed", {
-          status: res.status,
-          reason: "reason" in data ? data.reason ?? "error" : "error",
-          duration_ms: Date.now() - t0,
-        });
-        throw new Error("error" in data ? data.error : `HTTP ${res.status}`);
-      }
-
-      track("anon_generate_completed", {
-        duration_ms: Date.now() - t0,
-        cards: data.pack.flashcards.length,
-        quiz: data.pack.simulator.questions.length,
-        exam_type: examType,
-      });
-
-      setCompleted(true);
-      await new Promise((r) => setTimeout(r, 500));
-      setPack(data.pack);
-      try {
-        sessionStorage.setItem("lernly-pack", JSON.stringify(data.pack));
-      } catch (storageErr) {
-        // Pack still rendered from in-memory state; storage failure is non-fatal.
-        console.warn("[lernly] sessionStorage.setItem failed", storageErr);
-      }
-    } catch (err) {
-      if (err instanceof DOMException && err.name === "AbortError") {
-        setError(
-          language === "en"
-            ? "This took longer than 5 minutes. Try fewer or smaller files."
-            : "Das hat länger als 5 Minuten gedauert. Versuch's mit weniger oder kleineren Dateien.",
-        );
-      } else {
-        setError(
-          err instanceof Error
-            ? err.message
-            : language === "en"
-              ? "Network error"
-              : "Netzwerkfehler",
-        );
-      }
-    } finally {
-      clearTimeout(timeoutId);
-      setIsGenerating(false);
-      setCompleted(false);
+      // Authed user somehow landing on the marketing page — bounce to the
+      // dashboard flow. The root page already redirects authed users; this
+      // is a defensive fallback.
+      window.location.href = "/dashboard/new";
+    } catch (e) {
+      console.error("[landing] auth check failed", e);
+      window.location.href = "/login?next=/dashboard/new";
     }
   };
 
@@ -491,10 +514,10 @@ function Hero(props: HeroProps) {
             ● {isEn ? "2 min" : "2 Min"}
           </span>
           <span className="ln-hero-badge" style={{ color: "rgb(127, 169, 245)" }}>
-            ● {isEn ? "No login" : "Kein Login"}
+            ● {isEn ? "Demo without login" : "Demo ohne Login"}
           </span>
           <span className="ln-hero-badge" style={{ color: "rgb(143, 139, 229)" }}>
-            ● {isEn ? "3 free packs" : "3 Pakete gratis"}
+            ● {isEn ? "2 free packs/month" : "2 Pakete gratis / Monat"}
           </span>
           <span className="ln-hero-badge" style={{ color: "rgb(178, 156, 240)" }}>
             ● {isEn ? "DE/EN" : "DE/EN"}
@@ -871,6 +894,7 @@ function UploadDemo({
       <div className="mt-5 flex flex-wrap gap-1.5 rounded-xl border border-white/10 bg-black/20 p-1.5">
         {examOptions.map((opt) => {
           const active = examType === opt.value;
+          const IconComp = opt.Icon;
           return (
             <button
               key={opt.value}
@@ -882,7 +906,7 @@ function UploadDemo({
                   : "text-white/60 hover:text-white")
               }
             >
-              <span>{opt.emoji}</span>
+              <IconComp />
               <span className="hidden sm:inline">{opt.label}</span>
             </button>
           );
@@ -942,8 +966,8 @@ function UploadDemo({
         style={{ color: "var(--color-ln-mute)" }}
       >
         {isEn
-          ? "Free · No login · Not stored permanently"
-          : "Kostenlos · Kein Login · Wird nicht dauerhaft gespeichert"}
+          ? "Free · 2 packs per month · Sign up to start"
+          : "Kostenlos · 2 Pakete pro Monat · Anmelden zum Starten"}
       </p>
     </div>
   );
@@ -1761,7 +1785,7 @@ function EmailCapture({ pack }: { pack: StudyPack }) {
         >
           <li>✓ {isEn ? "Save & download as HTML" : "Speichern & als HTML herunterladen"}</li>
           <li>✓ {isEn ? "Access from any device" : "Von jedem Gerät zugreifen"}</li>
-          <li>✓ {isEn ? "3 packs free" : "3 Pakete gratis"}</li>
+          <li>✓ {isEn ? "2 packs free / month" : "2 Pakete gratis / Monat"}</li>
         </ul>
         <div className="mt-5 flex flex-wrap gap-3">
           <button
