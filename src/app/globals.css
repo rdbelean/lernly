@@ -287,6 +287,78 @@
   animation: ln-skeleton-shimmer 1.6s ease-in-out infinite;
 }
 
+/* ========== DEMO PACKS SECTION ========== */
+/* Featured card on the demo grid — sage-tint border + outer glow. Same
+   visual recipe as PricingCard.highlighted but keyed off the exam color. */
+.ln-demo-card-featured {
+  border-color: rgba(124, 196, 160, 0.32) !important;
+  box-shadow: 0 0 40px rgba(124, 196, 160, 0.08);
+}
+
+/* Bottom-fade mask for preview snippets — "there's more inside" effect. */
+.ln-demo-preview-fade {
+  mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+}
+
+/* Color-coded exam pills (top-right of each demo card). */
+.ln-demo-exam-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.ln-demo-exam-pill[data-exam="open_book"] {
+  background: rgba(124, 196, 160, 0.14);
+  color: var(--color-ln-sage);
+}
+.ln-demo-exam-pill[data-exam="essay"] {
+  background: rgba(124, 120, 216, 0.14);
+  color: var(--color-ln-indigo);
+}
+.ln-demo-exam-pill[data-exam="multiple_choice"] {
+  background: rgba(91, 184, 216, 0.14);
+  color: var(--color-ln-cyan);
+}
+.ln-demo-exam-pill[data-exam="oral"] {
+  background: rgba(251, 191, 36, 0.14);
+  color: var(--color-ln-amber);
+}
+
+/* "Meistgeklickt" micro-badge, only on the featured card. */
+.ln-demo-most-viewed {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(251, 191, 36, 0.1);
+  color: var(--color-ln-amber);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+}
+
+/* Section-wide subtle sage glow behind the demo cards. */
+.ln-demo-section-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(124, 196, 160, 0.06) 0%,
+    transparent 60%
+  );
+}
+
 /* Glassmorphism feature card */
 .ln-glass-card {
   background: rgba(8, 12, 28, 0.55);

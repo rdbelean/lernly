@@ -43,6 +43,8 @@ export type FunnelEvent =
   | "checkout_started"
   | "demo_pack_viewed"
   | "demo_to_upload_clicked"
+  | "demo_post_close_cta_seen"
+  | "demo_post_close_cta_clicked"
   | "landing_variant_seen"
   | "flashcard_streak_achieved"
   | "flashcard_session_completed";
