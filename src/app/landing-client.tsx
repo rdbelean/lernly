@@ -2399,24 +2399,6 @@ function PricingSection({
           </span>
         </div>
 
-        <div className="ln-reveal ln-guarantee-badge mt-4">
-          <span className="ln-guarantee-icon" aria-hidden>
-            🛡️
-          </span>
-          <div className="ln-guarantee-text">
-            <strong>
-              {isEn
-                ? "30-day money-back. One email is enough."
-                : "30 Tage Geld-zurück. Eine Email reicht."}
-            </strong>
-            <p>
-              {isEn
-                ? "If your first pack doesn't help — 100% back. No questions, no forms."
-                : "Wenn dein erstes Paket dir nicht hilft — 100% zurück. Keine Fragen, keine Formulare."}
-            </p>
-          </div>
-        </div>
-
         <div className="ln-stagger mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {tiers.map((tier) => (
             <PricingCard
@@ -3189,10 +3171,6 @@ const FAQ_ITEMS_DE: { q: string; a: string }[] = [
     q: "Was ist der Unterschied zu ChatGPT?",
     a: "ChatGPT gibt dir Fließtext. Lernly gibt dir ein interaktives Lernsystem — Karteikarten zum Flippen, einen Prüfungssimulator mit Feedback und einen Essay-Blueprint mit fertigen Formulierungen.",
   },
-  {
-    q: "Was wenn das Paket nichts taugt?",
-    a: "30 Tage Geld zurück. Eine Email an info@lernly-app.de reicht — kein Formular, keine Rückfragen.",
-  },
 ];
 
 const FAQ_ITEMS_EN: { q: string; a: string }[] = [
@@ -3211,10 +3189,6 @@ const FAQ_ITEMS_EN: { q: string; a: string }[] = [
   {
     q: "How is this different from ChatGPT?",
     a: "ChatGPT gives you long-form prose. Lernly gives you an interactive study system — flashcards to flip, an exam simulator with feedback, and an essay blueprint with ready phrasing.",
-  },
-  {
-    q: "What if the pack is bad?",
-    a: "30-day money-back. One email to info@lernly-app.de — no form, no questions.",
   },
 ];
 
