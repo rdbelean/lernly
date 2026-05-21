@@ -346,9 +346,9 @@ function Hero(props: HeroProps) {
             fontSize: "clamp(48px, 8vw, 96px)",
           }}
         >
-          <span className="block sm:inline">{isEn ? "Upload." : "Lade hoch."}</span>{" "}
+          <span className="block sm:inline">{isEn ? "Upload it." : "Lade hoch."}</span>{" "}
           <span className="block sm:inline" style={{ color: "rgb(255, 255, 255)" }}>
-            {isEn ? "Study smart." : "Lerne smart."}
+            {isEn ? "Pass the exam." : "Klausur bestanden."}
           </span>
         </h1>
 
@@ -406,9 +406,6 @@ function Hero(props: HeroProps) {
           </span>
           <span className="ln-hero-badge" style={{ color: "rgb(178, 156, 240)" }}>
             ● {isEn ? "Any subject" : "Jedes Fach"}
-          </span>
-          <span className="ln-hero-badge" style={{ color: "rgb(159, 212, 184)" }}>
-            ● {isEn ? "Free" : "Kostenlos"}
           </span>
         </div>
       </div>
@@ -1059,25 +1056,27 @@ function BentoFeatures() {
           {/* Card 1 — span 3 */}
           <div className="ln-reveal ln-glass-card p-8 md:col-span-3 md:p-9">
             <CardEyebrow>
-              {isEn ? "When you have to start now" : "Wenn du jetzt anfangen musst"}
+              {isEn ? "Reading ≠ Learning" : "Lesen ≠ Lernen"}
             </CardEyebrow>
             <CardTitle>
-              {isEn ? "No setup. No login. No excuses." : "Kein Setup. Kein Login. Keine Ausreden."}
+              {isEn
+                ? "Actively quizzed, not passively skimmed."
+                : "Aktiv abgefragt, nicht passiv durchgeblättert."}
             </CardTitle>
             <CardDesc>
               {isEn
-                ? "Open Lernly, drop in your PDFs, and 2 minutes later you have a pack. Exactly when you would normally drift into something else."
-                : "Öffne Lernly, wirf deine PDFs rein, in 2 Minuten hast du ein Paket. Genau in dem Moment, wo du sonst wieder was anderes machen würdest."}
+                ? "Every card tests you. Every quiz explains why each option is right or wrong. The stuff actually sticks instead of sliding off."
+                : "Jede Karte testet dich. Jedes Quiz erklärt, warum jede Option richtig oder falsch ist. Damit es wirklich hängen bleibt — statt nur durchgelesen zu werden."}
             </CardDesc>
             <div className="mt-6 flex flex-wrap gap-2">
               <span className="ln-mono-tag ln-mono-tag-pill ln-mono-tag-accent">
-                {isEn ? "No login" : "Ohne Login"}
+                {isEn ? "Active recall" : "Active Recall"}
               </span>
               <span className="ln-mono-tag ln-mono-tag-pill">
-                {isEn ? "No credit card" : "Ohne Kreditkarte"}
+                {isEn ? "Feedback per answer" : "Feedback pro Antwort"}
               </span>
               <span className="ln-mono-tag ln-mono-tag-pill">
-                {isEn ? "No app install" : "Ohne App-Install"}
+                {isEn ? "Repeat only what slipped" : "Nur falsche wiederholen"}
               </span>
             </div>
           </div>
@@ -1395,19 +1394,8 @@ function HowItWorks() {
 
         <p className="ln-reveal ln-pipeline-caption">
           {isEn
-            ? "From your material, for your exam. Ready in 2 minutes — built with the "
-            : "Aus deinem Material, für deine Prüfung. In 2 Minuten fertig — gebaut mit der "}
-          <a
-            href="https://www.anthropic.com/claude"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ln-accent-link"
-          >
-            {isEn
-              ? "AI that actually understands your material"
-              : "KI, die dein Material wirklich versteht"}
-          </a>
-          .
+            ? "From your PDFs, not from Wikipedia. Built exactly for your exam."
+            : "Aus deinen PDFs, nicht aus Wikipedia. Genau für deine Klausur."}
         </p>
       </div>
     </section>
@@ -1688,13 +1676,11 @@ const PRICING_TIERS_DE: PricingTier[] = [
     price: "0€",
     priceSize: "40px",
     subtitle: "für immer",
-    valueStackTotal: "€96",
-    valueStackLabel: "Wert wenn du's einzeln kaufst:",
     bullets: [
-      { text: "3 Klausuren komplett vorbereiten", value: "Tutor-Wert: €30" },
-      { text: "15 Karten pro Klausur (die Basics)", value: "Quizlet+: €18" },
-      { text: "8-Fragen-Prüfungssimulator", value: "€29" },
-      { text: "Konzepte nach Wichtigkeit sortiert", value: "€19" },
+      { text: "3 Klausuren komplett vorbereiten" },
+      { text: "15 Karten pro Klausur (die Basics)" },
+      { text: "8-Fragen-Prüfungssimulator" },
+      { text: "Konzepte nach Wichtigkeit sortiert" },
     ],
     ctaLabel: "Erstes Paket erstellen",
     ctaFilled: false,
@@ -1708,17 +1694,13 @@ const PRICING_TIERS_DE: PricingTier[] = [
     priceSize: "48px",
     subtitle: "/ Monat",
     anchorPrice: "9.99€",
-    valueStackTotal: "€631 / Monat",
-    valueStackLabel: "Wert wenn du's einzeln kaufst:",
     badge: "BELIEBT",
     bullets: [
-      { text: "20 Klausuren komplett vorbereitet", value: "Tutor-Wert: €200" },
-      { text: "600+ Karteikarten, nach Themen kuratiert", value: "Quizlet+: €36" },
-      { text: "Essay-Blueprint mit fertigen Templates", value: "Schreibcoach: €149" },
-      { text: "Prüfungssimulator (12+ Fragen pro Paket)", value: "Online-Kurs: €99" },
-      { text: "Offline-Modus + Quizlet-Export", value: "€49" },
-      { text: "Spickzettel-PDF zu jedem Paket", value: "€39", bonus: true },
-      { text: "Lernplan-Generator bis zur Prüfung", value: "€59", bonus: true },
+      { text: "20 Klausuren pro Monat komplett vorbereitet" },
+      { text: "600+ Karteikarten, nach Themen kuratiert" },
+      { text: "Essay-Blueprint mit fertigen Template-Sätzen" },
+      { text: "Prüfungssimulator mit 12+ Fragen pro Paket" },
+      { text: "Offline-Modus + Quizlet-Export" },
     ],
     ctaLabel: "Pro holen",
     ctaFilled: true,
@@ -1733,14 +1715,10 @@ const PRICING_TIERS_DE: PricingTier[] = [
     priceSize: "40px",
     subtitle: "/ Monat",
     anchorPrice: "19.99€",
-    valueStackTotal: "€1.208 / Monat",
-    valueStackLabel: "Wert wenn du's einzeln kaufst:",
     bullets: [
-      { text: "50 Klausuren / Monat (statt 20 bei Pro)", value: "Tutor-Wert: €300" },
-      { text: "Alles aus Pro inklusive", value: "Pro-Wert: €631" },
-      { text: "Priorität — deine Pakete werden zuerst gebaut", value: "€99" },
-      { text: "PDF-Spickzettel fürs Handy", value: "€49" },
-      { text: "Automatischer Lernplan bis zur Prüfung", value: "€129", bonus: true },
+      { text: "50 Klausuren pro Monat (2,5× mehr als Pro)" },
+      { text: "Alles aus Pro inklusive" },
+      { text: "Priorität — deine Pakete werden zuerst gebaut" },
     ],
     ctaLabel: "Team holen",
     ctaFilled: false,
@@ -1756,13 +1734,11 @@ const PRICING_TIERS_EN: PricingTier[] = [
     price: "0€",
     priceSize: "40px",
     subtitle: "forever",
-    valueStackTotal: "€96",
-    valueStackLabel: "Value if you bought it separately:",
     bullets: [
-      { text: "Prepare 3 exams completely", value: "Tutor value: €30" },
-      { text: "15 cards per exam (the basics)", value: "Quizlet+: €18" },
-      { text: "8-question exam simulator", value: "€29" },
-      { text: "Concepts sorted by importance", value: "€19" },
+      { text: "Prepare 3 exams completely" },
+      { text: "15 cards per exam (the basics)" },
+      { text: "8-question exam simulator" },
+      { text: "Concepts sorted by importance" },
     ],
     ctaLabel: "Create first pack",
     ctaFilled: false,
@@ -1776,17 +1752,13 @@ const PRICING_TIERS_EN: PricingTier[] = [
     priceSize: "48px",
     subtitle: "/ month",
     anchorPrice: "9.99€",
-    valueStackTotal: "€631 / month",
-    valueStackLabel: "Value if you bought it separately:",
     badge: "POPULAR",
     bullets: [
-      { text: "20 exams completely prepared", value: "Tutor value: €200" },
-      { text: "600+ flashcards, curated by topic", value: "Quizlet+: €36" },
-      { text: "Essay blueprint with ready-to-use templates", value: "Writing coach: €149" },
-      { text: "Exam simulator (12+ questions per pack)", value: "Online course: €99" },
-      { text: "Offline mode + Quizlet export", value: "€49" },
-      { text: "Cheat-sheet PDF for every pack", value: "€39", bonus: true },
-      { text: "Study plan generator until your exam", value: "€59", bonus: true },
+      { text: "20 exams per month, fully prepared" },
+      { text: "600+ flashcards, curated by topic" },
+      { text: "Essay blueprint with ready-to-use templates" },
+      { text: "Exam simulator with 12+ questions per pack" },
+      { text: "Offline mode + Quizlet export" },
     ],
     ctaLabel: "Get Pro",
     ctaFilled: true,
@@ -1801,14 +1773,10 @@ const PRICING_TIERS_EN: PricingTier[] = [
     priceSize: "40px",
     subtitle: "/ month",
     anchorPrice: "19.99€",
-    valueStackTotal: "€1,208 / month",
-    valueStackLabel: "Value if you bought it separately:",
     bullets: [
-      { text: "50 exams / month (vs. 20 on Pro)", value: "Tutor value: €300" },
-      { text: "Everything in Pro included", value: "Pro value: €631" },
-      { text: "Priority — your packs get built first", value: "€99" },
-      { text: "PDF cheat sheet for your phone", value: "€49" },
-      { text: "Automatic study plan until your exam", value: "€129", bonus: true },
+      { text: "50 exams per month (2.5× more than Pro)" },
+      { text: "Everything in Pro included" },
+      { text: "Priority — your packs get built first" },
     ],
     ctaLabel: "Get Team",
     ctaFilled: false,
@@ -2608,8 +2576,8 @@ const FAQ_ITEMS_DE: { q: string; a: string }[] = [
     a: "ChatGPT gibt dir eine Textwand. Lernly gibt dir ein Lernsystem — interaktive Karteikarten zum Flippen, einen Prüfungssimulator mit Feedback, und einen Essay-Blueprint mit fertigen Formulierungen.",
   },
   {
-    q: "Kann ich mein Lernpaket bearbeiten?",
-    a: "Du kannst es als HTML runterladen und offline nutzen. Bearbeitung innerhalb der App kommt bald.",
+    q: "Was wenn das Paket nichts taugt?",
+    a: "30 Tage Geld zurück. Eine Email an kontakt@lernly-app.de reicht — kein Formular, keine Rückfragen.",
   },
 ];
 
@@ -2631,8 +2599,8 @@ const FAQ_ITEMS_EN: { q: string; a: string }[] = [
     a: "ChatGPT gives you a wall of text. Lernly gives you a study system — interactive flashcards to flip, an exam simulator with feedback, and an essay blueprint with ready phrasing.",
   },
   {
-    q: "Can I edit my study pack?",
-    a: "You can download it as HTML and use it offline. In-app editing is coming soon.",
+    q: "What if the pack is bad?",
+    a: "30-day money-back. One email to kontakt@lernly-app.de — no form, no questions.",
   },
 ];
 
