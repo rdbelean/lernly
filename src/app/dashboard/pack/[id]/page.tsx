@@ -27,13 +27,17 @@ export default async function PackDetailPage({
     return (
       <main className="px-6 py-16">
         <div className="mx-auto max-w-[920px] text-white">
-          <a
-            href="/dashboard"
-            className="text-[13px]"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+          <nav
+            aria-label="Breadcrumb"
+            className="flex items-center gap-2 text-[12px]"
+            style={{ color: "rgba(255,255,255,0.45)" }}
           >
-            ← Dashboard
-          </a>
+            <a href="/dashboard" className="transition hover:text-white">
+              Bibliothek
+            </a>
+            <span aria-hidden>›</span>
+            <span style={{ color: "rgba(255,255,255,0.7)" }}>{data.title}</span>
+          </nav>
           <h1 className="mt-4 text-[28px] font-bold text-white">{data.title}</h1>
           <p
             className="mt-3 text-[14px]"
@@ -52,13 +56,34 @@ export default async function PackDetailPage({
   return (
     <main className="px-6 py-12">
       <div className="mx-auto max-w-[920px]">
-        <a
-          href="/dashboard"
-          className="text-[13px] transition hover:text-white"
-          style={{ color: "rgba(255,255,255,0.55)" }}
+        <nav
+          aria-label="Breadcrumb"
+          className="flex items-center gap-2 text-[12px]"
+          style={{ color: "rgba(255,255,255,0.45)" }}
         >
-          ← Dashboard
-        </a>
+          <a
+            href="/dashboard"
+            className="transition hover:text-white"
+          >
+            Bibliothek
+          </a>
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+          <span className="truncate" style={{ color: "rgba(255,255,255,0.75)" }}>
+            {pack.courseTitle}
+          </span>
+        </nav>
 
         <div className="mt-6 flex items-start justify-between gap-4">
           <div>
