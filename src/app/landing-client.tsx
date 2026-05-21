@@ -94,7 +94,7 @@ function useScrollReveal() {
   }, []);
 }
 
-const GENERATE_TIMEOUT_MS = 4 * 60 * 1000;
+const GENERATE_TIMEOUT_MS = 2 * 60 * 1000;
 
 const API_KEY_STORAGE = "lernly-claude-api-key";
 
@@ -220,8 +220,8 @@ export default function Home() {
       if (err instanceof DOMException && err.name === "AbortError") {
         setError(
           language === "en"
-            ? "This took longer than 4 minutes. Try fewer or smaller files."
-            : "Das hat länger als 4 Minuten gedauert. Versuch's mit weniger oder kleineren Dateien.",
+            ? "This took longer than 2 minutes. Try fewer or smaller files."
+            : "Das hat länger als 2 Minuten gedauert. Versuch's mit weniger oder kleineren Dateien.",
         );
       } else {
         setError(
