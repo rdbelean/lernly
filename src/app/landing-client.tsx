@@ -974,146 +974,333 @@ function UploadDemo({
   );
 }
 
-/* ========== SHOWCASE ========== */
+/* ========== SHOWCASE: input stack → output pack ========== */
+// Replaces the previous "BWL / MED / JURA" mock-demo cards. The page already
+// has DemoPacksSection showing real (BWL) packs; what was missing was an
+// answer to "passt das zu meinem konkreten Stapel?". This section makes that
+// promise visually: drop in your collected mess (PDFs, slides, notes) →
+// out comes a structured study pack.
 
-type ShowcaseItem = {
-  badge: string;
-  context: string;
-  result: string;
-  outputs: string[];
+type IoTile = {
+  label: string;
+  sub: string;
+  icon: React.ReactNode;
 };
 
-const SHOWCASE_DE: ShowcaseItem[] = [
-  {
-    badge: "BWL",
-    context: "400 Slides · Strategisches Management",
-    result: "Porter, SWOT, BCG priorisiert. Essay-Plan + 38 Karten fertig.",
-    outputs: ["38 Karten", "Essay-Plan", "12 Quiz"],
-  },
-  {
-    badge: "MED",
-    context: "Anatomie II · Multiple Choice",
-    result: "Ursprung, Ansatz, Innervation als Karten. 15 MC-Fragen inklusive.",
-    outputs: ["42 Karten", "15 MC-Fragen", "Feedback"],
-  },
-  {
-    badge: "JURA",
-    context: "Staatsrecht I · Fallklausur",
-    result: "34 Definitionen sortiert. 12 Fälle mit Prüfungsschema zum Üben.",
-    outputs: ["34 Definitionen", "12 Fälle", "Schema"],
-  },
-];
+function FileIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <line x1="9" y1="13" x2="15" y2="13" />
+      <line x1="9" y1="17" x2="15" y2="17" />
+    </svg>
+  );
+}
 
-const SHOWCASE_EN: ShowcaseItem[] = [
-  {
-    badge: "BUS",
-    context: "400 slides · Strategic Management",
-    result: "Porter, SWOT, BCG prioritized. Essay plan + 38 cards ready.",
-    outputs: ["38 cards", "Essay plan", "12 quiz"],
-  },
-  {
-    badge: "MED",
-    context: "Anatomy II · Multiple choice",
-    result: "Origin, insertion, innervation as cards. 15 MC questions included.",
-    outputs: ["42 cards", "15 MC questions", "Feedback"],
-  },
-  {
-    badge: "LAW",
-    context: "Constitutional Law I · Case exam",
-    result: "34 definitions sorted. 12 cases with exam schema to practice.",
-    outputs: ["34 definitions", "12 cases", "Schema"],
-  },
-];
+function SlidesIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <rect x="3" y="4" width="18" height="13" rx="2" />
+      <line x1="8" y1="20" x2="16" y2="20" />
+      <line x1="12" y1="17" x2="12" y2="20" />
+    </svg>
+  );
+}
+
+function NotesIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M3 6h18M3 12h18M3 18h12" />
+    </svg>
+  );
+}
+
+function CardsIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <rect x="3" y="5" width="14" height="14" rx="2" />
+      <path d="M7 9h10" />
+      <path d="M21 19V7a2 2 0 0 0-2-2" />
+    </svg>
+  );
+}
+
+function QuizIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <polyline points="9 11 12 14 22 4" />
+      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+    </svg>
+  );
+}
+
+function BlueprintIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M12 20h9" />
+      <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+    </svg>
+  );
+}
+
+function VisualMapIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <rect x="3" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="3" width="7" height="7" rx="1" />
+      <rect x="3" y="14" width="7" height="7" rx="1" />
+      <rect x="14" y="14" width="7" height="7" rx="1" />
+    </svg>
+  );
+}
 
 function ShowcaseSection() {
   const isEn = useLanguage() === "en";
-  const showcase = isEn ? SHOWCASE_EN : SHOWCASE_DE;
+
+  const inputs: IoTile[] = [
+    {
+      label: isEn ? "Lecture PDF" : "Vorlesungs-PDF",
+      sub: isEn ? "200+ slides, all in" : "200+ Slides, alles rein",
+      icon: <FileIcon />,
+    },
+    {
+      label: isEn ? "Slides" : "Folien",
+      sub: isEn ? "Exported PowerPoint" : "PowerPoint als PDF",
+      icon: <SlidesIcon />,
+    },
+    {
+      label: isEn ? "Notes" : "Notizen",
+      sub: ".txt · .md",
+      icon: <NotesIcon />,
+    },
+  ];
+
+  const outputs: IoTile[] = [
+    {
+      label: isEn ? "Flashcards" : "Karteikarten",
+      sub: isEn ? "Mnemonics included" : "Mit Eselsbrücken",
+      icon: <CardsIcon />,
+    },
+    {
+      label: isEn ? "Exam trainer" : "Übungsklausur",
+      sub: isEn ? "Real-firm scenarios" : "Szenarien mit echten Firmen",
+      icon: <QuizIcon />,
+    },
+    {
+      label: "Blueprint",
+      sub: isEn ? "Template sentences" : "Template-Sätze",
+      icon: <BlueprintIcon />,
+    },
+    {
+      label: "Visual Map",
+      sub: isEn ? "2×2 matrices, flows" : "2×2-Matrizen, Flows",
+      icon: <VisualMapIcon />,
+    },
+  ];
+
   return (
     <section className="px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[1200px]">
         <SectionHeading
-          eyebrow={isEn ? "Before the material mountain" : "Vor deinem Stoffberg"}
+          eyebrow={isEn ? "Drop it all in" : "Wirf alles rein"}
           boldPart={
-            isEn
-              ? "Business, Med, Law — whatever you study."
-              : "BWL, Medizin, Jura — egal was du studierst."
+            isEn ? "Drop in your whole stack." : "Wirf deinen Stapel rein."
           }
-          italicPart={isEn ? "Lernly reads it." : "Lernly liest's."}
+          italicPart={
+            isEn ? "Lernly does the rest." : "Lernly macht den Rest."
+          }
+          sub={
+            isEn
+              ? "Whatever piled up this semester — slides, notes, scripts. Up to 8 files, in one shot."
+              : "Egal was sich angesammelt hat — Folien, Notizen, Skripte. Bis zu 8 Dateien auf einmal."
+          }
         />
 
-        <div className="ln-stagger mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
-          {showcase.map((item, idx) => (
-            <ShowcaseCard key={item.badge} item={item} waveSeed={idx} />
-          ))}
+        <div className="ln-reveal mt-14 grid grid-cols-1 items-stretch gap-6 lg:grid-cols-[1fr_auto_1.2fr] lg:gap-8">
+          <IoColumn
+            kind="input"
+            heading={isEn ? "Stack in" : "Stapel rein"}
+            footerNote={
+              isEn
+                ? "PDF · TXT · MD · up to 8 files"
+                : "PDF · TXT · MD · bis zu 8 Dateien"
+            }
+            tiles={inputs}
+          />
+          <FlowConnector />
+          <IoColumn
+            kind="output"
+            heading={isEn ? "Study pack out" : "Lernpaket raus"}
+            footerNote={isEn ? "Ready in ~2 minutes" : "In ~2 Minuten fertig"}
+            tiles={outputs}
+          />
         </div>
       </div>
     </section>
   );
 }
 
-function ShowcaseCard({
-  item,
-  waveSeed,
+function IoColumn({
+  kind,
+  heading,
+  footerNote,
+  tiles,
 }: {
-  item: ShowcaseItem;
-  waveSeed: number;
+  kind: "input" | "output";
+  heading: string;
+  footerNote: string;
+  tiles: IoTile[];
 }) {
-  const isEn = useLanguage() === "en";
+  const isInput = kind === "input";
   return (
     <div
-      className="ln-reveal flex min-h-[280px] flex-col justify-between rounded-[22px] border p-7"
+      className="ln-glass-card flex h-full flex-col p-6 md:p-7"
       style={{
-        background: "var(--color-ln-hero-card-bg)",
-        borderColor: "rgba(255, 255, 255, 0.22)",
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
+        background: isInput
+          ? "linear-gradient(160deg, rgba(20,22,28,0.7), rgba(251,113,133,0.04))"
+          : "linear-gradient(160deg, rgba(20,22,28,0.7), rgba(124,196,160,0.06))",
+        borderColor: isInput
+          ? "rgba(251,113,133,0.18)"
+          : "rgba(124,196,160,0.2)",
       }}
     >
-      <div className="flex items-center justify-between">
-        <div
-          className="flex items-center gap-2 text-[13px]"
-          style={{ color: "var(--color-ln-ink-soft)" }}
-        >
+      <div
+        className="mb-5 flex items-center justify-between gap-2 text-[11px] font-semibold uppercase tracking-[0.18em]"
+        style={{
+          color: isInput ? "rgb(252,165,165)" : "rgb(134,239,172)",
+        }}
+      >
+        <span className="flex items-center gap-2">
           <span className="ln-pulse-dot-green" aria-hidden />
-          <span>{isEn ? "Ready" : "Fertig"}</span>
-        </div>
-        <span
-          className="rounded-lg border px-2.5 py-1 font-mono text-[12px] font-semibold"
-          style={{
-            borderColor: "rgba(255,255,255,0.12)",
-            background: "rgba(255,255,255,0.08)",
-            color: "rgba(255,255,255,0.65)",
-          }}
-        >
-          {item.badge}
+          {heading}
+        </span>
+        <span style={{ color: "rgba(255,255,255,0.4)" }}>
+          {tiles.length}
         </span>
       </div>
 
-      <div className="mt-6">
-        <div
-          className="text-[13px]"
-          style={{ color: "var(--color-ln-mute)" }}
-        >
-          {item.context}
-        </div>
-        <div className="mt-2 text-[20px] font-semibold leading-[1.3] text-white md:text-[22px]">
-          {item.result}
-        </div>
-        <div className="mt-5 flex flex-wrap gap-1.5">
-          {item.outputs.map((output, index) => (
-            <span
-              key={output}
-              className={
-                "ln-mono-tag " + (index === 0 ? "ln-mono-tag-accent" : "")
-              }
-            >
-              {output}
-            </span>
-          ))}
-        </div>
+      <div className="flex flex-col gap-2.5">
+        {tiles.map((t, i) => (
+          <IoTileCard
+            key={t.label}
+            tile={t}
+            tone={kind}
+            rotate={isInput ? (i % 2 === 0 ? -0.6 : 0.8) : 0}
+          />
+        ))}
       </div>
 
-      <Waveform seed={waveSeed} />
+      <div
+        className="mt-auto pt-5 font-mono text-[11px]"
+        style={{ color: "rgba(255,255,255,0.45)" }}
+      >
+        {footerNote}
+      </div>
+    </div>
+  );
+}
+
+function IoTileCard({
+  tile,
+  tone,
+  rotate,
+}: {
+  tile: IoTile;
+  tone: "input" | "output";
+  rotate: number;
+}) {
+  const isInput = tone === "input";
+  return (
+    <div
+      className="flex items-center gap-3 rounded-xl border px-4 py-3 transition"
+      style={{
+        background: "rgba(20, 22, 28, 0.55)",
+        borderColor: "rgba(255,255,255,0.1)",
+        transform: rotate ? `rotate(${rotate}deg)` : undefined,
+      }}
+    >
+      <span
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
+        style={{
+          background: isInput
+            ? "rgba(251,113,133,0.1)"
+            : "rgba(124,196,160,0.12)",
+          color: isInput ? "rgb(252,165,165)" : "rgb(134,239,172)",
+        }}
+      >
+        {tile.icon}
+      </span>
+      <div className="min-w-0 flex-1">
+        <div className="text-[14px] font-semibold text-white">{tile.label}</div>
+        <div
+          className="mt-0.5 text-[12px]"
+          style={{ color: "rgba(255,255,255,0.55)" }}
+        >
+          {tile.sub}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FlowConnector() {
+  return (
+    <div
+      className="flex items-center justify-center lg:px-2"
+      aria-hidden
+    >
+      {/* Horizontal arrow on lg+, vertical on mobile/tablet */}
+      <svg
+        className="hidden lg:block"
+        width="64"
+        height="40"
+        viewBox="0 0 64 40"
+        fill="none"
+      >
+        <line
+          x1="4"
+          y1="20"
+          x2="56"
+          y2="20"
+          stroke="rgba(255,255,255,0.25)"
+          strokeWidth="1.6"
+          strokeDasharray="3 4"
+        />
+        <polyline
+          points="48 12 60 20 48 28"
+          fill="none"
+          stroke="rgba(124,196,160,0.85)"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+      <svg
+        className="lg:hidden"
+        width="40"
+        height="48"
+        viewBox="0 0 40 48"
+        fill="none"
+      >
+        <line
+          x1="20"
+          y1="4"
+          x2="20"
+          y2="40"
+          stroke="rgba(255,255,255,0.25)"
+          strokeWidth="1.6"
+          strokeDasharray="3 4"
+        />
+        <polyline
+          points="12 32 20 44 28 32"
+          fill="none"
+          stroke="rgba(124,196,160,0.85)"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
     </div>
   );
 }
