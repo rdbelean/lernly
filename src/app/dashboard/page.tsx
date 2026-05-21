@@ -108,7 +108,7 @@ export default async function DashboardPage() {
               komplettes Lernpaket.
             </p>
             <a
-              href="/#upload"
+              href="/dashboard/new"
               className="mt-6 inline-block rounded-full bg-white px-5 py-2.5 text-[14px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
             >
               Paket erstellen →

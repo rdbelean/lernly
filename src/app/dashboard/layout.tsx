@@ -45,7 +45,7 @@ export default async function DashboardLayout({
 
           <div className="flex items-center gap-4">
             <a
-              href="/#upload"
+              href="/dashboard/new"
               className="rounded-full bg-white px-4 py-1.5 text-[13px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
             >
               Neues Paket
