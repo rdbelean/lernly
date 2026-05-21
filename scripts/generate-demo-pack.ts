@@ -21,10 +21,10 @@ const MODEL = "claude-sonnet-4-6";
 const PDF_CHAR_BUDGET = 280_000;
 
 const TASKS = {
-  cards: { instruction: TASK_CARDS, maxTokens: 12000 },
-  simulator: { instruction: TASK_SIMULATOR, maxTokens: 7000 },
+  cards: { instruction: TASK_CARDS, maxTokens: 14000 },
+  simulator: { instruction: TASK_SIMULATOR, maxTokens: 12000 },
   blueprint: { instruction: TASK_BLUEPRINT, maxTokens: 4000 },
-  meta: { instruction: TASK_META, maxTokens: 10000 },
+  meta: { instruction: TASK_META, maxTokens: 12000 },
 } as const;
 type TaskKey = keyof typeof TASKS;
 
