@@ -36,9 +36,9 @@ const EXAM_EMOJI: Record<string, string> = {
 };
 
 const PLAN_LIMITS: Record<string, number> = {
-  free: 3,
-  pro: 20,
-  team: 50,
+  free: 2,
+  pro: 25,
+  team: 60,
 };
 
 const PLAN_LABEL: Record<string, string> = {

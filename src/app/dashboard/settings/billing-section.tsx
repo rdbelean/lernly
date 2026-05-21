@@ -118,13 +118,13 @@ export default function BillingSection({
               }}
             >
               <div className="text-[15px] font-semibold text-white">
-                Pro · 6,99 € / Monat
+                Pro · 14,99 € / Monat
               </div>
               <div
                 className="text-[12.5px]"
                 style={{ color: "rgba(255,255,255,0.55)" }}
               >
-                20 Pakete pro Monat
+                25 Pakete pro Monat
               </div>
             </button>
             <button
@@ -138,13 +138,13 @@ export default function BillingSection({
               }}
             >
               <div className="text-[15px] font-semibold text-white">
-                Team · 14,99 € / Monat
+                Team · 24,99 € / Monat
               </div>
               <div
                 className="text-[12.5px]"
                 style={{ color: "rgba(255,255,255,0.55)" }}
               >
-                50 Pakete pro Monat
+                60 Pakete pro Monat
               </div>
             </button>
           </div>

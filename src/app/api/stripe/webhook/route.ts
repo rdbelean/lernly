@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
-import { getStripe, planFromPriceId } from "@/lib/stripe";
+import {
+  CREDIT_PRODUCTS,
+  creditProductFromPriceId,
+  getStripe,
+  planFromPriceId,
+  type CreditProduct,
+} from "@/lib/stripe";
 import { createServiceClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
@@ -64,14 +70,74 @@ export async function POST(request: Request) {
     }
   }
 
+  async function grantCreditsFromSession(
+    session: Stripe.Checkout.Session,
+  ): Promise<void> {
+    // Pricing v2: one-time credit purchase (Sprint / PAYG / PAYG-Pro).
+    // Insert one pack_credits row per credit so the table doubles as an audit
+    // log. Sprint expires 7 days from purchase, PAYG never expires.
+    let product: CreditProduct | null = null;
+    if (session.metadata?.credit_product) {
+      product = session.metadata.credit_product as CreditProduct;
+    }
+    if (!product && stripe) {
+      const items = await stripe.checkout.sessions.listLineItems(session.id, {
+        limit: 5,
+      });
+      for (const li of items.data) {
+        product = creditProductFromPriceId(li.price?.id);
+        if (product) break;
+      }
+    }
+    if (!product) {
+      console.warn(
+        "[stripe webhook] one-time session without recognized credit product",
+        { sessionId: session.id },
+      );
+      return;
+    }
+
+    const userId =
+      (session.metadata?.user_id as string | undefined) ??
+      (session.client_reference_id ?? null);
+    if (!userId) {
+      console.error(
+        "[stripe webhook] credit session missing user_id metadata",
+        { sessionId: session.id },
+      );
+      return;
+    }
+
+    const spec = CREDIT_PRODUCTS[product];
+    const expiresAt = spec.expiresAfterDays
+      ? new Date(
+          Date.now() + spec.expiresAfterDays * 24 * 60 * 60 * 1000,
+        ).toISOString()
+      : null;
+
+    const rows = Array.from({ length: spec.quantity }, () => ({
+      user_id: userId,
+      kind: spec.kind,
+      stripe_session_id: session.id,
+      expires_at: expiresAt,
+    }));
+
+    const { error } = await service.from("pack_credits").insert(rows);
+    if (error) {
+      console.error("[stripe webhook] pack_credits insert failed", error);
+    }
+  }
+
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
-      if (session.subscription && session.customer) {
+      if (session.mode === "subscription" && session.subscription) {
         const sub = await stripe.subscriptions.retrieve(
           session.subscription as string,
         );
         await applySubscriptionToUser(sub);
+      } else if (session.mode === "payment") {
+        await grantCreditsFromSession(session);
       }
       break;
     }

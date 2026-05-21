@@ -392,6 +392,11 @@ export async function POST(request: Request) {
 
     const usesByok = Boolean(storedKey || userApiKey);
 
+    // Whether this generation was paid for via a one-time pack_credit rather
+    // than the user's monthly subscription quota. Used at the end to skip
+    // bump_pack_usage so we don't double-charge.
+    let creditKindConsumed: string | null = null;
+
     if (user && !usesByok) {
       const { data: quota, error: qErr } = await supabase.rpc("check_pack_quota");
       if (qErr) {
@@ -411,21 +416,40 @@ export async function POST(request: Request) {
           );
         }
         if (quota.reason === "quota_exceeded") {
+          // Pricing v2: try to consume a one-time pack credit
+          // (Sprint / PAYG / Pro-topup) before failing with 402.
+          const { data: consumed, error: consumeErr } = await supabase.rpc(
+            "consume_pack_credit",
+          );
+          if (consumeErr) {
+            console.error("[/api/generate] consume_pack_credit failed", consumeErr);
+          }
+          if (typeof consumed === "string" && consumed) {
+            creditKindConsumed = consumed;
+            console.log(
+              "[/api/generate] quota exhausted; consumed pack credit",
+              consumed,
+            );
+          } else {
+            // No credits available either → tell the client so it can show the
+            // quota-hit modal with Sprint/PAYG offers.
+            return NextResponse.json(
+              {
+                error: `Monatslimit erreicht: ${quota.used}/${quota.limit} Pakete im ${quota.plan}-Plan.`,
+                reason: "quota_exceeded",
+                used: quota.used,
+                limit: quota.limit,
+                plan: quota.plan,
+              },
+              { status: 402 },
+            );
+          }
+        } else {
           return NextResponse.json(
-            {
-              error: `Monatslimit erreicht: ${quota.used}/${quota.limit} Pakete im ${quota.plan}-Plan. Upgrade für mehr.`,
-              reason: "quota_exceeded",
-              used: quota.used,
-              limit: quota.limit,
-              plan: quota.plan,
-            },
-            { status: 402 },
+            { error: "Generierung nicht erlaubt.", reason: quota.reason },
+            { status: 400 },
           );
         }
-        return NextResponse.json(
-          { error: "Generierung nicht erlaubt.", reason: quota.reason },
-          { status: 400 },
-        );
       }
     }
 
@@ -603,7 +627,9 @@ export async function POST(request: Request) {
           savedId = row.id as string;
         }
 
-        if (!usesByok) {
+        // Only bump the monthly quota counter if this generation actually
+        // consumed the subscription quota (not BYOK, not a one-time credit).
+        if (!usesByok && !creditKindConsumed) {
           const { error: bumpErr } = await supabase.rpc("bump_pack_usage");
           if (bumpErr) {
             console.error("[/api/generate] usage bump failed", bumpErr);

@@ -1807,7 +1807,7 @@ type PricingBullet = {
 };
 
 type PricingTier = {
-  plan: "free" | "pro" | "team";
+  plan: "free" | "sprint" | "pro" | "team";
   name: string;
   tagline: string;
   outcomeHeadline: string;
@@ -1828,36 +1828,54 @@ const PRICING_TIERS_DE: PricingTier[] = [
   {
     plan: "free",
     name: "Gratis",
-    tagline: "Zum Ausprobieren",
-    outcomeHeadline: "Erste Klausur testen",
+    tagline: "Probier ein Paket",
+    outcomeHeadline: "Ein Pack testen",
     price: "0€",
     priceSize: "40px",
     subtitle: "für immer",
     bullets: [
-      { text: "3 Klausuren komplett vorbereiten" },
-      { text: "15 Karten pro Klausur (die Basics)" },
-      { text: "8-Fragen-Prüfungssimulator" },
-      { text: "Konzepte nach Wichtigkeit sortiert" },
+      { text: "2 Pakete pro Monat" },
+      { text: "Volle Qualität — kein Feature-Lock" },
+      { text: "Visual Maps + Übungsklausur inklusive" },
+      { text: "Kein Login zum Reinschnuppern" },
     ],
-    ctaLabel: "Erstes Paket erstellen",
+    ctaLabel: "Kostenlos starten",
+    ctaFilled: false,
+  },
+  {
+    plan: "sprint",
+    name: "Sprint",
+    tagline: "Eine Klausur. Eine Woche.",
+    outcomeHeadline: "Eine Klausurwoche überleben",
+    price: "4.99€",
+    priceSize: "44px",
+    subtitle: "einmalig",
+    badge: "OHNE ABO",
+    bullets: [
+      { text: "5 Pakete in 7 Tagen" },
+      { text: "Perfekt für die EINE Klausur nächste Woche" },
+      { text: "Kein Abo, kein Vergessen-zu-Kündigen" },
+      { text: "Visual Maps + Mnemonics + Klausur-Trainer" },
+    ],
+    ctaLabel: "Sprint kaufen",
     ctaFilled: false,
   },
   {
     plan: "pro",
     name: "Pro",
-    tagline: "Wenn mehrere Klausuren anstehen",
-    outcomeHeadline: "Klausurenphase durchziehen",
-    price: "6.99€",
+    tagline: "Für das ganze Semester",
+    outcomeHeadline: "Semester durchziehen",
+    price: "14.99€",
     priceSize: "48px",
     subtitle: "/ Monat",
-    anchorPrice: "9.99€",
+    anchorPrice: "19.99€",
     badge: "BELIEBT",
     bullets: [
-      { text: "20 Klausuren pro Monat komplett vorbereitet" },
-      { text: "600+ Karteikarten, nach Themen kuratiert" },
-      { text: "Essay-Blueprint mit fertigen Template-Sätzen" },
-      { text: "Prüfungssimulator mit 12+ Fragen pro Paket" },
-      { text: "Offline-Modus + Quizlet-Export" },
+      { text: "25 Pakete pro Monat" },
+      { text: "Visual Maps mit 2×2-Matrizen + Flow-Diagrammen" },
+      { text: "Szenario-Klausurfragen mit echten Firmen" },
+      { text: "Essay-Blueprint + interaktive Checkliste" },
+      { text: "Extra-Pakete für 2,49€ statt 2,99€" },
     ],
     ctaLabel: "Pro holen",
     ctaFilled: true,
@@ -1866,18 +1884,19 @@ const PRICING_TIERS_DE: PricingTier[] = [
   {
     plan: "team",
     name: "Team",
-    tagline: "Fürs ganze Studienjahr",
-    outcomeHeadline: "Ganzes Semester durchziehen",
-    price: "14.99€",
-    priceSize: "40px",
+    tagline: "Eure WG-Lerngruppe, ein Account",
+    outcomeHeadline: "Pakete poolen",
+    price: "24.99€",
+    priceSize: "44px",
     subtitle: "/ Monat",
-    anchorPrice: "19.99€",
+    anchorPrice: "34.99€",
     bullets: [
-      { text: "50 Klausuren pro Monat (2,5× mehr als Pro)" },
+      { text: "60 Pakete pro Monat — shared zwischen 3 Sitzen" },
+      { text: "Günstiger als 3× Pro einzeln" },
       { text: "Alles aus Pro inklusive" },
-      { text: "Priorität — deine Pakete werden zuerst gebaut" },
+      { text: "Priorisierter Support" },
     ],
-    ctaLabel: "Team holen",
+    ctaLabel: "Team starten",
     ctaFilled: false,
   },
 ];
@@ -1886,36 +1905,54 @@ const PRICING_TIERS_EN: PricingTier[] = [
   {
     plan: "free",
     name: "Free",
-    tagline: "To try it out",
-    outcomeHeadline: "Try your first exam",
+    tagline: "Try one pack",
+    outcomeHeadline: "Test the output",
     price: "0€",
     priceSize: "40px",
     subtitle: "forever",
     bullets: [
-      { text: "Prepare 3 exams completely" },
-      { text: "15 cards per exam (the basics)" },
-      { text: "8-question exam simulator" },
-      { text: "Concepts sorted by importance" },
+      { text: "2 packs per month" },
+      { text: "Full quality — no feature lock" },
+      { text: "Visual Maps + Exam Trainer included" },
+      { text: "No login to try" },
     ],
-    ctaLabel: "Create first pack",
+    ctaLabel: "Start free",
+    ctaFilled: false,
+  },
+  {
+    plan: "sprint",
+    name: "Sprint",
+    tagline: "One exam. One week.",
+    outcomeHeadline: "Survive one exam week",
+    price: "4.99€",
+    priceSize: "44px",
+    subtitle: "one-time",
+    badge: "NO SUBSCRIPTION",
+    bullets: [
+      { text: "5 packs in 7 days" },
+      { text: "Perfect for the ONE exam next week" },
+      { text: "No subscription, no forgot-to-cancel" },
+      { text: "Visual Maps + mnemonics + exam trainer" },
+    ],
+    ctaLabel: "Buy Sprint",
     ctaFilled: false,
   },
   {
     plan: "pro",
     name: "Pro",
-    tagline: "When several exams are coming up",
-    outcomeHeadline: "Push through exam season",
-    price: "6.99€",
+    tagline: "For the whole semester",
+    outcomeHeadline: "Push through the semester",
+    price: "14.99€",
     priceSize: "48px",
     subtitle: "/ month",
-    anchorPrice: "9.99€",
+    anchorPrice: "19.99€",
     badge: "POPULAR",
     bullets: [
-      { text: "20 exams per month, fully prepared" },
-      { text: "600+ flashcards, curated by topic" },
-      { text: "Essay blueprint with ready-to-use templates" },
-      { text: "Exam simulator with 12+ questions per pack" },
-      { text: "Offline mode + Quizlet export" },
+      { text: "25 packs per month" },
+      { text: "Visual Maps with 2×2 matrices + flow diagrams" },
+      { text: "Scenario exam questions with real companies" },
+      { text: "Essay blueprint + interactive checklist" },
+      { text: "Extra packs for €2.49 instead of €2.99" },
     ],
     ctaLabel: "Get Pro",
     ctaFilled: true,
@@ -1924,18 +1961,19 @@ const PRICING_TIERS_EN: PricingTier[] = [
   {
     plan: "team",
     name: "Team",
-    tagline: "For the whole study year",
-    outcomeHeadline: "Carry the whole semester",
-    price: "14.99€",
-    priceSize: "40px",
+    tagline: "Your study group, one account",
+    outcomeHeadline: "Pool packs together",
+    price: "24.99€",
+    priceSize: "44px",
     subtitle: "/ month",
-    anchorPrice: "19.99€",
+    anchorPrice: "34.99€",
     bullets: [
-      { text: "50 exams per month (2.5× more than Pro)" },
+      { text: "60 packs per month — shared across 3 seats" },
+      { text: "Cheaper than 3× Pro" },
       { text: "Everything in Pro included" },
-      { text: "Priority — your packs get built first" },
+      { text: "Priority support" },
     ],
-    ctaLabel: "Get Team",
+    ctaLabel: "Start Team",
     ctaFilled: false,
   },
 ];
@@ -1967,12 +2005,34 @@ function PricingSection({
     ? "/dashboard/settings"
     : "/login?next=/dashboard/settings";
 
-  const handleTierCta = (plan: "free" | "pro" | "team") => {
+  const handleTierCta = (plan: "free" | "sprint" | "pro" | "team") => {
     if (plan === "free") {
       onActivateUpload();
-    } else {
-      window.location.href = paidUpgradeHref;
+      return;
     }
+    if (plan === "sprint") {
+      // Sprint is a one-time credit purchase. Unauth → login then jump to
+      // checkout, authed → fire checkout directly.
+      if (!authed) {
+        window.location.href = "/login?next=/dashboard?buy=sprint";
+        return;
+      }
+      track("checkout_started", { plan: "sprint", source: "pricing_section" });
+      fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credit: "sprint" }),
+      })
+        .then((r) => r.json())
+        .then((j) => {
+          if (j.url) window.location.href = j.url as string;
+        })
+        .catch(() => {
+          window.location.href = paidUpgradeHref;
+        });
+      return;
+    }
+    window.location.href = paidUpgradeHref;
   };
   const tiers = isEn ? PRICING_TIERS_EN : PRICING_TIERS_DE;
   return (
@@ -2004,8 +2064,8 @@ function PricingSection({
             <strong>{isEn ? "Founder pricing" : "Gründerpreis"}</strong>
             {" — "}
             {isEn
-              ? `Pro stays at €6.99 (instead of €9.99) while we're still under ${FOUNDER_PRICING_LIMIT.toLocaleString()} paying students.`
-              : `Solange wir unter ${FOUNDER_PRICING_LIMIT.toLocaleString("de-DE")} zahlenden Studis sind, bleibt Pro bei €6,99 statt €9,99.`}
+              ? `Pro stays at €14.99 (instead of €19.99) while we're still under the first ${FOUNDER_PRICING_LIMIT.toLocaleString()} paying students. Lifetime, not just the first month.`
+              : `Solange wir unter den ersten ${FOUNDER_PRICING_LIMIT.toLocaleString("de-DE")} zahlenden Studis sind, bleibt Pro bei €14,99 statt €19,99. Lebenslang, nicht nur den ersten Monat.`}
           </span>
         </div>
 
@@ -2027,7 +2087,7 @@ function PricingSection({
           </div>
         </div>
 
-        <div className="ln-stagger mt-10 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="ln-stagger mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {tiers.map((tier) => (
             <PricingCard
               key={tier.name}
@@ -2098,18 +2158,18 @@ function BYOKBanner({ onOpenConnect }: { onOpenConnect: () => void }) {
           </h4>
           <p>
             {isEn
-              ? "Save €2/month forever. Packs without a limit."
-              : "Spar €2/Monat dauerhaft. Unbegrenzte Pakete."}
+              ? "Save €3/month and get unlimited packs."
+              : "Spar €3/Monat und kriege unbegrenzte Pakete."}
           </p>
         </div>
       </div>
       <div className="byok-right">
         <div className="byok-prices">
           <span>
-            Pro + Key: <strong>4.99€</strong> <s>6.99€</s>
+            Pro + Key: <strong>11.99€</strong> <s>14.99€</s>
           </span>
           <span>
-            Team + Key: <strong>9.99€</strong> <s>14.99€</s>
+            Team + Key: <strong>21.99€</strong> <s>24.99€</s>
           </span>
         </div>
         <button type="button" onClick={handleConnect} className="byok-btn">

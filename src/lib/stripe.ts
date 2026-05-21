@@ -12,6 +12,19 @@ export function getStripe(): Stripe | null {
 }
 
 export type Plan = "pro" | "team" | "pro_byok" | "team_byok";
+export type CreditProduct = "sprint" | "payg" | "payg_pro";
+
+// One-time credit products (Pricing v2). Each entry tracks how many
+// pack_credits rows the Stripe webhook should insert + whether the credit has
+// a hard expiry (Sprint: 7 days, PAYG: no expiry).
+export const CREDIT_PRODUCTS: Record<
+  CreditProduct,
+  { quantity: number; expiresAfterDays: number | null; kind: "sprint" | "payg" | "pro_topup" }
+> = {
+  sprint: { quantity: 5, expiresAfterDays: 7, kind: "sprint" },
+  payg: { quantity: 1, expiresAfterDays: null, kind: "payg" },
+  payg_pro: { quantity: 1, expiresAfterDays: null, kind: "pro_topup" },
+};
 
 export function getPriceId(plan: Plan): string | null {
   switch (plan) {
@@ -26,6 +39,29 @@ export function getPriceId(plan: Plan): string | null {
     default:
       return null;
   }
+}
+
+export function getCreditPriceId(product: CreditProduct): string | null {
+  switch (product) {
+    case "sprint":
+      return process.env.STRIPE_PRICE_SPRINT_PACK ?? null;
+    case "payg":
+      return process.env.STRIPE_PRICE_PAYG_PACK ?? null;
+    case "payg_pro":
+      return process.env.STRIPE_PRICE_PAYG_PACK_PRO ?? null;
+    default:
+      return null;
+  }
+}
+
+export function creditProductFromPriceId(
+  priceId: string | undefined | null,
+): CreditProduct | null {
+  if (!priceId) return null;
+  if (priceId === process.env.STRIPE_PRICE_SPRINT_PACK) return "sprint";
+  if (priceId === process.env.STRIPE_PRICE_PAYG_PACK) return "payg";
+  if (priceId === process.env.STRIPE_PRICE_PAYG_PACK_PRO) return "payg_pro";
+  return null;
 }
 
 export function planFromPriceId(priceId: string | undefined | null):

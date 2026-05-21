@@ -4,6 +4,9 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDropzone, type FileRejection } from "react-dropzone";
 import GenerationProgress from "@/components/GenerationProgress";
+import QuotaHitModal, {
+  type QuotaHitDetails,
+} from "@/components/dashboard/QuotaHitModal";
 import { track } from "@/lib/analytics";
 import {
   EXAM_TYPE_LABELS,
@@ -38,6 +41,7 @@ export default function NewPackPage() {
   const [extraInfo, setExtraInfo] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [quotaHit, setQuotaHit] = useState<QuotaHitDetails | null>(null);
   const [completed, setCompleted] = useState(false);
 
   const onDrop = useCallback(
@@ -92,6 +96,15 @@ export default function NewPackPage() {
       const res = await fetch("/api/generate", { method: "POST", body: fd });
       const json = await res.json();
       if (!res.ok) {
+        if (json.reason === "quota_exceeded" && typeof json.limit === "number") {
+          setQuotaHit({
+            used: json.used,
+            limit: json.limit,
+            plan: json.plan ?? "free",
+          });
+          setBusy(false);
+          return;
+        }
         throw new Error(json.error ?? `HTTP ${res.status}`);
       }
       track("auth_generate_completed", {
@@ -137,6 +150,12 @@ export default function NewPackPage() {
 
   return (
     <main className="px-6 py-12">
+      {quotaHit && (
+        <QuotaHitModal
+          details={quotaHit}
+          onClose={() => setQuotaHit(null)}
+        />
+      )}
       <div className="mx-auto max-w-[720px]">
         <a
           href="/dashboard"
