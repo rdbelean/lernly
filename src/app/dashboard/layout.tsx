@@ -50,8 +50,14 @@ export default async function DashboardLayout({
             >
               Neues Paket
             </a>
+            <a
+              href="/dashboard/settings"
+              className="hidden text-[13px] text-white/55 transition hover:text-white sm:inline"
+            >
+              Einstellungen
+            </a>
             <span
-              className="hidden text-[13px] sm:inline"
+              className="hidden text-[13px] md:inline"
               style={{ color: "rgba(255,255,255,0.55)" }}
             >
               {user.email}

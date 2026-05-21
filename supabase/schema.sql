@@ -82,3 +82,136 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
+
+-- =========================================================================
+-- Quota + rate-limit columns (Phase 3)
+-- =========================================================================
+alter table public.users
+  add column if not exists last_quota_reset_at timestamptz not null default now();
+alter table public.users
+  add column if not exists last_pack_at timestamptz;
+
+-- =========================================================================
+-- check_pack_quota(): does monthly reset, returns JSON status
+-- =========================================================================
+create or replace function public.check_pack_quota()
+returns json
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_user record;
+  v_now timestamptz := now();
+  v_month_start timestamptz := date_trunc('month', v_now);
+  v_limit int;
+  v_gap_seconds int := 30;
+  v_retry_after int;
+begin
+  select plan, packs_used_this_month, last_quota_reset_at, last_pack_at
+    into v_user
+    from public.users
+    where id = auth.uid()
+    for update;
+
+  if not found then
+    return json_build_object(
+      'ok', false,
+      'reason', 'unknown_user'
+    );
+  end if;
+
+  if v_user.last_quota_reset_at < v_month_start then
+    update public.users
+      set packs_used_this_month = 0,
+          last_quota_reset_at = v_month_start
+      where id = auth.uid();
+    v_user.packs_used_this_month := 0;
+  end if;
+
+  v_limit := case v_user.plan
+    when 'free' then 3
+    when 'pro' then 20
+    when 'team' then 50
+    else 0
+  end;
+
+  if v_user.last_pack_at is not null
+     and v_now - v_user.last_pack_at < (v_gap_seconds || ' seconds')::interval then
+    v_retry_after := ceil(extract(epoch from (v_gap_seconds || ' seconds')::interval - (v_now - v_user.last_pack_at)))::int;
+    return json_build_object(
+      'ok', false,
+      'reason', 'rate_limit',
+      'retry_after_seconds', v_retry_after,
+      'used', v_user.packs_used_this_month,
+      'limit', v_limit,
+      'plan', v_user.plan
+    );
+  end if;
+
+  if v_user.packs_used_this_month >= v_limit then
+    return json_build_object(
+      'ok', false,
+      'reason', 'quota_exceeded',
+      'used', v_user.packs_used_this_month,
+      'limit', v_limit,
+      'plan', v_user.plan
+    );
+  end if;
+
+  return json_build_object(
+    'ok', true,
+    'used', v_user.packs_used_this_month,
+    'limit', v_limit,
+    'plan', v_user.plan
+  );
+end;
+$$;
+
+grant execute on function public.check_pack_quota() to authenticated;
+
+-- =========================================================================
+-- bump_pack_usage(): increment counter + stamp last_pack_at
+-- =========================================================================
+create or replace function public.bump_pack_usage()
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  update public.users
+    set packs_used_this_month = packs_used_this_month + 1,
+        last_pack_at = now()
+    where id = auth.uid();
+end;
+$$;
+
+grant execute on function public.bump_pack_usage() to authenticated;
+
+-- =========================================================================
+-- BYOK secrets (Phase 4) — encrypted Anthropic API keys
+-- =========================================================================
+-- App encrypts with AES-256-GCM (LERNLY_KEY_ENCRYPT_KEY env var) before insert.
+-- No RLS policies → only the service role can read/write. Authenticated users
+-- go through API routes that decrypt server-side.
+create table if not exists public.user_secrets (
+  user_id                     uuid primary key references public.users(id) on delete cascade,
+  anthropic_key_ciphertext    text,
+  anthropic_key_set_at        timestamptz
+);
+
+alter table public.user_secrets enable row level security;
+
+-- =========================================================================
+-- Stripe billing columns (Phase 5)
+-- =========================================================================
+alter table public.users
+  add column if not exists stripe_customer_id text unique;
+alter table public.users
+  add column if not exists stripe_subscription_id text;
+alter table public.users
+  add column if not exists current_period_end timestamptz;
+
+create index if not exists users_stripe_customer_id_idx
+  on public.users(stripe_customer_id);

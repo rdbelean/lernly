@@ -16,10 +16,7 @@ export async function POST(request: Request) {
     (body as { pack?: unknown })?.pack,
   );
   if (!parsed.success) {
-    return NextResponse.json(
-      { error: "Pack-Schema ungültig" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "Pack-Schema ungültig" }, { status: 400 });
   }
 
   const supabase = await createClient();
@@ -28,6 +25,40 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
+
+  const { data: quota, error: qErr } = await supabase.rpc("check_pack_quota");
+  if (qErr) {
+    console.error("[/api/packs/save] quota check failed", qErr);
+  } else if (quota && quota.ok === false) {
+    if (quota.reason === "rate_limit") {
+      return NextResponse.json(
+        {
+          error: `Bitte warte noch ${quota.retry_after_seconds}s.`,
+          reason: "rate_limit",
+        },
+        {
+          status: 429,
+          headers: { "Retry-After": String(quota.retry_after_seconds) },
+        },
+      );
+    }
+    if (quota.reason === "quota_exceeded") {
+      return NextResponse.json(
+        {
+          error: `Monatslimit erreicht: ${quota.used}/${quota.limit} im ${quota.plan}-Plan.`,
+          reason: "quota_exceeded",
+          used: quota.used,
+          limit: quota.limit,
+          plan: quota.plan,
+        },
+        { status: 402 },
+      );
+    }
+    return NextResponse.json(
+      { error: "Speichern nicht erlaubt.", reason: quota.reason },
+      { status: 400 },
+    );
   }
 
   const { data, error } = await supabase
@@ -47,6 +78,11 @@ export async function POST(request: Request) {
       { error: "Speichern fehlgeschlagen" },
       { status: 500 },
     );
+  }
+
+  const { error: bumpErr } = await supabase.rpc("bump_pack_usage");
+  if (bumpErr) {
+    console.error("[/api/packs/save] bump failed", bumpErr);
   }
 
   return NextResponse.json({ id: data.id });

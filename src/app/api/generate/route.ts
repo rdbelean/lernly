@@ -2,12 +2,20 @@ import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 import { STUDY_PACK_SYSTEM_PROMPT } from "@/lib/prompts";
 import { StudyPackSchema, type ExamType } from "@/lib/schema";
-import { createClient as createSupabaseServer } from "@/lib/supabase/server";
+import {
+  createClient as createSupabaseServer,
+  createServiceClient,
+} from "@/lib/supabase/server";
+import { decryptApiKey } from "@/lib/byok";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
 
 const defaultClient = new Anthropic();
+
+const MAX_FILES = 8;
+const MAX_FILE_BYTES = 25 * 1024 * 1024;
+const MAX_TOTAL_BYTES = 50 * 1024 * 1024;
 
 const EXAM_LABEL: Record<ExamType, string> = {
   essay: "Essay-Klausur (geschriebener Aufsatz in der Prüfung)",
@@ -54,6 +62,8 @@ type UserBlock =
       title?: string;
     };
 
+const ALLOWED_FILE = /\.(pdf|txt|md|markdown)$/i;
+
 export async function POST(request: Request) {
   const t0 = Date.now();
   try {
@@ -63,14 +73,49 @@ export async function POST(request: Request) {
     const extraInfo = (formData.get("extraInfo") as string | null) ?? "";
     const userApiKeyRaw = (formData.get("userApiKey") as string | null) ?? "";
     const userApiKey = userApiKeyRaw.trim();
-    const files = formData.getAll("files").filter((v): v is File => v instanceof File);
+    const files = formData
+      .getAll("files")
+      .filter((v): v is File => v instanceof File);
 
     if (!examType || !EXAM_LABEL[examType]) {
       return NextResponse.json({ error: "Ungültiger Prüfungstyp" }, { status: 400 });
     }
     if (files.length === 0) {
-      return NextResponse.json({ error: "Mindestens eine Datei erforderlich" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Mindestens eine Datei erforderlich" },
+        { status: 400 },
+      );
     }
+    if (files.length > MAX_FILES) {
+      return NextResponse.json(
+        { error: `Maximal ${MAX_FILES} Dateien pro Generierung.` },
+        { status: 400 },
+      );
+    }
+
+    let totalBytes = 0;
+    for (const f of files) {
+      if (!ALLOWED_FILE.test(f.name)) {
+        return NextResponse.json(
+          { error: `Dateityp nicht unterstützt: ${f.name}. Nur PDF, TXT, MD.` },
+          { status: 400 },
+        );
+      }
+      if (f.size > MAX_FILE_BYTES) {
+        return NextResponse.json(
+          { error: `${f.name} ist zu groß (max. 25 MB pro Datei).` },
+          { status: 413 },
+        );
+      }
+      totalBytes += f.size;
+    }
+    if (totalBytes > MAX_TOTAL_BYTES) {
+      return NextResponse.json(
+        { error: "Gesamtgröße zu groß — max. 50 MB pro Generierung." },
+        { status: 413 },
+      );
+    }
+
     if (userApiKey && !userApiKey.startsWith("sk-ant-")) {
       return NextResponse.json(
         { error: "Ungültiger API Key — Anthropic-Keys beginnen mit sk-ant-." },
@@ -78,8 +123,76 @@ export async function POST(request: Request) {
       );
     }
 
-    const client = userApiKey ? new Anthropic({ apiKey: userApiKey }) : defaultClient;
-    const usingUserKey = Boolean(userApiKey);
+    const supabase = await createSupabaseServer();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    let storedKey: string | null = null;
+    if (user) {
+      try {
+        const service = createServiceClient();
+        const { data: secret } = await service
+          .from("user_secrets")
+          .select("anthropic_key_ciphertext")
+          .eq("user_id", user.id)
+          .maybeSingle();
+        if (secret?.anthropic_key_ciphertext) {
+          storedKey = decryptApiKey(secret.anthropic_key_ciphertext);
+        }
+      } catch (e) {
+        console.error("[/api/generate] BYOK lookup failed", e);
+      }
+    }
+
+    const usesByok = Boolean(storedKey || userApiKey);
+
+    if (user && !usesByok) {
+      const { data: quota, error: qErr } = await supabase.rpc("check_pack_quota");
+      if (qErr) {
+        console.error("[/api/generate] quota check failed", qErr);
+      } else if (quota && quota.ok === false) {
+        if (quota.reason === "rate_limit") {
+          return NextResponse.json(
+            {
+              error: `Bitte warte noch ${quota.retry_after_seconds}s vor der nächsten Generierung.`,
+              reason: "rate_limit",
+              retryAfterSeconds: quota.retry_after_seconds,
+            },
+            {
+              status: 429,
+              headers: { "Retry-After": String(quota.retry_after_seconds) },
+            },
+          );
+        }
+        if (quota.reason === "quota_exceeded") {
+          return NextResponse.json(
+            {
+              error: `Monatslimit erreicht: ${quota.used}/${quota.limit} Pakete im ${quota.plan}-Plan. Upgrade für mehr.`,
+              reason: "quota_exceeded",
+              used: quota.used,
+              limit: quota.limit,
+              plan: quota.plan,
+            },
+            { status: 402 },
+          );
+        }
+        return NextResponse.json(
+          { error: "Generierung nicht erlaubt.", reason: quota.reason },
+          { status: 400 },
+        );
+      }
+    }
+
+    const effectiveKey = userApiKey || storedKey || null;
+    const client = effectiveKey
+      ? new Anthropic({ apiKey: effectiveKey })
+      : defaultClient;
+    const keySource = userApiKey
+      ? "user-transient"
+      : storedKey
+        ? "user-stored"
+        : "lernly";
 
     const contentBlocks: UserBlock[] = [
       {
@@ -104,16 +217,11 @@ export async function POST(request: Request) {
           },
           title: name,
         });
-      } else if (/\.(txt|md|markdown)$/i.test(name)) {
+      } else {
         contentBlocks.push({
           type: "text",
           text: `=== ${name} ===\n${buffer.toString("utf-8")}`,
         });
-      } else {
-        return NextResponse.json(
-          { error: `Dateityp nicht unterstützt: ${name}. Nur PDF, TXT und MD.` },
-          { status: 400 },
-        );
       }
     }
 
@@ -121,11 +229,11 @@ export async function POST(request: Request) {
       "[/api/generate] starting stream, files:",
       files.map((f) => f.name),
       "key:",
-      usingUserKey ? "user" : "lernly",
+      keySource,
+      "user:",
+      user?.id ?? "anon",
     );
 
-    // Stream to avoid SDK HTTP timeout on long generations.
-    // Disable adaptive thinking — not needed for this task and saves ~50% time.
     const stream = client.messages.stream({
       model: "claude-sonnet-4-6",
       max_tokens: 16000,
@@ -139,31 +247,26 @@ export async function POST(request: Request) {
     const textBlock = finalMessage.content.find((b) => b.type === "text");
     const raw = textBlock && "text" in textBlock ? textBlock.text : "";
 
-    // 1. Entferne Markdown-Backticks (```json ... ```)
     let resultText = raw;
     resultText = resultText.replace(/^[\s\S]*?```(?:json)?\s*/i, "");
     resultText = resultText.replace(/\s*```[\s\S]*$/i, "");
 
-    // 2. Entferne alles VOR dem ersten { und nach dem letzten }
     const firstBrace = resultText.indexOf("{");
     const lastBrace = resultText.lastIndexOf("}");
     if (firstBrace !== -1 && lastBrace !== -1) {
       resultText = resultText.substring(firstBrace, lastBrace + 1);
     }
 
-    // 3. Fix häufige JSON-Probleme
     resultText = resultText
-      .replace(/,\s*}/g, "}") // trailing commas vor }
-      .replace(/,\s*]/g, "]") // trailing commas vor ]
-      .replace(/\n/g, "\\n") // unescaped newlines in strings
-      .replace(/\t/g, "\\t"); // unescaped tabs
+      .replace(/,\s*}/g, "}")
+      .replace(/,\s*]/g, "]")
+      .replace(/\n/g, "\\n")
+      .replace(/\t/g, "\\t");
 
-    // 4. Parse — mit Fallback bei Fehlern
     let parsedJson: unknown;
     try {
       parsedJson = JSON.parse(resultText);
     } catch {
-      // Zweiter Versuch: newlines nur innerhalb von Strings fixen
       try {
         let raw2 = raw;
         raw2 = raw2.replace(/```json\s*/gi, "").replace(/```/g, "");
@@ -173,7 +276,6 @@ export async function POST(request: Request) {
           throw new Error("Kein JSON-Objekt in der Antwort gefunden");
         }
         raw2 = raw2.substring(start, end + 1);
-        // Ersetze echte Newlines innerhalb von Strings mit Leerzeichen
         raw2 = raw2.replace(/"([^"]*)\n([^"]*?)"/g, (match) =>
           match.replace(/\n/g, " "),
         );
@@ -196,7 +298,10 @@ export async function POST(request: Request) {
 
     const parsed = StudyPackSchema.safeParse(parsedJson);
     if (!parsed.success) {
-      console.error("[/api/generate] schema validation failed:", parsed.error.flatten());
+      console.error(
+        "[/api/generate] schema validation failed:",
+        parsed.error.flatten(),
+      );
       return NextResponse.json(
         { error: "Das generierte Lernpaket entspricht nicht dem erwarteten Schema." },
         { status: 502 },
@@ -209,12 +314,8 @@ export async function POST(request: Request) {
     );
 
     let savedId: string | null = null;
-    try {
-      const supabase = await createSupabaseServer();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
+    if (user) {
+      try {
         const { data: row, error: dbError } = await supabase
           .from("study_packs")
           .insert({
@@ -229,11 +330,17 @@ export async function POST(request: Request) {
           console.error("[/api/generate] save failed", dbError);
         } else {
           savedId = row.id as string;
-          console.log(`[/api/generate] saved pack ${savedId} for user ${user.id}`);
         }
+
+        if (!usesByok) {
+          const { error: bumpErr } = await supabase.rpc("bump_pack_usage");
+          if (bumpErr) {
+            console.error("[/api/generate] usage bump failed", bumpErr);
+          }
+        }
+      } catch (saveErr) {
+        console.error("[/api/generate] save threw", saveErr);
       }
-    } catch (saveErr) {
-      console.error("[/api/generate] save threw", saveErr);
     }
 
     return NextResponse.json({
@@ -243,8 +350,10 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("[/api/generate] error", err);
-    const message = err instanceof Anthropic.APIError ? err.message : "Unbekannter Fehler";
-    const status = err instanceof Anthropic.APIError ? err.status ?? 500 : 500;
+    const message =
+      err instanceof Anthropic.APIError ? err.message : "Unbekannter Fehler";
+    const status =
+      err instanceof Anthropic.APIError ? (err.status ?? 500) : 500;
     return NextResponse.json({ error: message }, { status });
   }
 }

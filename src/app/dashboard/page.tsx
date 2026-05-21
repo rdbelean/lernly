@@ -7,6 +7,18 @@ const EXAM_LABEL: Record<string, string> = {
   open_book: "Open Book",
 };
 
+const PLAN_LIMITS: Record<string, number> = {
+  free: 3,
+  pro: 20,
+  team: 50,
+};
+
+const PLAN_LABEL: Record<string, string> = {
+  free: "Gratis",
+  pro: "Pro",
+  team: "Team",
+};
+
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("de-DE", {
     day: "2-digit",
@@ -17,10 +29,25 @@ function formatDate(iso: string) {
 
 export default async function DashboardPage() {
   const supabase = await createClient();
-  const { data: packs, error } = await supabase
-    .from("study_packs")
-    .select("id, title, exam_type, created_at")
-    .order("created_at", { ascending: false });
+
+  const [packsRes, userRowRes] = await Promise.all([
+    supabase
+      .from("study_packs")
+      .select("id, title, exam_type, created_at")
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("users")
+      .select("plan, packs_used_this_month")
+      .single(),
+  ]);
+
+  const { data: packs, error } = packsRes;
+  const profile = userRowRes.data;
+  const plan = profile?.plan ?? "free";
+  const used = profile?.packs_used_this_month ?? 0;
+  const planLimit = PLAN_LIMITS[plan] ?? 0;
+  const planLabel = PLAN_LABEL[plan] ?? plan;
+  const quotaReached = used >= planLimit;
 
   if (error) {
     return (
@@ -44,7 +71,7 @@ export default async function DashboardPage() {
           Deine Lernpakete
         </p>
         <h1
-          className="mb-10 text-white"
+          className="mb-6 text-white"
           style={{
             fontFamily: "var(--font-display)",
             fontSize: "44px",
@@ -55,6 +82,40 @@ export default async function DashboardPage() {
         >
           Dashboard
         </h1>
+
+        <div
+          className="mb-10 flex flex-wrap items-center justify-between gap-3 rounded-2xl px-5 py-4"
+          style={{
+            background: "rgba(20, 22, 28, 0.4)",
+            border: "1px solid rgba(255,255,255,0.1)",
+          }}
+        >
+          <div className="text-[13px]" style={{ color: "rgba(255,255,255,0.7)" }}>
+            <span className="font-medium text-white">{planLabel}-Plan</span>
+            <span className="mx-2 opacity-40">·</span>
+            <span>
+              {used} / {planLimit} Pakete diesen Monat
+            </span>
+          </div>
+          {quotaReached ? (
+            <a
+              href="/dashboard/settings"
+              className="rounded-full bg-white px-4 py-1.5 text-[13px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
+            >
+              Upgrade →
+            </a>
+          ) : (
+            plan === "free" && (
+              <a
+                href="/dashboard/settings"
+                className="text-[13px] underline-offset-2 hover:underline"
+                style={{ color: "rgba(255,255,255,0.55)" }}
+              >
+                Upgrade auf Pro
+              </a>
+            )
+          )}
+        </div>
 
         {packs && packs.length > 0 ? (
           <ul className="grid gap-3 sm:grid-cols-2">
