@@ -2,6 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 import { STUDY_PACK_SYSTEM_PROMPT } from "@/lib/prompts";
 import { StudyPackSchema, type ExamType } from "@/lib/schema";
+import { createClient as createSupabaseServer } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -207,8 +208,37 @@ export async function POST(request: Request) {
       `[/api/generate] done in ${elapsed}s — ${parsed.data.flashcards.length} cards, ${parsed.data.simulator.questions.length} quiz`,
     );
 
+    let savedId: string | null = null;
+    try {
+      const supabase = await createSupabaseServer();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        const { data: row, error: dbError } = await supabase
+          .from("study_packs")
+          .insert({
+            user_id: user.id,
+            title: parsed.data.courseTitle,
+            exam_type: parsed.data.examType,
+            pack_data: parsed.data,
+          })
+          .select("id")
+          .single();
+        if (dbError) {
+          console.error("[/api/generate] save failed", dbError);
+        } else {
+          savedId = row.id as string;
+          console.log(`[/api/generate] saved pack ${savedId} for user ${user.id}`);
+        }
+      }
+    } catch (saveErr) {
+      console.error("[/api/generate] save threw", saveErr);
+    }
+
     return NextResponse.json({
-      id: crypto.randomUUID(),
+      id: savedId ?? crypto.randomUUID(),
+      saved: Boolean(savedId),
       pack: parsed.data,
     });
   } catch (err) {

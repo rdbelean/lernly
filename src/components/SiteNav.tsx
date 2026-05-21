@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ClaudeLogo from "@/components/ClaudeLogo";
+import AuthMenu from "@/components/AuthMenu";
 
 type Language = "en" | "de";
 
@@ -114,6 +115,7 @@ export default function SiteNav({
             <ClaudeLogo size={14} />
             {copy.connect}
           </a>
+          <AuthMenu language={language} />
           {renderLanguageToggle()}
           {onActivateUpload ? (
             <button
@@ -169,6 +171,7 @@ export default function SiteNav({
               <ClaudeLogo size={14} />
               {copy.connect}
             </a>
+            <AuthMenu language={language} />
             {renderLanguageToggle()}
             {onActivateUpload ? (
               <button
