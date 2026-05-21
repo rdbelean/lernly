@@ -1328,118 +1328,211 @@ function ComparisonSection() {
           }
         />
 
-        {/* Narrative block — replaces the old vs-table. The argument shifts
-            from 'ChatGPT bad / Lernly good' to 'reading ≠ knowing — that's a
-            method problem, not a ChatGPT problem'. Validates the user's lived
-            experience instead of attacking a tool they've used. */}
-        <div className="ln-reveal mx-auto mt-12 max-w-[720px]">
-          <div
-            className="rounded-2xl border px-6 py-8 md:px-10 md:py-12"
-            style={{
-              background: "rgba(20, 22, 28, 0.55)",
-              borderColor: "rgba(255,255,255,0.14)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-            }}
-          >
-            <div
-              className="space-y-5 text-[17px] leading-[1.65] md:text-[19px]"
-              style={{ color: "rgba(255,255,255,0.78)" }}
+        {/* "Zwei Mittwoche": same Tuesday night, two outcomes. Split-path
+            cards + a self-drawing retention curve as the proof element.
+            Argument is method-based ('reading decays, recall holds'), not a
+            tool attack. */}
+        <div className="ln-reveal mx-auto mt-12 max-w-[860px]">
+          {/* Shared time anchor */}
+          <div className="flex justify-center">
+            <span
+              className="inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-[12px] font-semibold tracking-[0.1em]"
+              style={{
+                background: "rgba(255,255,255,0.05)",
+                borderColor: "rgba(255,255,255,0.14)",
+                color: "rgba(255,255,255,0.75)",
+              }}
             >
-              <p>
-                {isEn ? (
-                  <>
-                    <strong className="text-white">Tuesday, 23:47.</strong> You
-                    paste the lecture slides into ChatGPT. Get a summary. Read
-                    it. Close the tab.
-                  </>
-                ) : (
-                  <>
-                    <strong className="text-white">Dienstag, 23:47.</strong> Du
-                    wirfst die VL-Folien in ChatGPT. Bekommst eine
-                    Zusammenfassung. Liest sie. Tab zu.
-                  </>
-                )}
+              <span className="ln-pulse-dot" aria-hidden />
+              {isEn ? "WED 09:00 · EXAM" : "MITTWOCH 09:00 · KLAUSUR"}
+            </span>
+          </div>
+
+          {/* Two paths */}
+          <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+            {/* ChatGPT path (rose) */}
+            <div
+              className="ln-glass-card flex flex-col p-6"
+              style={{
+                background:
+                  "linear-gradient(160deg, rgba(20,22,28,0.7), rgba(251,113,133,0.04))",
+                borderColor: "rgba(251,113,133,0.18)",
+              }}
+            >
+              <div
+                className="mb-3 text-[11px] font-semibold uppercase tracking-[0.16em]"
+                style={{ color: "rgb(252,165,165)" }}
+              >
+                {isEn ? "Tue 23:47 → ChatGPT" : "Di 23:47 → ChatGPT"}
+              </div>
+              <p
+                className="text-[15px] leading-relaxed"
+                style={{ color: "rgba(255,255,255,0.8)" }}
+              >
+                {isEn
+                  ? "Slides in. Summary out. Read it. Tab closed."
+                  : "Folien rein. Zusammenfassung raus. Gelesen. Tab zu."}
               </p>
-              <p>
-                {isEn ? (
-                  <>
-                    <strong className="text-white">Wednesday.</strong> You
-                    remember nothing.
-                  </>
-                ) : (
-                  <>
-                    <strong className="text-white">Mittwoch.</strong> Du
-                    erinnerst dich an nichts.
-                  </>
-                )}
-              </p>
-              <p>
-                {isEn ? (
-                  <>
-                    Because{" "}
-                    <em className="lernly-italic" style={{ color: "white" }}>
-                      reading
-                    </em>{" "}
-                    a summary ≠{" "}
-                    <em className="lernly-italic" style={{ color: "white" }}>
-                      knowing
-                    </em>{" "}
-                    the material.
-                    <br />
-                    That's not a ChatGPT problem. It's a method problem.
-                  </>
-                ) : (
-                  <>
-                    Weil eine Zusammenfassung{" "}
-                    <em className="lernly-italic" style={{ color: "white" }}>
-                      lesen
-                    </em>{" "}
-                    ≠ den Stoff{" "}
-                    <em className="lernly-italic" style={{ color: "white" }}>
-                      können
-                    </em>{" "}
-                    ist.
-                    <br />
-                    Das ist kein ChatGPT-Problem. Das ist ein Methoden-Problem.
-                  </>
-                )}
-              </p>
-              <p className="text-white">
-                {isEn ? (
-                  <>
-                    Lernly does the step{" "}
-                    <em className="lernly-italic" style={{ color: "var(--color-ln-cyan)" }}>
-                      you never do yourself
-                    </em>
-                    : it asks you back, until it sticks.
-                  </>
-                ) : (
-                  <>
-                    Lernly macht den Schritt,{" "}
-                    <em className="lernly-italic" style={{ color: "var(--color-ln-cyan)" }}>
-                      den du selbst nie machst
-                    </em>
-                    : es fragt dich zurück, bis es sitzt.
-                  </>
-                )}
-              </p>
+              <div
+                className="mt-auto pt-5 text-[15px] font-semibold"
+                style={{ color: "rgb(252,165,165)" }}
+              >
+                {isEn ? "Wednesday: blank." : "Mittwoch: leerer Kopf."}
+              </div>
             </div>
 
-            <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <a
-                href="#demo"
-                className="rounded-full bg-white px-5 py-2.5 text-[14px] font-semibold text-[#0F1535] transition hover:bg-white/90"
+            {/* Lernly path (cyan/sage) */}
+            <div
+              className="ln-glass-card flex flex-col p-6"
+              style={{
+                background:
+                  "linear-gradient(160deg, rgba(20,22,28,0.7), rgba(124,196,160,0.06))",
+                borderColor: "rgba(124,196,160,0.22)",
+              }}
+            >
+              <div
+                className="mb-3 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.16em]"
+                style={{ color: "rgb(134,239,172)" }}
               >
-                {isEn ? "See a real pack →" : "Echtes Paket ansehen →"}
-              </a>
-              <span
-                className="text-[12px]"
-                style={{ color: "rgba(255,255,255,0.45)" }}
+                <span className="ln-pulse-dot-green" aria-hidden />
+                {isEn ? "Tue 23:47 → Lernly" : "Di 23:47 → Lernly"}
+              </div>
+              <p
+                className="text-[15px] leading-relaxed"
+                style={{ color: "rgba(255,255,255,0.8)" }}
               >
-                {isEn ? "60 seconds, no signup" : "60 Sekunden, kein Login"}
+                {isEn
+                  ? "It quizzes you back. Again. Until it sticks."
+                  : "Es fragt dich zurück. Wieder. Bis es sitzt."}
+              </p>
+              <div
+                className="mt-auto pt-5 text-[15px] font-semibold"
+                style={{ color: "rgb(134,239,172)" }}
+              >
+                {isEn ? "Wednesday: it sticks." : "Mittwoch: sitzt."}
+              </div>
+            </div>
+          </div>
+
+          {/* Retention curve — the proof */}
+          <div
+            className="ln-glass-card mt-4 px-6 py-7 md:px-8"
+            style={{
+              background: "rgba(20, 22, 28, 0.5)",
+              borderColor: "rgba(255,255,255,0.1)",
+            }}
+          >
+            <div className="flex items-center justify-between text-[11px] font-mono">
+              <span style={{ color: "rgba(255,255,255,0.4)" }}>
+                {isEn ? "Di 23:47" : "Di 23:47"}
+              </span>
+              <span style={{ color: "rgba(255,255,255,0.55)" }}>
+                {isEn ? "Retention" : "Was hängenbleibt"}
+              </span>
+              <span style={{ color: "rgba(255,255,255,0.4)" }}>
+                {isEn ? "Wed 09:00" : "Mi 09:00"}
               </span>
             </div>
+
+            <svg
+              className="mt-3 w-full"
+              viewBox="0 0 320 110"
+              fill="none"
+              preserveAspectRatio="none"
+              style={{ height: "110px" }}
+              aria-hidden
+            >
+              {/* baseline */}
+              <line
+                x1="6"
+                y1="100"
+                x2="314"
+                y2="100"
+                stroke="rgba(255,255,255,0.08)"
+                strokeWidth="1"
+              />
+              {/* ChatGPT — exponential decay */}
+              <path
+                className="ln-curve-line ln-curve-rose"
+                d="M 8 22 C 70 32 150 88 314 100"
+                stroke="var(--color-ln-rose)"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                vectorEffect="non-scaling-stroke"
+              />
+              {/* Lernly — staircase recall, stays high */}
+              <path
+                className="ln-curve-line ln-curve-sage"
+                d="M 8 22 L 78 42 L 78 18 L 158 38 L 158 14 L 238 30 L 238 12 L 314 20"
+                stroke="var(--color-ln-cyan)"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                vectorEffect="non-scaling-stroke"
+              />
+              {/* recall markers */}
+              <circle className="ln-curve-dot" cx="78" cy="18" r="3.5" fill="var(--color-ln-cyan)" />
+              <circle className="ln-curve-dot" cx="158" cy="14" r="3.5" fill="var(--color-ln-cyan)" />
+              <circle className="ln-curve-dot" cx="238" cy="12" r="3.5" fill="var(--color-ln-cyan)" />
+            </svg>
+
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[12px]">
+              <span className="inline-flex items-center gap-1.5" style={{ color: "rgb(252,165,165)" }}>
+                <span className="inline-block h-2 w-2 rounded-full" style={{ background: "var(--color-ln-rose)" }} />
+                {isEn ? "Read a summary" : "Zusammenfassung gelesen"}
+              </span>
+              <span className="inline-flex items-center gap-1.5" style={{ color: "rgb(134,239,172)" }}>
+                <span className="inline-block h-2 w-2 rounded-full" style={{ background: "var(--color-ln-cyan)" }} />
+                {isEn ? "Actively quizzed" : "Aktiv abgefragt"}
+              </span>
+            </div>
+
+            <p
+              className="mt-4 text-center text-[13.5px] leading-relaxed"
+              style={{ color: "rgba(255,255,255,0.62)" }}
+            >
+              {isEn ? (
+                <>
+                  Reading{" "}
+                  <em className="lernly-italic" style={{ color: "white" }}>
+                    decays
+                  </em>
+                  . Recall{" "}
+                  <em className="lernly-italic" style={{ color: "white" }}>
+                    holds
+                  </em>
+                  . It's not a ChatGPT problem — it's a method problem.
+                </>
+              ) : (
+                <>
+                  Lesen{" "}
+                  <em className="lernly-italic" style={{ color: "white" }}>
+                    verfällt
+                  </em>
+                  . Abfragen{" "}
+                  <em className="lernly-italic" style={{ color: "white" }}>
+                    hält
+                  </em>
+                  . Kein ChatGPT-Problem — ein Methoden-Problem.
+                </>
+              )}
+            </p>
+          </div>
+
+          {/* CTA */}
+          <div className="mt-6 flex flex-col items-center gap-3">
+            <a
+              href="#demo"
+              className="rounded-full bg-white px-6 py-3 text-[14px] font-semibold text-[#0F1535] transition hover:bg-white/90"
+            >
+              {isEn ? "See a real pack →" : "Echtes Paket ansehen →"}
+            </a>
+            <span
+              className="text-[12px]"
+              style={{ color: "rgba(255,255,255,0.45)" }}
+            >
+              {isEn ? "60 seconds, no signup" : "60 Sekunden, kein Login"}
+            </span>
           </div>
         </div>
       </div>
