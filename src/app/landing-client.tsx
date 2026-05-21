@@ -1822,6 +1822,7 @@ type PricingTier = {
   ctaLabel: string;
   ctaFilled: boolean;
   highlighted?: boolean;
+  comingSoon?: boolean;
 };
 
 const PRICING_TIERS_DE: PricingTier[] = [
@@ -1890,14 +1891,16 @@ const PRICING_TIERS_DE: PricingTier[] = [
     priceSize: "44px",
     subtitle: "/ Monat",
     anchorPrice: "34.99€",
+    badge: "BALD",
     bullets: [
       { text: "60 Pakete pro Monat — shared zwischen 3 Sitzen" },
       { text: "Günstiger als 3× Pro einzeln" },
       { text: "Alles aus Pro inklusive" },
       { text: "Priorisierter Support" },
     ],
-    ctaLabel: "Team starten",
+    ctaLabel: "Bald verfügbar",
     ctaFilled: false,
+    comingSoon: true,
   },
 ];
 
@@ -1967,14 +1970,16 @@ const PRICING_TIERS_EN: PricingTier[] = [
     priceSize: "44px",
     subtitle: "/ month",
     anchorPrice: "34.99€",
+    badge: "SOON",
     bullets: [
       { text: "60 packs per month — shared across 3 seats" },
       { text: "Cheaper than 3× Pro" },
       { text: "Everything in Pro included" },
       { text: "Priority support" },
     ],
-    ctaLabel: "Start Team",
+    ctaLabel: "Coming soon",
     ctaFilled: false,
+    comingSoon: true,
   },
 ];
 
@@ -2167,9 +2172,6 @@ function BYOKBanner({ onOpenConnect }: { onOpenConnect: () => void }) {
         <div className="byok-prices">
           <span>
             Pro + Key: <strong>11.99€</strong> <s>14.99€</s>
-          </span>
-          <span>
-            Team + Key: <strong>21.99€</strong> <s>24.99€</s>
           </span>
         </div>
         <button type="button" onClick={handleConnect} className="byok-btn">
@@ -2388,16 +2390,21 @@ function PricingCard({
     ctaLabel,
     ctaFilled,
     highlighted,
+    comingSoon,
   } = tier;
+  const badgeBg = comingSoon
+    ? "rgba(255,255,255,0.85)"
+    : "var(--color-ln-cyan)";
   return (
     <div
-      className="ln-reveal ln-glass-card relative flex flex-col"
+      className="ln-reveal ln-glass-card relative flex h-full flex-col"
       style={{
-        padding: "36px 32px",
+        padding: "28px 22px",
         ...(highlighted && {
           borderColor: "rgba(91, 184, 216, 0.35)",
           boxShadow: "0 0 40px rgba(91, 184, 216, 0.08)",
         }),
+        ...(comingSoon && { opacity: 0.7 }),
       }}
     >
       {badge && (
@@ -2407,13 +2414,14 @@ function PricingCard({
             top: "-12px",
             left: "50%",
             transform: "translateX(-50%)",
-            background: "var(--color-ln-cyan)",
+            background: badgeBg,
             color: "#000",
             fontSize: "11px",
-            fontWeight: 600,
+            fontWeight: 700,
             borderRadius: "20px",
             padding: "3px 12px",
             letterSpacing: "0.05em",
+            whiteSpace: "nowrap",
           }}
         >
           {badge}
@@ -2427,9 +2435,7 @@ function PricingCard({
         {name}
       </div>
 
-      <div
-        className="mt-3 text-[18px] font-semibold leading-[1.2] text-white"
-      >
+      <div className="mt-3 text-[18px] font-semibold leading-[1.2] text-white">
         {outcomeHeadline}
       </div>
 
@@ -2463,26 +2469,40 @@ function PricingCard({
         </div>
       )}
 
-      <div className="mt-5 flex items-baseline gap-2">
-        {anchorPrice && <span className="ln-anchor-price">{anchorPrice}</span>}
-        <span
-          className="ln-stat-gradient-blue font-bold leading-none"
-          style={{ fontSize: priceSize, letterSpacing: "-1.6px" }}
-        >
-          {price}
-        </span>
-        <span
-          className="text-[14px]"
-          style={{ color: "var(--color-ln-mute)" }}
-        >
-          {subtitle}
-        </span>
+      {/* Price block — anchor sits ABOVE the main price so the line never wraps. */}
+      <div className="mt-auto pt-5">
+        {anchorPrice && (
+          <div className="ln-anchor-price-line">
+            <span className="ln-anchor-price">{anchorPrice}</span>
+            <span
+              className="text-[11px] font-medium uppercase tracking-[0.15em]"
+              style={{ color: "rgba(251,191,36,0.85)" }}
+            >
+              {comingSoon ? "Geplant" : "Founder"}
+            </span>
+          </div>
+        )}
+        <div className="flex items-baseline gap-1.5">
+          <span
+            className="ln-stat-gradient-blue font-bold leading-none"
+            style={{ fontSize: priceSize, letterSpacing: "-1.6px" }}
+          >
+            {price}
+          </span>
+          <span
+            className="text-[13px]"
+            style={{ color: "var(--color-ln-mute)" }}
+          >
+            {subtitle}
+          </span>
+        </div>
       </div>
 
       <button
-        onClick={onCta}
+        onClick={comingSoon ? undefined : onCta}
+        disabled={comingSoon}
         className={
-          "mt-6 rounded-xl px-5 py-3 text-[14px] transition " +
+          "mt-5 rounded-xl px-5 py-3 text-[14px] transition disabled:cursor-not-allowed " +
           (ctaFilled
             ? "bg-white font-semibold text-[color:var(--color-ln-bg-bot)] hover:bg-white/90"
             : "border bg-transparent font-medium text-white hover:bg-white/5")
@@ -2493,7 +2513,27 @@ function PricingCard({
             : { borderColor: "rgba(255, 255, 255, 0.14)" }
         }
       >
-        {ctaLabel}
+        {comingSoon ? (
+          <span className="inline-flex items-center justify-center gap-1.5">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            {ctaLabel}
+          </span>
+        ) : (
+          ctaLabel
+        )}
       </button>
     </div>
   );

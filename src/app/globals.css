@@ -1660,11 +1660,18 @@
 
 .ln-anchor-price {
   font-family: var(--font-mono);
-  font-size: 18px;
-  color: rgba(255, 255, 255, 0.32);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.4);
   text-decoration: line-through;
   text-decoration-color: rgba(251, 113, 133, 0.6);
   text-decoration-thickness: 2px;
+}
+
+.ln-anchor-price-line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
 }
 
 /* ========== BYOK BANNER (below the 3 pricing cards) ========== */
