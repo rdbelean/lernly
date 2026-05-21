@@ -268,13 +268,13 @@ export default function Home() {
             error={error}
             onGenerate={handleGenerate}
           />
-          <SocialProof />
-          <ShowcaseSection />
-          <ComparisonSection />
           <ResultPreview />
-          <BentoFeatures />
           <HowItWorks />
           <PipelineCta onActivateUpload={activateUpload} />
+          <ShowcaseSection />
+          <ComparisonSection />
+          <BentoFeatures />
+          <SocialProof />
           {pack && (
             <section ref={resultRef} id="result" className="scroll-mt-24">
               <ResultSection pack={pack} onReset={clearPack} />
@@ -348,7 +348,7 @@ function Hero(props: HeroProps) {
         >
           <span className="block sm:inline">{isEn ? "Upload it." : "Lade hoch."}</span>{" "}
           <span className="block sm:inline" style={{ color: "rgb(255, 255, 255)" }}>
-            {isEn ? "Pass the exam." : "Klausur bestanden."}
+            {isEn ? "Sorted in 2 min." : "In 2 Min sortiert."}
           </span>
         </h1>
 
@@ -366,7 +366,7 @@ function Hero(props: HeroProps) {
             className="rounded-full px-7 py-[14px] text-[16px] font-semibold transition hover:bg-white/90"
             style={{ background: "#ffffff", color: "#1a2647" }}
           >
-            {isEn ? "Create pack →" : "Paket erstellen →"}
+            {isEn ? "Drop in PDFs →" : "Jetzt PDFs reinwerfen →"}
           </button>
           <a
             href="#how"
@@ -405,7 +405,7 @@ function Hero(props: HeroProps) {
             ● {isEn ? "3 free packs" : "3 Pakete gratis"}
           </span>
           <span className="ln-hero-badge" style={{ color: "rgb(178, 156, 240)" }}>
-            ● {isEn ? "Any subject" : "Jedes Fach"}
+            ● {isEn ? "DE/EN" : "DE/EN"}
           </span>
         </div>
       </div>
@@ -423,7 +423,7 @@ function StudyPackCockpitMockup({ onActivate }: { onActivate: () => void }) {
         <div>
           <div className="ln-card-top-status">
             <span className="ln-pulse-dot-green" aria-hidden />
-            <span>{isEn ? "Generated" : "Generiert"}</span>
+            <span>{isEn ? "Ready" : "Fertig"}</span>
           </div>
           <div className="ln-cockpit-title">
             {isEn
@@ -843,9 +843,11 @@ function ShowcaseSection() {
             className="mt-4 max-w-3xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            {isEn ? "Too much material. Zero plan." : "Zu viel Material. Null Plan."}{" "}
+            {isEn
+              ? "Business, Med, Law — whatever you study."
+              : "BWL, Medizin, Jura — egal was du studierst."}{" "}
             <span className="lernly-italic" style={{ color: "var(--color-ln-ink-soft)" }}>
-              {isEn ? "A pack in 2 minutes." : "Paket in 2 Minuten."}
+              {isEn ? "Lernly reads it." : "Lernly liest's."}
             </span>
           </h2>
         </div>
@@ -884,7 +886,7 @@ function ShowcaseCard({
           style={{ color: "var(--color-ln-ink-soft)" }}
         >
           <span className="ln-pulse-dot-green" aria-hidden />
-          <span>{isEn ? "Generated" : "Generiert"}</span>
+          <span>{isEn ? "Ready" : "Fertig"}</span>
         </div>
         <span
           className="rounded-lg border px-2.5 py-1 font-mono text-[12px] font-semibold"
@@ -942,9 +944,9 @@ function ComparisonSection() {
             className="mt-4 max-w-3xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            {isEn ? "ChatGPT makes text." : "ChatGPT macht Text."}{" "}
+            {isEn ? "ChatGPT dumps text." : "ChatGPT spuckt Text."}{" "}
             <span className="lernly-italic" style={{ color: "var(--color-ln-ink-soft)" }}>
-              {isEn ? "Lernly makes training." : "Lernly macht Training."}
+              {isEn ? "Lernly quizzes you." : "Lernly fragt dich ab."}
             </span>
           </h2>
         </div>
@@ -1137,7 +1139,7 @@ function BentoFeatures() {
               {isEn ? "Even when Wi-Fi gives up" : "Auch wenn's WLAN streikt"}
             </CardEyebrow>
             <CardTitle className="mt-3">
-              {isEn ? "Studies where you study." : "Lernt wo du lernst."}
+              {isEn ? "Learns offline with you." : "Lernt offline mit dir."}
             </CardTitle>
             <CardDesc>
               {isEn
@@ -1155,7 +1157,7 @@ function BentoFeatures() {
               {isEn ? "What actually gets tested." : "Was wirklich geprüft wird."}
             </CardTitle>
             <div className="mt-5">
-              <PrivacyRow label={isEn ? "Your material" : "Dein Skript"} value="400 slides" />
+              <PrivacyRow label={isEn ? "Your material" : "Dein Skript"} value={isEn ? "400 slides" : "400 Folien"} />
               <PrivacyRow label={isEn ? "Exam-relevant" : "Prüfungsrelevant"} value="~40" />
               <PrivacyRow label={isEn ? "Lernly shows" : "Lernly zeigt"} value={isEn ? "which" : "welche"} />
               <PrivacyRow label={isEn ? "Time saved" : "Zeit gespart"} value={isEn ? "hours" : "Stunden"} />
@@ -1337,12 +1339,12 @@ function HowItWorks() {
         },
         {
           label: "Step 2",
-          title: "Build",
+          title: "Lernly sorts",
           desc: "No ChatGPT-style wall of text. No extra PDF. A finished study system: flashcards, quiz, essay blueprint — all interactive.",
         },
         {
           label: "Step 3",
-          title: "Pass",
+          title: "Drill",
           desc: "Flip, test, repeat — until it sticks. Then you walk into the exam knowing you studied the right things.",
         },
       ]
@@ -1354,12 +1356,12 @@ function HowItWorks() {
         },
         {
           label: "Schritt 2",
-          title: "Bauen",
+          title: "Lernly sortiert",
           desc: "Keine Textwand wie bei ChatGPT. Kein weiteres PDF. Ein fertiges Lernsystem: Karteikarten, Quiz, Essay-Blueprint — alles interaktiv.",
         },
         {
           label: "Schritt 3",
-          title: "Bestehen",
+          title: "Üben",
           desc: "Flippen, testen, wiederholen — bis es sitzt. Dann gehst du in die Klausur und weißt: du hast das Richtige gelernt.",
         },
       ];
@@ -1375,9 +1377,9 @@ function HowItWorks() {
             className="mt-4 max-w-2xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            {isEn ? "From chaos to a plan." : "Vom Chaos zum Plan."}{" "}
+            {isEn ? "Three steps." : "Drei Schritte."}{" "}
             <span className="lernly-italic" style={{ color: "var(--color-ln-ink-soft)" }}>
-              {isEn ? "In three steps." : "In drei Schritten."}
+              {isEn ? "Doable even at 2 a.m." : "Auch um 2 Uhr nachts machbar."}
             </span>
           </h2>
         </div>
@@ -1567,8 +1569,8 @@ function EmailCapture({ pack }: { pack: StudyPack }) {
           <span className="text-[24px]">🔒</span>
           <h3 className="text-[22px] font-semibold tracking-[-0.3px] text-white">
             {isEn
-              ? "Save this pack — create your free account"
-              : "Pack speichern — kostenlosen Account erstellen"}
+              ? "Save this pack — free account in 10 seconds"
+              : "Paket speichern — kostenloser Account in 10 Sekunden"}
           </h3>
         </div>
         <p className="mt-2 text-[14px]" style={{ color: "var(--color-ln-mute)" }}>
@@ -1672,7 +1674,7 @@ const PRICING_TIERS_DE: PricingTier[] = [
     plan: "free",
     name: "Gratis",
     tagline: "Zum Ausprobieren",
-    outcomeHeadline: "Erste Klausur überstehen",
+    outcomeHeadline: "Erste Klausur testen",
     price: "0€",
     priceSize: "40px",
     subtitle: "für immer",
@@ -1689,7 +1691,7 @@ const PRICING_TIERS_DE: PricingTier[] = [
     plan: "pro",
     name: "Pro",
     tagline: "Wenn mehrere Klausuren anstehen",
-    outcomeHeadline: "Klausurenphase bestehen",
+    outcomeHeadline: "Klausurenphase durchziehen",
     price: "6.99€",
     priceSize: "48px",
     subtitle: "/ Monat",
@@ -1730,7 +1732,7 @@ const PRICING_TIERS_EN: PricingTier[] = [
     plan: "free",
     name: "Free",
     tagline: "To try it out",
-    outcomeHeadline: "Survive your first exam",
+    outcomeHeadline: "Try your first exam",
     price: "0€",
     priceSize: "40px",
     subtitle: "forever",
@@ -1747,7 +1749,7 @@ const PRICING_TIERS_EN: PricingTier[] = [
     plan: "pro",
     name: "Pro",
     tagline: "When several exams are coming up",
-    outcomeHeadline: "Make it through exam season",
+    outcomeHeadline: "Push through exam season",
     price: "6.99€",
     priceSize: "48px",
     subtitle: "/ month",
@@ -1891,8 +1893,8 @@ function PricingSection({
           style={{ color: "rgba(255,255,255,0.3)" }}
         >
           {isEn
-            ? "All prices include VAT. Cancel anytime. Comparison values reflect typical market prices for equivalent services."
-            : "Alle Preise inkl. MwSt. Jederzeit kündbar. Vergleichswerte basieren auf typischen Marktpreisen für äquivalente Leistungen."}
+            ? "All prices include VAT. Cancel anytime."
+            : "Alle Preise inkl. MwSt. Jederzeit kündbar."}
         </p>
       </div>
     </section>
@@ -1945,8 +1947,8 @@ function BYOKBanner({ onOpenConnect }: { onOpenConnect: () => void }) {
           </h4>
           <p>
             {isEn
-              ? "Save €2/month forever + unlimited packs. Worth €240+/year if you stay 12 months."
-              : "Spar €2/Monat dauerhaft + unbegrenzte Pakete. Wert: €240+/Jahr wenn du 12 Monate bleibst."}
+              ? "Save €2/month forever. Packs without a limit."
+              : "Spar €2/Monat dauerhaft. Unbegrenzte Pakete."}
           </p>
         </div>
       </div>
@@ -2308,16 +2310,16 @@ function BottomCta() {
             fontSize: "clamp(34px, 5.5vw, 64px)",
           }}
         >
-          {isEn ? "No more studying till 2am." : "Schluss mit Lernen bis 2 Uhr morgens."}{" "}
+          {isEn ? "The exam is coming anyway." : "Die Klausur kommt egal."}{" "}
           <span className="lernly-italic text-white">
-            {isEn ? "In 2 minutes you've got your pack." : "In 2 Minuten hast du dein Paket."}
+            {isEn ? "Upload your PDFs now." : "Lade jetzt deine PDFs hoch."}
           </span>
         </h2>
         <a
           href="#upload"
           className="mt-10 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-[15px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
         >
-          {isEn ? "Start now" : "Jetzt anfangen"}
+          {isEn ? "Upload your PDFs" : "PDFs hochladen"}
           <span>↓</span>
         </a>
         <p
@@ -2352,8 +2354,8 @@ function SocialProof() {
         }}
       >
         {isEn
-          ? "Already tested at Uppsala University · 120+ study packs created"
-          : "Bereits an der Uppsala Universität getestet · 120+ Lernpakete erstellt"}
+          ? "Born from an exam in Uppsala · 120+ packs built so far"
+          : "Entstanden während einer Klausur in Uppsala · 120+ Pakete bisher gebaut"}
       </span>
     </div>
   );
@@ -2376,7 +2378,7 @@ function ResultPreview() {
           >
             {isEn ? "Not another PDF." : "Nicht noch ein PDF."}{" "}
             <span className="lernly-italic" style={{ color: "var(--color-ln-ink-soft)" }}>
-              {isEn ? "A study mode." : "Ein Lernmodus."}
+              {isEn ? "Something to click." : "Was zum Klicken."}
             </span>
           </h2>
         </div>
@@ -2434,7 +2436,7 @@ function PreviewCard({
     <div className="ln-reveal ln-preview-artifact-card">
       <div>
         <div className="ln-preview-artifact-label">
-          {isEn ? "Generated page" : "Generierte Seite"}
+          {isEn ? "Preview" : "Vorschau"}
         </div>
         <h3>{title}</h3>
         <p>{desc}</p>
@@ -2550,7 +2552,7 @@ function PipelineCta({ onActivateUpload }: { onActivateUpload: () => void }) {
         className="rounded-full px-7 py-[14px] text-[16px] font-semibold transition hover:bg-white/90"
         style={{ background: "#ffffff", color: "#1a2647" }}
       >
-        {isEn ? "Test it with your material →" : "Jetzt mit deinem Material testen →"}
+        {isEn ? "Start with your PDFs →" : "Mit deinen PDFs starten →"}
       </button>
     </div>
   );
@@ -2565,11 +2567,11 @@ const FAQ_ITEMS_DE: { q: string; a: string }[] = [
   },
   {
     q: "Welche Dateiformate funktionieren?",
-    a: "PDF, TXT und MD. PowerPoint-Support kommt bald.",
+    a: "PDF, TXT und MD. PowerPoint kannst du als PDF exportieren — geht in 10 Sekunden.",
   },
   {
     q: "Wie gut sind die Karteikarten?",
-    a: "Besser als die meisten selbstgeschriebenen. Die KI extrahiert nicht nur Definitionen — sie versteht Zusammenhänge, markiert Prüfungsrelevanz und gibt dir Template-Sätze zum direkt Verwenden.",
+    a: "Konkret: jede Karte mit Quelle und Prüfungsrelevanz. Template-Sätze die du direkt im Essay verwenden kannst. Plus: in 2 Minuten fertig statt 45.",
   },
   {
     q: "Was ist der Unterschied zu ChatGPT?",
@@ -2588,11 +2590,11 @@ const FAQ_ITEMS_EN: { q: string; a: string }[] = [
   },
   {
     q: "Which file formats work?",
-    a: "PDF, TXT, and MD. PowerPoint support is coming soon.",
+    a: "PDF, TXT, and MD. Export your PowerPoint as PDF — takes 10 seconds.",
   },
   {
     q: "How good are the flashcards?",
-    a: "Better than most hand-written ones. The AI does not just extract definitions — it understands relationships, marks exam relevance, and gives you ready-to-use template sentences.",
+    a: "Concretely: every card has its source and exam relevance. Template sentences you can drop straight into your essay. Plus: 2 minutes instead of 45.",
   },
   {
     q: "How is this different from ChatGPT?",
