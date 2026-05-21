@@ -5,17 +5,20 @@ const FOOTER_COPY: Record<
   {
     legalNotice: string;
     privacy: string;
+    terms: string;
     contact: string;
   }
 > = {
   en: {
     legalNotice: "Legal notice",
     privacy: "Privacy",
+    terms: "Terms",
     contact: "Contact",
   },
   de: {
     legalNotice: "Impressum",
     privacy: "Datenschutz",
+    terms: "AGB",
     contact: "Kontakt",
   },
 };
@@ -49,6 +52,9 @@ export default function SiteFooter({ language = "en" }: { language?: Language })
           </a>
           <a href="/datenschutz" className="transition hover:text-white">
             {copy.privacy}
+          </a>
+          <a href="/agb" className="transition hover:text-white">
+            {copy.terms}
           </a>
           <a
             href="mailto:info@lernly-app.de"

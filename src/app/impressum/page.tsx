@@ -112,6 +112,14 @@ function ImpressumContent() {
             </section>
 
             <section style={sectionStyle}>
+              <h2 style={headingStyle}>Umsatzsteuer</h2>
+              <p style={bodyStyle}>
+                Gemäß § 19 UStG wird keine Umsatzsteuer berechnet
+                (Kleinunternehmerregelung).
+              </p>
+            </section>
+
+            <section style={sectionStyle}>
               <h2 style={headingStyle}>Streitschlichtung</h2>
               <p style={bodyStyle}>
                 Die Europäische Kommission stellt eine Plattform zur

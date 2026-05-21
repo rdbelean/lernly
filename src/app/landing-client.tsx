@@ -972,7 +972,7 @@ function ComparisonSection() {
             className="mt-4 max-w-3xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            {isEn ? "ChatGPT dumps text." : "ChatGPT spuckt Text."}{" "}
+            {isEn ? "ChatGPT delivers text." : "ChatGPT liefert Text."}{" "}
             <span className="lernly-italic" style={{ color: "var(--color-ln-ink-soft)" }}>
               {isEn ? "Lernly quizzes you." : "Lernly fragt dich ab."}
             </span>
@@ -990,7 +990,11 @@ function ComparisonSection() {
                 : "2000 Wörter mehr. Und wieder musst du selbst planen."}
             </h3>
             <div className="mt-8 space-y-3">
-              <ComparisonRow label="Output" value={isEn ? "Wall of text" : "Textwand"} tone="muted" />
+              <ComparisonRow
+                label="Output"
+                value={isEn ? "Long-form prose" : "Fließtext (1.500+ Wörter)"}
+                tone="muted"
+              />
               <ComparisonRow label={isEn ? "Next step" : "Nächster Schritt"} value={isEn ? "Unclear" : "Unklar"} tone="muted" />
               <ComparisonRow label={isEn ? "Studying" : "Lernen"} value={isEn ? "Read and hope" : "Lesen und hoffen"} tone="muted" />
             </div>
@@ -1919,8 +1923,8 @@ function PricingSection({
           style={{ color: "rgba(255,255,255,0.3)" }}
         >
           {isEn
-            ? "All prices include VAT. Cancel anytime."
-            : "Alle Preise inkl. MwSt. Jederzeit kündbar."}
+            ? "Prices are final; no VAT charged (small business rule, § 19 UStG). Cancel anytime."
+            : "Endpreise — gemäß § 19 UStG (Kleinunternehmerregelung) wird keine Umsatzsteuer berechnet. Jederzeit kündbar."}
         </p>
       </div>
     </section>
@@ -2380,8 +2384,8 @@ function SocialProof() {
         }}
       >
         {isEn
-          ? "Born from an exam in Uppsala · 120+ packs built so far"
-          : "Entstanden während einer Klausur in Uppsala · 120+ Pakete bisher gebaut"}
+          ? "Born from a real exam at Uppsala University — built by a student for students."
+          : "Entstanden während einer Klausur an der Uppsala Universität — von einem Studi für Studis gebaut."}
       </span>
     </div>
   );
@@ -2601,7 +2605,7 @@ const FAQ_ITEMS_DE: { q: string; a: string }[] = [
   },
   {
     q: "Was ist der Unterschied zu ChatGPT?",
-    a: "ChatGPT gibt dir eine Textwand. Lernly gibt dir ein Lernsystem — interaktive Karteikarten zum Flippen, einen Prüfungssimulator mit Feedback, und einen Essay-Blueprint mit fertigen Formulierungen.",
+    a: "ChatGPT gibt dir Fließtext. Lernly gibt dir ein interaktives Lernsystem — Karteikarten zum Flippen, einen Prüfungssimulator mit Feedback und einen Essay-Blueprint mit fertigen Formulierungen.",
   },
   {
     q: "Was wenn das Paket nichts taugt?",
@@ -2624,7 +2628,7 @@ const FAQ_ITEMS_EN: { q: string; a: string }[] = [
   },
   {
     q: "How is this different from ChatGPT?",
-    a: "ChatGPT gives you a wall of text. Lernly gives you a study system — interactive flashcards to flip, an exam simulator with feedback, and an essay blueprint with ready phrasing.",
+    a: "ChatGPT gives you long-form prose. Lernly gives you an interactive study system — flashcards to flip, an exam simulator with feedback, and an essay blueprint with ready phrasing.",
   },
   {
     q: "What if the pack is bad?",
