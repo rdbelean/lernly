@@ -1,0 +1,745 @@
+{
+  "courseTitle": "Global Strategic Management — Session 15: Diversification",
+  "examType": "essay",
+  "flashcards": [
+    {
+      "id": "1",
+      "category": "Foundations of Diversification",
+      "question": "What are the two core sources of superior profit that also govern diversification decisions?",
+      "answer": "<strong>Industry attractiveness and competitive advantage.</strong><br>A firm earns returns above its cost of capital (ROIC > WACC) either by competing in an attractive industry or by holding a competitive advantage within that industry — or both.<br>Example: A firm considering entering the cloud computing market must ask both 'Is cloud computing a profitable industry?' and 'Can we outcompete AWS or Azure?'",
+      "difficulty": "easy"
+    },
+    {
+      "id": "2",
+      "category": "Foundations of Diversification",
+      "question": "What is the difference between product diversification, geographic diversification, and product-market diversification?",
+      "answer": "<strong>They differ in the dimension along which a firm expands its scope.</strong><br>Product diversification = entering multiple product/service markets. Geographic diversification = expanding across regions or countries. Product-market diversification = simultaneous expansion along both dimensions.<br>Example: A firm selling only cars in Germany that begins selling motorbikes in Asia pursues product-market diversification.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "3",
+      "category": "Foundations of Diversification",
+      "question": "What are the three main motives for diversification, and which one is most likely to destroy shareholder value?",
+      "answer": "<strong>Growth, risk spreading, and value creation — with growth-seeking diversification most likely to destroy shareholder value.</strong><br>Managers may pursue growth to increase their own compensation and status (principal-agent problem), even when acquisitions do not improve profitability. Risk spreading does not create value for shareholders who can already hold diversified portfolios (as shown by the Capital Asset Pricing Model).<br>Example: Conglomerate mergers of the 1960s–70s were largely growth-motivated and subsequently unwound through divestitures.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "4",
+      "category": "Foundations of Diversification",
+      "question": "Why does diversification reduce unsystematic risk but NOT create value for shareholders according to the Capital Asset Pricing Model (CAPM)?",
+      "answer": "<strong>Because shareholders can diversify their own portfolios at zero cost, making corporate diversification redundant for risk reduction.</strong><br>CAPM distinguishes unsystematic (firm-specific) risk, which can be eliminated through a diversified securities portfolio, from systematic (market-wide) risk, which cannot. Diversifying at the corporate level only reduces unsystematic risk — something investors can do themselves for free.<br>Example: A shareholder holding stocks in both an oil company and a tech firm already achieves the same risk reduction a conglomerate merger would provide.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "5",
+      "category": "Foundations of Diversification",
+      "question": "What condition must diversification meet to create shareholder value?",
+      "answer": "<strong>Bringing different businesses under common ownership must increase their total profitability above what each could achieve independently.</strong><br>This means the combined entity must generate synergies — cost savings, revenue gains, or capability transfers — that are not available to standalone firms or achievable through market contracts.<br>Example: If P&G acquires a small brand and its superior distribution network raises that brand's sales significantly, the acquisition creates real value.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "6",
+      "category": "Porter's Three Tests",
+      "question": "What are Porter's Three Essential Tests for diversification to create shareholder value?",
+      "answer": "<strong>The Attractiveness Test, the Cost of Entry Test, and the Better-Off Test.</strong><br>1. Attractiveness Test: the target industry must be structurally attractive (or have the potential to become so). 2. Cost of Entry Test: the entry price must not consume all future profits. 3. Better-Off Test: the new unit or the parent must gain a competitive advantage from the link — i.e., some form of synergy must exist.<br>Example: If a firm pays a massive acquisition premium to enter an attractive market, it may pass test 1 but fail test 2, destroying value overall.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "7",
+      "category": "Porter's Three Tests",
+      "question": "What does the Better-Off Test require, and why is it the most strategically demanding of Porter's three tests?",
+      "answer": "<strong>It requires that the new business unit gains competitive advantage from its link to the corporation, or vice-versa — i.e., genuine synergy must be present.</strong><br>This test is most demanding because synergies are frequently assumed but rarely realized. Integration costs, cultural clashes, and administrative complexity often offset theoretical economies of scope.<br>Example: Daimler's acquisition of Chrysler was meant to create cross-brand synergies but failed the Better-Off Test — costs exceeded any synergy gains, leading to divestiture.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "8",
+      "category": "Porter's Three Tests",
+      "question": "What is the Cost of Entry Test, and what happens when a firm fails it despite entering an attractive industry?",
+      "answer": "<strong>The cost of entry must not capitalize (i.e., absorb) all future profits from the new business.</strong><br>If competition for entry into an attractive industry drives up the acquisition price or entry costs, the net present value of the investment becomes zero or negative — the firm overpays and destroys value even in a good industry.<br>Example: The AOL–Time Warner merger: Time Warner operated in attractive media markets, but the inflated acquisition price (driven by AOL's overvalued equity) eliminated any prospect of returns.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "9",
+      "category": "Sources of Competitive Advantage from Diversification",
+      "question": "What are the two main economic sources of competitive advantage from diversification?",
+      "answer": "<strong>Economies of scope and economies from internalizing transactions.</strong><br>Economies of scope arise from sharing or transferring tangible/intangible resources across business units. Economies from internalization arise because a diversified firm can bypass costly external markets (e.g., capital markets, labor markets) by running internal equivalents with superior information.<br>Example: A diversified firm avoids the information asymmetry of external capital markets by allocating internal funds to its most productive business unit directly.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "10",
+      "category": "Sources of Competitive Advantage from Diversification",
+      "question": "What is the difference between transferring competencies and leveraging competencies in a diversified firm?",
+      "answer": "<strong>Transferring = implanting an existing competency into another business unit; leveraging = using it to create an entirely new business unit.</strong><br>Transferring: a distinctive competency from one business is moved to an existing unit in another industry to improve its performance. Leveraging: the same competency is used as the foundation for building a brand-new business in a different industry.<br>Example: Transferring — Disney moves its brand management expertise to its theme park division. Leveraging — Amazon uses its logistics competency to create Amazon Logistics as a separate business.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "11",
+      "category": "Sources of Competitive Advantage from Diversification",
+      "question": "What is a 'commonality' in the context of transferring competencies, and when does it increase profitability?",
+      "answer": "<strong>A commonality is a skill or competency that, when shared by two or more business units, allows them to operate more effectively and create more value.</strong><br>It increases profitability when it either lowers the cost structure of one or more business units or enables better product differentiation. Crucially, the competency must have real strategic value — not just superficial similarity.<br>Example: Shared brand equity (e.g., Apple's brand applied across Mac, iPhone, iPad) is a commonality that enhances differentiation across all units.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "12",
+      "category": "Sources of Competitive Advantage from Diversification",
+      "question": "What are economies of scope, and what are the two main sources of cost reduction they generate?",
+      "answer": "<strong>Economies of scope are synergies that arise when business units of a diversified firm share resources or capabilities to lower costs or increase differentiation.</strong><br>Two sources of cost reduction: (1) Sharing lowers the overall cost structure by spreading fixed costs across multiple units. (2) A shared marketing function can create stronger product differentiation, leading to a higher Return on Invested Capital (ROIC).<br>Example: Procter & Gamble's shared distribution network reduces per-unit logistics costs across its many consumer brands.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "13",
+      "category": "Sources of Competitive Advantage from Diversification",
+      "question": "What is product bundling, and does it always require joint ownership of the bundled businesses?",
+      "answer": "<strong>Product bundling means offering connected products together as a package to provide customers lower prices or a superior set of services — and it does NOT always require joint ownership.</strong><br>Bundling can be achieved through market contracts or strategic alliances without a full merger or acquisition. Joint ownership becomes necessary only when transaction costs or coordination failures make contracts inefficient.<br>Example: Microsoft bundles Office with Windows. Telecom companies bundle internet, TV, and phone services — sometimes via partnerships, not ownership.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "14",
+      "category": "Sources of Competitive Advantage from Diversification",
+      "question": "What are general organizational competencies, and what are the three types discussed in the course?",
+      "answer": "<strong>General organizational competencies are firm-wide capabilities of top managers that help all business units perform better than they could as independent companies.</strong><br>The three types are: (1) Entrepreneurial capabilities — fostering risk-taking and innovation across units. (2) Organizational design capabilities — creating structures, cultures, and controls that motivate high performance. (3) Superior strategic management capabilities — diagnosing problems and executing turnaround strategies across business units.<br>Example: GE under Jack Welch was famous for its organizational design and strategic management capabilities applied across diverse business units.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "15",
+      "category": "Sources of Competitive Advantage from Diversification",
+      "question": "What must a company do to develop entrepreneurial capabilities across its business units?",
+      "answer": "<strong>It must encourage risk-taking, provide time and resources for novel ideas, not punish failure, and ensure free cash flow is not wasted on low-return ventures.</strong><br>These four conditions create an internal environment where managers innovate rather than play it safe. The last condition is critical: excessive diversification financed by free cash flow without disciplined ROI requirements destroys value.<br>Example: Google (Alphabet) gives teams resources and tolerance for failure (e.g., Google X moonshots) while maintaining financial discipline on core businesses.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "16",
+      "category": "Sources of Competitive Advantage from Diversification",
+      "question": "What is a turnaround strategy in the context of diversified firms, and what capability does it require?",
+      "answer": "<strong>A turnaround strategy involves corporate managers identifying inefficient or poorly managed companies in other industries and improving their performance after acquisition.</strong><br>It requires superior strategic management capabilities — specifically the ability to diagnose the underlying source of underperformance and redesign strategy, structure, and management in the acquired unit.<br>Example: Berkshire Hathaway has consistently acquired underperforming companies and improved them through better management and capital allocation.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "17",
+      "category": "Empirical Evidence & Types of Relatedness",
+      "question": "What does empirical research reveal about the relationship between diversification and firm profitability?",
+      "answer": "<strong>There is no consistent relationship, but evidence suggests an inverted-U (∩-shaped) pattern: moderate diversification increases profitability, while excessive diversification reduces it.</strong><br>McKinsey & Co. identify benefits from moderate diversification — especially for firms with few remaining growth opportunities in their core markets. A further complication is reverse causality: profitable firms may diversify, rather than diversification causing profitability.<br>Example: A single-business firm that diversifies into one related area often improves performance; a conglomerate with 50 unrelated businesses often underperforms.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "18",
+      "category": "Empirical Evidence & Types of Relatedness",
+      "question": "What does empirical research show about related versus unrelated diversification in terms of profitability?",
+      "answer": "<strong>Most studies show that related diversification outperforms unrelated diversification.</strong><br>Related diversification offers greater synergies through shared resources and capabilities, but also imposes higher management coordination costs. The definition of 'relatedness' is itself contested — businesses can be related operationally, strategically, or in multiple ways simultaneously.<br>Example: LVMH (luxury brands — related), GE (aerospace to finance — more unrelated), Virgin Group (airlines to mobile — brand-related but operationally diverse).",
+      "difficulty": "easy"
+    },
+    {
+      "id": "19",
+      "category": "Empirical Evidence & Types of Relatedness",
+      "question": "What is the difference between operational relatedness and strategic relatedness in diversification?",
+      "answer": "<strong>Operational relatedness = synergies from sharing resources across businesses (e.g., distribution, brands, R&D); strategic relatedness = synergies at the corporate level from applying common management capabilities to different businesses.</strong><br>Operational relatedness is resource-based and visible at the business unit level. Strategic relatedness is management-based and operates through corporate-level processes like resource allocation, strategy formulation, and performance management.<br>Example: Operational: two consumer goods brands sharing a distribution network. Strategic: a conglomerate whose corporate center excels at allocating capital to businesses with similar risk/return profiles.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "20",
+      "category": "Empirical Evidence & Types of Relatedness",
+      "question": "What is the key problem with pursuing operational relatedness through economies of scope?",
+      "answer": "<strong>The administrative costs of exploiting economies of scope may dwarf the benefits they generate.</strong><br>Coordinating shared resources across business units requires management time, integration processes, and organizational complexity — all of which have costs. If these administrative costs exceed the synergy gains, operational relatedness destroys rather than creates value.<br>Example: Two merged companies that share a sales force may find that coordination conflicts, incentive misalignments, and management overhead eliminate any cost savings.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "21",
+      "category": "Empirical Evidence & Types of Relatedness",
+      "question": "What are the three dimensions of strategic similarity that determine strategic relatedness between business units?",
+      "answer": "<strong>Resource allocation similarity, strategy formulation similarity, and performance management & control similarity.</strong><br>Resource allocation: similar investment sizes, time spans, risk sources, and required management skills. Strategy formulation: similar key success factors, industry life cycle stages, and competitive positions. Performance management: similar performance variables, targets, and time horizons.<br>Example: Two businesses that both require multi-year capital projects with similar risk profiles and measured by ROIC are strategically related — a corporate center experienced in one can manage the other effectively.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "22",
+      "category": "Build-Borrow-Buy Framework",
+      "question": "What are the three growth strategies in the Build-Borrow-Buy Framework, and what does each involve?",
+      "answer": "<strong>Build (internal organic growth), Borrow (external growth via contracts/alliances), Buy (external growth via acquisition).</strong><br>Build: develop capabilities and enter markets through internal R&D and investment. Borrow: access external resources through licensing, joint ventures, or strategic alliances without full ownership. Buy: acquire a firm outright to gain its resources, capabilities, and market position.<br>Source: Capron & Mitchell (2012), <em>Build, Borrow, or Buy</em>.<br>Example: Tesla built its battery technology internally; pharmaceutical firms often borrow through licensing; Facebook bought Instagram.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "23",
+      "category": "Build-Borrow-Buy Framework",
+      "question": "What are the four main issues in the Build-Borrow-Buy Framework that guide the choice between strategies?",
+      "answer": "<strong>Relevancy, Tradability, Closeness, and Integration.</strong><br>Relevancy: how relevant are the firm's existing resources to closing the gap? (High relevancy → Build). Tradability: how easily can target resources be accessed externally? (High tradability → Borrow). Closeness: how close must the firm be to its resource partner? (High closeness → Buy). Integration: how well can the target firm be integrated if acquired? (Poor integration capacity → avoid Buy).<br>Example: If a firm needs tacit, non-tradable knowledge deeply embedded in a partner firm, acquisition (Buy) is likely necessary.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "24",
+      "category": "Mergers & Acquisitions",
+      "question": "What is the difference between a merger and an acquisition, and what makes a takeover 'hostile'?",
+      "answer": "<strong>A merger joins two independent companies into a combined entity (typically friendly); an acquisition is the purchase of one company by another (can be friendly or hostile).</strong><br>A takeover becomes hostile when the target firm does not wish to be acquired — the acquirer bypasses management and appeals directly to shareholders or uses other pressure mechanisms.<br>Example: Kraft's acquisition of Cadbury (2010) was initially hostile — Cadbury's management publicly rejected the offer before ultimately accepting a higher bid.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "25",
+      "category": "Mergers & Acquisitions",
+      "question": "What are the three main benefits of horizontal integration through mergers?",
+      "answer": "<strong>Reduction in competitive intensity, lower costs, and increased differentiation.</strong><br>Horizontal integration merges competitors at the same stage of the value chain, reducing the number of rivals (and thus competitive pressure), achieving economies of scale that lower unit costs, and potentially combining product lines or brands to improve differentiation.<br>Example: Sirius and XM Radio merged horizontally — reducing direct competition in satellite radio while achieving cost savings in programming and infrastructure.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "26",
+      "category": "Mergers & Acquisitions",
+      "question": "Why do most mergers and acquisitions fail to create competitive advantage, and what are the three underlying reasons given in the course?",
+      "answer": "<strong>Most M&As do not create competitive advantage, do not realize anticipated synergies, and destroy shareholder value — due to principal-agent problems, desire to overcome competitive disadvantage, and the rare exception of superior acquisition capability.</strong><br>Principal-agent problems: managers pursue M&A for personal gain (pay, status, power) rather than shareholder value. Competitive disadvantage motive: firms acquire to fix weaknesses rather than build on strengths. Only firms with a genuinely superior acquisition and integration capability reliably create value.<br>Example: AOL–Time Warner is a textbook case of value destruction driven by managerial overconfidence and principal-agent misalignment.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "27",
+      "category": "Mergers & Acquisitions",
+      "question": "What are the managerial motives for M&A, and how do they reflect principal-agent problems?",
+      "answer": "<strong>Managerial motives include compensation tied to firm size, psychological rewards (power, celebrity), and imitation of industry merger waves — all reflecting misalignment between manager and shareholder interests.</strong><br>Since CEO compensation correlates more with firm size than profitability, acquisitions can increase pay even when they reduce returns. Fear of missing out on a merger wave creates herding behavior that drives overpriced deals.<br>Example: Many telecom mergers of the late 1990s were driven by CEO ego and merger wave imitation, not strategic logic — most destroyed value.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "28",
+      "category": "Mergers & Acquisitions",
+      "question": "What are the four types of strategic motives for M&A with a concrete example of each?",
+      "answer": "<strong>Horizontal M&A, geographical extension M&A, vertical M&A, and diversifying M&A.</strong><br>1. Horizontal: economies of scale and market power — e.g., Sirius–XM (satellite radio). 2. Geographical extension: enter overseas markets — e.g., ENEL–Endesa (Italian utility entering Spain). 3. Vertical: acquire supplier or customer — e.g., Glencore–Xstrata (commodity trader acquiring miner). 4. Diversifying: enter a new business area — e.g., Kering–Puma (luxury group acquiring sportswear).",
+      "difficulty": "medium"
+    },
+    {
+      "id": "29",
+      "category": "Mergers & Acquisitions",
+      "question": "What are the financial motives for M&A? Name three with a real-world example for each.",
+      "answer": "<strong>Financial motives include exploiting stock market inefficiencies, seeking tax savings, and financial re-engineering through debt financing.</strong><br>1. Stock market inefficiencies: acquire undervalued firms or use overvalued equity as currency — e.g., Berkshire Hathaway–Heinz (undervalued target); AOL–Time Warner (overvalued equity used). 2. Tax savings: cross-border acquisitions to relocate to lower-tax jurisdictions — e.g., Burger King–Tim Hortons (US firm redomiciling to Canada). 3. Financial re-engineering: debt-financed buyouts reduce cost of capital — e.g., KKR–RJR Nabisco (leveraged buyout).",
+      "difficulty": "hard"
+    },
+    {
+      "id": "30",
+      "category": "Mergers & Acquisitions",
+      "question": "Why do firms acquire others to access new markets, overcome entry barriers, or preempt rivals, and which firms are most famous for the preemption motive?",
+      "answer": "<strong>Acquisitions provide faster and sometimes cheaper access to markets, distribution channels, or capabilities than building them organically, and preemptive acquisitions prevent rivals from gaining those same resources.</strong><br>Building new capabilities or entering new markets organically takes time and faces uncertainty. Acquisition bypasses entry barriers by purchasing an established player. Preemption denies competitors access to a scarce resource or talent pool.<br>Facebook and Google are explicitly cited in the course as famous for preemptive acquisition strategies — e.g., Facebook's acquisition of Instagram and WhatsApp before they could become competitive threats.",
+      "difficulty": "easy"
+    }
+  ],
+  "essayBlueprint": {
+    "totalWords": 900,
+    "timeMinutes": 60,
+    "parts": [
+      {
+        "title": "Introduction",
+        "words": 100,
+        "minutes": 7,
+        "paragraphs": [
+          {
+            "label": "Hook & Relevance",
+            "instruction": "Define diversification and establish its strategic relevance. State the central tension: diversification can create or destroy shareholder value depending on how it is pursued. End with a clear thesis that outlines the structure of your argument.",
+            "template": "Diversification — the expansion into new products, markets, or geographies — is one of the most debated strategic decisions in corporate management. While growth-seeking diversification has historically been associated with managerial rather than shareholder interests, Porter's framework demonstrates that value creation through diversification is possible under specific, stringent conditions. This essay argues that diversification creates competitive advantage only when it passes Porter's three tests and is grounded in genuine economies of scope or strategic relatedness.",
+            "references": [
+              "Porter (Three Tests)",
+              "Capital Asset Pricing Model"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Main Body",
+        "words": 700,
+        "minutes": 43,
+        "paragraphs": [
+          {
+            "label": "Paragraph 1 – Motives for Diversification and the Value Destruction Problem",
+            "instruction": "Distinguish between managerial motives (growth, risk spreading) and legitimate value-creation motives. Explain why growth-seeking diversification typically destroys shareholder value, referencing the Capital Asset Pricing Model argument that shareholders can diversify their own portfolios.",
+            "template": "A central insight from the literature is that many diversification decisions are driven by managerial rather than shareholder interests. Top management remuneration correlates more strongly with firm size than profitability, creating incentives for empire-building through acquisition. Furthermore, the Capital Asset Pricing Model demonstrates that diversification only reduces unsystematic risk — shareholders can achieve the same effect by holding diversified securities portfolios at no cost. Therefore, for diversification to create shareholder value, combining businesses under common ownership must increase their total profitability beyond what each could achieve independently.",
+            "references": [
+              "Capital Asset Pricing Model",
+              "Porter (Three Tests)"
+            ]
+          },
+          {
+            "label": "Paragraph 2 – Porter's Three Essential Tests",
+            "instruction": "Explain each of Porter's three tests (Attractiveness Test, Cost of Entry Test, Better-Off Test) concisely. Illustrate with one concrete example where possible. Emphasise that all three tests must be met simultaneously.",
+            "template": "Porter identifies three conditions that any value-creating diversification must satisfy. First, the Attractiveness Test requires that the target industry offers returns above the cost of capital. Second, the Cost of Entry Test cautions that acquisition premiums must not capitalise all future profits — a risk evident in the AOL-Time Warner merger, where overvalued equity financed an acquisition that ultimately destroyed value. Third, and most critically, the Better-Off Test demands that a genuine synergy exists: either the new business unit gains competitive advantage from its link with the parent, or vice versa. The simultaneous failure of all three tests explains why most mergers and acquisitions do not create competitive advantage.",
+            "references": [
+              "Porter (Three Tests)",
+              "AOL-Time Warner"
+            ]
+          },
+          {
+            "label": "Paragraph 3 – Sources of Competitive Advantage: Economies of Scope",
+            "instruction": "Explain how economies of scope underpin value creation in diversification. Distinguish between sharing tangible resources, transferring intangible resources, and leveraging competencies. Briefly contrast transferring competencies with leveraging competencies.",
+            "template": "When the Better-Off Test is met, the primary mechanism of value creation is economies of scope — synergies arising when shared resources lower costs or increase differentiation across business units. These can be operational: sharing distribution systems, R&D labs, or brand assets. They can also be competency-based: transferring a distinctive competency developed in one industry to improve performance in another (transferring), or using it to create an entirely new business unit (leveraging). For instance, a company with superior marketing capabilities can implant these across newly acquired units to enhance differentiation and raise return on invested capital. Critically, such economies of scope are only a sufficient basis for diversification when external markets for those resources are imperfect — that is, when transaction costs make internalisation more efficient than market contracts.",
+            "references": [
+              "Economies of Scope",
+              "Transaction Cost Economics"
+            ]
+          },
+          {
+            "label": "Paragraph 4 – Related vs. Unrelated Diversification and Types of Relatedness",
+            "instruction": "Discuss empirical evidence on related versus unrelated diversification. Introduce the distinction between operational relatedness and strategic relatedness. Acknowledge the inverted U-shaped relationship between diversification and profitability.",
+            "template": "Empirical research broadly supports the superiority of related over unrelated diversification, though the relationship is nuanced. Evidence points to an inverted U-shaped pattern: moderate diversification tends to increase profitability, while excessive diversification reduces it — likely due to rising administrative complexity. Relatedness itself can take two forms. Operational relatedness refers to synergies from sharing resources across business units (e.g. common distribution or joint R&D), while strategic relatedness refers to the ability to apply common management capabilities across businesses with similar key success factors, investment profiles, and competitive positions. The distinction matters because the benefits of operational relatedness can be outweighed by the administrative costs of exploitation, making strategic relatedness a more robust and scalable source of competitive advantage.",
+            "references": [
+              "McKinsey & Co.",
+              "Operational vs. Strategic Relatedness"
+            ]
+          },
+          {
+            "label": "Paragraph 5 – The Build-Borrow-Buy Framework and M&A Pitfalls",
+            "instruction": "Explain how firms can pursue diversification-related growth via building internally, borrowing through alliances, or buying through M&A. Discuss why M&A frequently fails and what conditions make acquisition the appropriate choice.",
+            "template": "The decision of how to access new resources and capabilities is structured by the Build-Borrow-Buy framework (Capron & Mitchell, 2012), which evaluates four dimensions: the relevancy of existing internal resources, the tradability of external resources, the required closeness to the resource partner, and the firm's integration capability. Acquisition is appropriate only when resources cannot be developed internally or accessed through contracts, and when the firm can successfully integrate the target. However, in practice, mergers and acquisitions frequently fail to create value — driven by principal-agent problems, managerial motives such as CEO celebrity status, and the overestimation of anticipated synergies. Cases such as KKR-RJR Nabisco (financial re-engineering) and Facebook's pre-emptive acquisitions illustrate that strategic rationale must be rigorously distinguished from managerial hubris.",
+            "references": [
+              "Capron & Mitchell (2012)",
+              "KKR-RJR Nabisco",
+              "Principal-Agent Problem"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Conclusion",
+        "words": 100,
+        "minutes": 10,
+        "paragraphs": [
+          {
+            "label": "Synthesis & Critical Assessment",
+            "instruction": "Synthesise the main argument: diversification creates value only under specific conditions. Offer a brief critical reflection — e.g. the difficulty of measuring 'relatedness' in practice (LVMH, GE, Virgin). End with a concise, memorable closing statement.",
+            "template": "In conclusion, diversification is neither inherently value-creating nor value-destroying — its outcome depends entirely on whether it satisfies Porter's three tests and whether genuine economies of scope or strategic relatedness can be exploited at acceptable administrative cost. The empirical record cautions against excessive diversification and favours moderate, relatedness-driven expansion. Yet defining 'relatedness' remains analytically challenging: conglomerates such as LVMH and Virgin demonstrate that strategic relatedness at the management level can substitute for operational overlap. Ultimately, the discipline of rigorous strategic analysis — not the pursuit of growth for its own sake — is the precondition for diversification that truly creates shareholder value.",
+            "references": [
+              "Porter (Three Tests)",
+              "LVMH",
+              "Virgin Group",
+              "McKinsey & Co."
+            ]
+          }
+        ]
+      }
+    ],
+    "checklist": [
+      "Have you defined diversification clearly in the introduction and stated a thesis?",
+      "Have you distinguished managerial motives (growth, size) from legitimate value-creation motives?",
+      "Have you explained all three of Porter's tests (Attractiveness, Cost of Entry, Better-Off) with at least one concrete example?",
+      "Have you explained economies of scope and distinguished transferring from leveraging competencies?",
+      "Have you differentiated operational relatedness from strategic relatedness?",
+      "Have you referenced the inverted U-shaped relationship between diversification and profitability?",
+      "Have you applied the Build-Borrow-Buy framework (Capron & Mitchell) and explained when M&A is appropriate?",
+      "Have you discussed at least two reasons why M&A typically destroys shareholder value?",
+      "Does your conclusion synthesise all main points without introducing new arguments?",
+      "Have you used at least one real company example per main body paragraph?",
+      "Are all key terms (economies of scope, strategic relatedness, transaction costs, principal-agent problem) defined or contextualised?",
+      "Is your essay within the target word count and have you allocated time per section?"
+    ]
+  },
+  "simulator": {
+    "questions": [
+      {
+        "id": "q1",
+        "scenario": "A tobacco company is considering entering the renewable energy sector because cigarette sales are declining in Western markets.",
+        "question": "According to Porter's Three Essential Tests, which condition must this diversification move satisfy FIRST to justify the strategic decision?",
+        "options": [
+          "The Cost of Entry Test: the acquisition price must not capitalize all future profits of the renewable energy firm.",
+          "The Attractiveness Test: the renewable energy industry must be structurally attractive or have the potential to become attractive.",
+          "The Better-Off Test: the tobacco company must be able to transfer a distinctive competency to the new business unit.",
+          "The Growth Test: the move must increase total revenues and firm size to satisfy shareholder expectations."
+        ],
+        "correctIndex": 1,
+        "explanation": "The Attractiveness Test is the first of Porter's three tests and asks whether the target industry offers returns above the cost of capital. Without industry attractiveness, diversification cannot create shareholder value regardless of other factors. — Option A (Cost of Entry Test) is Porter's second test, not the first; while important, it is logically subsequent to confirming the industry is attractive in the first place. — Option C (Better-Off Test) is Porter's third test; synergy only matters if the industry is attractive and the entry cost is reasonable. — Option D (Growth Test) is not one of Porter's three tests at all; Porter explicitly warns that growth-seeking diversification tends to destroy shareholder value."
+      },
+      {
+        "id": "q2",
+        "scenario": "Amazon uses its cloud infrastructure (AWS) to support its e-commerce platform, its streaming service, and third-party clients — all from the same technical base.",
+        "question": "Which source of competitive advantage from diversification best describes Amazon's approach?",
+        "options": [
+          "Transferring competencies from e-commerce to cloud computing.",
+          "Leveraging competencies to create an entirely new business unit in a different industry.",
+          "Sharing tangible resources across multiple businesses to realize economies of scope.",
+          "Product bundling to offer customers a complete package at lower prices."
+        ],
+        "correctIndex": 2,
+        "explanation": "Sharing tangible resources (here: physical and digital cloud infrastructure) across multiple business units to lower costs is the classic definition of economies of scope through resource sharing. AWS infrastructure is one shared resource used by several business lines simultaneously. — Option A (transferring competencies) refers to implanting a distinctive competency from one unit into another, not running multiple units off a shared physical resource base. — Option B (leveraging competencies) refers specifically to using an existing competency to CREATE a new business unit; AWS is not merely a new creation but an integrated shared resource. — Option D (product bundling) means offering connected products as a package to customers, which may partly apply to Amazon Prime but does not capture the infrastructure-sharing logic described in the scenario."
+      },
+      {
+        "id": "q3",
+        "scenario": "Empirical research on diversification consistently shows that firms with moderate diversification tend to outperform both highly specialized and highly diversified firms.",
+        "question": "Which empirical finding best describes this pattern?",
+        "options": [
+          "A U-shaped relationship where profitability first decreases and then increases with diversification.",
+          "A linear positive relationship: the more diversified the firm, the higher the profitability.",
+          "An inverted U-shaped (∩-shaped) relationship where moderate diversification maximizes profitability.",
+          "No relationship whatsoever between diversification and profitability, as McKinsey & Co. confirm."
+        ],
+        "correctIndex": 2,
+        "explanation": "The course material explicitly identifies a ∩-shaped (inverted U) relationship: diversification first increases profitability, but further diversification reduces it, likely due to increased complexity. McKinsey identifies benefits from moderate diversification, especially for firms that have exhausted organic growth opportunities. — Option A (U-shaped) is the opposite pattern — it would mean diversification initially hurts and then helps, which contradicts the evidence. — Option B (linear positive) is contradicted by the finding that excessive diversification raises complexity and reduces profitability. — Option D misrepresents the McKinsey finding; McKinsey identifies benefits from moderate diversification, not zero relationship."
+      },
+      {
+        "id": "q4",
+        "scenario": "Kering (luxury goods) acquires Puma (sportswear) to enter the athletic market, even though Puma's management team resists the takeover.",
+        "question": "How should this M&A transaction be categorized?",
+        "options": [
+          "A horizontal merger, because both firms compete in the fashion and apparel space.",
+          "A diversifying acquisition that could constitute a hostile takeover if Puma's management resists.",
+          "A vertical acquisition, because Kering is acquiring a supplier in the apparel value chain.",
+          "A geographical extension M&A, because Puma operates in markets where Kering is not present."
+        ],
+        "correctIndex": 1,
+        "explanation": "Kering moves from luxury goods into a new area of business (sportswear), making this a diversifying M&A — exactly the example cited in the course material. Since Puma's management resists, it qualifies as a hostile takeover. — Option A (horizontal merger) is incorrect because horizontal integration involves merging with a direct competitor at the same value chain stage; Kering and Puma are not direct competitors. — Option C (vertical acquisition) is incorrect because Puma is not a supplier or customer within Kering's existing value chain; it is a separate business category. — Option D (geographical extension) is incorrect because the primary motive is product/business diversification, not geographic market entry."
+      },
+      {
+        "id": "q5",
+        "scenario": "A company's CEO argues that shareholders benefit from corporate diversification because it reduces the overall risk of the firm's profit flows.",
+        "question": "Why does the course material challenge this argument?",
+        "options": [
+          "Because diversification actually increases systematic risk, making the firm's stock more volatile.",
+          "Because shareholders can hold diversified portfolios themselves, and the Capital Asset Pricing Model shows diversification only reduces unsystematic risk.",
+          "Because reducing variance in profit flows always leads to lower returns, directly harming shareholders.",
+          "Because risk spreading is only beneficial when combined with the Better-Off Test and the Attractiveness Test."
+        ],
+        "correctIndex": 1,
+        "explanation": "The material explicitly states that shareholders can hold diversified portfolios of securities themselves and that the CAPM shows corporate diversification only lowers unsystematic (firm-specific) risk, not systematic (market) risk. Therefore, corporate-level diversification for risk-spreading purposes does not add value for shareholders. — Option A is factually wrong; the argument is not that diversification raises systematic risk but that it fails to reduce it at the corporate level for shareholders' benefit. — Option C overstates the case; reducing variance is not inherently harmful, but it also does not create value for shareholders who can diversify on their own. — Option D conflates different arguments; while those tests matter for value creation, the specific challenge to the risk-spreading motive is the CAPM-based point about shareholder self-diversification."
+      },
+      {
+        "id": "q6",
+        "scenario": "A mid-sized tech firm wants to expand into AI-powered logistics. Internal R&D would take too long, licensing the technology is difficult due to tacit knowledge, but a full acquisition seems too costly and complex to integrate. The firm identifies a promising AI startup willing to collaborate closely.",
+        "question": "According to the Build-Borrow-or-Buy Framework, which growth mode is most appropriate here?",
+        "options": [
+          "Build — because the firm should develop the AI capability internally through organic growth.",
+          "Buy — because only full ownership ensures control over the strategic resource.",
+          "Borrow — through a strategic alliance or joint venture with the AI startup.",
+          "Build and Buy simultaneously — to hedge against the risk of collaboration failure."
+        ],
+        "correctIndex": 2,
+        "explanation": "The Borrow option (strategic alliance, contract, or joint venture) is appropriate when: internal resources are not sufficient (ruling out Build), the resource is hard to trade cleanly due to tacit knowledge (complicating a pure license), and integration of a full acquisition would be problematic. Close collaboration with a willing partner matches the 'Borrow' pathway. — Option A (Build) is ruled out by the time constraint and the gap in internal resources. — Option B (Buy) is ruled out because integration is deemed too costly and complex — a key criterion in the framework's 'Integration' dimension. — Option D is not a recognized mode in the Build-Borrow-or-Buy Framework and introduces unnecessary complexity without addressing the integration and tradability constraints identified."
+      },
+      {
+        "id": "q7",
+        "scenario": "Following a major merger, a pharmaceutical company discovers that anticipated cost savings from combining R&D labs and sales forces have not materialized. Instead, coordination costs have risen sharply.",
+        "question": "Which concept from the course material best explains why the expected synergies failed to appear?",
+        "options": [
+          "The Cost of Entry Test was not passed, meaning the acquisition price was too high.",
+          "The problem of operational relatedness: administrative costs of exploiting economies of scope can dwarf the benefits.",
+          "The firm lacked entrepreneurial capabilities and failed to encourage risk-taking in the merged entity.",
+          "Strategic relatedness was absent because both firms operated in the same stage of the industry life cycle."
+        ],
+        "correctIndex": 1,
+        "explanation": "The course explicitly warns that 'the benefits from economies of scope may be dwarfed by the administrative costs involved in their exploitation' — this is the core problem of operational relatedness. Combining R&D labs and sales forces is an operational synergy that generates real coordination costs. — Option A (Cost of Entry Test) relates to the acquisition price capitalizing future profits, not to post-merger integration failure; it is a pre-deal evaluation tool, not an explanation for post-merger operational problems. — Option C (entrepreneurial capabilities) refers to promoting innovation and risk-taking within business units, not to integration cost overruns. — Option D misrepresents strategic relatedness; operating in the same industry life cycle stage is actually a sign of strategic similarity, not absence of it, and would not explain the failure of operational synergies."
+      },
+      {
+        "id": "q8",
+        "scenario": "The CEO of a conglomerate earns a bonus tied to total company revenue. She pushes for a large acquisition of a consumer goods firm, projecting synergies that independent analysts view as optimistic.",
+        "question": "Which explanation from M&A theory best accounts for this behavior?",
+        "options": [
+          "Financial motive: the CEO is pursuing a cross-border acquisition to benefit from a lower tax regime.",
+          "Strategic motive: horizontal integration to reduce competitive intensity in the consumer goods market.",
+          "Managerial motive: top management remuneration depends more on firm size than profitability, and M&As confer CEO status.",
+          "Strategic motive: the firm is leveraging competencies into a new industry to create a differentiation advantage."
+        ],
+        "correctIndex": 2,
+        "explanation": "The course material explicitly identifies managerial motives including: remuneration tied to firm size rather than profitability, psychological rewards from power and celebrity status, and imitation of industry merger waves. All three are present in this scenario. — Option A (financial motive/tax) is irrelevant here; there is no cross-border dimension or tax optimization mentioned. — Option B (horizontal integration) would require the conglomerate to be a direct competitor of the consumer goods firm, which is not indicated; moreover, the focus on the CEO's personal incentives points to a managerial, not a strategic, motive. — Option D (leveraging competencies) is a value-creation rationale focused on competitive advantage, not on managerial incentive distortions; it does not explain why the CEO overstates synergies."
+      },
+      {
+        "id": "q9",
+        "scenario": "Virgin Group operates in aviation, telecoms, health clubs, and financial services — all under the Virgin brand. The businesses share very few operational resources but are managed using a common corporate philosophy and brand identity.",
+        "question": "Which type of relatedness primarily explains any synergies in the Virgin Group's diversification?",
+        "options": [
+          "Operational relatedness — Virgin shares distribution facilities and joint R&D across its business units.",
+          "Strategic relatedness — synergies derive from applying common management capabilities and the Virgin brand across different businesses.",
+          "Product bundling — Virgin offers connected products as a combined package to customers.",
+          "Transferring competencies — a distinctive competency from aviation is implanted into financial services."
+        ],
+        "correctIndex": 1,
+        "explanation": "Strategic relatedness refers to synergies at the corporate level from applying common management capabilities and brand to different businesses — regardless of operational overlap. Virgin's shared brand and corporate philosophy are exactly the type of intangible, corporate-level resource that defines strategic relatedness. — Option A (operational relatedness) requires sharing physical or functional resources like distribution or R&D; Virgin's units explicitly share very few operational resources, making this inapplicable. — Option C (product bundling) means offering interconnected products as a package deal; Virgin's businesses are largely independent offerings, not bundled solutions. — Option D (transferring competencies) refers to taking a specific distinctive competency from one unit and implanting it in another specific unit; Virgin's advantage is a brand-level and management-level phenomenon, not a targeted inter-unit competency transfer."
+      },
+      {
+        "id": "q10",
+        "scenario": "In 2000, AOL used its highly valued (and arguably overvalued) stock to acquire Time Warner in a deal worth $165 billion — one of the most value-destroying mergers in history.",
+        "question": "Which financial motive for M&A does this transaction illustrate?",
+        "options": [
+          "Debt-financed financial re-engineering to reduce the acquired company's cost of capital.",
+          "Using overvalued equity as acquisition currency to purchase real assets before the market corrects.",
+          "Cross-border acquisition to relocate to a lower tax regime.",
+          "Acquiring an undervalued company to exploit stock market inefficiencies in the target's favor."
+        ],
+        "correctIndex": 1,
+        "explanation": "The course material explicitly cites AOL-Time Warner as the example of using overvalued equity to acquire — a financial motive where a company exploits its inflated stock price to purchase real assets. This is listed under stock market inefficiencies as a financial motive. — Option A (debt-financed re-engineering) refers to deals like KKR-RJR Nabisco where debt is used to lower the acquired firm's cost of capital; AOL-Time Warner was an equity deal, not a leveraged buyout. — Option C (tax relocation) is a cross-border motive exemplified in the course by Burger King-Tim Horton; AOL and Time Warner were both US companies with no tax relocation dimension. — Option D describes the Berkshire Hathaway-Heinz logic of buying undervalued targets; here AOL was the overvalued acquirer, not a buyer exploiting undervaluation in the target."
+      },
+      {
+        "id": "q11",
+        "scenario": "A diversified company's corporate managers identify a struggling business unit in the medical devices division. They diagnose the root cause as poor cost management and implement a restructuring plan that returns the unit to profitability.",
+        "question": "Which general organizational competency does this demonstrate?",
+        "options": [
+          "Entrepreneurial capabilities — managers encouraged the unit to pursue novel ideas and take risks.",
+          "Capabilities in organizational design — managers restructured the culture and control systems of the unit.",
+          "Superior strategic management capabilities — managers diagnosed problems and executed a turnaround strategy.",
+          "Economies of scope — the unit was able to share resources with another business unit to lower costs."
+        ],
+        "correctIndex": 2,
+        "explanation": "The course defines superior strategic management capabilities as the ability to diagnose the underlying source of problems in poorly performing business units and execute turnaround strategies. This is exactly what the scenario describes. — Option A (entrepreneurial capabilities) involves encouraging risk-taking and innovation; restructuring a failing unit for efficiency is not the same as fostering entrepreneurship. — Option B (organizational design) refers to building structures, cultures, and control systems that motivate employees broadly; while related, the specific act of diagnosing problems and executing a turnaround is classified under superior strategic management capabilities. — Option D (economies of scope) is a resource-sharing mechanism between business units, not a managerial diagnostic capability; no resource sharing is described in the scenario."
+      },
+      {
+        "id": "q12",
+        "scenario": "Two competing airlines merge to reduce excess capacity on overlapping routes, lower unit costs through fleet standardization, and jointly negotiate better terms with aircraft manufacturers.",
+        "question": "What type of M&A is this, and what is the PRIMARY strategic motive?",
+        "options": [
+          "Vertical M&A — to acquire a supplier in the aircraft manufacturing value chain.",
+          "Diversifying M&A — to enter the aircraft manufacturing industry and leverage aviation competencies.",
+          "Geographical extension M&A — to access new international routes where the other airline operates.",
+          "Horizontal M&A — to achieve economies of scale and reduce competitive intensity in the airline market."
+        ],
+        "correctIndex": 3,
+        "explanation": "Merging with a direct competitor at the same stage of the value chain is horizontal integration. The stated benefits — reducing excess capacity, lowering unit costs, and gaining negotiating power — all align with the course's description of horizontal M&A motives: economies of scale and market power. — Option A (vertical M&A) would involve acquiring an aircraft manufacturer (a supplier), which is not the case here. — Option B (diversifying M&A) would mean entering a completely different industry; both firms are airlines operating in the same industry. — Option C (geographical extension) might be a secondary benefit, but the primary motive described is cost reduction and competitive consolidation, which defines horizontal integration, not geographic expansion."
+      }
+    ]
+  },
+  "overview": {
+    "topics": [
+      {
+        "name": "Foundations of Diversification",
+        "concepts": [
+          {
+            "term": "Diversification",
+            "definition": "Strategy of expanding a firm's scope by entering new product markets or geographic regions. Creates shareholder value only if it passes three essential tests.",
+            "author": "Porter",
+            "importance": "high",
+            "examRelevance": "Wird in Klausuren häufig gefragt, weil Studenten die Bedingungen für wertschaffende Diversifikation erklären und kritisch bewerten müssen."
+          },
+          {
+            "term": "Porter's Three Tests (Attractiveness, Cost of Entry, Better-Off)",
+            "definition": "Three conditions diversification must meet to create shareholder value: the target industry must be attractive, entry costs must not absorb all future profits, and synergies must improve profitability of at least one business unit.",
+            "author": "Porter",
+            "importance": "high",
+            "examRelevance": "Wird in Klausuren häufig gefragt, weil es das zentrale Analyserahmenwerk ist, um Diversifikationsentscheidungen zu beurteilen."
+          },
+          {
+            "term": "Motives for Diversification (Growth, Risk Spreading, Value Creation)",
+            "definition": "Three main drivers behind diversification decisions; growth and risk spreading often benefit managers more than shareholders, while value creation is the only legitimate shareholder rationale.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Wird in Klausuren häufig gefragt, weil Studenten zwischen managerialen und aktionärsorientierten Motiven unterscheiden und kritisch bewerten sollen."
+          },
+          {
+            "term": "Capital Asset Pricing Model (CAPM) and Diversification",
+            "definition": "CAPM shows that diversification only reduces unsystematic (firm-specific) risk, not systematic (market) risk; shareholders can achieve the same risk reduction by holding diversified portfolios themselves.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Wird in Klausuren gefragt, weil es erklärt, warum Risikostreuung allein keine Diversifikation aus Aktionärsperspektive rechtfertigt."
+          }
+        ]
+      },
+      {
+        "name": "Sources of Competitive Advantage from Diversification",
+        "concepts": [
+          {
+            "term": "Economies of Scope",
+            "definition": "Cost or differentiation advantages arising when two or more business units share tangible resources (e.g. distribution), intangible resources (e.g. brands), or functional capabilities across businesses.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Wird in Klausuren häufig gefragt, weil es das wichtigste ökonomische Argument für operative Diversifikationssynergien darstellt."
+          },
+          {
+            "term": "Transferring Competencies",
+            "definition": "Taking a distinctive competency developed in one business unit and implanting it in another business unit in a different industry to lower costs or improve differentiation.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Wird in Klausuren gefragt, weil Studenten erklären müssen, unter welchen Bedingungen Kompetenzübertragung tatsächlich Wert schafft."
+          },
+          {
+            "term": "Leveraging Competencies",
+            "definition": "Using a distinctive competency from an existing business unit to create an entirely new business unit in a different industry, applying an existing competitive advantage to a new context.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil es den Unterschied zwischen Übertragung und Hebelung von Kompetenzen illustriert und Grundlage für Wachstumsstrategien ist."
+          },
+          {
+            "term": "Product Bundling",
+            "definition": "Offering complementary products together as a package to provide customers lower prices or superior services; does not necessarily require joint ownership.",
+            "author": "",
+            "importance": "low",
+            "examRelevance": "Wird am Rande gefragt, weil es eine alternative Form der Wertschöpfung durch Diversifikation ohne vollständige Integration darstellt."
+          },
+          {
+            "term": "General Organizational Competencies (Entrepreneurial, Design, Strategic)",
+            "definition": "Corporate-level management skills — including entrepreneurial capabilities, organizational design skills, and superior strategic management — that enable business units to outperform independent companies.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil Studenten erklären sollen, wie Corporate Management selbst eine Quelle von Wettbewerbsvorteilen sein kann."
+          },
+          {
+            "term": "Internalizing Transactions (Internal Capital and Labor Markets)",
+            "definition": "A diversified firm creates value by replacing imperfect external markets with internal transactions, leveraging superior information about resources and reducing transaction costs.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil es erklärt, warum Economies of Scope allein nicht ausreichen — Transaktionskostenvorteile müssen hinzukommen."
+          }
+        ]
+      },
+      {
+        "name": "Types and Relatedness of Diversification",
+        "concepts": [
+          {
+            "term": "Related vs. Unrelated Diversification",
+            "definition": "Related diversification enters industries sharing operational or strategic links with existing businesses; unrelated diversification (conglomerates) enters industries with no significant commonalities.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Wird in Klausuren häufig gefragt, weil empirische Befunde zeigen, dass verwandte Diversifikation tendenziell profitabler ist, und Studenten dies begründen müssen."
+          },
+          {
+            "term": "Operational Relatedness",
+            "definition": "Synergies arising from sharing operational resources across businesses, such as common distribution facilities, brands, or joint R&D.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil Studenten operationale von strategischer Verwandtschaft unterscheiden und die jeweiligen Kosten-Nutzen-Abwägungen bewerten müssen."
+          },
+          {
+            "term": "Strategic Relatedness",
+            "definition": "Synergies at the corporate level derived from applying common management capabilities — such as resource allocation, strategy formulation, and performance management — to different businesses.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil strategische Verwandtschaft oft übersehen wird und erklärt, warum scheinbar unähnliche Unternehmen wie GE erfolgreich diversifizieren können."
+          },
+          {
+            "term": "Inverted-U (∩-shaped) Relationship: Diversification and Profitability",
+            "definition": "Empirical research suggests moderate diversification increases profitability, but excessive diversification reduces it due to increased organizational complexity.",
+            "author": "McKinsey & Co.",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil es den empirischen Befund zur Diversifikations-Profitabilitäts-Beziehung zusammenfasst und für kritische Bewertungen genutzt wird."
+          }
+        ]
+      },
+      {
+        "name": "Growth Strategies: Build, Borrow, or Buy",
+        "concepts": [
+          {
+            "term": "Build-Borrow-or-Buy Framework",
+            "definition": "A decision framework by Capron and Mitchell guiding firms on whether to grow organically (build), through alliances/contracts (borrow), or through acquisitions (buy) based on relevancy, tradability, closeness, and integration.",
+            "author": "Capron & Mitchell",
+            "importance": "high",
+            "examRelevance": "Wird in Klausuren häufig gefragt, weil es ein konkretes Entscheidungsframework für Wachstumsstrategien liefert, das Studenten auf Fallbeispiele anwenden sollen."
+          },
+          {
+            "term": "Strategic Gap Analysis",
+            "definition": "Identifying the gap between a firm's current resources and those required to achieve strategic goals, as a basis for choosing between build, borrow, or buy options.",
+            "author": "Capron & Mitchell",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil es den Ausgangspunkt des Build-Borrow-or-Buy Frameworks bildet und die strategische Logik hinter Wachstumsentscheidungen erklärt."
+          }
+        ]
+      },
+      {
+        "name": "Mergers and Acquisitions",
+        "concepts": [
+          {
+            "term": "Mergers and Acquisitions (M&A)",
+            "definition": "M&A combines two firms either through mutual agreement (merger) or purchase (acquisition); empirical evidence shows that M&A typically destroys shareholder value and fails to realize anticipated synergies.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Wird in Klausuren häufig gefragt, weil Studenten erklären müssen, warum M&A trotz negativer Evidenz so häufig durchgeführt wird."
+          },
+          {
+            "term": "Motives for M&A: Managerial, Financial, Strategic",
+            "definition": "M&A is driven by managerial motives (CEO remuneration, status, imitation), financial motives (tax savings, undervaluation, financial re-engineering), and strategic motives (economies of scale, geographic extension, vertical integration, diversification).",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Wird in Klausuren gefragt, weil Studenten zwischen legitimen strategischen und problematischen managerialen Motiven unterscheiden und an konkreten Beispielen illustrieren müssen."
+          },
+          {
+            "term": "Principal-Agent Problem in M&A",
+            "definition": "Managers (agents) pursue M&A driven by personal incentives such as firm size, status, and imitation rather than shareholder value maximization, illustrating the divergence between managerial and owner interests.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil es erklärt, warum wertvernichtende M&As dennoch häufig stattfinden, und Corporate Governance-Implikationen hat."
+          },
+          {
+            "term": "Horizontal Integration",
+            "definition": "Merging with or acquiring a competitor at the same stage of the value chain to reduce competitive intensity, lower costs, and increase differentiation.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil es die häufigste M&A-Form ist und Studenten ihre drei Hauptvorteile benennen und kritisch einordnen sollen."
+          }
+        ]
+      }
+    ]
+  },
+  "authors": [
+    {
+      "name": "Michael E. Porter",
+      "theory": "Porter's Three Tests for Diversification: For diversification to create shareholder value, it must pass the Attractiveness Test (target industry must be attractive), the Cost of Entry Test (entry costs must not absorb all future profits), and the Better-Off Test (synergies must improve at least one business unit's competitiveness).",
+      "useInExam": "Zitiere Porter direkt: 'According to Porter's three tests, diversification only creates shareholder value if the target industry is attractive, entry costs are not prohibitive, and genuine synergies exist.' Nutze das Framework, um Fallbeispiele zu bewerten."
+    },
+    {
+      "name": "Laurence Capron & Will Mitchell",
+      "theory": "Build-Borrow-or-Buy Framework (2012): Firms facing a resource gap should choose between organic development (build), alliances/licensing (borrow), or acquisitions (buy) based on four criteria: relevancy of existing resources, tradability of target resources, required closeness to partner, and integration feasibility.",
+      "useInExam": "Zitiere als: 'Capron and Mitchell (2012) argue that firms should assess relevancy, tradability, closeness, and integration ability before choosing between build, borrow, or buy.' Wende die vier Kriterien auf den konkreten Fallstudienkontext an."
+    },
+    {
+      "name": "McKinsey & Co.",
+      "theory": "Empirical finding of a ∩-shaped relationship between diversification and profitability: moderate diversification increases profitability (especially for firms with exhausted organic growth opportunities), but excessive diversification reduces it due to organizational complexity.",
+      "useInExam": "Zitiere als: 'McKinsey & Co. find that diversification follows an inverted-U pattern — moderate diversification can enhance profitability, but over-diversification increases complexity and destroys value.' Nutze diesen Befund, um die Grenzen von Diversifikationsstrategien zu illustrieren."
+    }
+  ],
+  "schedule": {
+    "daysUntilExam": 7,
+    "days": [
+      {
+        "day": 1,
+        "label": "Foundations & Porter's Three Tests",
+        "tasks": [
+          "Lies Session 15 vollständig durch und markiere die drei Hauptmotive (Growth, Risk Spreading, Value Creation).",
+          "Lerne Porter's Three Tests auswendig: Attractiveness Test, Cost of Entry Test, Better-Off Test — formuliere je ein eigenes Beispiel.",
+          "Erkläre in eigenen Worten, warum Risikostreuung allein (CAPM-Argument) für Aktionäre keinen Wert schafft.",
+          "Schreibe eine kurze Antwort (5-7 Sätze): 'Under what conditions does diversification create shareholder value?'"
+        ]
+      },
+      {
+        "day": 2,
+        "label": "Economies of Scope & Transferring/Leveraging Competencies",
+        "tasks": [
+          "Definiere Economies of Scope und unterscheide zwischen Sharing tangible vs. intangible resources — je ein konkretes Unternehmensbeispiel.",
+          "Erkläre den Unterschied zwischen Transferring Competencies und Leveraging Competencies mit eigenen Worten und Beispielen.",
+          "Notiere, warum Economies of Scope allein nicht ausreichen — Transaktionskostenargument verstehen.",
+          "Flashcard erstellen: Economies of Scope → Definition + Beispiel auf einer Seite."
+        ]
+      },
+      {
+        "day": 3,
+        "label": "Related vs. Unrelated Diversification & Empirical Evidence",
+        "tasks": [
+          "Lerne den Unterschied zwischen Operational Relatedness und Strategic Relatedness — Tabelle mit je drei Merkmalen erstellen.",
+          "Erkläre die ∩-shaped Relationship (McKinsey) zwischen Diversifikation und Profitabilität.",
+          "Analysiere, warum verwandte Diversifikation empirisch besser abschneidet als unverwandte Diversifikation.",
+          "Wende die Strategic Relatedness-Kriterien (Resource allocation, Strategy formulation, Performance management) auf ein bekanntes Unternehmen an (z.B. GE oder LVMH)."
+        ]
+      },
+      {
+        "day": 4,
+        "label": "Build-Borrow-or-Buy Framework",
+        "tasks": [
+          "Lerne die vier Entscheidungskriterien des Frameworks: Relevancy, Tradability, Closeness, Integration — auswendig und mit Erklärung.",
+          "Erstelle eine Entscheidungsmatrix: Wann Build? Wann Borrow? Wann Buy?",
+          "Übe, das Framework auf ein Fallbeispiel anzuwenden: Ein Technologieunternehmen möchte KI-Kompetenzen aufbauen — Build, Borrow oder Buy?",
+          "Schreibe Capron & Mitchell (2012) als korrekte Zitierweise auf und übe den Einsatz im Fließtext."
+        ]
+      },
+      {
+        "day": 5,
+        "label": "Mergers & Acquisitions — Motive und Misserfolg",
+        "tasks": [
+          "Lerne die drei Kategorien von M&A-Motiven: Managerial, Financial, Strategic — je zwei Beispiele pro Kategorie (nutze die im Material genannten: AOL-Time Warner, KKR-RJR Nabisco etc.).",
+          "Erkläre das Principal-Agent-Problem im Kontext von M&A in 4-5 Sätzen.",
+          "Analysiere: Warum schaffen M&As trotz negativer empirischer Evidenz weiterhin statt?",
+          "Unterscheide Merger, Acquisition und Hostile Takeover — Definitionen auf Karteikarte."
+        ]
+      },
+      {
+        "day": 6,
+        "label": "Integrationsübung & Essay-Training",
+        "tasks": [
+          "Schreibe einen vollständigen Probe-Essay (30 Minuten): 'Critically evaluate the conditions under which diversification creates shareholder value. Use relevant theories and examples.'",
+          "Überprüfe deinen Essay: Hast du Porter's Three Tests, Economies of Scope, Related vs. Unrelated Diversification und empirische Befunde eingebaut?",
+          "Identifiziere Lücken im Essay und ergänze fehlende Argumente mit Beispielen aus dem Material.",
+          "Erstelle eine Argumentationsstruktur (Outline) für zwei weitere potenzielle Klausurfragen: (1) Build-Borrow-or-Buy, (2) Why do M&As fail?"
+        ]
+      },
+      {
+        "day": 7,
+        "label": "Wiederholung & Prüfungsvorbereitung",
+        "tasks": [
+          "Wiederhole alle Flashcards und Schlüsselbegriffe ohne Notizen.",
+          "Gehe Porter's Three Tests, Build-Borrow-or-Buy und M&A Motive noch einmal durch — formuliere jedes Konzept in zwei Sätzen frei.",
+          "Überprüfe alle Autorenquellen: Porter, Capron & Mitchell, McKinsey — Theorie und Zitatformulierung sitzen.",
+          "Letzte 60 Minuten: Lies deinen Probe-Essay aus Tag 6 erneut, überarbeite ihn und stelle sicher, dass Argumentation klar und mit Beispielen unterstützt ist."
+        ]
+      }
+    ]
+  },
+  "quizletExport": "What are the two core sources of superior profit that also govern diversification decisions?\tIndustry attractiveness and competitive advantage.A firm earns returns above its cost of capital (ROIC > WACC) either by competing in an attractive industry or by holding a competitive advantage within that industry — or both.Example: A firm considering entering the cloud computing market must ask both 'Is cloud computing a profitable industry?' and 'Can we outcompete AWS or Azure?'\nWhat is the difference between product diversification, geographic diversification, and product-market diversification?\tThey differ in the dimension along which a firm expands its scope.Product diversification = entering multiple product/service markets. Geographic diversification = expanding across regions or countries. Product-market diversification = simultaneous expansion along both dimensions.Example: A firm selling only cars in Germany that begins selling motorbikes in Asia pursues product-market diversification.\nWhat are the three main motives for diversification, and which one is most likely to destroy shareholder value?\tGrowth, risk spreading, and value creation — with growth-seeking diversification most likely to destroy shareholder value.Managers may pursue growth to increase their own compensation and status (principal-agent problem), even when acquisitions do not improve profitability. Risk spreading does not create value for shareholders who can already hold diversified portfolios (as shown by the Capital Asset Pricing Model).Example: Conglomerate mergers of the 1960s–70s were largely growth-motivated and subsequently unwound through divestitures.\nWhy does diversification reduce unsystematic risk but NOT create value for shareholders according to the Capital Asset Pricing Model (CAPM)?\tBecause shareholders can diversify their own portfolios at zero cost, making corporate diversification redundant for risk reduction.CAPM distinguishes unsystematic (firm-specific) risk, which can be eliminated through a diversified securities portfolio, from systematic (market-wide) risk, which cannot. Diversifying at the corporate level only reduces unsystematic risk — something investors can do themselves for free.Example: A shareholder holding stocks in both an oil company and a tech firm already achieves the same risk reduction a conglomerate merger would provide.\nWhat condition must diversification meet to create shareholder value?\tBringing different businesses under common ownership must increase their total profitability above what each could achieve independently.This means the combined entity must generate synergies — cost savings, revenue gains, or capability transfers — that are not available to standalone firms or achievable through market contracts.Example: If P&G acquires a small brand and its superior distribution network raises that brand's sales significantly, the acquisition creates real value.\nWhat are Porter's Three Essential Tests for diversification to create shareholder value?\tThe Attractiveness Test, the Cost of Entry Test, and the Better-Off Test.1. Attractiveness Test: the target industry must be structurally attractive (or have the potential to become so). 2. Cost of Entry Test: the entry price must not consume all future profits. 3. Better-Off Test: the new unit or the parent must gain a competitive advantage from the link — i.e., some form of synergy must exist.Example: If a firm pays a massive acquisition premium to enter an attractive market, it may pass test 1 but fail test 2, destroying value overall.\nWhat does the Better-Off Test require, and why is it the most strategically demanding of Porter's three tests?\tIt requires that the new business unit gains competitive advantage from its link to the corporation, or vice-versa — i.e., genuine synergy must be present.This test is most demanding because synergies are frequently assumed but rarely realized. Integration costs, cultural clashes, and administrative complexity often offset theoretical economies of scope.Example: Daimler's acquisition of Chrysler was meant to create cross-brand synergies but failed the Better-Off Test — costs exceeded any synergy gains, leading to divestiture.\nWhat is the Cost of Entry Test, and what happens when a firm fails it despite entering an attractive industry?\tThe cost of entry must not capitalize (i.e., absorb) all future profits from the new business.If competition for entry into an attractive industry drives up the acquisition price or entry costs, the net present value of the investment becomes zero or negative — the firm overpays and destroys value even in a good industry.Example: The AOL–Time Warner merger: Time Warner operated in attractive media markets, but the inflated acquisition price (driven by AOL's overvalued equity) eliminated any prospect of returns.\nWhat are the two main economic sources of competitive advantage from diversification?\tEconomies of scope and economies from internalizing transactions.Economies of scope arise from sharing or transferring tangible/intangible resources across business units. Economies from internalization arise because a diversified firm can bypass costly external markets (e.g., capital markets, labor markets) by running internal equivalents with superior information.Example: A diversified firm avoids the information asymmetry of external capital markets by allocating internal funds to its most productive business unit directly.\nWhat is the difference between transferring competencies and leveraging competencies in a diversified firm?\tTransferring = implanting an existing competency into another business unit; leveraging = using it to create an entirely new business unit.Transferring: a distinctive competency from one business is moved to an existing unit in another industry to improve its performance. Leveraging: the same competency is used as the foundation for building a brand-new business in a different industry.Example: Transferring — Disney moves its brand management expertise to its theme park division. Leveraging — Amazon uses its logistics competency to create Amazon Logistics as a separate business.\nWhat is a 'commonality' in the context of transferring competencies, and when does it increase profitability?\tA commonality is a skill or competency that, when shared by two or more business units, allows them to operate more effectively and create more value.It increases profitability when it either lowers the cost structure of one or more business units or enables better product differentiation. Crucially, the competency must have real strategic value — not just superficial similarity.Example: Shared brand equity (e.g., Apple's brand applied across Mac, iPhone, iPad) is a commonality that enhances differentiation across all units.\nWhat are economies of scope, and what are the two main sources of cost reduction they generate?\tEconomies of scope are synergies that arise when business units of a diversified firm share resources or capabilities to lower costs or increase differentiation.Two sources of cost reduction: (1) Sharing lowers the overall cost structure by spreading fixed costs across multiple units. (2) A shared marketing function can create stronger product differentiation, leading to a higher Return on Invested Capital (ROIC).Example: Procter & Gamble's shared distribution network reduces per-unit logistics costs across its many consumer brands.\nWhat is product bundling, and does it always require joint ownership of the bundled businesses?\tProduct bundling means offering connected products together as a package to provide customers lower prices or a superior set of services — and it does NOT always require joint ownership.Bundling can be achieved through market contracts or strategic alliances without a full merger or acquisition. Joint ownership becomes necessary only when transaction costs or coordination failures make contracts inefficient.Example: Microsoft bundles Office with Windows. Telecom companies bundle internet, TV, and phone services — sometimes via partnerships, not ownership.\nWhat are general organizational competencies, and what are the three types discussed in the course?\tGeneral organizational competencies are firm-wide capabilities of top managers that help all business units perform better than they could as independent companies.The three types are: (1) Entrepreneurial capabilities — fostering risk-taking and innovation across units. (2) Organizational design capabilities — creating structures, cultures, and controls that motivate high performance. (3) Superior strategic management capabilities — diagnosing problems and executing turnaround strategies across business units.Example: GE under Jack Welch was famous for its organizational design and strategic management capabilities applied across diverse business units.\nWhat must a company do to develop entrepreneurial capabilities across its business units?\tIt must encourage risk-taking, provide time and resources for novel ideas, not punish failure, and ensure free cash flow is not wasted on low-return ventures.These four conditions create an internal environment where managers innovate rather than play it safe. The last condition is critical: excessive diversification financed by free cash flow without disciplined ROI requirements destroys value.Example: Google (Alphabet) gives teams resources and tolerance for failure (e.g., Google X moonshots) while maintaining financial discipline on core businesses.\nWhat is a turnaround strategy in the context of diversified firms, and what capability does it require?\tA turnaround strategy involves corporate managers identifying inefficient or poorly managed companies in other industries and improving their performance after acquisition.It requires superior strategic management capabilities — specifically the ability to diagnose the underlying source of underperformance and redesign strategy, structure, and management in the acquired unit.Example: Berkshire Hathaway has consistently acquired underperforming companies and improved them through better management and capital allocation.\nWhat does empirical research reveal about the relationship between diversification and firm profitability?\tThere is no consistent relationship, but evidence suggests an inverted-U (∩-shaped) pattern: moderate diversification increases profitability, while excessive diversification reduces it.McKinsey & Co. identify benefits from moderate diversification — especially for firms with few remaining growth opportunities in their core markets. A further complication is reverse causality: profitable firms may diversify, rather than diversification causing profitability.Example: A single-business firm that diversifies into one related area often improves performance; a conglomerate with 50 unrelated businesses often underperforms.\nWhat does empirical research show about related versus unrelated diversification in terms of profitability?\tMost studies show that related diversification outperforms unrelated diversification.Related diversification offers greater synergies through shared resources and capabilities, but also imposes higher management coordination costs. The definition of 'relatedness' is itself contested — businesses can be related operationally, strategically, or in multiple ways simultaneously.Example: LVMH (luxury brands — related), GE (aerospace to finance — more unrelated), Virgin Group (airlines to mobile — brand-related but operationally diverse).\nWhat is the difference between operational relatedness and strategic relatedness in diversification?\tOperational relatedness = synergies from sharing resources across businesses (e.g., distribution, brands, R&D); strategic relatedness = synergies at the corporate level from applying common management capabilities to different businesses.Operational relatedness is resource-based and visible at the business unit level. Strategic relatedness is management-based and operates through corporate-level processes like resource allocation, strategy formulation, and performance management.Example: Operational: two consumer goods brands sharing a distribution network. Strategic: a conglomerate whose corporate center excels at allocating capital to businesses with similar risk/return profiles.\nWhat is the key problem with pursuing operational relatedness through economies of scope?\tThe administrative costs of exploiting economies of scope may dwarf the benefits they generate.Coordinating shared resources across business units requires management time, integration processes, and organizational complexity — all of which have costs. If these administrative costs exceed the synergy gains, operational relatedness destroys rather than creates value.Example: Two merged companies that share a sales force may find that coordination conflicts, incentive misalignments, and management overhead eliminate any cost savings.\nWhat are the three dimensions of strategic similarity that determine strategic relatedness between business units?\tResource allocation similarity, strategy formulation similarity, and performance management & control similarity.Resource allocation: similar investment sizes, time spans, risk sources, and required management skills. Strategy formulation: similar key success factors, industry life cycle stages, and competitive positions. Performance management: similar performance variables, targets, and time horizons.Example: Two businesses that both require multi-year capital projects with similar risk profiles and measured by ROIC are strategically related — a corporate center experienced in one can manage the other effectively.\nWhat are the three growth strategies in the Build-Borrow-Buy Framework, and what does each involve?\tBuild (internal organic growth), Borrow (external growth via contracts/alliances), Buy (external growth via acquisition).Build: develop capabilities and enter markets through internal R&D and investment. Borrow: access external resources through licensing, joint ventures, or strategic alliances without full ownership. Buy: acquire a firm outright to gain its resources, capabilities, and market position.Source: Capron & Mitchell (2012), Build, Borrow, or Buy.Example: Tesla built its battery technology internally; pharmaceutical firms often borrow through licensing; Facebook bought Instagram.\nWhat are the four main issues in the Build-Borrow-Buy Framework that guide the choice between strategies?\tRelevancy, Tradability, Closeness, and Integration.Relevancy: how relevant are the firm's existing resources to closing the gap? (High relevancy → Build). Tradability: how easily can target resources be accessed externally? (High tradability → Borrow). Closeness: how close must the firm be to its resource partner? (High closeness → Buy). Integration: how well can the target firm be integrated if acquired? (Poor integration capacity → avoid Buy).Example: If a firm needs tacit, non-tradable knowledge deeply embedded in a partner firm, acquisition (Buy) is likely necessary.\nWhat is the difference between a merger and an acquisition, and what makes a takeover 'hostile'?\tA merger joins two independent companies into a combined entity (typically friendly); an acquisition is the purchase of one company by another (can be friendly or hostile).A takeover becomes hostile when the target firm does not wish to be acquired — the acquirer bypasses management and appeals directly to shareholders or uses other pressure mechanisms.Example: Kraft's acquisition of Cadbury (2010) was initially hostile — Cadbury's management publicly rejected the offer before ultimately accepting a higher bid.\nWhat are the three main benefits of horizontal integration through mergers?\tReduction in competitive intensity, lower costs, and increased differentiation.Horizontal integration merges competitors at the same stage of the value chain, reducing the number of rivals (and thus competitive pressure), achieving economies of scale that lower unit costs, and potentially combining product lines or brands to improve differentiation.Example: Sirius and XM Radio merged horizontally — reducing direct competition in satellite radio while achieving cost savings in programming and infrastructure.\nWhy do most mergers and acquisitions fail to create competitive advantage, and what are the three underlying reasons given in the course?\tMost M&As do not create competitive advantage, do not realize anticipated synergies, and destroy shareholder value — due to principal-agent problems, desire to overcome competitive disadvantage, and the rare exception of superior acquisition capability.Principal-agent problems: managers pursue M&A for personal gain (pay, status, power) rather than shareholder value. Competitive disadvantage motive: firms acquire to fix weaknesses rather than build on strengths. Only firms with a genuinely superior acquisition and integration capability reliably create value.Example: AOL–Time Warner is a textbook case of value destruction driven by managerial overconfidence and principal-agent misalignment.\nWhat are the managerial motives for M&A, and how do they reflect principal-agent problems?\tManagerial motives include compensation tied to firm size, psychological rewards (power, celebrity), and imitation of industry merger waves — all reflecting misalignment between manager and shareholder interests.Since CEO compensation correlates more with firm size than profitability, acquisitions can increase pay even when they reduce returns. Fear of missing out on a merger wave creates herding behavior that drives overpriced deals.Example: Many telecom mergers of the late 1990s were driven by CEO ego and merger wave imitation, not strategic logic — most destroyed value.\nWhat are the four types of strategic motives for M&A with a concrete example of each?\tHorizontal M&A, geographical extension M&A, vertical M&A, and diversifying M&A.1. Horizontal: economies of scale and market power — e.g., Sirius–XM (satellite radio). 2. Geographical extension: enter overseas markets — e.g., ENEL–Endesa (Italian utility entering Spain). 3. Vertical: acquire supplier or customer — e.g., Glencore–Xstrata (commodity trader acquiring miner). 4. Diversifying: enter a new business area — e.g., Kering–Puma (luxury group acquiring sportswear).\nWhat are the financial motives for M&A? Name three with a real-world example for each.\tFinancial motives include exploiting stock market inefficiencies, seeking tax savings, and financial re-engineering through debt financing.1. Stock market inefficiencies: acquire undervalued firms or use overvalued equity as currency — e.g., Berkshire Hathaway–Heinz (undervalued target); AOL–Time Warner (overvalued equity used). 2. Tax savings: cross-border acquisitions to relocate to lower-tax jurisdictions — e.g., Burger King–Tim Hortons (US firm redomiciling to Canada). 3. Financial re-engineering: debt-financed buyouts reduce cost of capital — e.g., KKR–RJR Nabisco (leveraged buyout).\nWhy do firms acquire others to access new markets, overcome entry barriers, or preempt rivals, and which firms are most famous for the preemption motive?\tAcquisitions provide faster and sometimes cheaper access to markets, distribution channels, or capabilities than building them organically, and preemptive acquisitions prevent rivals from gaining those same resources.Building new capabilities or entering new markets organically takes time and faces uncertainty. Acquisition bypasses entry barriers by purchasing an established player. Preemption denies competitors access to a scarce resource or talent pool.Facebook and Google are explicitly cited in the course as famous for preemptive acquisition strategies — e.g., Facebook's acquisition of Instagram and WhatsApp before they could become competitive threats."
+}

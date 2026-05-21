@@ -1,0 +1,881 @@
+{
+  "courseTitle": "Global Strategic Management — Session 9: Strategic Change and Innovation",
+  "examType": "open_book",
+  "flashcards": [
+    {
+      "id": "1",
+      "category": "Industry Life Cycle",
+      "question": "What are the four stages of the Industry Life Cycle?",
+      "answer": "<strong>Introduction → Growth → Maturity → Decline</strong><br>Each stage is characterized by different competitive dynamics, customer behavior, and technological intensity.<br><em>Example:</em> The smartphone industry moved from introduction (~2007) through rapid growth, and many segments are now approaching maturity.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "2",
+      "category": "Industry Life Cycle",
+      "question": "What are the two primary drivers of industry evolution according to the life cycle model?",
+      "answer": "<strong>1) Demand growth and 2) Creation and diffusion of knowledge</strong><br>As demand grows, new customers enter and the market expands. As knowledge diffuses, technology standardizes and competition intensifies on price rather than differentiation.<br><em>Example:</em> In the PC industry, knowledge diffusion led to component standardization and intense price competition.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "3",
+      "category": "Industry Life Cycle",
+      "question": "What structural changes typically occur as an industry moves into maturity?",
+      "answer": "<strong>Market saturation, price competition, consolidation, and production shifts to low-wage countries</strong><br>Customers become more price-conscious, products standardize, distribution channels consolidate, bargaining power of distributors increases, and excess capacity builds up. R&D intensity declines.<br><em>Example:</em> The textile industry shifted production to Asia as Western markets matured.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "4",
+      "category": "Industry Life Cycle",
+      "question": "Why is it dangerous to assume a common, pre-determined pattern of industry development in the life cycle model?",
+      "answer": "<strong>Industries can regenerate, stall, or skip stages — the life cycle is not deterministic</strong><br>Technology-intensive industries (e.g., pharmaceuticals, semiconductors) may retain emergence features indefinitely. Basic necessity industries (e.g., food, construction) reach maturity but rarely decline. Industries can also regenerate through technological shifts.<br><em>Example:</em> The motorcycle and TV industries both experienced life cycle regeneration rather than decline.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "5",
+      "category": "First-Mover Advantages & Disadvantages",
+      "question": "What are the four key advantages of being a first mover?",
+      "answer": "<strong>1) Brand loyalty & technological leadership, 2) Preemption of scarce assets, 3) Exploiting buyer switching costs, 4) Reaping increasing returns advantages</strong><br>First movers can lock in customers and resources before competitors arrive, creating durable competitive advantages.<br><em>Example:</em> Amazon preempted warehouse locations and built brand loyalty as a first mover in online retail.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "6",
+      "category": "First-Mover Advantages & Disadvantages",
+      "question": "What are the four key disadvantages of being a first mover?",
+      "answer": "<strong>1) High R&D expenses, 2) Undeveloped supply and distribution channels, 3) Immature enabling technologies and complements, 4) Uncertainty of customer requirements</strong><br>First movers bear the costs and risks of market creation — later entrants can free-ride on their investments.<br><em>Example:</em> Early electric vehicle makers struggled with immature battery technology and lack of charging infrastructure.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "7",
+      "category": "First-Mover Advantages & Disadvantages",
+      "question": "How are 'first movers,' 'early followers,' and 'late entrants' defined in terms of market timing?",
+      "answer": "<strong>First movers = first to sell in a new category; Early followers = early but not first; Late entrants = enter when product penetrates mass market or later</strong><br>These distinctions matter because increasing returns dynamics mean timing can fundamentally determine competitive outcomes.<br><em>Example:</em> Google was a late entrant to search (after Yahoo, AltaVista) but became dominant; Facebook was an early follower to MySpace in social networking.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "8",
+      "category": "Technology S-Curves & Cycles",
+      "question": "What is a 'discontinuous technology' and what characterizes its early performance relative to incumbent technology?",
+      "answer": "<strong>A discontinuous technology fulfills a similar market need via an entirely new knowledge base — and initially has LOWER performance than the incumbent</strong><br>Firms are reluctant to adopt it because improvement is initially slow/costly and they have significant investment in existing technology.<br><em>Example:</em> The first automobiles were much slower than horse-drawn carriages; early digital cameras had far lower image quality than film cameras.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "9",
+      "category": "Technology S-Curves & Cycles",
+      "question": "Describe the S-Curve pattern of technology diffusion — what explains the three phases?",
+      "answer": "<strong>Slow adoption → Acceleration → Saturation</strong><br>Adoption is initially slow because the technology is unfamiliar. It accelerates as it becomes better understood. Eventually the market saturates and new adoptions decline. Note: technology diffusion takes far longer than information diffusion because it requires complex knowledge, experience, and complementary resources.<br><em>Example:</em> Household electricity (invented 1873) took decades to reach 25% of the U.S. population.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "10",
+      "category": "Technology S-Curves & Cycles",
+      "question": "What are the two phases of a technology cycle according to Anderson and Tushman, and what triggers the transition between them?",
+      "answer": "<strong>Fluid phase (experimentation, design uncertainty) → Specific phase (incremental improvement, manufacturing efficiency); transition triggered by emergence of a dominant design</strong><br>The fluid phase features considerable uncertainty and firms experiment with different product designs. Once a dominant design emerges, competition shifts to efficiency and incremental refinement.<br><em>Example:</em> Early automobile designs varied widely (steam, electric, gasoline) until the gasoline-powered internal combustion engine became dominant.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "11",
+      "category": "Technology S-Curves & Cycles",
+      "question": "What is the 'era of ferment' in Anderson and Tushman's technology cycle model?",
+      "answer": "<strong>The turbulent, uncertain period following a technological discontinuity, before a dominant design is selected</strong><br>During this era, firms compete with different designs and there is no clear standard. It ends when a dominant design emerges and the era of incremental change begins.<br><em>Example:</em> The early personal computer era (late 1970s–early 1980s) was an era of ferment with competing architectures (Apple II, CP/M, IBM PC) before the IBM PC-compatible standard emerged.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "12",
+      "category": "Dominant Designs",
+      "question": "What were Anderson and Tushman's two key findings about dominant designs?",
+      "answer": "<strong>1) A dominant design always rose to command the majority of market share unless the next discontinuity arrived too early. 2) The dominant design was never the original discontinuity, nor the leading edge of technology — it bundled features meeting the needs of the majority.</strong><br>This means dominant designs are a market-driven compromise, not a technological optimum.<br><em>Example:</em> The QWERTY keyboard was not the most efficient layout but bundled features acceptable to the majority and became dominant.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "13",
+      "category": "Dominant Designs",
+      "question": "How does 'prior learning and absorptive capacity' explain why early-adopted technologies tend to become dominant designs?",
+      "answer": "<strong>A firm's prior experience shapes its ability to recognize and utilize new information — using a technology builds a knowledge base that makes it easier to improve and harder for rivals to catch up</strong><br>Technologies adopted earlier become better developed over time, creating a self-reinforcing advantage over later alternatives.<br><em>Example:</em> Intel's x86 architecture accumulated decades of engineering knowledge, making it very difficult for competing CPU architectures to match its performance.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "14",
+      "category": "Dominant Designs",
+      "question": "Explain the self-reinforcing cycle between installed base and complementary goods in dominant design competition.",
+      "answer": "<strong>Large installed base → more complementary goods developed → more users attracted → larger installed base (positive feedback loop)</strong><br>This network effect dynamic means that even a technically inferior technology can win if it gets ahead in installed base and complements early.<br><em>Example:</em> Windows PCs attracted more software developers than OS/2, which attracted more users, which attracted more developers — a self-reinforcing cycle that made Windows dominant.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "15",
+      "category": "Dominant Designs",
+      "question": "What is path dependency in the context of dominant designs, and why does it matter strategically?",
+      "answer": "<strong>Path dependency means end results depend greatly on the historical events leading up to the outcome — early choices shape which technology wins, not just technical merit</strong><br>This means technologically superior products do not always win. Winner-take-all markets require different firm strategies than markets with less pressure for a single dominant design.<br><em>Example:</em> VHS beat Betamax despite Betamax having superior video quality, because VHS gained an early installed base advantage.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "16",
+      "category": "Dominant Designs",
+      "question": "What are the four strategic steps for 'fighting standards wars' to win dominant design competition?",
+      "answer": "<strong>1) Determine potential for standards emergence (analyze network externalities), 2) Assemble allies (partners, complementors, competitors), 3) Pre-empt the market (enter early, attract key customers, use penetration pricing), 4) Manage expectations (use pre-launch publicity to convince market you will win)</strong><br>Standards wars are won through coalition-building and momentum, not just technology.<br><em>Example:</em> Blu-ray defeated HD-DVD partly by assembling studio allies and managing consumer expectations about the winning standard.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "17",
+      "category": "Dominant Designs",
+      "question": "What two dimensions of value determine a technology's overall attractiveness in increasing-returns industries, and why can a technically superior product lose?",
+      "answer": "<strong>1) Standalone value (functionality, ease of use, aesthetics) and 2) Network externality value (installed base size, availability of complementary goods)</strong><br>A new technology with more standalone functionality may offer less overall value if it has a smaller installed base or poor complement availability.<br><em>Example:</em> NeXT Computers were technically advanced but could not compete with the installed base value and complementary good value of Windows-based PCs.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "18",
+      "category": "Dominant Designs",
+      "question": "What are the four strategies for sustaining a dominant standard once won?",
+      "answer": "<strong>1) Don't fall behind on technology, 2) Ensure backward compatibility, 3) Offer customers a migration path to address disruptive technology threats, 4) Reinforce the standard with other resources (e.g., brand)</strong><br>Sustaining a standard requires ongoing investment — complacency invites disruption.<br><em>Example:</em> Microsoft maintained Windows dominance partly through backward compatibility, ensuring users could upgrade without losing existing software investments.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "19",
+      "category": "Types of Innovation",
+      "question": "What is the difference between 'competence-enhancing' and 'competence-destroying' innovation? Give an example of each.",
+      "answer": "<strong>Competence-enhancing: builds on the firm's existing knowledge base. Competence-destroying: renders a firm's existing competencies obsolete.</strong><br>Whether an innovation is competence-enhancing or -destroying depends on the perspective of a particular firm — the same innovation can be enhancing for one and destroying for another.<br><em>Example:</em> Intel's Pentium 4 (enhancing — built on Pentium III). Electronic calculators (destroying for Keuffel & Esser — rendered their slide rule expertise obsolete).",
+      "difficulty": "easy"
+    },
+    {
+      "id": "20",
+      "category": "Types of Innovation",
+      "question": "What is the difference between 'architectural' and 'component' (modular) innovation? Give an example of each.",
+      "answer": "<strong>Component innovation: changes one or more components without significantly affecting the overall system design. Architectural innovation: changes the overall system design or how components interact.</strong><br>Most architectural innovations also require component changes. Source: Henderson & Clark (1990).<br><em>Example:</em> Adding gel-filled material to a bicycle seat (component). Transition from high-wheel bicycle to safety bicycle (architectural).",
+      "difficulty": "easy"
+    },
+    {
+      "id": "21",
+      "category": "Types of Innovation",
+      "question": "According to Henderson and Clark (1990), what is the 'Innovation Matrix' and what are its four cells?",
+      "answer": "<strong>A 2x2 matrix combining architectural knowledge (reinforced vs. overturned) and component knowledge (reinforced vs. overturned), yielding: Incremental, Modular, Architectural, and Radical innovation</strong><br>The matrix shows that established firms most struggle with architectural innovations — even when individual components are familiar, changes to how they interact can destroy existing organizational knowledge.<br><em>Example:</em> A radical innovation (e.g., transistor replacing vacuum tube) overturns both architectural and component knowledge. Source: Henderson, R. and Clark, K. (1990), Administrative Science Quarterly.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "22",
+      "category": "Types of Innovation",
+      "question": "What are 'sustaining' versus 'disruptive' technologies, and which is harder for established firms to adapt to?",
+      "answer": "<strong>Sustaining technologies augment existing performance attributes; disruptive technologies incorporate different performance attributes — disruptive technologies are harder for established firms to adapt to</strong><br>Established firms optimize for their existing customers' needs, making them systematically blind to technologies that serve different performance dimensions or new customer segments.<br><em>Example:</em> Digital photography was disruptive to Kodak (different performance attributes — no film, instant review) but more sustaining for Sony (leveraged existing electronics competencies).",
+      "difficulty": "medium"
+    },
+    {
+      "id": "23",
+      "category": "Organizational Ambidexterity & Dual Strategies",
+      "question": "What is 'organizational ambidexterity' and why do firms need it?",
+      "answer": "<strong>Organizational ambidexterity is the ability to simultaneously exploit existing resources/capabilities (for today) AND explore new opportunities (for tomorrow)</strong><br>Firms face a paradox: exploitation generates current income but can crowd out exploration; exploration builds future competencies but costs resources today. Without ambidexterity, firms may succeed short-term but fail long-term.<br><em>Example:</em> Amazon exploits its retail and cloud businesses while exploring new areas like autonomous delivery and healthcare.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "24",
+      "category": "Organizational Ambidexterity & Dual Strategies",
+      "question": "What is the difference between 'structural ambidexterity' and 'contextual ambidexterity'?",
+      "answer": "<strong>Structural ambidexterity: exploration and exploitation allocated to separate organizational units. Contextual ambidexterity: the same units and people perform both exploration and exploitation.</strong><br>Structural ambidexterity reduces internal conflict but can create integration challenges. Contextual ambidexterity is more flexible but requires employees capable of switching between modes.<br><em>Example:</em> Structural — Lockheed's 'Skunk Works' (separate exploratory unit). Contextual — Google's 20% time policy (same employees explore and exploit).",
+      "difficulty": "medium"
+    },
+    {
+      "id": "25",
+      "category": "Organizational Ambidexterity & Dual Strategies",
+      "question": "What are the three 'modes of balancing' exploration and exploitation listed in the antecedents framework?",
+      "answer": "<strong>1) Contextual, 2) Structural, 3) Temporal</strong><br>Temporal balancing means switching between exploration and exploitation phases over time rather than doing both simultaneously — for example, a firm may have distinct innovation cycles and efficiency cycles.<br><em>Example:</em> A firm may pursue heavy exploration during a technological discontinuity, then switch to exploitation once a dominant design emerges.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "26",
+      "category": "Appropriability & Profitability of Innovation",
+      "question": "What is 'appropriability' in the context of innovation, and what two factors determine it?",
+      "answer": "<strong>Appropriability is the degree to which a firm can capture the rents (profits) from its innovation. It is determined by: 1) how easily/quickly competitors can copy the innovation, and 2) the legal and strategic protections the firm employs.</strong><br>High appropriability means the innovator captures most of the value; low appropriability means value leaks to imitators, customers, or complementors.<br><em>Example:</em> Pharmaceutical companies use patents to achieve high appropriability for drug innovations.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "27",
+      "category": "Appropriability & Profitability of Innovation",
+      "question": "What are the four main forms of legal intellectual property protection, and what does each cover?",
+      "answer": "<strong>1) Patents — exclusive rights to a new product, process, substance, or design. 2) Copyrights — exclusive rights to artistic, dramatic, and musical works. 3) Trademarks — exclusive rights to words, symbols, or marks distinguishing goods/services. 4) Trade Secrets — protection of chemical formulae, recipes, and industrial processes.</strong><br>Employment contracts restricting knowledge transfer are an additional protective mechanism.<br><em>Example:</em> Coca-Cola protects its formula as a trade secret rather than a patent (to avoid disclosure requirements).",
+      "difficulty": "easy"
+    },
+    {
+      "id": "28",
+      "category": "Appropriability & Profitability of Innovation",
+      "question": "Why might a firm strategically choose NOT to protect its innovation through patents?",
+      "answer": "<strong>Not protecting can encourage others to support the technology, increasing its likelihood of becoming the dominant design</strong><br>If network effects and installed base are more valuable than exclusivity, open access can be strategically superior to protection. Licensing or open standards can build a larger ecosystem faster.<br><em>Example:</em> Google made Android open-source to maximize adoption and build a large installed base, rather than protecting it exclusively.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "29",
+      "category": "Appropriability & Profitability of Innovation",
+      "question": "What are the four key antecedents of the 'appropriability regime' that affect how much value an innovator can capture?",
+      "answer": "<strong>1) Legal protection, 2) Complementary resources, 3) Imitability of the technology, 4) Lead time</strong><br>These factors together shape the competitive dynamics around an innovation — a strong appropriability regime means innovators can profit; a weak one means imitators or complementors capture more value.<br><em>Example:</em> EMI invented the CT scanner but lacked complementary resources (distribution, service networks) to appropriate the value — GE eventually dominated the market.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "30",
+      "category": "Modularity & Platform Ecosystems",
+      "question": "What is a 'modular system' and when is modularity most valuable?",
+      "answer": "<strong>A modular system can be separated and recombined to change configuration, scale, or functions via standardized interfaces. Modularity is most valuable when: a) there are diverse technological options to recombine, and b) customers have heterogeneous preferences.</strong><br>Modularity enables components from different producers to be combined (open modularity) or from a single firm (closed modularity).<br><em>Example:</em> Smartphones (open modularity — apps from many developers). IKEA shelving systems (closed modularity — only IKEA components recombined).",
+      "difficulty": "medium"
+    },
+    {
+      "id": "31",
+      "category": "Modularity & Platform Ecosystems",
+      "question": "What defines a 'platform ecosystem,' and why do all members' success depend on each other?",
+      "answer": "<strong>A platform ecosystem is one where a core product/platform mediates relationships between a wide range of complements/components and end-users. All members' success depends on the success of other members because value is co-created across the ecosystem.</strong><br>Members often invest in co-specialization or exclusivity agreements. Platform boundaries can be stable or dynamic. Source: Van Alstyne, Parker & Choudary (2016), Harvard Business Review.<br><em>Example:</em> A video game console (platform) connects game developers (complementors) and gamers (users) — if the platform fails, both developers and users lose their investments.",
+      "difficulty": "medium"
+    }
+  ],
+  "essayBlueprint": {
+    "totalWords": 1500,
+    "timeMinutes": 90,
+    "parts": [
+      {
+        "title": "Introduction",
+        "words": 150,
+        "minutes": 10,
+        "paragraphs": [
+          {
+            "label": "Context & Thesis",
+            "instruction": "Introduce the central tension between exploiting existing capabilities and exploring new technologies in the context of industry evolution. State your core argument clearly. Reference the industry life cycle and technological change as the analytical frame.",
+            "template": "As industries evolve through growth, maturity, and decline, firms face the fundamental challenge of balancing exploitation of current resources with exploration of emerging technologies. This essay argues that [YOUR THESIS — e.g., incumbent firms systematically underestimate disruptive technological change because of competence lock-in and dominant design path dependency], drawing on the industry life cycle model, technology S-curves, and the frameworks of Anderson and Tushman (1990) as well as Henderson and Clark (1990).",
+            "references": [
+              "Anderson & Tushman (1990)",
+              "Henderson & Clark (1990)"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Part 1: Industry Evolution and Technological Change",
+        "words": 400,
+        "minutes": 25,
+        "paragraphs": [
+          {
+            "label": "Industry Life Cycle and Driving Forces",
+            "instruction": "Explain how industries evolve through stages and what drives this evolution. Connect demand growth, knowledge diffusion, and market saturation to strategic implications for firms. Highlight that the life cycle is a useful heuristic but not a deterministic model.",
+            "template": "The industry life cycle framework identifies four stages — introduction, growth, maturity, and decline — driven primarily by demand growth and the creation and diffusion of knowledge. As markets approach saturation, customers become more price-conscious, products standardize, and distribution channels consolidate, intensifying price competition. However, the life cycle pattern is not universal: technology-intensive industries such as pharmaceuticals or semiconductors may retain characteristics of emerging industries, while others (e.g., motorcycles, televisions) experience life cycle regeneration.",
+            "references": [
+              "Industry Life Cycle Model"
+            ]
+          },
+          {
+            "label": "Technology S-Curves and Discontinuous Innovation",
+            "instruction": "Explain the S-curve model of technology diffusion and why incumbent firms struggle to adopt discontinuous technologies. Discuss the fluid and specific phases and the role of dominant design emergence.",
+            "template": "Technology diffusion follows an S-curve pattern: adoption is initially slow as the technology is unfamiliar, accelerates as it becomes better understood, and eventually decelerates as the market saturates. Critically, a discontinuous technology — one that fulfills a similar market need through an entirely new knowledge base — may initially underperform incumbent technology, as was the case when the first automobiles were slower than horse-drawn carriages. Anderson and Tushman (1990) found that each technological discontinuity inaugurates an 'era of ferment' until a dominant design emerges, after which an 'era of incremental change' begins. Established firms that have built competencies around the dominant design are particularly vulnerable to the next discontinuity, as they cease investing in alternative designs.",
+            "references": [
+              "Anderson & Tushman (1990)"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Part 2: Types of Innovation and Incumbent Vulnerability",
+        "words": 400,
+        "minutes": 25,
+        "paragraphs": [
+          {
+            "label": "Competence-Enhancing vs. Competence-Destroying Innovation",
+            "instruction": "Distinguish between competence-enhancing and competence-destroying innovations and explain why the latter poses an existential threat to established firms. Use concrete examples from the material.",
+            "template": "Not all innovation poses equal challenges to incumbents. Competence-enhancing innovations build on a firm's existing knowledge base — Intel's Pentium 4 building on Pentium III technology illustrates this. By contrast, competence-destroying innovations render existing competencies obsolete: electronic calculators eliminated the slide rule expertise of firms like Keuffel & Esser. The key insight is that whether an innovation is competence-enhancing or competence-destroying is firm-specific; digital photography was a far more radical disruption for Kodak than for Sony, given their respective knowledge bases.",
+            "references": [
+              "Henderson & Clark (1990)"
+            ]
+          },
+          {
+            "label": "Architectural vs. Component Innovation",
+            "instruction": "Explain the Henderson and Clark (1990) distinction between architectural and component innovation. Explain why architectural innovation is particularly difficult for established firms to manage.",
+            "template": "Henderson and Clark (1990) make a further critical distinction: component (modular) innovations change one or more components without altering the overall product architecture, while architectural innovations reconfigure how components interact. The transition from the high-wheel bicycle to the safety bicycle exemplifies architectural innovation. Established firms struggle more with architectural changes because their organizational routines, communication channels, and information filters are optimized around the existing architecture — knowledge of the old architecture actively impedes recognition of and adaptation to the new one. This explains why incumbents can fail even when the new technology does not require entirely new component-level knowledge.",
+            "references": [
+              "Henderson & Clark (1990)"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Part 3: Dominant Designs, Standards Wars, and Appropriability",
+        "words": 350,
+        "minutes": 20,
+        "paragraphs": [
+          {
+            "label": "Dominant Design Selection and Path Dependency",
+            "instruction": "Explain the mechanisms by which dominant designs are selected, focusing on increasing returns, installed base, complementary goods, and path dependency. Discuss implications for competitive strategy.",
+            "template": "The selection of a dominant design is not purely a function of technical superiority. Increasing returns dynamics — where a technology with a large installed base attracts developers of complementary goods, which in turn attracts more users — create self-reinforcing cycles that entrench a particular design regardless of its technological merit. This path dependency means that technologically superior products do not always win standards wars, as illustrated by the NeXT Computer, which despite its advanced architecture could not overcome the installed base and complementary good advantages of Windows-based PCs. Anderson and Tushman (1990) confirmed that the dominant design always emerged to command the majority of market share unless the next discontinuity arrived prematurely, and crucially, it was never the original discontinuity but rather the design that bundled features meeting majority market needs.",
+            "references": [
+              "Anderson & Tushman (1990)"
+            ]
+          },
+          {
+            "label": "Appropriability and Capturing Value from Innovation",
+            "instruction": "Explain the concept of appropriability and the mechanisms firms use to capture value from innovation. Discuss the strategic trade-off between protecting IP and encouraging ecosystem adoption.",
+            "template": "Even technologically successful innovators may fail to capture the rents from their innovations if appropriability is weak. Appropriability — the degree to which a firm can capture value from its innovation — depends on the inherent imitability of the technology and the legal protection mechanisms available, including patents, copyrights, trademarks, and trade secrets. However, a firm faces a strategic paradox: aggressively protecting an innovation may slow adoption and reduce its chance of becoming the dominant design, while openly licensing may accelerate adoption and network externality accumulation at the cost of direct rent capture.",
+            "references": [
+              "Appropriability framework (Session 9)"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Part 4: Organizational Ambidexterity and Dual Strategies",
+        "words": 150,
+        "minutes": 7,
+        "paragraphs": [
+          {
+            "label": "Balancing Exploration and Exploitation",
+            "instruction": "Explain organizational ambidexterity as the organizational response to the exploitation-exploration tension. Distinguish structural from contextual ambidexterity and note the inherent paradox.",
+            "template": "Firms must simultaneously pursue exploitation of existing capabilities and market positions and exploration of future opportunities — what is termed organizational ambidexterity. Structural ambidexterity allocates exploration and exploitation to separate organizational units, while contextual ambidexterity requires the same individuals to perform both. Both approaches involve real trade-offs: exploration reduces short-term income and stability, while exploitation undermines long-term adaptability. Managing this paradox — [YOUR ARGUMENT on how firms can resolve or manage this tension given the technological change dynamics discussed above] — is perhaps the defining strategic challenge in innovation-intensive industries.",
+            "references": [
+              "Organizational Ambidexterity framework (Session 9)"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Conclusion",
+        "words": 100,
+        "minutes": 3,
+        "paragraphs": [
+          {
+            "label": "Synthesis & Final Argument",
+            "instruction": "Synthesize the key arguments. Restate the thesis in light of the evidence. End with a forward-looking statement about what firms must do to survive technological discontinuities.",
+            "template": "In sum, incumbent firms' vulnerability to technological change stems from the interplay of dominant design lock-in, competence destruction, architectural disruption, and weakening appropriability — forces that reinforce one another across the industry life cycle. As Anderson and Tushman (1990) and Henderson and Clark (1990) collectively demonstrate, strategic survival requires not only organizational ambidexterity but also active management of installed base dynamics and IP strategy. Firms that [YOUR CONCLUSION — e.g., invest in absorptive capacity and maintain structural exploration units] will be best positioned to navigate successive technological discontinuities.",
+            "references": [
+              "Anderson & Tushman (1990)",
+              "Henderson & Clark (1990)"
+            ]
+          }
+        ]
+      }
+    ],
+    "checklist": [
+      "Thesis clearly stated in introduction — does it take a position, not just describe?",
+      "Industry life cycle used as analytical frame, not just described",
+      "Anderson & Tushman (1990): era of ferment, dominant design, era of incremental change — all three concepts applied",
+      "Henderson & Clark (1990): architectural vs. component innovation distinction correctly used with example",
+      "Competence-enhancing vs. competence-destroying distinction explained with firm-specific examples",
+      "Increasing returns and path dependency linked to dominant design selection",
+      "Installed base + complementary goods feedback loop explained",
+      "NeXT Computer or equivalent example used to illustrate standalone vs. network externality value",
+      "Appropriability paradox (protect vs. open) addressed",
+      "Organizational ambidexterity: structural vs. contextual distinction made",
+      "Exploration-exploitation trade-off connected to the broader argument about technological change",
+      "Conclusion synthesizes — does not introduce new material",
+      "All key authors cited by name (Anderson & Tushman, Henderson & Clark) — no anonymous 'some researchers argue'",
+      "Word count within ±10% of 1500",
+      "No contradictions between paragraphs — check logical flow from life cycle → S-curves → innovation types → dominant design → appropriability → ambidexterity"
+    ]
+  },
+  "simulator": {
+    "questions": [
+      {
+        "id": "q1",
+        "scenario": "A startup develops a new streaming music platform with superior audio quality. However, the dominant platform has 200 million users and thousands of integrated apps and devices.",
+        "question": "According to the multiple dimensions of value framework, why might the technologically superior new platform struggle to displace the incumbent?",
+        "options": [
+          "Because the incumbent holds stronger patents and trade secrets that block imitation.",
+          "Because the incumbent's large installed base and complementary goods ecosystem create network externality value that offsets the new platform's standalone value advantage.",
+          "Because late entrants always face disadvantages due to brand loyalty established by first movers.",
+          "Because the new platform is in the fluid phase and has not yet identified a dominant design."
+        ],
+        "correctIndex": 1,
+        "explanation": "The correct answer is B. The framework explicitly distinguishes standalone value (functions, quality, ease of use) from network externality value (installed base size, availability of complementary goods). A new technology with more standalone functionality may still lose because it lacks network externality value — exactly as illustrated by the NeXT Computer example in the material. A is incorrect: IPR protection (patents, trade secrets) is about appropriability, not about why a superior technology fails to displace an incumbent in a network market. C is incorrect: while first-mover brand loyalty is a real concept, the core issue here is not brand loyalty but the network externality dynamics; moreover, late entrant disadvantages are one factor among many and do not specifically explain the installed base problem. D is incorrect: the fluid phase and dominant design concepts relate to the technology cycle stage of an industry, not to the competitive dynamics of displacing an incumbent with an established ecosystem."
+      },
+      {
+        "id": "q2",
+        "scenario": "Intel releases its Pentium 4 processor, building directly on the architecture and manufacturing knowledge developed for the Pentium III.",
+        "question": "How should this innovation be classified according to the competence-enhancing vs. competence-destroying framework?",
+        "options": [
+          "Competence-destroying, because every new processor generation makes previous skills partially obsolete.",
+          "Architectural innovation, because the overall system design of the processor was changed.",
+          "Competence-enhancing, because it builds on Intel's existing knowledge base rather than rendering it obsolete.",
+          "Radical innovation, because semiconductor technology is inherently discontinuous."
+        ],
+        "correctIndex": 2,
+        "explanation": "The correct answer is C. The material explicitly uses Intel's Pentium 4 as its textbook example of a competence-enhancing innovation — one that builds on the firm's existing knowledge base. A is incorrect: competence-destroying innovations render existing competencies obsolete (like electronic calculators eliminating slide rule expertise); incremental processor improvements do the opposite. B is incorrect: architectural innovation changes the overall design of a product system or how components interact (e.g., the safety bicycle vs. high-wheel bicycle). Pentium 4 did not reconfigure the overall system architecture in a disruptive way. D is incorrect: radical innovation is defined by how new and different it is from prior products. Incremental processor improvements within the same family are by definition not radical; the material notes that radicalness is relative and context-dependent."
+      },
+      {
+        "id": "q3",
+        "scenario": "A bicycle manufacturer adds a new gel-filled padding insert to its existing saddle design without changing any other part of the bicycle.",
+        "question": "Which type of innovation does this represent?",
+        "options": [
+          "Architectural innovation, because it changes a core component of the product.",
+          "Component (modular) innovation, because it changes one component without significantly affecting the overall system design.",
+          "Competence-destroying innovation, because saddle manufacturing requires new material knowledge.",
+          "Radical innovation, because gel technology was previously unknown in cycling."
+        ],
+        "correctIndex": 1,
+        "explanation": "The correct answer is B. The material uses exactly this example — adding gel-filled material to a bicycle seat — as its definition of component (modular) innovation: a change to one or more components without significantly affecting the overall product system design. A is incorrect: architectural innovation involves changing the overall design or how components interact — like the transition from the high-wheel bicycle to the safety bicycle. A saddle insert does not reconfigure how the bicycle's parts relate to one another. C is incorrect: competence-destroying innovation renders a firm's existing competencies obsolete. Improving a saddle material is an incremental change that likely builds on existing manufacturing knowledge, not destroys it. D is incorrect: radicality is defined by how new and different the overall innovation is from prior products and processes. A minor material substitution in one component is an incremental change, not a radical one."
+      },
+      {
+        "id": "q4",
+        "scenario": "A new digital photography technology emerges. For Kodak, which built its entire business on chemical film processing, the shift is existential. For Sony, which already had strong electronics and sensor capabilities, it represents a natural extension.",
+        "question": "What principle does this scenario best illustrate?",
+        "options": [
+          "Architectural innovation always destroys more competences than component innovation.",
+          "Whether an innovation is competence-enhancing or competence-destroying depends on the perspective of the particular firm.",
+          "First movers in digital photography had a decisive advantage due to increasing returns.",
+          "Dominant designs in photography emerged because of strong network externalities."
+        ],
+        "correctIndex": 1,
+        "explanation": "The correct answer is B. The material explicitly states: 'Whether an innovation is competence enhancing or competence destroying depends on the perspective of a particular firm,' and uses exactly this digital photography / Kodak vs. Sony example to illustrate the point. A is incorrect: the architectural vs. component distinction is a separate framework from competence-enhancing vs. competence-destroying; the relationship between them is not that architectural automatically destroys more competences. C is incorrect: while first-mover advantages exist, the scenario is specifically about how the same innovation has different competitive implications for different firms — a point about firm-specific competences, not timing of entry. D is incorrect: dominant design and network externalities are concepts from the standards competition framework, which is not what this scenario is testing."
+      },
+      {
+        "id": "q5",
+        "scenario": "A tech company is launching a new smart home protocol and wants to maximize its chances of becoming the industry standard.",
+        "question": "According to the framework for fighting standards wars, which sequence of strategic actions is most appropriate?",
+        "options": [
+          "Focus on maximizing standalone product quality first, then enter the market once the technology is proven.",
+          "Analyze network externality potential, assemble allies and complementors, pre-empt the market with early entry and penetration pricing, then manage market expectations.",
+          "Protect the technology with strong patents to prevent imitation, then license it exclusively to premium partners.",
+          "Wait for a dominant design to emerge in the era of ferment, then enter with a refined version of the winning design."
+        ],
+        "correctIndex": 1,
+        "explanation": "The correct answer is B. The material provides a precise four-step framework for fighting standards wars: (1) determine network externality potential, (2) assemble allies, (3) pre-empt the market (early entry, key customers, penetration pricing), (4) manage expectations through publicity. This sequence is exactly what option B describes. A is incorrect: waiting to perfect standalone quality misses the window for building the installed base and network effects that are decisive in standards competition — this is the opposite of pre-emption. C is incorrect: strong patents and exclusive licensing may actually reduce the likelihood of becoming a dominant standard, because broad adoption (not exclusivity) drives network externalities; the material notes that sometimes not protecting technology is advantageous to increase adoption. D is incorrect: waiting for the era of ferment to resolve means forfeiting the pre-emption advantage; the material explicitly recommends entering early to build user base quickly."
+      },
+      {
+        "id": "q6",
+        "scenario": "During the era of ferment following a technological discontinuity, multiple firms are experimenting with radically different product designs. Over time, one design captures the majority of market share and becomes the reference point for the industry.",
+        "question": "According to Anderson and Tushman's research on technology cycles, what characterizes the dominant design that emerges?",
+        "options": [
+          "It is typically the design that was first introduced at the moment of technological discontinuity.",
+          "It represents the leading edge of technological performance available at the time of selection.",
+          "It bundles features that meet the needs of the majority of the market, but is not the original discontinuity nor the technological frontier.",
+          "It is selected primarily through government standardization bodies or industry consortia."
+        ],
+        "correctIndex": 2,
+        "explanation": "The correct answer is C. Anderson and Tushman found two key things: the dominant design was never in the same form as the original discontinuity, and it was also not on the leading edge of technology. Instead, it bundled the features that would meet the needs of the majority of the market. A is incorrect: Anderson and Tushman explicitly state that the dominant design was never in the same form as the original discontinuity — the pioneer's design is not what wins. B is incorrect: the finding directly contradicts this; the dominant design is not at the technological frontier. D is incorrect: the material does not attribute dominant design selection to government or industry bodies; it attributes it to installed base dynamics, prior learning, network externalities, and firm strategies — not regulatory processes."
+      },
+      {
+        "id": "q7",
+        "scenario": "A large pharmaceutical company has very profitable existing drug products that rely on chemical synthesis. A new biotechnology platform emerges that could produce superior drugs but requires completely different scientific expertise, equipment, and organizational processes.",
+        "question": "What strategic challenge does organizational ambidexterity theory identify for this firm?",
+        "options": [
+          "The firm must choose between exploitation of existing capabilities and exploration of new ones, as doing both simultaneously is theoretically impossible.",
+          "The firm faces a paradox: it must simultaneously exploit existing resources and market positions (for current income) and explore the new technology (for future positioning), requiring structural or contextual ambidexterity.",
+          "The firm should apply penetration pricing to defend its existing products against the biotechnology threat.",
+          "The firm's absorptive capacity will automatically enable it to recognize and adopt the new biotechnology because of its existing scientific knowledge base."
+        ],
+        "correctIndex": 1,
+        "explanation": "The correct answer is B. The material defines organizational ambidexterity as the need to simultaneously exploit existing resources/capabilities/market positions AND explore new opportunities, and explicitly calls this a paradox. It describes structural ambidexterity (allocating exploration and exploitation to different units) and contextual ambidexterity (same units doing both) as modes of resolution. A is incorrect: the material does not say simultaneous exploitation and exploration is impossible — it says it requires ambidexterity, and presents it as a manageable (though difficult) challenge, not an impossible one. C is incorrect: penetration pricing is a strategy for pre-empting markets in standards wars, not a response to competence-destroying technological change facing an incumbent. D is incorrect: absorptive capacity (prior experience enabling recognition of new information) actually works in the opposite direction here — the firm's chemical synthesis knowledge base may make it harder, not easier, to recognize and adopt a fundamentally different biotechnology platform, as the material warns about incumbent firms during eras of incremental change."
+      },
+      {
+        "id": "q8",
+        "scenario": "A software firm invents a breakthrough algorithm. Management is debating whether to file patents or to keep it as a trade secret and instead race to build market share as fast as possible.",
+        "question": "Which concept best frames this decision, and what does the material suggest about the trade-off?",
+        "options": [
+          "Increasing returns: the firm should prioritize installed base growth over legal protection in all cases.",
+          "Appropriability: the firm must decide whether and how to protect the innovation, noting that sometimes not protecting it can be advantageous if broad adoption increases its chances of becoming a dominant standard.",
+          "Dominant design selection: the firm should not protect the innovation because patents always slow down the era of ferment.",
+          "Competence-destroying innovation: the algorithm renders the firm's own prior competences obsolete, so protection is irrelevant."
+        ],
+        "correctIndex": 1,
+        "explanation": "The correct answer is B. The material defines appropriability as the degree to which a firm can capture rents from its innovation, and explicitly states that 'sometimes not protecting a technology is to the firm's advantage — it may encourage others to support the technology and increase its likelihood of becoming dominant.' This captures the exact trade-off management is debating. A is incorrect: while increasing returns and installed base growth are relevant concepts, the material does not say firms should prioritize market share over protection 'in all cases' — it frames this as a strategic decision dependent on context. C is incorrect: the material does not claim that patents always slow down the era of ferment; it discusses appropriability as a strategic choice with advantages and disadvantages, not as a blanket rule. D is incorrect: competence-destroying innovation refers to how a new technology affects a firm's existing skill base, which is unrelated to the IPR protection decision being discussed here."
+      },
+      {
+        "id": "q9",
+        "scenario": "In the early days of personal computing, IBM licensed its PC architecture openly, allowing many manufacturers to produce IBM-compatible machines. This created a massive installed base of hardware, which in turn attracted enormous developer investment in software for the platform.",
+        "question": "Which self-reinforcing mechanism from the dominant design framework does this best illustrate?",
+        "options": [
+          "Path dependency due to prior learning and absorptive capacity building an unassailable knowledge advantage.",
+          "The cycle between installed base size attracting complementary goods developers, whose products then attract more users, further growing the installed base.",
+          "Penetration pricing as a pre-emption strategy in a standards war.",
+          "Structural ambidexterity enabling IBM to explore new architectures while exploiting the existing PC standard."
+        ],
+        "correctIndex": 1,
+        "explanation": "The correct answer is B. The material explicitly describes this self-reinforcing cycle: 'A technology with a large installed base attracts developers of complementary goods; a technology with a wide range of complementary goods attracts users, increasing the installed base.' IBM's open licensing strategy grew the installed base rapidly, which then attracted software developers, whose products attracted more users — a textbook illustration of this cycle. A is incorrect: path dependency due to prior learning is a related but distinct concept — it refers to how early adoption of a technology builds a knowledge base that makes it progressively harder for other technologies to catch up. It does not specifically describe the installed base / complementary goods feedback loop. C is incorrect: penetration pricing is a deliberate pricing tactic in a standards war; IBM's open licensing is about architectural openness and ecosystem building, not pricing strategy. D is incorrect: structural ambidexterity is an organizational design concept about separating exploration and exploitation units — it has no relevance to the IBM ecosystem dynamics described here."
+      },
+      {
+        "id": "q10",
+        "scenario": "A consumer electronics company successfully launches a modular smart speaker system where third-party developers can create compatible add-on components using standardized interfaces.",
+        "question": "What condition, according to the material, makes modularity especially valuable in this type of product system?",
+        "options": [
+          "When the firm has strong patents protecting each component, ensuring no competitor can copy the interfaces.",
+          "When there are diverse technological options that can be recombined AND customers have heterogeneous preferences.",
+          "When the industry is in the specific phase of the technology cycle and firms are focused on manufacturing efficiency.",
+          "When the product system requires co-specialization agreements to prevent ecosystem members from switching platforms."
+        ],
+        "correctIndex": 1,
+        "explanation": "The correct answer is B. The material states explicitly: 'Modularity is more valuable when there are a) diverse technological options that can be recombined, and b) customers have heterogeneous preferences.' Both conditions apply to a smart speaker ecosystem: diverse audio/smart home technologies can plug in, and customers want different combinations of features. A is incorrect: the material does not condition modularity's value on patent strength; in fact, standardized open interfaces (which may not be patented) are what enable third-party development and thus the value of a modular platform. C is incorrect: the specific phase of the technology cycle is characterized by focus on incremental improvements and manufacturing efficiency — this is actually the phase where firms are less likely to experiment with diverse modular designs and more likely to converge on a dominant design. D is incorrect: co-specialization and exclusivity agreements are mentioned as investment behaviors within platform ecosystems, not as conditions that make modularity valuable."
+      },
+      {
+        "id": "q11",
+        "scenario": "A bicycle industry analyst observes that after the transition from the high-wheel bicycle to the safety bicycle, firms that had specialized in high-wheel manufacturing and design faced severe difficulties adapting, while newer entrants thrived.",
+        "question": "Using the Henderson and Clark (1990) innovation matrix, how should the transition to the safety bicycle be classified, and why did incumbents struggle?",
+        "options": [
+          "As a component innovation, because individual parts like wheels and handlebars were changed; incumbents struggled because they lacked raw materials for the new components.",
+          "As an architectural innovation, because it changed the overall system design and how components interact; incumbents struggled because their knowledge of the old architecture — embedded in routines and organizational structures — became a liability.",
+          "As a competence-enhancing innovation, because safety bicycle manufacturing still requires metalworking skills similar to those used in high-wheel production.",
+          "As a radical innovation in the incremental phase of the technology cycle, because dominant design had already been selected for the bicycle industry."
+        ],
+        "correctIndex": 1,
+        "explanation": "The correct answer is B. The material explicitly uses the safety bicycle as the example of architectural innovation — one that changes the overall design of the system and how components interact. Henderson and Clark's framework (cited directly in the material) explains that incumbents struggle with architectural innovation because their knowledge of component interactions, embodied in organizational routines and communication channels, becomes not just irrelevant but actively misleading. A is incorrect: component (modular) innovation changes one part without affecting overall design; the safety bicycle fundamentally reconfigured the entire bicycle system (frame geometry, wheel size, chain drive), not just one part. C is incorrect: while metalworking skills partially transfer, the framework specifically predicts incumbent difficulty with architectural innovations regardless of whether some underlying skills are shared. The architectural knowledge — how parts relate to each other — is what becomes obsolete. D is incorrect: this conflates the radical/incremental dimension with the architectural/component dimension; these are separate axes of the innovation matrix. The safety bicycle transition is architectural, not merely a stage in the technology cycle."
+      },
+      {
+        "id": "q12",
+        "scenario": "An industry report shows that a market has just passed peak sales and is entering a phase where customers are highly price-conscious, products are largely standardized, and production is shifting to low-wage countries.",
+        "question": "According to the industry life cycle framework, what stage is this industry in, and what competitive dynamic should firms anticipate?",
+        "options": [
+          "Growth stage: firms should invest heavily in R&D to differentiate products and capture market share before saturation.",
+          "Introduction stage: firms should focus on educating customers and building distribution channels.",
+          "Maturity/decline stage: firms should expect intensifying price competition, increased bargaining power of distributors, excess capacity, and declining R&D intensity.",
+          "Era of ferment: firms should experiment with alternative product designs to identify the emerging dominant design."
+        ],
+        "correctIndex": 2,
+        "explanation": "The correct answer is C. The scenario describes textbook characteristics of the maturity/decline stage as defined in the material: price-conscious customers, standardized products, production shifting to low-wage countries. The material explicitly links these conditions to intensifying price competition, increased distributor bargaining power, excess capacity, and production becoming less R&D and skill-intensive. A is incorrect: the growth stage is characterized by demand expansion, customer experimentation, and differentiation opportunities — the opposite of the price-sensitive, standardized market described. B is incorrect: the introduction stage involves uncertain customer requirements, undeveloped distribution channels, and high R&D — none of which characterize a post-peak market with consolidating distribution. D is incorrect: the era of ferment is a concept from the technology cycles framework (Anderson and Tushman) referring to the period of uncertainty after a discontinuity when firms compete on designs — it is not a stage of the industry life cycle and does not match the mature, standardized market described."
+      }
+    ]
+  },
+  "overview": {
+    "topics": [
+      {
+        "name": "Industry Life Cycle & Evolution",
+        "concepts": [
+          {
+            "term": "Industry Life Cycle",
+            "definition": "A model describing the stages an industry passes through: Introduction, Growth, Maturity, and Decline. Each stage is driven by demand growth, knowledge diffusion, and competitive dynamics.",
+            "author": "General framework",
+            "importance": "high",
+            "examRelevance": "Wird häufig gefragt, weil Studierende die Merkmale jeder Phase und deren strategische Implikationen erklären und auf reale Industrien anwenden müssen."
+          },
+          {
+            "term": "Driving Forces of Industry Evolution",
+            "definition": "Key forces reshaping industries include demand growth, creation and diffusion of knowledge, technology diffusion, market saturation, and shifts in buyer power and price competition.",
+            "author": "General framework",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil Studierende erklären müssen, warum und wie sich Industrien verändern, insbesondere in Reife- und Rückgangsphasen."
+          },
+          {
+            "term": "Life Cycle Regeneration",
+            "definition": "Some industries (e.g., motorcycles, TVs) experience renewed growth after maturity due to new technologies or market shifts, demonstrating that the life cycle is not a fixed, predetermined pattern.",
+            "author": "General framework",
+            "importance": "low",
+            "examRelevance": "Wird gelegentlich gefragt, weil es zeigt, dass das Life-Cycle-Modell nicht mechanisch angewendet werden darf."
+          }
+        ]
+      },
+      {
+        "name": "First-Mover Advantages and Timing of Entry",
+        "concepts": [
+          {
+            "term": "First-Mover Advantages",
+            "definition": "Benefits accruing to the first entrant in a market, including brand loyalty, technological leadership, preemption of scarce assets, exploitation of buyer switching costs, and increasing returns advantages.",
+            "author": "General framework",
+            "importance": "high",
+            "examRelevance": "Wird häufig gefragt, weil Studierende Vor- und Nachteile abwägen und auf konkrete Unternehmensbeispiele anwenden müssen."
+          },
+          {
+            "term": "First-Mover Disadvantages",
+            "definition": "Pioneering firms face high R&D costs, undeveloped supply/distribution channels, immature enabling technologies, and uncertainty about customer requirements.",
+            "author": "General framework",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil Open-Book-Prüfungen oft verlangen, die Kehrseite von First-Mover-Strategien kritisch zu reflektieren."
+          },
+          {
+            "term": "Increasing Returns",
+            "definition": "A dynamic where early adoption of a technology leads to self-reinforcing advantages — the more users adopt, the more valuable the technology becomes — making timing of market entry critically important.",
+            "author": "General framework",
+            "importance": "high",
+            "examRelevance": "Wird häufig gefragt, weil das Konzept die Grundlage für Standards Wars, Dominant Designs und Plattformstrategien bildet."
+          }
+        ]
+      },
+      {
+        "name": "Technology S-Curves and Technology Cycles",
+        "concepts": [
+          {
+            "term": "Technology S-Curve",
+            "definition": "Describes how a technology's performance improves slowly at first, then rapidly, then levels off as it approaches its natural limits. A new discontinuous technology may then displace the incumbent.",
+            "author": "General framework",
+            "importance": "high",
+            "examRelevance": "Wird häufig gefragt, weil Studierende erklären müssen, wann Firmen in neue vs. bestehende Technologien investieren sollten."
+          },
+          {
+            "term": "Discontinuous Technology",
+            "definition": "A technology that fulfills a similar market need through an entirely new knowledge base, often initially underperforming incumbent technology before eventually displacing it (e.g., digital photography displacing film).",
+            "author": "General framework",
+            "importance": "high",
+            "examRelevance": "Wird häufig gefragt, weil es erklärt, warum etablierte Firmen disruptiven Wandel oft verpassen."
+          },
+          {
+            "term": "Technology Cycles (Era of Ferment / Era of Incremental Change)",
+            "definition": "Technological change is cyclical: a discontinuity triggers an era of ferment (uncertainty, experimentation with designs), after which a dominant design emerges and an era of incremental change begins focused on efficiency.",
+            "author": "Anderson & Tushman",
+            "importance": "high",
+            "examRelevance": "Wird häufig gefragt, weil Anderson & Tushman ein zentrales, zitierfähiges Modell liefern, das die Verbindung zwischen Dominantem Design und Wettbewerbsdynamik erklärt."
+          },
+          {
+            "term": "S-Curve Diffusion",
+            "definition": "Technology adoption follows an S-curve: slow initial adoption (unfamiliarity), acceleration as technology becomes understood, then deceleration as the market saturates. Requires complementary resources.",
+            "author": "General framework",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil Studierende erklären müssen, warum Technologiediffusion langsamer verläuft als Informationsdiffusion."
+          }
+        ]
+      },
+      {
+        "name": "Dominant Design",
+        "concepts": [
+          {
+            "term": "Dominant Design",
+            "definition": "A single product architecture that comes to command the majority of market share in an industry, bundling features that meet the needs of the mass market — not the most advanced, but the most broadly accepted design.",
+            "author": "Anderson & Tushman",
+            "importance": "high",
+            "examRelevance": "Wird sehr häufig gefragt, weil das Konzept erklärt, wie sich Standards durchsetzen und warum Incumbents dabei scheitern können."
+          },
+          {
+            "term": "Path Dependency",
+            "definition": "The outcome of technology competition is heavily influenced by early events and prior adoption patterns, meaning history — not just current performance — determines which technology wins.",
+            "author": "General framework",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, um zu erklären, warum technologisch überlegene Produkte nicht immer den Markt gewinnen (z. B. QWERTY vs. Dvorak)."
+          },
+          {
+            "term": "Absorptive Capacity & Prior Learning",
+            "definition": "A firm's prior experience with a technology builds its knowledge base, enabling it to recognize and improve the technology further, creating a self-reinforcing advantage that helps that technology become dominant.",
+            "author": "General framework",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil es erklärt, warum früh adoptierte Technologien Wettbewerbsvorteile aufbauen, die Newcomer kaum einholen können."
+          },
+          {
+            "term": "Installed Base & Complementary Goods (Self-Reinforcing Cycle)",
+            "definition": "A large installed base attracts developers of complementary goods; more complements attract more users, further growing the installed base — a self-reinforcing cycle that entrenches dominant designs.",
+            "author": "General framework",
+            "importance": "high",
+            "examRelevance": "Wird häufig gefragt, weil es die Kernlogik hinter Network Effects, Standards Wars und Plattformwettbewerb bildet."
+          }
+        ]
+      },
+      {
+        "name": "Standards Wars and Network Externalities",
+        "concepts": [
+          {
+            "term": "Standards Wars",
+            "definition": "Competitive battles between incompatible technologies to become the dominant design, requiring strategies such as assembling allies, pre-empting the market, and managing customer expectations.",
+            "author": "General framework",
+            "importance": "high",
+            "examRelevance": "Wird gefragt, weil Open-Book-Prüfungen oft verlangen, eine konkrete Standards-War-Strategie (z.B. VHS vs. Betamax) zu analysieren."
+          },
+          {
+            "term": "Network Externalities",
+            "definition": "The value of a technology to a user increases as the number of other users grows. Direct network effects arise from user-to-user interaction; indirect effects arise from complementary goods availability.",
+            "author": "General framework",
+            "importance": "high",
+            "examRelevance": "Wird häufig gefragt, weil es die zentrale Triebkraft für winner-take-all Märkte und Plattformstrategien ist."
+          },
+          {
+            "term": "Standalone Value vs. Network Externality Value",
+            "definition": "Total technology value = standalone functionality + network externality value. A technically superior product may lose if its network externality value (installed base, complements) is lower than the incumbent's.",
+            "author": "General framework",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil Studierende z.B. den Fall NeXT Computer analysieren und erklären müssen, warum technische Überlegenheit allein nicht reicht."
+          }
+        ]
+      },
+      {
+        "name": "Modularity and Platform Ecosystems",
+        "concepts": [
+          {
+            "term": "Modularity",
+            "definition": "A system design principle where components can be separated and recombined via standardized interfaces, enabling diverse configurations and contributions from multiple producers.",
+            "author": "General framework",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil Studierende den Zusammenhang zwischen Modularität und Plattformwettbewerb erklären müssen."
+          },
+          {
+            "term": "Platform Ecosystem",
+            "definition": "A core product or platform mediates the relationship between a wide range of complementors and end-users, with all ecosystem members' success being interdependent (e.g., video game consoles and game developers).",
+            "author": "Van Alstyne, Parker & Choudary (2016)",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil Plattformstrategien ein zentrales Thema moderner Strategieforschung sind und Van Alstyne et al. als Referenz erwartet wird."
+          }
+        ]
+      },
+      {
+        "name": "Types of Innovation",
+        "concepts": [
+          {
+            "term": "Radical vs. Incremental Innovation",
+            "definition": "Radical innovations represent major departures from existing products/processes; incremental innovations involve minor adjustments. Radicalness is relative — digital photography was more radical for Kodak than for Sony.",
+            "author": "General framework",
+            "importance": "high",
+            "examRelevance": "Wird häufig gefragt, weil Studierende Beispiele klassifizieren und strategische Implikationen ableiten müssen."
+          },
+          {
+            "term": "Competence-Enhancing vs. Competence-Destroying Innovation",
+            "definition": "Competence-enhancing innovations build on existing firm knowledge (e.g., Intel Pentium 4 → III); competence-destroying innovations render existing competencies obsolete (e.g., electronic calculators vs. slide rules).",
+            "author": "General framework",
+            "importance": "high",
+            "examRelevance": "Wird häufig gefragt, weil das Konzept erklärt, welche Innovationen besonders gefährlich für Incumbents sind."
+          },
+          {
+            "term": "Architectural vs. Component (Modular) Innovation",
+            "definition": "Component innovation changes one or more parts without affecting overall design; architectural innovation changes the overall system design or how components interact (e.g., high-wheel to safety bicycle).",
+            "author": "Henderson & Clark (1990)",
+            "importance": "high",
+            "examRelevance": "Wird sehr häufig gefragt, weil Henderson & Clark ein klassisches, zitierbares Framework liefern, das erklärt, warum Incumbents bei architectural innovation scheitern."
+          },
+          {
+            "term": "Sustaining vs. Disruptive Technology",
+            "definition": "Sustaining technologies improve existing performance attributes; disruptive technologies serve different (often initially lower-end) performance attributes and can eventually displace incumbents.",
+            "author": "General framework",
+            "importance": "high",
+            "examRelevance": "Wird häufig gefragt, weil das Konzept erklärt, warum etablierte Firmen ihre Märkte an Neulinge verlieren."
+          },
+          {
+            "term": "Innovation Matrix (Henderson & Clark)",
+            "definition": "A 2x2 matrix combining architectural knowledge (reinforced vs. overturned) and component knowledge (reinforced vs. overturned) to classify innovations as incremental, modular, architectural, or radical.",
+            "author": "Henderson & Clark (1990)",
+            "importance": "high",
+            "examRelevance": "Wird gefragt, weil Studierende das Framework auf Fallbeispiele anwenden und Innovationstypen korrekt einordnen müssen."
+          }
+        ]
+      },
+      {
+        "name": "Organizational Ambidexterity and Dual Strategies",
+        "concepts": [
+          {
+            "term": "Organizational Ambidexterity",
+            "definition": "A firm's ability to simultaneously exploit existing resources/capabilities (for current performance) and explore new opportunities (for future performance), which requires structural or contextual solutions.",
+            "author": "General framework",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil Studierende erklären müssen, wie Firmen den Widerspruch zwischen kurzfristiger Effizienz und langfristiger Innovation managen."
+          },
+          {
+            "term": "Structural vs. Contextual Ambidexterity",
+            "definition": "Structural ambidexterity separates exploration and exploitation into different organizational units; contextual ambidexterity allows the same units/people to perform both tasks depending on context.",
+            "author": "General framework",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil Open-Book-Prüfungen oft verlangen, Vor- und Nachteile beider Ansätze zu vergleichen."
+          },
+          {
+            "term": "Exploration vs. Exploitation Trade-off",
+            "definition": "Exploration (searching for new opportunities) and exploitation (leveraging existing strengths) compete for resources. Overemphasis on exploitation leads to competency traps; overemphasis on exploration leads to failure to capture value.",
+            "author": "General framework",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil das Spannungsfeld zwischen Present vs. Future und Stability vs. Adaptability ein Kernthema strategischer Entscheidungsfindung ist."
+          }
+        ]
+      },
+      {
+        "name": "Appropriability and Protection of Innovation",
+        "concepts": [
+          {
+            "term": "Appropriability",
+            "definition": "The degree to which a firm can capture the rents (profits) from its innovation, determined by how easily competitors can imitate it and what legal or strategic protection mechanisms are in place.",
+            "author": "General framework",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil Studierende erklären müssen, welche Schutzstrategien für welche Innovationstypen geeignet sind."
+          },
+          {
+            "term": "Legal Protection of Intellectual Property (Patents, Copyrights, Trademarks, Trade Secrets)",
+            "definition": "Formal mechanisms granting exclusive rights: patents protect new products/processes; copyrights protect creative works; trademarks protect brand identifiers; trade secrets protect undisclosed formulas/processes.",
+            "author": "General framework",
+            "importance": "medium",
+            "examRelevance": "Wird gefragt, weil Studierende in Take-Home-Prüfungen konkrete Schutzinstrumente benennen und deren Grenzen diskutieren müssen."
+          },
+          {
+            "term": "Strategic Choice Not to Protect Innovation",
+            "definition": "Sometimes a firm deliberately avoids protecting a technology to encourage third-party support, accelerating diffusion and increasing the technology's chances of becoming the dominant design.",
+            "author": "General framework",
+            "importance": "low",
+            "examRelevance": "Wird gelegentlich gefragt, weil es den Widerspruch zwischen Schutz und offener Standardisierung als strategische Option verdeutlicht."
+          }
+        ]
+      }
+    ]
+  },
+  "authors": [
+    {
+      "name": "Anderson, P. & Tushman, M.",
+      "theory": "Technology Cycles: Technological change proceeds cyclically. Each discontinuity inaugurates an 'era of ferment' (experimentation, uncertainty) until a dominant design is selected, ushering in an 'era of incremental change'. Their key finding: a dominant design always rose to command majority market share unless the next discontinuity arrived too early. The dominant design is never the original discontinuity nor the leading-edge technology — it bundles features meeting mass-market needs. During the era of incremental change, firms cease investing in alternative designs and focus on the dominant design, explaining why incumbents miss discontinuities.",
+      "useInExam": "Cite as: 'Anderson and Tushman found that technological change proceeds in cycles: each discontinuity triggers an era of ferment, followed by dominant design selection and an era of incremental change.' Use to explain why established firms struggle with radical technological change."
+    },
+    {
+      "name": "Henderson, R. & Clark, K.",
+      "theory": "Architectural Innovation (1990, Administrative Science Quarterly): Introduced a 2x2 matrix classifying innovations along two dimensions — (1) component knowledge (reinforced vs. overturned) and (2) architectural knowledge (reinforced vs. overturned). This yields four types: incremental, modular, architectural, and radical innovation. Key insight: architectural innovations are particularly dangerous for incumbents because they destroy architectural knowledge (how components interact) while often leaving component knowledge intact — incumbents fail because their organizational routines and communication channels are built around the old architecture.",
+      "useInExam": "Cite as: 'Henderson and Clark (1990) argue that architectural innovations are especially challenging for incumbents because they disrupt the architectural knowledge embedded in organizational structures, even when component knowledge remains valid.' Apply the matrix to classify a given innovation in exam cases."
+    },
+    {
+      "name": "Van Alstyne, M., Parker, G.G. & Choudary, S.P.",
+      "theory": "Pipelines, Platforms, and the New Rules of Strategy (2016, Harvard Business Review): Distinguish between traditional 'pipeline' businesses (linear value chains) and 'platform' ecosystems, where a core platform mediates interactions between producers and consumers. In platform ecosystems, value is created through network effects across multiple sides of the market. Strategy shifts from controlling resources to orchestrating ecosystems.",
+      "useInExam": "Cite as: 'Van Alstyne, Parker and Choudary (2016) show that platform ecosystems create value by mediating interactions between multiple user groups, with success depending on network effects rather than linear pipeline efficiency.' Use when discussing platform competition and ecosystem strategy."
+    }
+  ],
+  "schedule": {
+    "daysUntilExam": 7,
+    "days": [
+      {
+        "day": 1,
+        "label": "Industry Life Cycle & First-Mover Logic",
+        "tasks": [
+          "Read the Industry Life Cycle section of the slides carefully; summarize the key characteristics of each phase (Introduction, Growth, Maturity, Decline) in your own words.",
+          "Create a table listing the Driving Forces of Industry Evolution and what they imply for competitive strategy.",
+          "List all First-Mover Advantages and Disadvantages; for each, find one real-world example from the slides or your own knowledge.",
+          "Understand the concept of Increasing Returns and why timing of entry is critical — write a 3-sentence explanation.",
+          "Quick check: Can you explain Life Cycle Regeneration and why the life cycle should not be applied mechanically?"
+        ]
+      },
+      {
+        "day": 2,
+        "label": "Technology S-Curves and Technology Cycles (Anderson & Tushman)",
+        "tasks": [
+          "Draw the Technology S-Curve from memory and annotate it: where does a discontinuous technology enter, and at what point should firms switch?",
+          "Summarize Anderson & Tushman's Technology Cycle model in 5 bullet points: era of ferment → dominant design → era of incremental change.",
+          "Write a paragraph explaining WHY incumbent firms have difficulty recognizing discontinuous technologies (link to installed base, prior learning, and era of incremental change).",
+          "Memorize the exact Anderson & Tushman citation formulation for use in the exam.",
+          "Apply the model: pick one example (e.g., typewriters → PCs, or vinyl → CDs) and trace it through the full technology cycle."
+        ]
+      },
+      {
+        "day": 3,
+        "label": "Dominant Design, Path Dependency & Network Effects",
+        "tasks": [
+          "Explain in writing: What is a dominant design? What are the three mechanisms that determine which technology becomes dominant (prior learning, installed base/complements, path dependency)?",
+          "Draw and explain the self-reinforcing cycle of installed base and complementary goods.",
+          "Understand Path Dependency: write 2 sentences explaining why technologically superior products do not always win (use NeXT Computers or QWERTY as examples).",
+          "Distinguish winner-take-all markets from conventional markets: list 3 ways competitive dynamics differ.",
+          "Practice: Given a scenario, identify whether network externalities are present and how strong they are."
+        ]
+      },
+      {
+        "day": 4,
+        "label": "Standards Wars, Network Externalities & Platform Ecosystems",
+        "tasks": [
+          "Memorize the 4-step Standards War strategy (1. Analyze network externalities, 2. Assemble allies, 3. Pre-empt market, 4. Manage expectations) and be ready to apply all four steps to a case.",
+          "Understand the distinction between Standalone Value and Network Externality Value — practice calculating which would make a new technology win or lose.",
+          "Read the Modularity and Platform Ecosystem section; explain in your own words what a platform ecosystem is and why co-specialization matters.",
+          "Cite Van Alstyne, Parker & Choudary (2016) correctly — practice the citation formulation.",
+          "Discuss: When should a firm NOT protect its technology? Link to dominant design strategy."
+        ]
+      },
+      {
+        "day": 5,
+        "label": "Types of Innovation & Henderson/Clark Matrix",
+        "tasks": [
+          "Draw the Henderson & Clark Innovation Matrix (2x2) from memory with all four quadrants labeled (Incremental, Modular, Architectural, Radical).",
+          "For each quadrant, write a definition and one example. Ensure you can classify any innovation given in an exam scenario.",
+          "Explain the difference between Competence-Enhancing and Competence-Destroying innovation — use Kodak/digital photography and Intel/Pentium as examples.",
+          "Distinguish Sustaining vs. Disruptive Technology: write a clear, exam-ready definition for each.",
+          "Practice: Given 3 different innovations, classify each on all three dimensions (radical/incremental, competence-enhancing/destroying, architectural/component, sustaining/disruptive)."
+        ]
+      },
+      {
+        "day": 6,
+        "label": "Ambidexterity, Appropriability & Integration",
+        "tasks": [
+          "Explain Organizational Ambidexterity in one paragraph: what is the exploration-exploitation trade-off and why does it create a paradox?",
+          "Distinguish Structural vs. Contextual Ambidexterity: list 2 pros and 2 cons of each.",
+          "Understand Appropriability: list all four legal IP protection mechanisms (patents, copyrights, trademarks, trade secrets) with their exact definitions and scope.",
+          "Connect appropriability to dominant design strategy: when is it strategically better NOT to protect an innovation?",
+          "Integration exercise: Draw a concept map linking Industry Life Cycle → Technology S-Curves → Dominant Design → Standards Wars → Types of Innovation → Ambidexterity."
+        ]
+      },
+      {
+        "day": 7,
+        "label": "Full Review, Case Practice & Exam Simulation",
+        "tasks": [
+          "Re-read all author frameworks (Anderson & Tushman, Henderson & Clark, Van Alstyne et al.) and rehearse exact citation formulations aloud.",
+          "Take one real industry (e.g., electric vehicles, streaming services, or smartphones) and apply ALL major frameworks from the session: life cycle stage, dominant design dynamics, type of innovation, standards war strategy, appropriability.",
+          "Write a mock exam answer (2-3 paragraphs) to this question: 'Why do established firms often fail to respond to discontinuous technologies? Use at least two theoretical frameworks from the course.'",
+          "Review your concept map from Day 6 and fill any gaps.",
+          "Prepare your open-book reference sheet: tab the most important slides (Technology Cycles, Henderson/Clark Matrix, Standards War steps, Innovation types) for quick access during the exam."
+        ]
+      }
+    ]
+  },
+  "quizletExport": "What are the four stages of the Industry Life Cycle?\tIntroduction → Growth → Maturity → DeclineEach stage is characterized by different competitive dynamics, customer behavior, and technological intensity.Example: The smartphone industry moved from introduction (~2007) through rapid growth, and many segments are now approaching maturity.\nWhat are the two primary drivers of industry evolution according to the life cycle model?\t1) Demand growth and 2) Creation and diffusion of knowledgeAs demand grows, new customers enter and the market expands. As knowledge diffuses, technology standardizes and competition intensifies on price rather than differentiation.Example: In the PC industry, knowledge diffusion led to component standardization and intense price competition.\nWhat structural changes typically occur as an industry moves into maturity?\tMarket saturation, price competition, consolidation, and production shifts to low-wage countriesCustomers become more price-conscious, products standardize, distribution channels consolidate, bargaining power of distributors increases, and excess capacity builds up. R&D intensity declines.Example: The textile industry shifted production to Asia as Western markets matured.\nWhy is it dangerous to assume a common, pre-determined pattern of industry development in the life cycle model?\tIndustries can regenerate, stall, or skip stages — the life cycle is not deterministicTechnology-intensive industries (e.g., pharmaceuticals, semiconductors) may retain emergence features indefinitely. Basic necessity industries (e.g., food, construction) reach maturity but rarely decline. Industries can also regenerate through technological shifts.Example: The motorcycle and TV industries both experienced life cycle regeneration rather than decline.\nWhat are the four key advantages of being a first mover?\t1) Brand loyalty & technological leadership, 2) Preemption of scarce assets, 3) Exploiting buyer switching costs, 4) Reaping increasing returns advantagesFirst movers can lock in customers and resources before competitors arrive, creating durable competitive advantages.Example: Amazon preempted warehouse locations and built brand loyalty as a first mover in online retail.\nWhat are the four key disadvantages of being a first mover?\t1) High R&D expenses, 2) Undeveloped supply and distribution channels, 3) Immature enabling technologies and complements, 4) Uncertainty of customer requirementsFirst movers bear the costs and risks of market creation — later entrants can free-ride on their investments.Example: Early electric vehicle makers struggled with immature battery technology and lack of charging infrastructure.\nHow are 'first movers,' 'early followers,' and 'late entrants' defined in terms of market timing?\tFirst movers = first to sell in a new category; Early followers = early but not first; Late entrants = enter when product penetrates mass market or laterThese distinctions matter because increasing returns dynamics mean timing can fundamentally determine competitive outcomes.Example: Google was a late entrant to search (after Yahoo, AltaVista) but became dominant; Facebook was an early follower to MySpace in social networking.\nWhat is a 'discontinuous technology' and what characterizes its early performance relative to incumbent technology?\tA discontinuous technology fulfills a similar market need via an entirely new knowledge base — and initially has LOWER performance than the incumbentFirms are reluctant to adopt it because improvement is initially slow/costly and they have significant investment in existing technology.Example: The first automobiles were much slower than horse-drawn carriages; early digital cameras had far lower image quality than film cameras.\nDescribe the S-Curve pattern of technology diffusion — what explains the three phases?\tSlow adoption → Acceleration → SaturationAdoption is initially slow because the technology is unfamiliar. It accelerates as it becomes better understood. Eventually the market saturates and new adoptions decline. Note: technology diffusion takes far longer than information diffusion because it requires complex knowledge, experience, and complementary resources.Example: Household electricity (invented 1873) took decades to reach 25% of the U.S. population.\nWhat are the two phases of a technology cycle according to Anderson and Tushman, and what triggers the transition between them?\tFluid phase (experimentation, design uncertainty) → Specific phase (incremental improvement, manufacturing efficiency); transition triggered by emergence of a dominant designThe fluid phase features considerable uncertainty and firms experiment with different product designs. Once a dominant design emerges, competition shifts to efficiency and incremental refinement.Example: Early automobile designs varied widely (steam, electric, gasoline) until the gasoline-powered internal combustion engine became dominant.\nWhat is the 'era of ferment' in Anderson and Tushman's technology cycle model?\tThe turbulent, uncertain period following a technological discontinuity, before a dominant design is selectedDuring this era, firms compete with different designs and there is no clear standard. It ends when a dominant design emerges and the era of incremental change begins.Example: The early personal computer era (late 1970s–early 1980s) was an era of ferment with competing architectures (Apple II, CP/M, IBM PC) before the IBM PC-compatible standard emerged.\nWhat were Anderson and Tushman's two key findings about dominant designs?\t1) A dominant design always rose to command the majority of market share unless the next discontinuity arrived too early. 2) The dominant design was never the original discontinuity, nor the leading edge of technology — it bundled features meeting the needs of the majority.This means dominant designs are a market-driven compromise, not a technological optimum.Example: The QWERTY keyboard was not the most efficient layout but bundled features acceptable to the majority and became dominant.\nHow does 'prior learning and absorptive capacity' explain why early-adopted technologies tend to become dominant designs?\tA firm's prior experience shapes its ability to recognize and utilize new information — using a technology builds a knowledge base that makes it easier to improve and harder for rivals to catch upTechnologies adopted earlier become better developed over time, creating a self-reinforcing advantage over later alternatives.Example: Intel's x86 architecture accumulated decades of engineering knowledge, making it very difficult for competing CPU architectures to match its performance.\nExplain the self-reinforcing cycle between installed base and complementary goods in dominant design competition.\tLarge installed base → more complementary goods developed → more users attracted → larger installed base (positive feedback loop)This network effect dynamic means that even a technically inferior technology can win if it gets ahead in installed base and complements early.Example: Windows PCs attracted more software developers than OS/2, which attracted more users, which attracted more developers — a self-reinforcing cycle that made Windows dominant.\nWhat is path dependency in the context of dominant designs, and why does it matter strategically?\tPath dependency means end results depend greatly on the historical events leading up to the outcome — early choices shape which technology wins, not just technical meritThis means technologically superior products do not always win. Winner-take-all markets require different firm strategies than markets with less pressure for a single dominant design.Example: VHS beat Betamax despite Betamax having superior video quality, because VHS gained an early installed base advantage.\nWhat are the four strategic steps for 'fighting standards wars' to win dominant design competition?\t1) Determine potential for standards emergence (analyze network externalities), 2) Assemble allies (partners, complementors, competitors), 3) Pre-empt the market (enter early, attract key customers, use penetration pricing), 4) Manage expectations (use pre-launch publicity to convince market you will win)Standards wars are won through coalition-building and momentum, not just technology.Example: Blu-ray defeated HD-DVD partly by assembling studio allies and managing consumer expectations about the winning standard.\nWhat two dimensions of value determine a technology's overall attractiveness in increasing-returns industries, and why can a technically superior product lose?\t1) Standalone value (functionality, ease of use, aesthetics) and 2) Network externality value (installed base size, availability of complementary goods)A new technology with more standalone functionality may offer less overall value if it has a smaller installed base or poor complement availability.Example: NeXT Computers were technically advanced but could not compete with the installed base value and complementary good value of Windows-based PCs.\nWhat are the four strategies for sustaining a dominant standard once won?\t1) Don't fall behind on technology, 2) Ensure backward compatibility, 3) Offer customers a migration path to address disruptive technology threats, 4) Reinforce the standard with other resources (e.g., brand)Sustaining a standard requires ongoing investment — complacency invites disruption.Example: Microsoft maintained Windows dominance partly through backward compatibility, ensuring users could upgrade without losing existing software investments.\nWhat is the difference between 'competence-enhancing' and 'competence-destroying' innovation? Give an example of each.\tCompetence-enhancing: builds on the firm's existing knowledge base. Competence-destroying: renders a firm's existing competencies obsolete.Whether an innovation is competence-enhancing or -destroying depends on the perspective of a particular firm — the same innovation can be enhancing for one and destroying for another.Example: Intel's Pentium 4 (enhancing — built on Pentium III). Electronic calculators (destroying for Keuffel & Esser — rendered their slide rule expertise obsolete).\nWhat is the difference between 'architectural' and 'component' (modular) innovation? Give an example of each.\tComponent innovation: changes one or more components without significantly affecting the overall system design. Architectural innovation: changes the overall system design or how components interact.Most architectural innovations also require component changes. Source: Henderson & Clark (1990).Example: Adding gel-filled material to a bicycle seat (component). Transition from high-wheel bicycle to safety bicycle (architectural).\nAccording to Henderson and Clark (1990), what is the 'Innovation Matrix' and what are its four cells?\tA 2x2 matrix combining architectural knowledge (reinforced vs. overturned) and component knowledge (reinforced vs. overturned), yielding: Incremental, Modular, Architectural, and Radical innovationThe matrix shows that established firms most struggle with architectural innovations — even when individual components are familiar, changes to how they interact can destroy existing organizational knowledge.Example: A radical innovation (e.g., transistor replacing vacuum tube) overturns both architectural and component knowledge. Source: Henderson, R. and Clark, K. (1990), Administrative Science Quarterly.\nWhat are 'sustaining' versus 'disruptive' technologies, and which is harder for established firms to adapt to?\tSustaining technologies augment existing performance attributes; disruptive technologies incorporate different performance attributes — disruptive technologies are harder for established firms to adapt toEstablished firms optimize for their existing customers' needs, making them systematically blind to technologies that serve different performance dimensions or new customer segments.Example: Digital photography was disruptive to Kodak (different performance attributes — no film, instant review) but more sustaining for Sony (leveraged existing electronics competencies).\nWhat is 'organizational ambidexterity' and why do firms need it?\tOrganizational ambidexterity is the ability to simultaneously exploit existing resources/capabilities (for today) AND explore new opportunities (for tomorrow)Firms face a paradox: exploitation generates current income but can crowd out exploration; exploration builds future competencies but costs resources today. Without ambidexterity, firms may succeed short-term but fail long-term.Example: Amazon exploits its retail and cloud businesses while exploring new areas like autonomous delivery and healthcare.\nWhat is the difference between 'structural ambidexterity' and 'contextual ambidexterity'?\tStructural ambidexterity: exploration and exploitation allocated to separate organizational units. Contextual ambidexterity: the same units and people perform both exploration and exploitation.Structural ambidexterity reduces internal conflict but can create integration challenges. Contextual ambidexterity is more flexible but requires employees capable of switching between modes.Example: Structural — Lockheed's 'Skunk Works' (separate exploratory unit). Contextual — Google's 20% time policy (same employees explore and exploit).\nWhat are the three 'modes of balancing' exploration and exploitation listed in the antecedents framework?\t1) Contextual, 2) Structural, 3) TemporalTemporal balancing means switching between exploration and exploitation phases over time rather than doing both simultaneously — for example, a firm may have distinct innovation cycles and efficiency cycles.Example: A firm may pursue heavy exploration during a technological discontinuity, then switch to exploitation once a dominant design emerges.\nWhat is 'appropriability' in the context of innovation, and what two factors determine it?\tAppropriability is the degree to which a firm can capture the rents (profits) from its innovation. It is determined by: 1) how easily/quickly competitors can copy the innovation, and 2) the legal and strategic protections the firm employs.High appropriability means the innovator captures most of the value; low appropriability means value leaks to imitators, customers, or complementors.Example: Pharmaceutical companies use patents to achieve high appropriability for drug innovations.\nWhat are the four main forms of legal intellectual property protection, and what does each cover?\t1) Patents — exclusive rights to a new product, process, substance, or design. 2) Copyrights — exclusive rights to artistic, dramatic, and musical works. 3) Trademarks — exclusive rights to words, symbols, or marks distinguishing goods/services. 4) Trade Secrets — protection of chemical formulae, recipes, and industrial processes.Employment contracts restricting knowledge transfer are an additional protective mechanism.Example: Coca-Cola protects its formula as a trade secret rather than a patent (to avoid disclosure requirements).\nWhy might a firm strategically choose NOT to protect its innovation through patents?\tNot protecting can encourage others to support the technology, increasing its likelihood of becoming the dominant designIf network effects and installed base are more valuable than exclusivity, open access can be strategically superior to protection. Licensing or open standards can build a larger ecosystem faster.Example: Google made Android open-source to maximize adoption and build a large installed base, rather than protecting it exclusively.\nWhat are the four key antecedents of the 'appropriability regime' that affect how much value an innovator can capture?\t1) Legal protection, 2) Complementary resources, 3) Imitability of the technology, 4) Lead timeThese factors together shape the competitive dynamics around an innovation — a strong appropriability regime means innovators can profit; a weak one means imitators or complementors capture more value.Example: EMI invented the CT scanner but lacked complementary resources (distribution, service networks) to appropriate the value — GE eventually dominated the market.\nWhat is a 'modular system' and when is modularity most valuable?\tA modular system can be separated and recombined to change configuration, scale, or functions via standardized interfaces. Modularity is most valuable when: a) there are diverse technological options to recombine, and b) customers have heterogeneous preferences.Modularity enables components from different producers to be combined (open modularity) or from a single firm (closed modularity).Example: Smartphones (open modularity — apps from many developers). IKEA shelving systems (closed modularity — only IKEA components recombined).\nWhat defines a 'platform ecosystem,' and why do all members' success depend on each other?\tA platform ecosystem is one where a core product/platform mediates relationships between a wide range of complements/components and end-users. All members' success depends on the success of other members because value is co-created across the ecosystem.Members often invest in co-specialization or exclusivity agreements. Platform boundaries can be stable or dynamic. Source: Van Alstyne, Parker & Choudary (2016), Harvard Business Review.Example: A video game console (platform) connects game developers (complementors) and gamers (users) — if the platform fails, both developers and users lose their investments."
+}

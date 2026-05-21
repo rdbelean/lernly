@@ -332,6 +332,7 @@ export default function Home() {
             error={error}
             onGenerate={handleGenerate}
           />
+          <DemoPacksSection language={language} onTryYourOwn={activateUpload} />
           <ResultPreview />
           <HowItWorks />
           <PipelineCta onActivateUpload={activateUpload} />
