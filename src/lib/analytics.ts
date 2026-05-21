@@ -43,7 +43,9 @@ export type FunnelEvent =
   | "checkout_started"
   | "demo_pack_viewed"
   | "demo_to_upload_clicked"
-  | "landing_variant_seen";
+  | "landing_variant_seen"
+  | "flashcard_streak_achieved"
+  | "flashcard_session_completed";
 
 export function track(event: FunnelEvent, props?: Record<string, unknown>): void {
   safeClient()?.capture(event, props);
