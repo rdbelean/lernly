@@ -199,7 +199,7 @@ export default function DemoPacksSection({ language, onTryYourOwn }: Props) {
     <>
       <section
         id="demo"
-        className="mx-auto w-full max-w-[1080px] px-6 py-14 md:py-20"
+        className="mx-auto w-full max-w-[1080px] px-6 py-20 md:py-28"
       >
         <div className="mb-8 text-center">
           <p

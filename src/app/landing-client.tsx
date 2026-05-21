@@ -358,7 +358,6 @@ export default function Home() {
           />
           <DemoPacksSection language={language} onTryYourOwn={activateUpload} />
           <HowItWorks />
-          <PricingPreviewStrip language={language} />
           <ShowcaseSection />
           <BentoFeatures />
           <ComparisonSection />
@@ -520,13 +519,13 @@ function StudyPackCockpitMockup({ onActivate }: { onActivate: () => void }) {
           </div>
           <div className="ln-cockpit-title">
             {isEn
-              ? "Scandinavian Leadership · Essay exam"
-              : "Scandinavian Leadership · Essay-Prüfung"}
+              ? "Strategic Management · Essay exam"
+              : "Strategic Management · Essay-Klausur"}
           </div>
         </div>
         <div className="ln-cockpit-pack-tags">
           <span>{isEn ? "35 cards" : "35 Karten"}</span>
-          <span>{isEn ? "3 essay examples" : "3 Essay-Beispiele"}</span>
+          <span>{isEn ? "12 quiz qs" : "12 Quiz-Fragen"}</span>
           <span>Blueprint</span>
         </div>
       </div>
@@ -542,11 +541,11 @@ function StudyPackCockpitMockup({ onActivate }: { onActivate: () => void }) {
           </div>
           <div className="ln-cockpit-rail-item">
             <span>02</span>
-            <strong>Deep Drill</strong>
+            <strong>{isEn ? "Flashcards" : "Karteikarten"}</strong>
           </div>
           <div className="ln-cockpit-rail-item">
             <span>03</span>
-            <strong>Example Essays</strong>
+            <strong>{isEn ? "Quiz" : "Übungsklausur"}</strong>
           </div>
         </aside>
 
@@ -563,15 +562,15 @@ function StudyPackCockpitMockup({ onActivate }: { onActivate: () => void }) {
 
           <div className="ln-timebar" aria-hidden>
             <div className="ln-timebar-segment is-scenario" style={{ flex: 3.5 }}>
-              <strong>Scenario</strong>
+              <strong>{isEn ? "Scenario" : "Szenario"}</strong>
               <span>~350 W.</span>
             </div>
             <div className="ln-timebar-segment is-theory" style={{ flex: 3.5 }}>
-              <strong>Theory</strong>
+              <strong>{isEn ? "Theory" : "Theorie"}</strong>
               <span>~350 W.</span>
             </div>
             <div className="ln-timebar-segment is-analysis" style={{ flex: 6 }}>
-              <strong>Analysis</strong>
+              <strong>{isEn ? "Analysis" : "Analyse"}</strong>
               <span>~650 W.</span>
             </div>
             <div className="ln-timebar-segment is-polish" style={{ flex: 1.8 }}>
@@ -584,24 +583,34 @@ function StudyPackCockpitMockup({ onActivate }: { onActivate: () => void }) {
             <div className="ln-blueprint-row is-scenario">
               <span>1</span>
               <div>
-                <strong>Scenario</strong>
-                <p>Describe future work life. No theory, no references.</p>
+                <strong>{isEn ? "Scenario" : "Szenario"}</strong>
+                <p>
+                  {isEn
+                    ? "Describe the industry context. No theory, no references."
+                    : "Branche beschreiben. Keine Theorie, keine Quellen."}
+                </p>
               </div>
               <em>40 min</em>
             </div>
             <div className="ln-blueprint-row is-theory">
               <span>2</span>
               <div>
-                <strong>Theory</strong>
-                <p>Hofstede, Zander & Zander, Holmberg & Åkerblom.</p>
+                <strong>{isEn ? "Theory" : "Theorie"}</strong>
+                <p>Porter, Barney, Anderson & Tushman.</p>
               </div>
               <em>40 min</em>
             </div>
             <div className="ln-blueprint-row is-analysis">
               <span>3</span>
               <div>
-                <strong>Analysis + conclusion</strong>
-                <p>Challenge vs. strengthen. Take a position, not a summary.</p>
+                <strong>
+                  {isEn ? "Analysis + conclusion" : "Analyse + Schluss"}
+                </strong>
+                <p>
+                  {isEn
+                    ? "Defend or challenge. Take a position, not a summary."
+                    : "Stützen oder angreifen. Position beziehen, keine Zusammenfassung."}
+                </p>
               </div>
               <em>80 min</em>
             </div>
@@ -610,10 +619,12 @@ function StudyPackCockpitMockup({ onActivate }: { onActivate: () => void }) {
 
         <aside
           className="ln-cockpit-drill"
-          aria-label={isEn ? "Deep Drill preview" : "Deep Drill Vorschau"}
+          aria-label={isEn ? "Flashcards preview" : "Karteikarten Vorschau"}
         >
           <div className="ln-cockpit-panel-head">
-            <span className="ln-section-label">Deep Drill</span>
+            <span className="ln-section-label">
+              {isEn ? "Flashcards" : "Karteikarten"}
+            </span>
             <span className="ln-cockpit-mini-pill">12 / 35</span>
           </div>
           <div className="ln-drill-progress">
@@ -621,39 +632,48 @@ function StudyPackCockpitMockup({ onActivate }: { onActivate: () => void }) {
           </div>
           <div className="ln-drill-card">
             <div className="ln-drill-card-top">
-              <span>Hofstede</span>
-              <em>low power distance</em>
+              <span>Porter</span>
+              <em>Five Forces</em>
             </div>
-            <strong>What does it mean for Swedish leadership?</strong>
+            <strong>
+              {isEn
+                ? "Which 5 forces shape industry structure?"
+                : "Welche 5 Kräfte bestimmen die Branchenstruktur?"}
+            </strong>
             <p>
-              Equality, flat structures, approachable leaders. Employees can
-              question decisions and are expected to participate.
+              {isEn
+                ? "Supplier power, buyer power, rivalry, new entrants, substitutes. Streaming = intense rivalry (Netflix/Disney+/Amazon)."
+                : "Lieferantenmacht, Käufermacht, Rivalität, neue Anbieter, Substitute. Streaming = hohe Rivalität (Netflix/Disney+/Amazon)."}
             </p>
           </div>
           <div className="ln-drill-actions" aria-hidden>
-            <span className="is-again">Again</span>
-            <span className="is-kinda">Kinda</span>
-            <span className="is-got">Got it</span>
+            <span className="is-again">{isEn ? "Again" : "Nochmal"}</span>
+            <span className="is-kinda">{isEn ? "Almost" : "Fast"}</span>
+            <span className="is-got">{isEn ? "Got it" : "Kann ich"}</span>
           </div>
         </aside>
       </div>
 
       <div className="ln-cockpit-bottom">
         <div className="ln-example-chip">
-          <span>AI & automation</span>
-          <strong>challenge → strengthen</strong>
+          <span>{isEn ? "Vertical Integration" : "Vertikale Integration"}</span>
+          <strong>Make-or-Buy</strong>
         </div>
         <div className="ln-example-chip">
-          <span>No travel</span>
-          <strong>local hubs · delegation</strong>
+          <span>{isEn ? "Global Strategy" : "Globale Strategie"}</span>
+          <strong>CAGE · I-R Framework</strong>
         </div>
         <div className="ln-example-chip">
-          <span>Climate rules</span>
-          <strong>fairness · pragmatism</strong>
+          <span>{isEn ? "Diversification" : "Diversifikation"}</span>
+          <strong>Porter's 3 Tests</strong>
         </div>
         <button type="button" onClick={onActivate} className="ln-cockpit-cta">
           <span>✦</span>
-          <span>{isEn ? "Try it with my PDFs" : "Jetzt mit meinen PDFs testen"}</span>
+          <span>
+            {isEn
+              ? "Try it with my slides"
+              : "Jetzt mit meinen Folien testen"}
+          </span>
         </button>
       </div>
     </div>
@@ -984,7 +1004,7 @@ function ShowcaseSection() {
   const isEn = useLanguage() === "en";
   const showcase = isEn ? SHOWCASE_EN : SHOWCASE_DE;
   return (
-    <section className="px-6 py-24 md:py-28">
+    <section className="px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[1200px]">
         <div className="ln-reveal">
           <span className="ln-section-label">
@@ -1193,7 +1213,7 @@ function Waveform({ seed }: { seed: number }) {
 function BentoFeatures() {
   const isEn = useLanguage() === "en";
   return (
-    <section id="features" className="scroll-mt-24 px-6 py-24 md:py-32">
+    <section id="features" className="scroll-mt-24 px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[1200px]">
         <div className="ln-reveal">
           <span className="ln-section-label">
@@ -1522,7 +1542,7 @@ function HowItWorks() {
       ];
 
   return (
-    <section id="how" className="scroll-mt-24 px-6 py-24 md:py-32">
+    <section id="how" className="scroll-mt-24 px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[1200px]">
         <div className="ln-reveal">
           <span className="ln-section-label">
@@ -2095,7 +2115,7 @@ function PricingSection({
   };
   const tiers = isEn ? PRICING_TIERS_EN : PRICING_TIERS_DE;
   return (
-    <section id="pricing" className="scroll-mt-24 px-6 py-24 md:py-32">
+    <section id="pricing" className="scroll-mt-24 px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[1200px]">
         <div className="ln-reveal">
           <span className="ln-section-label">
@@ -2598,7 +2618,7 @@ function PricingCard({
 function BottomCta() {
   const isEn = useLanguage() === "en";
   return (
-    <section className="relative overflow-hidden px-6 py-28 md:py-36">
+    <section className="relative overflow-hidden px-6 py-24 md:py-32">
       <div
         aria-hidden
         className="ln-glow pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
@@ -2671,7 +2691,7 @@ function SocialProof() {
 function ResultPreview() {
   const isEn = useLanguage() === "en";
   return (
-    <section className="px-6 py-24 md:py-28">
+    <section className="px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[1200px]">
         <div className="ln-reveal">
           <span className="ln-section-label">
@@ -2752,38 +2772,57 @@ function PreviewCard({
 }
 
 function BlueprintArtifactMockup() {
+  const isEn = useLanguage() === "en";
   return (
     <div className="ln-artifact-page">
       <div className="ln-artifact-top">
         <span>Blueprint</span>
-        <strong>Correct Structure</strong>
+        <strong>{isEn ? "Correct Structure" : "Klausur-Struktur"}</strong>
       </div>
       <div className="ln-artifact-timebar">
-        <span className="is-scenario" style={{ flex: 3.5 }}>Scenario</span>
-        <span className="is-theory" style={{ flex: 3.5 }}>Theory</span>
-        <span className="is-analysis" style={{ flex: 6 }}>Analysis</span>
+        <span className="is-scenario" style={{ flex: 3.5 }}>
+          {isEn ? "Scenario" : "Szenario"}
+        </span>
+        <span className="is-theory" style={{ flex: 3.5 }}>
+          {isEn ? "Theory" : "Theorie"}
+        </span>
+        <span className="is-analysis" style={{ flex: 6 }}>
+          {isEn ? "Analysis" : "Analyse"}
+        </span>
         <span className="is-polish" style={{ flex: 1.8 }}>Polish</span>
       </div>
       <div className="ln-artifact-list">
         <div className="is-scenario">
           <span>1</span>
           <div>
-            <strong>Scenario</strong>
-            <p>~350 words · no theory</p>
+            <strong>{isEn ? "Scenario" : "Szenario"}</strong>
+            <p>
+              {isEn
+                ? "~350 words · industry context"
+                : "~350 Wörter · Branchen-Kontext"}
+            </p>
           </div>
         </div>
         <div className="is-theory">
           <span>2</span>
           <div>
-            <strong>Theory</strong>
-            <p>4 references in one flow</p>
+            <strong>{isEn ? "Theory" : "Theorie"}</strong>
+            <p>
+              {isEn
+                ? "Porter · Barney · A&T"
+                : "Porter · Barney · A&T"}
+            </p>
           </div>
         </div>
         <div className="is-analysis">
           <span>3</span>
           <div>
-            <strong>Main Event</strong>
-            <p>500-700 words · take a stand</p>
+            <strong>{isEn ? "Main Event" : "Hauptteil"}</strong>
+            <p>
+              {isEn
+                ? "500-700 words · take a stand"
+                : "500-700 Wörter · Position beziehen"}
+            </p>
           </div>
         </div>
       </div>
@@ -2792,54 +2831,71 @@ function BlueprintArtifactMockup() {
 }
 
 function DeepDrillArtifactMockup() {
+  const isEn = useLanguage() === "en";
   return (
     <div className="ln-artifact-page">
       <div className="ln-artifact-top">
-        <span>Deep Drill</span>
-        <strong>35 cards</strong>
+        <span>{isEn ? "Flashcards" : "Karteikarten"}</span>
+        <strong>{isEn ? "35 cards" : "35 Karten"}</strong>
       </div>
       <div className="ln-artifact-progress">
         <span style={{ width: "68%" }} />
       </div>
       <div className="ln-artifact-flashcard">
         <div>
-          <span>Hofstede</span>
+          <span>Barney</span>
           <em>18 / 35</em>
         </div>
-        <strong>What is social individualism?</strong>
-        <p>Individual autonomy rooted in collective responsibility.</p>
+        <strong>
+          {isEn
+            ? "What are the 4 VRIO criteria?"
+            : "Was sind die 4 VRIO-Kriterien?"}
+        </strong>
+        <p>
+          {isEn
+            ? "Valuable · Rare · Inimitable · Organized. Tesla's battery tech ticks all four."
+            : "Valuable · Rare · Inimitable · Organized. Teslas Batterie-Tech erfüllt alle vier."}
+        </p>
       </div>
       <div className="ln-artifact-actions">
-        <span>Again</span>
-        <span>Kinda</span>
-        <span>Got it</span>
+        <span>{isEn ? "Again" : "Nochmal"}</span>
+        <span>{isEn ? "Almost" : "Fast"}</span>
+        <span>{isEn ? "Got it" : "Kann ich"}</span>
       </div>
     </div>
   );
 }
 
 function ExampleEssaysArtifactMockup() {
+  const isEn = useLanguage() === "en";
   return (
     <div className="ln-artifact-page">
       <div className="ln-artifact-top">
-        <span>Example Essays</span>
-        <strong>3 scenarios</strong>
+        <span>{isEn ? "Sample essays" : "Essay-Beispiele"}</span>
+        <strong>{isEn ? "3 scenarios" : "3 Szenarien"}</strong>
       </div>
       <div className="ln-artifact-tabs">
-        <span className="is-active">AI</span>
-        <span>No travel</span>
-        <span>Climate</span>
+        <span className="is-active">
+          {isEn ? "Diversification" : "Diversifikation"}
+        </span>
+        <span>{isEn ? "Going Global" : "Going Global"}</span>
+        <span>{isEn ? "Make-or-Buy" : "Make-or-Buy"}</span>
       </div>
       <div className="ln-artifact-essay">
-        <span>Part 3: Analysis + Conclusion</span>
+        <span>
+          {isEn
+            ? "Part 3: Analysis + Conclusion"
+            : "Teil 3: Analyse + Schluss"}
+        </span>
         <p>
-          The AI-driven scenario creates a test for Scandinavian leadership:
-          expertise is challenged, while collaboration becomes more valuable.
+          {isEn
+            ? "Porter's 3 Tests show: most M&As fail the Better-Off Test — synergies were promised but never materialized."
+            : "Porters 3 Tests zeigen: die meisten M&As scheitern am Better-Off-Test — versprochene Synergien blieben aus."}
         </p>
       </div>
       <div className="ln-artifact-tags">
-        <span>challenge</span>
-        <span>strengthen</span>
+        <span>{isEn ? "challenge" : "angreifen"}</span>
+        <span>{isEn ? "defend" : "stützen"}</span>
       </div>
     </div>
   );
@@ -2916,7 +2972,7 @@ function FAQSection() {
   const isEn = useLanguage() === "en";
   const items = isEn ? FAQ_ITEMS_EN : FAQ_ITEMS_DE;
   return (
-    <section id="faq" className="scroll-mt-24 px-6 py-24 md:py-32">
+    <section id="faq" className="scroll-mt-24 px-6 py-20 md:py-28">
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
