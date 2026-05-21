@@ -200,6 +200,33 @@ function extractClientIp(request: Request): string | null {
   return request.headers.get("x-real-ip");
 }
 
+async function verifyTurnstileToken(
+  token: string | null,
+  clientIp: string | null,
+): Promise<{ ok: boolean; reason?: string }> {
+  const secret = process.env.TURNSTILE_SECRET_KEY;
+  if (!secret) return { ok: true, reason: "not_configured" };
+  if (!token) return { ok: false, reason: "missing_token" };
+
+  try {
+    const body = new URLSearchParams({ secret, response: token });
+    if (clientIp) body.set("remoteip", clientIp);
+    const resp = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body,
+      },
+    );
+    const data = (await resp.json()) as { success: boolean };
+    return data.success ? { ok: true } : { ok: false, reason: "rejected" };
+  } catch (e) {
+    console.error("[/api/generate] turnstile verify threw", e);
+    return { ok: false, reason: "verify_threw" };
+  }
+}
+
 export async function POST(request: Request) {
   const t0 = Date.now();
   try {
@@ -212,6 +239,8 @@ export async function POST(request: Request) {
     const files = formData
       .getAll("files")
       .filter((v): v is File => v instanceof File);
+    const turnstileToken =
+      (formData.get("cf-turnstile-response") as string | null) ?? null;
     const clientIp = extractClientIp(request);
     const userAgent = request.headers.get("user-agent") ?? "";
 
@@ -290,6 +319,21 @@ export async function POST(request: Request) {
     }
 
     if (isAnonymous) {
+      const turnstile = await verifyTurnstileToken(turnstileToken, clientIp);
+      if (!turnstile.ok) {
+        return NextResponse.json(
+          {
+            error:
+              turnstile.reason === "missing_token"
+                ? "Bitte bestätige, dass du kein Bot bist."
+                : "Captcha-Verifizierung fehlgeschlagen — bitte erneut versuchen.",
+            reason: "turnstile_failed",
+            detail: turnstile.reason,
+          },
+          { status: 403 },
+        );
+      }
+
       try {
         const service = createServiceClient();
         const { data: anonQuota, error: anonErr } = await service.rpc(

@@ -42,7 +42,8 @@ export type FunnelEvent =
   | "flashcard_rated"
   | "checkout_started"
   | "demo_pack_viewed"
-  | "demo_to_upload_clicked";
+  | "demo_to_upload_clicked"
+  | "landing_variant_seen";
 
 export function track(event: FunnelEvent, props?: Record<string, unknown>): void {
   safeClient()?.capture(event, props);

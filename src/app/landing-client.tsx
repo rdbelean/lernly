@@ -23,6 +23,7 @@ import EssayBlueprintView from "@/components/pack/EssayBlueprintView";
 import OverviewView from "@/components/pack/OverviewView";
 import ExamSimulator from "@/components/pack/ExamSimulator";
 import DemoPacksSection from "@/components/landing/DemoPacksSection";
+import TurnstileWidget from "@/components/TurnstileWidget";
 import { track } from "@/lib/analytics";
 
 type Language = "en" | "de";
@@ -100,6 +101,16 @@ const GENERATE_TIMEOUT_MS = 5 * 60 * 1000;
 
 const API_KEY_STORAGE = "lernly-claude-api-key";
 
+// Landing variant — "anonymous" (default) lets visitors generate without
+// signing up; "signup_wall" routes every upload CTA to /login first. Switched
+// at build time via Vercel env var; later wired to PostHog feature flag for
+// per-user A/B testing.
+const LANDING_VARIANT =
+  (process.env.NEXT_PUBLIC_LANDING_VARIANT as "anonymous" | "signup_wall") ??
+  "anonymous";
+const IS_SIGNUP_WALL = LANDING_VARIANT === "signup_wall";
+const SIGNUP_HREF = "/login?next=/dashboard/new";
+
 export default function Home() {
   const [mode, setMode] = useState<"demo" | "upload">("demo");
   const [files, setFiles] = useState<File[]>([]);
@@ -112,12 +123,18 @@ export default function Home() {
   const [apiKey, setApiKey] = useState<string | null>(null);
   const [isConnectOpen, setConnectOpen] = useState(false);
   const [language, setLanguage] = useState<Language>("de");
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
 
   const openConnect = useCallback(() => setConnectOpen(true), []);
   const closeConnect = useCallback(() => setConnectOpen(false), []);
 
   const activateUpload = () => {
+    if (IS_SIGNUP_WALL) {
+      track("signup_started", { source: "landing_wall" });
+      window.location.href = SIGNUP_HREF;
+      return;
+    }
     setMode("upload");
     requestAnimationFrame(() => {
       document
@@ -127,6 +144,10 @@ export default function Home() {
   };
 
   useScrollReveal();
+
+  useEffect(() => {
+    track("landing_variant_seen", { variant: LANDING_VARIANT });
+  }, []);
 
   useEffect(() => {
     const raw = sessionStorage.getItem("lernly-pack");
@@ -198,6 +219,7 @@ export default function Home() {
     const fd = new FormData();
     fd.append("examType", examType);
     if (apiKey) fd.append("userApiKey", apiKey);
+    if (turnstileToken) fd.append("cf-turnstile-response", turnstileToken);
     for (const f of files) fd.append("files", f);
 
     const controller = new AbortController();
@@ -331,6 +353,8 @@ export default function Home() {
             elapsedSec={elapsedSec}
             error={error}
             onGenerate={handleGenerate}
+            onTurnstileVerify={setTurnstileToken}
+            onTurnstileError={() => setTurnstileToken(null)}
           />
           <DemoPacksSection language={language} onTryYourOwn={activateUpload} />
           <ResultPreview />
@@ -380,6 +404,8 @@ type HeroProps = {
   elapsedSec: number;
   error: string | null;
   onGenerate: () => void;
+  onTurnstileVerify: (token: string) => void;
+  onTurnstileError: () => void;
 };
 
 function formatElapsed(sec: number) {
@@ -645,6 +671,8 @@ function UploadDemo({
   elapsedSec,
   error,
   onGenerate,
+  onTurnstileVerify,
+  onTurnstileError,
 }: HeroProps) {
   const language = useLanguage();
   const isEn = language === "en";
@@ -694,6 +722,57 @@ function UploadDemo({
     );
   }
 
+  if (IS_SIGNUP_WALL) {
+    return (
+      <div className="ln-hero-card py-[30px] px-[34px]">
+        <div className="rounded-2xl border-2 border-dashed border-white/15 bg-black/20 px-6 py-10 text-center">
+          <div className="mx-auto flex max-w-[420px] flex-col items-center gap-4">
+            <div
+              className="flex h-12 w-12 items-center justify-center rounded-xl"
+              style={{
+                background: "rgba(91,184,216,0.14)",
+                color: "var(--color-ln-cyan)",
+              }}
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                <polyline points="10 17 15 12 10 7" />
+                <line x1="15" y1="12" x2="3" y2="12" />
+              </svg>
+            </div>
+            <div className="text-[16px] font-semibold text-white">
+              {isEn
+                ? "Sign up to upload your PDF"
+                : "Erstelle einen Account, um dein PDF hochzuladen"}
+            </div>
+            <div
+              className="text-[13px]"
+              style={{ color: "var(--color-ln-mute)" }}
+            >
+              {isEn
+                ? "30 seconds with Google. 3 free packs per month. No credit card."
+                : "30 Sekunden mit Google. 3 Pakete pro Monat gratis. Keine Kreditkarte."}
+            </div>
+            <a
+              href={SIGNUP_HREF}
+              className="mt-2 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[15px] font-semibold text-[#0F1535] hover:bg-white/90"
+            >
+              {isEn ? "Sign in to start →" : "Anmelden & loslegen →"}
+            </a>
+            <p
+              className="mt-2 text-[12px]"
+              style={{ color: "var(--color-ln-mute)" }}
+            >
+              {isEn
+                ? "Want to see what it looks like first? Scroll down to the demo."
+                : "Erst mal anschauen? Scroll runter zur Demo."}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="ln-hero-card py-[30px] px-[34px]">
       <div
@@ -736,6 +815,11 @@ function UploadDemo({
           </div>
         </div>
       </div>
+
+      <TurnstileWidget
+        onVerify={onTurnstileVerify}
+        onError={onTurnstileError}
+      />
 
       {files.length > 0 && (
         <ul className="mt-4 flex flex-wrap gap-2">
