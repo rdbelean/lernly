@@ -357,13 +357,10 @@ export default function Home() {
             onTurnstileError={() => setTurnstileToken(null)}
           />
           <DemoPacksSection language={language} onTryYourOwn={activateUpload} />
-          <ResultPreview />
           <HowItWorks />
-          <PipelineCta onActivateUpload={activateUpload} />
           <ShowcaseSection />
-          <ComparisonSection />
           <BentoFeatures />
-          <SocialProof />
+          <ComparisonSection />
           {pack && (
             <section ref={resultRef} id="result" className="scroll-mt-24">
               <ResultSection pack={pack} onReset={clearPack} />
@@ -437,9 +434,11 @@ function Hero(props: HeroProps) {
             fontSize: "clamp(48px, 8vw, 96px)",
           }}
         >
-          <span className="block sm:inline">{isEn ? "Upload it." : "Lade hoch."}</span>{" "}
+          <span className="block sm:inline">
+            {isEn ? "From 8 PDFs" : "Aus 8 PDFs"}
+          </span>{" "}
           <span className="block sm:inline" style={{ color: "rgb(255, 255, 255)" }}>
-            {isEn ? "Sorted in 2 min." : "In 2 Min sortiert."}
+            {isEn ? "comes a plan." : "wird ein Plan."}
           </span>
         </h1>
 
@@ -447,7 +446,9 @@ function Hero(props: HeroProps) {
           className="ln-reveal mx-auto mt-8 max-w-[680px] text-center leading-[1.4] text-white"
           style={{ fontSize: "clamp(18px, 2.2vw, 22px)" }}
         >
-          {isEn ? "8 PDFs. 3 days. No plan." : "8 PDFs. 3 Tage. Kein Plan."}
+          {isEn
+            ? "3 days to the exam. No plan. No stress."
+            : "3 Tage bis zur Klausur. Kein Plan. Kein Stress."}
         </p>
 
         <div className="ln-hero-actions ln-reveal mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -457,7 +458,7 @@ function Hero(props: HeroProps) {
             className="rounded-full px-7 py-[14px] text-[16px] font-semibold transition hover:bg-white/90"
             style={{ background: "#ffffff", color: "#1a2647" }}
           >
-            {isEn ? "Drop in PDFs →" : "Jetzt PDFs reinwerfen →"}
+            {isEn ? "Drop in slides →" : "Folien reinwerfen →"}
           </button>
           <a
             href="#how"
@@ -805,8 +806,8 @@ function UploadDemo({
                 ? "Drop them!"
                 : "Loslassen!"
               : isEn
-                ? "Drop PDFs here (or click)"
-                : "PDFs hier reinwerfen (oder klicken)"}
+                ? "Drop slides here (or click)"
+                : "Folien hier reinwerfen (oder klicken)"}
           </div>
           <div className="text-[12px]" style={{ color: "var(--color-ln-mute)" }}>
             {isEn
@@ -1124,8 +1125,8 @@ function ComparisonSection() {
           <div className="ln-reveal ln-comparison-card is-active">
             <div className="ln-section-label" style={{ fontSize: 11, letterSpacing: "2.2px", color: "var(--color-ln-cyan)" }}>
               {isEn
-                ? "Flashcards, simulator, blueprint"
-                : "Karteikarten, Simulator, Blueprint"}
+                ? "Flashcards, quiz, blueprint"
+                : "Karteikarten, Quiz, Blueprint"}
             </div>
             <h3 className="mt-4 text-[26px] font-semibold leading-tight tracking-[-0.4px] text-white">
               {isEn
@@ -1265,8 +1266,8 @@ function BentoFeatures() {
             </CardTitle>
             <CardDesc>
               {isEn
-                ? "What usually costs you an evening, Lernly does before your coffee gets cold. Flashcards, blueprint, simulator — done."
-                : "Was dich sonst einen Abend kostet, macht Lernly bevor dein Kaffee kalt ist. Karteikarten, Blueprint, Simulator — fertig."}
+                ? "What usually costs you an evening, Lernly does before your coffee gets cold. Flashcards, blueprint, quiz — done."
+                : "Was dich sonst einen Abend kostet, macht Lernly bevor dein Kaffee kalt ist. Karteikarten, Blueprint, Quiz — fertig."}
             </CardDesc>
             <WaveBars className="mt-6" />
           </div>
@@ -1566,7 +1567,7 @@ const RESULT_TABS: { id: ResultTab; label: string; emoji: string }[] = [
   { id: "flashcards", label: "Karteikarten", emoji: "🎴" },
   { id: "overview", label: "Übersicht", emoji: "🧠" },
   { id: "blueprint", label: "Blueprint", emoji: "📐" },
-  { id: "simulator", label: "Simulator", emoji: "🎮" },
+  { id: "simulator", label: "Übungsklausur", emoji: "🎯" },
 ];
 
 function ResultSection({ pack, onReset }: { pack: StudyPack; onReset: () => void }) {
@@ -1829,8 +1830,8 @@ const PRICING_TIERS_DE: PricingTier[] = [
   {
     plan: "free",
     name: "Gratis",
-    tagline: "Probier ein Paket",
-    outcomeHeadline: "Ein Pack testen",
+    tagline: "Probier ein Lernpaket",
+    outcomeHeadline: "Ein Lernpaket testen",
     price: "0€",
     priceSize: "40px",
     subtitle: "für immer",
@@ -1864,7 +1865,7 @@ const PRICING_TIERS_DE: PricingTier[] = [
   {
     plan: "pro",
     name: "Pro",
-    tagline: "Für das ganze Semester",
+    tagline: "Das ganze Semester durchziehen",
     outcomeHeadline: "Semester durchziehen",
     price: "14.99€",
     priceSize: "48px",
@@ -1885,8 +1886,8 @@ const PRICING_TIERS_DE: PricingTier[] = [
   {
     plan: "team",
     name: "Team",
-    tagline: "Eure WG-Lerngruppe, ein Account",
-    outcomeHeadline: "Pakete poolen",
+    tagline: "Skripte mit der WG poolen",
+    outcomeHeadline: "Lernpakete poolen",
     price: "24.99€",
     priceSize: "44px",
     subtitle: "/ Monat",

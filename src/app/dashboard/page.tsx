@@ -268,8 +268,8 @@ function EmptyState() {
             className="mt-2 text-[14px]"
             style={{ color: "rgba(255,255,255,0.62)" }}
           >
-            Lade ein PDF hoch — Karteikarten, Simulator und Blueprint sind in
-            ca. 2 Minuten fertig.
+            Lad deine Folien hoch — Karteikarten, Quiz und Blueprint in ca. 2
+            Minuten.
           </p>
         </div>
         <div className="flex flex-wrap items-center justify-center gap-3">
