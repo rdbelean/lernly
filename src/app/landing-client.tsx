@@ -22,6 +22,7 @@ import FlashcardDeck from "@/components/pack/FlashcardDeck";
 import EssayBlueprintView from "@/components/pack/EssayBlueprintView";
 import OverviewView from "@/components/pack/OverviewView";
 import ExamSimulator from "@/components/pack/ExamSimulator";
+import { track } from "@/lib/analytics";
 
 type Language = "en" | "de";
 
@@ -186,6 +187,13 @@ export default function Home() {
     setIsGenerating(true);
     setError(null);
 
+    track("anon_generate_started", {
+      file_count: files.length,
+      exam_type: examType,
+      total_bytes: files.reduce((sum, f) => sum + f.size, 0),
+      uses_byok: Boolean(apiKey),
+    });
+
     const fd = new FormData();
     fd.append("examType", examType);
     if (apiKey) fd.append("userApiKey", apiKey);
@@ -193,6 +201,7 @@ export default function Home() {
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), GENERATE_TIMEOUT_MS);
+    const t0 = Date.now();
 
     try {
       const res = await fetch("/api/generate", {
@@ -201,10 +210,15 @@ export default function Home() {
         signal: controller.signal,
       });
 
-      let data: { id: string; pack: StudyPack } | { error: string };
+      let data: { id: string; pack: StudyPack } | { error: string; reason?: string };
       try {
         data = await res.json();
       } catch {
+        track("anon_generate_failed", {
+          status: res.status,
+          reason: "no_json",
+          duration_ms: Date.now() - t0,
+        });
         throw new Error(
           language === "en"
             ? `Server responded with status ${res.status}, but no JSON.`
@@ -213,8 +227,20 @@ export default function Home() {
       }
 
       if (!res.ok || "error" in data) {
+        track("anon_generate_failed", {
+          status: res.status,
+          reason: "reason" in data ? data.reason ?? "error" : "error",
+          duration_ms: Date.now() - t0,
+        });
         throw new Error("error" in data ? data.error : `HTTP ${res.status}`);
       }
+
+      track("anon_generate_completed", {
+        duration_ms: Date.now() - t0,
+        cards: data.pack.flashcards.length,
+        quiz: data.pack.simulator.questions.length,
+        exam_type: examType,
+      });
 
       setCompleted(true);
       await new Promise((r) => setTimeout(r, 500));

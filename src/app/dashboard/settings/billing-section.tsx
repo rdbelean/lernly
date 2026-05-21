@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { track } from "@/lib/analytics";
 
 type Plan = "pro" | "team" | "pro_byok" | "team_byok";
 
@@ -31,6 +32,7 @@ export default function BillingSection({
 
   const startCheckout = (target: Plan) => {
     setError(null);
+    track("checkout_started", { plan: target });
     startTransition(async () => {
       try {
         const res = await fetch("/api/stripe/checkout", {

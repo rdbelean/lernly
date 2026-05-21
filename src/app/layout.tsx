@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import AnalyticsProvider from "@/components/AnalyticsProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -87,6 +88,7 @@ export default function RootLayout({
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
+        <AnalyticsProvider />
         {children}
       </body>
     </html>

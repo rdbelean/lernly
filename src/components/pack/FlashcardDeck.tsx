@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { Flashcard } from "@/lib/schema";
+import { track } from "@/lib/analytics";
 
 type Language = "en" | "de";
 type CardStatus = "new" | "again" | "almost" | "known";
@@ -36,8 +37,13 @@ export default function FlashcardDeck({
   const card = queue[index];
   const knownCount = Object.values(statuses).filter((s) => s === "known").length;
 
+  const firstRateFired = useRef(false);
   const rate = (status: CardStatus) => {
     if (!card) return;
+    if (!firstRateFired.current) {
+      firstRateFired.current = true;
+      track("flashcard_rated", { rating: status, total_cards: cards.length });
+    }
     setStatuses((prev) => ({ ...prev, [card.id]: status }));
     setFlipped(false);
     setIndex((i) => i + 1);

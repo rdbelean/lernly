@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/dal";
+import UserIdentifier from "@/components/UserIdentifier";
 
 export default async function DashboardLayout({
   children,
@@ -13,6 +14,11 @@ export default async function DashboardLayout({
 
   return (
     <>
+      <UserIdentifier
+        userId={user.id}
+        email={user.email ?? null}
+        provider={user.app_metadata?.provider ?? null}
+      />
       <nav
         className="sticky top-0 z-40 w-full"
         style={{

@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { StudyPack } from "@/lib/schema";
 import FlashcardDeck from "./FlashcardDeck";
 import EssayBlueprintView from "./EssayBlueprintView";
 import OverviewView from "./OverviewView";
 import ExamSimulator from "./ExamSimulator";
+import { track } from "@/lib/analytics";
 
 type Language = "en" | "de";
 type Tab = "flashcards" | "overview" | "blueprint" | "simulator";
@@ -26,6 +27,14 @@ export default function PackView({
 }) {
   const [tab, setTab] = useState<Tab>("flashcards");
   const isEn = language === "en";
+
+  useEffect(() => {
+    track("pack_opened", {
+      cards: pack.flashcards.length,
+      quiz: pack.simulator.questions.length,
+      exam_type: pack.examType,
+    });
+  }, [pack.flashcards.length, pack.simulator.questions.length, pack.examType]);
 
   return (
     <div className="ln-glass-card overflow-hidden">

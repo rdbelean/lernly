@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDropzone, type FileRejection } from "react-dropzone";
 import GenerationProgress from "@/components/GenerationProgress";
+import { track } from "@/lib/analytics";
 import {
   EXAM_TYPE_LABELS,
   type ExamType,
@@ -86,12 +87,20 @@ export default function NewPackPage() {
     if (extraInfo.trim()) fd.set("extraInfo", extraInfo.trim());
     for (const file of files) fd.append("files", file);
 
+    const t0 = Date.now();
     try {
       const res = await fetch("/api/generate", { method: "POST", body: fd });
       const json = await res.json();
       if (!res.ok) {
         throw new Error(json.error ?? `HTTP ${res.status}`);
       }
+      track("auth_generate_completed", {
+        duration_ms: Date.now() - t0,
+        cards: json.pack?.flashcards?.length,
+        quiz: json.pack?.simulator?.questions?.length,
+        exam_type: examType,
+        file_count: files.length,
+      });
       setCompleted(true);
       if (json.saved && json.id) {
         // small delay so the user sees completion tick
