@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { StudyPack } from "@/lib/schema";
 import { track } from "@/lib/analytics";
 import PackView from "@/components/pack/PackView";
+import SectionHeading from "@/components/landing/SectionHeading";
 
 type Language = "en" | "de";
 type ExamKind = "open_book" | "essay" | "multiple_choice" | "oral";
@@ -675,41 +676,21 @@ export default function DemoPacksSection({ language, onTryYourOwn }: Props) {
       >
         <div aria-hidden className="ln-demo-section-glow" />
         <div className="relative">
-          <div className="mb-10 text-center">
-            <p
-              className="mb-4 text-[11px] font-semibold uppercase tracking-[0.22em]"
-              style={{ color: "rgba(255,255,255,0.55)" }}
-            >
-              {isEn
-                ? "No upload · No account · Real packs"
-                : "Kein Upload · Kein Account · Echte Pakete"}
-            </p>
-            <h2
-              className="ln-reveal mx-auto max-w-[820px] text-balance text-white"
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(32px, 5.5vw, 56px)",
-                fontWeight: 700,
-                letterSpacing: "-1.4px",
-                lineHeight: 1.05,
-              }}
-            >
-              {isEn ? "Three real packs. " : "Drei echte Pakete. "}
-              <span
-                className="lernly-italic"
-                style={{ color: "var(--color-ln-ink-soft)" }}
-              >
-                {isEn ? "Click one." : "Klick rein."}
-              </span>
-            </h2>
-            <p
-              className="ln-reveal mx-auto mt-4 max-w-[600px] text-[15px]"
-              style={{ color: "rgba(255,255,255,0.62)" }}
-            >
-              {isEn
-                ? "From real exams. Cards, quiz, blueprint — all live. No upload, no account, no fluff."
-                : "Aus echten Klausuren. Karteikarten, Quiz und Blueprint laufen live — kein Upload, kein Account, kein Bullshit."}
-            </p>
+          <div className="mb-10">
+            <SectionHeading
+              eyebrow={
+                isEn
+                  ? "No upload · No account · Real packs"
+                  : "Kein Upload · Kein Account · Echte Pakete"
+              }
+              boldPart={isEn ? "Three real packs." : "Drei echte Pakete."}
+              italicPart={isEn ? "Click one." : "Klick rein."}
+              sub={
+                isEn
+                  ? "From real exams. Cards, quiz, blueprint — all live. No upload, no account, no fluff."
+                  : "Aus echten Klausuren. Karteikarten, Quiz und Blueprint laufen live — kein Upload, kein Account, kein Bullshit."
+              }
+            />
           </div>
 
           {/* Featured pack lives in its own row (full width). Two secondary

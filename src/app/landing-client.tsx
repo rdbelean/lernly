@@ -23,6 +23,7 @@ import EssayBlueprintView from "@/components/pack/EssayBlueprintView";
 import OverviewView from "@/components/pack/OverviewView";
 import ExamSimulator from "@/components/pack/ExamSimulator";
 import DemoPacksSection from "@/components/landing/DemoPacksSection";
+import SectionHeading from "@/components/landing/SectionHeading";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import { track } from "@/lib/analytics";
 
@@ -1030,22 +1031,15 @@ function ShowcaseSection() {
   return (
     <section className="px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[1200px]">
-        <div className="ln-reveal">
-          <span className="ln-section-label">
-            {isEn ? "Before the material mountain" : "Vor deinem Stoffberg"}
-          </span>
-          <h2
-            className="mt-4 max-w-3xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
-            style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
-          >
-            {isEn
+        <SectionHeading
+          eyebrow={isEn ? "Before the material mountain" : "Vor deinem Stoffberg"}
+          boldPart={
+            isEn
               ? "Business, Med, Law — whatever you study."
-              : "BWL, Medizin, Jura — egal was du studierst."}{" "}
-            <span className="lernly-italic" style={{ color: "var(--color-ln-ink-soft)" }}>
-              {isEn ? "Lernly reads it." : "Lernly liest's."}
-            </span>
-          </h2>
-        </div>
+              : "BWL, Medizin, Jura — egal was du studierst."
+          }
+          italicPart={isEn ? "Lernly reads it." : "Lernly liest's."}
+        />
 
         <div className="ln-stagger mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
           {showcase.map((item, idx) => (
@@ -1131,20 +1125,11 @@ function ComparisonSection() {
   return (
     <section className="px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[1200px]">
-        <div className="ln-reveal">
-          <span className="ln-section-label">
-            {isEn ? "Why not just ChatGPT?" : "Warum nicht einfach ChatGPT?"}
-          </span>
-          <h2
-            className="mt-4 max-w-3xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
-            style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
-          >
-            {isEn ? "ChatGPT delivers text." : "ChatGPT liefert Text."}{" "}
-            <span className="lernly-italic" style={{ color: "var(--color-ln-ink-soft)" }}>
-              {isEn ? "Lernly quizzes you." : "Lernly fragt dich ab."}
-            </span>
-          </h2>
-        </div>
+        <SectionHeading
+          eyebrow={isEn ? "Why not just ChatGPT?" : "Warum nicht einfach ChatGPT?"}
+          boldPart={isEn ? "ChatGPT delivers text." : "ChatGPT liefert Text."}
+          italicPart={isEn ? "Lernly quizzes you." : "Lernly fragt dich ab."}
+        />
 
         <div className="ln-stagger mt-12 grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="ln-reveal ln-comparison-card is-muted">
@@ -1239,19 +1224,21 @@ function BentoFeatures() {
   return (
     <section id="features" className="scroll-mt-24 px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[1200px]">
-        <div className="ln-reveal">
-          <span className="ln-section-label">
-            {isEn ? "What makes Lernly different" : "Was Lernly anders macht"}
-          </span>
-          <h2
-            className="mt-4 max-w-2xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
-            style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
-          >
-            {isEn
-              ? "Prepare for your exam without scrolling and hoping."
-              : "Klausur vorbereiten ohne Durchscrollen und Hoffen."}
-          </h2>
-        </div>
+        <SectionHeading
+          eyebrow={
+            isEn ? "What makes Lernly different" : "Was Lernly anders macht"
+          }
+          boldPart={
+            isEn
+              ? "Prepare for your exam"
+              : "Klausur vorbereiten"
+          }
+          italicPart={
+            isEn
+              ? "without scrolling and hoping."
+              : "ohne Durchscrollen und Hoffen."
+          }
+        />
 
         <div className="ln-stagger mt-14 grid grid-cols-1 gap-4 md:grid-cols-6">
           {/* Card 1 — span 3 */}
@@ -1568,22 +1555,17 @@ function HowItWorks() {
   return (
     <section id="how" className="scroll-mt-24 px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[1200px]">
-        <div className="ln-reveal">
-          <span className="ln-section-label">
-            {isEn ? "From chaos to exam-ready" : "Vom Chaos zur Prüfung"}
-          </span>
-          <h2
-            className="mt-4 max-w-2xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
-            style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
-          >
-            {isEn
-              ? "Build flashcards in three steps."
-              : "Karteikarten erstellen in drei Schritten."}{" "}
-            <span className="lernly-italic" style={{ color: "var(--color-ln-ink-soft)" }}>
-              {isEn ? "Doable even at 2 a.m." : "Auch um 2 Uhr nachts."}
-            </span>
-          </h2>
-        </div>
+        <SectionHeading
+          eyebrow={isEn ? "From chaos to exam-ready" : "Vom Chaos zur Prüfung"}
+          boldPart={
+            isEn
+              ? "Flashcards in three steps."
+              : "Karteikarten in drei Schritten."
+          }
+          italicPart={
+            isEn ? "Doable even at 2 a.m." : "Auch um 2 Uhr nachts."
+          }
+        />
 
         <div className="ln-pipeline ln-reveal mt-14">
           {steps.map((s) => (
@@ -2141,23 +2123,15 @@ function PricingSection({
   return (
     <section id="pricing" className="scroll-mt-24 px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[1200px]">
-        <div className="ln-reveal">
-          <span className="ln-section-label">
-            {isEn ? "What do you need?" : "Was brauchst du?"}
-          </span>
-          <h2
-            className="mt-4 max-w-2xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
-            style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
-          >
-            {isEn ? "Try it for free." : "Probier's gratis."}{" "}
-            <span
-              className="lernly-italic"
-              style={{ color: "var(--color-ln-ink-soft)" }}
-            >
-              {isEn ? "Upgrade only when it sticks." : "Upgrade nur wenn's sitzt."}
-            </span>
-          </h2>
-        </div>
+        <SectionHeading
+          eyebrow={isEn ? "What do you need?" : "Was brauchst du?"}
+          boldPart={isEn ? "Try it for free." : "Probier's gratis."}
+          italicPart={
+            isEn
+              ? "Upgrade only when it sticks."
+              : "Upgrade nur wenn's sitzt."
+          }
+        />
 
         <div className="ln-reveal ln-founder-eyebrow mt-8">
           <span className="ln-founder-rocket" aria-hidden>
@@ -2651,34 +2625,34 @@ function BottomCta() {
             "radial-gradient(closest-side, rgba(91,184,216,0.20), transparent 70%)",
         }}
       />
-      <div className="ln-reveal relative mx-auto max-w-[820px] text-center">
-        <h2
-          className="font-bold leading-[1.05] tracking-[-1.92px]"
-          style={{
-            color: "var(--color-ln-ink-soft)",
-            fontSize: "clamp(34px, 5.5vw, 64px)",
-          }}
-        >
-          {isEn ? "The exam is coming anyway." : "Die Klausur kommt egal."}{" "}
-          <span className="lernly-italic text-white">
-            {isEn ? "Upload your PDFs now." : "Lade jetzt deine PDFs hoch."}
-          </span>
-        </h2>
-        <a
-          href="#upload"
-          className="mt-10 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-[15px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
-        >
-          {isEn ? "Upload your PDFs" : "PDFs hochladen"}
-          <span>↓</span>
-        </a>
-        <p
-          className="mt-5 text-[13px]"
-          style={{ color: "var(--color-ln-mute)" }}
-        >
-          {isEn
-            ? "Free · No login · No credit card"
-            : "Gratis · Ohne Login · Ohne Kreditkarte"}
-        </p>
+      <div className="relative">
+        <SectionHeading
+          boldPart={
+            isEn ? "The exam is coming anyway." : "Die Klausur kommt egal."
+          }
+          italicPart={
+            isEn ? "Drop in your slides now." : "Wirf jetzt deine Folien rein."
+          }
+          boldColor="var(--color-ln-ink-soft)"
+          italicColor="#ffffff"
+        />
+        <div className="ln-reveal mt-10 flex flex-col items-center gap-5">
+          <a
+            href="#upload"
+            className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-[15px] font-semibold text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
+          >
+            {isEn ? "Drop in slides" : "Folien reinwerfen"}
+            <span>↓</span>
+          </a>
+          <p
+            className="text-[13px]"
+            style={{ color: "var(--color-ln-mute)" }}
+          >
+            {isEn
+              ? "Free · 2 packs per month · No credit card"
+              : "Gratis · 2 Pakete pro Monat · Ohne Kreditkarte"}
+          </p>
+        </div>
       </div>
     </section>
   );
@@ -3013,15 +2987,10 @@ function FAQSection() {
         }}
       />
       <div className="mx-auto max-w-[820px]">
-        <div className="ln-reveal">
-          <span className="ln-section-label">{isEn ? "Questions?" : "Fragen?"}</span>
-          <h2
-            className="mt-4 font-bold leading-[1.05] tracking-[-1.92px] text-white"
-            style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
-          >
-            {isEn ? "Short answers." : "Kurz beantwortet."}
-          </h2>
-        </div>
+        <SectionHeading
+          eyebrow={isEn ? "Questions?" : "Fragen?"}
+          boldPart={isEn ? "Short answers." : "Kurz beantwortet."}
+        />
 
         <div className="ln-reveal ln-glass-card mt-10 overflow-hidden">
           {items.map((item, i) => {
