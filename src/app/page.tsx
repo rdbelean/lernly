@@ -1533,15 +1533,20 @@ function ResultSection({ pack, onReset }: { pack: StudyPack; onReset: () => void
 function EmailCapture({ pack }: { pack: StudyPack }) {
   const language = useLanguage();
   const isEn = language === "en";
-  const [email, setEmail] = useState("");
-  const [saved, setSaved] = useState(false);
+  const [authed, setAuthed] = useState<boolean | null>(null);
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.includes("@")) return;
-    localStorage.setItem("lernly-email", email);
-    setSaved(true);
-  };
+  useEffect(() => {
+    let active = true;
+    import("@/lib/supabase/browser").then(({ createClient }) => {
+      const supabase = createClient();
+      supabase.auth.getUser().then(({ data }) => {
+        if (active) setAuthed(Boolean(data.user));
+      });
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleDownload = () => {
     const html = renderPackAsHtml(pack, language);
@@ -1554,46 +1559,95 @@ function EmailCapture({ pack }: { pack: StudyPack }) {
     URL.revokeObjectURL(url);
   };
 
+  const handleStartSignup = () => {
+    try {
+      localStorage.setItem("lernly:pendingPack", JSON.stringify(pack));
+    } catch {
+      // localStorage might be unavailable; just go on.
+    }
+    window.location.href = "/login?next=/dashboard/claim";
+  };
+
+  if (authed === null) {
+    return <div className="ln-glass-card mt-6 p-7 md:p-9 opacity-0" aria-hidden />;
+  }
+
+  if (!authed) {
+    return (
+      <div className="ln-glass-card mt-6 p-7 md:p-9">
+        <div className="flex items-center gap-3">
+          <span className="text-[24px]">🔒</span>
+          <h3 className="text-[22px] font-semibold tracking-[-0.3px] text-white">
+            {isEn
+              ? "Save this pack — create your free account"
+              : "Pack speichern — kostenlosen Account erstellen"}
+          </h3>
+        </div>
+        <p className="mt-2 text-[14px]" style={{ color: "var(--color-ln-mute)" }}>
+          {isEn
+            ? "Create a free account to download this pack, keep it in your dashboard, and generate more — for free."
+            : "Erstelle einen kostenlosen Account, um dieses Paket herunterzuladen, im Dashboard zu behalten und weitere zu erstellen — gratis."}
+        </p>
+        <ul
+          className="mt-4 space-y-1.5 text-[13px]"
+          style={{ color: "var(--color-ln-ink-soft)" }}
+        >
+          <li>✓ {isEn ? "Save & download as HTML" : "Speichern & als HTML herunterladen"}</li>
+          <li>✓ {isEn ? "Access from any device" : "Von jedem Gerät zugreifen"}</li>
+          <li>✓ {isEn ? "3 packs free" : "3 Pakete gratis"}</li>
+        </ul>
+        <div className="mt-5 flex flex-wrap gap-3">
+          <button
+            onClick={handleStartSignup}
+            className="rounded-lg bg-white px-5 py-2.5 text-[13.5px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
+          >
+            {isEn ? "Create free account →" : "Kostenlosen Account erstellen →"}
+          </button>
+          <a
+            href="/login?next=/dashboard/claim"
+            onClick={() => {
+              try {
+                localStorage.setItem(
+                  "lernly:pendingPack",
+                  JSON.stringify(pack),
+                );
+              } catch {}
+            }}
+            className="rounded-lg border border-white/20 bg-transparent px-5 py-2.5 text-[13.5px] font-medium text-white transition hover:bg-white/5"
+          >
+            {isEn ? "I already have an account" : "Ich hab schon einen Account"}
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="ln-glass-card mt-6 p-7 md:p-9">
       <div className="flex items-center gap-3">
         <span className="text-[24px]">🎉</span>
         <h3 className="text-[22px] font-semibold tracking-[-0.3px] text-white">
-          {isEn ? "Your study pack is ready" : "Dein Lernpaket ist fertig"}
+          {isEn ? "Saved to your dashboard" : "In deinem Dashboard gespeichert"}
         </h3>
       </div>
-      <p
-        className="mt-2 text-[14px]"
-        style={{ color: "var(--color-ln-mute)" }}
-      >
+      <p className="mt-2 text-[14px]" style={{ color: "var(--color-ln-mute)" }}>
         {isEn
-          ? "Download it for offline use — printable, yours forever. Or leave your email; we will tell you when save-by-link is live."
-          : "Lade es offline runter — druckbar, für immer dein. Oder trag deine E-Mail ein; wir sagen dir Bescheid, sobald Speichern per Link live ist."}
+          ? "You can come back to this pack any time. Or download it for offline use right now."
+          : "Du kannst jederzeit zu diesem Paket zurück. Oder lade es direkt offline runter."}
       </p>
-
-      <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-        <form onSubmit={handleSave} className="flex flex-1 gap-2">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder={isEn ? "you@mail.com" : "deine@mail.de"}
-            className="flex-1 rounded-lg border border-white/10 bg-black/30 px-3 py-2.5 text-[14px] text-white placeholder:text-white/30 focus:border-[color:var(--color-ln-cyan)] focus:outline-none"
-          />
-          <button
-            type="submit"
-            disabled={saved}
-            className="rounded-lg border border-white/20 bg-transparent px-4 py-2.5 text-[13.5px] font-medium text-white transition hover:bg-white/5 disabled:opacity-50"
-          >
-            {saved ? (isEn ? "✓ Saved" : "✓ Gemerkt") : isEn ? "Save" : "Merken"}
-          </button>
-        </form>
+      <div className="mt-5 flex flex-wrap gap-3">
         <button
           onClick={handleDownload}
           className="rounded-lg bg-white px-5 py-2.5 text-[13.5px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
         >
           {isEn ? "Save offline" : "Offline speichern"}
         </button>
+        <a
+          href="/dashboard"
+          className="rounded-lg border border-white/20 bg-transparent px-5 py-2.5 text-[13.5px] font-medium text-white transition hover:bg-white/5"
+        >
+          {isEn ? "Open dashboard" : "Dashboard öffnen"}
+        </a>
       </div>
     </div>
   );

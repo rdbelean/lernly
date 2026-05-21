@@ -65,7 +65,11 @@ export default function AuthMenu({ language = "en" }: { language?: Language }) {
   return (
     <a
       href="/login"
-      className="text-[14px] font-medium text-white transition hover:opacity-70"
+      className="rounded-full px-4 py-1.5 text-[13.5px] font-medium text-white transition hover:bg-white/10"
+      style={{
+        background: "rgba(255,255,255,0.06)",
+        border: "1px solid rgba(255,255,255,0.18)",
+      }}
     >
       {copy.signIn}
     </a>

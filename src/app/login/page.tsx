@@ -6,19 +6,28 @@ type SearchParams = Promise<{
   error?: string;
   sent?: string;
   email?: string;
+  next?: string;
 }>;
+
+function safeNext(raw: string | undefined): string {
+  if (!raw) return "/dashboard";
+  if (!raw.startsWith("/") || raw.startsWith("//")) return "/dashboard";
+  return raw;
+}
 
 export default async function LoginPage({
   searchParams,
 }: {
   searchParams: SearchParams;
 }) {
+  const params = await searchParams;
+  const next = safeNext(params.next);
+
   const user = await getUser();
   if (user) {
-    redirect("/dashboard");
+    redirect(next);
   }
 
-  const params = await searchParams;
   const errorMessage = params.error;
   const magicLinkSent = params.sent === "1";
   const sentTo = params.email;
@@ -100,6 +109,7 @@ export default async function LoginPage({
         ) : null}
 
         <form action={loginWithGoogle} className="mb-4">
+          <input type="hidden" name="next" value={next} />
           <button
             type="submit"
             className="flex w-full items-center justify-center gap-3 rounded-full bg-white px-5 py-3 text-[15px] font-medium text-[#14161C] transition hover:bg-white/90"
@@ -135,6 +145,7 @@ export default async function LoginPage({
         </div>
 
         <form action={loginWithMagicLink} className="flex flex-col gap-3">
+          <input type="hidden" name="next" value={next} />
           <label
             htmlFor="email"
             className="text-[12px] uppercase tracking-[0.18em]"
