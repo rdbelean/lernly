@@ -47,11 +47,17 @@ export async function POST(request: Request) {
     const plan = planFromPriceId(priceId);
     const status = sub.status;
     const active = status === "active" || status === "trialing";
-    const sub_with_period = sub as Stripe.Subscription & {
-      current_period_end?: number;
-    };
-    const periodEndIso = sub_with_period.current_period_end
-      ? new Date(sub_with_period.current_period_end * 1000).toISOString()
+    // Recent Stripe API versions moved current_period_end off the Subscription
+    // onto each subscription item; read the item first, fall back to legacy.
+    const item = sub.items.data[0] as
+      | (Stripe.SubscriptionItem & { current_period_end?: number })
+      | undefined;
+    const periodEndUnix =
+      item?.current_period_end ??
+      (sub as Stripe.Subscription & { current_period_end?: number })
+        .current_period_end;
+    const periodEndIso = periodEndUnix
+      ? new Date(periodEndUnix * 1000).toISOString()
       : null;
 
     const newPlan = active && plan ? plan : "free";
