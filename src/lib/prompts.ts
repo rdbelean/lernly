@@ -243,3 +243,15 @@ JSON-SCHEMA (genau diese Struktur):
     ]
   }
 }`;
+
+export const TASK_ANALYSIS = `AUFGABE: Analysiere das Kursmaterial und erstelle ein kompaktes PRÜFUNGS-BRIEFING — eine interne Analyse, die anschließend genutzt wird, um Karteikarten, Trainer, Visual Map und Übersicht prüfungsfokussiert zu erstellen. Das ist KEIN Endprodukt für den Studenten, sondern Steuerungs-Input für die Generierung.
+
+Schreibe knappen, strukturierten FLIESSTEXT (KEIN JSON, keine Markdown-Codeblöcke). Decke ab:
+1. KERN-KONZEPTE (5-8): die prüfungskritischsten Begriffe — je mit einem Satz, WARUM es geprüft wird.
+2. FRAGE-MUSTER & FALLEN: wie dieser Stoff typischerweise abgefragt wird; häufig verwechselte Begriffspaare.
+3. SCHWIERIGKEITS-HOTSPOTS: was Studenten erfahrungsgemäß falsch machen.
+4. SCHLÜSSEL-AUTOREN/QUELLEN: wer/was zitiert werden muss.
+5. QUERVERWEISE: welche Themen zusammenhängen und wie.
+6. PRÜFUNGSTYP-FOKUS: was beim oben genannten Prüfungsformat besonders zählt.
+
+Maximal ~400 Wörter. Priorisiere hart — lieber wenige scharfe Punkte als eine Aufzählung von allem.`;
