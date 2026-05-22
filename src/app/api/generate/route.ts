@@ -70,6 +70,9 @@ const VISION_MAX_TOTAL_PAGES = 150; // cost cap on vision pages per generation
 const MODEL = "claude-sonnet-4-6";
 
 const ANALYSIS_MAX_TOKENS = 4000;
+// Cap the analysis pass's own deadline so a flaky/slow Pass 1 can't eat the whole
+// budget and starve the generation tasks (it degrades to single-pass on failure).
+const ANALYSIS_BUDGET_MS = 200_000;
 const ANALYSIS_HEADER =
   "=== ANALYSE — WAS IST PRÜFUNGSRELEVANT (nutze dies zum Priorisieren) ===\n";
 
@@ -729,7 +732,8 @@ export async function POST(request: Request) {
     const useTwoPass = shouldUseTwoPass({ isAnonymous, usesByok, plan: userPlan });
     let brief = "";
     if (useTwoPass) {
-      brief = await runAnalysisPass(client, materialBlocks, deadline).catch(
+      const analysisDeadline = Math.min(deadline, t0 + ANALYSIS_BUDGET_MS);
+      brief = await runAnalysisPass(client, materialBlocks, analysisDeadline).catch(
         (e) => {
           console.error(
             "[/api/generate] analysis pass failed, falling back to single-pass",
