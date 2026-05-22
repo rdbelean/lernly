@@ -101,7 +101,7 @@ function deriveQuizletExport(cards: Flashcard[]): string {
     .join("\n");
 }
 
-async function runTask(
+async function runTaskOnce(
   client: Anthropic,
   key: TaskKey,
   materialText: string,
@@ -168,6 +168,24 @@ async function runTask(
       raw.slice(0, 400),
     );
     throw new Error(`Sub-Task ${key} hat kein valides JSON zurückgegeben.`);
+  }
+}
+
+// One retry covers transient API errors and the occasional malformed-JSON
+// response, so a single hiccup no longer fails the entire generation.
+async function runTask(
+  client: Anthropic,
+  key: TaskKey,
+  materialText: string,
+): Promise<unknown> {
+  try {
+    return await runTaskOnce(client, key, materialText);
+  } catch (e) {
+    console.warn(
+      `[/api/generate] task=${key} attempt 1 failed, retrying:`,
+      e instanceof Error ? e.message : e,
+    );
+    return await runTaskOnce(client, key, materialText);
   }
 }
 
@@ -571,6 +589,17 @@ export async function POST(request: Request) {
         {
           error:
             "Das generierte Lernpaket entspricht nicht dem erwarteten Schema.",
+        },
+        { status: 502 },
+      );
+    }
+
+    if (parsed.data.flashcards.length === 0) {
+      console.error("[/api/generate] generation produced 0 flashcards");
+      return NextResponse.json(
+        {
+          error:
+            "Die Generierung lieferte keine Karteikarten — bitte erneut versuchen.",
         },
         { status: 502 },
       );
