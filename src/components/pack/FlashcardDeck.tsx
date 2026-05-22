@@ -261,9 +261,8 @@ export default function FlashcardDeck({
             }
             transition={{ type: "spring", stiffness: 280, damping: 24 }}
             onClick={() => !isAnimating && setFlipped((f) => !f)}
-            className="absolute inset-0 cursor-pointer rounded-2xl border border-white/15 text-left"
+            className="absolute inset-0 cursor-pointer rounded-2xl text-left"
             style={{
-              background: "rgba(20, 22, 28, 0.78)",
               transformStyle: "preserve-3d",
             }}
           >
@@ -275,8 +274,12 @@ export default function FlashcardDeck({
             >
               {/* Question face */}
               <div
-                className="absolute inset-0 flex flex-col justify-between p-7"
-                style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
+                className="absolute inset-0 flex flex-col justify-between rounded-2xl border border-white/15 p-7"
+                style={{
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                  background: "rgba(20, 22, 28, 0.92)",
+                }}
               >
                 <div>
                   <div
@@ -300,11 +303,12 @@ export default function FlashcardDeck({
 
               {/* Answer face (rotated 180deg) */}
               <div
-                className="absolute inset-0 flex flex-col justify-between p-7"
+                className="absolute inset-0 flex flex-col justify-between rounded-2xl border border-white/15 p-7"
                 style={{
                   backfaceVisibility: "hidden",
                   WebkitBackfaceVisibility: "hidden",
                   transform: "rotateY(180deg)",
+                  background: "rgba(20, 22, 28, 0.92)",
                 }}
               >
                 <div>
