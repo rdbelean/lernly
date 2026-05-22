@@ -1,0 +1,1086 @@
+{
+  "courseTitle": "Datenbanksysteme — Kapitel 1: Einführung (Thomas Neumann, TU München)",
+  "examType": "multiple_choice",
+  "flashcards": [
+    {
+      "id": "1",
+      "category": "Grundbegriffe & Motivation",
+      "question": "Was ist ein Datenbanksystem (DBS) und warum reicht ein herkömmliches Dateisystem nicht aus?",
+      "answer": "<strong>Ein DBS ist ein System zum Speichern und Verwalten von Daten</strong>, das Ausfallsicherheit und Skalierbarkeit ohne großen Eigenaufwand bietet.<br>Beispiel: Amazon speichert Milliarden Produktdaten — ein selbstgebautes Dateisystem könnte bei gleichzeitigen Millionen Zugriffen (z.B. Black Friday) nicht zuverlässig skalieren oder nach einem Absturz konsistent bleiben.<br><em>Eselsbrücke:</em> Dateisystem = Schuhkarton für Belege; DBS = professionelles Archiv mit Suchsystem, Zugangskontrolle und Backup.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "2",
+      "category": "Grundbegriffe & Motivation",
+      "question": "Unter welchen zwei Bedingungen werden Datenbanken laut Vorlesung 'fast immer' eingesetzt?",
+      "answer": "<strong>Wenn die Datenmenge groß ist UND wenn die Daten wertvoll sind.</strong><br>Beispiel: Google-Suchanfragen (riesige Datenmenge) und Bankkonten (hochwertige Daten) — beide Bedingungen zusammen erfordern zwingend ein DBS.<br><em>Eselsbrücke:</em> 'Groß und Wertvoll' — wie ein Tresor: klein und wertlos → Schublade; groß und wertvoll → Banktresor (DBS).",
+      "difficulty": "easy"
+    },
+    {
+      "id": "3",
+      "category": "Grundbegriffe & Motivation",
+      "question": "Nenne die 7 typischen Probleme, die ohne ein DBS auftreten (Merkhilfe gefragt!).",
+      "answer": "<strong>7 Probleme ohne DBS — Eselsbrücke: 'RV-PMISH'</strong><br>1. <strong>R</strong>edundanz und Inkonsistenz<br>2. <strong>V</strong>erschiedene Datenformate<br>3. <strong>P</strong>robleme beim Mehrbenutzerbetrieb<br>4. <strong>V</strong>erlust von Daten<br>5. <strong>I</strong>ntegritätsverletzungen<br>6. <strong>S</strong>icherheitsprobleme<br>7. <strong>H</strong>ohe Entwicklungskosten<br>Beispiel: Zwei Abteilungen pflegen Kundenadressen in verschiedenen Excel-Dateien → Redundanz führt zur Inkonsistenz; kein Passwortschutz → Sicherheitsproblem.<br><em>Eselsbrücke:</em> 'Richtig Viele Probleme, Verliert Irgendjemand Sicher Hunderte-Euro'.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "4",
+      "category": "Grundbegriffe & Motivation",
+      "question": "Nenne die 6 Hauptgründe für den DBS-Einsatz (Merkhilfe gefragt!).",
+      "answer": "<strong>6 Gründe für DBS-Einsatz — Eselsbrücke: 'DD-MFSE'</strong><br>1. <strong>D</strong>atenunabhängigkeit<br>2. <strong>D</strong>eklarative Anfragesprachen<br>3. <strong>M</strong>ehrbenutzersynchronisation<br>4. <strong>F</strong>ehlerbehandlung<br>5. <strong>S</strong>icherstellung der Datenintegrität<br>6. <strong>E</strong>ffizienz und Skalierbarkeit<br>Beispiel: PostgreSQL bietet all diese Features out-of-the-box; ein Entwickler muss keine eigene Transaktionslogik programmieren.<br><em>Eselsbrücke:</em> 'Datenbanken Decken Mehrere Fehler-Sicher-Effizient ab'.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "5",
+      "category": "Grundbegriffe & Motivation",
+      "question": "Welche kommerziellen und welche freien Datenbanksysteme nennt die Vorlesung?",
+      "answer": "<strong>Kommerzielle DBS: Oracle, IBM DB2, Microsoft SQL Server, Sybase. Freie DBS: PostgreSQL, MySQL, MonetDB.</strong><br>Beispiel: Der Großteil der Webseiten (z.B. WordPress-Blogs) nutzt MySQL; Enterprise-Anwendungen wie SAP laufen häufig auf Oracle oder IBM DB2.<br><em>Eselsbrücke:</em> Kommerzielle = 'OIMS' (Ohren Im Magen Schmerzen → viel Geld); Freie = 'PMM' (Postgreys MySQL MonetDB → gratis).",
+      "difficulty": "easy"
+    },
+    {
+      "id": "6",
+      "category": "Datenunabhängigkeit & Architektur",
+      "question": "Erkläre die drei Ebenen der Datenunabhängigkeit und welche davon in modernen DBS garantiert wird.",
+      "answer": "<strong>DBS trennt drei Ebenen: Sicht (wie Benutzer Daten sieht), logische Ebene (Struktur der Daten) und physische Ebene (Speicherung).</strong><br>Physische Datenunabhängigkeit: Änderungen am Speicherlayout (z.B. Index hinzufügen in PostgreSQL) haben keinen Einfluss auf Anwendungscode → wird in fast allen modernen DBS durchgesetzt. Logische Datenunabhängigkeit (z.B. neue Spalte in Tabelle) beeinflusst Anwendungen idealerweise auch nicht.<br><em>Eselsbrücke:</em> Denk an ein Restaurant: Gast (Sicht) sieht nur die Speisekarte, Küche (logisch) weiß das Rezept, Lieferant (physisch) bringt die Zutaten — Gast merkt nichts, wenn Lieferant wechselt.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "7",
+      "category": "Datenunabhängigkeit & Architektur",
+      "question": "Was unterscheidet logische von physischer Datenunabhängigkeit, und welche ist in der Praxis stärker garantiert?",
+      "answer": "<strong>Physische Datenunabhängigkeit</strong> = Änderungen an Speicherstrukturen (Indexe, Dateiformat) beeinflussen Anwendungen nicht. <strong>Logische Datenunabhängigkeit</strong> = Änderungen am Schema (neue Tabelle, neue Spalte) beeinflussen Anwendungen nicht.<br>In der Praxis: <strong>Physische Datenunabhängigkeit</strong> wird in fast allen modernen DBS garantiert. Logische ist schwieriger vollständig durchzusetzen.<br><em>Eselsbrücke:</em> Physisch = Fundament tauschen, ohne Haus abzureißen (machbar). Logisch = Grundriss ändern, ohne Möbel umzustellen (schwieriger).",
+      "difficulty": "medium"
+    },
+    {
+      "id": "8",
+      "category": "Datenunabhängigkeit & Architektur",
+      "question": "Was versteht man unter einer 'deklarativen Anfragesprache' und welchen Vorteil bietet sie gegenüber prozeduralen Ansätzen?",
+      "answer": "<strong>Bei einer deklarativen Anfragesprache (z.B. SQL) sagt der Benutzer WAS er will, nicht WIE es geholt werden soll.</strong><br>Beispiel: SQL-Query 'SELECT name FROM Studenten WHERE MatrNr = 26120' — der Benutzer muss nicht wissen, ob ein Index existiert oder wie die Daten auf der Festplatte liegen. Das DBMS optimiert selbst.<br><em>Eselsbrücke:</em> Deklarativ = Google-Suche (du tippst was du willst). Prozedural = selbst durch alle Webseiten klicken.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "9",
+      "category": "Datenunabhängigkeit & Architektur",
+      "question": "Wie funktioniert Mehrbenutzersynchronisation in einem DBS und warum ist sie notwendig?",
+      "answer": "<strong>Das DBS erlaubt gleichzeitigen Zugriff mehrerer Benutzer und verhindert dabei unkontrollierte Seiteneffekte durch Synchronisationsmechanismen.</strong><br>Beispiel: Zwei Nutzer buchen gleichzeitig den letzten Sitzplatz auf einer Flugbuchungsplattform (z.B. Lufthansa.com) — ohne Synchronisation könnten beide den Platz erhalten. Das DBS sperrt den Datensatz während der Buchung.<br><em>Eselsbrücke:</em> Ohne Sync = zwei Leute schreiben gleichzeitig auf denselben Zettel → unlesbares Chaos.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "10",
+      "category": "Datenunabhängigkeit & Architektur",
+      "question": "Wie handhabt ein DBS Fehlerbehandlung nach einem Systemabsturz?",
+      "answer": "<strong>Das DBS führt Logdateien, mit denen es den konsistenten Zustand zum Zeitpunkt eines Absturzes rekonstruieren kann.</strong><br>Beispiel: Wenn eine Bank-Transaktion (Geldüberweisung) mitten in der Ausführung abbricht, stellt das DBS über das Log sicher, dass entweder die vollständige Buchung oder gar keine stattgefunden hat — kein Geld 'verschwindet'.<br><em>Eselsbrücke:</em> Log = Flugschreiber im Flugzeug: nach dem Absturz weiß man genau, was passiert ist und kann rekonstruieren.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "11",
+      "category": "Datenunabhängigkeit & Architektur",
+      "question": "Was ist Datenintegrität im Kontext eines DBS und wovor schützt sie?",
+      "answer": "<strong>Datenintegrität bedeutet, dass das DBS angegebene Regeln (Constraints) durchsetzt und damit die Korrektheit der Daten sicherstellt.</strong><br>Das DBS schützt vor <strong>Benutzerfehlern</strong> (z.B. Alter = -5 eingeben) und <strong>Programmfehlern</strong> (z.B. ein Bug löscht Fremdschlüssel-Referenzen).<br>Beispiel: In einer Uni-Datenbank kann man keinen Studenten in einer Vorlesung einschreiben, die nicht existiert — die Fremdschlüssel-Constraint verhindert das.<br><em>Eselsbrücke:</em> Integrität = Türsteher der DB: schlechte Daten kommen nicht rein.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "12",
+      "category": "Datenunabhängigkeit & Architektur",
+      "question": "Beschreibe die grobe Architektur eines Datenbanksystems: Welche Hauptkomponenten gibt es und wie heißt die Gesamtheit aus DBMS + Datenbasis?",
+      "answer": "<strong>Ein DBS besteht aus dem DBMS (Datenbankmanagementsystem) und der Datenbasis — zusammen bilden sie das Datenbanksystem.</strong><br>Anwendungen interagieren mit dem DBMS; das DBMS verwaltet die eigentliche Datenbasis auf dem Hintergrundspeicher. Mehrere Anwendungen (und Nutzer) können gleichzeitig über das DBMS auf dieselbe Datenbasis zugreifen.<br>Beispiel: Instagram-App (Anwendung) → MySQL/PostgreSQL (DBMS) → Dateien auf Servern (Datenbasis).<br><em>Eselsbrücke:</em> DBS = Bibliothek: Datenbasis = Regale voller Bücher; DBMS = Bibliothekar, der findet, verleiht und zurücklegt.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "13",
+      "category": "Datenunabhängigkeit & Architektur",
+      "question": "Nenne die Komponenten der detaillierten DBMS-Architektur aus der Vorlesung (Folie 23) und ordne sie den Benutzergruppen zu.",
+      "answer": "<strong>Das DBMS enthält: DML-Compiler, DDL-Compiler, Anfragebearbeitung, Datenbankmanager, Schemaverwaltung, Mehrbenutzersynchronisation, Fehlerbehandlung, Dateiverwaltung.</strong><br>Auf dem Hintergrundspeicher liegen: Logdateien, Indexe, Datenbasis, Datenwörterbuch.<br>Benutzergruppen: 'Naive' Benutzer (Anwendung), Fortgeschrittene (interaktive Anfrage), Anwendungsprogrammierer (Präcompiler), Datenbankadministratoren (Verwaltungswerkzeug + DDL-Compiler).<br><em>Eselsbrücke:</em> DDL = 'Data Definition Language' (Struktur anlegen, Admin-Job). DML = 'Data Manipulation Language' (Daten lesen/schreiben, Programmiererjob).",
+      "difficulty": "hard"
+    },
+    {
+      "id": "14",
+      "category": "Datenmodellierung",
+      "question": "Was ist der Unterschied zwischen einem Datenmodell und einem Schema?",
+      "answer": "<strong>Ein Datenmodell legt fest, welche Konstrukte zum Beschreiben von Daten existieren; ein Schema ist eine konkrete Beschreibung einer bestimmten Datensammlung unter Verwendung eines Datenmodells.</strong><br>Beispiel: Das relationale Modell ist ein Datenmodell (definiert: Tabellen, Spalten, Fremdschlüssel). Das konkrete Schema 'Studenten(MatrNr, Name), Vorlesungen(VorlNr, Titel)' der Uni-Datenbank ist eine Schema-Instanz davon.<br><em>Eselsbrücke:</em> Datenmodell = Bauplan-Standard (DIN-Norm). Schema = konkreter Bauplan für ein bestimmtes Haus.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "15",
+      "category": "Datenmodellierung",
+      "question": "Unterscheide konzeptuelle von logischen Datenmodellen und nenne je zwei Beispiele.",
+      "answer": "<strong>Konzeptuelle Modelle</strong> beschreiben die reale Welt abstrakt (unabhängig von Implementierung); <strong>logische Modelle</strong> beschreiben, wie Daten im System strukturiert werden.<br>Konzeptuell: <strong>Entity-Relationship-Modell (ER-Modell)</strong>, <strong>UML</strong>.<br>Logisch: Hierarchisches, Netzwerk-, <strong>Relationales</strong>, Objekt-orientiertes, Objekt-relationales, Semistrukturiertes, Graphstrukturiertes Modell.<br><em>Eselsbrücke:</em> Konzeptuell = Skizze auf Papier (was soll es sein?). Logisch = technische Zeichnung (wie wird es gebaut?).",
+      "difficulty": "medium"
+    },
+    {
+      "id": "16",
+      "category": "Datenmodellierung",
+      "question": "Nenne alle 7 logischen Datenmodelle aus der Vorlesung.",
+      "answer": "<strong>7 logische Datenmodelle — Eselsbrücke: 'HN-ROOS-G'</strong><br>1. <strong>H</strong>ierarchisches Modell<br>2. <strong>N</strong>etzwerkmodell<br>3. <strong>R</strong>elationales Modell<br>4. <strong>O</strong>bjekt-orientiertes Modell<br>5. <strong>O</strong>bjekt-relationales Modell<br>6. <strong>S</strong>emistrukturiertes Modell<br>7. <strong>G</strong>raphstrukturiertes Modell<br>Beispiel: MySQL/PostgreSQL = relational; MongoDB = semistrukturiert (JSON); Neo4j = graphstrukturiert (z.B. für soziale Netzwerke wie LinkedIn).<br><em>Eselsbrücke:</em> 'Heute Nehmen Rechner Ordentlich Objekte, Semistrukturiert, Graphisch.'",
+      "difficulty": "hard"
+    },
+    {
+      "id": "17",
+      "category": "Datenmodellierung",
+      "question": "Beschreibe die Schritte der Datenmodellierung vom Ausschnitt der realen Welt bis zum logischen Schema.",
+      "answer": "<strong>Schritt 1: Manuelle/intellektuelle Modellierung</strong> → Ausschnitt der realen Miniwelt wird in ein <strong>konzeptuelles Schema (ER-Schema)</strong> überführt. <strong>Schritt 2: Halbautomatische Transformation</strong> → aus dem ER-Schema entsteht ein logisches Schema (relational, Netzwerk oder objektorientiert).<br>Beispiel: Die Uni-Realität (Studenten hören Vorlesungen, Professoren lesen Vorlesungen) wird zuerst als ER-Diagramm skizziert, dann in relationale Tabellen transformiert.<br><em>Eselsbrücke:</em> Real → ER = Hand (Mensch denkt). ER → Relational = Halbautomat (Tool hilft).",
+      "difficulty": "medium"
+    },
+    {
+      "id": "18",
+      "category": "Datenmodellierung",
+      "question": "Erkläre anhand des Uni-Beispiels aus der Vorlesung, wie ein ER-Schema in ein relationales Schema transformiert wird.",
+      "answer": "<strong>Im ER-Schema werden Entities (Studenten, Professoren, Vorlesungen) und Beziehungen (hören, lesen) modelliert; im relationalen Schema werden diese zu Tabellen mit Attributen.</strong><br>ER-Entities: Studenten (MatrNr, Name), Professoren (PersNr, Name), Vorlesungen (VorlNr, Titel).<br>ER-Beziehung 'hören' → Tabelle hören(MatrNr, VorlNr). So weiß man: Student 25403 (Jonas) hört Vorlesung 5022 (Glaube und Wissen).<br><em>Eselsbrücke:</em> Entity → Tabelle, Beziehung → Zwischentabelle (mit den Schlüsseln beider Seiten).",
+      "difficulty": "medium"
+    },
+    {
+      "id": "19",
+      "category": "Datenmodellierung",
+      "question": "Was zeigt das ER-Diagramm auf dem Cover des Kemper/Eickler-Lehrbuchs? Welche Entities und Beziehungen sind erkennbar?",
+      "answer": "<strong>Das Buchcover zeigt das klassische Uni-Beispiel als ER-Diagramm mit den Entities Studenten, Vorlesungen, Professoren, Assistenten und deren Beziehungen.</strong><br>Entities: Studenten (MatrNr, Name, Sem), Vorlesungen (VorlNr, Titel, SWS), Professoren (PersNr, Name, Rang, Raum), Assistenten (PersNr, Name, Fachgebiet).<br>Beziehungen: hören (N:M zwischen Studenten und Vorlesungen), lesen (1:N zwischen Professoren und Vorlesungen), prüfen (mit Attribut Note), voraussetzen (rekursiv auf Vorlesungen), arbeitenFür (zwischen Assistenten und Professoren).<br><em>Eselsbrücke:</em> Das Buchcover = das wichtigste Diagramm der Vorlesung — auswendig lernen lohnt sich!",
+      "difficulty": "hard"
+    },
+    {
+      "id": "20",
+      "category": "DBMS-Komponenten & Rollen",
+      "question": "Was ist der Unterschied zwischen DML und DDL im Kontext eines DBMS?",
+      "answer": "<strong>DDL (Data Definition Language)</strong> wird zum Definieren von Datenbankstrukturen (Schemas, Tabellen) verwendet; <strong>DML (Data Manipulation Language)</strong> wird zum Lesen und Ändern von Daten verwendet.<br>Beispiel: 'CREATE TABLE Studenten (MatrNr INT, Name VARCHAR)' = DDL (Datenbankadministrator). 'SELECT name FROM Studenten WHERE MatrNr = 26120' = DML (Anwendungsprogrammierer/Benutzer).<br><em>Eselsbrücke:</em> DDL = 'Definieren' (Rahmen bauen). DML = 'Manipulieren' (Inhalt befüllen und lesen).",
+      "difficulty": "medium"
+    },
+    {
+      "id": "21",
+      "category": "DBMS-Komponenten & Rollen",
+      "question": "Welche vier Benutzergruppen interagieren laut der detaillierten DBMS-Architektur mit dem System und wie?",
+      "answer": "<strong>4 Benutzergruppen:</strong><br>1. <strong>'Naive' Benutzer</strong> → nutzen fertige Anwendungen (z.B. Web-UI)<br>2. <strong>Fortgeschrittene Benutzer</strong> → stellen interaktive SQL-Anfragen direkt<br>3. <strong>Anwendungsprogrammierer</strong> → schreiben Code mit eingebettetem SQL (über Präcompiler)<br>4. <strong>Datenbankadministratoren</strong> → verwalten Schema und System (DDL-Compiler, Verwaltungswerkzeug)<br>Beispiel: Bei Amazon: Endkunde (naiv), Data Analyst (fortgeschritten), Backend-Entwickler (Programmierer), DB-Admin (Administrator).<br><em>Eselsbrücke:</em> 'NFPA' — Naive, Fortgeschrittene, Programmierer, Administratoren.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "22",
+      "category": "DBMS-Komponenten & Rollen",
+      "question": "Was ist ein Datenwörterbuch (Data Dictionary) im DBMS und welche Rolle spielt es?",
+      "answer": "<strong>Das Datenwörterbuch speichert Metadaten über die Datenbankstruktur (Schemas, Datentypen, Constraints, Berechtigungen) und liegt auf dem Hintergrundspeicher.</strong><br>Beispiel: Das DBMS schaut im Datenwörterbuch nach, ob ein Benutzer Leserechte auf die Tabelle 'Gehalt' hat, bevor es eine Anfrage ausführt. Es enthält auch Informationen über verfügbare Indexe für die Anfrageoptimierung.<br><em>Eselsbrücke:</em> Datenwörterbuch = Inhaltsverzeichnis + Hausordnung der Datenbank.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "23",
+      "category": "DBMS-Komponenten & Rollen",
+      "question": "Welche Dateien/Strukturen liegen laut Vorlesung auf dem Hintergrundspeicher eines DBMS?",
+      "answer": "<strong>Auf dem Hintergrundspeicher liegen: Logdateien, Indexe, Datenbasis und Datenwörterbuch.</strong><br>Funktion: Logdateien → Fehlerbehandlung/Recovery. Indexe → schneller Datenzugriff (z.B. B-Tree-Index auf MatrNr). Datenbasis → die eigentlichen Daten. Datenwörterbuch → Metadaten/Schema-Infos.<br>Beispiel: MySQL speichert all das in Dateien auf dem Server: .ibd-Dateien (Datenbasis+Indexe), binlog (Logdateien).<br><em>Eselsbrücke:</em> 'LIDD' — Logdateien, Indexe, Datenbasis, Datenwörterbuch.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "24",
+      "category": "Kursüberblick & Einordnung",
+      "question": "Welche 10 Themengebiete deckt die Datenbanksysteme-Vorlesung (Kapitel 2–11) ab?",
+      "answer": "<strong>10 Kapitel — Eselsbrücke: 'DR SQL-RPATFMV'</strong><br>Kap. 2: <strong>D</strong>atenbankentwurf<br>Kap. 3: <strong>R</strong>elationales Modell<br>Kap. 4: <strong>SQL</strong><br>Kap. 5: <strong>R</strong>elationale Entwurfstheorie<br>Kap. 6: <strong>P</strong>hysische Datenorganisation<br>Kap. 7: <strong>A</strong>nfragebearbeitung<br>Kap. 8: <strong>T</strong>ransaktionsverwaltung<br>Kap. 9: <strong>F</strong>ehlerbehandlung<br>Kap. 10: <strong>M</strong>ehrbenutzersynchronisation<br>Kap. 11: <strong>V</strong>erteilte Datenbanksysteme<br><em>Eselsbrücke:</em> 'DR SQLR-PATFMV' — der Kurs baut von Design zu Verteilung auf.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "25",
+      "category": "Kursüberblick & Einordnung",
+      "question": "Was sind die zwei übergeordneten Perspektiven, die die Vorlesung laut Folie 30 abdeckt?",
+      "answer": "<strong>1. Wie benutzt man ein DBMS? (Anwender-Perspektive)</strong><br><strong>2. Was passiert hinter den Kulissen? (Implementierungs-Perspektive)</strong><br>Beispiel: Perspektive 1 → SQL schreiben, ER-Modellierung, Normalisierung. Perspektive 2 → wie funktioniert ein B-Tree-Index intern, wie verwaltet das DBMS Transaktionen im Speicher.<br><em>Eselsbrücke:</em> Autofahrer vs. Automechaniker: Beide brauchen das Auto, aber der Mechaniker versteht den Motor.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "26",
+      "category": "Kursüberblick & Einordnung",
+      "question": "Welches ist das Hauptlehrbuch der Vorlesung und wer sind die Autoren?",
+      "answer": "<strong>Kemper und Eickler: 'Datenbanksysteme – Eine Einführung', 9. Auflage, Oldenbourg Verlag.</strong><br>Das Buch enthält das klassische Uni-ER-Diagramm auf dem Cover (Studenten, Vorlesungen, Professoren, Assistenten) — dieses Beispiel zieht sich durch die gesamte Vorlesung.<br>Ergänzend: Kemper & Wimmer: 'Übungsbuch Datenbanksysteme' (2. Auflage) für Klausurpraxis.<br><em>Eselsbrücke:</em> Kemper = Kurs-Autor bei TU München (www-db.in.tum.de) — Material und Buch kommen aus derselben Quelle.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "27",
+      "category": "Kursüberblick & Einordnung",
+      "question": "Warum ist das Relationale Modell unter den logischen Datenmodellen besonders wichtig und was sind Alternativen für moderne Anwendungsfälle?",
+      "answer": "<strong>Das Relationale Modell ist das dominierende Modell in kommerziellen DBS (Oracle, MySQL, PostgreSQL) und Grundlage von SQL.</strong><br>Für moderne Anforderungen existieren Alternativen: <strong>Semistrukturiertes Modell</strong> (MongoDB für JSON-Daten wie Produktkataloge bei Amazon), <strong>Graphstrukturiertes Modell</strong> (Neo4j für soziale Netzwerke wie LinkedIn-Verbindungen).<br>Verbindung zum Kurs: Kapitel 3 (Relationales Modell) und Kapitel 4 (SQL) bilden das Herzstück der Vorlesung.<br><em>Eselsbrücke:</em> Relational = 'König der Modelle' — dominiert seit 50 Jahren, aber Graph und Semi-Struktur holen auf.",
+      "difficulty": "medium"
+    }
+  ],
+  "simulator": {
+    "questions": [
+      {
+        "id": "q1",
+        "scenario": "Die Universitätsverwaltung München speichert Studentendaten bisher in einzelnen Excel-Tabellen auf verschiedenen Rechnern. Die IT-Abteilung stellt fest: Wenn Matrikelnummern geändert werden, stimmen die Daten in manchen Dateien nicht mehr überein.",
+        "question": "Dieses Problem ist ein klassisches Beispiel für welches typische Problem ohne DBS-Einsatz?",
+        "options": [
+          "Physische Datenunabhängigkeit",
+          "Redundanz und Inkonsistenz",
+          "Mehrbenutzersynchronisation",
+          "Deklarative Anfragesprache"
+        ],
+        "correctIndex": 1,
+        "explanation": "<strong>Redundanz und Inkonsistenz</strong> ist das korrekte Problem: Dieselbe Information (Matrikelnummer) ist mehrfach gespeichert (Redundanz), und nach einer Änderung nur an manchen Stellen aktualisiert → Widersprüche entstehen (Inkonsistenz). Dies ist laut Folie 12 explizit als erstes typisches Problem ohne DBS aufgeführt.<br><br><em>Warum die anderen falsch sind:</em> <strong>Physische Datenunabhängigkeit</strong> ist ein Vorteil des DBS, kein Problem ohne DBS. <strong>Mehrbenutzersynchronisation</strong> wäre das Problem, wenn zwei Personen gleichzeitig dieselbe Datei bearbeiten und sich überschreiben — darum geht es hier nicht. <strong>Deklarative Anfragesprache</strong> ist ein Feature des DBS, nicht ein Problem ohne DBS.",
+        "category": "Probleme ohne DBS"
+      },
+      {
+        "id": "q2",
+        "scenario": "Ein Amazon-Entwickler schreibt eine Anwendung, die Bestelldaten aus einer MySQL-Datenbank abfragt. Der Datenbankadministrator entscheidet sich, die internen Speicherstrukturen (Indexe, Dateipfade) zu optimieren und umzuorganisieren.",
+        "question": "Der Entwickler muss seinen Anwendungscode NICHT anpassen. Welches DBS-Prinzip ermöglicht das?",
+        "options": [
+          "Logische Datenunabhängigkeit",
+          "Physische Datenunabhängigkeit",
+          "Deklarative Anfragesprache",
+          "Schemaverwaltung"
+        ],
+        "correctIndex": 1,
+        "explanation": "<strong>Physische Datenunabhängigkeit</strong> bedeutet: Änderungen auf der physischen Ebene (wie Daten gespeichert werden — Indexe, Dateipfade, Festplattenorganisation) haben KEINEN Einfluss auf Anwendungen. Die Anwendung bleibt unberührt. Laut Folie 16 wird dies in fast allen modernen DBS durchgesetzt.<br><br><em>Warum die anderen falsch sind:</em> <strong>Logische Datenunabhängigkeit</strong> wäre relevant, wenn das Schema (Tabellensturktur, Attribute) geändert würde — hier werden aber nur physische Speicherstrukturen geändert. <strong>Deklarative Anfragesprache</strong> beschreibt das WAS (nicht WIE) bei Anfragen, nicht die Unabhängigkeit von Speicheränderungen. <strong>Schemaverwaltung</strong> ist eine Komponente im DBMS-Architekturdiagramm, kein eigenständiges Prinzip der Datenunabhängigkeit.",
+        "category": "Datenunabhängigkeit"
+      },
+      {
+        "id": "q3",
+        "scenario": "Ein Datenbankadministrator bei eBay fügt der Produkttabelle ein neues Attribut 'Gewicht_kg' hinzu. Eine bestehende Anwendung, die nur Preis und Titel abfragt, soll davon unbeeinflusst bleiben.",
+        "question": "Welches Prinzip soll hier greifen?",
+        "options": [
+          "Physische Datenunabhängigkeit",
+          "Fehlerbehandlung",
+          "Logische Datenunabhängigkeit",
+          "Mehrbenutzersynchronisation"
+        ],
+        "correctIndex": 2,
+        "explanation": "<strong>Logische Datenunabhängigkeit</strong> bedeutet: Änderungen auf der logischen Ebene (Schema — also Tabellenstruktur, neue Attribute) haben keinen Einfluss auf bestehende Anwendungen. Das neue Attribut 'Gewicht_kg' ist eine Änderung des logischen Schemas, nicht der physischen Speicherung.<br><br><em>Warum die anderen falsch sind:</em> <strong>Physische Datenunabhängigkeit</strong> wäre relevant bei Änderungen der internen Speicherorganisation (Indexe, Dateipfade) — hier ändert sich aber das Schema. <strong>Fehlerbehandlung</strong> betrifft Absturzrekonstruktion via Logdateien. <strong>Mehrbenutzersynchronisation</strong> betrifft gleichzeitige Zugriffe mehrerer Nutzer.<br><br><em>Merkhilfe: Physisch = WIE gespeichert. Logisch = WAS gespeichert (Struktur).</em>",
+        "category": "Datenunabhängigkeit"
+      },
+      {
+        "id": "q4",
+        "scenario": "Bei einem Online-Banking-System buchen zwei Nutzer gleichzeitig vom selben Konto: Nutzer A hebt 500 € ab, Nutzer B überweist 200 €. Ohne Kontrolle lesen beide den gleichen Kontostand (1000 €) und schreiben jeweils ihren neuen Wert zurück — das Ergebnis ist falsch.",
+        "question": "Welche DBS-Funktion löst dieses Problem?",
+        "options": [
+          "Fehlerbehandlung mit Logdateien",
+          "Datenintegrität",
+          "Mehrbenutzersynchronisation",
+          "Deklarative Anfragesprache"
+        ],
+        "correctIndex": 2,
+        "explanation": "<strong>Mehrbenutzersynchronisation</strong> verhindert genau diesen 'Lost Update'-Effekt: Das DBS kontrolliert den gleichzeitigen Zugriff und verhindert, dass Änderungen eines Nutzers die des anderen überschreiben. Laut Folie 18 erlaubt das DBS gleichzeitigen Zugriff UND verhindert schlimme Seiteneffekte.<br><br><em>Warum die anderen falsch sind:</em> <strong>Fehlerbehandlung mit Logdateien</strong> betrifft die Wiederherstellung nach einem Systemabsturz, nicht konkurrierende Zugriffe. <strong>Datenintegrität</strong> schützt vor dem Verletzen fachlicher Regeln (z.B. 'Kontostand darf nicht negativ sein'), nicht vor gleichzeitigen Schreibkonflikten. <strong>Deklarative Anfragesprache</strong> beschreibt, wie Anfragen formuliert werden.",
+        "category": "Mehrbenutzersynchronisation"
+      },
+      {
+        "id": "q5",
+        "scenario": "Ein Google-Datenbankserver stürzt mitten in einer Transaktion ab. Nach dem Neustart stellt das System den konsistenten Zustand vor dem Absturz wieder her.",
+        "question": "Welche Komponente im DBMS ermöglicht diese Wiederherstellung?",
+        "options": [
+          "Datenwörterbuch",
+          "Logdateien",
+          "Indexe",
+          "DML-Compiler"
+        ],
+        "correctIndex": 1,
+        "explanation": "<strong>Logdateien</strong> sind laut Folie 19 explizit das Werkzeug, das das DBS anlegt und verwaltet, um den Zustand zum Zeitpunkt eines Absturzes rekonstruieren zu können. Im Architekturdiagramm (Folie 23) sind Logdateien neben Indexen und Datenbasis als Teil des Hintergrundspeichers eingezeichnet.<br><br><em>Warum die anderen falsch sind:</em> Das <strong>Datenwörterbuch</strong> speichert Metadaten (Schemainformationen), nicht Transaktionshistorie. <strong>Indexe</strong> beschleunigen Suchanfragen, helfen aber nicht bei der Wiederherstellung. Der <strong>DML-Compiler</strong> verarbeitet Datenanfragen (SELECT, INSERT etc.), ist aber nicht für die Fehlerbehandlung zuständig.",
+        "category": "Fehlerbehandlung"
+      },
+      {
+        "id": "q6",
+        "scenario": "Ein Datenbankentwickler schreibt: SELECT Name FROM Studenten WHERE MatrNr = 26120; — Er gibt nur an, WELCHE Daten er möchte, nicht wie das DBS intern suchen soll (ob es den Index benutzt, wie es die Festplatte liest usw.).",
+        "question": "Welches DBS-Kernprinzip demonstriert diese SQL-Anfrage?",
+        "options": [
+          "Physische Datenunabhängigkeit",
+          "Deklarative Anfragesprache",
+          "Datenintegrität",
+          "Schemaverwaltung"
+        ],
+        "correctIndex": 1,
+        "explanation": "<strong>Deklarative Anfragesprache</strong> bedeutet laut Folie 17: Der Benutzer sagt dem DBS WAS für Daten geholt werden sollen — NICHT WIE die Daten geholt werden sollen. SQL ist das klassische Beispiel: Man beschreibt das Ergebnis, der Query-Optimizer des DBS entscheidet intern den effizientesten Ausführungsweg.<br><br><em>Warum die anderen falsch sind:</em> <strong>Physische Datenunabhängigkeit</strong> beschreibt, dass Anwendungen unberührt bleiben, wenn Speicherstrukturen sich ändern — das ist ein anderes Konzept. <strong>Datenintegrität</strong> betrifft das Einhalten fachlicher Regeln, nicht die Art der Anfrageformulierung. <strong>Schemaverwaltung</strong> ist eine interne DBMS-Komponente.",
+        "category": "Deklarative Anfragesprache"
+      },
+      {
+        "id": "q7",
+        "scenario": "True/False: Im 3-Ebenen-Modell der Datenunabhängigkeit beschreibt die 'Logische Ebene', WIE die Daten physisch auf der Festplatte gespeichert werden.",
+        "question": "Ist diese Aussage korrekt?",
+        "options": [
+          "True",
+          "False"
+        ],
+        "correctIndex": 1,
+        "explanation": "<strong>False.</strong> Laut Folie 15 gilt: Die <strong>Logische Ebene</strong> beschreibt, WIE die Daten <em>strukturiert</em> sind (Tabellen, Attribute, Beziehungen). Die <strong>Physische Ebene</strong> beschreibt, WIE die Daten <em>gespeichert</em> werden (Indexe, Dateipfade, Blockorganisation). Die <strong>Sicht</strong>-Ebene beschreibt, wie ein konkreter Benutzer die Daten sieht.<br><br><em>Merkhilfe: S-L-P = Sicht (User) → Logisch (Struktur) → Physisch (Speicher)</em>",
+        "category": "Datenunabhängigkeit"
+      },
+      {
+        "id": "q8",
+        "scenario": "Ein Systemarchitekt skizziert folgende Schichten: Oben die Anwendungsprogrammierer (nutzen Präcompiler), daneben Datenbankadministratoren (nutzen Verwaltungswerkzeug). Darunter der DML-Compiler und DDL-Compiler. Darunter der Datenbankmanager mit Anfragebearbeitung. Ganz unten Logdateien, Indexe, Datenbasis und Datenwörterbuch.",
+        "question": "Wofür ist der DDL-Compiler in dieser Architektur zuständig?",
+        "options": [
+          "Er verarbeitet SELECT/INSERT/UPDATE-Anfragen von Nutzern",
+          "Er wird von Datenbankadministratoren für Schemadefinitionen und -verwaltung genutzt",
+          "Er rekonstruiert Datenbankzustände nach Abstürzen",
+          "Er synchronisiert gleichzeitige Benutzerzugriffe"
+        ],
+        "correctIndex": 1,
+        "explanation": "Laut dem Architekturdiagramm auf Folie 23 ist der <strong>DDL-Compiler</strong> (Data Definition Language) mit den Datenbankadministratoren und dem Verwaltungswerkzeug verbunden — er verarbeitet Schema-Definitionen (CREATE TABLE, ALTER TABLE etc.) und arbeitet mit der Schemaverwaltung zusammen.<br><br><em>Warum die anderen falsch sind:</em> SELECT/INSERT/UPDATE sind DML-Operationen → zuständig ist der <strong>DML-Compiler</strong>. Absturzrekonstruktion übernehmen <strong>Logdateien + Fehlerbehandlung</strong>. Gleichzeitige Zugriffe regelt die <strong>Mehrbenutzersynchronisation</strong> im Datenbankmanager.",
+        "category": "DBMS-Architektur"
+      },
+      {
+        "id": "q9",
+        "scenario": "Ein Universitätssystem modelliert die reale Welt (Studenten, Vorlesungen, Professoren). Im ersten Schritt wird ein ER-Diagramm erstellt (wie auf Folie 27 gezeigt: Studenten–hören–Vorlesungen–lesen–Professoren). Im zweiten Schritt werden daraus relationale Tabellen erzeugt.",
+        "question": "Wie nennt man den Übergang vom ER-Schema zum relationalen Schema laut dem Modellierungsdiagramm?",
+        "options": [
+          "Manuelle/intellektuelle Modellierung",
+          "Halbautomatische Transformation",
+          "Physische Datenunabhängigkeit",
+          "Konzeptuelle Abstraktion"
+        ],
+        "correctIndex": 1,
+        "explanation": "Laut dem Diagramm auf Folie 26 gibt es zwei Schritte: (1) Reale Miniwelt → Konzeptuelles Schema (ER-Schema): das ist die <strong>manuelle/intellektuelle Modellierung</strong> durch den Menschen. (2) ER-Schema → relationales/Netzwerk/objektorientiertes Schema: das ist die <strong>halbautomatische Transformation</strong> — sie kann tool-unterstützt erfolgen, aber nicht vollautomatisch.<br><br><em>Warum die anderen falsch sind:</em> <strong>Manuelle Modellierung</strong> ist der erste Schritt (Realwelt → ER), nicht der zweite. <strong>Physische Datenunabhängigkeit</strong> ist ein Laufzeitprinzip, kein Modellierungsschritt. <strong>Konzeptuelle Abstraktion</strong> ist kein Begriff aus dem Folienmaterial.",
+        "category": "Datenmodellierung"
+      },
+      {
+        "id": "q10",
+        "scenario": "True/False: Das Entity-Relationship-Modell (ER-Modell) ist laut Vorlesung ein logisches Datenmodell, das direkt in einer Datenbank implementiert wird.",
+        "question": "Ist diese Aussage korrekt?",
+        "options": [
+          "True",
+          "False"
+        ],
+        "correctIndex": 1,
+        "explanation": "<strong>False.</strong> Laut Folie 25 ist das ER-Modell ein <strong>konzeptuelles Modell</strong>, KEIN logisches Modell. Konzeptuelle Modelle (ER, UML) dienen zur Modellierung der realen Welt für den Entwurf. Logische Modelle (relationales Modell, Netzwerkmodell, objektorientiertes Modell etc.) beschreiben, wie Daten tatsächlich strukturiert und im DBMS verwaltet werden. Das ER-Schema wird erst durch halbautomatische Transformation in ein logisches Schema überführt.",
+        "category": "Datenmodelle"
+      },
+      {
+        "id": "q11",
+        "scenario": "Eine Krankenhausdatenbank hat folgende Regel: 'Jeder Patient muss eine eindeutige Patientennummer haben' und 'Das Geburtsdatum darf nicht in der Zukunft liegen'. Ein Dateneingabe-Mitarbeiter versucht, einen Patienten ohne Patientennummer einzutragen.",
+        "question": "Welche DBS-Funktion blockiert diese fehlerhafte Eingabe?",
+        "options": [
+          "Mehrbenutzersynchronisation",
+          "Fehlerbehandlung",
+          "Sicherstellung der Datenintegrität",
+          "Deklarative Anfragesprache"
+        ],
+        "correctIndex": 2,
+        "explanation": "<strong>Sicherstellung der Datenintegrität</strong> bedeutet laut Folie 20: Das DBS befolgt angegebene Prinzipien (hier: Pflichtfeld-Constraints, Datumregeln) und schützt so vor Benutzerfehlern UND Programmfehlern. Integritätsbedingungen werden im Schema definiert und vom DBS automatisch durchgesetzt.<br><br><em>Warum die anderen falsch sind:</em> <strong>Mehrbenutzersynchronisation</strong> schützt vor gleichzeitigen Schreibkonflikten, nicht vor inhaltlich falschen Daten. <strong>Fehlerbehandlung</strong> betrifft Systemabstürze und Wiederherstellung. <strong>Deklarative Anfragesprache</strong> beschreibt, wie Anfragen formuliert werden — nicht das Einhalten von Regeln.",
+        "category": "Datenintegrität"
+      },
+      {
+        "id": "q12",
+        "scenario": "Ein Startup überlegt: 'Wir könnten unsere Daten in einfachen CSV-Dateien speichern statt ein DBMS wie PostgreSQL einzusetzen.' Der CTO fragt: 'Was gewinnen wir konkret durch ein DBMS?'",
+        "question": "Welche der folgenden Vorteile nennt die Vorlesung NICHT als Grund für den DBS-Einsatz?",
+        "options": [
+          "Effizienz und Skalierbarkeit",
+          "Automatische Programmiersprachenkonvertierung",
+          "Datenunabhängigkeit",
+          "Fehlerbehandlung"
+        ],
+        "correctIndex": 1,
+        "explanation": "Laut Folie 13 nennt die Vorlesung folgende 6 Gründe für den DBS-Einsatz: <strong>Datenunabhängigkeit, Deklarative Anfragesprachen, Mehrbenutzersynchronisation, Fehlerbehandlung, Sicherstellung der Datenintegrität, Effizienz und Skalierbarkeit</strong>. 'Automatische Programmiersprachenkonvertierung' ist KEIN genannter Vorteil und existiert nicht als DBS-Konzept in diesem Kapitel.<br><br><em>Merkhilfe für die 6 Gründe: <strong>D-D-M-F-I-E</strong> = Datenunabhängigkeit, Deklarativ, Mehrbenutzer, Fehler, Integrität, Effizienz</em>",
+        "category": "Gründe für DBS-Einsatz"
+      },
+      {
+        "id": "q13",
+        "scenario": "Im Architekturdiagramm (Folie 22) sieht man: Anwendungen kommunizieren mit dem DBMS, das DBMS verwaltet die Datenbasis. Der Begriff 'Datenbanksystem' (DBS) umfasst dabei mehr als nur die Datenbasis.",
+        "question": "Was gehört laut der groben Architektur zum 'Datenbanksystem' (DBS)?",
+        "options": [
+          "Nur die Datenbasis (die gespeicherten Daten)",
+          "DBMS (Datenbankmanagementsystem) + Datenbasis zusammen",
+          "Anwendungen + DBMS + Datenbasis zusammen",
+          "Nur das DBMS ohne die Datenbasis"
+        ],
+        "correctIndex": 1,
+        "explanation": "Laut dem Architekturdiagramm auf Folie 22 ist das <strong>Datenbanksystem (DBS)</strong> = <strong>DBMS (Datenbankmanagementsystem) + Datenbasis</strong>. Die geschweifte Klammer im Diagramm umfasst explizit beide Komponenten. Das DBMS ist die Software (mit Anfragebearbeitung, Synchronisation etc.), die Datenbasis sind die eigentlichen Daten.<br><br><em>Warum die anderen falsch sind:</em> 'Nur die Datenbasis' wäre nur der Datenspeicher ohne Verwaltungslogik. 'Anwendungen + DBMS + Datenbasis' ist zu weit — Anwendungen (wie Amazon-Website) nutzen das DBS, gehören aber nicht dazu. 'Nur das DBMS' fehlt die Datenbasis als essenzielle Komponente.",
+        "category": "DBMS-Architektur"
+      },
+      {
+        "id": "q14",
+        "scenario": "True/False: Laut Vorlesung werden Datenbanken fast immer dann eingesetzt, wenn die Datenmenge klein und die Daten leicht ersetzbar sind.",
+        "question": "Ist diese Aussage korrekt?",
+        "options": [
+          "True",
+          "False"
+        ],
+        "correctIndex": 1,
+        "explanation": "<strong>False.</strong> Laut Folie 10 gilt genau das Gegenteil: Datenbanken werden fast immer eingesetzt, wenn (1) die <strong>Datenmengen groß sind</strong> und (2) die <strong>Daten wertvoll sind</strong>. Sind Daten klein und leicht ersetzbar, ist ein vollständiges DBS-System oft überdimensioniert. Typische Beispiele aus der Vorlesung: Google-Suche, Amazon-Anfragen, Backend großer Webseiten — alles große, wertvolle Datenbestände.",
+        "category": "Grundlagen DBS"
+      }
+    ]
+  },
+  "overview": {
+    "topics": [
+      {
+        "name": "Was ist ein Datenbanksystem?",
+        "concepts": [
+          {
+            "term": "Datenbanksystem (DBS)",
+            "definition": "Ein System zum <strong>Speichern und Verwalten von Daten</strong>. Besteht aus zwei Teilen: dem <strong>DBMS</strong> (Datenbankmanagementsystem) + der <strong>Datenbasis</strong> (die eigentlichen Daten).",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Wird als Begriffsdefinition in MC gefragt: <strong>DBS = DBMS + Datenbasis</strong> — nicht DBS = nur die Datenbank! Trenne die Komponenten klar."
+          },
+          {
+            "term": "DBMS vs. Datenbasis",
+            "definition": "Das <strong>DBMS</strong> ist die Software (z.B. Oracle, PostgreSQL), die <strong>Datenbasis</strong> sind die gespeicherten Daten auf dem Hintergrundspeicher. Zusammen = <strong>Datenbanksystem</strong>.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Klassische MC-Falle: 'Was ist eine Datenbasis?' — Antwort: <strong>die Daten selbst</strong>, nicht das verwaltende System. Häufig als Zuordnungsfrage gestellt."
+          },
+          {
+            "term": "Warum kein Dateisystem?",
+            "definition": "Ein herkömmliches Dateisystem erreicht <strong>Ausfallsicherheit und Skalierbarkeit</strong> nur mit sehr hohem Entwicklungsaufwand — ein DBS liefert das out-of-the-box.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Wird als 'Warum DBS statt Dateisystem?'-Frage gefragt. Kernargument: <strong>Ausfallsicherheit + Skalierbarkeit</strong> ohne Eigenimplementierung."
+          }
+        ]
+      },
+      {
+        "name": "Typische Probleme ohne DBS",
+        "concepts": [
+          {
+            "term": "7 Probleme ohne DBS — Merkhilfe: 'RVMVISH'",
+            "definition": "<strong>R</strong>edundanz & Inkonsistenz, <strong>V</strong>erschiedene Datenformate, <strong>M</strong>ehrbenutzerproblem, <strong>V</strong>erlust von Daten, <strong>I</strong>ntegritätsverletzungen, <strong>S</strong>icherheitsprobleme, <strong>H</strong>ohe Entwicklungskosten. Merke: <em>'Roter Vampir macht Viele Illusionen sehr hart'</em>.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Häufigste MC-Frage aus diesem Kapitel: 'Welches der folgenden ist ein typisches Problem <em>ohne</em> DBS?' — Alle 7 Punkte auswendig. Falle: <strong>Effizienz</strong> ist ein Vorteil des DBS, kein Problem ohne DBS!"
+          },
+          {
+            "term": "Redundanz und Inkonsistenz",
+            "definition": "Ohne DBS werden Daten oft <strong>mehrfach gespeichert</strong> (Redundanz). Wird ein Datensatz geändert, aber nicht alle Kopien, entsteht <strong>Inkonsistenz</strong>. Beispiel: Kundenadressen in 3 verschiedenen Excel-Dateien.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Wird als Beispiel-Szenario gefragt: 'Eine Adresse wird in zwei Tabellen unterschiedlich gespeichert — welches Problem liegt vor?' → <strong>Redundanz + Inkonsistenz</strong>."
+          }
+        ]
+      },
+      {
+        "name": "Gründe für den DBS-Einsatz (Vorteile)",
+        "concepts": [
+          {
+            "term": "6 Gründe für DBS — Merkhilfe: 'DDMFSE'",
+            "definition": "<strong>D</strong>atenunabhängigkeit, <strong>D</strong>eklarative Anfragesprachen, <strong>M</strong>ehrbenutzersynchronisation, <strong>F</strong>ehlerbehandlung, <strong>S</strong>icherstellung der Datenintegrität, <strong>E</strong>ffizienz & Skalierbarkeit. Merke: <em>'Daten Dürfen Manchmal Fehler Schlecht Erlauben'</em>.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Direkte Gegenüberstellung mit den 7 Problemen ohne DBS — MC-Frage: 'Welches Merkmal löst das Problem X?' z.B. Redundanz → <strong>Datenintegrität</strong>, Absturz → <strong>Fehlerbehandlung</strong>."
+          },
+          {
+            "term": "Datenunabhängigkeit",
+            "definition": "DBS <strong>entkoppelt Anwendungen</strong> von Struktur und Speicherung der Daten. Zwei Arten: <strong>Logische Datenunabhängigkeit</strong> (Änderungen im Schema beeinflussen Anwendungen nicht) und <strong>Physische Datenunabhängigkeit</strong> (Änderungen im Speicherlayout beeinflussen Anwendungen nicht).",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Klassische MC-Frage: 'Welche Art der Datenunabhängigkeit wird in fast allen modernen DBS garantiert?' → <strong>Physische</strong> (nicht logische!). Logische ist schwerer durchzusetzen."
+          },
+          {
+            "term": "Logische Datenunabhängigkeit",
+            "definition": "Änderungen auf der <strong>logischen Ebene</strong> (Schema) haben keinen Einfluss auf bestehende Anwendungen. Schwieriger zu erreichen als physische Unabhängigkeit.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Falle: Logische Unabhängigkeit wird <em>nicht</em> in fast allen modernen DBS durchgesetzt — das ist die <strong>physische</strong>! Verwechslung kostet Punkte."
+          },
+          {
+            "term": "Physische Datenunabhängigkeit",
+            "definition": "Änderungen auf der <strong>physischen Ebene</strong> (Speicherformat, Indexstruktur) haben keinen Einfluss auf Anwendungen. Wird in <strong>fast allen modernen DBS</strong> umgesetzt.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "'Wird in fast allen modernen DBS durchgesetzt' — diese Formulierung aus der Vorlesung wird wörtlich in MC-Fragen übernommen. Merke: <strong>physisch ja, logisch schwieriger</strong>."
+          },
+          {
+            "term": "Deklarative Anfragesprache",
+            "definition": "Nutzer sagt dem DBS <strong>was</strong> er will (nicht <strong>wie</strong> es geholt wird). Beispiel: SQL — 'SELECT Name FROM Studenten WHERE MatrNr = 26120' statt selbst durch Dateien zu iterieren.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "MC-Frage: 'Was beschreibt eine deklarative Anfragesprache?' → Nutzer spezifiziert das <strong>Was</strong>, nicht das <strong>Wie</strong>. Gegenteil = prozedurale/imperative Sprache."
+          },
+          {
+            "term": "Mehrbenutzersynchronisation",
+            "definition": "DBS erlaubt <strong>gleichzeitigen Zugriff</strong> mehrerer Nutzer und verhindert dabei <strong>Seiteneffekte</strong> (z.B. zwei Buchungen desselben Sitzplatzes). Technisch umgesetzt durch <strong>Transaktionsverwaltung</strong> (Kapitel 8/10).",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Verbindung zu späteren Kapiteln: <strong>Transaktionsverwaltung (Kap. 8)</strong> und <strong>Mehrbenutzersynchronisation (Kap. 10)</strong> sind die technischen Implementierungen dieses Grundes."
+          },
+          {
+            "term": "Fehlerbehandlung",
+            "definition": "DBS kann den Datenbankzustand nach einem <strong>Absturz rekonstruieren</strong>. Technisches Mittel: <strong>Logdateien</strong>, die das DBS anlegt und verwaltet.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "'Womit ermöglicht ein DBS Fehlerbehandlung?' → Antwort: <strong>Logdateien</strong>. Cross-Reference: <strong>Kapitel 9 (Fehlerbehandlung)</strong> baut direkt darauf auf."
+          }
+        ]
+      },
+      {
+        "name": "3-Ebenen-Architektur & Datenunabhängigkeit",
+        "concepts": [
+          {
+            "term": "3-Ebenen-Modell: Sicht – Logisch – Physisch",
+            "definition": "<strong>Sicht (extern)</strong>: wie ein Benutzer die Daten sieht. <strong>Logische Ebene (konzeptuell)</strong>: wie die Daten strukturiert sind (Schema). <strong>Physische Ebene (intern)</strong>: wie die Daten tatsächlich gespeichert werden. Jede Ebene ist von der anderen <strong>entkoppelt</strong>.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Das Schaubild aus Folie 14 wird als Zuordnungsaufgabe gefragt: 'Welche Ebene beschreibt X?' — Lerne alle 3 Ebenen mit ihrer Funktion. <strong>Sicht ≠ logische Ebene!</strong>"
+          },
+          {
+            "term": "Sicht (View)",
+            "definition": "Beschreibt, wie ein <strong>spezifischer Benutzer</strong> die Daten sieht — gefilterte/angepasste Darstellung der logischen Ebene. Mehrere Sichten auf dieselbe logische Ebene möglich (z.B. Student sieht nur eigene Noten, Professor alle).",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "MC-Frage: 'Was beschreibt eine Sicht (View)?' → Die <strong>benutzerspezifische Perspektive</strong> auf die Daten, nicht die Daten selbst."
+          }
+        ]
+      },
+      {
+        "name": "DBMS-Architektur (Komponenten)",
+        "concepts": [
+          {
+            "term": "Grobe Architektur: Anwendung – DBMS – Datenbasis",
+            "definition": "Nutzer interagieren mit <strong>Anwendungen</strong>, die wiederum über das <strong>DBMS</strong> auf die <strong>Datenbasis</strong> zugreifen. DBMS + Datenbasis = <strong>Datenbanksystem</strong>. Trennlinie zwischen Anwendung und DBMS ist wichtig.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Folie 22-Architektur: 'Zu welchem Teil des DBS gehört die Datenbasis?' → Zur <strong>Datenbank</strong> (zusammen mit DBMS), nicht zur Anwendung."
+          },
+          {
+            "term": "Interne DBMS-Komponenten",
+            "definition": "DML-Compiler (verarbeitet Datenanfragen), DDL-Compiler (verarbeitet Schema-Definitionen), <strong>Anfragebearbeitung</strong>, <strong>Datenbankmanager</strong>, Schemaverwaltung, Mehrbenutzersynchronisation, Fehlerbehandlung, <strong>Dateiverwaltung</strong>. Auf Hintergrundspeicher: Logdateien, Indexe, Datenbasis, <strong>Datenwörterbuch</strong>.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "'Welche Komponente verarbeitet SQL-Anfragen?' → <strong>DML-Compiler</strong> + Anfragebearbeitung. 'Welche Komponente verwaltet Schema-Definitionen?' → <strong>DDL-Compiler</strong>."
+          },
+          {
+            "term": "DML vs. DDL",
+            "definition": "<strong>DML (Data Manipulation Language)</strong>: Sprache für Datenabfragen/-änderungen (z.B. SELECT, INSERT). <strong>DDL (Data Definition Language)</strong>: Sprache für Schema-Definitionen (z.B. CREATE TABLE). Beide haben eigene Compiler im DBMS.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "MC-Falle: 'Mit welcher Sprache definiert man ein Schema?' → <strong>DDL</strong>, nicht DML. DML = Daten manipulieren, DDL = Struktur definieren."
+          },
+          {
+            "term": "Datenwörterbuch (Data Dictionary)",
+            "definition": "Speichert <strong>Metadaten</strong> über die Datenbankstruktur — also das Schema selbst. Wird vom DBMS auf dem Hintergrundspeicher verwaltet (neben Logdateien, Indexen, Datenbasis).",
+            "author": "",
+            "importance": "low",
+            "examRelevance": "'Was speichert das Datenwörterbuch?' → <strong>Metadaten/Schema-Informationen</strong>, nicht die eigentlichen Nutzdaten."
+          }
+        ]
+      },
+      {
+        "name": "Datenmodellierung: Konzepte & Schritte",
+        "concepts": [
+          {
+            "term": "Datenmodell vs. Schema",
+            "definition": "<strong>Datenmodell</strong>: legt fest, welche <em>Konstrukte</em> zum Beschreiben von Daten existieren (z.B. Tabellen, Beziehungen). <strong>Schema</strong>: eine <em>konkrete Beschreibung</em> einer bestimmten Datenmenge unter Verwendung eines Datenmodells.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Klassische MC-Frage: 'Was ist der Unterschied zwischen Datenmodell und Schema?' → Datenmodell = <strong>Sprache/Konstrukte</strong>, Schema = <strong>konkrete Anwendung</strong> des Modells. Beispiel: Relationales Modell vs. das Uni-Schema mit Studenten/Vorlesungen."
+          },
+          {
+            "term": "Konzeptuelle vs. Logische Datenmodelle",
+            "definition": "<strong>Konzeptuell</strong> (für den Entwurf, implementierungsunabhängig): ER-Modell, UML. <strong>Logisch</strong> (für die Implementierung): Hierarchisch, Netzwerk, <strong>Relational</strong>, Objektorientiert, Objekt-relational, Semistrukturiert, Graphstrukturiert.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "'Welche Datenmodelle sind konzeptuell?' → Nur <strong>ER-Modell und UML</strong>. Alles andere (relational, hierarchisch etc.) ist logisch. Häufige MC-Falle: das relationale Modell als konzeptuell einordnen."
+          },
+          {
+            "term": "Entity-Relationship-Modell (ER-Modell)",
+            "definition": "Konzeptuelles Datenmodell für den <strong>Datenbankentwurf</strong>. Kernelemente: <strong>Entitäten</strong> (Rechtecke, z.B. Studenten), <strong>Beziehungen</strong> (Rauten, z.B. hören), <strong>Attribute</strong> (Ellipsen, z.B. MatrNr). Das ER-Schema wird halbautomatisch in logische Schemata transformiert.",
+            "author": "P. Chen (Erfinder, 1976)",
+            "importance": "high",
+            "examRelevance": "Das ER-Diagramm aus Folie 27 (Studenten–hören–Vorlesungen–lesen–Professoren) ist das Lehrbeispiel. 'Was symbolisiert eine Raute im ER-Diagramm?' → <strong>Beziehung (Relationship)</strong>. Wird in Kap. 2 vertieft."
+          },
+          {
+            "term": "Schritte der Modellierung (3 Phasen)",
+            "definition": "1. <strong>Reale Miniwelt</strong> → manuell/intellektuell → 2. <strong>Konzeptuelles Schema (ER-Schema)</strong> → halbautomatische Transformation → 3. <strong>Logisches Schema</strong> (relational ODER Netzwerk ODER objektorientiert).",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "'Welcher Schritt der Modellierung ist intellektuell/manuell?' → Der Schritt von der <strong>realen Welt zum ER-Schema</strong>. Die Transformation ins logische Schema ist halbautomatisch."
+          },
+          {
+            "term": "Relationales Schema (Beispiel Uni)",
+            "definition": "Das ER-Modell Studenten–hören–Vorlesungen wird zu 3 Tabellen: <strong>Studenten(MatrNr, Name)</strong>, <strong>hören(MatrNr, VorlNr)</strong>, <strong>Vorlesungen(VorlNr, Titel)</strong>. Beziehungen werden zu eigenen Tabellen oder Fremdschlüsseln.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Das Uni-Beispiel aus Folie 28 ist das Durchgängsbeispiel der gesamten Vorlesung — Tabellen und Attribute werden in späteren Kapiteln (SQL Kap. 4, Normalformen Kap. 5) wiederverwendet."
+          }
+        ]
+      },
+      {
+        "name": "Reale DBMS-Systeme",
+        "concepts": [
+          {
+            "term": "Kommerzielle vs. freie DBMS",
+            "definition": "<strong>Kommerzielle</strong>: Oracle, IBM DB2, Microsoft SQL Server, Sybase. <strong>Freie/Open-Source</strong>: PostgreSQL, MySQL, MonetDB. Alle implementieren (meist) das <strong>relationale Modell</strong> mit SQL.",
+            "author": "",
+            "importance": "low",
+            "examRelevance": "MC-Frage: 'Welches der folgenden ist ein freies DBMS?' → <strong>PostgreSQL, MySQL, MonetDB</strong>. Oracle/DB2/SQL Server sind kommerziell. MonetDB ist speziell für analytische Anfragen optimiert."
+          }
+        ]
+      }
+    ]
+  },
+  "authors": [
+    {
+      "name": "Thomas Neumann",
+      "theory": "Dozent dieser Vorlesung (TU München); forscht zu hochperformanten Datenbanksystemen und Query-Optimierung.",
+      "useInExam": "In MC-Fragen nicht als Autor von Konzepten gefragt — er ist der Kursleiter. Relevant für: 'Welches Lehrbuch wird empfohlen?' → Kemper/Eickler, nicht Neumann."
+    },
+    {
+      "name": "Alfons Kemper & André Eickler",
+      "theory": "Autoren des Standardlehrbuchs 'Datenbanksysteme – Eine Einführung' (9. Aufl., Oldenbourg); definieren die kanonischen Konzepte dieser Vorlesung.",
+      "useInExam": "Das Hauptlehrbuch der Vorlesung. Wenn Folien und Buch abweichen, gilt die Folienversion. Kemper ist auch Co-Autor des Übungsbuchs mit Wimmer — für Klausurvorbereitung sehr relevant."
+    }
+  ],
+  "schedule": {
+    "daysUntilExam": 7,
+    "days": [
+      {
+        "day": 1,
+        "label": "Überblick & Grundbegriffe einprägen",
+        "tasks": [
+          "Folie 8 lesen: DBS-Definition + Warum kein Dateisystem? → 3 Stichworte aufschreiben",
+          "Die 7 Probleme ohne DBS (Folie 12) mit Merkhilfe 'RVMVISH' auswendig lernen",
+          "Die 6 Gründe für DBS (Folie 13) mit Merkhilfe 'DDMFSE' auswendig lernen",
+          "Flashcard erstellen: Vorderseite 'Problem ohne DBS', Rückseite 'Gelöst durch DBS-Merkmal X'"
+        ]
+      },
+      {
+        "day": 2,
+        "label": "Datenunabhängigkeit & 3-Ebenen-Modell",
+        "tasks": [
+          "Diagramm Folie 14 (3 Ebenen: Sicht–Logisch–Physisch) aus dem Kopf nachzeichnen",
+          "Unterschied logische vs. physische Datenunabhängigkeit klar formulieren — inkl. 'welche wird in modernen DBS garantiert?'",
+          "MC-Selbsttest: 5 Fragen zu Datenunabhängigkeit selbst formulieren und beantworten",
+          "Merke: Physische Unabhängigkeit = fast immer; Logische Unabhängigkeit = schwieriger"
+        ]
+      },
+      {
+        "day": 3,
+        "label": "DBMS-Architektur & Komponenten",
+        "tasks": [
+          "Grobe Architektur (Folie 22) nachzeichnen: Anwendung → DBMS → Datenbasis",
+          "Detaillierte Übersicht (Folie 23) studieren: DML-Compiler, DDL-Compiler, Anfragebearbeitung, Datenbankmanager, Dateiverwaltung",
+          "4 Dinge auf dem Hintergrundspeicher einprägen: Logdateien, Indexe, Datenbasis, Datenwörterbuch",
+          "DML vs. DDL Unterschied mit je einem Beispiel (SQL-Befehl) aufschreiben"
+        ]
+      },
+      {
+        "day": 4,
+        "label": "Datenmodelle & Modellierungsschritte",
+        "tasks": [
+          "Liste aller Datenmodelle (Folie 25) einprägen: 2 konzeptuelle (ER, UML) + 7 logische",
+          "Die 3 Phasen der Modellierung (Folie 26) als Flussdiagramm aus dem Kopf zeichnen",
+          "Unterschied Datenmodell vs. Schema mit eigenem Beispiel erklären",
+          "ER-Diagramm Folie 27 (Uni-Beispiel) analysieren: Welche Entitäten, Beziehungen, Attribute?"
+        ]
+      },
+      {
+        "day": 5,
+        "label": "ER-Modell & Relationales Schema (Uni-Beispiel)",
+        "tasks": [
+          "ER-Diagramm Folie 27 aus dem Kopf zeichnen: Studenten–hören–Vorlesungen–lesen–Professoren mit allen Attributen",
+          "Relationales Schema aus Folie 28 auswendig kennen: Studenten(MatrNr, Name), hören(MatrNr, VorlNr), Vorlesungen(VorlNr, Titel)",
+          "Transformation ER → Relational üben: Was wird zur eigenen Tabelle, was zum Fremdschlüssel?",
+          "Notiere: Dieses Uni-Schema wird in Kap. 3 (Relationales Modell) und Kap. 4 (SQL) wiederverwendet!"
+        ]
+      },
+      {
+        "day": 6,
+        "label": "MC-Simulation & Lücken schließen",
+        "tasks": [
+          "20 MC-Fragen aus dem gesamten Kapitel 1 selbst formulieren (alle Themen abdecken)",
+          "Besonders üben: logisch vs. physische Unabhängigkeit, Datenmodell vs. Schema, konzeptuell vs. logisch",
+          "Häufigste Fallen nochmals durchgehen: 'relationales Modell ist logisch, nicht konzeptuell', 'physische Unabhängigkeit wird garantiert, nicht logische'",
+          "Kommerzielle vs. freie DBMS-Liste einprägen (Oracle/DB2/SQL Server vs. PostgreSQL/MySQL/MonetDB)"
+        ]
+      },
+      {
+        "day": 7,
+        "label": "Finaler Review & Kurs-Überblick",
+        "tasks": [
+          "Alle Folien (8–31) in 30 min querlesen — nur Überschriften und fett markierte Begriffe",
+          "3-Ebenen-Diagramm + ER-Diagramm + Modellierungsschritte-Diagramm aus dem Kopf zeichnen",
+          "Die Mnemonic 'RVMVISH' (Probleme) und 'DDMFSE' (Gründe) laut aufsagen",
+          "Vorlesungsübersicht (Folie 31) lesen: Kapitel 2–11 als Vorschau kennen — welche Themen bauen auf Kap. 1 auf?"
+        ]
+      }
+    ]
+  },
+  "quizletExport": "Was ist ein Datenbanksystem (DBS) und warum reicht ein herkömmliches Dateisystem nicht aus?\tEin DBS ist ein System zum Speichern und Verwalten von Daten, das Ausfallsicherheit und Skalierbarkeit ohne großen Eigenaufwand bietet.Beispiel: Amazon speichert Milliarden Produktdaten — ein selbstgebautes Dateisystem könnte bei gleichzeitigen Millionen Zugriffen (z.B. Black Friday) nicht zuverlässig skalieren oder nach einem Absturz konsistent bleiben.Eselsbrücke: Dateisystem = Schuhkarton für Belege; DBS = professionelles Archiv mit Suchsystem, Zugangskontrolle und Backup.\nUnter welchen zwei Bedingungen werden Datenbanken laut Vorlesung 'fast immer' eingesetzt?\tWenn die Datenmenge groß ist UND wenn die Daten wertvoll sind.Beispiel: Google-Suchanfragen (riesige Datenmenge) und Bankkonten (hochwertige Daten) — beide Bedingungen zusammen erfordern zwingend ein DBS.Eselsbrücke: 'Groß und Wertvoll' — wie ein Tresor: klein und wertlos → Schublade; groß und wertvoll → Banktresor (DBS).\nNenne die 7 typischen Probleme, die ohne ein DBS auftreten (Merkhilfe gefragt!).\t7 Probleme ohne DBS — Eselsbrücke: 'RV-PMISH'1. Redundanz und Inkonsistenz2. Verschiedene Datenformate3. Probleme beim Mehrbenutzerbetrieb4. Verlust von Daten5. Integritätsverletzungen6. Sicherheitsprobleme7. Hohe EntwicklungskostenBeispiel: Zwei Abteilungen pflegen Kundenadressen in verschiedenen Excel-Dateien → Redundanz führt zur Inkonsistenz; kein Passwortschutz → Sicherheitsproblem.Eselsbrücke: 'Richtig Viele Probleme, Verliert Irgendjemand Sicher Hunderte-Euro'.\nNenne die 6 Hauptgründe für den DBS-Einsatz (Merkhilfe gefragt!).\t6 Gründe für DBS-Einsatz — Eselsbrücke: 'DD-MFSE'1. Datenunabhängigkeit2. Deklarative Anfragesprachen3. Mehrbenutzersynchronisation4. Fehlerbehandlung5. Sicherstellung der Datenintegrität6. Effizienz und SkalierbarkeitBeispiel: PostgreSQL bietet all diese Features out-of-the-box; ein Entwickler muss keine eigene Transaktionslogik programmieren.Eselsbrücke: 'Datenbanken Decken Mehrere Fehler-Sicher-Effizient ab'.\nWelche kommerziellen und welche freien Datenbanksysteme nennt die Vorlesung?\tKommerzielle DBS: Oracle, IBM DB2, Microsoft SQL Server, Sybase. Freie DBS: PostgreSQL, MySQL, MonetDB.Beispiel: Der Großteil der Webseiten (z.B. WordPress-Blogs) nutzt MySQL; Enterprise-Anwendungen wie SAP laufen häufig auf Oracle oder IBM DB2.Eselsbrücke: Kommerzielle = 'OIMS' (Ohren Im Magen Schmerzen → viel Geld); Freie = 'PMM' (Postgreys MySQL MonetDB → gratis).\nErkläre die drei Ebenen der Datenunabhängigkeit und welche davon in modernen DBS garantiert wird.\tDBS trennt drei Ebenen: Sicht (wie Benutzer Daten sieht), logische Ebene (Struktur der Daten) und physische Ebene (Speicherung).Physische Datenunabhängigkeit: Änderungen am Speicherlayout (z.B. Index hinzufügen in PostgreSQL) haben keinen Einfluss auf Anwendungscode → wird in fast allen modernen DBS durchgesetzt. Logische Datenunabhängigkeit (z.B. neue Spalte in Tabelle) beeinflusst Anwendungen idealerweise auch nicht.Eselsbrücke: Denk an ein Restaurant: Gast (Sicht) sieht nur die Speisekarte, Küche (logisch) weiß das Rezept, Lieferant (physisch) bringt die Zutaten — Gast merkt nichts, wenn Lieferant wechselt.\nWas unterscheidet logische von physischer Datenunabhängigkeit, und welche ist in der Praxis stärker garantiert?\tPhysische Datenunabhängigkeit = Änderungen an Speicherstrukturen (Indexe, Dateiformat) beeinflussen Anwendungen nicht. Logische Datenunabhängigkeit = Änderungen am Schema (neue Tabelle, neue Spalte) beeinflussen Anwendungen nicht.In der Praxis: Physische Datenunabhängigkeit wird in fast allen modernen DBS garantiert. Logische ist schwieriger vollständig durchzusetzen.Eselsbrücke: Physisch = Fundament tauschen, ohne Haus abzureißen (machbar). Logisch = Grundriss ändern, ohne Möbel umzustellen (schwieriger).\nWas versteht man unter einer 'deklarativen Anfragesprache' und welchen Vorteil bietet sie gegenüber prozeduralen Ansätzen?\tBei einer deklarativen Anfragesprache (z.B. SQL) sagt der Benutzer WAS er will, nicht WIE es geholt werden soll.Beispiel: SQL-Query 'SELECT name FROM Studenten WHERE MatrNr = 26120' — der Benutzer muss nicht wissen, ob ein Index existiert oder wie die Daten auf der Festplatte liegen. Das DBMS optimiert selbst.Eselsbrücke: Deklarativ = Google-Suche (du tippst was du willst). Prozedural = selbst durch alle Webseiten klicken.\nWie funktioniert Mehrbenutzersynchronisation in einem DBS und warum ist sie notwendig?\tDas DBS erlaubt gleichzeitigen Zugriff mehrerer Benutzer und verhindert dabei unkontrollierte Seiteneffekte durch Synchronisationsmechanismen.Beispiel: Zwei Nutzer buchen gleichzeitig den letzten Sitzplatz auf einer Flugbuchungsplattform (z.B. Lufthansa.com) — ohne Synchronisation könnten beide den Platz erhalten. Das DBS sperrt den Datensatz während der Buchung.Eselsbrücke: Ohne Sync = zwei Leute schreiben gleichzeitig auf denselben Zettel → unlesbares Chaos.\nWie handhabt ein DBS Fehlerbehandlung nach einem Systemabsturz?\tDas DBS führt Logdateien, mit denen es den konsistenten Zustand zum Zeitpunkt eines Absturzes rekonstruieren kann.Beispiel: Wenn eine Bank-Transaktion (Geldüberweisung) mitten in der Ausführung abbricht, stellt das DBS über das Log sicher, dass entweder die vollständige Buchung oder gar keine stattgefunden hat — kein Geld 'verschwindet'.Eselsbrücke: Log = Flugschreiber im Flugzeug: nach dem Absturz weiß man genau, was passiert ist und kann rekonstruieren.\nWas ist Datenintegrität im Kontext eines DBS und wovor schützt sie?\tDatenintegrität bedeutet, dass das DBS angegebene Regeln (Constraints) durchsetzt und damit die Korrektheit der Daten sicherstellt.Das DBS schützt vor Benutzerfehlern (z.B. Alter = -5 eingeben) und Programmfehlern (z.B. ein Bug löscht Fremdschlüssel-Referenzen).Beispiel: In einer Uni-Datenbank kann man keinen Studenten in einer Vorlesung einschreiben, die nicht existiert — die Fremdschlüssel-Constraint verhindert das.Eselsbrücke: Integrität = Türsteher der DB: schlechte Daten kommen nicht rein.\nBeschreibe die grobe Architektur eines Datenbanksystems: Welche Hauptkomponenten gibt es und wie heißt die Gesamtheit aus DBMS + Datenbasis?\tEin DBS besteht aus dem DBMS (Datenbankmanagementsystem) und der Datenbasis — zusammen bilden sie das Datenbanksystem.Anwendungen interagieren mit dem DBMS; das DBMS verwaltet die eigentliche Datenbasis auf dem Hintergrundspeicher. Mehrere Anwendungen (und Nutzer) können gleichzeitig über das DBMS auf dieselbe Datenbasis zugreifen.Beispiel: Instagram-App (Anwendung) → MySQL/PostgreSQL (DBMS) → Dateien auf Servern (Datenbasis).Eselsbrücke: DBS = Bibliothek: Datenbasis = Regale voller Bücher; DBMS = Bibliothekar, der findet, verleiht und zurücklegt.\nNenne die Komponenten der detaillierten DBMS-Architektur aus der Vorlesung (Folie 23) und ordne sie den Benutzergruppen zu.\tDas DBMS enthält: DML-Compiler, DDL-Compiler, Anfragebearbeitung, Datenbankmanager, Schemaverwaltung, Mehrbenutzersynchronisation, Fehlerbehandlung, Dateiverwaltung.Auf dem Hintergrundspeicher liegen: Logdateien, Indexe, Datenbasis, Datenwörterbuch.Benutzergruppen: 'Naive' Benutzer (Anwendung), Fortgeschrittene (interaktive Anfrage), Anwendungsprogrammierer (Präcompiler), Datenbankadministratoren (Verwaltungswerkzeug + DDL-Compiler).Eselsbrücke: DDL = 'Data Definition Language' (Struktur anlegen, Admin-Job). DML = 'Data Manipulation Language' (Daten lesen/schreiben, Programmiererjob).\nWas ist der Unterschied zwischen einem Datenmodell und einem Schema?\tEin Datenmodell legt fest, welche Konstrukte zum Beschreiben von Daten existieren; ein Schema ist eine konkrete Beschreibung einer bestimmten Datensammlung unter Verwendung eines Datenmodells.Beispiel: Das relationale Modell ist ein Datenmodell (definiert: Tabellen, Spalten, Fremdschlüssel). Das konkrete Schema 'Studenten(MatrNr, Name), Vorlesungen(VorlNr, Titel)' der Uni-Datenbank ist eine Schema-Instanz davon.Eselsbrücke: Datenmodell = Bauplan-Standard (DIN-Norm). Schema = konkreter Bauplan für ein bestimmtes Haus.\nUnterscheide konzeptuelle von logischen Datenmodellen und nenne je zwei Beispiele.\tKonzeptuelle Modelle beschreiben die reale Welt abstrakt (unabhängig von Implementierung); logische Modelle beschreiben, wie Daten im System strukturiert werden.Konzeptuell: Entity-Relationship-Modell (ER-Modell), UML.Logisch: Hierarchisches, Netzwerk-, Relationales, Objekt-orientiertes, Objekt-relationales, Semistrukturiertes, Graphstrukturiertes Modell.Eselsbrücke: Konzeptuell = Skizze auf Papier (was soll es sein?). Logisch = technische Zeichnung (wie wird es gebaut?).\nNenne alle 7 logischen Datenmodelle aus der Vorlesung.\t7 logische Datenmodelle — Eselsbrücke: 'HN-ROOS-G'1. Hierarchisches Modell2. Netzwerkmodell3. Relationales Modell4. Objekt-orientiertes Modell5. Objekt-relationales Modell6. Semistrukturiertes Modell7. Graphstrukturiertes ModellBeispiel: MySQL/PostgreSQL = relational; MongoDB = semistrukturiert (JSON); Neo4j = graphstrukturiert (z.B. für soziale Netzwerke wie LinkedIn).Eselsbrücke: 'Heute Nehmen Rechner Ordentlich Objekte, Semistrukturiert, Graphisch.'\nBeschreibe die Schritte der Datenmodellierung vom Ausschnitt der realen Welt bis zum logischen Schema.\tSchritt 1: Manuelle/intellektuelle Modellierung → Ausschnitt der realen Miniwelt wird in ein konzeptuelles Schema (ER-Schema) überführt. Schritt 2: Halbautomatische Transformation → aus dem ER-Schema entsteht ein logisches Schema (relational, Netzwerk oder objektorientiert).Beispiel: Die Uni-Realität (Studenten hören Vorlesungen, Professoren lesen Vorlesungen) wird zuerst als ER-Diagramm skizziert, dann in relationale Tabellen transformiert.Eselsbrücke: Real → ER = Hand (Mensch denkt). ER → Relational = Halbautomat (Tool hilft).\nErkläre anhand des Uni-Beispiels aus der Vorlesung, wie ein ER-Schema in ein relationales Schema transformiert wird.\tIm ER-Schema werden Entities (Studenten, Professoren, Vorlesungen) und Beziehungen (hören, lesen) modelliert; im relationalen Schema werden diese zu Tabellen mit Attributen.ER-Entities: Studenten (MatrNr, Name), Professoren (PersNr, Name), Vorlesungen (VorlNr, Titel).ER-Beziehung 'hören' → Tabelle hören(MatrNr, VorlNr). So weiß man: Student 25403 (Jonas) hört Vorlesung 5022 (Glaube und Wissen).Eselsbrücke: Entity → Tabelle, Beziehung → Zwischentabelle (mit den Schlüsseln beider Seiten).\nWas zeigt das ER-Diagramm auf dem Cover des Kemper/Eickler-Lehrbuchs? Welche Entities und Beziehungen sind erkennbar?\tDas Buchcover zeigt das klassische Uni-Beispiel als ER-Diagramm mit den Entities Studenten, Vorlesungen, Professoren, Assistenten und deren Beziehungen.Entities: Studenten (MatrNr, Name, Sem), Vorlesungen (VorlNr, Titel, SWS), Professoren (PersNr, Name, Rang, Raum), Assistenten (PersNr, Name, Fachgebiet).Beziehungen: hören (N:M zwischen Studenten und Vorlesungen), lesen (1:N zwischen Professoren und Vorlesungen), prüfen (mit Attribut Note), voraussetzen (rekursiv auf Vorlesungen), arbeitenFür (zwischen Assistenten und Professoren).Eselsbrücke: Das Buchcover = das wichtigste Diagramm der Vorlesung — auswendig lernen lohnt sich!\nWas ist der Unterschied zwischen DML und DDL im Kontext eines DBMS?\tDDL (Data Definition Language) wird zum Definieren von Datenbankstrukturen (Schemas, Tabellen) verwendet; DML (Data Manipulation Language) wird zum Lesen und Ändern von Daten verwendet.Beispiel: 'CREATE TABLE Studenten (MatrNr INT, Name VARCHAR)' = DDL (Datenbankadministrator). 'SELECT name FROM Studenten WHERE MatrNr = 26120' = DML (Anwendungsprogrammierer/Benutzer).Eselsbrücke: DDL = 'Definieren' (Rahmen bauen). DML = 'Manipulieren' (Inhalt befüllen und lesen).\nWelche vier Benutzergruppen interagieren laut der detaillierten DBMS-Architektur mit dem System und wie?\t4 Benutzergruppen:1. 'Naive' Benutzer → nutzen fertige Anwendungen (z.B. Web-UI)2. Fortgeschrittene Benutzer → stellen interaktive SQL-Anfragen direkt3. Anwendungsprogrammierer → schreiben Code mit eingebettetem SQL (über Präcompiler)4. Datenbankadministratoren → verwalten Schema und System (DDL-Compiler, Verwaltungswerkzeug)Beispiel: Bei Amazon: Endkunde (naiv), Data Analyst (fortgeschritten), Backend-Entwickler (Programmierer), DB-Admin (Administrator).Eselsbrücke: 'NFPA' — Naive, Fortgeschrittene, Programmierer, Administratoren.\nWas ist ein Datenwörterbuch (Data Dictionary) im DBMS und welche Rolle spielt es?\tDas Datenwörterbuch speichert Metadaten über die Datenbankstruktur (Schemas, Datentypen, Constraints, Berechtigungen) und liegt auf dem Hintergrundspeicher.Beispiel: Das DBMS schaut im Datenwörterbuch nach, ob ein Benutzer Leserechte auf die Tabelle 'Gehalt' hat, bevor es eine Anfrage ausführt. Es enthält auch Informationen über verfügbare Indexe für die Anfrageoptimierung.Eselsbrücke: Datenwörterbuch = Inhaltsverzeichnis + Hausordnung der Datenbank.\nWelche Dateien/Strukturen liegen laut Vorlesung auf dem Hintergrundspeicher eines DBMS?\tAuf dem Hintergrundspeicher liegen: Logdateien, Indexe, Datenbasis und Datenwörterbuch.Funktion: Logdateien → Fehlerbehandlung/Recovery. Indexe → schneller Datenzugriff (z.B. B-Tree-Index auf MatrNr). Datenbasis → die eigentlichen Daten. Datenwörterbuch → Metadaten/Schema-Infos.Beispiel: MySQL speichert all das in Dateien auf dem Server: .ibd-Dateien (Datenbasis+Indexe), binlog (Logdateien).Eselsbrücke: 'LIDD' — Logdateien, Indexe, Datenbasis, Datenwörterbuch.\nWelche 10 Themengebiete deckt die Datenbanksysteme-Vorlesung (Kapitel 2–11) ab?\t10 Kapitel — Eselsbrücke: 'DR SQL-RPATFMV'Kap. 2: DatenbankentwurfKap. 3: Relationales ModellKap. 4: SQLKap. 5: Relationale EntwurfstheorieKap. 6: Physische DatenorganisationKap. 7: AnfragebearbeitungKap. 8: TransaktionsverwaltungKap. 9: FehlerbehandlungKap. 10: MehrbenutzersynchronisationKap. 11: Verteilte DatenbanksystemeEselsbrücke: 'DR SQLR-PATFMV' — der Kurs baut von Design zu Verteilung auf.\nWas sind die zwei übergeordneten Perspektiven, die die Vorlesung laut Folie 30 abdeckt?\t1. Wie benutzt man ein DBMS? (Anwender-Perspektive)2. Was passiert hinter den Kulissen? (Implementierungs-Perspektive)Beispiel: Perspektive 1 → SQL schreiben, ER-Modellierung, Normalisierung. Perspektive 2 → wie funktioniert ein B-Tree-Index intern, wie verwaltet das DBMS Transaktionen im Speicher.Eselsbrücke: Autofahrer vs. Automechaniker: Beide brauchen das Auto, aber der Mechaniker versteht den Motor.\nWelches ist das Hauptlehrbuch der Vorlesung und wer sind die Autoren?\tKemper und Eickler: 'Datenbanksysteme – Eine Einführung', 9. Auflage, Oldenbourg Verlag.Das Buch enthält das klassische Uni-ER-Diagramm auf dem Cover (Studenten, Vorlesungen, Professoren, Assistenten) — dieses Beispiel zieht sich durch die gesamte Vorlesung.Ergänzend: Kemper & Wimmer: 'Übungsbuch Datenbanksysteme' (2. Auflage) für Klausurpraxis.Eselsbrücke: Kemper = Kurs-Autor bei TU München (www-db.in.tum.de) — Material und Buch kommen aus derselben Quelle.\nWarum ist das Relationale Modell unter den logischen Datenmodellen besonders wichtig und was sind Alternativen für moderne Anwendungsfälle?\tDas Relationale Modell ist das dominierende Modell in kommerziellen DBS (Oracle, MySQL, PostgreSQL) und Grundlage von SQL.Für moderne Anforderungen existieren Alternativen: Semistrukturiertes Modell (MongoDB für JSON-Daten wie Produktkataloge bei Amazon), Graphstrukturiertes Modell (Neo4j für soziale Netzwerke wie LinkedIn-Verbindungen).Verbindung zum Kurs: Kapitel 3 (Relationales Modell) und Kapitel 4 (SQL) bilden das Herzstück der Vorlesung.Eselsbrücke: Relational = 'König der Modelle' — dominiert seit 50 Jahren, aber Graph und Semi-Struktur holen auf.",
+  "visualMap": {
+    "blocks": [
+      {
+        "title": "Was ist ein Datenbanksystem (DBS)?",
+        "subtitle": "Big Picture: Warum DBS statt Dateisystem?",
+        "color": "blue",
+        "frameworks": [
+          {
+            "kind": "formula",
+            "title": "Kern-Definition",
+            "formula": "DBS = DBMS + Datenbasis",
+            "sub": "DBMS verwaltet die Daten; Datenbasis speichert sie. Anwendungen (z.B. Amazon-Shop) reden NUR mit dem DBMS, nie direkt mit den Rohdaten."
+          },
+          {
+            "kind": "comparison",
+            "title": "DBS vs. herkömmliches Dateisystem",
+            "left": {
+              "label": "Dateisystem ❌",
+              "tone": "con",
+              "items": [
+                "Redundanz & Inkonsistenz (gleiche Adresse in 3 Dateien)",
+                "Verschiedene Datenformate (CSV, XML, JSON — kein Standard)",
+                "Mehrbenutzerbetrieb: zwei schreiben gleichzeitig → Datenverlust",
+                "Kein automatisches Recovery nach Absturz",
+                "Keine Integritätsprüfung (z.B. negatives Gehalt möglich)",
+                "Sicherheit muss selbst programmiert werden",
+                "Hohe Entwicklungskosten je Anwendung"
+              ]
+            },
+            "right": {
+              "label": "DBS ✅",
+              "tone": "pro",
+              "items": [
+                "Datenunabhängigkeit: Struktur ändern ohne App-Code anzufassen",
+                "Deklarative Anfragesprache (SQL): WAS, nicht WIE",
+                "Mehrbenutzersynchronisation eingebaut (Transaktionen)",
+                "Fehlerbehandlung via Logdateien → Zustand rekonstruierbar",
+                "Datenintegrität: DBS erzwingt Regeln automatisch",
+                "Rechteverwaltung (Sicherheit) zentral",
+                "Effizienz & Skalierbarkeit für Millionen Datensätze"
+              ]
+            },
+            "explanation": "Merke: Ausfallsicherheit + Skalierbarkeit mit reinem Dateisystem nur mit enormem Eigenaufwand erreichbar. Deswegen nutzt PostgreSQL/Oracle jede große Anwendung."
+          },
+          {
+            "kind": "mnemonic",
+            "title": "7 Gründe für DBS-Einsatz",
+            "acronym": "DAMS-FIE",
+            "expansion": [
+              {
+                "letter": "D",
+                "meaning": "Datenunabhängigkeit (logisch & physisch)"
+              },
+              {
+                "letter": "A",
+                "meaning": "Anfragesprache (deklarativ: SQL)"
+              },
+              {
+                "letter": "M",
+                "meaning": "Mehrbenutzersynchronisation"
+              },
+              {
+                "letter": "S",
+                "meaning": "Sicherstellung der Datenintegrität"
+              },
+              {
+                "letter": "F",
+                "meaning": "Fehlerbehandlung (Recovery via Logdateien)"
+              },
+              {
+                "letter": "I",
+                "meaning": "Integration vieler Anwendungen auf einer Basis"
+              },
+              {
+                "letter": "E",
+                "meaning": "Effizienz & Skalierbarkeit (Google, Amazon-Scale)"
+              }
+            ],
+            "hook": "Stell dir vor, ein DAMM hält deine Daten — bricht er (kein DBS), schwemmt alles weg. DAMS-FIE = der Damm hält."
+          },
+          {
+            "kind": "comparison",
+            "title": "Kommerzielle vs. Freie DBS",
+            "left": {
+              "label": "Kommerziell (4 Große)",
+              "tone": "neutral",
+              "items": [
+                "Oracle (Marktführer Enterprise)",
+                "IBM DB2",
+                "Microsoft SQL Server",
+                "Sybase"
+              ]
+            },
+            "right": {
+              "label": "Open Source (3 Bekannte)",
+              "tone": "neutral",
+              "items": [
+                "PostgreSQL (feature-reich, Standard in Forschung)",
+                "MySQL (Webbackend, z.B. Wikipedia)",
+                "MonetDB (Spaltenorientiert, Analyse)"
+              ]
+            },
+            "explanation": "MC-Falle: MonetDB ist KEIN kommerzielles System! Es ist open-source und spaltenorientiert — anders als die anderen."
+          }
+        ]
+      },
+      {
+        "title": "Datenunabhängigkeit & 3-Ebenen-Architektur",
+        "subtitle": "Das wichtigste Strukturprinzip eines DBS",
+        "color": "cyan",
+        "frameworks": [
+          {
+            "kind": "flow",
+            "title": "3-Ebenen-Modell (Aniso-ANSI/SPARC)",
+            "boxes": [
+              {
+                "label": "Sicht-Ebene",
+                "sub": "Wie Benutzer die Daten sehen (z.B. nur Name+Note, kein Gehalt)",
+                "accent": "cyan"
+              },
+              {
+                "label": "Logische Ebene",
+                "sub": "Wie die Daten strukturiert sind (Tabellen, Relationen, Schema)",
+                "accent": "blue"
+              },
+              {
+                "label": "Physische Ebene",
+                "sub": "Wie die Daten gespeichert werden (B-Baum-Indexe, Blöcke auf Disk)",
+                "accent": "violet"
+              }
+            ],
+            "arrows": "right",
+            "explanation": "Änderung auf physischer Ebene (z.B. neuer Index) → Anwendung merkt NICHTS. Das ist physische Datenunabhängigkeit. Änderung auf logischer Ebene (z.B. neue Spalte) → Anwendung soll möglichst nichts merken. Das ist logische Datenunabhängigkeit (schwerer zu garantieren)."
+          },
+          {
+            "kind": "comparison",
+            "title": "Physische vs. Logische Datenunabhängigkeit",
+            "left": {
+              "label": "Physische Datenunabhängigkeit ✅",
+              "tone": "pro",
+              "items": [
+                "Änderungen auf Speicher-/Indexebene → keine App-Änderung nötig",
+                "Beispiel: DBA fügt B+-Baum-Index auf 'Name' hinzu → SQL-Abfragen laufen schneller, App-Code unverändert",
+                "Wird in FAST ALLEN modernen DBS garantiert"
+              ]
+            },
+            "right": {
+              "label": "Logische Datenunabhängigkeit ⚠️",
+              "tone": "neutral",
+              "items": [
+                "Änderungen auf Schema-Ebene → App soll unverändert bleiben",
+                "Beispiel: neue Spalte 'Email' in Tabelle Studenten → alte Queries auf MatrNr/Name unberührt",
+                "Schwerer durchzusetzen; Views helfen dabei"
+              ]
+            },
+            "explanation": "Prüfungsfrage-Klassiker: 'Welche Datenunabhängigkeit ist in modernen DBS stärker garantiert?' → PHYSISCHE."
+          },
+          {
+            "kind": "formula",
+            "title": "Deklarative Anfragesprache — Kernprinzip",
+            "formula": "SQL: WAS soll geholt werden — NICHT WIE es geholt wird",
+            "sub": "Beispiel: SELECT Name FROM Studenten WHERE MatrNr = 26120 — Du sagst nicht ob per Index oder Full Table Scan. Das optimiert der Query Optimizer intern. → weniger fehleranfällig, kein Wissen über Speicherstruktur nötig."
+          }
+        ]
+      },
+      {
+        "title": "DBS-Architektur: Komponenten im Überblick",
+        "subtitle": "Was steckt hinter den Kulissen eines DBMS?",
+        "color": "violet",
+        "frameworks": [
+          {
+            "kind": "flow",
+            "title": "Grobe DBS-Architektur (aus dem Schaubild)",
+            "boxes": [
+              {
+                "label": "Anwendungen / Benutzer",
+                "sub": "Naive Benutzer, Fortgeschrittene, Anwendungsprogrammierer, DB-Administratoren",
+                "accent": "cyan"
+              },
+              {
+                "label": "DBMS",
+                "sub": "DML-Compiler, DDL-Compiler, Anfragebearbeitung, Datenbankmanager, Schemaverwaltung, Mehrbenutzersynchr., Fehlerbehandlung",
+                "accent": "violet"
+              },
+              {
+                "label": "Datenbasis + Hintergrundspeicher",
+                "sub": "Logdateien, Indexe, Datenbasis, Datenwörterbuch — alles auf persistentem Speicher",
+                "accent": "blue"
+              }
+            ],
+            "arrows": "bidirectional",
+            "explanation": "Merke: Das Datenbanksystem (DBS) = DBMS + Datenbasis. Das DBMS ist die Software, die Datenbasis sind die gespeicherten Daten. Anwendungen sehen nur das DBMS-Interface, nie rohe Dateien."
+          },
+          {
+            "kind": "comparison",
+            "title": "DDL-Compiler vs. DML-Compiler",
+            "left": {
+              "label": "DDL-Compiler",
+              "tone": "neutral",
+              "items": [
+                "DDL = Data Definition Language",
+                "Verarbeitet Schema-Definitionen (CREATE TABLE, ALTER TABLE)",
+                "Benutzt von: Datenbankadministratoren",
+                "Ergebnis landet im Datenwörterbuch (Schemaverwaltung)"
+              ]
+            },
+            "right": {
+              "label": "DML-Compiler",
+              "tone": "neutral",
+              "items": [
+                "DML = Data Manipulation Language",
+                "Verarbeitet Anfragen & Datenänderungen (SELECT, INSERT, UPDATE)",
+                "Benutzt von: Anwendungen, interaktive Anfragen, Präcompiler",
+                "Geht durch Anfragebearbeitung → Datenbankmanager"
+              ]
+            },
+            "explanation": "Eselsbrücke: DDL = 'Definieren' (Struktur), DML = 'Manipulieren' (Daten). DBA nutzt DDL, Entwickler nutzt DML."
+          },
+          {
+            "kind": "mnemonic",
+            "title": "Was liegt auf dem Hintergrundspeicher?",
+            "acronym": "LIDD",
+            "expansion": [
+              {
+                "letter": "L",
+                "meaning": "Logdateien (für Fehlerbehandlung/Recovery)"
+              },
+              {
+                "letter": "I",
+                "meaning": "Indexe (für schnelle Suche, z.B. B+-Bäume)"
+              },
+              {
+                "letter": "D",
+                "meaning": "Datenbasis (die eigentlichen Nutzdaten)"
+              },
+              {
+                "letter": "D",
+                "meaning": "Datenwörterbuch (Metadaten: Schema-Infos, Constraints)"
+              }
+            ],
+            "hook": "LIDD klingt wie 'Lid' (Deckel) — der Deckel des DBS liegt auf dem Speicher. Öffnest du ihn, siehst du Logs, Indexe, Daten, Dictionary."
+          }
+        ]
+      },
+      {
+        "title": "Datenmodellierung: Von der realen Welt zur Datenbank",
+        "subtitle": "Konzeptuelle → Logische Modelle",
+        "color": "green",
+        "frameworks": [
+          {
+            "kind": "flow",
+            "title": "Modellierungsprozess (aus dem Schaubild Folie 26/27)",
+            "boxes": [
+              {
+                "label": "Reale Miniwelt",
+                "sub": "z.B. Universität mit Studenten, Vorlesungen, Professoren",
+                "accent": "amber"
+              },
+              {
+                "label": "Konzeptuelles Schema (ER-Modell)",
+                "sub": "Manuelle/intellektuelle Modellierung: Entitäten + Beziehungen (hören, lesen)",
+                "accent": "green"
+              },
+              {
+                "label": "Logisches Schema",
+                "sub": "Halbautomatische Transformation: relational / Netzwerk / objektorientiert",
+                "accent": "cyan"
+              }
+            ],
+            "arrows": "right",
+            "explanation": "Schritt 1 (Miniwelt → ER) ist MANUELL und intellektuell — hier entscheidest du, was wichtig ist. Schritt 2 (ER → relational) ist halbautomatisch — es gibt Regeln (z.B. N:M-Beziehung wird eigene Tabelle)."
+          },
+          {
+            "kind": "comparison",
+            "title": "Konzeptuelle vs. Logische Datenmodelle",
+            "left": {
+              "label": "Konzeptuelle Modelle (für Menschen)",
+              "tone": "neutral",
+              "items": [
+                "Entity-Relationship-Modell (ER-Modell) — Standard in dieser Vorlesung",
+                "Unified Modeling Language (UML)",
+                "Zeigt Entitäten (Rechtecke), Attribute (Ellipsen), Beziehungen (Rauten)",
+                "Beispiel: Studenten —hören→ Vorlesungen —lesen→ Professoren"
+              ]
+            },
+            "right": {
+              "label": "Logische Modelle (für DBS)",
+              "tone": "neutral",
+              "items": [
+                "Hierarchisches Modell (veraltet, IMS von IBM)",
+                "Netzwerkmodell (veraltet)",
+                "Relationales Modell (dominant: Oracle, PostgreSQL, MySQL)",
+                "Objekt-orientiertes Modell",
+                "Objekt-relationales Modell",
+                "Semistrukturiertes Modell (XML, JSON)",
+                "Graphstrukturiertes Modell (Neo4j)"
+              ]
+            },
+            "explanation": "MC-Falle: ER-Modell ist KONZEPTUELL, nicht logisch! Es wird danach in ein logisches Modell (meist relational) transformiert."
+          },
+          {
+            "kind": "mnemonic",
+            "title": "Logische Modelle merken",
+            "acronym": "HNR-OOS-G",
+            "expansion": [
+              {
+                "letter": "H",
+                "meaning": "Hierarchisches Modell"
+              },
+              {
+                "letter": "N",
+                "meaning": "Netzwerkmodell"
+              },
+              {
+                "letter": "R",
+                "meaning": "Relationales Modell (der King!)"
+              },
+              {
+                "letter": "O",
+                "meaning": "Objekt-orientiertes Modell"
+              },
+              {
+                "letter": "O",
+                "meaning": "Objekt-relationales Modell"
+              },
+              {
+                "letter": "S",
+                "meaning": "Semistrukturiertes Modell (XML/JSON)"
+              },
+              {
+                "letter": "G",
+                "meaning": "Graphstrukturiertes Modell (Neo4j)"
+              }
+            ],
+            "hook": "Stell dir eine HNR-OOS-G (Aussprache: 'Honoroos-G') Leiter vor — von alt (H, N) zu modern (G). Das relationale Modell R sitzt genau in der Mitte und dominiert alles."
+          },
+          {
+            "kind": "flow",
+            "title": "Uni-Beispiel: ER → Relationales Schema (aus Folie 27/28)",
+            "boxes": [
+              {
+                "label": "ER-Diagramm",
+                "sub": "Studenten (MatrNr, Name) —hören— Vorlesungen (VorlNr, Titel) —lesen— Professoren (PersNr, Name)",
+                "accent": "green"
+              },
+              {
+                "label": "Relationale Tabellen",
+                "sub": "Studenten(MatrNr, Name) | hören(MatrNr, VorlNr) | Vorlesungen(VorlNr, Titel)",
+                "accent": "cyan"
+              }
+            ],
+            "arrows": "right",
+            "explanation": "N:M-Beziehung 'hören' wird zu eigener Tabelle mit zwei Fremdschlüsseln (MatrNr, VorlNr). Student Fichte (26120) hört Vorlesung 5001 'Grundzüge' — Eintrag: hören(26120, 5001)."
+          }
+        ]
+      },
+      {
+        "title": "Datenmodell vs. Schema — Kern-Unterschied",
+        "subtitle": "Prüfungs-Klassiker: Was ist was?",
+        "color": "amber",
+        "frameworks": [
+          {
+            "kind": "comparison",
+            "title": "Datenmodell vs. Schema",
+            "left": {
+              "label": "Datenmodell",
+              "tone": "neutral",
+              "items": [
+                "Legt FEST, welche Konstrukte zum Beschreiben von Daten EXISTIEREN",
+                "Abstrakt, allgemein — wie eine Sprache oder Grammatik",
+                "Beispiel: 'Relationales Modell' sagt: es gibt Tabellen, Zeilen, Spalten, Fremdschlüssel",
+                "Beispiel: 'ER-Modell' sagt: es gibt Entitäten, Attribute, Beziehungen"
+              ]
+            },
+            "right": {
+              "label": "Schema",
+              "tone": "neutral",
+              "items": [
+                "Eine KONKRETE Beschreibung einer bestimmten Datensammlung",
+                "Spezifisch, instanziiert — wie ein Satz in einer Sprache",
+                "Beispiel: 'Studenten(MatrNr INT, Name VARCHAR, Sem INT)' ist ein relationales Schema",
+                "Beispiel: Das ER-Diagramm der Uni mit Studenten/Vorlesungen/Professoren ist ein konzeptuelles Schema"
+              ]
+            },
+            "explanation": "Analogie: Datenmodell = Grammatik der deutschen Sprache. Schema = der konkrete Roman 'Faust'. Das Modell gibt die Regeln, das Schema ist die Anwendung."
+          },
+          {
+            "kind": "formula",
+            "title": "Wann setzt man eine Datenbank ein?",
+            "formula": "Große Datenmenge ODER wertvolle Daten → DBS einsetzen",
+            "sub": "Google-Suche: Billionen URLs = groß. Bankdaten: klein aber wertvoll. Amazon-Bestellungen: groß UND wertvoll → auf jeden Fall DBS."
+          },
+          {
+            "kind": "link_note",
+            "fromTopic": "Datenunabhängigkeit (3-Ebenen-Modell)",
+            "toTopic": "Datenmodellierung (ER → Relational)",
+            "explanation": "Die 3 Ebenen (Sicht / Logisch / Physisch) entsprechen genau dem Modellierungsprozess: Sicht ≈ individuelle Benutzerperspektive, Logische Ebene ≈ relationales/konzeptuelles Schema, Physische Ebene ≈ wie Tabellen auf Disk gespeichert werden. Wer den Modellierungsprozess kennt, versteht auch automatisch warum Datenunabhängigkeit so wichtig ist."
+          }
+        ]
+      }
+    ]
+  }
+}
