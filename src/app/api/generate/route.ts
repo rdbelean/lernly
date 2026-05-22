@@ -533,36 +533,36 @@ export async function POST(request: Request) {
       user?.id ?? "anon",
     );
 
-    const [
-      cardsResult,
-      simulatorResult,
-      blueprintResult,
-      metaResult,
-      visualMapSettled,
-    ] = await Promise.all([
-      runTask(client, "cards", materialText) as Promise<{
-        flashcards?: Flashcard[];
-      }>,
-      runTask(client, "simulator", materialText) as Promise<{
-        simulator?: unknown;
-      }>,
-      runTask(client, "blueprint", materialText) as Promise<{
-        essayBlueprint?: unknown;
-      }>,
-      runTask(client, "meta", materialText) as Promise<{
-        courseTitle?: string;
-        overview?: unknown;
-        authors?: unknown;
-        schedule?: unknown;
-      }>,
-      // VisualMap is best-effort: if Claude fumbles it, we still ship the rest.
-      runTask(client, "visualMap", materialText)
-        .then((r) => (r as { visualMap?: unknown }).visualMap ?? null)
-        .catch((e) => {
-          console.error("[/api/generate] visualMap soft-failed", e);
-          return null;
-        }),
-    ]);
+    // Warm the prompt cache with the cheapest task (blueprint, ~0.6k out) so the
+    // other four read the cached material instead of each re-writing it.
+    const blueprintResult = (await runTask(
+      client,
+      "blueprint",
+      materialText,
+    )) as { essayBlueprint?: unknown };
+
+    const [cardsResult, simulatorResult, metaResult, visualMapSettled] =
+      await Promise.all([
+        runTask(client, "cards", materialText) as Promise<{
+          flashcards?: Flashcard[];
+        }>,
+        runTask(client, "simulator", materialText) as Promise<{
+          simulator?: unknown;
+        }>,
+        runTask(client, "meta", materialText) as Promise<{
+          courseTitle?: string;
+          overview?: unknown;
+          authors?: unknown;
+          schedule?: unknown;
+        }>,
+        // VisualMap stays best-effort: if Claude fumbles it, we still ship the rest.
+        runTask(client, "visualMap", materialText)
+          .then((r) => (r as { visualMap?: unknown }).visualMap ?? null)
+          .catch((e) => {
+            console.error("[/api/generate] visualMap soft-failed", e);
+            return null;
+          }),
+      ]);
 
     const cards = cardsResult?.flashcards ?? [];
 

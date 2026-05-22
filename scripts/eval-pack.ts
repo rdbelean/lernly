@@ -138,6 +138,21 @@ function costOf(u: Usage): number {
   );
 }
 
+async function runTaskSettled(
+  client: Anthropic,
+  key: TaskKey,
+  materialText: string,
+): Promise<
+  PromiseSettledResult<{ data: unknown; usage: Usage; ms: number; stop: string | null }>
+> {
+  try {
+    const value = await runTask(client, key, materialText);
+    return { status: "fulfilled", value };
+  } catch (reason) {
+    return { status: "rejected", reason } as PromiseRejectedResult;
+  }
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const slugArg = args.find((a) => a.startsWith("--slug="));
@@ -199,37 +214,37 @@ async function main() {
     return;
   }
 
-  console.log("running 5 tasks in parallel...\n");
-  const results = await Promise.allSettled([
-    runTask(client, "cards", materialText),
-    runTask(client, "simulator", materialText),
-    runTask(client, "blueprint", materialText),
-    runTask(client, "meta", materialText),
-    runTask(client, "visualMap", materialText),
+  console.log("warming cache with blueprint, then 4 parallel...\n");
+  const bpResult = await runTaskSettled(client, "blueprint", materialText);
+  const [cardsR2, simR2, metaR2, vmR2] = await Promise.all([
+    runTaskSettled(client, "cards", materialText),
+    runTaskSettled(client, "simulator", materialText),
+    runTaskSettled(client, "meta", materialText),
+    runTaskSettled(client, "visualMap", materialText),
   ]);
+  const results = [cardsR2, simR2, bpResult, metaR2, vmR2];
 
   const [cardsR, simR, bpR, metaR, vmR] = results;
-  const get = <T,>(r: PromiseSettledResult<{ data: unknown }>): T | undefined =>
-    r.status === "fulfilled" ? (r.value.data as T) : undefined;
+  const get = (r: PromiseSettledResult<{ data: unknown }>): unknown =>
+    r.status === "fulfilled" ? r.value.data : undefined;
 
-  const usages: Usage[] = results
-    .filter((r): r is PromiseFulfilledResult<{ usage: Usage }> => r.status === "fulfilled")
-    .map((r) => r.value.usage);
+  const usages: Usage[] = [];
+  for (const r of results) if (r.status === "fulfilled") usages.push(r.value.usage);
 
   for (const r of results) {
     if (r.status === "rejected") console.error("  TASK FAILED:", r.reason?.message ?? r.reason);
   }
 
-  const cards = get<{ flashcards?: Flashcard[] }>(cardsR)?.flashcards ?? [];
-  const sim = get<{ simulator?: unknown }>(simR);
-  const bp = get<{ essayBlueprint?: unknown }>(bpR);
-  const meta = get<{
+  const cards = (get(cardsR) as { flashcards?: Flashcard[] } | undefined)?.flashcards ?? [];
+  const sim = get(simR) as { simulator?: unknown } | undefined;
+  const bp = get(bpR) as { essayBlueprint?: unknown } | undefined;
+  const meta = get(metaR) as {
     courseTitle?: string;
     overview?: unknown;
     authors?: unknown;
     schedule?: unknown;
-  }>(metaR);
-  const vm = get<{ visualMap?: unknown }>(vmR)?.visualMap ?? null;
+  } | undefined;
+  const vm = (get(vmR) as { visualMap?: unknown } | undefined)?.visualMap ?? null;
 
   const merged = {
     courseTitle: meta?.courseTitle,
