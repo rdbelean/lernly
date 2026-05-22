@@ -118,6 +118,11 @@ export default async function PackDetailPage({
                   {pack.essayBlueprint.parts.length}-teiliger Blueprint
                 </span>
               )}
+              {pack.openQuestions && (
+                <span className="ln-mono-tag">
+                  {pack.openQuestions.questions.length} offene Fragen
+                </span>
+              )}
             </div>
           </div>
           <DeletePackButton id={data.id} />

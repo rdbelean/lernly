@@ -2000,6 +2000,12 @@ function ResultSection({ pack, onReset }: { pack: StudyPack; onReset: () => void
                     : `${pack.essayBlueprint.parts.length}-teiliger Blueprint`}
                 </span>
               )}
+              {pack.openQuestions && (
+                <span className="ln-mono-tag">
+                  {pack.openQuestions.questions.length}{" "}
+                  {isEn ? "open questions" : "offene Fragen"}
+                </span>
+              )}
             </div>
           </div>
           <button
