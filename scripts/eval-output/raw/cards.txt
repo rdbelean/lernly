@@ -1,0 +1,193 @@
+{
+  "flashcards": [
+    {
+      "id": "1",
+      "category": "Kapitel 1: Grundlagen & Motivation",
+      "question": "Was sind die 7 typischen Probleme, die ohne ein Datenbanksystem (DBS) auftreten?",
+      "answer": "<strong>Ohne DBS entstehen 7 klassische Datenverwaltungsprobleme</strong> — von Redundanz bis zu hohen Entwicklungskosten.<br>Stell dir vor, Amazon würde Bestelldaten in Excel-Dateien auf verschiedenen Servern speichern: Daten wären redundant und inkonsistent, verschiedene Abteilungen hätten verschiedene Formate, bei gleichzeitigem Zugriff (Mehrbenutzerbetrieb) entstünden Konflikte, bei Absturz gingen Daten verloren, Integritätsverletzungen wären unvermeidbar, Sicherheitslücken entstünden, und jede App bräuchte eigene teure Datenverwaltungslogik.<br><em>Eselsbrücke:</em> <strong>R-F-M-V-I-S-H</strong> — <strong>R</strong>edundanz, <strong>F</strong>ormate (verschieden), <strong>M</strong>ehrbenutzerbetrieb, <strong>V</strong>erlust, <strong>I</strong>ntegrität, <strong>S</strong>icherheit, <strong>H</strong>ohe Kosten. Merke: 'Richtig Fette Mengen Von Irrem Stress? Hilft nur ein DBS.'",
+      "difficulty": "medium"
+    },
+    {
+      "id": "2",
+      "category": "Kapitel 1: Grundlagen & Motivation",
+      "question": "Was sind die 6 Hauptgründe für den Einsatz eines Datenbanksystems — und was unterscheidet logische von physischer Datenunabhängigkeit?",
+      "answer": "<strong>Ein DBS bietet 6 zentrale Vorteile, wobei Datenunabhängigkeit das Kernprinzip ist.</strong><br>Die 6 Gründe: Datenunabhängigkeit, deklarative Anfragesprachen, Mehrbenutzersynchronisation, Fehlerbehandlung, Datenintegrität, Effizienz & Skalierbarkeit. Datenunabhängigkeit bedeutet: Änderungen einer Ebene beeinflussen Anwendungen nicht. <strong>Logische Datenunabhängigkeit</strong> = Schemaänderungen (z.B. neue Tabellenspalte bei Oracle) treffen keine App. <strong>Physische Datenunabhängigkeit</strong> = Speicheränderungen (z.B. neuer Index bei PostgreSQL) treffen keine App — wird in fast allen modernen DBS durchgesetzt.<br><em>Eselsbrücke:</em> <strong>D-D-M-F-I-E</strong> — 'Datenbanken Dürfen Mehrere Fehler Intensiv Eliminieren'. Logisch = Struktur, Physisch = Speicherung.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "3",
+      "category": "Kapitel 1: Grundlagen & Motivation",
+      "question": "Was ist der Unterschied zwischen einer deklarativen und einer prozeduralen Anfragesprache — und welche Kategorie ist SQL?",
+      "answer": "<strong>Deklarativ bedeutet: du sagst WAS du willst, nicht WIE die Datenbank es holt.</strong><br>SQL ist deklarativ: Du schreibst <em>SELECT Name FROM Student WHERE MatrNr = 1</em> — das DBMS (z.B. MySQL bei Facebook) entscheidet selbst, ob es einen Index nutzt, einen Full-Table-Scan macht usw. Eine prozedurale Sprache würde verlangen, dass du den genauen Suchweg programmierst — fehleranfälliger und aufwendiger. Die relationale Algebra ist prozeduraler orientiert und wird intern vom DBMS für Anfragepläne genutzt.<br><em>Eselsbrücke:</em> Deklarativ = Restaurant (du bestellst Pasta, der Koch entscheidet wie). Prozedural = selbst kochen (du bestimmst jeden Schritt).",
+      "difficulty": "easy"
+    },
+    {
+      "id": "4",
+      "category": "Kapitel 1: Grundlagen & Motivation",
+      "question": "Was sind die 3 Ebenen der Datenunabhängigkeit im ANSI/SPARC-Modell und welche Rolle spielen 'Sichten'?",
+      "answer": "<strong>Das Drei-Ebenen-Modell trennt Sicht, logische Ebene und physische Ebene — damit Änderungen unten oben nicht kaputt machen.</strong><br>1. <strong>Physische Ebene</strong>: Wie werden Daten gespeichert? (Dateien, Indexe, Speicherformat — z.B. wie PostgreSQL Daten auf der Festplatte ablegt). 2. <strong>Logische Ebene</strong>: Wie sind Daten strukturiert? (Tabellen, Relationen, Schema). 3. <strong>Sicht (View)</strong>: Wie sieht ein bestimmter Benutzer die Daten? (z.B. Personalabteilung bei SAP sieht nur Gehaltsdaten, nicht Kundendaten).<br><em>Eselsbrücke:</em> Von unten nach oben: <strong>P-L-S</strong> — 'Physisch Liegt Sichtbar'. Oder: Eisberg — physisch ist unter Wasser, logisch ist die Form, Sicht ist was der Passant sieht.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "5",
+      "category": "Kapitel 1: Grundlagen & Motivation",
+      "question": "Wie unterscheiden sich konzeptuelle von logischen Datenmodellen — und nenne je 2 Beispiele?",
+      "answer": "<strong>Konzeptuelle Modelle beschreiben die reale Welt (unabhängig vom DBMS), logische Modelle beschreiben die Datenbankstruktur (DBMS-nah).</strong><br>Konzeptuell: <strong>ER-Modell</strong> (Entity-Relationship) und <strong>UML</strong> — damit sprichst du mit dem Kunden über Studenten, Vorlesungen, Professoren, ohne über Tabellen nachzudenken. Logisch: <strong>Relationales Modell</strong> (SQL-Datenbanken wie MySQL), <strong>Objekt-orientiertes Modell</strong>, hierarchisches Modell, Netzwerkmodell, semistrukturiertes Modell, Graphstrukturiertes Modell. Der Entwurfsprozess läuft: Reale Welt → konzeptuell (ER) → logisch (relationales Schema) → physisch.<br><em>Eselsbrücke:</em> Konzeptuell = Architekt zeichnet Grundriss für den Kunden. Logisch = Bauplan für den Baumeister.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "6",
+      "category": "Kapitel 2: Datenbankentwurf & ER-Modell",
+      "question": "Was sind die 4 Phasen des Datenbankentwurfs — und was ist das Ergebnis jeder Phase?",
+      "answer": "<strong>Der Datenbankentwurf läuft in 4 Phasen: Anforderungsanalyse → konzeptueller Entwurf → Implementierungsentwurf → physischer Entwurf.</strong><br>Phase 1: <strong>Anforderungsanalyse</strong> → Anforderungsspezifikation (was soll das System können?). Phase 2: <strong>Konzeptueller Entwurf</strong> → ER-Schema (grafisches Modell der Daten). Phase 3: <strong>Implementierungsentwurf</strong> → logische Datenbankstruktur (z.B. relationales Schema). Phase 4: <strong>Physischer Entwurf</strong> → physische Datenbankstruktur (Indexe, Speicherlayout). Beeinflusst wird der physische Entwurf durch Hardware/BS-Charakteristika und DBMS-Charakteristika.<br><em>Eselsbrücke:</em> <strong>A-K-I-P</strong> — 'Alle Kluge IT-Profis' planen in dieser Reihenfolge.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "7",
+      "category": "Kapitel 2: Datenbankentwurf & ER-Modell",
+      "question": "Was sind die 5 grundlegenden Bausteine des ER-Modells — und wie werden sie grafisch dargestellt?",
+      "answer": "<strong>Das ER-Modell hat 5 Bausteine: Entitätentyp, Attribut, Schlüssel, Relationship und Rolle.</strong><br>Grafisch: <strong>Entitätentyp</strong> = Rechteck (z.B. □ Student). <strong>Attribut</strong> = Ellipse (z.B. ○ Name). <strong>Schlüssel</strong> = unterstrichenes Attribut in der Ellipse (z.B. ○ MatrNr). <strong>Relationship</strong> = Raute (z.B. ◇ besucht). <strong>Rolle</strong> = Beschriftung an der Kante (z.B. 'Vorgänger'/'Nachfolger' bei rekursiven Beziehungen wie setzt_voraus). Beispiel: Student ─── besucht ─── Vorlesung, wobei besucht eine N:M-Beziehung ist.<br><em>Eselsbrücke:</em> <strong>E-A-S-R-R</strong> — 'Echte Attribute Sind Rechteckige Rauten'. Formen merken: Enti<strong>tät</strong> = rec<strong>t</strong>angle, Attribu<strong>t</strong> = ellipse (oval), Rela<strong>t</strong>ionship = Rau<strong>t</strong>e.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "8",
+      "category": "Kapitel 2: Datenbankentwurf & ER-Modell",
+      "question": "Was sind die 4 Funktionalitätstypen (Kardinalitäten) im ER-Modell — und welche Konsistenzbedingungen erzwingen sie?",
+      "answer": "<strong>Die 4 Funktionalitäten 1:1, 1:N, N:1, N:M beschreiben, mit wie vielen Entitäten eine Entität eine Beziehung eingehen darf.</strong><br>1:1 = ein Student hat genau einen Studierendenausweis. 1:N = ein Professor hält mehrere Vorlesungen (Professor:Vorlesung). N:1 = umgekehrt. <strong>N:M</strong> = Studenten besuchen viele Vorlesungen, Vorlesungen werden von vielen Studenten besucht — die 'besucht'-Beziehung. Die Funktionalität erzwingt Constraints: bei der 'betreuen'-Beziehung (Professor × Student → Seminarthema) darf ein Student beim selben Professor nur ein Thema haben und ein Thema nur einmal bearbeiten.<br><em>Eselsbrücke:</em> N:M = viele-zu-viele = Netflix (viele User sehen viele Serien). 1:N = Chef zu Mitarbeitern. 1:1 = Person zu Personalausweis.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "9",
+      "category": "Kapitel 2: Datenbankentwurf & ER-Modell",
+      "question": "Was ist der Unterschied zwischen (min,max)-Notation und der einfachen 1/N-Funktionalitätsangabe im ER-Modell?",
+      "answer": "<strong>Die (min,max)-Notation ist präziser: sie gibt für jede Entität die minimale UND maximale Anzahl an Beziehungen an.</strong><br>Einfache Notation: 1:N sagt nur 'eine Seite kann viele haben'. (min,max)-Notation: (0,1) bedeutet 'mindestens 0, höchstens 1 Beziehung' — also optional-eins. (1,*) bedeutet 'mindestens 1, beliebig viele' — also Pflichtbeziehung. Beispiel bei UML ähnlich, aber <strong>Vorsicht!</strong>: UML-Multiplizitäten sind analog zur (min,max)-Angabe im ER, NICHT zur einfachen 1/N-Angabe — das ist eine klassische Klausurfalle!<br><em>Eselsbrücke:</em> (min,max) = SLA-Vertrag mit Minimum-Guarantee und Maximum-Cap. 1:N = grobe Schätzung ohne Garantie.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "10",
+      "category": "Kapitel 2: Datenbankentwurf & ER-Modell",
+      "question": "Was ist eine schwache Entität im ER-Modell — und wie wird sie ins relationale Modell übersetzt?",
+      "answer": "<strong>Eine schwache Entität kann nicht eigenständig existieren und braucht eine starke Entität zur eindeutigen Identifikation.</strong><br>Klassisches Beispiel: <strong>Zimmer</strong> ist eine schwache Entität von <strong>Gebäude</strong>. Zimmer 101 gibt es in jedem Gebäude — erst GebäudeNr + ZimmerNr zusammen identifizieren ein Zimmer eindeutig. Grafisch: doppelt umrandetes Rechteck (starke Entität mit doppelter Raute). Im relationalen Modell: <em>Gebäude(GebäudeNr, ...)</em> und <em>Zimmer(<strong>GebäudeNr, ZimmerNr</strong>, ...)</em> — der <strong>zusammengesetzte Schlüssel</strong> enthält den Schlüssel der starken Entität. Die Beziehung wird wie 1:N behandelt.<br><em>Eselsbrücke:</em> Schwache Entität = Kind, das den Nachnamen (Schlüssel) der Eltern übernimmt, um eindeutig identifizierbar zu sein.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "11",
+      "category": "Kapitel 2: Datenbankentwurf & ER-Modell",
+      "question": "Was sind die 3 weiterführenden Konzepte im ER-Modell — und wofür wird jeweils welches eingesetzt?",
+      "answer": "<strong>Die 3 erweiterten ER-Konzepte sind: schwache Entitäten, Generalisierung (is-a) und Aggregation (part-of).</strong><br><strong>Schwache Entitäten</strong>: für abhängige Objekte (Zimmer in Gebäude). <strong>Generalisierung (is-a)</strong>: wie Vererbung in OOP — Assistent und Professor erben Attribute von Angestellte (PersNr, Name). Ermöglicht Spezialisierung ohne Redundanz. <strong>Aggregation (part-of)</strong>: modelliert 'ist-Teil-von'-Beziehungen — z.B. Auto besteht aus Karosserie, Fahrgestell, Rädern. Beispiel aus der Praxis: bei SAP sind Buchungszeilen (schwach) Teil von Buchungsbelegen (stark), und Buchungsbelege sind aggregiert in Journalen.<br><em>Eselsbrücke:</em> <strong>S-G-A</strong> — 'Schwache Geister Aggregieren'. Generalisierung = Stammbaum nach oben. Aggregation = Lego-Teile zum Ganzen.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "12",
+      "category": "Kapitel 2: Datenbankentwurf & ER-Modell",
+      "question": "Was sind die 4 zentralen Entwurfsentscheidungen im ER-Modell — und was ist die 'Connection Trap'?",
+      "answer": "<strong>Die 4 Entwurfsentscheidungen: Entität vs. Attribut, Entität vs. Beziehung, binäre vs. ternäre Beziehung, Connection Trap vermeiden.</strong><br><strong>Entität vs. Attribut</strong>: Adresse als Attribut (einfach) vs. eigene Entität (flexibel, nötig wenn mehrere Adressen pro Kunde möglich). <strong>Entität vs. Beziehung</strong>: Wenn dieselben Entitäten mehrfach eine Beziehung eingehen sollen (z.B. mehrere Noten pro Prüfung), braucht man eine eigene Prüfungs-Entität. <strong>Ternäre Beziehung</strong>: nur wenn alle 3 Entitäten nötig sind (prüft: Professor × Student × Vorlesung). <strong>Connection Trap</strong>: redundante, zyklische Beziehungen — z.B. 'besucht Vorlesung' ist redundant, wenn 'besucht' und 'hält' schon den Zusammenhang ausdrücken.<br><em>Eselsbrücke:</em> Connection Trap = Doppelt gemoppelt. Wenn du eine Beziehung aus zwei anderen ableiten kannst → Connection Trap!",
+      "difficulty": "hard"
+    },
+    {
+      "id": "13",
+      "category": "Kapitel 2: Datenbankentwurf & ER-Modell",
+      "question": "Wie werden die 3 Schritte der ER-zu-Relational-Übersetzung durchgeführt — und welche Schlüsselregel gilt bei N:M vs. 1:N?",
+      "answer": "<strong>Die ER→Relational-Übersetzung läuft in 3 Schritten: Entitäten übersetzen → Beziehungen übersetzen → Schema vereinfachen.</strong><br>Schritt 1: Jede Entität wird Relation, Attribute bleiben, Schlüssel wird Primärschlüssel. Schritt 2: Jede Beziehung wird Relation mit Schlüsseln der beteiligten Entitäten. <strong>Schlüsselregel</strong>: N:M → Kombination beider Schlüssel. 1:N oder N:1 → Schlüssel der N-Seite. 1:1 → einer der beiden. Schritt 3: Relationen mit gleichem Schlüssel zusammenfassen — z.B. Vorlesung(Nr, Titel, Credits) + hält(Nr, PersNr) → <em>Vorlesung(Nr, Titel, Credits, ProfPersNr)</em>. ProfPersNr ist <strong>Fremdschlüssel</strong>.<br><em>Eselsbrücke:</em> Schritt 3: 'Gleicher Schlüssel = Hochzeit' — zwei Tabellen heiraten zu einer.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "14",
+      "category": "Kapitel 2: Datenbankentwurf & ER-Modell",
+      "question": "Welche 3 Strategien gibt es zur Übersetzung von Generalisierungen ins relationale Modell — und was ist das Problem jeder Strategie?",
+      "answer": "<strong>Generalisierungen haben keine direkte relationale Entsprechung — man wählt zwischen 3 Strategien mit je einem Problem.</strong><br>Beispiel: Angestellte is-a (Professor, Assistent). Strategie 1: <strong>Nur Obertyp</strong> — Angestellte(PersNr, Name, Fachgebiet, ZimmerNr) → Problem: <strong>NULL-Werte</strong> für nicht zutreffende Attribute. Strategie 2: <strong>Nur Untertypen</strong> — Professor(PersNr, Name, ZimmerNr) + Assistent(PersNr, Name, Fachgebiet) → Problem: Angestellte die weder Professor noch Assistent sind fallen raus. Strategie 3: <strong>Alle Typen</strong> — Angestellte(PersNr, Name) + Professor(PersNr, ZimmerNr) + Assistent(PersNr, Fachgebiet) → Problem: Information verteilt auf mehrere Relationen, Joins nötig.<br><em>Eselsbrücke:</em> <strong>O-U-A</strong> — Obertyp (NULLs), Untertypen (fehlende Instanzen), Alle (verteilte Info).",
+      "difficulty": "hard"
+    },
+    {
+      "id": "15",
+      "category": "Kapitel 3: Relationales Modell & Algebra",
+      "question": "Was sind die grundlegenden Definitionen des relationalen Modells — was ist eine Relation, ein Tupel, ein Attribut, eine Domäne, ein Schlüssel?",
+      "answer": "<strong>Das relationale Modell (entwickelt von E.F. Codd, Turing Award) speichert Daten in Relationen = Tabellen mit strengen mathematischen Eigenschaften.</strong><br><strong>Relation</strong> = Untermenge des kartesischen Produkts der Domänen: R ⊆ D1 × D2 × ... × Dn. <strong>Tupel</strong> = eine Zeile. <strong>Attribut</strong> = eine Spalte. <strong>Domäne</strong> = Wertebereich eines Attributs (z.B. DMatrNr = integer). <strong>Kardinalität</strong> = Anzahl der Tupel. <strong>Schlüssel</strong> = minimale Menge von Attributen, die ein Tupel eindeutig identifiziert. <strong>Primärschlüssel</strong> = wird unterstrichen dargestellt. Wichtig: Relationen sind <strong>Mengen</strong> — keine Duplikate, keine Reihenfolge!<br><em>Eselsbrücke:</em> Relation = Tabelle in Excel, aber mit Mathe-Regeln: keine Duplikate, keine leere Reihenfolge.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "16",
+      "category": "Kapitel 3: Relationales Modell & Algebra",
+      "question": "Was macht der Projektionsoperator π in der relationalen Algebra — und was passiert mit Duplikaten?",
+      "answer": "<strong>Die Projektion πA1,...,An(R) wählt bestimmte Spalten (Attribute) aus einer Relation aus — alle anderen werden gefiltert.</strong><br>Syntax: πName(Student) gibt nur die Name-Spalte aller Studenten zurück. Da das relationale Modell mengenorientiert ist: <strong>Duplikate werden automatisch eliminiert!</strong> Beispiel: Wenn 2 Studenten am gleichen Tag Geburtstag haben und du πGeburtstag(Student) ausführst, erscheint das Datum nur einmal. In SQL entspricht das SELECT DISTINCT. Bei Google's Indexdatenbank wäre eine Projektion: 'Gib mir nur die URLs, nicht alle Metadaten.'<br><em>Eselsbrücke:</em> Projektion = Kino-Projektor — wirft nur das auf die Leinwand, was du zeigen willst. π = Pi = 'Pick it' (Spalten auswählen).",
+      "difficulty": "easy"
+    },
+    {
+      "id": "17",
+      "category": "Kapitel 3: Relationales Modell & Algebra",
+      "question": "Was macht der Selektionsoperator σ in der relationalen Algebra — und welche Operatoren sind in Prädikaten erlaubt?",
+      "answer": "<strong>Die Selektion σp(R) wählt alle Zeilen (Tupel) aus, die das Prädikat p erfüllen — sie filtert Zeilen, nicht Spalten.</strong><br>Syntax: σMatrNr≤3 ∧ Geburtstag>1981-01-01(Student) gibt alle Studenten mit MatrNr ≤ 3 UND Geburtstag nach 1.1.1981 zurück. Erlaubte Vergleichsoperatoren: =, <, ≤, >, ≥. Logische Verknüpfungen: ∧ (AND), ∨ (OR), ¬ (NOT). In SQL entspricht das der WHERE-Klausel. Amazon nutzt intern Selektionen um z.B. alle Bestellungen eines bestimmten Kunden in einer bestimmten Zeitspanne zu finden.<br><em>Eselsbrücke:</em> σ (Sigma) = 'Select rows'. Selektion = Sieb (filtert Zeilen). Projektion = Schere (schneidet Spalten). Merke: σ filtert ZEILEN, π filtert SPALTEN.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "18",
+      "category": "Kapitel 3: Relationales Modell & Algebra",
+      "question": "Warum ist das Kreuzprodukt R1 × R2 in der Praxis problematisch — und wie löst der Join dieses Problem?",
+      "answer": "<strong>Das Kreuzprodukt kombiniert ALLE Tupel beider Relationen miteinander — die meisten Kombinationen sind sinnlos und müssen gefiltert werden.</strong><br>Vorlesung (4 Tupel) × Professor (2 Tupel) = 8 Tupel, aber nur 4 sind sinnvoll (jede Vorlesung mit IHREM Professor, nicht mit allen). Lösung: nachgeschaltete Selektion σProfPersNr=PersNr(Vorlesung × Professor). Da dies so häufig vorkommt, gibt es den <strong>Join-Operator</strong>: R1 ⋈R1.Ai=R2.Aj R2 = σAi=Aj(R1 × R2). <strong>Joins sind effizienter implementierbar</strong> als Kreuzprodukte — DBMS wie Oracle nutzt spezielle Join-Algorithmen (Hash-Join, Merge-Join).<br><em>Eselsbrücke:</em> Kreuzprodukt = Blind Date für alle mit allen. Join = Dating-App mit Filter.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "19",
+      "category": "Kapitel 3: Relationales Modell & Algebra",
+      "question": "Was sind die 3 Join-Typen Theta-Join, Equi-Join und natürlicher Join — und wie unterscheiden sie sich?",
+      "answer": "<strong>Die 3 Join-Typen unterscheiden sich im erlaubten Joinprädikat: Theta-Join ist allgemein, Equi-Join nur Gleichheit, natürlicher Join automatisch auf gleichnamige Attribute.</strong><br><strong>Theta-Join (θ-Join)</strong>: beliebige Vergleichsoperatoren erlaubt (=, ≠, <, ≤, >, ≥). Beispiel: Mitarbeiter ⋈Gehalt>Mindestgehalt Gehaltsklasse. <strong>Equi-Join</strong>: nur Gleichheit (=). Häufigster Fall. <strong>Natürlicher Join</strong>: spezieller Equi-Join, vergleicht automatisch alle gleichnamigen Attribute und projiziert redundante Spalten weg. Voraussetzung: Attributnamen müssen angepasst sein (z.B. via ρ-Umbenennung). Bei SQL entspricht das JOIN ... ON vs. NATURAL JOIN.<br><em>Eselsbrücke:</em> <strong>T-E-N</strong> — 'Theta Erlaubt Nichts zu verbieten' (allgemein), Equi = Equal (nur =), Natural = Namensvetter (gleiche Namen).",
+      "difficulty": "medium"
+    },
+    {
+      "id": "20",
+      "category": "Kapitel 3: Relationales Modell & Algebra",
+      "question": "Was sind die 4 äußeren Join-Varianten (Outer Joins) — und wann verliert ein Tupel seinen Joinpartner?",
+      "answer": "<strong>Beim normalen Join gehen Tupel ohne Partner verloren — äußere Joins verhindern das durch NULL-Auffüllung.</strong><br>Beispiel: L hat c2, R kennt c2 nicht → beim normalen Join fällt das Tupel mit c2 weg. Die 4 Varianten: <strong>Vollständiger äußerer Join (⟗)</strong>: Tupel beider Seiten bleiben erhalten, fehlende Werte werden mit NULL gefüllt. <strong>Linker äußerer Join (⟕)</strong>: nur Tupel der linken Relation bleiben immer erhalten. <strong>Rechter äußerer Join (⟖)</strong>: nur Tupel der rechten Relation. <strong>Semi-Join (⋉ oder ⋊)</strong>: behält nur Tupel einer Seite, die einen Partner haben (ohne NULL). Bei Amazon: LEFT JOIN um alle Kunden anzuzeigen, auch die ohne Bestellungen.<br><em>Eselsbrücke:</em> LEFT = linke Seite ist der 'Chef' — bleibt immer. RIGHT = rechte Seite ist Chef. FULL = beide sind Chefs.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "21",
+      "category": "Kapitel 3: Relationales Modell & Algebra",
+      "question": "Was ist der Unterschied zwischen Semi-Join und Anti-Join — und wann verwendet man welchen?",
+      "answer": "<strong>Semi-Join gibt Tupel zurück, die einen Joinpartner HABEN — Anti-Join gibt Tupel zurück, die KEINEN Partner haben.</strong><br><strong>Semi-Join (⋉)</strong>: L ⋉ R — gibt alle Tupel aus L zurück, für die es mindestens ein passendes Tupel in R gibt (ohne Attribute von R). Beispiel: Alle Studenten, die mindestens eine Vorlesung besuchen. <strong>Anti-Join</strong>: L ▷ R — gibt alle Tupel aus L zurück, für die es KEIN passendes Tupel in R gibt. Beispiel: Alle Studenten, die KEINE Vorlesung besuchen. In SQL: Semi-Join ≈ WHERE EXISTS, Anti-Join ≈ WHERE NOT EXISTS. Netflix nutzt Anti-Joins um Nutzer zu finden, die eine Serie noch nicht gesehen haben (für Empfehlungen).<br><em>Eselsbrücke:</em> Semi = 'hat einen Kumpel'. Anti = 'der Einzelgänger ohne Kumpel'.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "22",
+      "category": "Kapitel 3: Relationales Modell & Algebra",
+      "question": "Was sind die 3 Mengenoperationen in der relationalen Algebra — und welche Voraussetzung müssen die Relationen erfüllen?",
+      "answer": "<strong>Die 3 Mengenoperationen Vereinigung (∪), Schnitt (∩) und Differenz (\\) setzen voraus, dass beide Relationen das gleiche Schema haben.</strong><br>Voraussetzung: gleiche Anzahl Attribute UND sich entsprechende Attribute haben gleichen Typ (<strong>Vereinigungsverträglichkeit</strong>). Beispiele mit Prof1(PersNr, Name) und Prof2(PersNr, Name): <strong>Vereinigung</strong> (∪): alle Professoren aus beiden Listen (Duplikate eliminiert). <strong>Schnitt</strong> (∩): nur Professoren die auf BEIDEN Listen stehen. <strong>Differenz</strong> (\\): Professoren die auf Liste 1 aber NICHT auf Liste 2 stehen. Praxisbeispiel: eBay vereinigt Käuferlisten aus verschiedenen Regionen mit ∪.<br><em>Eselsbrücke:</em> ∪ = Union (alles zusammen). ∩ = Intersection (Überschneidung). \\ = Differenz (was übrig bleibt wenn man abzieht).",
+      "difficulty": "easy"
+    },
+    {
+      "id": "23",
+      "category": "Kapitel 3: Relationales Modell & Algebra",
+      "question": "Wofür wird die relationale Division (÷) eingesetzt — und wie lautet die informelle Definition?",
+      "answer": "<strong>Die relationale Division R1 ÷ R2 wird für allquantifizierte Anfragen eingesetzt: 'Finde alle X, die in Beziehung zu ALLEN Y stehen.'</strong><br>Informell: t ∈ R1 ÷ R2, falls für jedes v ∈ R2 ein passendes Tupel in R1 existiert. Voraussetzung: R2 ⊆ R1 (Attributmenge). Klassisches Beispiel: besucht ÷ Vorl3 gibt alle MatrNr von Studenten, die ALLE 3 Vorlesungen in Liste Vorl3 besucht haben. Formale Definition: R1 ÷ R2 = π(R1\R2)(R1) \\ π(R1\R2)((π(R1\R2)(R1) × R2) \\ R1). In SQL entspricht das einem doppelten NOT EXISTS.<br><em>Eselsbrücke:</em> Division = 'Der Allrounder-Test'. Wer hat ALLES bestanden? Wie bei Amazon: Welche Kunden haben ALLE Produkte einer Kategorie gekauft?",
+      "difficulty": "hard"
+    },
+    {
+      "id": "24",
+      "category": "Kapitel 3: Relationales Modell & Algebra",
+      "question": "Was ist der relationale Tupelkalkül — und wie unterscheidet er sich von der relationalen Algebra?",
+      "answer": "<strong>Der relationale Tupelkalkül ist eine rein deklarative Sprache: man beschreibt WAS das Ergebnis sein soll, nicht WIE es berechnet wird.</strong><br>Form: {t | P(t)} — 'alle Tupel t, für die Prädikat P gilt'. Beispiel: Alle C4-Professoren: {p | p ∈ Professoren ∧ p.Rang = 'C4'}. Die relationale Algebra ist prozeduraler (gibt den Rechenweg vor). <strong>Wichtig für die Klausur</strong>: relationale Algebra, sicherer Tupelkalkül und sicherer Domänenkalkül sind gleich ausdrucksstark (gleich mächtig) — dies ist ein fundamentales Resultat. Der Tupelkalkül ist die theoretische Grundlage für SQL.<br><em>Eselsbrücke:</em> Kalkül = 'Was will ich?' (deklarativ wie SQL). Algebra = 'Wie rechne ich?' (prozedural wie ein Programm). Beide kommen zum gleichen Ergebnis.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "25",
+      "category": "Kapitel 3: Relationales Modell & Algebra",
+      "question": "Was ist das Sicherheitsproblem im Relationenkalkül — und wann ist ein Ausdruck 'sicher'?",
+      "answer": "<strong>Ein Kalküausdruck ist unsicher, wenn sein Ergebnis unendlich viele Tupel enthalten kann.</strong><br>Unsicheres Beispiel: {n | ¬(n ∈ Professoren)} — das wären alle Personen/Dinge, die KEINE Professoren sind → unendliche Menge! Sicherheitsbedingung: Das Ergebnis muss eine Teilmenge der <strong>Domäne der Formel</strong> sein. Die Domäne enthält nur: (1) alle Konstanten in der Formel, (2) alle Attributwerte der referenzierten Relationen. Für den Domänenkalkül gelten analoge Regeln für ∃- und ∀-Teilformeln. Fazit: Alle drei Sprachen (Algebra, Tupelkalkül, Domänenkalkül) — jeweils eingeschränkt auf sichere Ausdrücke — sind gleich mächtig.<br><em>Eselsbrücke:</em> Unsicher = 'Negation ohne Begrenzung' = Unendlichkeit. Sicher = Ergebnis kommt aus bekannten, endlichen Daten.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "26",
+      "category": "Kapitel 3: Relationales Modell & Algebra",
+      "question": "Was ist der Umbenennungsoperator ρ in der relationalen Algebra — und wann ist er zwingend nötig?",
+      "answer": "<strong>Der Umbenennungsoperator ρ benennt Attribute um und ist zwingend nötig, wenn zwei Relationen gleich benannte Attribute haben und gejoint werden sollen.</strong><br>Problem: Assistent(PersNr, Name, ...) ⋈ Professor(PersNr, Name, ...) — welches PersNr und Name ist welches? Lösung: ρAPersNr←PersNr, AName←Name(Assistent) ⋈Boss=PPersNr ρPPersNr←PersNr, PName←Name(Professor). Praxisrelevanz: Bei SQL löst man das mit Tabellen-Aliassen (AS a, AS p) und a.Name vs. p.Name. Bei Selbst-Joins (eine Tabelle mit sich selbst joinen, z.B. Vorlesung ⋈ setzt_voraus Vorlesung) ist ρ ebenfalls zwingend.<br><em>Eselsbrücke:</em> ρ (Rho) = 'Rename'. Wie bei Namensänderung nach der Heirat — gleiche Person, neuer Name für Eindeutigkeit.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "27",
+      "category": "Kapitel 2: Datenbankentwurf & ER-Modell",
+      "question": "Was ist Schemakonsolidierung und warum ist sie notwendig?",
+      "answer": "<strong>Schemakonsolidierung fusioniert mehrere Teilschemata verschiedener Entwickler/Abteilungen zu einem konsistenten Gesamtschema.</strong><br>In der Praxis modellieren verschiedene Teams dieselbe Anwendung aus unterschiedlichen Blickwinkeln: Das Buchhaltungsteam sieht 'Kunde' anders als das Marketingteam. Ergebnis: inkompatible Teilschemata S1, S2, S3... Schemakonsolidierung führt diese iterativ zusammen: S1+S2 → Zwischenschema → +S3 → Gesamtschema. Konflikte entstehen z.B. durch Namenskonflikte (Student vs. Studierender), Strukturkonflikte (Adresse als Attribut vs. Entität), Typkonflikte. Bei SAP-Einführungen in Großkonzernen ist Schemakonsolidierung einer der aufwendigsten Schritte.<br><em>Eselsbrücke:</em> Schemakonsolidierung = Firmen-Merger auf Datenbankebene. Jede Abteilung hat ihre eigenen 'Bücher', am Ende muss ein gemeinsames Hauptbuch entstehen.",
+      "difficulty": "medium"
+    }
+  ]
+}
