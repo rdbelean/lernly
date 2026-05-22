@@ -25,6 +25,7 @@ import { StudyPackSchema, type Flashcard, type ExamType } from "../src/lib/schem
 import { activeTasksFor, type GenTaskKey } from "../src/lib/examTasks";
 import { shouldUseVision } from "../src/lib/pdfVision";
 import { parseModelJson } from "../src/lib/parseModelJson";
+import { MODEL_FOR, SONNET, HAIKU } from "../src/lib/taskModels";
 import { config } from "dotenv";
 
 // Next.js auto-loads .env.local; a plain script does not. Load it explicitly,
@@ -33,7 +34,6 @@ config({
   path: resolve(dirname(fileURLToPath(import.meta.url)), "..", ".env.local"),
 });
 
-const MODEL = "claude-sonnet-4-6";
 const PDF_CHAR_BUDGET = 280_000;
 
 const VISION_CHARS_PER_PAGE = 800;
@@ -42,6 +42,9 @@ const VISION_MAX_TOTAL_PAGES = 150;
 
 // Sonnet 4.6 list price ($/1M tokens) — for a rough cost estimate only.
 const PRICE = { in: 3, cacheWrite: 3.75, cacheRead: 0.3, out: 15 };
+
+// --all-sonnet forces every task onto Sonnet (for A/B vs the tiered MODEL_FOR).
+let allSonnet = false;
 
 const ANALYSIS_HEADER =
   "=== ANALYSE — WAS IST PRÜFUNGSRELEVANT (nutze dies zum Priorisieren) ===\n";
@@ -98,7 +101,7 @@ async function runTask(
   const t0 = Date.now();
   const { instruction, maxTokens } = TASKS[key];
   const stream = client.messages.stream({
-    model: MODEL,
+    model: allSonnet ? SONNET : MODEL_FOR[key],
     max_tokens: maxTokens,
     thinking: { type: "disabled" },
     system: BASE_SYSTEM_PROMPT,
@@ -178,7 +181,7 @@ async function runAnalysis(
   materialBlocks: Anthropic.Messages.ContentBlockParam[],
 ): Promise<string> {
   const stream = client.messages.stream({
-    model: MODEL,
+    model: allSonnet ? SONNET : HAIKU,
     max_tokens: 4000,
     thinking: { type: "disabled" },
     system: BASE_SYSTEM_PROMPT,
@@ -203,6 +206,7 @@ async function main() {
     ? new Set(onlyArg.split("=")[1].split(",") as TaskKey[])
     : null;
   const twoPass = args.includes("--two-pass");
+  allSonnet = args.includes("--all-sonnet");
   const positional = args.filter((a) => !a.startsWith("--"));
   const examType = positional[0] ?? "multiple_choice";
   const pdfPaths = positional.slice(1);
