@@ -8,6 +8,7 @@ import OverviewView from "./OverviewView";
 import ExamSimulator from "./ExamSimulator";
 import VisualMapView from "./VisualMapView";
 import { track } from "@/lib/analytics";
+import OpenQuestionsView from "./OpenQuestionsView";
 
 type Language = "en" | "de";
 type Tab =
@@ -15,6 +16,7 @@ type Tab =
   | "simulator"
   | "flashcards"
   | "blueprint"
+  | "openQuestions"
   | "overview";
 
 type TabDef = { id: Tab; emoji: string; de: string; en: string };
@@ -24,6 +26,7 @@ const ALL_TABS: TabDef[] = [
   { id: "simulator", emoji: "🎯", de: "Übungsklausur", en: "Exam Trainer" },
   { id: "flashcards", emoji: "🃏", de: "Karteikarten", en: "Flashcards" },
   { id: "blueprint", emoji: "📝", de: "Blueprint", en: "Blueprint" },
+  { id: "openQuestions", emoji: "✍️", de: "Offene Fragen", en: "Open Questions" },
   { id: "overview", emoji: "🗺", de: "Übersicht", en: "Overview" },
 ];
 
@@ -35,25 +38,35 @@ export default function PackView({
   language?: Language;
 }) {
   const tabs = useMemo<TabDef[]>(() => {
-    // Visual Map tab only renders if the pack actually contains one — older
-    // packs without the new section get the legacy 4-tab layout.
-    if (pack.visualMap && pack.visualMap.blocks.length > 0) return ALL_TABS;
-    return ALL_TABS.filter((t) => t.id !== "visualMap");
-  }, [pack.visualMap]);
+    const has: Record<Tab, boolean> = {
+      visualMap: Boolean(pack.visualMap && pack.visualMap.blocks.length > 0),
+      simulator: Boolean(pack.simulator && pack.simulator.questions.length > 0),
+      flashcards: pack.flashcards.length > 0,
+      blueprint: Boolean(pack.essayBlueprint && pack.essayBlueprint.parts.length > 0),
+      openQuestions: Boolean(
+        pack.openQuestions && pack.openQuestions.questions.length > 0,
+      ),
+      overview: pack.overview.topics.length > 0,
+    };
+    return ALL_TABS.filter((t) => has[t.id]);
+  }, [pack]);
 
-  const [tab, setTab] = useState<Tab>(tabs[0]?.id ?? "simulator");
+  const TRAINER_TABS: Tab[] = ["simulator", "openQuestions", "blueprint"];
+  const defaultTab =
+    tabs.find((t) => TRAINER_TABS.includes(t.id))?.id ?? tabs[0]?.id ?? "overview";
+  const [tab, setTab] = useState<Tab>(defaultTab);
   const isEn = language === "en";
 
   useEffect(() => {
     track("pack_opened", {
       cards: pack.flashcards.length,
-      quiz: pack.simulator.questions.length,
+      quiz: pack.simulator?.questions.length ?? 0,
       exam_type: pack.examType,
       has_visual_map: Boolean(pack.visualMap),
     });
   }, [
     pack.flashcards.length,
-    pack.simulator.questions.length,
+    pack.simulator?.questions.length,
     pack.examType,
     pack.visualMap,
   ]);
@@ -85,18 +98,18 @@ export default function PackView({
         {tab === "visualMap" && pack.visualMap && (
           <VisualMapView map={pack.visualMap} />
         )}
-        {tab === "simulator" && (
-          <ExamSimulator
-            questions={pack.simulator.questions}
-            language={language}
-          />
+        {tab === "simulator" && pack.simulator && (
+          <ExamSimulator questions={pack.simulator.questions} language={language} />
         )}
         {tab === "flashcards" && (
           <FlashcardDeck cards={pack.flashcards} language={language} />
         )}
-        {tab === "blueprint" && (
-          <EssayBlueprintView
-            blueprint={pack.essayBlueprint}
+        {tab === "blueprint" && pack.essayBlueprint && (
+          <EssayBlueprintView blueprint={pack.essayBlueprint} language={language} />
+        )}
+        {tab === "openQuestions" && pack.openQuestions && (
+          <OpenQuestionsView
+            questions={pack.openQuestions.questions}
             language={language}
           />
         )}

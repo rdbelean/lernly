@@ -108,12 +108,16 @@ export default async function PackDetailPage({
                 )}{" "}
                 Konzepte
               </span>
-              <span className="ln-mono-tag">
-                {pack.simulator.questions.length} Quiz
-              </span>
-              <span className="ln-mono-tag">
-                {pack.essayBlueprint.parts.length}-teiliger Blueprint
-              </span>
+              {pack.simulator && (
+                <span className="ln-mono-tag">
+                  {pack.simulator.questions.length} Quiz
+                </span>
+              )}
+              {pack.essayBlueprint && (
+                <span className="ln-mono-tag">
+                  {pack.essayBlueprint.parts.length}-teiliger Blueprint
+                </span>
+              )}
             </div>
           </div>
           <DeletePackButton id={data.id} />

@@ -22,7 +22,7 @@ export default function EssayBlueprintView({
   blueprint,
   language = "de",
 }: {
-  blueprint: StudyPack["essayBlueprint"];
+  blueprint: NonNullable<StudyPack["essayBlueprint"]>;
   language?: Language;
 }) {
   const isEn = language === "en";
