@@ -32,7 +32,10 @@ import {
 } from "@/lib/retry";
 
 export const runtime = "nodejs";
-export const maxDuration = 300;
+// 800s is the Vercel Fluid Compute max — needed because large image-heavy PDFs
+// sent as vision document blocks take far longer than text-only generation.
+// Requires Fluid Compute enabled on the Vercel project.
+export const maxDuration = 800;
 
 const defaultClient = new Anthropic();
 
@@ -64,7 +67,7 @@ const VISION_MAX_TOTAL_PAGES = 150; // cost cap on vision pages per generation
 
 const MODEL = "claude-sonnet-4-6";
 
-const GENERATION_BUDGET_MS = 280_000; // 20s buffer under maxDuration (300)
+const GENERATION_BUDGET_MS = 780_000; // 20s buffer under maxDuration (800)
 const PER_ATTEMPT_TIMEOUT_MS = 180_000;
 const MAX_ATTEMPTS = 3;
 const MIN_ATTEMPT_MS = 20_000;
