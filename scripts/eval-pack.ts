@@ -52,6 +52,7 @@ const EXAM_LABEL: Record<string, string> = {
   multiple_choice: "Multiple-Choice-Prüfung",
   oral: "Mündliche Prüfung",
   open_book: "Open-Book / Take-Home",
+  open_questions: "Klausur mit offenen Fragen (Freitext-Antworten)",
 };
 
 type Usage = {
