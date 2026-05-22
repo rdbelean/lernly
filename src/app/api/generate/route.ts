@@ -82,7 +82,7 @@ const TASKS: Record<TaskKey, { instruction: string; maxTokens: number }> = {
   simulator: { instruction: TASK_SIMULATOR, maxTokens: 12000 },
   blueprint: { instruction: TASK_BLUEPRINT, maxTokens: 4000 },
   meta: { instruction: TASK_META, maxTokens: 12000 },
-  visualMap: { instruction: TASK_VISUAL_MAP, maxTokens: 10000 },
+  visualMap: { instruction: TASK_VISUAL_MAP, maxTokens: 16000 },
   openQuestions: { instruction: TASK_OPEN_QUESTIONS, maxTokens: 12000 },
 };
 
