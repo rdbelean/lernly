@@ -1611,6 +1611,17 @@
   font-family: ui-monospace, monospace;
 }
 
+/* Inline code in generated pack content (schema/SQL snippets, algebra ops). */
+.ln-glass-card code {
+  font-family: var(--font-mono, ui-monospace, "SF Mono", Menlo, monospace);
+  font-size: 0.88em;
+  background: rgba(34, 211, 238, 0.1);
+  border: 1px solid rgba(34, 211, 238, 0.2);
+  border-radius: 5px;
+  padding: 1px 5px;
+  color: rgb(186, 230, 253);
+}
+
 .modal .text-link {
   background: transparent;
   border: none;
