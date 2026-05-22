@@ -87,11 +87,10 @@ async function extractPdfText(
   buffer: Buffer,
   filename: string,
 ): Promise<{ text: string; pages: number }> {
-  const uint8 = new Uint8Array(
-    buffer.buffer,
-    buffer.byteOffset,
-    buffer.byteLength,
-  );
+  // Copy the bytes: pdf.js detaches the ArrayBuffer it's handed, which would
+  // neuter the caller's `buffer` (breaking a later buffer.toString("base64")
+  // for the vision document block). A copy keeps the original intact.
+  const uint8 = new Uint8Array(buffer);
   const pdf = await getDocumentProxy(uint8);
   const { totalPages, text } = await extractText(pdf, { mergePages: true });
   const merged = Array.isArray(text) ? text.join("\n\n") : text;

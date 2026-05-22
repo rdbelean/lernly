@@ -71,7 +71,9 @@ type Usage = {
 async function extractPdfText(
   buffer: Buffer,
 ): Promise<{ text: string; pages: number }> {
-  const u8 = new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
+  // Copy: pdf.js detaches the ArrayBuffer, which would empty the caller's buffer
+  // before we can base64 it for a vision document block.
+  const u8 = new Uint8Array(buffer);
   const pdf = await getDocumentProxy(u8);
   const { totalPages, text } = await extractText(pdf, { mergePages: true });
   const merged = Array.isArray(text) ? text.join("\n\n") : text;
