@@ -27,7 +27,7 @@ REGELN
 - Jede FRAGE ist SPEZIFISCH und PRÜFUNGSREIF: "Was sind die 4 Building Blocks of Competitive Advantage?" — NICHT "Erkläre Wettbewerbsvorteil"
 - Jede ANTWORT ist strukturiert in genau dieser Reihenfolge:
   1. <strong>Kernaussage in einem Satz</strong> (Schlüsselbegriffe gefettet)
-  2. <br>Erklärung mit einem konkreten, zur Domäne passenden Anwendungsbeispiel (Firma, System, Fall, Experiment — je nach Fach)
+  2. <br>Erklärung mit einem KONKRETEN, benannten Beispiel — PFLICHT in JEDER Antwort, niemals abstrakt (echtes System/Firma/Fall/Experiment, z.B. PostgreSQL, Amazon, eine konkrete Studenten-DB — je nach Fach). Eine Karte ohne konkretes Beispiel ist ein Fehler.
   3. <br><em>Eselsbrücke:</em> wenn eine Liste >3 Elemente hat ODER der Begriff verwechselbar ist, baue eine Merkhilfe (Akronym, Analogie, "B goes Back"-Trick)
 - Autoren/Quellen in der Antwort nennen wo relevant (z.B. "<strong>Barney (1991)</strong>")
 - Difficulty-Verteilung über alle Karten: ~40% easy, ~40% medium, ~20% hard — sei ehrlich, nicht alles mittel
