@@ -285,10 +285,24 @@ function ComparisonFramework({ fw }: { fw: ComparisonFw }) {
                   : "• "}
               {col.side.label}
             </div>
-            <ul className="space-y-1 text-[13px] leading-relaxed">
+            <ul className="space-y-1.5 text-[13px] leading-relaxed">
               {col.side.items.map((item, i) => (
-                <li key={i} style={{ color: "rgba(255,255,255,0.78)" }}>
-                  {item}
+                <li key={i} className="flex items-start gap-2">
+                  <span
+                    aria-hidden
+                    className="mt-[2px] shrink-0 text-[12px]"
+                    style={{ color: col.style.text }}
+                  >
+                    {col.side.tone === "pro"
+                      ? "✓"
+                      : col.side.tone === "con"
+                        ? "✗"
+                        : "•"}
+                  </span>
+                  <span
+                    style={{ color: "rgba(255,255,255,0.85)" }}
+                    dangerouslySetInnerHTML={{ __html: toSafeInlineHtml(item) }}
+                  />
                 </li>
               ))}
             </ul>

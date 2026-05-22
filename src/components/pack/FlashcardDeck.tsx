@@ -269,7 +269,7 @@ export default function FlashcardDeck({
           >
             <motion.div
               animate={{ rotateY: flipped ? 180 : 0 }}
-              transition={{ type: "spring", stiffness: 260, damping: 22 }}
+              transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
               className="relative h-full w-full"
               style={{ transformStyle: "preserve-3d", minHeight: "260px" }}
             >
