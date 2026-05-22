@@ -8,7 +8,9 @@ import {
   TASK_BLUEPRINT,
   TASK_META,
   TASK_VISUAL_MAP,
+  TASK_OPEN_QUESTIONS,
 } from "@/lib/prompts";
+import { activeTasksFor, type GenTaskKey } from "@/lib/examTasks";
 import {
   StudyPackSchema,
   type ExamType,
@@ -41,6 +43,7 @@ const EXAM_LABEL: Record<ExamType, string> = {
   multiple_choice: "Multiple-Choice-Prüfung",
   oral: "Mündliche Prüfung",
   open_book: "Open-Book / Take-Home",
+  open_questions: "Klausur mit offenen Fragen (Freitext-Antworten)",
 };
 
 const ALLOWED_FILE = /\.(pdf|txt|md|markdown)$/i;
@@ -51,12 +54,7 @@ const MODEL = "claude-sonnet-4-6";
 
 const PER_TASK_TIMEOUT_MS = 180_000;
 
-type TaskKey =
-  | "cards"
-  | "simulator"
-  | "blueprint"
-  | "meta"
-  | "visualMap";
+type TaskKey = GenTaskKey;
 
 const TASKS: Record<TaskKey, { instruction: string; maxTokens: number }> = {
   cards: { instruction: TASK_CARDS, maxTokens: 14000 },
@@ -64,6 +62,7 @@ const TASKS: Record<TaskKey, { instruction: string; maxTokens: number }> = {
   blueprint: { instruction: TASK_BLUEPRINT, maxTokens: 4000 },
   meta: { instruction: TASK_META, maxTokens: 12000 },
   visualMap: { instruction: TASK_VISUAL_MAP, maxTokens: 10000 },
+  openQuestions: { instruction: TASK_OPEN_QUESTIONS, maxTokens: 12000 },
 };
 
 async function extractPdfText(
@@ -533,50 +532,65 @@ export async function POST(request: Request) {
       user?.id ?? "anon",
     );
 
-    // Warm the prompt cache with the cheapest task (blueprint, ~0.6k out) so the
-    // other four read the cached material instead of each re-writing it.
-    const blueprintResult = (await runTask(
-      client,
-      "blueprint",
-      materialText,
-    )) as { essayBlueprint?: unknown };
+    // examType decides what we generate: always the core (cards, meta, visualMap)
+    // plus exactly one matching trainer.
+    const active = activeTasksFor(examType);
+    // visualMap is best-effort; the rest are required. Warm the cache with the
+    // cheapest required task, then run the others in parallel reading the cache.
+    const required = active.filter((k) => k !== "visualMap");
+    const warmKey = [...required].sort(
+      (a, b) => TASKS[a].maxTokens - TASKS[b].maxTokens,
+    )[0];
 
-    const [cardsResult, simulatorResult, metaResult, visualMapSettled] =
-      await Promise.all([
-        runTask(client, "cards", materialText) as Promise<{
-          flashcards?: Flashcard[];
-        }>,
-        runTask(client, "simulator", materialText) as Promise<{
-          simulator?: unknown;
-        }>,
-        runTask(client, "meta", materialText) as Promise<{
+    const runOne = (k: GenTaskKey): Promise<unknown> =>
+      k === "visualMap"
+        ? runTask(client, k, materialText)
+            .then((r) => (r as { visualMap?: unknown }).visualMap ?? null)
+            .catch((e) => {
+              console.error("[/api/generate] visualMap soft-failed", e);
+              return null;
+            })
+        : runTask(client, k, materialText);
+
+    const warmResult = await runOne(warmKey);
+    const restKeys = active.filter((k) => k !== warmKey);
+    const restResults = await Promise.all(restKeys.map(runOne));
+
+    const byKey: Partial<Record<GenTaskKey, unknown>> = { [warmKey]: warmResult };
+    restKeys.forEach((k, i) => {
+      byKey[k] = restResults[i];
+    });
+
+    const cards =
+      (byKey.cards as { flashcards?: Flashcard[] } | undefined)?.flashcards ?? [];
+    const meta = byKey.meta as
+      | {
           courseTitle?: string;
           overview?: unknown;
           authors?: unknown;
           schedule?: unknown;
-        }>,
-        // VisualMap stays best-effort: if Claude fumbles it, we still ship the rest.
-        runTask(client, "visualMap", materialText)
-          .then((r) => (r as { visualMap?: unknown }).visualMap ?? null)
-          .catch((e) => {
-            console.error("[/api/generate] visualMap soft-failed", e);
-            return null;
-          }),
-      ]);
-
-    const cards = cardsResult?.flashcards ?? [];
+        }
+      | undefined;
+    const visualMap = (byKey.visualMap as unknown) ?? null;
 
     const merged = {
-      courseTitle: metaResult?.courseTitle,
+      courseTitle: meta?.courseTitle,
       examType,
       flashcards: cards,
-      essayBlueprint: blueprintResult?.essayBlueprint,
-      simulator: simulatorResult?.simulator,
-      overview: metaResult?.overview,
-      authors: metaResult?.authors,
-      schedule: metaResult?.schedule,
+      overview: meta?.overview,
+      authors: meta?.authors,
+      schedule: meta?.schedule,
       quizletExport: deriveQuizletExport(cards),
-      ...(visualMapSettled ? { visualMap: visualMapSettled } : {}),
+      ...(visualMap ? { visualMap } : {}),
+      ...(byKey.blueprint
+        ? { essayBlueprint: (byKey.blueprint as { essayBlueprint?: unknown }).essayBlueprint }
+        : {}),
+      ...(byKey.simulator
+        ? { simulator: (byKey.simulator as { simulator?: unknown }).simulator }
+        : {}),
+      ...(byKey.openQuestions
+        ? { openQuestions: (byKey.openQuestions as { openQuestions?: unknown }).openQuestions }
+        : {}),
     };
 
     const parsed = StudyPackSchema.safeParse(merged);
@@ -607,7 +621,7 @@ export async function POST(request: Request) {
 
     const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
     console.log(
-      `[/api/generate] done in ${elapsed}s — ${parsed.data.flashcards.length} cards, ${parsed.data.simulator.questions.length} quiz`,
+      `[/api/generate] done in ${elapsed}s — ${parsed.data.flashcards.length} cards, ${parsed.data.simulator?.questions.length ?? 0} quiz, ${parsed.data.openQuestions?.questions.length ?? 0} open-q`,
     );
 
     let savedId: string | null = null;
