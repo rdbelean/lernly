@@ -1,0 +1,1049 @@
+{
+  "courseTitle": "Datenbanken — Kapitel 3: Das Relationale Modell (Relationale Algebra & Relationenkalkül)",
+  "examType": "open_book",
+  "flashcards": [
+    {
+      "id": "1",
+      "category": "Grundbegriffe des Relationalen Modells",
+      "question": "Was sind die zwei Bestandteile einer Relation R und was beschreibt jeder davon?",
+      "answer": "<strong>Eine Relation besteht aus Schema (Struktur) und Instanz (Inhalt).</strong><br>Das <strong>Schema R</strong> legt Name, Attributnamen und Datentypen fest — es ändert sich selten. Die <strong>Instanz R</strong> ist die aktuelle Tabelle mit konkreten Tupeln, z.B. Student(MatrNr:integer, Name:string, Geburtstag:date) als Schema, und die Zeilen mit Schmidt, Müller, Klein als Instanz.<br><em>Eselsbrücke:</em> Schema = Bauplan eines Hauses, Instanz = das fertige Haus mit Bewohnern.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "2",
+      "category": "Grundbegriffe des Relationalen Modells",
+      "question": "Wie ist eine Relation formal (mathematisch) definiert und was bedeutet das konkret?",
+      "answer": "<strong>Eine Relation (Instanz) ist eine <em>Untermenge des kartesischen Produkts</em> ihrer Domänen: R ⊆ D1 × D2 × … × Dn.</strong><br>Für die Relation Student bedeutet das: Student ⊆ integer × string × date — jedes Tupel (Zeile) ist eine gültige Kombination aus einem Integer (MatrNr), einem String (Name) und einem Datum (Geburtstag). Nicht jede mögliche Kombination muss vorkommen.<br><em>Eselsbrücke:</em> Das kartesische Produkt ist die Menge ALLER denkbaren Kombos — die Relation ist nur der relevante Ausschnitt davon.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "3",
+      "category": "Grundbegriffe des Relationalen Modells",
+      "question": "Was unterscheidet Tupel, Attribut, Kardinalität und Schlüssel in einer Relation?",
+      "answer": "<strong>Tupel = Zeile, Attribut = Spalte, Kardinalität = Anzahl Tupel, Schlüssel = minimale Attributmenge zur eindeutigen Identifikation.</strong><br>In Student(MatrNr, Name, Geburtstag) mit 4 Einträgen: 4 Tupel, 3 Attribute, Kardinalität = 4. Der <strong>Primärschlüssel</strong> MatrNr identifiziert jeden Studenten eindeutig (wird im Schema unterstrichen dargestellt).<br><em>Eselsbrücke: TAKS</em> — Tupel=Zeile, Attribut=Spalte, Kardinalität=Größe, Schlüssel=ID.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "4",
+      "category": "Grundbegriffe des Relationalen Modells",
+      "question": "Warum ist das relationale Modell historisch so bedeutend und wer hat es entwickelt?",
+      "answer": "<strong>E.F. Codd entwickelte das relationale Modell in den 1970ern — er erhielt dafür den Turing Award.</strong><br>Es löste die bis dahin dominanten hierarchischen und Netzwerk-Modelle ab, weil es eine einfache, mathematisch fundierte Struktur (Tabellen) mit mächtigen Anfragesprachen verbindet. Heute bildet es die Basis für PostgreSQL, MySQL, Oracle und SQLite.<br><em>Eselsbrücke:</em> Codd + Tabellen = Turing Award — so wichtig war dieser Schritt.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "5",
+      "category": "Grundbegriffe des Relationalen Modells",
+      "question": "Was passiert mit Duplikaten bei der Projektion — und warum?",
+      "answer": "<strong>Duplikate werden bei der Projektion automatisch eliminiert, weil eine Relation eine <em>Menge</em> von Tupeln ist.</strong><br>Beispiel: πGeburtstag(Student) auf einer Tabelle mit 4 Studenten (Müller und Meier haben beide 1982-07-30) liefert nur 3 Ergebniszeilen statt 4 — der Duplikat-Geburtstag erscheint nur einmal. In SQL muss man für dieses Verhalten explizit DISTINCT schreiben.<br><em>Eselsbrücke:</em> Mengen haben keine Duplikate — Relationen sind Mengen, also auch keine Duplikate.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "6",
+      "category": "Grundbegriffe des Relationalen Modells",
+      "question": "Was ist der Unterschied zwischen dem relationalen Tupelkalkül und der relationalen Algebra hinsichtlich ihrer Orientierung?",
+      "answer": "<strong>Relationenkalkül ist <em>deklarativ</em> (Was?), relationale Algebra ist <em>prozedural</em> (Wie?).</strong><br>Im Kalkül beschreibt man das gewünschte Ergebnis: {p | p ∈ Professoren ∧ p.Rang = 'C4'}. In der Algebra gibt man Schritt für Schritt an, wie man es berechnet: σRang='C4'(Professoren). Das DBMS selbst arbeitet intern mit einer Variante der Algebra, um Anfragepläne zu bauen — obwohl SQL deklarativ ist.<br><em>Eselsbrücke:</em> Kalkül = Bestellung im Restaurant (\"Ich will Pasta\"), Algebra = Kochrezept (\"Koche Wasser, füge Nudeln hinzu…\").",
+      "difficulty": "medium"
+    },
+    {
+      "id": "7",
+      "category": "Operatoren der Relationalen Algebra",
+      "question": "Was macht die Projektion πA1,...,An(R) und was ist dabei zu beachten?",
+      "answer": "<strong>Die <em>Projektion</em> wählt bestimmte Spalten (Attribute) aus einer Relation aus und eliminiert alle anderen.</strong><br>πName(Student) liefert nur die Namen aller Studenten — MatrNr und Geburtstag werden herausgefiltert. Duplikate im Ergebnis werden eliminiert (Mengensemantik): πGeburtstag(Student) liefert bei zwei Studenten mit gleichem Geburtstag trotzdem nur einen Eintrag.<br><em>Eselsbrücke:</em> π wie \"Pick columns\" — du pickst die Spalten, die du willst.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "8",
+      "category": "Operatoren der Relationalen Algebra",
+      "question": "Was macht die Selektion σp(R) und welche Operatoren darf das Prädikat p enthalten?",
+      "answer": "<strong>Die <em>Selektion</em> wählt alle Zeilen (Tupel) aus R aus, die das Prädikat p erfüllen — sie filtert Zeilen, nicht Spalten.</strong><br>σMatrNr≤3 ∧ Geburtstag>1981-01-01(Student) liefert nur Müller (Nr 2, 1982) und Klein (Nr 3, 1981) — Schmidt (1980) und Meier (Nr 4) fallen raus. Prädikate dürfen =, &lt;, ≤, &gt;, ≥ sowie ∧ (UND), ∨ (ODER), ¬ (NICHT) enthalten.<br><em>Eselsbrücke:</em> σ wie \"Select rows\" — im Gegensatz zu π (Pick columns).",
+      "difficulty": "easy"
+    },
+    {
+      "id": "9",
+      "category": "Operatoren der Relationalen Algebra",
+      "question": "Was ist das Kreuzprodukt R1 × R2, welches Problem entsteht dabei und wie wird es gelöst?",
+      "answer": "<strong>Das <em>Kreuzprodukt</em> kombiniert jedes Tupel aus R1 mit jedem Tupel aus R2 — das erzeugt viele sinnlose Kombinationen.</strong><br>Vorlesung (4 Tupel) × Professor (2 Tupel) = 8 Tupelkombos, davon sind z.B. (Vorlesung 1 von Prof 1) × (Prof 2) eine unsinnige Kombination. Lösung: nachgeschaltete Selektion σProfPersNr=PersNr filtert die sinnvollen heraus — oder direkt ein <strong>Join-Operator</strong> verwenden, der das effizienter macht.<br><em>Eselsbrücke:</em> Kreuzprodukt = Alle heiraten alle — Join = nur die richtigen Paare.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "10",
+      "category": "Operatoren der Relationalen Algebra",
+      "question": "Welche 3 Join-Typen werden nach ihrem Prädikat unterschieden und worin unterscheiden sie sich?",
+      "answer": "<strong>Die drei Join-Typen sind <em>Theta-Join</em>, <em>Equi-Join</em> und <em>Natürlicher Join</em> — geordnet von allgemein zu speziell.</strong><br><strong>Theta-Join:</strong> beliebige Vergleichsoperatoren (=, ≠, &lt;, ≤, &gt;, ≥), z.B. Gehalt &gt; Mindestvorgabe. <strong>Equi-Join:</strong> nur Gleichheit (=), z.B. ProfPersNr = PersNr. <strong>Natürlicher Join:</strong> Spezialfall des Equi-Joins, der automatisch alle gleichnamigen Attribute vergleicht und redundante Spalten wegprojiziert.<br><em>Eselsbrücke: TEN</em> — Theta=alles, Equi=gleich, Natural=automatisch.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "11",
+      "category": "Operatoren der Relationalen Algebra",
+      "question": "Warum braucht man den Umbenennungsoperator ρ bei Joins und wie wird er eingesetzt?",
+      "answer": "<strong>ρ benennt Attribute um, um <em>Namenskonflikte</em> bei gleichnamigen Attributen in verschiedenen Relationen zu lösen.</strong><br>Problem: Assistent(PersNr, Name, Fachgebiet, Boss) und Professor(PersNr, Name, ZimmerNr) haben beide PersNr und Name — ein direkter Join wäre mehrdeutig. Lösung: ρAPersNr←PersNr, AName←Name(Assistent) ⋈Boss=PPersNr ρPPersNr←PersNr, PName←Name(Professor) — jetzt sind alle Attributnamen eindeutig.<br><em>Eselsbrücke:</em> ρ wie \"Rename\" — Namensschild kleben, bevor man zusammensitzt.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "12",
+      "category": "Operatoren der Relationalen Algebra",
+      "question": "Was ist ein äußerer Join (Outer Join) und welche drei Varianten gibt es?",
+      "answer": "<strong>Der <em>äußere Join</em> erhält auch Tupel ohne Joinpartner — fehlende Werte werden mit NULL (–) aufgefüllt.</strong><br>Beispiel: L(a1,b1,c1), (a2,b2,c2) ⋈ R(c1,d1,e1), (c3,d2,e2). <strong>Voller äußerer Join:</strong> alle Tupel beider Seiten (a2 und c3 erscheinen mit NULLs). <strong>Linker äußerer Join:</strong> nur linke Tupel bleiben erhalten (a2 mit NULLs, c3 fällt weg). <strong>Rechter äußerer Join:</strong> nur rechte Tupel bleiben (c3 mit NULLs, a2 fällt weg).<br><em>Eselsbrücke:</em> Links = linke Seite ist Boss, Rechts = rechte Seite ist Boss, Voll = alle sind Boss.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "13",
+      "category": "Operatoren der Relationalen Algebra",
+      "question": "Was ist der Unterschied zwischen Semi-Join und Anti-Join?",
+      "answer": "<strong><em>Semi-Join</em>: behält Tupel, die einen Partner haben. <em>Anti-Join</em>: behält Tupel, die KEINEN Partner haben.</strong><br>Beispiel: L(a1,b1,c1), (a2,b2,c2) ⋈ R(c1,…), (c3,…). Semi-Join (L⋉R) = {(a1,b1,c1)} — nur a1 hat einen Partner in R. Anti-Join (L▷R) = {(a2,b2,c2)} — nur a2 hat keinen Partner in R. Anwendung: Anti-Join findet z.B. alle Studenten, die keine einzige Vorlesung besucht haben.<br><em>Eselsbrücke:</em> Anti-Join = Außenseiter-Finder — wer hat keinen Match?",
+      "difficulty": "medium"
+    },
+    {
+      "id": "14",
+      "category": "Operatoren der Relationalen Algebra",
+      "question": "Wie funktioniert die relationale Division R1 ÷ R2 und wofür wird sie eingesetzt?",
+      "answer": "<strong>Die <em>relationale Division</em> beantwortet <em>allquantifizierte</em> Anfragen (\"alle …\") — t ist im Ergebnis, wenn t mit JEDEM Tupel aus R2 kombiniert in R1 vorkommt.</strong><br>besucht(MatrNr, Nr) ÷ Vorl3(Nr={1,2,3}) liefert nur MatrNr 3 — nur Student 3 hat alle drei Vorlesungen 1, 2 und 3 besucht. Typische Fragestellung: \"Welche Studenten haben ALLE Vorlesungen aus Liste X besucht?\"<br><em>Eselsbrücke:</em> Division = \"Wer hat ALLES davon?\" — wie bei normaler Division: vollständige Teilbarkeit.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "15",
+      "category": "Operatoren der Relationalen Algebra",
+      "question": "Was sind die Voraussetzungen für Vereinigung (∪), Schnitt (∩) und Differenz (\\) auf Relationen?",
+      "answer": "<strong>Mengenoperationen erfordern <em>kompatible Schemata</em>: gleiche Anzahl Attribute UND entsprechende Attribute haben gleichen Typ.</strong><br>Prof1(PersNr:int, Name:string) ∪ Prof2(PersNr:int, Name:string) = alle Professoren beider Listen ohne Duplikate. Prof1 ∩ Prof2 = nur Professoren auf beiden Listen (Kemper). Prof1 \\ Prof2 = Professoren auf Liste 1, aber nicht auf Liste 2 (Moerkotte).<br><em>Eselsbrücke: VSG</em> — Vereinigung=alle, Schnitt=beide, diff(Gegensatz)=nur erste.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "16",
+      "category": "Operatoren der Relationalen Algebra",
+      "question": "Sind Joins kommutativ und assoziativ — und warum ist das für DBMSs wichtig?",
+      "answer": "<strong>Joins sind sowohl <em>kommutativ</em> als auch <em>assoziativ</em> — die Reihenfolge beeinflusst das Ergebnis nicht, aber die <em>Performance</em> enorm.</strong><br>A ⋈ B ⋈ C liefert dasselbe Ergebnis wie C ⋈ A ⋈ B. Das DBMS-Optimierer (Query Optimizer) nutzt diese Eigenschaft, um die effizienteste Join-Reihenfolge zu wählen — z.B. zuerst den kleinsten Join, der die Zwischentabelle minimiert. Bei PostgreSQL werden dafür Statistiken über Tabellengrößen genutzt.<br><em>Eselsbrücke:</em> Wie Addition: 2+3+5 = 5+2+3 — gleiche Summe, egal in welcher Reihenfolge.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "17",
+      "category": "Operatoren der Relationalen Algebra",
+      "question": "Wie lautet die formale Definition des (Theta-)Joins mit dem Kreuzprodukt?",
+      "answer": "<strong>R1 ⋈R1.Ai=R2.Aj R2 = σR1.Ai=R2.Aj(R1 × R2) — ein Join ist syntaktischer Zucker für Kreuzprodukt + Selektion.</strong><br>Vorlesung ⋈ProfPersNr=PersNr Professor ist äquivalent zu σProfPersNr=PersNr(Vorlesung × Professor) — liefert dieselben 4 sinnvollen Zeilen. Aber: Joins sind effizienter implementierbar, weil DBMS spezielle Algorithmen (Hash-Join, Merge-Join, Nested-Loop) nutzt, ohne erst das riesige Kreuzprodukt zu materialisieren.<br><em>Eselsbrücke:</em> Join = Kreuzprodukt + Filter, aber schneller.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "18",
+      "category": "Operatoren der Relationalen Algebra",
+      "question": "Welche 6 Grundoperatoren der relationalen Algebra gibt es? (Merkhilfe gesucht!)",
+      "answer": "<strong>Die 6 Grundoperatoren sind: Projektion (π), Selektion (σ), Kreuzprodukt (×), Vereinigung (∪), Differenz (\\) und Umbenennung (ρ).</strong><br>Alle anderen Operatoren (Join, Schnitt, Division) sind aus diesen ableitbar. Beispiel: Schnitt R1 ∩ R2 = R1 \\ (R1 \\ R2). Das DBMS muss intern nur diese 6 Basisoperatoren implementieren.<br><em>Eselsbrücke: PiSKo VeDU</em> — <strong>P</strong>rojektion, <strong>S</strong>elektion, <strong>K</strong>reuzprodukt, <strong>V</strong>ereinigung, <strong>D</strong>ifferenz, <strong>U</strong>mbenennung.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "19",
+      "category": "Relationenkalkül — Tupelkalkül",
+      "question": "Wie sieht die allgemeine Syntax einer Anfrage im relationalen Tupelkalkül aus und was bedeuten die Bestandteile?",
+      "answer": "<strong>Syntax: {t | P(t)} — \"Menge aller Tupel t, für die die Formel P(t) wahr ist.\"</strong><br>t ist eine <strong>Tupelvariable</strong> (repräsentiert eine Zeile), P ist die <strong>Bedingung</strong>. Beispiel: {p | p ∈ Professoren ∧ p.Rang = 'C4'} liefert alle C4-Professoren. Das ist die theoretische Basis für SQL's SELECT-FROM-WHERE: SELECT entspricht dem t-Teil, FROM dem Relationsname, WHERE dem Prädikat P.<br><em>Eselsbrücke:</em> {t | P(t)} = \"Alle t, die die Bedingung P erfüllen\" — wie ein Sieb.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "20",
+      "category": "Relationenkalkül — Tupelkalkül",
+      "question": "Wie formuliert man im Tupelkalkül eine verschachtelte Anfrage mit ∃ — am Beispiel 'Studenten mit mindestens einer Pythagoras-Vorlesung'?",
+      "answer": "<strong>Verschachtelte ∃-Anfragen verknüpfen mehrere Relationen durch existenzielle Quantifizierung.</strong><br>{s | s ∈ Studenten ∧ ∃h ∈ hören(s.MatrNr = h.MatrNr ∧ ∃v ∈ Vorlesungen(h.VorlNr = v.VorlNr ∧ ∃p ∈ Professoren(p.PersNr = v.gelesenVon ∧ p.Name = 'Pythagoras')))}. Jedes ∃ entspricht einem JOIN in der Algebra — man hangelt sich von Tabelle zu Tabelle durch Fremdschlüssel.<br><em>Eselsbrücke:</em> ∃ = \"Es gibt mindestens einen…\" — wie ein JOIN-Filter.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "21",
+      "category": "Relationenkalkül — Tupelkalkül",
+      "question": "Was sind Atome im relationalen Tupelkalkül? Nenne alle 3 Arten.",
+      "answer": "<strong>Atome sind die kleinsten nicht weiter zerlegbaren Formeln — es gibt 3 Typen.</strong><br>1. <strong>s ∈ R</strong>: Tupelvariable s gehört zur Relation R (z.B. p ∈ Professoren). 2. <strong>s.A φ t.B</strong>: Vergleich zweier Attribute aus verschiedenen Tupeln (z.B. s.MatrNr = h.MatrNr). 3. <strong>s.A φ c</strong>: Vergleich eines Attributs mit einer Konstante (z.B. p.Rang = 'C4').<br><em>Eselsbrücke: REK</em> — <strong>R</strong>elation (∈), <strong>E</strong>lementvergleich (Attribut-Attribut), <strong>K</strong>onstantenvergleich.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "22",
+      "category": "Relationenkalkül — Sicherheit",
+      "question": "Was bedeutet Sicherheit im Relationenkalkül und warum ist {n | ¬(n ∈ Professoren)} ein unsicherer Ausdruck?",
+      "answer": "<strong>Ein Ausdruck ist <em>sicher</em>, wenn sein Ergebnis eine endliche Teilmenge der <em>Domäne der Formel</em> ist.</strong><br>{n | ¬(n ∈ Professoren)} ist unsicher, weil das Ergebnis alle Dinge enthält, die KEIN Professor sind — also potenziell unendlich viele Werte (alle Strings, Zahlen, Objekte der Welt). Die Domäne einer Formel enthält nur: alle in der Formel vorkommenden Konstanten + alle Attributwerte der referenzierten Relationen.<br><em>Eselsbrücke:</em> Sicher = endlich und berechenbar — Negation ohne Einschränkung = unendlich = GEFAHR.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "23",
+      "category": "Relationenkalkül — Domänenkalkül",
+      "question": "Wie unterscheidet sich der relationale Domänenkalkül vom Tupelkalkül syntaktisch?",
+      "answer": "<strong>Im Domänenkalkül sind Variablen <em>einzelne Attributwerte</em> (Domänenvariablen), nicht ganze Tupel.</strong><br>Syntax: {[v1, v2, …, vn] | P(v1, …, vn)}. Beispiel MatrNr+Name der Prüflinge von Sokrates: {[m, n] | ∃s ([m, n, s] ∈ Studenten ∧ ∃p, v, g ([m, p, v, g] ∈ prüfen ∧ …))}. Tupelkalkül arbeitet mit Tupelvariablen (s.MatrNr), Domänenkalkül mit direkten Werten (m für MatrNr).<br><em>Eselsbrücke:</em> Tupelkalkül = ganze Zeile als Variable, Domänenkalkül = einzelne Zellwerte als Variablen.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "24",
+      "category": "Relationenkalkül — Domänenkalkül",
+      "question": "Was sind die 3 Atomtypen im relationalen Domänenkalkül?",
+      "answer": "<strong>Atome im Domänenkalkül referenzieren Relationen oder vergleichen Domänenvariablen mit Variablen oder Konstanten.</strong><br>1. <strong>[w1, w2, …, wm] ∈ R</strong>: Domänenvariablen bilden ein Tupel in R (z.B. [p, a, r, b] ∈ Professoren). 2. <strong>x φ y</strong>: Vergleich zweier Domänenvariablen (z.B. m = p). 3. <strong>x φ c</strong>: Vergleich mit Konstante (z.B. a = 'Sokrates').<br><em>Eselsbrücke: RVK</em> — <strong>R</strong>elation, <strong>V</strong>ariablenvergleich, <strong>K</strong>onstantenvergleich — gleich wie beim Tupelkalkül, nur die erste Atomart sieht anders aus.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "25",
+      "category": "Relationenkalkül — Domänenkalkül",
+      "question": "Wie mächtig sind relationale Algebra, Tupelkalkül und Domänenkalkül im Vergleich zueinander?",
+      "answer": "<strong>Alle drei Sprachen sind gleich mächtig — jede Anfrage, die in einer formulierbar ist, lässt sich auch in den anderen ausdrücken.</strong><br>Diese Äquivalenz (bewiesen von Codd) bedeutet: SQL (das auf dem Kalkül basiert) und die Algebra (die DBMSs intern nutzen) drücken exakt dieselbe Anfragemenge aus. Nichts geht verloren oder hinzu. Voraussetzung: Tupelkalkül und Domänenkalkül jeweils eingeschränkt auf sichere Ausdrücke.<br><em>Eselsbrücke:</em> 3 Sprachen, 1 Mächtigkeit — wie Deutsch, Englisch und Französisch: unterschiedliche Syntax, gleicher Inhalt.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "26",
+      "category": "Operatoren der Relationalen Algebra",
+      "question": "Wie verbindet man im Multi-Join-Szenario Student, besucht und Vorlesung per Algebra — und welche Reihenfolge ist korrekt?",
+      "answer": "<strong>Mehrere Relationen werden durch verkettete Joins verbunden — jede Reihenfolge ist <em>korrekt</em>, aber nicht jede ist <em>effizient</em>.</strong><br>Student ⋈Student.MatrNr=besucht.MatrNr besucht ⋈besucht.Nr=Vorlesung.Nr Vorlesung liefert alle Studenten mit ihren besuchten Vorlesungstiteln. Das DBMS-Optimizer wählt die Reihenfolge, die die kleinsten Zwischenrelationen erzeugt — z.B. erst besucht ⋈ Vorlesung, dann ⋈ Student.<br><em>Eselsbrücke:</em> Joins sind wie Lego: egal in welcher Reihenfolge du zusammenbaust, das Endmodell ist gleich — aber effizienter Baustart spart Zeit.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "27",
+      "category": "Grundbegriffe des Relationalen Modells",
+      "question": "Was ist der Unterschied zwischen dem Schema einer Relation und ihrer Domäne (Wertebereich)?",
+      "answer": "<strong>Das Schema legt Attributnamen und Typen fest; die Domäne definiert den erlaubten Wertebereich jedes Attributs.</strong><br>Im Schema Student(MatrNr:integer, Name:string, Geburtstag:date) ist 'integer' der Typ von MatrNr — die Domäne DMatrNr = integer erlaubt Werte wie 1, 2, 3, aber nicht 'Hans' oder 1980-10-12. Domäne = Wertebereich, Schema = Blaupause mit Typen.<br><em>Eselsbrücke:</em> Domäne = erlaubte Werte (wie Ländergrenzen), Schema = Struktur (wie Landkarte).",
+      "difficulty": "easy"
+    },
+    {
+      "id": "28",
+      "category": "Relationenkalkül — Tupelkalkül",
+      "question": "Welche 4 Arten von Formeln (nicht Atome) können im Tupelkalkül aufgebaut werden?",
+      "answer": "<strong>Formeln entstehen aus Atomen durch 4 Konstruktoren: Negation (¬P), Konjunktion (P1 ∧ P2), Disjunktion (P1 ∨ P2) und Quantifizierung (∃t∈R(P(t)) oder ∀t∈R(P(t))).</strong><br>Beispiel: {s | s ∈ Studenten ∧ ¬∃h ∈ hören(s.MatrNr = h.MatrNr)} findet Studenten, die keine Vorlesung hören — kombiniert ∧, ¬ und ∃. Außerdem gilt: Implikation P1 ⇒ P2 ist ebenfalls erlaubt (äquivalent zu ¬P1 ∨ P2).<br><em>Eselsbrücke: NKDQ</em> — <strong>N</strong>egation, <strong>K</strong>onjunktion, <strong>D</strong>isjunktion, <strong>Q</strong>uantifizierung.",
+      "difficulty": "hard"
+    }
+  ],
+  "essayBlueprint": {
+    "totalWords": 800,
+    "timeMinutes": 60,
+    "parts": [
+      {
+        "title": "Einleitung",
+        "words": 80,
+        "minutes": 6,
+        "paragraphs": [
+          {
+            "label": "Kontext & These",
+            "instruction": "Führe das relationale Modell historisch ein und formuliere eine klare These darüber, warum das Modell bis heute dominant ist. Nenne E.F. Codd als Urheber und grenze das Modell von älteren Ansätzen ab.",
+            "template": "Das von <strong>E.F. Codd</strong> in den 1970er Jahren entwickelte relationale Modell hat hierarchische und Netzwerk-Modelle abgelöst und bildet bis heute die Grundlage moderner DBMS – ein Erfolg, der auf seiner formalen Fundierung durch <strong>Mengentheorie</strong> und seinen mächtigen <strong>Anfragesprachen</strong> beruht.",
+            "references": [
+              "E.F. Codd"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Hauptteil",
+        "words": 620,
+        "minutes": 44,
+        "paragraphs": [
+          {
+            "label": "Absatz 1 – Aufbau einer Relation: Schema vs. Instanz",
+            "instruction": "Erkläre den Unterschied zwischen Schema (Struktur) und Instanz (aktueller Inhalt) anhand eines konkreten Beispiels. Definiere Tupel, Attribut, Domäne, Kardinalität und Primärschlüssel präzise. Zeige, wie das Schema Student(MatrNr:integer, Name:string, Geburtstag:date) beide Konzepte vereint.",
+            "template": "Das <strong>Schema</strong> einer Relation legt Name und Datentypen der Attribute fest – z.B. <strong>Student(MatrNr:integer, Name:string, Geburtstag:date)</strong> – während die <strong>Instanz</strong> den aktuellen Tabelleninhalt darstellt; die minimale Attributmenge zur eindeutigen Identifikation eines Tupels heißt <strong>Schlüssel</strong> und wird im Schema unterstrichen notiert.",
+            "references": [
+              "E.F. Codd"
+            ]
+          },
+          {
+            "label": "Absatz 2 – Relationale Algebra: Grundoperatoren",
+            "instruction": "Stelle die zentralen Operatoren Projektion (π), Selektion (σ) und Kreuzprodukt (×) vor. Erkläre den Unterschied: π filtert Spalten, σ filtert Zeilen, × kombiniert zwei Relationen. Betone, dass Duplikate bei π eliminiert werden (Mengenorientierung). Nutze das Student-Beispiel aus dem Material.",
+            "template": "Die <strong>Projektion</strong> πName(Student) liefert nur die Namensspalte – Duplikate werden eliminiert, da Relationen <strong>Mengen</strong> von Tupeln sind – während die <strong>Selektion</strong> σMatrNr≤3(Student) gezielt Zeilen anhand eines Prädikats herausfiltert; beide Operatoren sind <strong>abgeschlossen</strong>, d.h. Eingabe und Ausgabe sind stets Relationen.",
+            "references": [
+              "E.F. Codd"
+            ]
+          },
+          {
+            "label": "Absatz 3 – Join-Operatoren: Typen und Anwendung",
+            "instruction": "Erläutere, warum das Kreuzprodukt allein nicht ausreicht (sinnlose Kombinationen) und wie der Join dieses Problem löst. Klassifiziere die Join-Typen: Theta-Join (beliebige Vergleichsoperatoren), Equi-Join (nur Gleichheit), Natürlicher Join (gleiche Attributnamen, redundante Spalten entfernt). Erkläre den Äußeren Join (vollständig, links, rechts) und Semi-Join vs. Anti-Join anhand der Vorlesung/Professor-Beispiele.",
+            "template": "Während <strong>Vorlesung × Professor</strong> alle 4×2=8 Kombinationen erzeugt – von denen die meisten keinen Sinn ergeben – filtert der <strong>Theta-Join</strong> Vorlesung ⋈ProfPersNr=PersNr Professor nur sinnvolle Paare; der <strong>äußere Join</strong> (⋈) behält zusätzlich Tupel ohne Joinpartner und füllt fehlende Werte mit NULL, was den Datenverlust des inneren Joins vermeidet.",
+            "references": [
+              "E.F. Codd"
+            ]
+          },
+          {
+            "label": "Absatz 4 – Mengenoperationen und Relationale Division",
+            "instruction": "Erkläre Vereinigung (∪), Schnitt (∩) und Mengendifferenz (\\) mit der Voraussetzung gleicher Schemata. Leite dann zur Relationalen Division (÷) über und erkläre, wann sie eingesetzt wird: bei allquantifizierten Anfragen ('alle Studenten, die ALLE Vorlesungen X besuchen'). Nutze das besucht÷Vorl3-Beispiel.",
+            "template": "Mengenoperationen wie <strong>Prof1 ∪ Prof2</strong> setzen kompatible Schemata voraus und eliminieren Duplikate; für allquantifizierte Anfragen hingegen – z.B. 'alle Studenten, die sämtliche Vorlesungen in Vorl3 besuchen' – verwendet man die <strong>relationale Division</strong> besucht ÷ Vorl3, deren Ergebnis {MatrNr=3} nur jene Studenten enthält, die <em>jeden</em> Eintrag der Divisorrelation abdecken.",
+            "references": [
+              "E.F. Codd"
+            ]
+          },
+          {
+            "label": "Absatz 5 – Relationenkalkül: Tupel- und Domänenkalkül",
+            "instruction": "Erkläre den Unterschied zwischen relationalem Algebra (prozedural: WIE wird das Ergebnis berechnet?) und Relationenkalkül (deklarativ: WAS soll das Ergebnis sein?). Stelle Tupelkalkül {t | P(t)} und Domänenkalkül {[v1,...,vn] | P(...)} gegenüber. Erkläre das Sicherheitsproblem anhand des unsicheren Ausdrucks {n | ¬(n ∈ Professoren)} und wie die Domänenbeschränkung es löst.",
+            "template": "Im Gegensatz zur prozeduralen <strong>relationalen Algebra</strong> beschreibt der <strong>Tupelkalkül</strong> {p | p ∈ Professoren ∧ p.Rang = 'C4'} nur das gewünschte Ergebnis ohne Berechnungsvorschrift; ein Ausdruck gilt als <strong>sicher</strong>, wenn sein Ergebnis Teilmenge der Domäne der Formel ist – {n | ¬(n ∈ Professoren)} ist dagegen unsicher, da es ein unendliches Ergebnis liefern würde.",
+            "references": [
+              "E.F. Codd"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Schluss",
+        "words": 100,
+        "minutes": 10,
+        "paragraphs": [
+          {
+            "label": "Synthese und Ausdruckskraft",
+            "instruction": "Fasse das zentrale Ergebnis zusammen: Alle drei Sprachen (relationale Algebra, Tupelkalkül, Domänenkalkül) sind gleich mächtig – das ist der Satz von Codd. Stelle den Bogen zur Einleitung her: Diese theoretische Fundierung erklärt die Langlebigkeit des Modells. Gib einen Ausblick auf SQL als praktische Realisierung des Relationenkalküls.",
+            "template": "Die theoretische Äquivalenz von <strong>relationaler Algebra</strong>, <strong>sicherem Tupelkalkül</strong> und <strong>sicherem Domänenkalkül</strong> – alle drei sind gleich mächtig – belegt die Robustheit des von <strong>Codd</strong> entworfenen Fundaments; SQL als deklarative Anfragesprache ist direkte Konsequenz dieser Theorie und erklärt, warum das relationale Modell trotz objektorientierter Erweiterungen bis heute dominiert.",
+            "references": [
+              "E.F. Codd"
+            ]
+          }
+        ]
+      }
+    ],
+    "checklist": [
+      "Steht der Name E.F. Codd mit historischem Kontext (1970er, Turing Award) in der Einleitung?",
+      "Habe ich Schema UND Instanz klar unterschieden und das Student-Beispiel mit Datentypen (integer, string, date) genutzt?",
+      "Ist der Primärschlüssel (unterstrichen im Schema) definiert und von 'Schlüssel' abgegrenzt?",
+      "Habe ich erklärt, dass Projektion Duplikate eliminiert (Mengenorientierung)?",
+      "Sind alle drei Operator-Typen für Joins klassifiziert: Theta-Join, Equi-Join, Natürlicher Join?",
+      "Habe ich den Unterschied zwischen innerem Join und äußerem Join (links/rechts/voll) am Beispiel erklärt?",
+      "Ist Semi-Join (behält Tupel die Bedingung erfüllen) vs. Anti-Join (behält Tupel die Bedingung NICHT erfüllen) klar unterschieden?",
+      "Sind für Mengenoperationen (∪, ∩, \\) die Schema-Kompatibilitäts-Voraussetzungen genannt?",
+      "Ist die relationale Division (÷) als Werkzeug für allquantifizierte Anfragen ('alle...') charakterisiert?",
+      "Habe ich den prozeduralen Charakter der Algebra dem deklarativen Charakter des Kalküls gegenübergestellt?",
+      "Ist das Sicherheitsproblem im Kalkül erklärt (Gegenbeispiel: ¬(n ∈ Professoren) = unsicher)?",
+      "Steht der Äquivalenzsatz (alle drei Sprachen gleich mächtig) im Fazit?",
+      "Ist SQL als praktische Konsequenz des Relationenkalküls erwähnt?",
+      "Sind alle Formeln/Operatoren korrekt notiert (π für Projektion, σ für Selektion, ÷ für Division)?",
+      "Liegt die Gesamtwortzahl zwischen 750 und 850 Wörtern?"
+    ]
+  },
+  "overview": {
+    "topics": [
+      {
+        "name": "Grundbegriffe des Relationalen Modells",
+        "concepts": [
+          {
+            "term": "Relation",
+            "definition": "Besteht aus zwei Teilen: dem <strong>Schema R</strong> (Struktur: Name + Attributnamen + Datentypen) und der <strong>Instanz R</strong> (aktueller Tabelleninhalt mit Tupeln). Formal: <strong>R ⊆ D₁ × D₂ × … × Dₙ</strong> (Teilmenge des kartesischen Produkts der Domänen).",
+            "author": "E.F. Codd",
+            "importance": "high",
+            "examRelevance": "Wird häufig als Definitionsaufgabe gefragt: 'Was ist der Unterschied zwischen Schema und Instanz?' Schema = Struktur (bleibt stabil), Instanz = aktueller Inhalt (ändert sich bei INSERT/DELETE)."
+          },
+          {
+            "term": "Tupel & Attribut",
+            "definition": "Eine <strong>Zeile</strong> der Tabelle heißt <strong>Tupel</strong>, eine <strong>Spalte</strong> heißt <strong>Attribut</strong>. Jedes Attribut hat eine <strong>Domäne</strong> (Wertebereich, z.B. integer, string, date).",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Terminologie-Frage: Zeile = Tupel, Spalte = Attribut, Anzahl Tupel = <strong>Kardinalität</strong>. Häufig als Multiple-Choice oder Lückentext."
+          },
+          {
+            "term": "Kardinalität",
+            "definition": "Die <strong>Anzahl der Tupel</strong> (Zeilen) in einer Relation. Gibt die 'Größe' der Instanz an — nicht zu verwechseln mit dem <strong>Grad</strong> (Anzahl der Attribute).",
+            "author": "",
+            "importance": "low",
+            "examRelevance": "Terminologiefalle in Multiple-Choice: Kardinalität = Anzahl Zeilen, Grad = Anzahl Spalten."
+          },
+          {
+            "term": "Primärschlüssel",
+            "definition": "Die <strong>minimale Menge von Attributen</strong>, deren Werte ein Tupel eindeutig identifizieren. Wird im Schema <strong>unterstrichen</strong> dargestellt: <code>Student(<u>MatrNr</u>, Name, Geburtstag)</code>.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Wird in Klausuren als Schemanotation gefragt: 'Unterstreiche den Primärschlüssel' oder 'Warum ist Name kein geeigneter PK?' — weil Name nicht eindeutig ist (zwei Studierende können gleichen Namen haben)."
+          }
+        ]
+      },
+      {
+        "name": "Anfragesprachen: Überblick",
+        "concepts": [
+          {
+            "term": "Relationale Algebra",
+            "definition": "<strong>Prozedural</strong> orientiert: beschreibt <em>wie</em> das Ergebnis berechnet wird. Alle Operatoren sind <strong>mengenorientiert und abgeschlossen</strong> — Eingabe und Ausgabe sind immer Mengen von Tupeln.",
+            "author": "E.F. Codd",
+            "importance": "high",
+            "examRelevance": "Kernkompetenz der Klausur: Algebraausdrücke für gegebene natürlichsprachliche Anfragen schreiben. Bildet die Grundlage für <strong>SQL-Anfragepläne</strong> des DBMS — das DBMS arbeitet intern mit Algebra-Operatoren."
+          },
+          {
+            "term": "Relationenkalkül",
+            "definition": "<strong>Deklarativ</strong> orientiert: beschreibt <em>was</em> gesucht wird, nicht wie. Basiert auf dem <strong>Prädikatenkalkül erster Stufe</strong>. Bildet die theoretische Grundlage für <strong>SQL</strong>.",
+            "author": "E.F. Codd",
+            "importance": "medium",
+            "examRelevance": "Wird als Verständnisfrage gefragt: 'Was ist der Unterschied zwischen Algebra und Kalkül?' — Algebra = prozedural (WIE), Kalkül = deklarativ (WAS). Wichtig: beide sind <strong>gleich mächtig</strong> (Codd'sche Vollständigkeit)."
+          }
+        ]
+      },
+      {
+        "name": "Operatoren der Relationalen Algebra",
+        "concepts": [
+          {
+            "term": "Projektion (π)",
+            "definition": "Syntax: <strong>π<sub>A1,…,An</sub>(R)</strong>. Wählt bestimmte <strong>Spalten (Attribute)</strong> aus — filtert alle anderen heraus. Da die Relation eine Menge ist, werden <strong>Duplikate automatisch eliminiert</strong>.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Klassische Klausuraufgabe: 'Gib alle Geburtsdaten aus' → <code>π<sub>Geburtstag</sub>(Student)</code>. Falle: Bei Projektion auf nicht-Schlüsselattribute entstehen weniger Tupel als erwartet, weil <strong>Duplikate eliminiert</strong> werden (z.B. zwei Studenten mit gleichem Geburtstag → nur einmal im Ergebnis)."
+          },
+          {
+            "term": "Selektion (σ)",
+            "definition": "Syntax: <strong>σ<sub>p</sub>(R)</strong>. Wählt alle <strong>Zeilen (Tupel)</strong>, die das Prädikat <em>p</em> erfüllen. Prädikate kombinierbar mit <strong>∧, ∨, ¬</strong>; Vergleichsoperatoren: <strong>=, <, ≤, >, ≥</strong>.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Häufigste Klausuraufgabe: natürlichsprachliche Bedingung in σ-Ausdruck übersetzen. Eselsbrücke: <strong>σ = Sieben (filtert Zeilen)</strong>, π = Projizieren (wählt Spalten). Kombination: erst σ, dann π für effiziente Anfragen."
+          },
+          {
+            "term": "Kreuzprodukt (×)",
+            "definition": "Verbindet zwei Relationen: <strong>R₁ × R₂</strong>. Erzeugt <em>alle</em> Tupelkombinationen — bei |R₁| = m und |R₂| = n entstehen <strong>m × n Tupel</strong>. Viele Kombinationen sind semantisch sinnlos.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Wird als Fallstrick gefragt: 'Warum ist Kreuzprodukt alleine unbrauchbar?' — erzeugt unsinnige Kombinationen (z.B. Vorlesung von Moerkotte mit Professor Kemper). Lösung: nachgelagerte <strong>Selektion</strong> = Join."
+          },
+          {
+            "term": "Theta-Join / Equi-Join / Natürlicher Join (⋈)",
+            "definition": "<strong>Theta-Join</strong>: R₁ ⋈<sub>Bedingung</sub> R₂ = σ<sub>Bedingung</sub>(R₁ × R₂), beliebige Vergleichsoperatoren. <strong>Equi-Join</strong>: nur Gleichheit (=). <strong>Natürlicher Join</strong>: automatischer Equi-Join auf gleichnamigen Attributen, redundante Spalten werden wegprojiziert.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Prüfung fragt: 'Welcher Join-Typ ist hier anzuwenden?' und 'Schreibe die Anfrage mit Join statt Kreuzprodukt + Selektion.' Joins sind <strong>kommutativ und assoziativ</strong> — Reihenfolge beeinflusst Korrektheit nicht, aber <strong>Performance</strong> (wichtig für Kapitel über Anfragepläne)."
+          },
+          {
+            "term": "Äußerer Join (⟗, ⟕, ⟖)",
+            "definition": "Im <strong>äußeren Join (⟗)</strong> bleiben Tupel ohne Joinpartner erhalten — fehlende Werte werden mit <strong>NULL (–)</strong> aufgefüllt. <strong>Linker äußerer Join (⟕)</strong>: nur linke Tupel bleiben erhalten; <strong>Rechter äußerer Join (⟖)</strong>: nur rechte.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Klausurfrage: 'Welche Studenten haben noch keine Vorlesung besucht?' → Linker äußerer Join Student ⟕ besucht, dann σ auf NULL-Werte. Falle: beim inneren Join gehen diese Tupel <strong>verloren</strong>."
+          },
+          {
+            "term": "Semi-Join & Anti-Join",
+            "definition": "<strong>Semi-Join</strong>: prüft Joinbedingung, behält aber nur Tupel der <em>einen</em> Seite (die die Bedingung erfüllen). <strong>Anti-Join (▷)</strong>: behält Tupel der einen Seite, die die Bedingung <em>nicht</em> erfüllen.",
+            "author": "",
+            "importance": "low",
+            "examRelevance": "Wird seltener direkt gefragt, aber als Konzept wichtig: Anti-Join entspricht der Mengendifferenz nach einem Join — 'Welche Tupel aus L haben <strong>keinen</strong> Partner in R?'"
+          },
+          {
+            "term": "Mengenoperationen (∪, ∩, \\)",
+            "definition": "<strong>Vereinigung (∪)</strong>, <strong>Schnitt (∩)</strong> und <strong>Differenz (\\)</strong> auf Relationen. Voraussetzung: beide Relationen müssen <strong>union-kompatibel</strong> sein (gleiche Anzahl Attribute, gleiche Typen).",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Typische Frage: 'Welche Professoren sind in Liste 1, aber nicht in Liste 2?' → <code>Prof1 \\ Prof2</code>. Häufige Falle: Mengenoperationen nur auf <strong>union-kompatiblen</strong> Relationen möglich — sonst erst mit ρ umbenennen."
+          },
+          {
+            "term": "Relationale Division (÷)",
+            "definition": "Löst <strong>allquantifizierte Anfragen</strong> ('alle', 'für jeden'). R₁ ÷ R₂ liefert alle Tupel aus R₁, die mit <em>jedem</em> Tupel in R₂ kombiniert in R₁ vorkommen. Voraussetzung: <strong>Schema(R₂) ⊆ Schema(R₁)</strong>.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Erkennungsmerkmal in der Klausur: Sobald die Frage 'alle … besuchen/belegen/haben' enthält → Division. Beispiel: 'Studenten die <em>alle</em> Vorlesungen in Liste X besucht haben' → besucht ÷ VorlX. Häufig kombiniert mit dem <strong>Schlüsselwort 'alle'</strong>."
+          },
+          {
+            "term": "Umbenennungsoperator (ρ)",
+            "definition": "Syntax: <strong>ρ<sub>neuName←altName</sub>(R)</strong>. Benennt Attribute um — notwendig wenn zwei zu joinende Relationen <strong>gleichnamige Attribute</strong> haben (z.B. PersNr in Assistent und Professor).",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Wird bei Join-Aufgaben mit gleichnamigen Attributen benötigt. Ohne ρ ist der Ausdruck <strong>mehrdeutig und formal falsch</strong>. Beispiel: Assistent ⋈ Professor — beide haben PersNr und Name → erst umbenennen, dann joinen."
+          }
+        ]
+      },
+      {
+        "name": "Relationenkalkül: Tupelkalkül & Domänenkalkül",
+        "concepts": [
+          {
+            "term": "Relationaler Tupelkalkül",
+            "definition": "Form: <strong>{t | P(t)}</strong> wobei t eine <strong>Tupelvariable</strong> ist. Beschreibt, welche Eigenschaften ein Ergebnistupel haben muss — ohne Berechnungsweg. Nutzt <strong>∃</strong> (existenzquantor) und <strong>∀</strong> (allquantor).",
+            "author": "E.F. Codd",
+            "importance": "medium",
+            "examRelevance": "Klausuraufgabe: natürlichsprachliche Anfrage in Tupelkalkül übersetzen (z.B. 'alle C4-Professoren' → {p | p ∈ Professoren ∧ p.Rang = 'C4'}). Tupelkalkül-Variable steht für <strong>ganze Zeilen</strong> — im Gegensatz zum Domänenkalkül (einzelne Werte)."
+          },
+          {
+            "term": "Relationaler Domänenkalkül",
+            "definition": "Form: <strong>{[v₁,…,vₙ] | P(v₁,…,vₙ)}</strong> wobei v₁,…,vₙ <strong>Domänenvariablen</strong> (einzelne Attributwerte) sind. Näher an SQL als der Tupelkalkül.",
+            "author": "E.F. Codd",
+            "importance": "medium",
+            "examRelevance": "Unterschied zum Tupelkalkül: Variablen stehen für <strong>einzelne Attributwerte</strong>, nicht ganze Tupel. Prüfung fragt oft: 'Übersetze diese Anfrage in Domänenkalkül' — alle Attribute der Zielrelation müssen als Variablen aufgelistet werden."
+          },
+          {
+            "term": "Sicherheit von Kalkülanfragen",
+            "definition": "Ein Kalkülausdruck ist <strong>sicher</strong>, wenn sein Ergebnis eine <strong>endliche Teilmenge der Domäne der Formel</strong> ist. Unsichere Anfragen: z.B. {n | ¬(n ∈ Professoren)} — das Ergebnis wäre <strong>unendlich groß</strong>.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Klausurfrage: 'Ist dieser Kalkülausdruck sicher? Begründe.' Merkhilfe: Negation ohne Einschränkung auf eine Relation → fast immer <strong>unsicher</strong>. Sicherheit ist Voraussetzung für die Äquivalenz der drei Sprachen."
+          },
+          {
+            "term": "Äquivalenz der drei Sprachen (Codd'sche Vollständigkeit)",
+            "definition": "Relationale Algebra, sicherer Tupelkalkül und sicherer Domänenkalkül sind <strong>gleich mächtig</strong> — jede Anfrage, die in einer Sprache formulierbar ist, ist es auch in den anderen beiden.",
+            "author": "E.F. Codd",
+            "importance": "high",
+            "examRelevance": "Prüfungsfrage: 'Warum ist SQL relational vollständig?' — weil SQL auf dem <strong>sicheren Domänenkalkül</strong> basiert, der gleich mächtig wie die relationale Algebra ist. Verbindet Kapitel Kalkül mit Kapitel SQL (Querverbindung zu späteren Kapiteln)."
+          }
+        ]
+      }
+    ]
+  },
+  "authors": [
+    {
+      "name": "Edgar F. Codd",
+      "theory": "Erfand in den 1970ern das relationale Datenbankmodell: Daten als mathematische Relationen (Mengen von Tupeln), abfragbar durch relationale Algebra und Kalkül — dafür erhielt er den Turing Award.",
+      "useInExam": "Nenne Codd immer wenn gefragt wird 'Wer hat das relationale Modell entwickelt?' oder 'Was ist Codd'sche Vollständigkeit?' — Codd'sche Vollständigkeit = alle drei Anfragesprachen sind gleich mächtig. Nicht verwechseln mit dem Entity-Relationship-Modell (das stammt von Peter Chen)."
+    }
+  ],
+  "schedule": {
+    "daysUntilExam": 7,
+    "days": [
+      {
+        "day": 1,
+        "label": "Grundbegriffe einprägen",
+        "tasks": [
+          "Slides 1–7 lesen: Relation, Schema, Instanz, Domäne, Tupel, Attribut, Kardinalität",
+          "Merkhilfe aufschreiben: Schema = Bauplan (stabil), Instanz = aktueller Inhalt (ändert sich)",
+          "Eigenes Beispiel-Schema entwerfen (z.B. Film-Datenbank mit Primärschlüssel unterstreichen)",
+          "Formale Definition R ⊆ D₁ × D₂ × … × Dₙ mit eigenem Beispiel nachvollziehen"
+        ]
+      },
+      {
+        "day": 2,
+        "label": "Projektion (π) und Selektion (σ) üben",
+        "tasks": [
+          "Slides 11–16 lesen: Projektion und Selektion mit allen Beispielen",
+          "Eselsbrücke festigen: σ = Sieben (filtert Zeilen), π = Projizieren (wählt Spalten)",
+          "5 eigene natürlichsprachliche Anfragen formulieren und in π/σ übersetzen",
+          "Duplikat-Eliminierung bei Projektion verstehen: πGeburtstag(Student) → nur 3 statt 4 Tupel"
+        ]
+      },
+      {
+        "day": 3,
+        "label": "Joins verstehen und üben",
+        "tasks": [
+          "Slides 17–25 lesen: Kreuzprodukt, Theta-Join, Equi-Join, Natürlicher Join",
+          "Kreuzprodukt-Beispiel (Vorlesung × Professor = 8 Tupel) manuell durchrechnen",
+          "Gleichen Join als σ(Kreuzprodukt) UND als ⋈-Operator schreiben — Unterschied verstehen",
+          "Join-Typen-Tabelle erstellen: Theta = beliebig, Equi = nur =, Natürlich = gleichnamige Attribute + redundante Spalten weg",
+          "Umbenennungsoperator ρ für Assistent ⋈ Professor üben (beide haben PersNr und Name)"
+        ]
+      },
+      {
+        "day": 4,
+        "label": "Äußere Joins, Semi-Join, Anti-Join, Mengenoperationen",
+        "tasks": [
+          "Slides 27–36 lesen: alle Join-Varianten und Mengenoperationen",
+          "Eigene Tabelle zeichnen: Linker äußerer Join → rechte Seite NULL, Rechter äußerer Join → linke Seite NULL, Voller äußerer Join → beide Seiten NULL wo nein Partner",
+          "Mengenoperationen (∪, ∩, \\) mit Prof1/Prof2-Beispiel selbst durchrechnen",
+          "Union-Kompatibilität prüfen: Wann kann ich ∪/∩/\\ anwenden?"
+        ]
+      },
+      {
+        "day": 5,
+        "label": "Relationale Division meistern",
+        "tasks": [
+          "Slides 37–39 lesen: Relationale Division mit besucht ÷ Vorl1/Vorl2/Vorl3",
+          "Erkennungsmerkmal einprägen: Schlüsselwort 'alle' in der Anfrage → Division",
+          "Division-Formel aufschreiben: R₁ ÷ R₂ = π(R₁\\R₂)(R₁) \\ π(R₁\\R₂)((π(R₁\\R₂)(R₁) × R₂) \\ R₁)",
+          "Alle drei Divisionsergebnisse (÷Vorl1, ÷Vorl2, ÷Vorl3) aus Beispiel-Slides selbst berechnen"
+        ]
+      },
+      {
+        "day": 6,
+        "label": "Relationenkalkül und Äquivalenz",
+        "tasks": [
+          "Slides 40–49 lesen: Tupelkalkül, Domänenkalkül, Sicherheit, Äquivalenz",
+          "Vergleichstabelle erstellen: Tupelkalkül (Variable = ganze Zeile) vs. Domänenkalkül (Variable = einzelner Wert)",
+          "Unsichere Ausdrücke identifizieren: Warum ist {n | ¬(n ∈ Professoren)} unsicher?",
+          "Codd'sche Vollständigkeit auswendig lernen: alle 3 Sprachen gleich mächtig (Begründung für SQL-Vollständigkeit)",
+          "Tupelkalkül-Beispiel 'C4-Professoren' und 'Pythagoras-Studenten' selbst schreiben"
+        ]
+      },
+      {
+        "day": 7,
+        "label": "Generalprobe: Klausur-Simulation",
+        "tasks": [
+          "10 natürlichsprachliche Anfragen selbst erfinden und in relationale Algebra übersetzen (alle Operatoren mindestens einmal)",
+          "Für jede Anfrage: welcher Join-Typ ist optimal? Equi, Theta, Natürlich, Äußerer?",
+          "Sicherheits-Check: 3 selbst erfundene Kalkülausdrücke — sicher oder unsicher?",
+          "Terminologie-Quiz: Relation/Tupel/Attribut/Kardinalität/Schema/Instanz/Primärschlüssel/Domäne in 30 Sekunden definieren",
+          "Offene Fragen klären, Notizen durchsehen, Eselsbrücken wiederholen"
+        ]
+      }
+    ]
+  },
+  "quizletExport": "Was sind die zwei Bestandteile einer Relation R und was beschreibt jeder davon?\tEine Relation besteht aus Schema (Struktur) und Instanz (Inhalt).Das Schema R legt Name, Attributnamen und Datentypen fest — es ändert sich selten. Die Instanz R ist die aktuelle Tabelle mit konkreten Tupeln, z.B. Student(MatrNr:integer, Name:string, Geburtstag:date) als Schema, und die Zeilen mit Schmidt, Müller, Klein als Instanz.Eselsbrücke: Schema = Bauplan eines Hauses, Instanz = das fertige Haus mit Bewohnern.\nWie ist eine Relation formal (mathematisch) definiert und was bedeutet das konkret?\tEine Relation (Instanz) ist eine Untermenge des kartesischen Produkts ihrer Domänen: R ⊆ D1 × D2 × … × Dn.Für die Relation Student bedeutet das: Student ⊆ integer × string × date — jedes Tupel (Zeile) ist eine gültige Kombination aus einem Integer (MatrNr), einem String (Name) und einem Datum (Geburtstag). Nicht jede mögliche Kombination muss vorkommen.Eselsbrücke: Das kartesische Produkt ist die Menge ALLER denkbaren Kombos — die Relation ist nur der relevante Ausschnitt davon.\nWas unterscheidet Tupel, Attribut, Kardinalität und Schlüssel in einer Relation?\tTupel = Zeile, Attribut = Spalte, Kardinalität = Anzahl Tupel, Schlüssel = minimale Attributmenge zur eindeutigen Identifikation.In Student(MatrNr, Name, Geburtstag) mit 4 Einträgen: 4 Tupel, 3 Attribute, Kardinalität = 4. Der Primärschlüssel MatrNr identifiziert jeden Studenten eindeutig (wird im Schema unterstrichen dargestellt).Eselsbrücke: TAKS — Tupel=Zeile, Attribut=Spalte, Kardinalität=Größe, Schlüssel=ID.\nWarum ist das relationale Modell historisch so bedeutend und wer hat es entwickelt?\tE.F. Codd entwickelte das relationale Modell in den 1970ern — er erhielt dafür den Turing Award.Es löste die bis dahin dominanten hierarchischen und Netzwerk-Modelle ab, weil es eine einfache, mathematisch fundierte Struktur (Tabellen) mit mächtigen Anfragesprachen verbindet. Heute bildet es die Basis für PostgreSQL, MySQL, Oracle und SQLite.Eselsbrücke: Codd + Tabellen = Turing Award — so wichtig war dieser Schritt.\nWas passiert mit Duplikaten bei der Projektion — und warum?\tDuplikate werden bei der Projektion automatisch eliminiert, weil eine Relation eine Menge von Tupeln ist.Beispiel: πGeburtstag(Student) auf einer Tabelle mit 4 Studenten (Müller und Meier haben beide 1982-07-30) liefert nur 3 Ergebniszeilen statt 4 — der Duplikat-Geburtstag erscheint nur einmal. In SQL muss man für dieses Verhalten explizit DISTINCT schreiben.Eselsbrücke: Mengen haben keine Duplikate — Relationen sind Mengen, also auch keine Duplikate.\nWas ist der Unterschied zwischen dem relationalen Tupelkalkül und der relationalen Algebra hinsichtlich ihrer Orientierung?\tRelationenkalkül ist deklarativ (Was?), relationale Algebra ist prozedural (Wie?).Im Kalkül beschreibt man das gewünschte Ergebnis: {p | p ∈ Professoren ∧ p.Rang = 'C4'}. In der Algebra gibt man Schritt für Schritt an, wie man es berechnet: σRang='C4'(Professoren). Das DBMS selbst arbeitet intern mit einer Variante der Algebra, um Anfragepläne zu bauen — obwohl SQL deklarativ ist.Eselsbrücke: Kalkül = Bestellung im Restaurant (\"Ich will Pasta\"), Algebra = Kochrezept (\"Koche Wasser, füge Nudeln hinzu…\").\nWas macht die Projektion πA1,...,An(R) und was ist dabei zu beachten?\tDie Projektion wählt bestimmte Spalten (Attribute) aus einer Relation aus und eliminiert alle anderen.πName(Student) liefert nur die Namen aller Studenten — MatrNr und Geburtstag werden herausgefiltert. Duplikate im Ergebnis werden eliminiert (Mengensemantik): πGeburtstag(Student) liefert bei zwei Studenten mit gleichem Geburtstag trotzdem nur einen Eintrag.Eselsbrücke: π wie \"Pick columns\" — du pickst die Spalten, die du willst.\nWas macht die Selektion σp(R) und welche Operatoren darf das Prädikat p enthalten?\tDie Selektion wählt alle Zeilen (Tupel) aus R aus, die das Prädikat p erfüllen — sie filtert Zeilen, nicht Spalten.σMatrNr≤3 ∧ Geburtstag>1981-01-01(Student) liefert nur Müller (Nr 2, 1982) und Klein (Nr 3, 1981) — Schmidt (1980) und Meier (Nr 4) fallen raus. Prädikate dürfen =, &lt;, ≤, &gt;, ≥ sowie ∧ (UND), ∨ (ODER), ¬ (NICHT) enthalten.Eselsbrücke: σ wie \"Select rows\" — im Gegensatz zu π (Pick columns).\nWas ist das Kreuzprodukt R1 × R2, welches Problem entsteht dabei und wie wird es gelöst?\tDas Kreuzprodukt kombiniert jedes Tupel aus R1 mit jedem Tupel aus R2 — das erzeugt viele sinnlose Kombinationen.Vorlesung (4 Tupel) × Professor (2 Tupel) = 8 Tupelkombos, davon sind z.B. (Vorlesung 1 von Prof 1) × (Prof 2) eine unsinnige Kombination. Lösung: nachgeschaltete Selektion σProfPersNr=PersNr filtert die sinnvollen heraus — oder direkt ein Join-Operator verwenden, der das effizienter macht.Eselsbrücke: Kreuzprodukt = Alle heiraten alle — Join = nur die richtigen Paare.\nWelche 3 Join-Typen werden nach ihrem Prädikat unterschieden und worin unterscheiden sie sich?\tDie drei Join-Typen sind Theta-Join, Equi-Join und Natürlicher Join — geordnet von allgemein zu speziell.Theta-Join: beliebige Vergleichsoperatoren (=, ≠, &lt;, ≤, &gt;, ≥), z.B. Gehalt &gt; Mindestvorgabe. Equi-Join: nur Gleichheit (=), z.B. ProfPersNr = PersNr. Natürlicher Join: Spezialfall des Equi-Joins, der automatisch alle gleichnamigen Attribute vergleicht und redundante Spalten wegprojiziert.Eselsbrücke: TEN — Theta=alles, Equi=gleich, Natural=automatisch.\nWarum braucht man den Umbenennungsoperator ρ bei Joins und wie wird er eingesetzt?\tρ benennt Attribute um, um Namenskonflikte bei gleichnamigen Attributen in verschiedenen Relationen zu lösen.Problem: Assistent(PersNr, Name, Fachgebiet, Boss) und Professor(PersNr, Name, ZimmerNr) haben beide PersNr und Name — ein direkter Join wäre mehrdeutig. Lösung: ρAPersNr←PersNr, AName←Name(Assistent) ⋈Boss=PPersNr ρPPersNr←PersNr, PName←Name(Professor) — jetzt sind alle Attributnamen eindeutig.Eselsbrücke: ρ wie \"Rename\" — Namensschild kleben, bevor man zusammensitzt.\nWas ist ein äußerer Join (Outer Join) und welche drei Varianten gibt es?\tDer äußere Join erhält auch Tupel ohne Joinpartner — fehlende Werte werden mit NULL (–) aufgefüllt.Beispiel: L(a1,b1,c1), (a2,b2,c2) ⋈ R(c1,d1,e1), (c3,d2,e2). Voller äußerer Join: alle Tupel beider Seiten (a2 und c3 erscheinen mit NULLs). Linker äußerer Join: nur linke Tupel bleiben erhalten (a2 mit NULLs, c3 fällt weg). Rechter äußerer Join: nur rechte Tupel bleiben (c3 mit NULLs, a2 fällt weg).Eselsbrücke: Links = linke Seite ist Boss, Rechts = rechte Seite ist Boss, Voll = alle sind Boss.\nWas ist der Unterschied zwischen Semi-Join und Anti-Join?\tSemi-Join: behält Tupel, die einen Partner haben. Anti-Join: behält Tupel, die KEINEN Partner haben.Beispiel: L(a1,b1,c1), (a2,b2,c2) ⋈ R(c1,…), (c3,…). Semi-Join (L⋉R) = {(a1,b1,c1)} — nur a1 hat einen Partner in R. Anti-Join (L▷R) = {(a2,b2,c2)} — nur a2 hat keinen Partner in R. Anwendung: Anti-Join findet z.B. alle Studenten, die keine einzige Vorlesung besucht haben.Eselsbrücke: Anti-Join = Außenseiter-Finder — wer hat keinen Match?\nWie funktioniert die relationale Division R1 ÷ R2 und wofür wird sie eingesetzt?\tDie relationale Division beantwortet allquantifizierte Anfragen (\"alle …\") — t ist im Ergebnis, wenn t mit JEDEM Tupel aus R2 kombiniert in R1 vorkommt.besucht(MatrNr, Nr) ÷ Vorl3(Nr={1,2,3}) liefert nur MatrNr 3 — nur Student 3 hat alle drei Vorlesungen 1, 2 und 3 besucht. Typische Fragestellung: \"Welche Studenten haben ALLE Vorlesungen aus Liste X besucht?\"Eselsbrücke: Division = \"Wer hat ALLES davon?\" — wie bei normaler Division: vollständige Teilbarkeit.\nWas sind die Voraussetzungen für Vereinigung (∪), Schnitt (∩) und Differenz (\\) auf Relationen?\tMengenoperationen erfordern kompatible Schemata: gleiche Anzahl Attribute UND entsprechende Attribute haben gleichen Typ.Prof1(PersNr:int, Name:string) ∪ Prof2(PersNr:int, Name:string) = alle Professoren beider Listen ohne Duplikate. Prof1 ∩ Prof2 = nur Professoren auf beiden Listen (Kemper). Prof1 \\ Prof2 = Professoren auf Liste 1, aber nicht auf Liste 2 (Moerkotte).Eselsbrücke: VSG — Vereinigung=alle, Schnitt=beide, diff(Gegensatz)=nur erste.\nSind Joins kommutativ und assoziativ — und warum ist das für DBMSs wichtig?\tJoins sind sowohl kommutativ als auch assoziativ — die Reihenfolge beeinflusst das Ergebnis nicht, aber die Performance enorm.A ⋈ B ⋈ C liefert dasselbe Ergebnis wie C ⋈ A ⋈ B. Das DBMS-Optimierer (Query Optimizer) nutzt diese Eigenschaft, um die effizienteste Join-Reihenfolge zu wählen — z.B. zuerst den kleinsten Join, der die Zwischentabelle minimiert. Bei PostgreSQL werden dafür Statistiken über Tabellengrößen genutzt.Eselsbrücke: Wie Addition: 2+3+5 = 5+2+3 — gleiche Summe, egal in welcher Reihenfolge.\nWie lautet die formale Definition des (Theta-)Joins mit dem Kreuzprodukt?\tR1 ⋈R1.Ai=R2.Aj R2 = σR1.Ai=R2.Aj(R1 × R2) — ein Join ist syntaktischer Zucker für Kreuzprodukt + Selektion.Vorlesung ⋈ProfPersNr=PersNr Professor ist äquivalent zu σProfPersNr=PersNr(Vorlesung × Professor) — liefert dieselben 4 sinnvollen Zeilen. Aber: Joins sind effizienter implementierbar, weil DBMS spezielle Algorithmen (Hash-Join, Merge-Join, Nested-Loop) nutzt, ohne erst das riesige Kreuzprodukt zu materialisieren.Eselsbrücke: Join = Kreuzprodukt + Filter, aber schneller.\nWelche 6 Grundoperatoren der relationalen Algebra gibt es? (Merkhilfe gesucht!)\tDie 6 Grundoperatoren sind: Projektion (π), Selektion (σ), Kreuzprodukt (×), Vereinigung (∪), Differenz (\\) und Umbenennung (ρ).Alle anderen Operatoren (Join, Schnitt, Division) sind aus diesen ableitbar. Beispiel: Schnitt R1 ∩ R2 = R1 \\ (R1 \\ R2). Das DBMS muss intern nur diese 6 Basisoperatoren implementieren.Eselsbrücke: PiSKo VeDU — Projektion, Selektion, Kreuzprodukt, Vereinigung, Differenz, Umbenennung.\nWie sieht die allgemeine Syntax einer Anfrage im relationalen Tupelkalkül aus und was bedeuten die Bestandteile?\tSyntax: {t | P(t)} — \"Menge aller Tupel t, für die die Formel P(t) wahr ist.\"t ist eine Tupelvariable (repräsentiert eine Zeile), P ist die Bedingung. Beispiel: {p | p ∈ Professoren ∧ p.Rang = 'C4'} liefert alle C4-Professoren. Das ist die theoretische Basis für SQL's SELECT-FROM-WHERE: SELECT entspricht dem t-Teil, FROM dem Relationsname, WHERE dem Prädikat P.Eselsbrücke: {t | P(t)} = \"Alle t, die die Bedingung P erfüllen\" — wie ein Sieb.\nWie formuliert man im Tupelkalkül eine verschachtelte Anfrage mit ∃ — am Beispiel 'Studenten mit mindestens einer Pythagoras-Vorlesung'?\tVerschachtelte ∃-Anfragen verknüpfen mehrere Relationen durch existenzielle Quantifizierung.{s | s ∈ Studenten ∧ ∃h ∈ hören(s.MatrNr = h.MatrNr ∧ ∃v ∈ Vorlesungen(h.VorlNr = v.VorlNr ∧ ∃p ∈ Professoren(p.PersNr = v.gelesenVon ∧ p.Name = 'Pythagoras')))}. Jedes ∃ entspricht einem JOIN in der Algebra — man hangelt sich von Tabelle zu Tabelle durch Fremdschlüssel.Eselsbrücke: ∃ = \"Es gibt mindestens einen…\" — wie ein JOIN-Filter.\nWas sind Atome im relationalen Tupelkalkül? Nenne alle 3 Arten.\tAtome sind die kleinsten nicht weiter zerlegbaren Formeln — es gibt 3 Typen.1. s ∈ R: Tupelvariable s gehört zur Relation R (z.B. p ∈ Professoren). 2. s.A φ t.B: Vergleich zweier Attribute aus verschiedenen Tupeln (z.B. s.MatrNr = h.MatrNr). 3. s.A φ c: Vergleich eines Attributs mit einer Konstante (z.B. p.Rang = 'C4').Eselsbrücke: REK — Relation (∈), Elementvergleich (Attribut-Attribut), Konstantenvergleich.\nWas bedeutet Sicherheit im Relationenkalkül und warum ist {n | ¬(n ∈ Professoren)} ein unsicherer Ausdruck?\tEin Ausdruck ist sicher, wenn sein Ergebnis eine endliche Teilmenge der Domäne der Formel ist.{n | ¬(n ∈ Professoren)} ist unsicher, weil das Ergebnis alle Dinge enthält, die KEIN Professor sind — also potenziell unendlich viele Werte (alle Strings, Zahlen, Objekte der Welt). Die Domäne einer Formel enthält nur: alle in der Formel vorkommenden Konstanten + alle Attributwerte der referenzierten Relationen.Eselsbrücke: Sicher = endlich und berechenbar — Negation ohne Einschränkung = unendlich = GEFAHR.\nWie unterscheidet sich der relationale Domänenkalkül vom Tupelkalkül syntaktisch?\tIm Domänenkalkül sind Variablen einzelne Attributwerte (Domänenvariablen), nicht ganze Tupel.Syntax: {[v1, v2, …, vn] | P(v1, …, vn)}. Beispiel MatrNr+Name der Prüflinge von Sokrates: {[m, n] | ∃s ([m, n, s] ∈ Studenten ∧ ∃p, v, g ([m, p, v, g] ∈ prüfen ∧ …))}. Tupelkalkül arbeitet mit Tupelvariablen (s.MatrNr), Domänenkalkül mit direkten Werten (m für MatrNr).Eselsbrücke: Tupelkalkül = ganze Zeile als Variable, Domänenkalkül = einzelne Zellwerte als Variablen.\nWas sind die 3 Atomtypen im relationalen Domänenkalkül?\tAtome im Domänenkalkül referenzieren Relationen oder vergleichen Domänenvariablen mit Variablen oder Konstanten.1. [w1, w2, …, wm] ∈ R: Domänenvariablen bilden ein Tupel in R (z.B. [p, a, r, b] ∈ Professoren). 2. x φ y: Vergleich zweier Domänenvariablen (z.B. m = p). 3. x φ c: Vergleich mit Konstante (z.B. a = 'Sokrates').Eselsbrücke: RVK — Relation, Variablenvergleich, Konstantenvergleich — gleich wie beim Tupelkalkül, nur die erste Atomart sieht anders aus.\nWie mächtig sind relationale Algebra, Tupelkalkül und Domänenkalkül im Vergleich zueinander?\tAlle drei Sprachen sind gleich mächtig — jede Anfrage, die in einer formulierbar ist, lässt sich auch in den anderen ausdrücken.Diese Äquivalenz (bewiesen von Codd) bedeutet: SQL (das auf dem Kalkül basiert) und die Algebra (die DBMSs intern nutzen) drücken exakt dieselbe Anfragemenge aus. Nichts geht verloren oder hinzu. Voraussetzung: Tupelkalkül und Domänenkalkül jeweils eingeschränkt auf sichere Ausdrücke.Eselsbrücke: 3 Sprachen, 1 Mächtigkeit — wie Deutsch, Englisch und Französisch: unterschiedliche Syntax, gleicher Inhalt.\nWie verbindet man im Multi-Join-Szenario Student, besucht und Vorlesung per Algebra — und welche Reihenfolge ist korrekt?\tMehrere Relationen werden durch verkettete Joins verbunden — jede Reihenfolge ist korrekt, aber nicht jede ist effizient.Student ⋈Student.MatrNr=besucht.MatrNr besucht ⋈besucht.Nr=Vorlesung.Nr Vorlesung liefert alle Studenten mit ihren besuchten Vorlesungstiteln. Das DBMS-Optimizer wählt die Reihenfolge, die die kleinsten Zwischenrelationen erzeugt — z.B. erst besucht ⋈ Vorlesung, dann ⋈ Student.Eselsbrücke: Joins sind wie Lego: egal in welcher Reihenfolge du zusammenbaust, das Endmodell ist gleich — aber effizienter Baustart spart Zeit.\nWas ist der Unterschied zwischen dem Schema einer Relation und ihrer Domäne (Wertebereich)?\tDas Schema legt Attributnamen und Typen fest; die Domäne definiert den erlaubten Wertebereich jedes Attributs.Im Schema Student(MatrNr:integer, Name:string, Geburtstag:date) ist 'integer' der Typ von MatrNr — die Domäne DMatrNr = integer erlaubt Werte wie 1, 2, 3, aber nicht 'Hans' oder 1980-10-12. Domäne = Wertebereich, Schema = Blaupause mit Typen.Eselsbrücke: Domäne = erlaubte Werte (wie Ländergrenzen), Schema = Struktur (wie Landkarte).\nWelche 4 Arten von Formeln (nicht Atome) können im Tupelkalkül aufgebaut werden?\tFormeln entstehen aus Atomen durch 4 Konstruktoren: Negation (¬P), Konjunktion (P1 ∧ P2), Disjunktion (P1 ∨ P2) und Quantifizierung (∃t∈R(P(t)) oder ∀t∈R(P(t))).Beispiel: {s | s ∈ Studenten ∧ ¬∃h ∈ hören(s.MatrNr = h.MatrNr)} findet Studenten, die keine Vorlesung hören — kombiniert ∧, ¬ und ∃. Außerdem gilt: Implikation P1 ⇒ P2 ist ebenfalls erlaubt (äquivalent zu ¬P1 ∨ P2).Eselsbrücke: NKDQ — Negation, Konjunktion, Disjunktion, Quantifizierung.",
+  "visualMap": {
+    "blocks": [
+      {
+        "title": "Das Relationale Modell — Grundbegriffe",
+        "subtitle": "Was ist eine Relation? Schema vs. Instanz, Schlüssel, Kardinalität",
+        "color": "blue",
+        "frameworks": [
+          {
+            "kind": "flow",
+            "title": "Relation = Schema + Instanz",
+            "boxes": [
+              {
+                "label": "Schema R",
+                "sub": "Struktur: Name + Attributnamen + Datentypen. Ändert sich selten.",
+                "accent": "blue"
+              },
+              {
+                "label": "Instanz R",
+                "sub": "Aktueller Inhalt: Tabelle mit Tupeln (Zeilen) und Attributen (Spalten)",
+                "accent": "cyan"
+              },
+              {
+                "label": "Beispiel: Student(MatrNr:int, Name:string, Geburtstag:date)",
+                "sub": "Schema → fixe Vorlage. Instanz → die 3 Studenten-Zeilen drin.",
+                "accent": "green"
+              }
+            ],
+            "arrows": "right",
+            "explanation": "Klausur-Falle: Schema ≠ Instanz. Schema = Bauplan (unveränderlich). Instanz = aktuelle Daten (änderbar). Typische Frage: 'Was gehört zum Schema?' → Name der Relation + Attributnamen + Domänen."
+          },
+          {
+            "kind": "formula",
+            "title": "Formale Definition einer Relation",
+            "formula": "R ⊆ D1 × D2 × ... × Dn",
+            "sub": "Beispiel: Student ⊆ integer × string × date — eine Relation ist eine UNTERMENGE des kartesischen Produkts ihrer Domänen. Duplikate existieren NICHT (Mengensemantik!)"
+          },
+          {
+            "kind": "comparison",
+            "title": "Schlüssel vs. Primärschlüssel",
+            "left": {
+              "label": "Schlüssel (allgemein)",
+              "tone": "neutral",
+              "items": [
+                "MINIMALE Menge von Attributen, die ein Tupel eindeutig identifiziert",
+                "Kann mehrere geben (Kandidatenschlüssel)",
+                "Beispiel: MatrNr ALLEIN reicht → Schlüssel",
+                "Name allein reicht NICHT → kein Schlüssel"
+              ]
+            },
+            "right": {
+              "label": "Primärschlüssel (ausgewählt)",
+              "tone": "pro",
+              "items": [
+                "DER eine ausgewählte Schlüssel der Relation",
+                "Notation: wird unterstrichen dargestellt",
+                "Beispiel: Student(<u>MatrNr</u>, Name, Geburtstag)",
+                "Darf NICHT NULL sein"
+              ]
+            },
+            "explanation": "Merkhilfe: Alle Primärschlüssel sind Schlüssel, aber nicht alle Schlüssel sind Primärschlüssel. Kardinalität = Anzahl Tupel in der Instanz (≠ Anzahl Attribute = Grad/Stelligkeit)."
+          },
+          {
+            "kind": "mnemonic",
+            "title": "Begriffe der Relationalen Welt",
+            "acronym": "TASK",
+            "expansion": [
+              {
+                "letter": "T",
+                "meaning": "Tupel = eine Zeile (ein Datensatz)"
+              },
+              {
+                "letter": "A",
+                "meaning": "Attribut = eine Spalte (ein Merkmal)"
+              },
+              {
+                "letter": "S",
+                "meaning": "Schema = Struktur/Bauplan der Relation"
+              },
+              {
+                "letter": "K",
+                "meaning": "Kardinalität = Anzahl Tupel (Größe der Instanz)"
+              }
+            ],
+            "hook": "Eine Datenbank hat eine TASK: Daten strukturiert speichern. Jedes Tupel ist eine Aufgabe (Task) in der DB."
+          }
+        ]
+      },
+      {
+        "title": "Relationale Algebra — Grundoperatoren",
+        "subtitle": "Projektion, Selektion, Kreuzprodukt: die Basis aller Anfragen",
+        "color": "cyan",
+        "frameworks": [
+          {
+            "kind": "comparison",
+            "title": "Projektion π vs. Selektion σ — der häufigste Verwechslungs-Fehler",
+            "left": {
+              "label": "Projektion πA1,...,An(R)",
+              "tone": "neutral",
+              "items": [
+                "Wählt SPALTEN (Attribute) aus",
+                "Filtert andere Spalten heraus",
+                "Duplikate werden ELIMINIERT (Mengensemantik)",
+                "Beispiel: πName(Student) → nur die Spalte Name",
+                "SQL-Äquivalent: SELECT Name FROM Student"
+              ]
+            },
+            "right": {
+              "label": "Selektion σp(R)",
+              "tone": "neutral",
+              "items": [
+                "Wählt ZEILEN (Tupel) aus, die Prädikat p erfüllen",
+                "Alle Spalten bleiben erhalten",
+                "Operatoren: =, <, ≤, >, ≥, ∧, ∨, ¬",
+                "Beispiel: σMatrNr≤3(Student) → nur Zeilen mit MatrNr ≤ 3",
+                "SQL-Äquivalent: SELECT * FROM Student WHERE MatrNr<=3"
+              ]
+            },
+            "explanation": "Gedächtnisstütze: π = Pi = Projektion = Spalten PIcken. σ = Sigma = Selektion = Zeilen Sieben. Kombination: πName(σMatrNr≤3(Student)) = Namen aller Studenten mit MatrNr ≤ 3."
+          },
+          {
+            "kind": "flow",
+            "title": "Kreuzprodukt → Join: der natürliche Weg",
+            "boxes": [
+              {
+                "label": "Kreuzprodukt R1 × R2",
+                "sub": "ALLE Kombinationen. Bei 4 Vorlesungen × 2 Professoren = 8 Tupel. Viele sinnlos!",
+                "accent": "rose"
+              },
+              {
+                "label": "Selektion σ drauf",
+                "sub": "σProfPersNr=PersNr filtert sinnlose Kombinationen raus. Umständlich.",
+                "accent": "amber"
+              },
+              {
+                "label": "Join R1 ⋈p R2",
+                "sub": "Abkürzung für σp(R1×R2). Effizienter implementierbar. Direkt sinnvolle Kombis.",
+                "accent": "green"
+              }
+            ],
+            "arrows": "right",
+            "explanation": "Klausur-Tipp: R1 ⋈R1.Ai=R2.Aj R2 ist ÄQUIVALENT zu σR1.Ai=R2.Aj(R1×R2). Joins sind nur syntaktischer Zucker + effizienter. Das DBMS bevorzugt intern immer den Join."
+          },
+          {
+            "kind": "formula",
+            "title": "Abgeschlossenheit der Relationalen Algebra",
+            "formula": "Operator: Relation(en) → Relation",
+            "sub": "Jeder Operator nimmt Relationen als Input und liefert eine Relation als Output. Daher sind Ausdrücke beliebig schachtelbar: πName(σMatrNr≤3(Student ⋈ besucht))"
+          }
+        ]
+      },
+      {
+        "title": "Join-Typen — das Herzstück der Algebra",
+        "subtitle": "Theta, Equi, Natural, Outer, Semi, Anti: welcher wann?",
+        "color": "green",
+        "frameworks": [
+          {
+            "kind": "matrix2x2",
+            "title": "Join-Klassifikation: Prädikat × Tupel-Erhalt",
+            "xAxis": {
+              "label": "Joinprädikat",
+              "low": "Nur Gleichheit (=)",
+              "high": "Beliebige Operatoren"
+            },
+            "yAxis": {
+              "label": "Tupel-Erhalt bei fehlendem Partner",
+              "low": "Verlust (Inner Join)",
+              "high": "Erhalt (Outer / Semi / Anti)"
+            },
+            "cells": [
+              {
+                "x": "low",
+                "y": "low",
+                "title": "Equi-Join / Natural Join",
+                "sub": "Häufigster Fall: Vorlesung ⋈ProfPersNr=PersNr Professor",
+                "highlight": true
+              },
+              {
+                "x": "high",
+                "y": "low",
+                "title": "Theta-Join (θ-Join)",
+                "sub": "Allgemeinste Form: auch <, >, ≠ erlaubt. Equi-Join ist Spezialfall davon.",
+                "highlight": false
+              },
+              {
+                "x": "low",
+                "y": "high",
+                "title": "Outer / Semi / Anti Join",
+                "sub": "Tupel ohne Partner bleiben (NULL) oder werden explizit gefiltert",
+                "highlight": false
+              },
+              {
+                "x": "high",
+                "y": "high",
+                "title": "Outer Theta-Join",
+                "sub": "Selten, aber möglich: alle Operatoren + Tupel-Erhalt",
+                "highlight": false
+              }
+            ],
+            "explanation": "Lernreihenfolge: Theta ⊇ Equi ⊇ Natural. Natural Join = Equi-Join auf ALLE gleichnamigen Attribute + redundante Spalte wird wegprojiziert. Beispiel: Vorlesung(ProfPersNr) ⋈ Professor(PersNr) → erst umbenennen mit ρ, dann natural joinen."
+          },
+          {
+            "kind": "comparison",
+            "title": "Äußere Joins — welche Tupel überleben?",
+            "left": {
+              "label": "Linker Äußerer Join (⟕)",
+              "tone": "pro",
+              "items": [
+                "ALLE Tupel aus der LINKEN Relation bleiben erhalten",
+                "Fehlende Werte rechts → NULL (–)",
+                "Beispiel: L⟕R: a2/b2/c2 bleibt, c3 von R fällt raus",
+                "Anwendung: 'Alle Studenten, auch ohne Vorlesungen'"
+              ]
+            },
+            "right": {
+              "label": "Vollständiger Äußerer Join (⟗)",
+              "tone": "neutral",
+              "items": [
+                "ALLE Tupel BEIDER Relationen bleiben erhalten",
+                "Fehlende Werte beiderseits → NULL (–)",
+                "Rechter äußerer Join (⟖): nur rechte Tupel erhalten",
+                "Anwendung: 'Alle Vorlesungen UND alle Professoren, egal ob verknüpft'"
+              ]
+            },
+            "explanation": "Eselsbrücke: Das Symbol zeigt nach welcher Seite der Join 'offen' ist: ⟕ = links offen = linke Tupel sicher. ⟖ = rechts offen. ⟗ = beidseitig offen."
+          },
+          {
+            "kind": "comparison",
+            "title": "Semi-Join vs. Anti-Join",
+            "left": {
+              "label": "Semi-Join (⋉ / ⋊)",
+              "tone": "pro",
+              "items": [
+                "Prüft Join-Bedingung, behält aber nur Tupel EINER Relation",
+                "Die die Bedingung ERFÜLLEN",
+                "Beispiel: L⋉R → nur a1/b1/c1 (weil c1 in R existiert)",
+                "Anwendung: EXISTS-Subquery in SQL"
+              ]
+            },
+            "right": {
+              "label": "Anti-Join (▷)",
+              "tone": "con",
+              "items": [
+                "Prüft Join-Bedingung, behält Tupel die Bedingung NICHT erfüllen",
+                "Das 'Gegenteil' des Semi-Joins",
+                "Beispiel: L▷R → nur a2/b2/c2 (weil c2 NICHT in R)",
+                "Anwendung: NOT EXISTS-Subquery in SQL"
+              ]
+            },
+            "explanation": "Gedächtnisstütze: Semi = halber Join (eine Seite). Anti = gegen den Join (die Nicht-Partner). Beide geben NUR Spalten EINER Relation zurück — kein Zusammenführen!"
+          },
+          {
+            "kind": "mnemonic",
+            "title": "Alle Join-Typen auf einen Blick",
+            "acronym": "TENSA",
+            "expansion": [
+              {
+                "letter": "T",
+                "meaning": "Theta-Join: allgemeinster Join, alle Operatoren erlaubt"
+              },
+              {
+                "letter": "E",
+                "meaning": "Equi-Join: nur Gleichheit (=) als Prädikat"
+              },
+              {
+                "letter": "N",
+                "meaning": "Natural Join: Equi auf gleichnamige Attribute, redundante Spalten weg"
+              },
+              {
+                "letter": "S",
+                "meaning": "Semi-Join: nur Tupel aus EINER Seite, die Partner haben"
+              },
+              {
+                "letter": "A",
+                "meaning": "Anti-Join: nur Tupel aus EINER Seite, die KEINEN Partner haben"
+              }
+            ],
+            "hook": "Wie bei einem Tennisspiel (TENSA): Theta ist der Generalschlüssel, alles andere ist Spezialisierung davon."
+          }
+        ]
+      },
+      {
+        "title": "Mengenoperationen & Relationale Division",
+        "subtitle": "Vereinigung, Schnitt, Differenz, Division — wann brauche ich was?",
+        "color": "amber",
+        "frameworks": [
+          {
+            "kind": "flow",
+            "title": "Mengenoperationen — Voraussetzung: kompatible Schemata!",
+            "boxes": [
+              {
+                "label": "Vereinigung R1 ∪ R2",
+                "sub": "Alle Tupel aus BEIDEN Relationen. Duplikate werden eliminiert. Beispiel: Prof1∪Prof2 → Moerkotte+Kemper+Weikum",
+                "accent": "green"
+              },
+              {
+                "label": "Schnitt R1 ∩ R2",
+                "sub": "Nur Tupel, die in BEIDEN vorkommen. Beispiel: Prof1∩Prof2 → nur Kemper",
+                "accent": "blue"
+              },
+              {
+                "label": "Differenz R1 \\ R2",
+                "sub": "Tupel aus R1, die NICHT in R2. Beispiel: Prof1\\Prof2 → nur Moerkotte. ACHTUNG: nicht kommutativ!",
+                "accent": "rose"
+              }
+            ],
+            "arrows": "plus",
+            "explanation": "PFLICHT-Bedingung: Gleiche Anzahl Attribute UND kompatible Datentypen. Sonst ist die Operation nicht definiert. Differenz: R1\\R2 ≠ R2\\R1 — Reihenfolge wichtig!"
+          },
+          {
+            "kind": "formula",
+            "title": "Relationale Division R1 ÷ R2 — für ALL-Anfragen",
+            "formula": "R1 ÷ R2 = π(R1\\R2)(R1) \\ π(R1\\R2)((π(R1\\R2)(R1) × R2) \\ R1)",
+            "sub": "Intuition: t ∈ R1÷R2, wenn t mit ALLEN Tupeln aus R2 kombiniert in R1 vorkommt. Schlüsselwort: 'alle'. Beispiel: besucht÷Vorl3 → MatrNr 3, weil Student 3 alle 3 Vorlesungen besucht hat. Voraussetzung: Schema(R2) ⊆ Schema(R1)"
+          },
+          {
+            "kind": "comparison",
+            "title": "Wann Division, wann Semi-Join?",
+            "left": {
+              "label": "Division (÷) → ALL-Anfragen",
+              "tone": "pro",
+              "items": [
+                "Schlüsselwort: 'ALLE', 'jede', 'sämtliche'",
+                "Beispiel: 'Studenten, die ALLE Vorlesungen besucht haben'",
+                "besucht ÷ Vorl3 → MatrNr 3",
+                "SQL: meist mit NOT EXISTS(...NOT EXISTS...) oder GROUP BY/HAVING"
+              ]
+            },
+            "right": {
+              "label": "Semi-Join (⋉) → EXISTS-Anfragen",
+              "tone": "neutral",
+              "items": [
+                "Schlüsselwort: 'mindestens eine', 'gibt es', 'existiert'",
+                "Beispiel: 'Studenten, die IRGENDEINE Vorlesung besucht haben'",
+                "Student ⋉ besucht → alle Studenten mit Einträgen in besucht",
+                "SQL: WHERE EXISTS (SELECT ...)"
+              ]
+            },
+            "explanation": "Trick für die Klausur: Steht 'alle' in der Anfrage → Division. Steht 'mindestens eine' → Semi-Join oder normaler Join. Division ist komplex zu formulieren, aber konzeptionell klar."
+          }
+        ]
+      },
+      {
+        "title": "Relationenkalkül — deklarativ statt prozedural",
+        "subtitle": "Tupelkalkül vs. Domänenkalkül, Sicherheit, Äquivalenz",
+        "color": "violet",
+        "frameworks": [
+          {
+            "kind": "comparison",
+            "title": "Relationale Algebra vs. Relationenkalkül",
+            "left": {
+              "label": "Relationale Algebra (prozedural)",
+              "tone": "neutral",
+              "items": [
+                "Beschreibt WIE das Ergebnis berechnet wird",
+                "Schrittweise Operatoren: π, σ, ⋈, ×, ∪, ∩, \\, ÷",
+                "Wird intern vom DBMS für Anfragepläne genutzt",
+                "Beispiel: πName(σMatrNr≤3(Student))"
+              ]
+            },
+            "right": {
+              "label": "Relationenkalkül (deklarativ)",
+              "tone": "pro",
+              "items": [
+                "Beschreibt WAS das Ergebnis sein soll",
+                "Basis für SQL!",
+                "Zwei Varianten: Tupelkalkül und Domänenkalkül",
+                "Beispiel: {p | p ∈ Professoren ∧ p.Rang = 'C4'}"
+              ]
+            },
+            "explanation": "Schlüssel-Insight: SQL ist dem Relationenkalkül ähnlich (deklarativ: du sagst WAS, nicht WIE). Das DBMS übersetzt intern in relationale Algebra-Ausdrücke (Anfragepläne). Das ist warum SQL so mächtig ist."
+          },
+          {
+            "kind": "comparison",
+            "title": "Tupelkalkül vs. Domänenkalkül",
+            "left": {
+              "label": "Relationaler Tupelkalkül",
+              "tone": "neutral",
+              "items": [
+                "Form: {t | P(t)} — t ist eine Tupel-Variable",
+                "Variablen repräsentieren ganze Zeilen",
+                "Zugriff auf Attribute: t.Attributname",
+                "Beispiel: {p | p ∈ Professoren ∧ p.Rang='C4'}",
+                "Näher an SQL (Tupel = Zeile im SELECT)"
+              ]
+            },
+            "right": {
+              "label": "Relationaler Domänenkalkül",
+              "tone": "neutral",
+              "items": [
+                "Form: {[v1,...,vn] | P(v1,...,vn)} — vi sind Einzelwerte",
+                "Variablen repräsentieren einzelne Attributwerte",
+                "Keine Punktnotation: [m,n,s] ∈ Studenten",
+                "Beispiel: {[m,n] | ∃s([m,n,s] ∈ Studenten ∧ ...)}",
+                "Näher an QBE (Query by Example)"
+              ]
+            },
+            "explanation": "Beide sind gleich mächtig! Unterschied nur in der Notation. Tupelkalkül = Variablen für Zeilen. Domänenkalkül = Variablen für einzelne Zellwerte."
+          },
+          {
+            "kind": "formula",
+            "title": "Sicherheit von Kalkülanfragen",
+            "formula": "Sicher ⟺ Ergebnis ⊆ Domäne der Formel",
+            "sub": "UNSICHER: {n | ¬(n ∈ Professoren)} → unendliches Ergebnis! Die Domäne einer Formel = alle Konstanten + alle Attributwerte der referenzierten Relationen. Nur sichere Ausdrücke sind im Kalkül erlaubt."
+          },
+          {
+            "kind": "formula",
+            "title": "Das wichtigste Theorem: Gleiche Ausdruckskraft",
+            "formula": "Rel. Algebra = Sicherer Tupelkalkül = Sicherer Domänenkalkül",
+            "sub": "Alle drei Sprachen sind gleich mächtig (Codd-Äquivalenz). Was in einer ausdrückbar ist, ist in allen ausdrückbar. SQL ist ebenfalls 'relational vollständig'."
+          },
+          {
+            "kind": "link_note",
+            "fromTopic": "Relationenkalkül (deklarativ, WAS)",
+            "toTopic": "SQL in der Praxis",
+            "explanation": "Der Relationenkalkül ist die theoretische Grundlage für SQL. SQL-SELECT entspricht dem Tupelkalkül: SELECT Name FROM Professoren WHERE Rang='C4' ist direkt die Kalkül-Formel {p | p ∈ Professoren ∧ p.Rang='C4'}. Das DBMS (z.B. PostgreSQL, MySQL) übersetzt SQL intern in relationale Algebra-Ausdrücke, um effiziente Anfragepläne zu bauen."
+          },
+          {
+            "kind": "mnemonic",
+            "title": "Kalkül-Quantoren merken",
+            "acronym": "EAVF",
+            "expansion": [
+              {
+                "letter": "E",
+                "meaning": "∃ (Existenzquantor) = 'Es gibt mindestens einen' → Semi-Join-Logik"
+              },
+              {
+                "letter": "A",
+                "meaning": "∀ (Allquantor) = 'Für alle gilt' → Divisions-Logik"
+              },
+              {
+                "letter": "V",
+                "meaning": "∨ (Oder) = mindestens eine Bedingung wahr"
+              },
+              {
+                "letter": "F",
+                "meaning": "Formel muss SICHER sein: Ergebnis endlich und aus der Domäne"
+              }
+            ],
+            "hook": "EAVF = 'Ein Allquantor, Vorsicht bei Formeln' — der ∀ ist der gefährlichste, er erzeugt leicht unsichere Ausdrücke!"
+          }
+        ]
+      },
+      {
+        "title": "Operator-Übersicht & Klausur-Quickref",
+        "subtitle": "Alle Operatoren auf einen Blick — für Open-Book-Klausur",
+        "color": "rose",
+        "frameworks": [
+          {
+            "kind": "flow",
+            "title": "Vollständige Operator-Hierarchie der Relationalen Algebra",
+            "boxes": [
+              {
+                "label": "Unäre Operatoren",
+                "sub": "π (Projektion: Spalten)\nσ (Selektion: Zeilen)\nρ (Umbenennung: Attribute umbenennen)",
+                "accent": "blue"
+              },
+              {
+                "label": "Join-Familie",
+                "sub": "× (Kreuzprodukt)\n⋈θ (Theta-Join)\n⋈= (Equi-Join)\n⋈ (Natural Join)\n⟕⟖⟗ (Outer Joins)\n⋉⋊ (Semi-Join)\n▷ (Anti-Join)",
+                "accent": "cyan"
+              },
+              {
+                "label": "Mengenoperatoren",
+                "sub": "∪ (Vereinigung)\n∩ (Schnitt)\n\\ (Differenz)\n÷ (Division für ALL-Anfragen)",
+                "accent": "green"
+              }
+            ],
+            "arrows": "plus",
+            "explanation": "Klausur-Strategie Open-Book: 1. Natürlichsprachliche Anfrage lesen. 2. Schlüsselwörter identifizieren: 'alle' → ÷, 'und/oder' → ∩/∪, 'aber nicht' → \\, 'zusammen mit' → ⋈. 3. Von innen nach außen aufbauen."
+          },
+          {
+            "kind": "mnemonic",
+            "title": "Schlüsselwörter → Operatoren — Übersetzungsregel",
+            "acronym": "AVKJ",
+            "expansion": [
+              {
+                "letter": "A",
+                "meaning": "'ALLE / jede / sämtliche' → Division (÷)"
+              },
+              {
+                "letter": "V",
+                "meaning": "'VERBINDE / zusammen mit' → Join (⋈)"
+              },
+              {
+                "letter": "K",
+                "meaning": "'KEIN / nicht in / außer' → Differenz (\\) oder Anti-Join (▷)"
+              },
+              {
+                "letter": "J",
+                "meaning": "'JE EIN / mindestens eine' → Semi-Join (⋉) oder σ+⋈"
+              }
+            ],
+            "hook": "Für die Open-Book-Klausur: AVKJ = 'Anfragen Visuell Korrekt Jagen'. Lies die Anfrage, matche das Schlüsselwort, wähle den Operator."
+          },
+          {
+            "kind": "link_note",
+            "fromTopic": "Kreuzprodukt (×) — kombinatorische Explosion",
+            "toTopic": "Join (⋈) — effizienter Spezialfall",
+            "explanation": "Das Kreuzprodukt erzeugt bei Vorlesung(4 Tupel) × Professor(2 Tupel) = 8 Tupel, wovon 4 sinnlos sind. Ein DBMS würde niemals wirklich ein Kreuzprodukt berechnen — es übersetzt σ(R1×R2) intern sofort in einen Join-Algorithmus (z.B. Hash-Join, Nested-Loop-Join). Daher: in Klausurausdrücken immer ⋈ bevorzugen, nicht ×+σ."
+          }
+        ]
+      }
+    ]
+  }
+}

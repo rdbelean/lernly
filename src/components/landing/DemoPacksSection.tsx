@@ -7,9 +7,9 @@ import PackView from "@/components/pack/PackView";
 import SectionHeading from "@/components/landing/SectionHeading";
 
 type Language = "en" | "de";
-type ExamKind = "open_book" | "essay" | "multiple_choice" | "oral";
+type ExamKind = "open_book" | "essay" | "multiple_choice" | "oral" | "open_questions";
 
-type PreviewKind = "flashcard" | "quiz" | "blueprint";
+type PreviewKind = "flashcard" | "quiz" | "blueprint" | "openQuestion";
 type Preview = {
   kind: PreviewKind;
   eyebrow: { de: string; en: string };
@@ -31,100 +31,109 @@ type DemoEntry = {
 
 const DEMOS: DemoEntry[] = [
   {
-    slug: "strategic-mgmt",
-    exam: "open_book",
-    examLabel: { de: "Open Book", en: "Open Book" },
-    title: "Strategic Management",
-    subtitle: { de: "Innovation & Change", en: "Innovation & Change" },
-    origin: {
-      de: "Session 9 · Uni-Klausur · DE",
-      en: "Session 9 · Uni exam · DE",
-    },
-    stats: { cards: 27, quiz: 15, topics: 7 },
+    slug: "db-grundlagen",
+    exam: "multiple_choice",
+    examLabel: { de: "Multiple Choice", en: "Multiple Choice" },
+    title: "Datenbanksysteme",
+    subtitle: { de: "Einführung & Motivation", en: "Introduction & motivation" },
+    origin: { de: "TU München · Neumann · DE", en: "TU München · Neumann · DE" },
+    stats: { cards: 27, quiz: 14, topics: 7 },
     featured: true,
     preview: [
       {
         kind: "flashcard",
-        eyebrow: { de: "Porter · Five Forces", en: "Porter · Five Forces" },
+        eyebrow: { de: "Grundlagen · DBS", en: "Basics · DBS" },
         title: {
-          de: "Welche 5 Kräfte bestimmen die Branchenstruktur?",
-          en: "Which 5 forces shape industry structure?",
+          de: "Was ist ein DBS — und warum reicht ein Dateisystem nicht?",
+          en: "What is a DBMS — and why isn't a file system enough?",
         },
         body: {
-          de: "Lieferantenmacht, Käufermacht, Rivalität, neue Anbieter, Substitute.",
-          en: "Supplier power, buyer power, rivalry, new entrants, substitutes.",
+          de: "Ausfallsicherheit & Skalierbarkeit out-of-the-box. Beispiel: Amazon.",
+          en: "Reliability & scalability out of the box. Example: Amazon.",
         },
       },
-      {
-        kind: "blueprint",
-        eyebrow: {
-          de: "Blueprint · Teil 1",
-          en: "Blueprint · Part 1",
-        },
-        title: {
-          de: "Szenario · 40 min · ~350 W.",
-          en: "Scenario · 40 min · ~350 W.",
-        },
-        body: {
-          de: "Branche beschreiben. Keine Theorie, keine Quellen.",
-          en: "Describe the industry. No theory, no references.",
-        },
-      },
-    ],
-  },
-  {
-    slug: "global-strategy",
-    exam: "open_book",
-    examLabel: { de: "Open Book", en: "Open Book" },
-    title: "Global Strategy",
-    subtitle: { de: "Internationalisierung", en: "Internationalization" },
-    origin: {
-      de: "Session 14 · Uni-Klausur · DE",
-      en: "Session 14 · Uni exam · DE",
-    },
-    stats: { cards: 27, quiz: 16, topics: 6 },
-    featured: false,
-    preview: [
       {
         kind: "quiz",
-        eyebrow: { de: "Quiz · I-R Framework", en: "Quiz · I-R Framework" },
+        eyebrow: { de: "Quiz · DBS vs. Dateisystem", en: "Quiz · DBS vs. file system" },
         title: {
-          de: "Welche Strategie kombiniert lokale Anpassung mit Skaleneffekten?",
-          en: "Which strategy combines local adaptation with scale?",
+          de: "Dieselben Daten dreimal, dreimal anders — welches Problem?",
+          en: "Same data three times, three ways — which problem?",
         },
         body: {
-          de: "Multidomestic · Global · Transnational · International",
-          en: "Multidomestic · Global · Transnational · International",
+          de: "Skalierbarkeit · Sicherheit · Redundanz & Inkonsistenz · Effizienz",
+          en: "Scalability · Security · Redundancy & inconsistency · Efficiency",
         },
       },
     ],
   },
   {
-    slug: "diversification",
-    exam: "essay",
-    examLabel: { de: "Essay", en: "Essay" },
-    title: "Diversification",
-    subtitle: { de: "Konzern-Strategien", en: "Corporate strategies" },
-    origin: {
-      de: "Session 15 · Uni-Klausur · DE",
-      en: "Session 15 · Uni exam · DE",
-    },
-    stats: { cards: 27, quiz: 15, topics: 6 },
+    slug: "db-entwurf",
+    exam: "open_questions",
+    examLabel: { de: "Offene Fragen", en: "Open Questions" },
+    title: "Datenbankentwurf",
+    subtitle: { de: "ER-Modell & Diagramme", en: "ER model & diagrams" },
+    origin: { de: "TU München · Kemper/Eickler · DE", en: "TU München · Kemper/Eickler · DE" },
+    stats: { cards: 30, quiz: 13, topics: 7 },
     featured: false,
     preview: [
       {
-        kind: "blueprint",
-        eyebrow: {
-          de: "Blueprint · Hauptteil",
-          en: "Blueprint · Main part",
-        },
+        kind: "flashcard",
+        eyebrow: { de: "ER · Entwurfsphasen", en: "ER · design phases" },
         title: {
-          de: "Analyse · 80 min · ~650 W.",
-          en: "Analysis · 80 min · ~650 W.",
+          de: "Die 4 Phasen des Datenbankentwurfs — in welcher Reihenfolge?",
+          en: "The 4 phases of database design — in what order?",
         },
         body: {
-          de: "Porter's 3 Tests: Attractiveness, Cost of Entry, Better-Off.",
-          en: "Porter's 3 Tests: Attractiveness, Cost of Entry, Better-Off.",
+          de: "Anforderungsanalyse → Konzeptuell → Implementation → Physisch.",
+          en: "Requirements → Conceptual → Implementation → Physical.",
+        },
+      },
+      {
+        kind: "openQuestion",
+        eyebrow: { de: "Offene Frage", en: "Open question" },
+        title: {
+          de: "Nenne die 4 Entwurfsphasen und das Ergebnis jeder Phase.",
+          en: "Name the 4 design phases and each phase's output.",
+        },
+        body: {
+          de: "Jede Phase liefert ein Artefakt: Spezifikation, ER-Schema, log. Schema, phys. Schema.",
+          en: "Each phase yields an artifact: spec, ER schema, logical schema, physical schema.",
+        },
+      },
+    ],
+  },
+  {
+    slug: "db-relational",
+    exam: "open_book",
+    examLabel: { de: "Open Book", en: "Open Book" },
+    title: "Relationales Modell",
+    subtitle: { de: "Algebra & Schlüssel", en: "Algebra & keys" },
+    origin: { de: "TU München · Codd/Kemper · DE", en: "TU München · Codd/Kemper · DE" },
+    stats: { cards: 28, quiz: 0, topics: 4 },
+    featured: false,
+    preview: [
+      {
+        kind: "flashcard",
+        eyebrow: { de: "Relation · Schema vs. Instanz", en: "Relation · schema vs. instance" },
+        title: {
+          de: "Aus welchen zwei Bestandteilen besteht eine Relation R?",
+          en: "What two parts make up a relation R?",
+        },
+        body: {
+          de: "Schema (Struktur, ändert sich selten) + Instanz (Inhalt, ändert sich ständig).",
+          en: "Schema (structure, rarely changes) + instance (content, changes constantly).",
+        },
+      },
+      {
+        kind: "blueprint",
+        eyebrow: { de: "Blueprint · Einleitung", en: "Blueprint · introduction" },
+        title: {
+          de: "Das relationale Modell historisch einführen + These (Codd)",
+          en: "Introduce the relational model historically + thesis (Codd)",
+        },
+        body: {
+          de: "Warum ist Codds Modell bis heute dominant? Klare These im ersten Satz.",
+          en: "Why is Codd's model still dominant? Clear thesis in sentence one.",
         },
       },
     ],
@@ -279,6 +288,51 @@ function MiniBlueprintPreview({
   );
 }
 
+function MiniOpenQuestionPreview({
+  preview,
+  language,
+}: {
+  preview: Preview;
+  language: Language;
+}) {
+  const isEn = language === "en";
+  return (
+    <div
+      className="ln-demo-preview-fade rounded-xl border p-3"
+      style={{
+        background: "rgba(20, 22, 28, 0.6)",
+        borderColor: "rgba(255,255,255,0.08)",
+      }}
+    >
+      <div
+        className="text-[10px] font-semibold uppercase tracking-[0.1em]"
+        style={{ color: "var(--color-ln-mute)" }}
+      >
+        {isEn ? preview.eyebrow.en : preview.eyebrow.de}
+      </div>
+      <div className="mt-1.5 text-[13px] font-semibold leading-snug text-white">
+        {isEn ? preview.title.en : preview.title.de}
+      </div>
+      <div
+        className="mt-2 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10.5px]"
+        style={{
+          borderColor: "rgba(91,184,216,0.3)",
+          background: "rgba(91,184,216,0.08)",
+          color: "var(--color-ln-cyan)",
+        }}
+      >
+        {isEn ? "Model answer" : "Musterlösung"}
+      </div>
+      <div
+        className="mt-1.5 text-[11.5px] leading-relaxed"
+        style={{ color: "rgba(255,255,255,0.55)" }}
+      >
+        {isEn ? preview.body.en : preview.body.de}
+      </div>
+    </div>
+  );
+}
+
 function PreviewSwitch({
   preview,
   language,
@@ -293,6 +347,8 @@ function PreviewSwitch({
       return <MiniQuizPreview preview={preview} language={language} />;
     case "blueprint":
       return <MiniBlueprintPreview preview={preview} language={language} />;
+    case "openQuestion":
+      return <MiniOpenQuestionPreview preview={preview} language={language} />;
   }
 }
 
@@ -380,12 +436,23 @@ function DemoCard({
         <span className="ln-mono-tag ln-mono-tag-accent">
           {entry.stats.cards} {isEn ? "cards" : "Karten"}
         </span>
-        <span className="ln-mono-tag">
-          {entry.stats.quiz} Quiz
-        </span>
-        <span className="ln-mono-tag">
-          {entry.stats.topics} {isEn ? "topics" : "Themen"}
-        </span>
+        {entry.stats.quiz > 0 ? (
+          <span className="ln-mono-tag">
+            {entry.stats.quiz}{" "}
+            {entry.exam === "open_questions"
+              ? isEn ? "Questions" : "Fragen"
+              : "Quiz"}
+          </span>
+        ) : (
+          <span className="ln-mono-tag">
+            {entry.stats.topics} {isEn ? "topics" : "Themen"}
+          </span>
+        )}
+        {entry.stats.quiz > 0 && (
+          <span className="ln-mono-tag">
+            {entry.stats.topics} {isEn ? "topics" : "Themen"}
+          </span>
+        )}
       </div>
 
       {/* Preview snippet(s) — "there's more inside" content. Featured card

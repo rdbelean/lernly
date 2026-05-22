@@ -5,197 +5,211 @@
     {
       "id": "1",
       "category": "Phasen des Datenbankentwurfs",
-      "question": "Welche 4 Phasen durchläuft ein vollständiger Datenbankentwurf — und welche Artefakte entstehen jeweils?",
-      "answer": "<strong>4 Phasen: Anforderungsanalyse → Konzeptueller Entwurf → Implementationsentwurf → Physischer Entwurf</strong><br>Phase 1 liefert die <strong>Anforderungsspezifikation</strong>, Phase 2 ein <strong>ER-Schema</strong> (Informationsstruktur), Phase 3 die <strong>logische Datenbankstruktur</strong>, Phase 4 die <strong>physische Datenbankstruktur</strong>. In Phase 3 fließen DBMS-Charakteristika ein, in Phase 4 Hardware/BS-Charakteristika.<br><em>Eselsbrücke: 'AKIP' — Analyse, Konzept, Implementierung, Physisch</em>",
+      "question": "Nenne und erkläre die 4 Hauptphasen des Datenbankentwurfs in der richtigen Reihenfolge.",
+      "answer": "<strong>4 Phasen: Anforderungsanalyse → Konzeptueller Entwurf → Implementationsentwurf → Physischer Entwurf</strong><br>Jede Phase produziert ein Artefakt: Anforderungsspezifikation → ER-Schema (Informationsstruktur) → logische Datenbankstruktur → physische Datenbankstruktur. Beispiel Uni-DB: erst wird gefragt 'welche Daten braucht das Prüfungsamt?', dann ein ER-Diagramm mit Student/Vorlesung/Professor gezeichnet, danach in SQL-Tabellen übersetzt, schließlich Indizes und Speicherpfade festgelegt.<br><em>Eselsbrücke:</em> <strong>AKI-P</strong> — <strong>A</strong>nforderung, <strong>K</strong>onzeptuell, <strong>I</strong>mplementation, <strong>P</strong>hysisch — wie ein AKI-Pumpe: Daten fließen von oben nach unten.",
       "difficulty": "easy"
     },
     {
       "id": "2",
       "category": "Phasen des Datenbankentwurfs",
-      "question": "Warum scheitert die Anforderungsanalyse in der Praxis so oft — und was ist die Kernaussage der 'Baumschaukel'-Folie?",
-      "answer": "<strong>Geldgeber, Designer, Programmierer und Kunde verstehen 'dasselbe' unterschiedlich</strong> — jeder übersetzt die Anforderung falsch.<br>Die Folie zeigt 6 Versionen derselben Schaukel: vom üppigen Baum über ein hängendes Brett bis zu einem einseitigen Seil. Der Kunde wollte eine simple Reifenschaukel — bekam aber etwas ganz anderes.<br><em>Kernbotschaft: Kommunikation zwischen Anwender und Entwickler ist entscheidend. In der Klausur: Iterativer Prozess notwendig!</em>",
+      "question": "Was ist der Unterschied zwischen 'Informationsanforderungen' und 'Datenverarbeitungsanforderungen' im Phasenmodell?",
+      "answer": "<strong>Informationsanforderungen</strong> beschreiben <strong>WAS</strong> gespeichert werden soll (Struktur der Daten), <strong>Datenverarbeitungsanforderungen</strong> beschreiben <strong>WIE</strong> diese Daten verarbeitet werden sollen (Prozesse).<br>Beispiel: 'Wir speichern Studenten mit MatrNr, Name, Geburtstag' = Informationsanforderung. 'Zeugnisaustellung läuft halbjährlich, verarbeitet 500 Studenten und 3000 Prüfungen' = Datenverarbeitungsanforderung. Beide fließen gemeinsam in die Anforderungsanalyse ein.<br><em>Eselsbrücke:</em> Info = <strong>I</strong>nhalt, Verarbeitung = <strong>V</strong>organg — 'I' kommt vor 'V', Struktur vor Prozess.",
       "difficulty": "easy"
     },
     {
       "id": "3",
       "category": "Phasen des Datenbankentwurfs",
-      "question": "Nenne die 7 Schritte der Anforderungsanalyse in der richtigen Reihenfolge.",
-      "answer": "<strong>7 Schritte von der Identifikation bis zur Formalisierung</strong><br>1. Identifikation von Organisationseinheiten, 2. Identifikation der zu unterstützenden Aufgaben, 3. Anforderungs-Sammelplan, 4. Anforderungs-Sammlung, 5. Filterung, 6. Satzklassifikationen, 7. Formalisierung.<br><em>Eselsbrücke: 'IO-ASFSF' — Oder merke: 'Ich Identifiziere Aufgaben, Sammle Filter, Klassifiziere, Formalisiere'</em>",
-      "difficulty": "medium"
+      "question": "Was zeigt das klassische 'Baum-Comic' der Anforderungsanalyse, und welche DB-Entwurfslektion steckt dahinter?",
+      "answer": "<strong>Das Comic illustriert, dass Geldgeber, Designer, Programmierer und Kunde völlig unterschiedliche Vorstellungen vom selben System haben</strong> — obwohl alle 'über denselben Baum' sprechen.<br>Die Lektion: Missverständnisse zwischen Anwender und Entwickler sind das häufigste Scheitern von Projekten. Deshalb ist die Anforderungsanalyse ein <strong>iterativer Prozess</strong>: Anwender erzählt → Entwickler schreibt auf → Rückübersetzung → Feedback → Schritt wiederholen. Im Datenbankkontext: ohne klare Anforderungen entwirft man das falsche ER-Schema.<br><em>Eselsbrücke:</em> 'Schaukel statt Baum' — der Kunde wollte eine Schaukel (einfach), bekam aber ein 6-stufiges Konstrukt (unnötig komplex).",
+      "difficulty": "easy"
     },
     {
       "id": "4",
       "category": "Phasen des Datenbankentwurfs",
-      "question": "Was unterscheidet eine Objektbeschreibung von einer Beziehungsbeschreibung in der Anforderungsanalyse — und was gehört jeweils rein?",
-      "answer": "<strong>Objektbeschreibung beschreibt Entitäten mit Attributen, Beziehungsbeschreibung beschreibt Relationen mit beteiligten Objekten und eigenen Attributen.</strong><br>Beispiel Objektbeschreibung 'Uni-Angestellte': Anzahl 1000, Attribute PersonalNummer (Schlüssel, Definiertheit 100%), Gehalt (Definiertheit 90%), Rang. Beispiel Beziehungsbeschreibung 'prüfen': beteiligte Objekte Professor, Student, Vorlesung; Attribute Datum, Uhrzeit, Note; 100.000 Vorgänge/Jahr.<br><em>Merke: Beziehungsbeschreibung hat immer beteiligte Objekte + eigene Attribute + Häufigkeit</em>",
+      "question": "Was enthält eine Objektbeschreibung in der Anforderungsanalyse? Nenne alle relevanten Metadaten am Beispiel 'Uni-Angestellte'.",
+      "answer": "<strong>Eine Objektbeschreibung dokumentiert für jedes Attribut: Typ, Länge, Wertebereich, Anzahl Wiederholungen, Definiertheit (%) und ob es identifizierend ist.</strong><br>Beispiel: Attribut <em>PersonalNummer</em> der Entität Uni-Angestellte (1000 Instanzen): Typ=char, Länge=9, Wertebereich=0…999.999.99, Wiederholungen=0, Definiertheit=100%, identifizierend=ja. Attribut <em>Gehalt</em>: Typ=dezimal, Länge=(8,2), Definiertheit=90%, identifizierend=nein — d.h. 10% der Angestellten haben kein gespeichertes Gehalt (NULL-Problem!).<br><em>Eselsbrücke:</em> <strong>TLWWDI</strong> — Typ, Länge, Wertebereich, Wiederholung, Definiertheit, Identifizierend.",
       "difficulty": "medium"
     },
     {
       "id": "5",
       "category": "Phasen des Datenbankentwurfs",
-      "question": "Was sind die 4 Eigenschaften einer idealen Spezifikation — und warum ist keine davon in der Realität vollständig erreichbar?",
-      "answer": "<strong>Eindeutig, vollständig, verständlich (für alle Leser), redundanzfrei</strong> — in der Praxis immer nur ein Kompromiss.<br>Beispiel: Eine Vorlesungsdatenbank-Spezifikation kann für den Dekan verständlich, aber für den Programmierer zu vage sein. 'Vollständig' scheitert, weil Anwender nicht wissen, was sie nicht wissen (vgl. Baumschaukel-Problem).<br><em>Eselsbrücke: 'EVVR' — Eindeutig, Vollständig, Verständlich, Redundanzfrei</em>",
+      "question": "Was sind die 4 Bestandteile einer idealen Spezifikation, und warum ist sie in der Praxis unerreichbar?",
+      "answer": "<strong>Die ideale Spezifikation ist: eindeutig, vollständig, verständlich (für alle Leser), redundanzfrei.</strong><br>In der Praxis scheitert dies, weil Anwender und Entwickler unterschiedliche Fachsprachen sprechen, Anforderungen sich ändern, und Vollständigkeit nicht verifizierbar ist. Beispiel: eine Uni-DB-Spezifikation, die für das Prüfungsamt verständlich ist, kann für den DB-Entwickler zu informal sein — Kompromisse sind unvermeidlich.<br><em>Eselsbrücke:</em> <strong>EVVR</strong> — wie 'Ewig Viele Versuche Rauben' Zeit, weil die perfekte Spezifikation nie existiert.",
       "difficulty": "easy"
     },
     {
       "id": "6",
       "category": "ER-Modell: Grundbausteine",
-      "question": "Was sind die 5 grundlegenden Bausteine des ER-Modells und wie werden sie grafisch dargestellt?",
-      "answer": "<strong>Entitätentyp (Rechteck), Attribut (Ellipse), Schlüssel (unterstrichenes Attribut in Ellipse), Relationship/Beziehungstyp (Raute), Rolle (Beschriftung an Kante)</strong><br>Beispiel: Entität 'Student' ist ein Rechteck; Attribut 'MatrNr' ist eine unterstrichene Ellipse (Schlüssel); Beziehung 'besucht' zwischen Student und Vorlesung ist eine Raute; bei rekursiver Beziehung 'setzt_voraus' auf Vorlesung tragen die Kanten die Rollen 'Vorgänger' und 'Nachfolger'.<br><em>Eselsbrücke: 'EASKR' — Entität-Attribut-Schlüssel-Relationship-Rolle. Formen: Rechteck=Ding, Ellipse=Eigenschaft, Raute=Verb</em>",
+      "question": "Welche 5 grundlegenden Bausteine hat das ER-Modell, und welche grafischen Symbole repräsentieren sie?",
+      "answer": "<strong>5 Bausteine: Entitätentyp (Rechteck), Attribut (Ellipse), Schlüssel (Ellipse mit unterstrichenem Text), Relationship/Beziehungstyp (Raute), Rolle (Beschriftung an Kante).</strong><br>Beispiel aus der Uni-DB: <em>Student</em> = Rechteck, <em>MatrNr</em> = unterstr. Ellipse (Schlüssel), <em>Name/Geburtstag</em> = normale Ellipsen, <em>besucht</em> = Raute zwischen Student und Vorlesung, <em>Vorgänger/Nachfolger</em> = Rollen bei der rekursiven Beziehung <em>setzt_voraus</em>.<br><em>Eselsbrücke:</em> <strong>EASRR</strong> — <strong>E</strong>ntität=Rechteck, <strong>A</strong>ttribut=Ellipse, <strong>S</strong>chlüssel=unterstrichen, <strong>R</strong>elationship=Raute, <strong>R</strong>olle=Kantenbeschriftung.",
       "difficulty": "easy"
     },
     {
       "id": "7",
       "category": "ER-Modell: Grundbausteine",
-      "question": "Was ist eine Entität im ER-Modell — und wie unterscheidet sich ein Entitätstyp von einer Entitätsinstanz?",
-      "answer": "<strong>Eine Entität ist ein unterscheidbares Objekt der realen Miniwelt; der Entitätstyp beschreibt die Klasse, die Instanz ein konkretes Exemplar.</strong><br>Entitätstyp: 'Student' (Rechteck im ER-Diagramm). Instanz: der konkrete Student mit MatrNr 12345, Name 'Müller', Geburtstag 01.01.2000. Entitätstypen können Dinge, Personen oder Konzepte sein (z.B. Vorlesung als Konzept).<br><em>Merke: Typ = Bauplan, Instanz = konkretes Objekt. Wie in Java: Klasse vs. Objekt.</em>",
+      "question": "Erkläre den Unterschied zwischen einem Entitätstyp und einer Entität (Instanz) anhand eines konkreten Beispiels.",
+      "answer": "<strong>Ein Entitätstyp ist die Schablone/Klasse (z.B. 'Student'), eine Entität ist eine konkrete Instanz davon (z.B. Student mit MatrNr=12345, Name='Max Müller').</strong><br>Im ER-Diagramm zeichnen wir nur Entitätstypen (Rechtecke). Der Entitätstyp <em>Vorlesung</em> mit Attributen Nr, Titel, Credits kann z.B. die Instanz 'Datenbanken I, Nr=5001, 6 Credits' enthalten. Prüfungsrelevanz: In SQL wird der Entitätstyp zur Tabelle, die Entitäten werden zu Zeilen (Tupeln).<br><em>Eselsbrücke:</em> Typ = Formular-Vorlage, Instanz = ausgefülltes Formular.",
       "difficulty": "easy"
     },
     {
       "id": "8",
       "category": "ER-Modell: Grundbausteine",
-      "question": "Was sind die 4 Funktionalitätstypen im ER-Modell — und was bedeuten sie formal?",
-      "answer": "<strong>1:1, 1:N, N:1, N:M</strong> — sie geben an, mit wie vielen Entitäten der anderen Seite eine Entität in Beziehung stehen kann.<br>Beispiel: Student <strong>besucht</strong> Vorlesung ist <strong>N:M</strong> (ein Student besucht viele Vorlesungen, eine Vorlesung wird von vielen Studenten besucht). Vorlesung <strong>hält</strong> Professor ist <strong>N:1</strong> (viele Vorlesungen, ein Professor je Vorlesung — der Schlüssel der N-Seite, also VorlNr, wird Schlüssel der Beziehungsrelation).<br><em>Eselsbrücke: Lies 1:N als 'einer zu viele'. 1=eine Seite, N=viele Seiten.</em>",
-      "difficulty": "easy"
+      "question": "Was ist eine schwache Entität, und welche Bedingungen muss sie erfüllen? Nenne ein Beispiel.",
+      "answer": "<strong>Eine schwache Entität kann nicht eigenständig existieren und benötigt eine 'starke' Entität zur eindeutigen Identifikation — ihr Schlüssel ist zusammengesetzt.</strong><br>Beispiel: <em>Zimmer</em> ist eine schwache Entität, da eine ZimmerNr '101' ohne Angabe des Gebäudes nicht eindeutig ist. Erst die Kombination (GebäudeNr, ZimmerNr) identifiziert ein Zimmer eindeutig. Die Beziehung <em>in</em> zwischen Gebäude (stark) und Zimmer (schwach) ist stets 1:N. Im relationalen Modell: Zimmer(<u>GebäudeNr</u>, <u>ZimmerNr</u>, ...).<br><em>Eselsbrücke:</em> Schwache Entität = Parasit — kann ohne Wirt (starke Entität) nicht identifiziert werden. Gestricheltes Rechteck und gestrichelte Ellipse im ER-Diagramm.",
+      "difficulty": "medium"
     },
     {
       "id": "9",
       "category": "ER-Modell: Grundbausteine",
-      "question": "Was bedeutet die (min,max)-Notation an einer Beziehungskante — und worin besteht der Unterschied zur einfachen N:M-Notation?",
-      "answer": "<strong>(min,max) gibt für jede Entität an, an wie vielen Beziehungsinstanzen sie mindestens (min) und höchstens (max) teilnehmen muss.</strong><br>Beispiel Polyeder-Modell: Beziehung 'Hülle' zwischen Polyeder und Flächen hat (4,*) auf der Flächen-Seite — ein Polyeder hat mindestens 4 Flächen, maximal beliebig viele. 'Begrenzung' zwischen Flächen und Kanten hat (3,*) auf Kanten-Seite und (2,2) auf Flächen-Seite — jede Kante begrenzt genau 2 Flächen.<br><em>Vorsicht: (min,max) ≠ einfache Funktionalitätsangabe (1:N). Die (min,max)-Notation ist mächtiger und enthält auch Pflichtteilnahme (min>0).</em>",
-      "difficulty": "hard"
+      "question": "Was sind Rollen im ER-Modell, und wann braucht man sie zwingend?",
+      "answer": "<strong>Rollen beschriften die Kanten einer Beziehung und beschreiben, in welcher Funktion eine Entität an der Beziehung teilnimmt — zwingend nötig bei rekursiven (unären) Beziehungen.</strong><br>Beispiel: Die Beziehung <em>setzt_voraus</em> verbindet den Entitätstyp <em>Vorlesung</em> mit sich selbst. Ohne Rollen wäre unklar, welche Vorlesung Vorgänger und welche Nachfolger ist. Die Kanten werden daher mit 'Vorgänger' (N-Seite) und 'Nachfolger' (M-Seite) beschriftet. Logik: Eine Vorlesung kann mehrere Voraussetzungen haben (N) und selbst Voraussetzung für viele sein (M).<br><em>Eselsbrücke:</em> Rollen = Namensschilder bei einem Meeting, damit man weiß, wer welche Funktion hat.",
+      "difficulty": "medium"
     },
     {
       "id": "10",
-      "category": "ER-Modell: Grundbausteine",
-      "question": "Was sind Rollen im ER-Modell und wann braucht man sie zwingend?",
-      "answer": "<strong>Rollen beschreiben die Funktion, die eine Entität in einer Beziehung einnimmt — zwingend bei rekursiven Beziehungen (ein Entitätstyp nimmt mehrfach teil).</strong><br>Beispiel: Entität 'Vorlesung' hat eine rekursive Beziehung 'setzt_voraus' zu sich selbst. Ohne Rollen wäre unklar, welche Vorlesung Vorgänger und welche Nachfolger ist. Mit Rollen: Kante mit 'Vorgänger' (N-Seite) und 'Nachfolger' (M-Seite).<br><em>Merke: Rollen = Rollenschilder an den Türen. Ohne Schild weiß niemand, wer was tut.</em>",
-      "difficulty": "medium"
+      "category": "ER-Modell: Funktionalitäten",
+      "question": "Erkläre die 4 Arten von Funktionalitäten (1:1, 1:N, N:1, N:M) mit je einem konkreten Uni-DB-Beispiel.",
+      "answer": "<strong>Funktionalitäten drücken aus, mit wie vielen Entitäten der anderen Seite eine Entität maximal in Beziehung steht.</strong><br>• <strong>1:1</strong>: Jeder Professor hat genau ein Büro (in einer strikten Uni-Regelung).<br>• <strong>1:N</strong>: Ein Professor <em>hält</em> N Vorlesungen (jede Vorlesung von max. 1 Professor).<br>• <strong>N:1</strong>: N Assistenten <em>arbeiten_für</em> 1 Professor.<br>• <strong>N:M</strong>: N Studenten <em>besuchen</em> M Vorlesungen (jede Vorlesung hat viele Hörer).<br><em>Eselsbrücke:</em> Lies die Zahl an der Kante auf DEINER Seite = wie viele von DIR pro Gegenüber. N:M = 'Viele-zu-Viele' = braucht stets eigene Tabelle in SQL!",
+      "difficulty": "easy"
     },
     {
       "id": "11",
-      "category": "ER-Modell: Erweiterte Konzepte",
-      "question": "Was ist eine schwache Entität, wann tritt sie auf und wie erkennt man sie im ER-Diagramm?",
-      "answer": "<strong>Eine schwache Entität kann nicht eigenständig existieren und wird durch doppelte Linien (Rechteck und Raute) dargestellt — sie braucht eine starke Entität zur eindeutigen Identifikation.</strong><br>Beispiel: 'Zimmer' ist schwach, weil ZimmerNr 101 in Gebäude A und B existieren kann. Erst die Kombination (GebäudeNr, ZimmerNr) ist eindeutig. Die starke Entität 'Gebäude' geht eine 1:N-Beziehung mit 'Zimmer' ein.<br><em>Merke: Schwache Entität hat einen gestrichelten Teilschlüssel. Im relationalen Schema bekommt sie einen zusammengesetzten Schlüssel: Zimmer(<u>GebäudeNr, ZimmerNr</u>, ...).</em>",
-      "difficulty": "medium"
+      "category": "ER-Modell: Funktionalitäten",
+      "question": "Was bedeutet die (min,max)-Notation im ER-Modell? Erkläre am Beispiel des Polyeder-Diagramms (Folie 32).",
+      "answer": "<strong>Die (min,max)-Notation an einer Kante gibt an, dass jede Entität des zugehörigen Typs mindestens min-mal und höchstens max-mal an der Beziehung teilnimmt ('*' = beliebig viele).</strong><br>Aus dem Polyeder-Beispiel: Die Kante Polyeder–Hülle hat (4,*) auf der Flächen-Seite → jeder Polyeder besteht aus mindestens 4 Flächen. Die Kante Hülle–Flächen hat (1,1) auf der Polyeder-Seite → jede Fläche gehört zu genau einem Polyeder. Wichtig: Diese Notation ist NICHT dasselbe wie die einfache N:M-Notation! (min,max) ist präziser.<br><em>Eselsbrücke:</em> <strong>Vorsicht Verwechslungsgefahr!</strong> (min,max) liest man von der Entität zur Beziehung hin; N:M liest man von Entität zu Entität.",
+      "difficulty": "hard"
     },
     {
       "id": "12",
-      "category": "ER-Modell: Erweiterte Konzepte",
-      "question": "Was modelliert eine Generalisierung im ER-Modell — und welche 3 Übersetzungsstrategien gibt es ins relationale Modell?",
-      "answer": "<strong>Generalisierung modelliert 'is-a'-Hierarchien mit Attributvererbung vom Obertyp an Untertypen — es gibt keine direkte relationale Entsprechung, daher 3 Kompromissstrategien.</strong><br>Beispiel: 'Angestellte' (PersNr, Name) ist Obertyp; 'Assistent' (Fachgebiet) und 'Professor' (ZimmerNr) sind Untertypen. Strategie 1 (nur Obertyp): Angestellte(PersNr, Name, Fachgebiet, ZimmerNr) → Problem: NULL-Werte. Strategie 2 (nur Untertypen): Problem bei anderen Angestellten. Strategie 3 (alle Typen): Information über JOIN verteilt.<br><em>Eselsbrücke: 'OUA' — Oben-Unten-Alle. Jede Strategie hat genau einen typischen Nachteil.</em>",
+      "category": "ER-Modell: Funktionalitäten",
+      "question": "Die ternäre Beziehung 'betreuen' (Professoren × Studenten → Seminarthemen) hat die Funktionalitäten N (Studenten) und 1 (Professoren, Seminarthemen). Welche 2 Konsistenzbedingungen erzwingt das?",
+      "answer": "<strong>1. Ein Student kann bei demselben Professor nur ein Seminarthema bearbeiten. 2. Ein Student kann dasselbe Seminarthema nur einmal bearbeiten (auch nicht bei anderen Professoren).</strong><br>Formal: betreuen : Professoren × Studenten → Seminarthemen bedeutet, dass die Kombination (Professor, Student) das Seminarthema eindeutig bestimmt. Und betreuen : Seminarthemen × Studenten → Professoren bedeutet, dass (Thema, Student) den Professor eindeutig bestimmt. Erlaubt bleibt: Ein Professor darf dasselbe Thema mehreren Studenten geben; ein Thema kann von mehreren Professoren vergeben werden (aber an verschiedene Studenten).<br><em>Eselsbrücke:</em> Die '1' an einer Kante = Funktionspfeil in diese Richtung = die anderen zwei Seiten zusammen bestimmen diese Entität EINDEUTIG.",
       "difficulty": "hard"
     },
     {
       "id": "13",
-      "category": "ER-Modell: Erweiterte Konzepte",
-      "question": "Was modelliert eine Aggregation im ER-Modell — und wie unterscheidet sie sich von einer Generalisierung?",
-      "answer": "<strong>Aggregation modelliert 'ist-Teil-von'-Beziehungen (part-of), Generalisierung modelliert 'ist-ein'-Beziehungen (is-a).</strong><br>Beispiel Aggregation: Auto besteht aus Fahrgestell, Karosserie und Rädern — jede Komponente ist ein part-of Auto. Beispiel Generalisierung: Professor is-a Angestellter. Wichtig: Teil-Entitäten können ohne das Ganze existieren (Räder existieren auch ohne Auto), bei starker Aggregation (Komposition) nicht.<br><em>Merke: 'part-of' = Aggregation (Teile); 'is-a' = Generalisierung (Typ). Auto hat Räder ≠ Auto ist ein Fahrzeug.</em>",
-      "difficulty": "medium"
+      "category": "ER-Modell: Funktionalitäten",
+      "question": "Was ist eine 'echte ternäre Beziehung', und woran erkennst du, ob eine ternäre Beziehung wirklich ternär ist oder in binäre aufgeteilt werden kann?",
+      "answer": "<strong>Eine echte ternäre Beziehung benötigt alle drei teilnehmenden Entitäten zur vollständigen Beschreibung eines Sachverhalts — sie kann NICHT verlustfrei in binäre Beziehungen aufgeteilt werden.</strong><br>Beispiel echt ternär: <em>prüft</em> (Professor × Student × Vorlesung) — die Note hängt von allen dreien ab. Beispiel NICHT echt ternär: <em>DiplArbeit</em> (Student × Professor[Erstgutachter] × Professor[Zweitgutachter]) — hier sind es eigentlich zwei separate 1:N-Beziehungen (Student→Erstgutachter und Student→Zweitgutachter), die man als zwei binäre Rollen modellieren sollte.<br><em>Eselsbrücke:</em> Test: Kann ich eine der drei Entitäten weglassen, ohne Information zu verlieren? Dann ist die Beziehung NICHT echt ternär.",
+      "difficulty": "hard"
     },
     {
       "id": "14",
-      "category": "ER-Modell: Entwurfsentscheidungen",
-      "question": "Wann modelliert man etwas als Entität und wann als Attribut — was sind die entscheidenden Kriterien?",
-      "answer": "<strong>Entitätstyp wenn: Mehrfachvorkommen möglich, eigene Attribute nötig, oder Zerlegung in Unterattribute sinnvoll. Attribut wenn: einfach, einwertig, keine eigene Bedeutung.</strong><br>Beispiel 'Adresse' eines Kunden bei Amazon: Kann ein Kunde mehrere Adressen haben? → Eigene Entität (Attribute sind nicht mengenwertig). Soll Adresse in PLZ, Stadt etc. zerlegt werden? → Mindestens in Unterattribute aufteilen, ggf. eigene Entität ausgliedern.<br><em>Faustregel: Flexibilität braucht Entität, Einfachheit erlaubt Attribut.</em>",
-      "difficulty": "medium"
-    },
-    {
-      "id": "15",
-      "category": "ER-Modell: Entwurfsentscheidungen",
-      "question": "Wann braucht man eine Entität statt einer Beziehung — und was ist das zentrale Argument?",
-      "answer": "<strong>Beziehungen haben keine eigene Identität: dieselben Entitäten können nicht mehrfach in derselben Beziehung auftreten. Wenn das nötig ist, muss eine Entität modellieren.</strong><br>Beispiel: Student 'Müller' legt Prüfung in 'Datenbanken' bei Prof. 'Schmidt' mehrfach ab (Wiederholung). Als Beziehung 'prüft' nicht darstellbar (eindeutig). Lösung: Entität 'Prüfung' mit PrüfungsNr, Note, Datum einführen — verbunden mit Student (meldet), Vorlesung (Thema) und Professor (benotet).<br><em>Merke: 'Mehr als einmal dasselbe' → muss Entität werden, nicht Beziehung.</em>",
-      "difficulty": "medium"
-    },
-    {
-      "id": "16",
-      "category": "ER-Modell: Entwurfsentscheidungen",
-      "question": "Was ist eine echte ternäre Beziehung — und wie unterscheidet sie sich von einer falschen ternären Beziehung (mit Beispiel)?",
-      "answer": "<strong>Eine echte ternäre Beziehung benötigt alle drei teilnehmenden Entitäten zur eindeutigen Beschreibung — bei einer unechten ternären kann man sie in binäre zerlegen.</strong><br>Echt ternär: 'prüft' (Professor, Student, Vorlesung) — welcher Professor prüft welchen Studenten über welche Vorlesung? Alle drei nötig. Nicht echt ternär: 'DiplArbeit' (Student, Professor_Erstgutachter, Professor_Zweitgutachter) — kann als zwei binäre Beziehungen (Erstgutachter: Student→Professor; Zweitgutachter: Student→Professor) mit Rollen modelliert werden.<br><em>Test: Kann ich die ternäre Raute ohne Informationsverlust durch zwei binäre Rauten ersetzen? → Wenn ja, nicht echt ternär.</em>",
-      "difficulty": "hard"
-    },
-    {
-      "id": "17",
-      "category": "ER-Modell: Entwurfsentscheidungen",
-      "question": "Was ist eine Connection Trap — und wie erkennt man sie im ER-Schema?",
-      "answer": "<strong>Eine Connection Trap ist eine redundante, zyklische Beziehung, die bereits durch andere Beziehungen im Schema ausgedrückt wird.</strong><br>Beispiel: Student <strong>besucht</strong> Vorlesung (N:M) und Professor <strong>hält</strong> Vorlesung (N:1) sind bereits modelliert. Fügt man zusätzlich die Beziehung 'besucht Vorlesung' zwischen Student und Professor ein, ist diese redundant — welcher Student welche Vorlesung bei welchem Professor besucht, ist über besucht + hält bereits ableitbar.<br><em>Erkennungsmerkmal: Zyklus im ER-Diagramm = Verdacht auf Connection Trap. Frage: Ist die Information bereits durch Transitiv-Verknüpfung bestehender Beziehungen ausdrückbar?</em>",
-      "difficulty": "hard"
-    },
-    {
-      "id": "18",
-      "category": "ER zu Relational: Übersetzungsregeln",
-      "question": "Wie übersetzt man eine Entität ins relationale Modell — mit konkretem Beispiel?",
-      "answer": "<strong>Jede Entität wird zu einer Relation; Attribute der Entität werden Attribute der Relation; Schlüsselattribut wird Primärschlüssel (unterstrichen).</strong><br>Beispiel: Entität 'Student' mit MatrNr (Schlüssel), Name, Geburtstag wird zu: <strong>Student(<u>MatrNr</u>, Name, Geburtstag)</strong>. Entität 'Professor' mit PersNr (Schlüssel), Name, ZimmerNr wird zu: <strong>Professor(<u>PersNr</u>, Name, ZimmerNr)</strong>.<br><em>Regel: 1 Entität = 1 Relation. Schlüssel wird unterstrichen. Alle Attribute übernehmen.</em>",
+      "category": "ER-Modell: Weiterführende Konzepte",
+      "question": "Was ist eine Generalisierung im ER-Modell, und welche Darstellung wird verwendet?",
+      "answer": "<strong>Generalisierung modelliert eine is-a-Hierarchie: ein Untertyp erbt alle Attribute des Obertyps und besitzt zusätzlich eigene Attribute — dargestellt durch eine Raute 'is-a' mit Pfeil zum Obertyp.</strong><br>Beispiel: Obertyp <em>Angestellte</em> (PersNr, Name). Untertypen: <em>Professor</em> (erbt PersNr, Name; hat zusätzlich ZimmerNr) und <em>Assistent</em> (erbt PersNr, Name; hat zusätzlich Fachgebiet). Das entspricht dem Konzept der Vererbung aus OOP — ein Professor IST EIN Angestellter.<br><em>Eselsbrücke:</em> is-a = 'ist ein' — Professor ist ein Angestellter. Pfeil zeigt AUFWÄRTS zum Obertyp (wie Erbschaft fließt nach oben zur Quelle).",
       "difficulty": "easy"
     },
     {
+      "id": "15",
+      "category": "ER-Modell: Weiterführende Konzepte",
+      "question": "Was ist eine Aggregation im ER-Modell, und wann setzt man sie ein?",
+      "answer": "<strong>Aggregation modelliert eine 'ist-Teil-von'-Beziehung (part-of) zwischen Entitäten — das Ganze besteht aus seinen Teilen.</strong><br>Beispiel: <em>Auto</em> besteht aus (part-of) <em>Fahrgestell</em>, <em>Karosserie</em> und <em>Rädern</em>. Unterschied zu Generalisierung: Aggregation = 'hat' (Komposition), Generalisierung = 'ist'. Ein Auto IST KEIN Fahrgestell, es HAT EINES. Im ER-Diagramm: mehrere Rauten 'part-of' verbinden das Ganze mit seinen Teilen in einer Baumstruktur.<br><em>Eselsbrücke:</em> <strong>Aggregation = 'HAT'</strong> (has-a), <strong>Generalisierung = 'IST'</strong> (is-a). Auto hat Räder ≠ Auto ist ein Rad.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "16",
+      "category": "Entwurfsentscheidungen im ER-Modell",
+      "question": "Wann modelliert man etwas als eigene Entität statt als Attribut? Nenne die 2 Entscheidungskriterien.",
+      "answer": "<strong>Als eigene Entität modellieren, wenn: (1) mehrere Werte pro Instanz möglich sind (Mengenwertig) oder (2) das Konzept selbst in Teilkomponenten zerlegt wird.</strong><br>Beispiel <em>Adresse</em> bei Kunden: Wenn ein Kunde mehrere Adressen haben kann → eigene Entität (da Attribute nicht mehrwertig sein dürfen). Wenn die Adresse in Straße, PLZ, Stadt aufgeteilt werden soll → entweder mehrere Attribute oder eigene Entität mit diesen Attributen. Faustregel: Attribut = einfacher, Entität = flexibler für spätere Erweiterungen.<br><em>Eselsbrücke:</em> <strong>M-Z-Test</strong>: Mehrere Werte? → Entität. Zerlegbar? → Entität (oder Teilattribute). Sonst: Attribut.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "17",
+      "category": "Entwurfsentscheidungen im ER-Modell",
+      "question": "Wann wählt man eine Entität statt einer Beziehung? Nenne den entscheidenden Grund und ein Beispiel.",
+      "answer": "<strong>Eine Beziehung hat keine eigene Identität — dieselben Entitäten können nur EINMAL eine bestimmte Beziehung eingehen. Wenn mehrere Instanzen des gleichen Sachverhalts möglich sind, braucht man eine Entität.</strong><br>Problem-Beispiel: <em>prüft</em> als ternäre Beziehung (Professor–Student–Vorlesung) kann einen Studenten pro Vorlesung und Professor nur einmal prüfen. Wenn aber ein Student dieselbe Vorlesung mehrfach ablegen kann (Wiederholungsprüfung), muss man <em>Prüfung</em> als eigene Entität modellieren mit eigenem Schlüssel (PrüfungsNr) sowie Attributen Note und Datum.<br><em>Eselsbrücke:</em> Beziehung = Unikat-Verbindung. Mehrfach = eigene Entität mit Schlüssel.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "18",
+      "category": "Entwurfsentscheidungen im ER-Modell",
+      "question": "Was ist eine Connection Trap im ER-Modell? Wie erkennt und vermeidet man sie?",
+      "answer": "<strong>Eine Connection Trap entsteht, wenn ein zyklischer Pfad aus mehreren Beziehungen eine weitere Beziehung redundant macht — die redundante Beziehung speichert keine neue Information.</strong><br>Beispiel aus der Uni-DB: Die Beziehung <em>besucht_Vorlesung</em> (Student–Professor) ist redundant, da sich dieselbe Information bereits aus der Kombination von <em>besucht</em> (Student–Vorlesung) und <em>hält</em> (Vorlesung–Professor) ergibt. Enthält ein ER-Diagramm einen Zyklus → prüfen, ob eine Beziehung im Zyklus aus den anderen ableitbar ist. Wenn ja: Connection Trap — die redundante Beziehung entfernen.<br><em>Eselsbrücke:</em> Connection Trap = Kurzschluss im Schaltkreis: überflüssige Verbindung, die Probleme (Redundanz, Inkonsistenz) erzeugt.",
+      "difficulty": "medium"
+    },
+    {
       "id": "19",
-      "category": "ER zu Relational: Übersetzungsregeln",
-      "question": "Wie bestimmt sich der Schlüssel einer Beziehungsrelation — abhängig von der Funktionalität (N:M, 1:N, 1:1)?",
-      "answer": "<strong>N:M → Kombination beider Entitätsschlüssel als zusammengesetzter Schlüssel. 1:N / N:1 → Schlüssel der N-Seite wird Schlüssel der Beziehungsrelation. 1:1 → einer der beiden Entitätsschlüssel wählbar.</strong><br>Beispiel N:M: besucht(Student N:M Vorlesung) → <strong>besucht(<u>MatrNr, Nr</u>)</strong>. Beispiel N:1: hält(Vorlesung N:1 Professor) → <strong>hält(<u>Nr</u>, PersNr)</strong> — Nr ist Schlüssel der N-Seite (Vorlesung).<br><em>Eselsbrücke: 'N gewinnt' — bei 1:N gewinnt immer die N-Seite den Schlüssel der Beziehung.</em>",
+      "category": "Entwurfsentscheidungen im ER-Modell",
+      "question": "Erkläre das vollständige ER-Schema der Uni-DB: Welche Entitäten, Beziehungen und Funktionalitäten enthält es?",
+      "answer": "<strong>Das vollständige Schema enthält 4 Entitäten: Student, Vorlesung, Professor, Assistent — verbunden durch 5 Beziehungen.</strong><br>• <em>besucht</em>: Student N:M Vorlesung<br>• <em>prüft</em>: Student N:M Professor (mit Attribut Note), Vorlesung N-Seite<br>• <em>hält</em>: Professor 1:N Vorlesung<br>• <em>arbeitet_für</em>: Assistent N:1 Professor<br>• <em>setzt_voraus</em>: Vorlesung N:M Vorlesung (rekursiv, Rollen: Vorgänger/Nachfolger)<br>Schlüssel: Student=MatrNr, Vorlesung=Nr, Professor=PersNr, Assistent=PersNr.<br><em>Eselsbrücke:</em> Merke die 4 Entitäten als <strong>SVPA</strong> — Student, Vorlesung, Professor, Assistent.",
       "difficulty": "medium"
     },
     {
       "id": "20",
-      "category": "ER zu Relational: Übersetzungsregeln",
-      "question": "Was ist Schemavereinfachung (Schema Merge) — wann findet sie statt und was ist ein Fremdschlüssel?",
-      "answer": "<strong>Bei 1:N-, N:1- und 1:1-Beziehungen haben Entitätsrelation und Beziehungsrelation denselben Schlüssel → werden zu einer Relation zusammengefasst. Der eingebettete fremde Schlüssel heißt Fremdschlüssel.</strong><br>Beispiel: Vorlesung(<u>Nr</u>, Titel, Credits) + hält(<u>Nr</u>, PersNr) → gleicher Schlüssel (Nr) → zusammenfassen zu <strong>Vorlesung(<u>Nr</u>, Titel, Credits, PersNr)</strong>. PersNr referenziert Professor.PersNr = Fremdschlüssel. Zur Klarheit umbenennen: ProfPersNr.<br><em>Merke: Schemavereinfachung passiert NUR bei 1:N / N:1 / 1:1, NICHT bei N:M (dort bleibt eigene Beziehungsrelation erhalten).</em>",
-      "difficulty": "medium"
+      "category": "Übersetzung ER → Relational",
+      "question": "Erkläre die 3 Schritte der Übersetzung eines ER-Schemas in ein relationales Schema.",
+      "answer": "<strong>Schritt 1: Entitäten übersetzen. Schritt 2: Beziehungen übersetzen. Schritt 3: Schema vereinfachen (Zusammenführen von Relationen mit gleichem Schlüssel).</strong><br>Beispiel: Entität Student → Relation Student(MatrNr, Name, Geburtstag). Beziehung besucht(N:M) → eigene Relation besucht(MatrNr, Nr). Beziehung hält(N:1) → Relation hält(Nr, PersNr), danach Vereinfachung: hält hat denselben Schlüssel Nr wie Vorlesung → zusammenführen zu Vorlesung(Nr, Titel, Credits, ProfPersNr) mit ProfPersNr als Fremdschlüssel.<br><em>Eselsbrücke:</em> <strong>EBV</strong> — Entitäten, Beziehungen, Vereinfachen — wie 'Eine Basis Vorbereiten'.",
+      "difficulty": "easy"
     },
     {
       "id": "21",
-      "category": "ER zu Relational: Übersetzungsregeln",
-      "question": "Wie wird eine schwache Entität ins relationale Modell übersetzt — und wie sieht der Schlüssel aus?",
-      "answer": "<strong>Schwache Entitäten werden wie 1:N-Beziehungen übersetzt — der Schlüssel der übergeordneten Entität wird Teil des zusammengesetzten Schlüssels der schwachen Entität.</strong><br>Beispiel: Gebäude(<u>GebäudeNr</u>, ...) und Zimmer (schwach, Teilschlüssel: ZimmerNr) → <strong>Zimmer(<u>GebäudeNr, ZimmerNr</u>, ...)</strong>. GebäudeNr ist Fremdschlüssel und Teil des Primärschlüssels gleichzeitig.<br><em>Merke: Schwache Entität = immer zusammengesetzter Schlüssel aus starkem + eigenem Teilschlüssel.</em>",
+      "category": "Übersetzung ER → Relational",
+      "question": "Wie bestimmt sich der Primärschlüssel einer Beziehungsrelation? Erkläre für alle 3 Fälle (N:M, 1:N/N:1, 1:1).",
+      "answer": "<strong>N:M: Kombination beider Entitätsschlüssel ist Primärschlüssel. | 1:N oder N:1: Schlüssel der N-Seite wird Primärschlüssel. | 1:1: Einer der beiden Entitätsschlüssel (beliebig wählbar).</strong><br>Beispiele aus der Uni-DB:<br>• besucht (N:M Student–Vorlesung) → besucht(<u>MatrNr</u>, <u>Nr</u>)<br>• hält (N:1 Vorlesung–Professor) → hält(<u>Nr</u>, PersNr) — Nr ist Schlüssel der N-Seite (Vorlesung)<br>• arbeitet_für (N:1 Assistent–Professor) → wird in Assistent-Relation aufgenommen: Assistent(<u>PersNr</u>, ..., ProfPersNr)<br><em>Eselsbrücke:</em> N:M = beide Schlüssel zusammen. 1:N = <strong>N gewinnt</strong> (N-Seite wird Schlüssel). 1:1 = egal, Münze werfen.",
       "difficulty": "medium"
     },
     {
       "id": "22",
-      "category": "ER zu Relational: Übersetzungsregeln",
-      "question": "Was sind die 3 Strategien zur Übersetzung einer Generalisierung ins relationale Modell — mit Vor- und Nachteilen?",
-      "answer": "<strong>Strategie 1 'Nur Obertyp': alle Attribute in eine Relation → Problem: NULL-Werte für nicht-zutreffende Untertyp-Attribute. Strategie 2 'Nur Untertypen': jeder Untertyp enthält alle Obertyp-Attribute → Problem: keine Speicherung für Angestellte, die weder Assistent noch Professor sind. Strategie 3 'Alle Typen': Obertyp + je eine Relation pro Untertyp → Problem: Information über JOINs verteilt.</strong><br>Beispiel: Angestellte is-a Professor/Assistent. Strategie 3 ergibt: Angestellte(<u>PersNr</u>, Name), Assistant(<u>PersNr</u>, Fachgebiet), Professor(<u>PersNr</u>, ZimmerNr). Um Professordaten zu lesen: JOIN über 2 Tabellen nötig.<br><em>Eselsbrücke: 'OUA' — Oben (NULLs), Unten (Lücken), Alle (JOINs). Jede Strategie hat genau einen Haken.</em>",
-      "difficulty": "hard"
+      "category": "Übersetzung ER → Relational",
+      "question": "Was ist Schemavereinfachung, und wann tritt sie auf? Erkläre am Beispiel Vorlesung/hält.",
+      "answer": "<strong>Schemavereinfachung bedeutet, zwei Relationen mit identischem Primärschlüssel zu einer einzigen Relation zusammenzuführen — tritt auf bei 1:N, N:1 und 1:1-Beziehungen.</strong><br>Nach Schritt 2 existieren: Vorlesung(Nr, Titel, Credits) und hält(Nr, PersNr). Beide haben Schlüssel Nr → Zusammenführen zu Vorlesung(Nr, Titel, Credits, PersNr). PersNr ist dabei ein <strong>Fremdschlüssel</strong>, der auf Professor(PersNr) verweist. Zur Klarheit oft umbenannt: Vorlesung(Nr, Titel, Credits, <u>ProfPersNr</u>).<br><em>Eselsbrücke:</em> Gleicher Schlüssel = gleiches Haus → Zimmer zusammenlegen! Nur bei 1-Seite möglich (nicht bei N:M, dort bleibt eigene Tabelle).",
+      "difficulty": "medium"
     },
     {
       "id": "23",
-      "category": "ER zu Relational: Übersetzungsregeln",
-      "question": "Welches vollständige relationale Schema ergibt sich aus dem Uni-ER-Beispiel (Student, Vorlesung, Professor, Assistent)?",
-      "answer": "<strong>Student(<u>MatrNr</u>, Name, Geburtstag), Vorlesung(<u>Nr</u>, Titel, Credits, ProfPersNr), Professor(<u>PersNr</u>, Name, ZimmerNr), Assistent(<u>PersNr</u>, Name, Fachgebiet, ProfPersNr), besucht(<u>MatrNr, Nr</u>), prüft(<u>MatrNr, VorlNr, ProfPersNr</u>, Note), setzt_voraus(<u>VorgängerNr, NachfolgerNr</u>)</strong><br>Schlüsselentscheidungen: hält (N:1) wird in Vorlesung integriert (ProfPersNr als FK). arbeitet_für (N:1) wird in Assistent integriert. besucht (N:M) bleibt eigene Relation. prüft ist ternär (N:M:1) → eigene Relation mit 3-teiligem Schlüssel.<br><em>Prüfungstipp: Immer prüfen, ob FK umbenennt werden muss (z.B. PersNr → ProfPersNr), um Mehrdeutigkeiten zu vermeiden.</em>",
+      "category": "Übersetzung ER → Relational",
+      "question": "Erkläre die 3 Strategien zur Übersetzung einer Generalisierung ins relationale Modell mit je einem Problem.",
+      "answer": "<strong>3 Strategien: (1) Nur Obertyp, (2) Nur Untertypen, (3) Alle Typen.</strong><br>• <strong>Nur Obertyp</strong>: Angestellte(PersNr, Name, Fachgebiet, ZimmerNr) — <em>Problem</em>: NULL-Werte (Professor hat kein Fachgebiet, Assistent keine ZimmerNr)<br>• <strong>Nur Untertypen</strong>: Assistent(PersNr, Name, Fachgebiet), Professor(PersNr, Name, ZimmerNr) — <em>Problem</em>: Angestellte, die weder Professor noch Assistent sind, können nicht gespeichert werden<br>• <strong>Alle Typen</strong>: Angestellte(PersNr, Name) + Assistant(PersNr, Fachgebiet) + Professor(PersNr, ZimmerNr) — <em>Problem</em>: Information über eine Person ist über mehrere Tabellen verteilt (teures JOIN)<br><em>Eselsbrücke:</em> <strong>OUG</strong>-Trilemma: NULL, Unvollständig, Geteilt — jede Option hat einen Preis.",
       "difficulty": "hard"
     },
     {
       "id": "24",
-      "category": "UML Klassendiagramme",
-      "question": "Was sind die Hauptunterschiede zwischen ER-Modell und UML-Klassendiagramm für die Datenmodellierung?",
-      "answer": "<strong>UML-Klassen enthalten neben Attributen auch Operationen/Methoden und sind der De-facto-Standard für OO-Entwurf; ER-Modelle sind rein datenorientiert ohne Verhalten.</strong><br>Beispiel Uni-Schema in UML: Klasse 'Studenten' hat Attribute (+MatrNr: int, +Name: String, +Semester: int) UND Methoden (+Notenschnitt(): float, +SummeWochenstunden(): short) — das gibt es im ER-Modell nicht. Assoziationen mit Multiplizitäten ersetzen Beziehungen mit Funktionalitäten.<br><em>Merke: UML = ER + Methoden + Sichtbarkeiten (+/-). Für Datenbanken nutzt man meist nur den Strukturteil (Attribute + Assoziationen).</em>",
+      "category": "Übersetzung ER → Relational",
+      "question": "Wie werden schwache Entitäten ins relationale Modell übersetzt? Was ist der Unterschied zur normalen 1:N-Übersetzung?",
+      "answer": "<strong>Schwache Entitäten werden wie 1:N-Beziehungen übersetzt, mit dem einzigen Unterschied, dass die schwache Entität einen zusammengesetzten Primärschlüssel erhält (eigener Teilschlüssel + Fremdschlüssel der starken Entität).</strong><br>Beispiel: Gebäude(<u>GebäudeNr</u>, ...) und Zimmer (<u>GebäudeNr</u>, <u>ZimmerNr</u>, ...). ZimmerNr allein ist kein eindeutiger Schlüssel — erst zusammen mit GebäudeNr wird Zimmer 101 in Gebäude 3 eindeutig identifiziert. GebäudeNr in der Zimmer-Relation ist gleichzeitig Fremdschlüssel (Referenz auf Gebäude) und Teil des Primärschlüssels.<br><em>Eselsbrücke:</em> Schwache Entität = 'lebt von' der starken → der Schlüssel der starken Entität wandert als FK+Teil-PK in die schwache Tabelle.",
       "difficulty": "medium"
     },
     {
       "id": "25",
-      "category": "UML Klassendiagramme",
-      "question": "Was bedeuten UML-Multiplizitäten wie '1..*' und '*' — und wo liegt die Verwechslungsgefahr mit der ER-(min,max)-Notation?",
-      "answer": "<strong>UML '1..*' bedeutet: mindestens 1, maximal beliebig viele. '*' bedeutet: 0 bis beliebig. Die Multiplizität steht auf der Seite der assoziierten Klasse und gibt an, wie viele Objekte dieser Klasse mit einem Objekt der anderen Seite in Beziehung stehen.</strong><br>Beispiel UML-Diagramm: Studenten (1..*) — hören → Vorlesungen (*): Ein Student hört mindestens 1 Vorlesung; eine Vorlesung kann von 0 bis n Studenten gehört werden. Verwechslungsgefahr: In UML steht die Multiplizität auf der FERNEN Seite; in ER-(min,max) auf der EIGENEN Seite.<br><em>Vorsicht: UML-Multiplizität ≠ ER-Funktionalität. UML 1..* auf Vorlesungsseite = in ER: Student muss mindestens 1 Vorlesung besuchen.</em>",
-      "difficulty": "hard"
-    },
-    {
-      "id": "26",
-      "category": "UML Klassendiagramme",
-      "question": "Was ist ein Use-Case-Diagramm in UML — welche Elemente enthält es und wozu dient es im Datenbankentwurf?",
-      "answer": "<strong>Use-Case-Diagramme zeigen Akteure (Strichmännchen), Anwendungsfälle (Ellipsen) und deren Beziehungen — sie gehören zur Anforderungsspezifikation (das WAS, nicht das WIE).</strong><br>Beispiel Uni-System: Akteure StudentIn, ProfessorIn, AssistentIn interagieren mit Anwendungsfällen 'Vorlesungen anbieten', 'Prüfungen durchführen', 'Studienplan überprüfen' innerhalb der Systemgrenze 'Fakultäten'. Beziehung «verwendet» zeigt, dass 'Prüfungen durchführen' den Use Case 'Studienplan überprüfen' nutzt.<br><em>Im Datenbankentwurf: Use Cases gehören zur Spezifikationsphase und helfen, benötigte Daten und Prozesse zu identifizieren.</em>",
+      "category": "UML-Klassendiagramme",
+      "question": "Was sind die Gemeinsamkeiten und Unterschiede zwischen ER-Modell und UML-Klassendiagramm bei der Datenmodellierung?",
+      "answer": "<strong>Gemeinsamkeiten: Beide modellieren Entitäten/Klassen mit Attributen, Beziehungen mit Multiplizitäten, Generalisierungshierarchien und Aggregationen. Unterschied: UML modelliert zusätzlich Verhalten (Operationen/Methoden) und ist De-facto-Standard für OO-Software-Entwurf.</strong><br>ER-Äquivalente in UML: Entitätstyp = Klasse (Rechteck mit 3 Bereichen: Name, Attribute, Methoden), Beziehung = Assoziation (Linie mit Multiplizität), is-a = offener Dreieckspfeil zur Oberklasse, Aggregation = Rautenende an der Ganzes-Klasse. Beispiel Uni-DB in UML (Folie 60): Studenten-Klasse hat Methoden +Notenschnitt():float, +SummeWochenstunden():short.<br><em>Eselsbrücke:</em> ER = reine Datenstruktur. UML = Daten + Verhalten. Für reine DB-Entwürfe oft ER bevorzugt.",
       "difficulty": "medium"
     },
     {
+      "id": "26",
+      "category": "UML-Klassendiagramme",
+      "question": "Was ist der kritische Unterschied zwischen UML-Multiplizitäten und der (min,max)-Notation im ER-Modell?",
+      "answer": "<strong>In UML steht die Multiplizität i..j auf einer Kante und bedeutet: jedes Element der GEGENÜBERLIEGENDEN Klasse steht mit mindestens i und maximal j Elementen DIESER Klasse in Beziehung — die Notation liest sich 'von der anderen Seite'.</strong><br>Beispiel (Folie 56): KlasseA mit Multiplizität k..l bedeutet für KlasseB-Objekte: jedes KlasseB-Objekt steht mit mindestens k und maximal l KlasseA-Objekten in Beziehung. Aus Folie 57: Studenten 1..* bedeutet, jede Vorlesung hat mindestens 1 Hörer. Das ist die UMGEKEHRTE Leserichtung im Vergleich zu ER! Im ER-Modell steht die (min,max)-Notation auf der Seite der Entität, für die sie gilt.<br><em>Eselsbrücke:</em> <strong>UML = Gegenrichtung lesen</strong>. Die Zahl steht beim Ziel, beschreibt aber, was die Quelle 'bekommt'.",
+      "difficulty": "hard"
+    },
+    {
       "id": "27",
-      "category": "Schemakonsolidierung & Konzeptueller Entwurf",
-      "question": "Was ist Schemakonsolidierung — und warum ist sie notwendig?",
-      "answer": "<strong>Schemakonsolidierung führt mehrere Teilschemata (aus verschiedenen Benutzerperspektiven) iterativ zu einem globalen Schema zusammen.</strong><br>Beispiel: In einem Uni-System modelliert die Prüfungsamts-Abteilung 'Prüfungen' anders als die Lehrplanung. Teilschema 1 (Prüfungsamt) + Teilschema 2 (Lehrplanung) → Schema S1,S2 → + Teilschema 3 (Studentensekretariat) → globales Schema. Konflikte entstehen z.B. durch unterschiedliche Namen für gleiche Konzepte.<br><em>Merke: Konsolidierung = schrittweises Zusammenführen, nicht ein Einzel-Merge. Reihenfolge: paarweise bottom-up bis globales Schema entsteht.</em>",
+      "category": "Schemakonsolidierung",
+      "question": "Was ist Schemakonsolidierung und warum ist sie notwendig? Wie läuft der Prozess ab?",
+      "answer": "<strong>Schemakonsolidierung ist das schrittweise Zusammenführen mehrerer Teilschemata (von verschiedenen Modellierern) zu einem konsistenten Gesamtschema.</strong><br>Notwendig, weil große Systeme von mehreren Teams parallel modelliert werden — jedes Team sieht die Anwendung aus seiner Perspektive (z.B. Prüfungsamt vs. Lehrplanung). Der Prozess läuft iterativ von unten nach oben: S1+S2 → Schema(S1,S2), dann Schema(S1,S2)+S3 → Schema(S1,S2,S3), bis zum globalen Schema. Probleme: Namenskonflikte (gleiche Konzepte, verschiedene Namen), strukturelle Konflikte (gleiche Konzepte, verschiedene Modellierung).<br><em>Eselsbrücke:</em> Wie Firmenfusionen — jede Abteilung hat ihre eigene 'Sprache', am Ende muss ein gemeinsamer Standard entstehen.",
       "difficulty": "medium"
     },
     {
       "id": "28",
-      "category": "Schemakonsolidierung & Konzeptueller Entwurf",
-      "question": "Wozu dient ein ER-Schema im konzeptuellen Entwurf — welche 3 Funktionen hat es?",
-      "answer": "<strong>Das ER-Schema (1) enthält alle Informationseinheiten des zu implementierenden DBS, (2) dient der Kommunikation mit Benutzern zur Vollständigkeits- und Korrektheitsprüfung, und (3) kann relativ einfach ins logische (relationale) Schema transformiert werden.</strong><br>Praxisbeispiel: Nach Erstellung des ER-Schemas für die Uni-Datenbank wird es dem Prüfungsamt vorgelegt (Funktion 2) — fehlt die Entität 'Studienordnung', fällt das hier auf, bevor Code geschrieben wird. Dann erfolgt die systematische Übersetzung in SQL-Tabellen (Funktion 3).<br><em>Merke: ER-Schema ist DBMS-unabhängig — es beschreibt die Realität, nicht die Implementierung.</em>",
+      "category": "Phasen des Datenbankentwurfs",
+      "question": "Welche 7 Schritte umfasst das grobe Vorgehen bei der Anforderungsanalyse?",
+      "answer": "<strong>7 Schritte: (1) Identifikation von Organisationseinheiten, (2) Identifikation zu unterstützender Aufgaben, (3) Anforderungs-Sammelplan, (4) Anforderungs-Sammlung, (5) Filterung, (6) Satzklassifikationen, (7) Formalisierung.</strong><br>Praxisbeispiel Uni-DB: (1) Prüfungsamt, Lehrstuhl, Studentensekretariat identifizieren. (2) Zeugnisaustellung, Vorlesungsanmeldung als Aufgaben festlegen. (3) Plan: Interviews mit welchen Personen wann? (4) Interviews durchführen. (5) Irrelevantes herausfiltern. (6) Objekte klassifizieren (Entitäten vs. Beziehungen vs. Attribute). (7) Formale Objektbeschreibungen erstellen.<br><em>Eselsbrücke:</em> <strong>IOASFSF</strong> — oder einfacher: 'Ich Ordne Alle Schritte Für Sauberkeit Formal'.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "29",
+      "category": "ER-Modell: Grundbausteine",
+      "question": "Erkläre, warum das ER-Modell für den konzeptuellen Entwurf besonders geeignet ist — nenne 3 Eigenschaften eines ER-Schemas.",
+      "answer": "<strong>Ein ER-Schema ist für den konzeptuellen Entwurf geeignet, weil es (1) alle Informationseinheiten des DBS enthält, (2) als Kommunikationsmittel mit Nutzern dient, und (3) relativ einfach ins logische/relationale Schema transformierbar ist.</strong><br>Beispiel: Das vollständige Uni-DB-ER-Schema (Folie 34) zeigt auf einen Blick alle Entitäten (Student, Vorlesung, Professor, Assistent) und ihre Beziehungen — ein Prüfungsamts-Mitarbeiter kann es verstehen und auf Vollständigkeit prüfen, ohne SQL zu kennen. Danach wird es systematisch in SQL-Tabellen übersetzt (Folie 46ff.).<br><em>Eselsbrücke:</em> ER-Schema = universelle Sprache zwischen Fachbereich und IT. Grafisch = verständlich für alle.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "30",
+      "category": "Übersetzung ER → Relational",
+      "question": "Was ist ein Fremdschlüssel (Foreign Key), und wie entsteht er bei der ER-zu-Relational-Übersetzung?",
+      "answer": "<strong>Ein Fremdschlüssel ist ein Attribut in einer Relation, dessen Werte den Primärschlüssel einer anderen Relation referenzieren — er entsteht bei der Übersetzung von 1:N und N:1-Beziehungen durch Schemavereinfachung.</strong><br>Beispiel: Nach Zusammenführung von Vorlesung(Nr, Titel, Credits) und hält(Nr, PersNr) entsteht Vorlesung(Nr, Titel, Credits, <strong>ProfPersNr</strong>). ProfPersNr ist Fremdschlüssel: er enthält dieselben Werte wie Professor.PersNr und stellt die referenzielle Integrität sicher — es darf kein ProfPersNr-Wert existieren, der nicht in Professor vorkommt. Zur Klarheit wird der FK oft umbenannt (PersNr → ProfPersNr).<br><em>Eselsbrücke:</em> FK = Adressverweis: 'Für mehr Infos über diesen Professor, schau in der Professor-Tabelle unter PersNr nach.'",
       "difficulty": "easy"
     }
   ],
@@ -205,65 +219,65 @@
         "name": "Phasen des Datenbankentwurfs",
         "concepts": [
           {
-            "term": "Phasen des Datenbankentwurfs",
-            "definition": "4-stufiger Prozess: <strong>Anforderungsanalyse → Konzeptueller Entwurf → Implementationsentwurf → Physischer Entwurf</strong>. Jede Phase liefert ein konkretes Artefakt (Spezifikation, ER-Schema, logisches Schema, physisches Schema).",
-            "author": "",
-            "importance": "high",
-            "examRelevance": "Häufig als 'Nennen und erklären Sie die Phasen'-Frage, weil die Phasen den gesamten Kursaufbau strukturieren. Merkhilfe: <strong>A-K-I-P</strong> (Anforderung → Konzept → Implementierung → Physisch)."
-          },
-          {
             "term": "Anforderungsanalyse",
-            "definition": "Sammlung und Formalisierung von <strong>Informationsanforderungen</strong> und <strong>Datenverarbeitungsanforderungen</strong>. Ergebnis: Anforderungsspezifikation mit Objekt- und Beziehungsbeschreibungen.",
+            "definition": "Erster Schritt des Entwurfsprozesses: <strong>Informations- und Datenverarbeitungsanforderungen</strong> werden gesammelt und formalisiert. Ziel: Anwender und Entwickler sprechen dieselbe Sprache.",
             "author": "",
             "importance": "medium",
-            "examRelevance": "Wird als Verständnisfrage gefragt: 'Was ist der Unterschied zwischen Informations- und Verarbeitungsanforderungen?' — Informationsanforderungen = WAS gespeichert wird, Verarbeitungsanforderungen = WIE es verarbeitet wird."
+            "examRelevance": "Wird als Einleitungsfrage gefragt: 'Nennen Sie die 7 Schritte der Anforderungsanalyse.' Merkhilfe: <strong>IO-ASF-SF</strong> (Identifikation Org., Identifikation Aufgaben, Sammelplan, Sammlung, Filterung, Satzklassifikation, Formalisierung)."
           },
           {
-            "term": "Objektbeschreibung (Anforderungsanalyse)",
-            "definition": "Formale Beschreibung eines Objekttyps mit Attributen inkl. <strong>Typ, Länge, Wertebereich, Definiertheit und ob identifizierend</strong>. Beispiel: PersonalNummer (char, Länge 9, Definiertheit 100%, identifizierend: ja).",
+            "term": "4 Phasen des Datenbankentwurfs",
+            "definition": "<strong>Anforderungsanalyse → Konzeptueller Entwurf → Implementationsentwurf → Physischer Entwurf</strong>. Jede Phase produziert ein Artefakt: Spezifikation, ER-Schema, logisches Schema, physisches Schema.",
             "author": "",
-            "importance": "low",
-            "examRelevance": "Kann als Anwendungsaufgabe kommen: 'Erstellen Sie eine Objektbeschreibung für Entität X.' Achte auf das Attribut <strong>Definiertheit</strong> (= Anteil Tupel, bei denen Wert nicht NULL ist)."
+            "importance": "high",
+            "examRelevance": "Klassische Freitextfrage: 'Nennen und erläutern Sie die Phasen.' Klausur prüft, ob du weißt, <strong>welches Artefakt</strong> welche Phase ausgibt und welche externen Faktoren (DBMS-Charakteristika, Hardware/BS) welche Phase beeinflussen."
           },
           {
             "term": "Spezifikation",
-            "definition": "Legt das <strong>WAS</strong> fest (nicht das WIE). Bestandteile: Prozessbeschreibungen, Use Cases, Benutzerschnittstellen, Systemschnittstellen. Ideale Spezifikation ist <strong>eindeutig, vollständig, verständlich und redundanzfrei</strong>.",
+            "definition": "Legt das <strong>Was</strong> fest (nicht das Wie). Bestandteile: Prozessbeschreibungen, Use Cases, Benutzerschnittstellen, sonstige Schnittstellen. Ideale Spezifikation ist <strong>eindeutig, vollständig, verständlich, redundanzfrei</strong>.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Freitext: 'Welche Eigenschaften hat eine ideale Spezifikation?' Merkhilfe: <strong>EVVR</strong> (Eindeutig, Vollständig, Verständlich, Redundanzfrei). Wichtig: die Folie sagt explizit, dass das in der Realität nicht erreichbar ist — das ist prüfungsrelevant."
+          },
+          {
+            "term": "Objektbeschreibung",
+            "definition": "Formale Dokumentation einer Entität in der Anforderungsanalyse: enthält <strong>Typ, Länge, Wertebereich, Anzahl Wiederholungen, Definiertheit (%), Identifizierend</strong> für jedes Attribut.",
             "author": "",
             "importance": "low",
-            "examRelevance": "Kann als Nennen-Aufgabe kommen: 'Welche Eigenschaften hat eine ideale Spezifikation?' Merkhilfe: <strong>EVVR</strong> (Eindeutig, Vollständig, Verständlich, Redundanzfrei) — und in der Realität nie vollständig erreichbar."
+            "examRelevance": "Kann als Leseverständnisaufgabe kommen: 'Was bedeutet Definiertheit 90 bei Attribut Gehalt?' → 10% der Datensätze haben NULL-Werte."
           }
         ]
       },
       {
-        "name": "ER-Modell — Grundlegende Bausteine",
+        "name": "ER-Modell: Grundlegende Bausteine",
         "concepts": [
           {
-            "term": "Entitätstyp",
-            "definition": "Ein <strong>unterscheidbares Objekt der realen Miniwelt</strong> (Person, Ding, Konzept). Im ER-Diagramm als <strong>Rechteck</strong> dargestellt. Beispiel: Student, Professor, Vorlesung.",
-            "author": "",
+            "term": "Entitätentyp",
+            "definition": "Repräsentiert eine Klasse von Objekten der realen Miniwelt (<strong>Dinge, Personen, Konzepte</strong>). Im ER-Diagramm als <strong>Rechteck</strong> dargestellt. Einzelne Objekte heißen Entitäten (Instanzen des Typs).",
+            "author": "Peter Chen (ER-Modell, 1976)",
             "importance": "high",
-            "examRelevance": "Basiswissen für jede ER-Aufgabe. In Klausuren muss man aus einer Textbeschreibung korrekt Entitäten identifizieren — Faustregel: Substantive mit eigener Identität = Entität."
+            "examRelevance": "Grundlage jeder ER-Aufgabe. Klausur gibt dir eine Beschreibung ('Eine Universität verwaltet Studenten und Vorlesungen...') und du musst Entitäten identifizieren. <strong>Rechteck = Entitätentyp</strong> — kein anderes Symbol verwenden."
           },
           {
             "term": "Attribut & Schlüssel",
-            "definition": "Attribute beschreiben eine Entität und werden als <strong>Ellipse</strong> dargestellt. Ein <strong>Schlüssel</strong> ist ein Attribut (oder eine Kombination), das eine Entität eindeutig identifiziert — im Diagramm <strong>unterstrichen</strong>.",
+            "definition": "Attribute beschreiben Entitäten (<strong>Ellipse</strong> im Diagramm, Linie zur Entität). Ein <strong>Schlüssel</strong> identifiziert eine Entität eindeutig — im Diagramm <strong>unterstrichen</strong>. Jedes Attribut hat einen Wertebereich.",
             "author": "",
             "importance": "high",
-            "examRelevance": "In Klausuren muss der Schlüssel korrekt unterstrichen sein. Häufiger Fehler: mehrere Attribute als Schlüssel angeben ohne sie als <strong>zusammengesetzten Schlüssel</strong> zu kennzeichnen."
+            "examRelevance": "Fast jede ER-Klausuraufgabe: du musst Schlüssel korrekt unterstreichen. Häufiger Fehler: Schlüssel vergessen oder falsches Attribut als Schlüssel wählen. <strong>Attribute sind nicht mengenwertig</strong> — wenn mehrere Werte möglich sind → eigene Entität modellieren."
           },
           {
             "term": "Relationship (Beziehungstyp)",
-            "definition": "Verbindet zwei oder mehr Entitätstypen. Im ER-Diagramm als <strong>Raute</strong> dargestellt. Kann eigene Attribute besitzen (z.B. Beziehung 'prüft' hat Attribut Note).",
+            "definition": "Verbindet <strong>zwei oder mehr Entitätstypen</strong>. Im Diagramm als <strong>Raute</strong> dargestellt. Kann eigene Attribute haben (z.B. Note bei 'prüft'). Beziehungen haben keine eigene Identität.",
             "author": "",
             "importance": "high",
-            "examRelevance": "Prüfungsklassiker: 'Modellieren Sie die Beziehung X.' Attribute an der Beziehung (nicht an der Entität!) werden häufig vergessen — z.B. Note gehört zur Beziehung <strong>prüft</strong>, nicht zu Student."
+            "examRelevance": "Kernaufgabe in jeder Klausur: ER-Diagramm zeichnen oder lesen. Wichtig: <strong>Raute = Beziehung</strong>. Weil Beziehungen keine eigene Identität haben, können dieselben Entitäten nicht mehrfach dieselbe Beziehung eingehen — das erzwingt die Entwurfsentscheidung 'Entität vs. Beziehung'."
           },
           {
-            "term": "Rolle",
-            "definition": "Beschreibt, <strong>in welcher Weise</strong> eine Entität an einer Beziehung teilnimmt. Besonders wichtig bei <strong>rekursiven Beziehungen</strong> (gleicher Entitätstyp tritt mehrfach auf). Beispiel: Vorlesung als Vorgänger/Nachfolger in <strong>setzt_voraus</strong>.",
+            "term": "Rollen",
+            "definition": "Beschreiben, <strong>in welcher Funktion</strong> eine Entität an einer Beziehung teilnimmt. Besonders nützlich bei <strong>rekursiven Beziehungen</strong> (Entität steht mit sich selbst in Beziehung), z.B. Vorlesung 'setzt_voraus' Vorlesung mit Rollen Vorgänger/Nachfolger.",
             "author": "",
             "importance": "medium",
-            "examRelevance": "Wird gefragt wenn eine Entität zweimal an derselben Beziehung beteiligt ist. Merke: Ohne Rollenangabe ist unklar, welche Seite Vorgänger und welche Nachfolger ist."
+            "examRelevance": "Typische Aufgabe: 'Modellieren Sie Vorlesungsabhängigkeiten.' Erkenne, wann eine rekursive Beziehung vorliegt und benenne die Rollen korrekt an den Verbindungslinien."
           }
         ]
       },
@@ -271,25 +285,25 @@
         "name": "Funktionalitäten (Kardinalitäten)",
         "concepts": [
           {
-            "term": "Funktionalitäten: 1:1, 1:N, N:M",
-            "definition": "Drücken aus, mit wie vielen anderen Entitäten eine Entität eine Beziehung eingehen kann. <strong>1:N</strong> = eine Entität links steht mit mehreren rechts in Beziehung, aber jede rechts steht mit maximal einer links. Beispiel: Professor (1) hält Vorlesungen (N).",
+            "term": "1:1, 1:N, N:1, N:M Beziehungen",
+            "definition": "Drücken aus, mit <strong>wie vielen Entitäten der anderen Seite</strong> eine Entität eine Beziehung eingeht. <strong>1:N</strong>: eine Vorlesung wird von 1 Professor gehalten, aber ein Professor hält N Vorlesungen. <strong>N:M</strong>: ein Student besucht M Vorlesungen, eine Vorlesung wird von N Studenten besucht.",
             "author": "",
             "importance": "high",
-            "examRelevance": "Die wichtigste Klausurkompetenz im ER-Kapitel. Fehlerquelle: Richtung der Funktionalität. Merkhilfe: Die Zahl steht immer <strong>neben der Entität, nicht neben der Raute</strong> — N steht neben der 'vielen'-Seite."
+            "examRelevance": "Häufigste Teilaufgabe bei ER-Modellierung: Funktionalität korrekt annotieren. Merkhilfe: <strong>Lies die Semantik von links nach rechts UND rechts nach links</strong>. Falsche Funktionalität = Datenintegritätsverletzung — deshalb prüfungsrelevant."
           },
           {
             "term": "(min, max)-Notation",
-            "definition": "Präzisere Form der Kardinalität: <strong>(min, max)</strong> gibt an, wie oft eine Entität mindestens und höchstens in der Beziehung vorkommt. Beispiel: (1,1) = genau einmal, (3,*) = mindestens dreimal, beliebig oft. <strong>Vorsicht:</strong> Semantisch entgegengesetzt zur UML-Multiplizitätsangabe!",
+            "definition": "Präzisere Funktionalitätsangabe: für jede Entität e_i gibt es <strong>mindestens min_i und höchstens max_i</strong> Tupel in der Beziehung. Beispiel: Fläche gehört zu mindestens 1 Polyeder, höchstens 1 Polyeder → <strong>(1,1)</strong>. Stern (*) bedeutet unbegrenzt.",
             "author": "",
             "importance": "high",
-            "examRelevance": "Sehr häufige Klausurfrage — sowohl lesen als auch erstellen. <strong>Verwechslungsgefahr mit UML-Multiplizitäten</strong>: In ER steht (min,max) auf der Seite der Entität und beschreibt deren eigene Teilnahme; in UML steht die Multiplizität auf der gegenüberliegenden Seite."
+            "examRelevance": "<strong>Vorsicht: (min,max)-Notation ist NICHT identisch mit UML-Multiplizitäten</strong> — das steht explizit in den Folien und ist eine typische Fangfrage. Beim Polyeder-Beispiel: Fläche hat (1,1), Polyeder hat (4,*) bei 'Hülle'-Beziehung."
           },
           {
-            "term": "Ternäre Beziehung & echte Ternärität",
-            "definition": "Beziehung zwischen <strong>drei Entitätstypen</strong>. <strong>Echt ternär</strong>: alle drei Entitäten werden benötigt, um die Beziehung zu beschreiben — sie kann NICHT in binäre Beziehungen zerlegt werden. Beispiel: <strong>prüft</strong>(Professor, Student, Vorlesung) ist echt ternär.",
+            "term": "Funktionale Abhängigkeit (formale Darstellung)",
+            "definition": "Bei einer Beziehung R mit '1' an E_k gilt: <strong>R : E_1 × ... × E_{k-1} × E_{k+1} × ... × E_n → E_k</strong>. Die anderen Entitäten bestimmen E_k eindeutig. Beispiel: betreuen: Professoren × Studenten → Seminarthemen.",
             "author": "",
             "importance": "medium",
-            "examRelevance": "Klausurfrage: 'Ist diese Beziehung echt ternär oder kann sie in binäre Beziehungen zerlegt werden?' Gegenbeispiel: DiplArbeit(Student, Professor, Professor) — die zwei Professoren-Rollen können als separate binäre Beziehungen (Erstgutachter, Zweitgutachter) modelliert werden."
+            "examRelevance": "Kann als formale Schreibaufgabe kommen: 'Geben Sie die funktionale Abhängigkeit für die Beziehung betreuen an.' Direkt aus dem Diagramm ablesen: '1' an einer Entität → diese steht rechts vom Pfeil."
           }
         ]
       },
@@ -298,24 +312,24 @@
         "concepts": [
           {
             "term": "Schwache Entität",
-            "definition": "Kann <strong>nicht eigenständig existieren</strong> und hat keinen eigenen vollständigen Schlüssel — sie braucht eine starke Entität zur Identifikation. Im Diagramm mit <strong>Doppelrechteck</strong> dargestellt. Beispiel: Zimmer (schwach) braucht Gebäude (stark) — Schlüssel: (GebäudeNr, ZimmerNr).",
+            "definition": "Kann <strong>nicht eigenständig existieren</strong> und hat keinen eigenen vollständigen Schlüssel. Braucht eine starke Entität zur eindeutigen Identifikation. Im Diagramm: <strong>doppelt umrandetes Rechteck</strong>, Schlüsselattribut <strong>gestrichelt unterstrichen</strong>. Geht 1:N Beziehung mit starker Entität ein. Beispiel: Zimmer (ZimmerNr) braucht Gebäude (GebäudeNr).",
             "author": "",
             "importance": "high",
-            "examRelevance": "Klausurklassiker: 'Identifizieren Sie schwache Entitäten und begründen Sie Ihre Wahl.' Erkennungszeichen: Der Schlüssel allein (z.B. ZimmerNr = 101) ist nicht eindeutig — erst zusammen mit der starken Entität (GebäudeNr) ist er eindeutig."
+            "examRelevance": "Wird direkt gefragt: 'Was ist eine schwache Entität?' ODER im Entwurf: 'Modellieren Sie Zimmer in Gebäuden.' Erkennungsmerkmal: der Schlüssel ist <strong>zusammengesetzt</strong> (GebäudeNr + ZimmerNr). Verknüpfung zur Übersetzung: schwache Entität bekommt zusammengesetzten Primärschlüssel in der Relationentabelle."
           },
           {
             "term": "Generalisierung (is-a)",
-            "definition": "Ober-/Untertyp-Beziehung analog zur <strong>Vererbung in OOP</strong>. Untertypen erben Attribute des Obertyps. Beispiel: Assistent <strong>is-a</strong> Angestellte, Professor <strong>is-a</strong> Angestellte. Im Diagramm mit Pfeil zum Obertyp über Raute <em>is-a</em>.",
+            "definition": "<strong>Vererbungshierarchie</strong>: Untertypen erben Attribute des Obertyps. Pfeil zeigt vom is-a-Knoten zur Oberklasse. Beispiel: Assistent und Professor sind Untertypen von Angestellte. <strong>Drei Übersetzungsstrategien</strong>: nur Obertyp, nur Untertypen, alle Typen — jede mit eigenem Problem.",
             "author": "",
             "importance": "high",
-            "examRelevance": "Wird bei der ER→Relational-Übersetzung zur Pflichtfrage: 'Welche der drei Übersetzungsstrategien wählen Sie und warum?' Verknüpfung: Die Wahl zwischen Nur-Obertyp/Nur-Untertypen/Alle-Typen (siehe Übersetzungsabschnitt) bestimmt, ob NULL-Werte entstehen oder Information auf mehrere Tabellen verteilt wird."
+            "examRelevance": "Beliebte Klausurfrage: 'Beschreiben Sie drei Möglichkeiten zur Übersetzung einer Generalisierung ins relationale Modell und nennen Sie jeweils ein Problem.' Antwort: <strong>Nur Obertyp → NULL-Werte</strong>; <strong>nur Untertypen → Angestellte ohne Subtyp verloren</strong>; <strong>alle Typen → Information verteilt</strong>."
           },
           {
             "term": "Aggregation (part-of)",
-            "definition": "Modelliert <strong>ist-Teil-von</strong>-Beziehungen. Teile existieren in Abhängigkeit vom Ganzen. Beispiel: Fahrgestell, Karosserie, Räder sind Teile von Auto.",
+            "definition": "Modelliert <strong>ist-Teil-von</strong>-Beziehungen. Beispiel: Auto besteht aus Fahrgestell, Karosserie, Rädern. Im ER-Diagramm als part-of-Beziehungen dargestellt. In UML als <strong>Raute an der Aggregat-Klasse</strong>.",
             "author": "",
-            "importance": "low",
-            "examRelevance": "Seltener direkte Klausurfrage, aber wichtig für das ER-Diagramm-Zeichnen: <strong>part-of</strong>-Beziehung ist keine normale Relationship-Raute, sondern eine Hierarchie von Ganzes → Teile."
+            "importance": "medium",
+            "examRelevance": "Abgrenzungsfrage: 'Wann Aggregation, wann is-a?' Aggregation = 'besteht aus', is-a = 'ist ein'. Fehler verwechseln kostet Punkte im Entwurf."
           }
         ]
       },
@@ -324,97 +338,104 @@
         "concepts": [
           {
             "term": "Entität vs. Attribut",
-            "definition": "<strong>Entität</strong> wenn: (a) mehrere Werte pro Instanz möglich (Attribute dürfen nicht mengenwertig sein), oder (b) der Begriff selbst Attribute hat. <strong>Attribut</strong> wenn: einfacher Einzelwert, der keinen eigenen Kontext braucht.",
+            "definition": "<strong>Attribut</strong> wenn einfach und einmalig; <strong>eigene Entität</strong> wenn (a) mehrere Werte möglich (Attribute dürfen nicht mengenwertig sein) oder (b) weitere Attribute nötig sind. Beispiel: Adresse als Attribut vs. Adresse als Entität mit Straße, PLZ, Stadt.",
             "author": "",
             "importance": "medium",
-            "examRelevance": "Wird als Designaufgabe gefragt: 'Modellieren Sie Adresse als Entität oder Attribut?' Entscheidungsregel: Wenn ein Kunde mehrere Adressen haben kann → Entität. Wenn nur eine Adresse und nicht weiter zerlegt → Attribut."
+            "examRelevance": "Entwurfsaufgabe: 'Begründen Sie, warum Adresse als eigene Entität modelliert wird.' Zwei Gründe reichen: <strong>Mehrfachwerte</strong> und <strong>Zerlegungsbedarf</strong>."
           },
           {
             "term": "Entität vs. Beziehung",
-            "definition": "Beziehungen haben <strong>keine eigene Identität</strong>: dieselben zwei Entitäten können nur einmal in einer Beziehung vorkommen. Wenn man denselben Sachverhalt mehrfach modellieren muss (z.B. Student schreibt mehrere Klausuren in derselben Vorlesung), braucht man eine <strong>Entität</strong> (z.B. Prüfung mit PrüfungsNr).",
+            "definition": "<strong>Beziehung</strong> wenn einfach und einmalig; <strong>eigene Entität</strong> wenn dieselben Entitäten <strong>mehrfach</strong> in derselben Beziehung auftreten sollen (Beziehungen haben keine eigene Identität). Beispiel: Prüfung als Entität, weil ein Student mehrfach geprüft werden kann.",
+            "author": "",
+            "importance": "high",
+            "examRelevance": "Häufigste Falle in Entwurfsaufgaben: 'Warum ist Prüfung eine Entität und nicht nur die Beziehung prüft?' Antwort: Ein Student kann von demselben Professor in derselben Vorlesung <strong>mehrfach geprüft</strong> werden (Wiederholung) — das wäre als Beziehung nicht modellierbar."
+          },
+          {
+            "term": "Binäre vs. ternäre Beziehung",
+            "definition": "<strong>Echt ternär</strong>: alle drei Entitäten werden benötigt, um die Beziehung eindeutig zu beschreiben. Beispiel: prüft(Student, Professor, Vorlesung). <strong>Nicht echt ternär</strong>: lässt sich in zwei binäre Beziehungen aufspalten. Beispiel: DiplArbeit(Student, Erstgutachter, Zweitgutachter) hat zwei unabhängige Rollen.",
             "author": "",
             "importance": "medium",
-            "examRelevance": "Klausurfrage: 'Warum wird Prüfung als Entität und nicht als Beziehung modelliert?' Antwort: Weil ein Student dieselbe Vorlesung mehrfach prüfen lassen kann (Wiederholung) — das ist mit einer Beziehung <strong>prüft</strong> nicht modellierbar."
+            "examRelevance": "Analyseaufgabe: 'Ist die Beziehung betreuen(Professoren, Studenten, Seminarthemen) echt ternär?' Test: Kann man sie verlustlos in binäre Beziehungen zerlegen? Wenn nein → echt ternär."
           },
           {
             "term": "Connection Trap",
-            "definition": "<strong>Redundante, zyklische Beziehungen</strong> im ER-Schema. Entsteht, wenn eine direkte Beziehung bereits indirekt durch zwei andere ausgedrückt wird. Beispiel: 'Student besucht Vorlesung' ist redundant, wenn bereits 'Student besucht Kurs' und 'Professor hält Kurs' vorhanden sind.",
+            "definition": "<strong>Redundante, zyklische Beziehung</strong>: eine Beziehung, die bereits durch die Komposition anderer Beziehungen ausgedrückt wird. Beispiel: 'besucht_Vorlesung(Student, Professor)' ist redundant, da Student → besucht → Vorlesung → hält → Professor.",
             "author": "",
             "importance": "medium",
-            "examRelevance": "Prüfungsaufgabe: 'Welche Beziehung in diesem Diagramm ist redundant?' Prüfmethode: Kann Information über Beziehung X aus anderen Beziehungen abgeleitet werden? → Ja = Connection Trap."
-          },
-          {
-            "term": "Schemakonsolidierung",
-            "definition": "Zusammenführen mehrerer <strong>Teilschemata</strong> (erstellt von verschiedenen Personen mit verschiedenen Sichtweisen) zu einem <strong>globalen Schema</strong>. Erfolgt iterativ durch schrittweise Zusammenführung von S1+S2 → S1,S2,S3 → ... → globales Schema.",
-            "author": "",
-            "importance": "low",
-            "examRelevance": "Eher konzeptuell gefragt: 'Warum ist Schemakonsolidierung notwendig?' — Weil große Systeme von mehreren Teams modelliert werden und Konflikte (Namenskonflikte, strukturelle Unterschiede) aufgelöst werden müssen."
+            "examRelevance": "Klausur zeigt ein ER-Diagramm mit redundanter Beziehung: 'Welche Beziehung ist überflüssig und warum?' Erkennungsmuster: <strong>Zyklus aus 3 Entitäten</strong> mit 3 Beziehungen — eine ist oft ableitbar."
           }
         ]
       },
       {
-        "name": "Übersetzung ER → Relationales Schema",
+        "name": "Übersetzung ER → Relationales Modell",
         "concepts": [
           {
-            "term": "Übersetzung Entität → Relation",
-            "definition": "Jede Entität wird zu einer <strong>Relation (Tabelle)</strong>. Attribute der Entität werden Spalten. Der <strong>Schlüssel der Entität wird Primärschlüssel</strong>. Beispiel: Student(MatrNr, Name, Geburtstag) — MatrNr unterstrichen.",
+            "term": "Übersetzung von Entitäten",
+            "definition": "Jede Entität wird zu einer <strong>Relation (Tabelle)</strong>. Attribute der Entität werden Spalten. <strong>Schlüssel der Entität wird Primärschlüssel</strong> der Relation. Beispiel: Student(MatrNr, Name, Geburtstag) mit MatrNr als PK.",
             "author": "",
             "importance": "high",
-            "examRelevance": "Basis-Kompetenz für ER→Relational-Aufgaben. Häufig als Teil einer großen Übersetzungsaufgabe. Merke: Der Primärschlüssel wird <strong>unterstrichen</strong> notiert."
+            "examRelevance": "Schritt 1 jeder Übersetzungsaufgabe. Direkt anwendbar — kein Spielraum. Fehlerquelle: Schlüssel nicht als PK markieren oder Attribute vergessen."
           },
           {
-            "term": "Übersetzung Beziehung → Relation + Fremdschlüssel",
-            "definition": "Jede Beziehung wird zu einer Relation mit den <strong>Schlüsseln der beteiligten Entitäten als Fremdschlüssel</strong>. Schlüssel der Beziehungsrelation hängt von Kardinalität ab: <strong>N:M → Kombination beider Schlüssel; 1:N → Schlüssel der N-Seite; 1:1 → einer der beiden</strong>.",
+            "term": "Übersetzung von Beziehungen",
+            "definition": "Jede Beziehung wird zu einer Relation. Attribute: <strong>Schlüssel der beteiligten Entitäten + eigene Attribute</strong>. PK hängt von Kardinalität ab: <strong>N:M → zusammengesetzter PK (beide Schlüssel)</strong>; <strong>1:N / N:1 → Schlüssel der N-Seite</strong>; <strong>1:1 → einer der beiden</strong>.",
             "author": "",
             "importance": "high",
-            "examRelevance": "Die häufigste Klausuraufgabe in diesem Kapitel. Typischer Fehler: Bei 1:N-Beziehungen vergessen, dass die Beziehungsrelation denselben Schlüssel wie die N-Seite hat und daher mit ihr zusammengeführt werden kann (Schemavereinfachung)."
+            "examRelevance": "Kernaufgabe: ER → Relationalschema übersetzen. Typischer Fehler: bei N:M nur einen Schlüssel nehmen. <strong>Bei 1:N und 1:1 entsteht eine Relation mit gleichem PK wie eine Entitätsrelation → Schemavereinfachung nötig.</strong> Verknüpft mit Schemavereinfachung."
           },
           {
-            "term": "Schemavereinfachung (Zusammenführung bei 1:N)",
-            "definition": "Bei 1:N, N:1 und 1:1 Beziehungen hat die Beziehungsrelation denselben Schlüssel wie eine Entitätsrelation → <strong>beide werden zusammengeführt</strong>. Der Fremdschlüssel wird in die Entitätsrelation integriert. Beispiel: Vorlesung(Nr, Titel, Credits) + hält(Nr, PersNr) → <strong>Vorlesung(Nr, Titel, Credits, ProfPersNr)</strong>.",
+            "term": "Schemavereinfachung (Merge)",
+            "definition": "Nach der Beziehungsübersetzung: Relationen mit <strong>gleichem Primärschlüssel zusammenführen</strong>. Passiert bei 1:N, N:1 und 1:1. Beispiel: Vorlesung(Nr, Titel, Credits) + hält(Nr, PersNr) → <strong>Vorlesung(Nr, Titel, Credits, ProfPersNr)</strong>. PersNr wird zum <strong>Fremdschlüssel</strong>.",
             "author": "",
             "importance": "high",
-            "examRelevance": "Sehr häufige Klausuraufgabe: 'Übersetzen Sie dieses ER-Schema vollständig in ein relationales Schema inkl. Vereinfachung.' Klassischer Fehler: Die Vereinfachung weglassen und hält als separate Tabelle stehen lassen."
+            "examRelevance": "Häufig als letzter Schritt in Übersetzungsaufgaben vergessen. Prüfer sieht redundante Relationen → Punktabzug. Merke: <strong>Merge nur bei 1:N/N:1/1:1, NICHT bei N:M</strong> — N:M-Beziehungsrelation bleibt eigenständig."
           },
           {
-            "term": "Übersetzung schwache Entität",
-            "definition": "Wie 1:N-Beziehung behandelt, aber die schwache Entität bekommt einen <strong>zusammengesetzten Primärschlüssel</strong> aus dem Schlüssel der starken Entität + eigenem Teilschlüssel. Beispiel: Zimmer(GebäudeNr, ZimmerNr, ...) — beide Attribute zusammen sind der Primärschlüssel.",
+            "term": "Fremdschlüssel",
+            "definition": "Attribut in einer Relation, das den <strong>Primärschlüssel einer anderen Relation referenziert</strong>. Entsteht bei der Übersetzung von Beziehungen. Sichert referentielle Integrität. Beispiel: ProfPersNr in Vorlesung referenziert PersNr in Professor.",
             "author": "",
             "importance": "medium",
-            "examRelevance": "Aufgabe: 'Übersetzen Sie schwache Entität X.' Erkennbar am <strong>zusammengesetzten Schlüssel</strong> in der Zieltabelle — dieser Punkt wird oft falsch gemacht (nur ZimmerNr als Schlüssel angegeben)."
+            "examRelevance": "Wird explizit gefragt: 'Was ist ein Fremdschlüssel? Nennen Sie ein Beispiel aus dem Uni-Schema.' Umbenennung (PersNr → ProfPersNr) macht Referenz klarer — kann als Best-Practice-Frage kommen."
           },
           {
-            "term": "Drei Strategien für Generalisierung",
-            "definition": "<strong>(1) Nur Obertyp</strong>: eine Tabelle für alle — Problem: NULL-Werte. <strong>(2) Nur Untertypen</strong>: je eine Tabelle pro Untertyp mit geerbten Attributen — Problem: Angestellte ohne Untertyp verloren. <strong>(3) Alle Typen</strong>: Obertyp-Tabelle + je eine Untertyp-Tabelle mit Fremdschlüssel — Problem: Joins nötig.",
+            "term": "Übersetzung schwacher Entitäten",
+            "definition": "Wie 1:N-Beziehung, aber die schwache Entität bekommt einen <strong>zusammengesetzten Primärschlüssel</strong> (eigener Teilschlüssel + Schlüssel der starken Entität). Beispiel: Zimmer(GebäudeNr, ZimmerNr, ...) — GebäudeNr ist Fremdschlüssel UND Teil des PK.",
+            "author": "",
+            "importance": "medium",
+            "examRelevance": "Verbindet das Konzept <strong>schwache Entität</strong> (Abschnitt 'Weiterführende Konzepte') direkt mit der Übersetzung. Klausur: 'Übersetzen Sie Zimmer in Gebäude ins relationale Modell' — zusammengesetzter PK ist die entscheidende Antwort."
+          },
+          {
+            "term": "Generalisierung: 3 Übersetzungsstrategien",
+            "definition": "<strong>(1) Nur Obertyp</strong>: eine Tabelle, NULL-Werte für subtypspezifische Attribute. <strong>(2) Nur Untertypen</strong>: Obertyp-Attribute werden wiederholt, Entitäten ohne Subtyp verloren. <strong>(3) Alle Typen</strong>: sauberste Lösung, aber Information verteilt auf mehrere Tabellen → JOINs nötig.",
             "author": "",
             "importance": "high",
-            "examRelevance": "Fast sicher Klausurstoff: 'Erläutern Sie die drei Strategien zur Übersetzung einer Generalisierung und nennen Sie je ein Problem.' Merkhilfe: <strong>OUG</strong> (Ober, Unter, Gemeinsam) — jede Variante hat genau ein typisches Problem."
+            "examRelevance": "Sehr beliebte Klausurfrage mit drei Teilpunkten. Verknüpft mit <strong>Generalisierung im ER-Modell</strong> (vorheriger Abschnitt). Strategie (3) entspricht der Variante in modernen ORMs wie Hibernate (TABLE_PER_CLASS vs. SINGLE_TABLE vs. JOINED) — wer das kennt, hat einen Anker."
           }
         ]
       },
       {
-        "name": "UML als Entwurfssprache",
+        "name": "UML als Modellierungsalternative",
         "concepts": [
           {
             "term": "UML-Klassendiagramm für Datenmodellierung",
-            "definition": "UML-Klasse entspricht ER-Entitätstyp. Klassen haben <strong>Attribute und Operationen</strong>. Assoziationen entsprechen Beziehungstypen. Unterstützt Generalisierung (Vererbungspfeil) und Aggregation (ausgefüllte Raute = Komposition).",
+            "definition": "De-facto Standard für OO-Entwurf. <strong>Klasse</strong> = Entitätstyp; <strong>Assoziation</strong> = Beziehungstyp. Klasse hat drei Bereiche: Name, Attribute (mit Typ), Operationen/Methoden. Unterstützt Generalisierungshierarchien und Aggregation.",
             "author": "",
             "importance": "medium",
-            "examRelevance": "Vergleichsfrage: 'Worin unterscheidet sich UML-Klassendiagramm vom ER-Modell?' Hauptunterschied: UML hat <strong>Operationen/Methoden</strong>, ER nicht. UML-Multiplizitäten haben <strong>umgekehrte Semantik</strong> zur ER-(min,max)-Notation."
+            "examRelevance": "Vergleichsfrage: 'Was sind Unterschiede und Gemeinsamkeiten zwischen ER-Modell und UML-Klassendiagramm?' Hauptunterschied: UML modelliert auch <strong>Verhalten (Methoden)</strong>, ER nur Struktur."
           },
           {
-            "term": "UML-Multiplizitäten vs. ER-(min,max)",
-            "definition": "In UML steht die Multiplizität <strong>gegenüber</strong> der beschriebenen Klasse (beschreibt die andere Seite). In ER steht (min,max) <strong>direkt neben</strong> der beschriebenen Entität. Beide beschreiben Kardinalitäten, aber mit <strong>entgegengesetzter Positionierungslogik</strong>.",
+            "term": "UML-Multiplizitäten vs. ER-Funktionalitäten",
+            "definition": "UML-Multiplizität i..j an Klasse B bedeutet: jedes A-Objekt steht mit <strong>mindestens i und höchstens j</strong> B-Objekten in Beziehung. <strong>Achtung: Leserichtung ist UMGEKEHRT zur ER-(min,max)-Notation!</strong> In UML steht die Zahl beim ZIELOBJEKT, in ER beim QUELLELEMENT.",
             "author": "",
-            "importance": "medium",
-            "examRelevance": "Explizit im Material als <strong>Vorsicht!</strong> markiert. Klausurfrage: 'Gegeben ein UML-Diagramm mit Multiplizitäten — wie lautet die entsprechende ER-(min,max)-Notation?' Die Richtung wird systematisch falsch gemacht."
+            "importance": "high",
+            "examRelevance": "<strong>Explizite Warnung in den Folien: 'Nicht zur (min,max)-Angabe: Vorsicht!'</strong> Das ist ein gesetzter Fallstrick in der Klausur. Wenn du ein UML-Diagramm liest, steht 1..* bei Studenten → jede Vorlesung hat mindestens 1 Hörer — NICHT andersherum."
           },
           {
-            "term": "Use-Case-Diagramm",
-            "definition": "UML-Diagramm zur Darstellung von <strong>Anwendungsfällen</strong> und Akteuren. Zeigt WAS das System leisten soll (nicht wie). Akteure sind externe Nutzer/Systeme, Anwendungsfälle sind Ellipsen im Systemrahmen.",
+            "term": "Schemakonsolidierung",
+            "definition": "Wenn verschiedene Personen <strong>Teilschemata</strong> modellieren, müssen diese zu einem <strong>globalen Schema</strong> zusammengeführt werden. Vorgehen: iterativ, paarweise Zusammenführung (S1+S2, dann +S3, usw.).",
             "author": "",
             "importance": "low",
-            "examRelevance": "Eher konzeptuell gefragt als Teil der Spezifikation. Merke: Use-Case-Diagramme gehören zur <strong>Anforderungsspezifikation</strong> (Phase 1), nicht zum konzeptuellen Entwurf (Phase 2)."
+            "examRelevance": "Kann als Konzeptfrage kommen: 'Warum entsteht in der Praxis das Problem der Schemakonsolidierung?' Antwort: verschiedene Perspektiven verschiedener Stakeholder → inkonsistente Teilmodelle."
           }
         ]
       }
@@ -422,9 +443,9 @@
   },
   "authors": [
     {
-      "name": "Chen, Peter (Peter Pin-Shan Chen)",
-      "theory": "Erfinder des Entity-Relationship-Modells (1976): Daten der realen Welt werden durch Entitäten, Attribute und Beziehungen strukturiert und als grafisches Schema dargestellt.",
-      "useInExam": "Nimm Chen, wenn die Frage nach dem Ursprung oder den Grundprinzipien des ER-Modells fragt. Nicht verwechseln: Chen hat das ER-Modell erfunden, UML kommt von der OMG (Object Management Group)."
+      "name": "Peter Chen",
+      "theory": "Erfinder des Entity-Relationship-Modells (1976): Daten der realen Welt werden als Entitäten, Attribute und Beziehungen modelliert — unabhängig vom DBMS.",
+      "useInExam": "Nenne Chen, wenn nach dem Ursprung des ER-Modells gefragt wird. Nicht verwechseln mit Codd (der hat das relationale Modell erfunden, nicht ER)."
     }
   ],
   "schedule": {
@@ -432,251 +453,254 @@
     "days": [
       {
         "day": 1,
-        "label": "Überblick & Phasen",
+        "label": "Überblick & Phasen einprägen",
         "tasks": [
-          "Foliensatz komplett durchlesen (alle 64 Seiten, ca. 45 Min) — nur querlesen, nicht lernen",
-          "Die 4 Phasen des Datenbankentwurfs aus dem Gedächtnis aufschreiben: Anforderungsanalyse → Konzeptuell → Implementierung → Physisch",
-          "Merkhilfe AKIP auf Karteikarte schreiben + für jede Phase das Output-Artefakt notieren",
-          "Konzepte 'Objektbeschreibung' und 'Beziehungsbeschreibung' (Folie 11-12) anhand Uni-Beispiel nachvollziehen"
+          "Folie 2 (Phasendiagramm) 5 Minuten anstarren: 4 Phasen + ihre Artefakte auswendig lernen",
+          "Merkhilfe schreiben: 'A-K-I-P' (Anforderungsanalyse, Konzeptuell, Implementationsentwurf, Physisch) mit je einem Output-Artefakt",
+          "Folien 3-17 (Anforderungsanalyse & Spezifikation) querlesen — merke EVVR für ideale Spezifikation",
+          "Mini-Test: Blatt nehmen, die 4 Phasen + Artefakte aus dem Gedächtnis aufschreiben"
         ]
       },
       {
         "day": 2,
-        "label": "ER-Grundbausteine",
+        "label": "ER-Grundbausteine & Notation",
         "tasks": [
-          "ER-Notationsregeln auswendig lernen: Rechteck = Entität, Ellipse = Attribut, Raute = Beziehung, Unterstreichung = Schlüssel",
-          "Das vollständige Uni-ER-Schema (Folie 34) abzeichnen ohne Vorlage — dann mit Original vergleichen",
-          "Alle 5 Entitäten (Student, Vorlesung, Professor, Assistent, —) und alle Beziehungen benennen",
-          "Karteikarten für: Entitätstyp, Attribut, Schlüssel, Relationship, Rolle"
+          "Folien 21-26 durcharbeiten: ER-Notation einprägen — Rechteck=Entität, Ellipse=Attribut, Raute=Beziehung, Unterstrich=Schlüssel",
+          "Das Uni-Schema (Folie 34) komplett abzeichnen — ohne Vorlage, aus dem Gedächtnis versuchen",
+          "Flashcard schreiben: 'Was ist der Unterschied zwischen Entität und Entitätstyp?'",
+          "Übung: Modelliere ein Bibliothekssystem (Buch, Leser, Ausleihe) als ER-Diagramm"
         ]
       },
       {
         "day": 3,
         "label": "Funktionalitäten & Kardinalitäten",
         "tasks": [
-          "Funktionalitäten 1:1, 1:N, N:M mit je einem eigenen Beispiel aus dem Uni-Kontext erklären (nicht aus Folien abschreiben)",
-          "(min,max)-Notation an Polyeder-Beispiel (Folie 32) nachvollziehen: Was bedeutet (4,*) an Hülle? Was bedeutet (1,1) an Flächen?",
-          "UML-Multiplizitäten vs. ER-(min,max) Unterschied auf Karteikarte: Positionierungslogik entgegengesetzt!",
-          "5 Übungsaufgaben selbst erfinden: für jeden Beziehungstyp eine Situation aus dem Alltag → Kardinalität bestimmen"
+          "Folien 25-32 genau durcharbeiten: 1:1, 1:N, N:M mit Beispielen",
+          "Die betreuen-Beziehung (Folie 28) nachvollziehen: welche Konsistenzbedingungen erzwingt sie?",
+          "(min,max)-Notation üben: Polyeder-Beispiel (Folie 32) selbst erklären können",
+          "3 eigene Beispiele erfinden und Kardinalitäten annotieren (z.B. Arzt-Patient, Bestellung-Produkt, Film-Schauspieler)"
         ]
       },
       {
         "day": 4,
         "label": "Weiterführende Konzepte + Entwurfsentscheidungen",
         "tasks": [
-          "Schwache Entität: Gebäude/Zimmer-Beispiel erklären, zusammengesetzten Schlüssel notieren",
-          "Generalisierung is-a: Angestellte/Professor/Assistent-Beispiel zeichnen",
-          "Entwurfsentscheidungen durcharbeiten: Entität vs. Attribut (Adress-Beispiel), Entität vs. Beziehung (Prüfungs-Beispiel), Connection Trap (redundante Beziehung identifizieren)",
-          "Übungsaufgabe: Gegeben Textszenario → ER-Diagramm zeichnen inkl. Entscheidungsbegründung"
+          "Schwache Entität (Folie 36): Gebäude/Zimmer-Beispiel auswendig erklären — warum zusammengesetzter Schlüssel?",
+          "Generalisierung (Folie 37): is-a-Pfeil korrekt zeichnen — Pfeil zeigt ZUR Oberklasse",
+          "Aggregation (Folie 38): Auto-Beispiel, Abgrenzung zu is-a formulieren",
+          "Entwurfsentscheidungen (Folien 39-43) lesen: für jede der 4 Entscheidungen (Entität vs. Attribut, Entität vs. Beziehung, binär vs. ternär, Connection Trap) ein eigenes Beispiel erfinden"
         ]
       },
       {
         "day": 5,
-        "label": "ER → Relational Übersetzung",
+        "label": "ER → Relationales Schema übersetzen",
         "tasks": [
-          "Übersetzungsregeln für Entitäten lernen: Entität → Tabelle, Schlüssel → Primärschlüssel",
-          "Übersetzungsregeln für Beziehungen: N:M → eigene Tabelle mit zusammengesetztem Schlüssel; 1:N → Fremdschlüssel in N-Seite integrieren (Schemavereinfachung!)",
-          "Das vollständige Uni-ER-Schema (Folie 34) komplett übersetzen: alle 5 Entitäten + alle Beziehungen → relationale Notation mit unterstrichenen Primärschlüsseln",
-          "Drei Generalisierungsstrategien (OUG) auswendig lernen inkl. je einem konkreten Problem"
+          "3-Schritt-Prozess (Folien 46-52) auswendig: (1) Entitäten → Relationen, (2) Beziehungen → Relationen, (3) Schemavereinfachung",
+          "Das vollständige Uni-Schema (Folie 34) selbst ins relationale Modell übersetzen — alle Tabellen mit PKs und FKs",
+          "Fremdschlüssel-Regel lernen: Wann entsteht ein FK? Bei welchen Kardinalitäten wird gemergt?",
+          "Übung: Generalisierung (Angestellte/Assistent/Professor) in alle 3 Strategien übersetzen und Probleme benennen"
         ]
       },
       {
         "day": 6,
-        "label": "UML + Wiederholung",
+        "label": "UML + Schwachstellen gezielt üben",
         "tasks": [
-          "UML-Klassendiagramm (Folie 60) lesen: Klassen, Assoziationen, Multiplizitäten, Generalisierungspfeile identifizieren",
-          "Unterschied ER ↔ UML auf einer Seite zusammenfassen: Notation, Multiplizitätsrichtung, Operationen",
-          "Alle Konzepte aus Woche ohne Notizen erklären (Laut-Denken oder Partner): Entität, Schlüssel, Relationship, Funktionalitäten, Schwache Entität, Generalisierung, Übersetzungsregeln",
-          "Schwachstellen identifizieren und gezielt die entsprechenden Folien nochmal ansehen"
+          "UML-Folien (55-63): Unterschied UML vs. ER — Methoden in UML, kein Verhalten in ER",
+          "FALLE einprägen: UML-Multiplizität vs. ER-(min,max)-Notation — Leserichtung unterschiedlich!",
+          "Altes Klausurformat simulieren: Schreibe selbst 3 Freitextfragen aus diesem Kapitel und beantworte sie ohne Unterlagen",
+          "Connection Trap (Folie 43) erklären: Warum ist 'besucht_Vorlesung(Student, Professor)' redundant?"
         ]
       },
       {
         "day": 7,
-        "label": "Klausursimulation & Puffer",
+        "label": "Generalprobe & Lücken schließen",
         "tasks": [
-          "Klausursimulation: Aus dem Gedächtnis ein vollständiges ER-Schema für ein neues Szenario zeichnen (z.B. Bibliothek: Buch, Autor, Leser, Ausleihe) inkl. Kardinalitäten und Schlüsseln",
-          "Das selbst gezeichnete Schema komplett in relationale Tabellen übersetzen inkl. Schemavereinfachung",
-          "Die 3 Generalisierungsstrategien auf das Bibliotheks-Beispiel anwenden und Vor-/Nachteile nennen",
-          "Letzte Wiederholung: alle Karteikarten durchgehen, Lücken schließen, Merkhilfen AKIP, EVVR, OUG wiederholen"
+          "Das vollständige Uni-Schema aus dem Gedächtnis als ER-Diagramm zeichnen (Folie 34 als Kontrolle)",
+          "Dasselbe Schema komplett ins relationale Modell übersetzen (alle Tabellen, PKs, FKs, Fremdschlüsselnamen)",
+          "Die 3 Generalisierungsstrategien auf einem Blatt mit Vor-/Nachteilen zusammenfassen",
+          "Letzte Schwachstellen: EVVR, 7 Schritte Anforderungsanalyse, Unterschied (min,max) vs. UML-Multiplizität nochmals wiederholen",
+          "Schlafen gehen — nicht mehr neu lernen"
         ]
       }
     ]
   },
-  "quizletExport": "Welche 4 Phasen durchläuft ein vollständiger Datenbankentwurf — und welche Artefakte entstehen jeweils?\t4 Phasen: Anforderungsanalyse → Konzeptueller Entwurf → Implementationsentwurf → Physischer EntwurfPhase 1 liefert die Anforderungsspezifikation, Phase 2 ein ER-Schema (Informationsstruktur), Phase 3 die logische Datenbankstruktur, Phase 4 die physische Datenbankstruktur. In Phase 3 fließen DBMS-Charakteristika ein, in Phase 4 Hardware/BS-Charakteristika.Eselsbrücke: 'AKIP' — Analyse, Konzept, Implementierung, Physisch\nWarum scheitert die Anforderungsanalyse in der Praxis so oft — und was ist die Kernaussage der 'Baumschaukel'-Folie?\tGeldgeber, Designer, Programmierer und Kunde verstehen 'dasselbe' unterschiedlich — jeder übersetzt die Anforderung falsch.Die Folie zeigt 6 Versionen derselben Schaukel: vom üppigen Baum über ein hängendes Brett bis zu einem einseitigen Seil. Der Kunde wollte eine simple Reifenschaukel — bekam aber etwas ganz anderes.Kernbotschaft: Kommunikation zwischen Anwender und Entwickler ist entscheidend. In der Klausur: Iterativer Prozess notwendig!\nNenne die 7 Schritte der Anforderungsanalyse in der richtigen Reihenfolge.\t7 Schritte von der Identifikation bis zur Formalisierung1. Identifikation von Organisationseinheiten, 2. Identifikation der zu unterstützenden Aufgaben, 3. Anforderungs-Sammelplan, 4. Anforderungs-Sammlung, 5. Filterung, 6. Satzklassifikationen, 7. Formalisierung.Eselsbrücke: 'IO-ASFSF' — Oder merke: 'Ich Identifiziere Aufgaben, Sammle Filter, Klassifiziere, Formalisiere'\nWas unterscheidet eine Objektbeschreibung von einer Beziehungsbeschreibung in der Anforderungsanalyse — und was gehört jeweils rein?\tObjektbeschreibung beschreibt Entitäten mit Attributen, Beziehungsbeschreibung beschreibt Relationen mit beteiligten Objekten und eigenen Attributen.Beispiel Objektbeschreibung 'Uni-Angestellte': Anzahl 1000, Attribute PersonalNummer (Schlüssel, Definiertheit 100%), Gehalt (Definiertheit 90%), Rang. Beispiel Beziehungsbeschreibung 'prüfen': beteiligte Objekte Professor, Student, Vorlesung; Attribute Datum, Uhrzeit, Note; 100.000 Vorgänge/Jahr.Merke: Beziehungsbeschreibung hat immer beteiligte Objekte + eigene Attribute + Häufigkeit\nWas sind die 4 Eigenschaften einer idealen Spezifikation — und warum ist keine davon in der Realität vollständig erreichbar?\tEindeutig, vollständig, verständlich (für alle Leser), redundanzfrei — in der Praxis immer nur ein Kompromiss.Beispiel: Eine Vorlesungsdatenbank-Spezifikation kann für den Dekan verständlich, aber für den Programmierer zu vage sein. 'Vollständig' scheitert, weil Anwender nicht wissen, was sie nicht wissen (vgl. Baumschaukel-Problem).Eselsbrücke: 'EVVR' — Eindeutig, Vollständig, Verständlich, Redundanzfrei\nWas sind die 5 grundlegenden Bausteine des ER-Modells und wie werden sie grafisch dargestellt?\tEntitätentyp (Rechteck), Attribut (Ellipse), Schlüssel (unterstrichenes Attribut in Ellipse), Relationship/Beziehungstyp (Raute), Rolle (Beschriftung an Kante)Beispiel: Entität 'Student' ist ein Rechteck; Attribut 'MatrNr' ist eine unterstrichene Ellipse (Schlüssel); Beziehung 'besucht' zwischen Student und Vorlesung ist eine Raute; bei rekursiver Beziehung 'setzt_voraus' auf Vorlesung tragen die Kanten die Rollen 'Vorgänger' und 'Nachfolger'.Eselsbrücke: 'EASKR' — Entität-Attribut-Schlüssel-Relationship-Rolle. Formen: Rechteck=Ding, Ellipse=Eigenschaft, Raute=Verb\nWas ist eine Entität im ER-Modell — und wie unterscheidet sich ein Entitätstyp von einer Entitätsinstanz?\tEine Entität ist ein unterscheidbares Objekt der realen Miniwelt; der Entitätstyp beschreibt die Klasse, die Instanz ein konkretes Exemplar.Entitätstyp: 'Student' (Rechteck im ER-Diagramm). Instanz: der konkrete Student mit MatrNr 12345, Name 'Müller', Geburtstag 01.01.2000. Entitätstypen können Dinge, Personen oder Konzepte sein (z.B. Vorlesung als Konzept).Merke: Typ = Bauplan, Instanz = konkretes Objekt. Wie in Java: Klasse vs. Objekt.\nWas sind die 4 Funktionalitätstypen im ER-Modell — und was bedeuten sie formal?\t1:1, 1:N, N:1, N:M — sie geben an, mit wie vielen Entitäten der anderen Seite eine Entität in Beziehung stehen kann.Beispiel: Student besucht Vorlesung ist N:M (ein Student besucht viele Vorlesungen, eine Vorlesung wird von vielen Studenten besucht). Vorlesung hält Professor ist N:1 (viele Vorlesungen, ein Professor je Vorlesung — der Schlüssel der N-Seite, also VorlNr, wird Schlüssel der Beziehungsrelation).Eselsbrücke: Lies 1:N als 'einer zu viele'. 1=eine Seite, N=viele Seiten.\nWas bedeutet die (min,max)-Notation an einer Beziehungskante — und worin besteht der Unterschied zur einfachen N:M-Notation?\t(min,max) gibt für jede Entität an, an wie vielen Beziehungsinstanzen sie mindestens (min) und höchstens (max) teilnehmen muss.Beispiel Polyeder-Modell: Beziehung 'Hülle' zwischen Polyeder und Flächen hat (4,*) auf der Flächen-Seite — ein Polyeder hat mindestens 4 Flächen, maximal beliebig viele. 'Begrenzung' zwischen Flächen und Kanten hat (3,*) auf Kanten-Seite und (2,2) auf Flächen-Seite — jede Kante begrenzt genau 2 Flächen.Vorsicht: (min,max) ≠ einfache Funktionalitätsangabe (1:N). Die (min,max)-Notation ist mächtiger und enthält auch Pflichtteilnahme (min>0).\nWas sind Rollen im ER-Modell und wann braucht man sie zwingend?\tRollen beschreiben die Funktion, die eine Entität in einer Beziehung einnimmt — zwingend bei rekursiven Beziehungen (ein Entitätstyp nimmt mehrfach teil).Beispiel: Entität 'Vorlesung' hat eine rekursive Beziehung 'setzt_voraus' zu sich selbst. Ohne Rollen wäre unklar, welche Vorlesung Vorgänger und welche Nachfolger ist. Mit Rollen: Kante mit 'Vorgänger' (N-Seite) und 'Nachfolger' (M-Seite).Merke: Rollen = Rollenschilder an den Türen. Ohne Schild weiß niemand, wer was tut.\nWas ist eine schwache Entität, wann tritt sie auf und wie erkennt man sie im ER-Diagramm?\tEine schwache Entität kann nicht eigenständig existieren und wird durch doppelte Linien (Rechteck und Raute) dargestellt — sie braucht eine starke Entität zur eindeutigen Identifikation.Beispiel: 'Zimmer' ist schwach, weil ZimmerNr 101 in Gebäude A und B existieren kann. Erst die Kombination (GebäudeNr, ZimmerNr) ist eindeutig. Die starke Entität 'Gebäude' geht eine 1:N-Beziehung mit 'Zimmer' ein.Merke: Schwache Entität hat einen gestrichelten Teilschlüssel. Im relationalen Schema bekommt sie einen zusammengesetzten Schlüssel: Zimmer(GebäudeNr, ZimmerNr, ...).\nWas modelliert eine Generalisierung im ER-Modell — und welche 3 Übersetzungsstrategien gibt es ins relationale Modell?\tGeneralisierung modelliert 'is-a'-Hierarchien mit Attributvererbung vom Obertyp an Untertypen — es gibt keine direkte relationale Entsprechung, daher 3 Kompromissstrategien.Beispiel: 'Angestellte' (PersNr, Name) ist Obertyp; 'Assistent' (Fachgebiet) und 'Professor' (ZimmerNr) sind Untertypen. Strategie 1 (nur Obertyp): Angestellte(PersNr, Name, Fachgebiet, ZimmerNr) → Problem: NULL-Werte. Strategie 2 (nur Untertypen): Problem bei anderen Angestellten. Strategie 3 (alle Typen): Information über JOIN verteilt.Eselsbrücke: 'OUA' — Oben-Unten-Alle. Jede Strategie hat genau einen typischen Nachteil.\nWas modelliert eine Aggregation im ER-Modell — und wie unterscheidet sie sich von einer Generalisierung?\tAggregation modelliert 'ist-Teil-von'-Beziehungen (part-of), Generalisierung modelliert 'ist-ein'-Beziehungen (is-a).Beispiel Aggregation: Auto besteht aus Fahrgestell, Karosserie und Rädern — jede Komponente ist ein part-of Auto. Beispiel Generalisierung: Professor is-a Angestellter. Wichtig: Teil-Entitäten können ohne das Ganze existieren (Räder existieren auch ohne Auto), bei starker Aggregation (Komposition) nicht.Merke: 'part-of' = Aggregation (Teile); 'is-a' = Generalisierung (Typ). Auto hat Räder ≠ Auto ist ein Fahrzeug.\nWann modelliert man etwas als Entität und wann als Attribut — was sind die entscheidenden Kriterien?\tEntitätstyp wenn: Mehrfachvorkommen möglich, eigene Attribute nötig, oder Zerlegung in Unterattribute sinnvoll. Attribut wenn: einfach, einwertig, keine eigene Bedeutung.Beispiel 'Adresse' eines Kunden bei Amazon: Kann ein Kunde mehrere Adressen haben? → Eigene Entität (Attribute sind nicht mengenwertig). Soll Adresse in PLZ, Stadt etc. zerlegt werden? → Mindestens in Unterattribute aufteilen, ggf. eigene Entität ausgliedern.Faustregel: Flexibilität braucht Entität, Einfachheit erlaubt Attribut.\nWann braucht man eine Entität statt einer Beziehung — und was ist das zentrale Argument?\tBeziehungen haben keine eigene Identität: dieselben Entitäten können nicht mehrfach in derselben Beziehung auftreten. Wenn das nötig ist, muss eine Entität modellieren.Beispiel: Student 'Müller' legt Prüfung in 'Datenbanken' bei Prof. 'Schmidt' mehrfach ab (Wiederholung). Als Beziehung 'prüft' nicht darstellbar (eindeutig). Lösung: Entität 'Prüfung' mit PrüfungsNr, Note, Datum einführen — verbunden mit Student (meldet), Vorlesung (Thema) und Professor (benotet).Merke: 'Mehr als einmal dasselbe' → muss Entität werden, nicht Beziehung.\nWas ist eine echte ternäre Beziehung — und wie unterscheidet sie sich von einer falschen ternären Beziehung (mit Beispiel)?\tEine echte ternäre Beziehung benötigt alle drei teilnehmenden Entitäten zur eindeutigen Beschreibung — bei einer unechten ternären kann man sie in binäre zerlegen.Echt ternär: 'prüft' (Professor, Student, Vorlesung) — welcher Professor prüft welchen Studenten über welche Vorlesung? Alle drei nötig. Nicht echt ternär: 'DiplArbeit' (Student, Professor_Erstgutachter, Professor_Zweitgutachter) — kann als zwei binäre Beziehungen (Erstgutachter: Student→Professor; Zweitgutachter: Student→Professor) mit Rollen modelliert werden.Test: Kann ich die ternäre Raute ohne Informationsverlust durch zwei binäre Rauten ersetzen? → Wenn ja, nicht echt ternär.\nWas ist eine Connection Trap — und wie erkennt man sie im ER-Schema?\tEine Connection Trap ist eine redundante, zyklische Beziehung, die bereits durch andere Beziehungen im Schema ausgedrückt wird.Beispiel: Student besucht Vorlesung (N:M) und Professor hält Vorlesung (N:1) sind bereits modelliert. Fügt man zusätzlich die Beziehung 'besucht Vorlesung' zwischen Student und Professor ein, ist diese redundant — welcher Student welche Vorlesung bei welchem Professor besucht, ist über besucht + hält bereits ableitbar.Erkennungsmerkmal: Zyklus im ER-Diagramm = Verdacht auf Connection Trap. Frage: Ist die Information bereits durch Transitiv-Verknüpfung bestehender Beziehungen ausdrückbar?\nWie übersetzt man eine Entität ins relationale Modell — mit konkretem Beispiel?\tJede Entität wird zu einer Relation; Attribute der Entität werden Attribute der Relation; Schlüsselattribut wird Primärschlüssel (unterstrichen).Beispiel: Entität 'Student' mit MatrNr (Schlüssel), Name, Geburtstag wird zu: Student(MatrNr, Name, Geburtstag). Entität 'Professor' mit PersNr (Schlüssel), Name, ZimmerNr wird zu: Professor(PersNr, Name, ZimmerNr).Regel: 1 Entität = 1 Relation. Schlüssel wird unterstrichen. Alle Attribute übernehmen.\nWie bestimmt sich der Schlüssel einer Beziehungsrelation — abhängig von der Funktionalität (N:M, 1:N, 1:1)?\tN:M → Kombination beider Entitätsschlüssel als zusammengesetzter Schlüssel. 1:N / N:1 → Schlüssel der N-Seite wird Schlüssel der Beziehungsrelation. 1:1 → einer der beiden Entitätsschlüssel wählbar.Beispiel N:M: besucht(Student N:M Vorlesung) → besucht(MatrNr, Nr). Beispiel N:1: hält(Vorlesung N:1 Professor) → hält(Nr, PersNr) — Nr ist Schlüssel der N-Seite (Vorlesung).Eselsbrücke: 'N gewinnt' — bei 1:N gewinnt immer die N-Seite den Schlüssel der Beziehung.\nWas ist Schemavereinfachung (Schema Merge) — wann findet sie statt und was ist ein Fremdschlüssel?\tBei 1:N-, N:1- und 1:1-Beziehungen haben Entitätsrelation und Beziehungsrelation denselben Schlüssel → werden zu einer Relation zusammengefasst. Der eingebettete fremde Schlüssel heißt Fremdschlüssel.Beispiel: Vorlesung(Nr, Titel, Credits) + hält(Nr, PersNr) → gleicher Schlüssel (Nr) → zusammenfassen zu Vorlesung(Nr, Titel, Credits, PersNr). PersNr referenziert Professor.PersNr = Fremdschlüssel. Zur Klarheit umbenennen: ProfPersNr.Merke: Schemavereinfachung passiert NUR bei 1:N / N:1 / 1:1, NICHT bei N:M (dort bleibt eigene Beziehungsrelation erhalten).\nWie wird eine schwache Entität ins relationale Modell übersetzt — und wie sieht der Schlüssel aus?\tSchwache Entitäten werden wie 1:N-Beziehungen übersetzt — der Schlüssel der übergeordneten Entität wird Teil des zusammengesetzten Schlüssels der schwachen Entität.Beispiel: Gebäude(GebäudeNr, ...) und Zimmer (schwach, Teilschlüssel: ZimmerNr) → Zimmer(GebäudeNr, ZimmerNr, ...). GebäudeNr ist Fremdschlüssel und Teil des Primärschlüssels gleichzeitig.Merke: Schwache Entität = immer zusammengesetzter Schlüssel aus starkem + eigenem Teilschlüssel.\nWas sind die 3 Strategien zur Übersetzung einer Generalisierung ins relationale Modell — mit Vor- und Nachteilen?\tStrategie 1 'Nur Obertyp': alle Attribute in eine Relation → Problem: NULL-Werte für nicht-zutreffende Untertyp-Attribute. Strategie 2 'Nur Untertypen': jeder Untertyp enthält alle Obertyp-Attribute → Problem: keine Speicherung für Angestellte, die weder Assistent noch Professor sind. Strategie 3 'Alle Typen': Obertyp + je eine Relation pro Untertyp → Problem: Information über JOINs verteilt.Beispiel: Angestellte is-a Professor/Assistent. Strategie 3 ergibt: Angestellte(PersNr, Name), Assistant(PersNr, Fachgebiet), Professor(PersNr, ZimmerNr). Um Professordaten zu lesen: JOIN über 2 Tabellen nötig.Eselsbrücke: 'OUA' — Oben (NULLs), Unten (Lücken), Alle (JOINs). Jede Strategie hat genau einen Haken.\nWelches vollständige relationale Schema ergibt sich aus dem Uni-ER-Beispiel (Student, Vorlesung, Professor, Assistent)?\tStudent(MatrNr, Name, Geburtstag), Vorlesung(Nr, Titel, Credits, ProfPersNr), Professor(PersNr, Name, ZimmerNr), Assistent(PersNr, Name, Fachgebiet, ProfPersNr), besucht(MatrNr, Nr), prüft(MatrNr, VorlNr, ProfPersNr, Note), setzt_voraus(VorgängerNr, NachfolgerNr)Schlüsselentscheidungen: hält (N:1) wird in Vorlesung integriert (ProfPersNr als FK). arbeitet_für (N:1) wird in Assistent integriert. besucht (N:M) bleibt eigene Relation. prüft ist ternär (N:M:1) → eigene Relation mit 3-teiligem Schlüssel.Prüfungstipp: Immer prüfen, ob FK umbenennt werden muss (z.B. PersNr → ProfPersNr), um Mehrdeutigkeiten zu vermeiden.\nWas sind die Hauptunterschiede zwischen ER-Modell und UML-Klassendiagramm für die Datenmodellierung?\tUML-Klassen enthalten neben Attributen auch Operationen/Methoden und sind der De-facto-Standard für OO-Entwurf; ER-Modelle sind rein datenorientiert ohne Verhalten.Beispiel Uni-Schema in UML: Klasse 'Studenten' hat Attribute (+MatrNr: int, +Name: String, +Semester: int) UND Methoden (+Notenschnitt(): float, +SummeWochenstunden(): short) — das gibt es im ER-Modell nicht. Assoziationen mit Multiplizitäten ersetzen Beziehungen mit Funktionalitäten.Merke: UML = ER + Methoden + Sichtbarkeiten (+/-). Für Datenbanken nutzt man meist nur den Strukturteil (Attribute + Assoziationen).\nWas bedeuten UML-Multiplizitäten wie '1..*' und '*' — und wo liegt die Verwechslungsgefahr mit der ER-(min,max)-Notation?\tUML '1..*' bedeutet: mindestens 1, maximal beliebig viele. '*' bedeutet: 0 bis beliebig. Die Multiplizität steht auf der Seite der assoziierten Klasse und gibt an, wie viele Objekte dieser Klasse mit einem Objekt der anderen Seite in Beziehung stehen.Beispiel UML-Diagramm: Studenten (1..*) — hören → Vorlesungen (*): Ein Student hört mindestens 1 Vorlesung; eine Vorlesung kann von 0 bis n Studenten gehört werden. Verwechslungsgefahr: In UML steht die Multiplizität auf der FERNEN Seite; in ER-(min,max) auf der EIGENEN Seite.Vorsicht: UML-Multiplizität ≠ ER-Funktionalität. UML 1..* auf Vorlesungsseite = in ER: Student muss mindestens 1 Vorlesung besuchen.\nWas ist ein Use-Case-Diagramm in UML — welche Elemente enthält es und wozu dient es im Datenbankentwurf?\tUse-Case-Diagramme zeigen Akteure (Strichmännchen), Anwendungsfälle (Ellipsen) und deren Beziehungen — sie gehören zur Anforderungsspezifikation (das WAS, nicht das WIE).Beispiel Uni-System: Akteure StudentIn, ProfessorIn, AssistentIn interagieren mit Anwendungsfällen 'Vorlesungen anbieten', 'Prüfungen durchführen', 'Studienplan überprüfen' innerhalb der Systemgrenze 'Fakultäten'. Beziehung «verwendet» zeigt, dass 'Prüfungen durchführen' den Use Case 'Studienplan überprüfen' nutzt.Im Datenbankentwurf: Use Cases gehören zur Spezifikationsphase und helfen, benötigte Daten und Prozesse zu identifizieren.\nWas ist Schemakonsolidierung — und warum ist sie notwendig?\tSchemakonsolidierung führt mehrere Teilschemata (aus verschiedenen Benutzerperspektiven) iterativ zu einem globalen Schema zusammen.Beispiel: In einem Uni-System modelliert die Prüfungsamts-Abteilung 'Prüfungen' anders als die Lehrplanung. Teilschema 1 (Prüfungsamt) + Teilschema 2 (Lehrplanung) → Schema S1,S2 → + Teilschema 3 (Studentensekretariat) → globales Schema. Konflikte entstehen z.B. durch unterschiedliche Namen für gleiche Konzepte.Merke: Konsolidierung = schrittweises Zusammenführen, nicht ein Einzel-Merge. Reihenfolge: paarweise bottom-up bis globales Schema entsteht.\nWozu dient ein ER-Schema im konzeptuellen Entwurf — welche 3 Funktionen hat es?\tDas ER-Schema (1) enthält alle Informationseinheiten des zu implementierenden DBS, (2) dient der Kommunikation mit Benutzern zur Vollständigkeits- und Korrektheitsprüfung, und (3) kann relativ einfach ins logische (relationale) Schema transformiert werden.Praxisbeispiel: Nach Erstellung des ER-Schemas für die Uni-Datenbank wird es dem Prüfungsamt vorgelegt (Funktion 2) — fehlt die Entität 'Studienordnung', fällt das hier auf, bevor Code geschrieben wird. Dann erfolgt die systematische Übersetzung in SQL-Tabellen (Funktion 3).Merke: ER-Schema ist DBMS-unabhängig — es beschreibt die Realität, nicht die Implementierung.",
+  "quizletExport": "Nenne und erkläre die 4 Hauptphasen des Datenbankentwurfs in der richtigen Reihenfolge.\t4 Phasen: Anforderungsanalyse → Konzeptueller Entwurf → Implementationsentwurf → Physischer EntwurfJede Phase produziert ein Artefakt: Anforderungsspezifikation → ER-Schema (Informationsstruktur) → logische Datenbankstruktur → physische Datenbankstruktur. Beispiel Uni-DB: erst wird gefragt 'welche Daten braucht das Prüfungsamt?', dann ein ER-Diagramm mit Student/Vorlesung/Professor gezeichnet, danach in SQL-Tabellen übersetzt, schließlich Indizes und Speicherpfade festgelegt.Eselsbrücke: AKI-P — Anforderung, Konzeptuell, Implementation, Physisch — wie ein AKI-Pumpe: Daten fließen von oben nach unten.\nWas ist der Unterschied zwischen 'Informationsanforderungen' und 'Datenverarbeitungsanforderungen' im Phasenmodell?\tInformationsanforderungen beschreiben WAS gespeichert werden soll (Struktur der Daten), Datenverarbeitungsanforderungen beschreiben WIE diese Daten verarbeitet werden sollen (Prozesse).Beispiel: 'Wir speichern Studenten mit MatrNr, Name, Geburtstag' = Informationsanforderung. 'Zeugnisaustellung läuft halbjährlich, verarbeitet 500 Studenten und 3000 Prüfungen' = Datenverarbeitungsanforderung. Beide fließen gemeinsam in die Anforderungsanalyse ein.Eselsbrücke: Info = Inhalt, Verarbeitung = Vorgang — 'I' kommt vor 'V', Struktur vor Prozess.\nWas zeigt das klassische 'Baum-Comic' der Anforderungsanalyse, und welche DB-Entwurfslektion steckt dahinter?\tDas Comic illustriert, dass Geldgeber, Designer, Programmierer und Kunde völlig unterschiedliche Vorstellungen vom selben System haben — obwohl alle 'über denselben Baum' sprechen.Die Lektion: Missverständnisse zwischen Anwender und Entwickler sind das häufigste Scheitern von Projekten. Deshalb ist die Anforderungsanalyse ein iterativer Prozess: Anwender erzählt → Entwickler schreibt auf → Rückübersetzung → Feedback → Schritt wiederholen. Im Datenbankkontext: ohne klare Anforderungen entwirft man das falsche ER-Schema.Eselsbrücke: 'Schaukel statt Baum' — der Kunde wollte eine Schaukel (einfach), bekam aber ein 6-stufiges Konstrukt (unnötig komplex).\nWas enthält eine Objektbeschreibung in der Anforderungsanalyse? Nenne alle relevanten Metadaten am Beispiel 'Uni-Angestellte'.\tEine Objektbeschreibung dokumentiert für jedes Attribut: Typ, Länge, Wertebereich, Anzahl Wiederholungen, Definiertheit (%) und ob es identifizierend ist.Beispiel: Attribut PersonalNummer der Entität Uni-Angestellte (1000 Instanzen): Typ=char, Länge=9, Wertebereich=0…999.999.99, Wiederholungen=0, Definiertheit=100%, identifizierend=ja. Attribut Gehalt: Typ=dezimal, Länge=(8,2), Definiertheit=90%, identifizierend=nein — d.h. 10% der Angestellten haben kein gespeichertes Gehalt (NULL-Problem!).Eselsbrücke: TLWWDI — Typ, Länge, Wertebereich, Wiederholung, Definiertheit, Identifizierend.\nWas sind die 4 Bestandteile einer idealen Spezifikation, und warum ist sie in der Praxis unerreichbar?\tDie ideale Spezifikation ist: eindeutig, vollständig, verständlich (für alle Leser), redundanzfrei.In der Praxis scheitert dies, weil Anwender und Entwickler unterschiedliche Fachsprachen sprechen, Anforderungen sich ändern, und Vollständigkeit nicht verifizierbar ist. Beispiel: eine Uni-DB-Spezifikation, die für das Prüfungsamt verständlich ist, kann für den DB-Entwickler zu informal sein — Kompromisse sind unvermeidlich.Eselsbrücke: EVVR — wie 'Ewig Viele Versuche Rauben' Zeit, weil die perfekte Spezifikation nie existiert.\nWelche 5 grundlegenden Bausteine hat das ER-Modell, und welche grafischen Symbole repräsentieren sie?\t5 Bausteine: Entitätentyp (Rechteck), Attribut (Ellipse), Schlüssel (Ellipse mit unterstrichenem Text), Relationship/Beziehungstyp (Raute), Rolle (Beschriftung an Kante).Beispiel aus der Uni-DB: Student = Rechteck, MatrNr = unterstr. Ellipse (Schlüssel), Name/Geburtstag = normale Ellipsen, besucht = Raute zwischen Student und Vorlesung, Vorgänger/Nachfolger = Rollen bei der rekursiven Beziehung setzt_voraus.Eselsbrücke: EASRR — Entität=Rechteck, Attribut=Ellipse, Schlüssel=unterstrichen, Relationship=Raute, Rolle=Kantenbeschriftung.\nErkläre den Unterschied zwischen einem Entitätstyp und einer Entität (Instanz) anhand eines konkreten Beispiels.\tEin Entitätstyp ist die Schablone/Klasse (z.B. 'Student'), eine Entität ist eine konkrete Instanz davon (z.B. Student mit MatrNr=12345, Name='Max Müller').Im ER-Diagramm zeichnen wir nur Entitätstypen (Rechtecke). Der Entitätstyp Vorlesung mit Attributen Nr, Titel, Credits kann z.B. die Instanz 'Datenbanken I, Nr=5001, 6 Credits' enthalten. Prüfungsrelevanz: In SQL wird der Entitätstyp zur Tabelle, die Entitäten werden zu Zeilen (Tupeln).Eselsbrücke: Typ = Formular-Vorlage, Instanz = ausgefülltes Formular.\nWas ist eine schwache Entität, und welche Bedingungen muss sie erfüllen? Nenne ein Beispiel.\tEine schwache Entität kann nicht eigenständig existieren und benötigt eine 'starke' Entität zur eindeutigen Identifikation — ihr Schlüssel ist zusammengesetzt.Beispiel: Zimmer ist eine schwache Entität, da eine ZimmerNr '101' ohne Angabe des Gebäudes nicht eindeutig ist. Erst die Kombination (GebäudeNr, ZimmerNr) identifiziert ein Zimmer eindeutig. Die Beziehung in zwischen Gebäude (stark) und Zimmer (schwach) ist stets 1:N. Im relationalen Modell: Zimmer(GebäudeNr, ZimmerNr, ...).Eselsbrücke: Schwache Entität = Parasit — kann ohne Wirt (starke Entität) nicht identifiziert werden. Gestricheltes Rechteck und gestrichelte Ellipse im ER-Diagramm.\nWas sind Rollen im ER-Modell, und wann braucht man sie zwingend?\tRollen beschriften die Kanten einer Beziehung und beschreiben, in welcher Funktion eine Entität an der Beziehung teilnimmt — zwingend nötig bei rekursiven (unären) Beziehungen.Beispiel: Die Beziehung setzt_voraus verbindet den Entitätstyp Vorlesung mit sich selbst. Ohne Rollen wäre unklar, welche Vorlesung Vorgänger und welche Nachfolger ist. Die Kanten werden daher mit 'Vorgänger' (N-Seite) und 'Nachfolger' (M-Seite) beschriftet. Logik: Eine Vorlesung kann mehrere Voraussetzungen haben (N) und selbst Voraussetzung für viele sein (M).Eselsbrücke: Rollen = Namensschilder bei einem Meeting, damit man weiß, wer welche Funktion hat.\nErkläre die 4 Arten von Funktionalitäten (1:1, 1:N, N:1, N:M) mit je einem konkreten Uni-DB-Beispiel.\tFunktionalitäten drücken aus, mit wie vielen Entitäten der anderen Seite eine Entität maximal in Beziehung steht.• 1:1: Jeder Professor hat genau ein Büro (in einer strikten Uni-Regelung).• 1:N: Ein Professor hält N Vorlesungen (jede Vorlesung von max. 1 Professor).• N:1: N Assistenten arbeiten_für 1 Professor.• N:M: N Studenten besuchen M Vorlesungen (jede Vorlesung hat viele Hörer).Eselsbrücke: Lies die Zahl an der Kante auf DEINER Seite = wie viele von DIR pro Gegenüber. N:M = 'Viele-zu-Viele' = braucht stets eigene Tabelle in SQL!\nWas bedeutet die (min,max)-Notation im ER-Modell? Erkläre am Beispiel des Polyeder-Diagramms (Folie 32).\tDie (min,max)-Notation an einer Kante gibt an, dass jede Entität des zugehörigen Typs mindestens min-mal und höchstens max-mal an der Beziehung teilnimmt ('*' = beliebig viele).Aus dem Polyeder-Beispiel: Die Kante Polyeder–Hülle hat (4,*) auf der Flächen-Seite → jeder Polyeder besteht aus mindestens 4 Flächen. Die Kante Hülle–Flächen hat (1,1) auf der Polyeder-Seite → jede Fläche gehört zu genau einem Polyeder. Wichtig: Diese Notation ist NICHT dasselbe wie die einfache N:M-Notation! (min,max) ist präziser.Eselsbrücke: Vorsicht Verwechslungsgefahr! (min,max) liest man von der Entität zur Beziehung hin; N:M liest man von Entität zu Entität.\nDie ternäre Beziehung 'betreuen' (Professoren × Studenten → Seminarthemen) hat die Funktionalitäten N (Studenten) und 1 (Professoren, Seminarthemen). Welche 2 Konsistenzbedingungen erzwingt das?\t1. Ein Student kann bei demselben Professor nur ein Seminarthema bearbeiten. 2. Ein Student kann dasselbe Seminarthema nur einmal bearbeiten (auch nicht bei anderen Professoren).Formal: betreuen : Professoren × Studenten → Seminarthemen bedeutet, dass die Kombination (Professor, Student) das Seminarthema eindeutig bestimmt. Und betreuen : Seminarthemen × Studenten → Professoren bedeutet, dass (Thema, Student) den Professor eindeutig bestimmt. Erlaubt bleibt: Ein Professor darf dasselbe Thema mehreren Studenten geben; ein Thema kann von mehreren Professoren vergeben werden (aber an verschiedene Studenten).Eselsbrücke: Die '1' an einer Kante = Funktionspfeil in diese Richtung = die anderen zwei Seiten zusammen bestimmen diese Entität EINDEUTIG.\nWas ist eine 'echte ternäre Beziehung', und woran erkennst du, ob eine ternäre Beziehung wirklich ternär ist oder in binäre aufgeteilt werden kann?\tEine echte ternäre Beziehung benötigt alle drei teilnehmenden Entitäten zur vollständigen Beschreibung eines Sachverhalts — sie kann NICHT verlustfrei in binäre Beziehungen aufgeteilt werden.Beispiel echt ternär: prüft (Professor × Student × Vorlesung) — die Note hängt von allen dreien ab. Beispiel NICHT echt ternär: DiplArbeit (Student × Professor[Erstgutachter] × Professor[Zweitgutachter]) — hier sind es eigentlich zwei separate 1:N-Beziehungen (Student→Erstgutachter und Student→Zweitgutachter), die man als zwei binäre Rollen modellieren sollte.Eselsbrücke: Test: Kann ich eine der drei Entitäten weglassen, ohne Information zu verlieren? Dann ist die Beziehung NICHT echt ternär.\nWas ist eine Generalisierung im ER-Modell, und welche Darstellung wird verwendet?\tGeneralisierung modelliert eine is-a-Hierarchie: ein Untertyp erbt alle Attribute des Obertyps und besitzt zusätzlich eigene Attribute — dargestellt durch eine Raute 'is-a' mit Pfeil zum Obertyp.Beispiel: Obertyp Angestellte (PersNr, Name). Untertypen: Professor (erbt PersNr, Name; hat zusätzlich ZimmerNr) und Assistent (erbt PersNr, Name; hat zusätzlich Fachgebiet). Das entspricht dem Konzept der Vererbung aus OOP — ein Professor IST EIN Angestellter.Eselsbrücke: is-a = 'ist ein' — Professor ist ein Angestellter. Pfeil zeigt AUFWÄRTS zum Obertyp (wie Erbschaft fließt nach oben zur Quelle).\nWas ist eine Aggregation im ER-Modell, und wann setzt man sie ein?\tAggregation modelliert eine 'ist-Teil-von'-Beziehung (part-of) zwischen Entitäten — das Ganze besteht aus seinen Teilen.Beispiel: Auto besteht aus (part-of) Fahrgestell, Karosserie und Rädern. Unterschied zu Generalisierung: Aggregation = 'hat' (Komposition), Generalisierung = 'ist'. Ein Auto IST KEIN Fahrgestell, es HAT EINES. Im ER-Diagramm: mehrere Rauten 'part-of' verbinden das Ganze mit seinen Teilen in einer Baumstruktur.Eselsbrücke: Aggregation = 'HAT' (has-a), Generalisierung = 'IST' (is-a). Auto hat Räder ≠ Auto ist ein Rad.\nWann modelliert man etwas als eigene Entität statt als Attribut? Nenne die 2 Entscheidungskriterien.\tAls eigene Entität modellieren, wenn: (1) mehrere Werte pro Instanz möglich sind (Mengenwertig) oder (2) das Konzept selbst in Teilkomponenten zerlegt wird.Beispiel Adresse bei Kunden: Wenn ein Kunde mehrere Adressen haben kann → eigene Entität (da Attribute nicht mehrwertig sein dürfen). Wenn die Adresse in Straße, PLZ, Stadt aufgeteilt werden soll → entweder mehrere Attribute oder eigene Entität mit diesen Attributen. Faustregel: Attribut = einfacher, Entität = flexibler für spätere Erweiterungen.Eselsbrücke: M-Z-Test: Mehrere Werte? → Entität. Zerlegbar? → Entität (oder Teilattribute). Sonst: Attribut.\nWann wählt man eine Entität statt einer Beziehung? Nenne den entscheidenden Grund und ein Beispiel.\tEine Beziehung hat keine eigene Identität — dieselben Entitäten können nur EINMAL eine bestimmte Beziehung eingehen. Wenn mehrere Instanzen des gleichen Sachverhalts möglich sind, braucht man eine Entität.Problem-Beispiel: prüft als ternäre Beziehung (Professor–Student–Vorlesung) kann einen Studenten pro Vorlesung und Professor nur einmal prüfen. Wenn aber ein Student dieselbe Vorlesung mehrfach ablegen kann (Wiederholungsprüfung), muss man Prüfung als eigene Entität modellieren mit eigenem Schlüssel (PrüfungsNr) sowie Attributen Note und Datum.Eselsbrücke: Beziehung = Unikat-Verbindung. Mehrfach = eigene Entität mit Schlüssel.\nWas ist eine Connection Trap im ER-Modell? Wie erkennt und vermeidet man sie?\tEine Connection Trap entsteht, wenn ein zyklischer Pfad aus mehreren Beziehungen eine weitere Beziehung redundant macht — die redundante Beziehung speichert keine neue Information.Beispiel aus der Uni-DB: Die Beziehung besucht_Vorlesung (Student–Professor) ist redundant, da sich dieselbe Information bereits aus der Kombination von besucht (Student–Vorlesung) und hält (Vorlesung–Professor) ergibt. Enthält ein ER-Diagramm einen Zyklus → prüfen, ob eine Beziehung im Zyklus aus den anderen ableitbar ist. Wenn ja: Connection Trap — die redundante Beziehung entfernen.Eselsbrücke: Connection Trap = Kurzschluss im Schaltkreis: überflüssige Verbindung, die Probleme (Redundanz, Inkonsistenz) erzeugt.\nErkläre das vollständige ER-Schema der Uni-DB: Welche Entitäten, Beziehungen und Funktionalitäten enthält es?\tDas vollständige Schema enthält 4 Entitäten: Student, Vorlesung, Professor, Assistent — verbunden durch 5 Beziehungen.• besucht: Student N:M Vorlesung• prüft: Student N:M Professor (mit Attribut Note), Vorlesung N-Seite• hält: Professor 1:N Vorlesung• arbeitet_für: Assistent N:1 Professor• setzt_voraus: Vorlesung N:M Vorlesung (rekursiv, Rollen: Vorgänger/Nachfolger)Schlüssel: Student=MatrNr, Vorlesung=Nr, Professor=PersNr, Assistent=PersNr.Eselsbrücke: Merke die 4 Entitäten als SVPA — Student, Vorlesung, Professor, Assistent.\nErkläre die 3 Schritte der Übersetzung eines ER-Schemas in ein relationales Schema.\tSchritt 1: Entitäten übersetzen. Schritt 2: Beziehungen übersetzen. Schritt 3: Schema vereinfachen (Zusammenführen von Relationen mit gleichem Schlüssel).Beispiel: Entität Student → Relation Student(MatrNr, Name, Geburtstag). Beziehung besucht(N:M) → eigene Relation besucht(MatrNr, Nr). Beziehung hält(N:1) → Relation hält(Nr, PersNr), danach Vereinfachung: hält hat denselben Schlüssel Nr wie Vorlesung → zusammenführen zu Vorlesung(Nr, Titel, Credits, ProfPersNr) mit ProfPersNr als Fremdschlüssel.Eselsbrücke: EBV — Entitäten, Beziehungen, Vereinfachen — wie 'Eine Basis Vorbereiten'.\nWie bestimmt sich der Primärschlüssel einer Beziehungsrelation? Erkläre für alle 3 Fälle (N:M, 1:N/N:1, 1:1).\tN:M: Kombination beider Entitätsschlüssel ist Primärschlüssel. | 1:N oder N:1: Schlüssel der N-Seite wird Primärschlüssel. | 1:1: Einer der beiden Entitätsschlüssel (beliebig wählbar).Beispiele aus der Uni-DB:• besucht (N:M Student–Vorlesung) → besucht(MatrNr, Nr)• hält (N:1 Vorlesung–Professor) → hält(Nr, PersNr) — Nr ist Schlüssel der N-Seite (Vorlesung)• arbeitet_für (N:1 Assistent–Professor) → wird in Assistent-Relation aufgenommen: Assistent(PersNr, ..., ProfPersNr)Eselsbrücke: N:M = beide Schlüssel zusammen. 1:N = N gewinnt (N-Seite wird Schlüssel). 1:1 = egal, Münze werfen.\nWas ist Schemavereinfachung, und wann tritt sie auf? Erkläre am Beispiel Vorlesung/hält.\tSchemavereinfachung bedeutet, zwei Relationen mit identischem Primärschlüssel zu einer einzigen Relation zusammenzuführen — tritt auf bei 1:N, N:1 und 1:1-Beziehungen.Nach Schritt 2 existieren: Vorlesung(Nr, Titel, Credits) und hält(Nr, PersNr). Beide haben Schlüssel Nr → Zusammenführen zu Vorlesung(Nr, Titel, Credits, PersNr). PersNr ist dabei ein Fremdschlüssel, der auf Professor(PersNr) verweist. Zur Klarheit oft umbenannt: Vorlesung(Nr, Titel, Credits, ProfPersNr).Eselsbrücke: Gleicher Schlüssel = gleiches Haus → Zimmer zusammenlegen! Nur bei 1-Seite möglich (nicht bei N:M, dort bleibt eigene Tabelle).\nErkläre die 3 Strategien zur Übersetzung einer Generalisierung ins relationale Modell mit je einem Problem.\t3 Strategien: (1) Nur Obertyp, (2) Nur Untertypen, (3) Alle Typen.• Nur Obertyp: Angestellte(PersNr, Name, Fachgebiet, ZimmerNr) — Problem: NULL-Werte (Professor hat kein Fachgebiet, Assistent keine ZimmerNr)• Nur Untertypen: Assistent(PersNr, Name, Fachgebiet), Professor(PersNr, Name, ZimmerNr) — Problem: Angestellte, die weder Professor noch Assistent sind, können nicht gespeichert werden• Alle Typen: Angestellte(PersNr, Name) + Assistant(PersNr, Fachgebiet) + Professor(PersNr, ZimmerNr) — Problem: Information über eine Person ist über mehrere Tabellen verteilt (teures JOIN)Eselsbrücke: OUG-Trilemma: NULL, Unvollständig, Geteilt — jede Option hat einen Preis.\nWie werden schwache Entitäten ins relationale Modell übersetzt? Was ist der Unterschied zur normalen 1:N-Übersetzung?\tSchwache Entitäten werden wie 1:N-Beziehungen übersetzt, mit dem einzigen Unterschied, dass die schwache Entität einen zusammengesetzten Primärschlüssel erhält (eigener Teilschlüssel + Fremdschlüssel der starken Entität).Beispiel: Gebäude(GebäudeNr, ...) und Zimmer (GebäudeNr, ZimmerNr, ...). ZimmerNr allein ist kein eindeutiger Schlüssel — erst zusammen mit GebäudeNr wird Zimmer 101 in Gebäude 3 eindeutig identifiziert. GebäudeNr in der Zimmer-Relation ist gleichzeitig Fremdschlüssel (Referenz auf Gebäude) und Teil des Primärschlüssels.Eselsbrücke: Schwache Entität = 'lebt von' der starken → der Schlüssel der starken Entität wandert als FK+Teil-PK in die schwache Tabelle.\nWas sind die Gemeinsamkeiten und Unterschiede zwischen ER-Modell und UML-Klassendiagramm bei der Datenmodellierung?\tGemeinsamkeiten: Beide modellieren Entitäten/Klassen mit Attributen, Beziehungen mit Multiplizitäten, Generalisierungshierarchien und Aggregationen. Unterschied: UML modelliert zusätzlich Verhalten (Operationen/Methoden) und ist De-facto-Standard für OO-Software-Entwurf.ER-Äquivalente in UML: Entitätstyp = Klasse (Rechteck mit 3 Bereichen: Name, Attribute, Methoden), Beziehung = Assoziation (Linie mit Multiplizität), is-a = offener Dreieckspfeil zur Oberklasse, Aggregation = Rautenende an der Ganzes-Klasse. Beispiel Uni-DB in UML (Folie 60): Studenten-Klasse hat Methoden +Notenschnitt():float, +SummeWochenstunden():short.Eselsbrücke: ER = reine Datenstruktur. UML = Daten + Verhalten. Für reine DB-Entwürfe oft ER bevorzugt.\nWas ist der kritische Unterschied zwischen UML-Multiplizitäten und der (min,max)-Notation im ER-Modell?\tIn UML steht die Multiplizität i..j auf einer Kante und bedeutet: jedes Element der GEGENÜBERLIEGENDEN Klasse steht mit mindestens i und maximal j Elementen DIESER Klasse in Beziehung — die Notation liest sich 'von der anderen Seite'.Beispiel (Folie 56): KlasseA mit Multiplizität k..l bedeutet für KlasseB-Objekte: jedes KlasseB-Objekt steht mit mindestens k und maximal l KlasseA-Objekten in Beziehung. Aus Folie 57: Studenten 1..* bedeutet, jede Vorlesung hat mindestens 1 Hörer. Das ist die UMGEKEHRTE Leserichtung im Vergleich zu ER! Im ER-Modell steht die (min,max)-Notation auf der Seite der Entität, für die sie gilt.Eselsbrücke: UML = Gegenrichtung lesen. Die Zahl steht beim Ziel, beschreibt aber, was die Quelle 'bekommt'.\nWas ist Schemakonsolidierung und warum ist sie notwendig? Wie läuft der Prozess ab?\tSchemakonsolidierung ist das schrittweise Zusammenführen mehrerer Teilschemata (von verschiedenen Modellierern) zu einem konsistenten Gesamtschema.Notwendig, weil große Systeme von mehreren Teams parallel modelliert werden — jedes Team sieht die Anwendung aus seiner Perspektive (z.B. Prüfungsamt vs. Lehrplanung). Der Prozess läuft iterativ von unten nach oben: S1+S2 → Schema(S1,S2), dann Schema(S1,S2)+S3 → Schema(S1,S2,S3), bis zum globalen Schema. Probleme: Namenskonflikte (gleiche Konzepte, verschiedene Namen), strukturelle Konflikte (gleiche Konzepte, verschiedene Modellierung).Eselsbrücke: Wie Firmenfusionen — jede Abteilung hat ihre eigene 'Sprache', am Ende muss ein gemeinsamer Standard entstehen.\nWelche 7 Schritte umfasst das grobe Vorgehen bei der Anforderungsanalyse?\t7 Schritte: (1) Identifikation von Organisationseinheiten, (2) Identifikation zu unterstützender Aufgaben, (3) Anforderungs-Sammelplan, (4) Anforderungs-Sammlung, (5) Filterung, (6) Satzklassifikationen, (7) Formalisierung.Praxisbeispiel Uni-DB: (1) Prüfungsamt, Lehrstuhl, Studentensekretariat identifizieren. (2) Zeugnisaustellung, Vorlesungsanmeldung als Aufgaben festlegen. (3) Plan: Interviews mit welchen Personen wann? (4) Interviews durchführen. (5) Irrelevantes herausfiltern. (6) Objekte klassifizieren (Entitäten vs. Beziehungen vs. Attribute). (7) Formale Objektbeschreibungen erstellen.Eselsbrücke: IOASFSF — oder einfacher: 'Ich Ordne Alle Schritte Für Sauberkeit Formal'.\nErkläre, warum das ER-Modell für den konzeptuellen Entwurf besonders geeignet ist — nenne 3 Eigenschaften eines ER-Schemas.\tEin ER-Schema ist für den konzeptuellen Entwurf geeignet, weil es (1) alle Informationseinheiten des DBS enthält, (2) als Kommunikationsmittel mit Nutzern dient, und (3) relativ einfach ins logische/relationale Schema transformierbar ist.Beispiel: Das vollständige Uni-DB-ER-Schema (Folie 34) zeigt auf einen Blick alle Entitäten (Student, Vorlesung, Professor, Assistent) und ihre Beziehungen — ein Prüfungsamts-Mitarbeiter kann es verstehen und auf Vollständigkeit prüfen, ohne SQL zu kennen. Danach wird es systematisch in SQL-Tabellen übersetzt (Folie 46ff.).Eselsbrücke: ER-Schema = universelle Sprache zwischen Fachbereich und IT. Grafisch = verständlich für alle.\nWas ist ein Fremdschlüssel (Foreign Key), und wie entsteht er bei der ER-zu-Relational-Übersetzung?\tEin Fremdschlüssel ist ein Attribut in einer Relation, dessen Werte den Primärschlüssel einer anderen Relation referenzieren — er entsteht bei der Übersetzung von 1:N und N:1-Beziehungen durch Schemavereinfachung.Beispiel: Nach Zusammenführung von Vorlesung(Nr, Titel, Credits) und hält(Nr, PersNr) entsteht Vorlesung(Nr, Titel, Credits, ProfPersNr). ProfPersNr ist Fremdschlüssel: er enthält dieselben Werte wie Professor.PersNr und stellt die referenzielle Integrität sicher — es darf kein ProfPersNr-Wert existieren, der nicht in Professor vorkommt. Zur Klarheit wird der FK oft umbenannt (PersNr → ProfPersNr).Eselsbrücke: FK = Adressverweis: 'Für mehr Infos über diesen Professor, schau in der Professor-Tabelle unter PersNr nach.'",
   "openQuestions": {
     "questions": [
       {
         "id": "oq1",
-        "question": "Nennen und erläutere kurz die vier Phasen des Datenbankentwurfs in der richtigen Reihenfolge. Was ist das Ergebnis jeder Phase?",
-        "modelAnswer": "Der Datenbankentwurf gliedert sich in vier Phasen: (1) <strong>Anforderungsanalyse</strong> → Ergebnis: Anforderungsspezifikation (Was soll das System können?). (2) <strong>Konzeptueller Entwurf</strong> → Ergebnis: ER-Schema (technologieneutrales Datenmodell). (3) <strong>Implementationsentwurf (logischer Entwurf)</strong> → Ergebnis: logische Datenbankstruktur, abhängig vom DBMS-Typ. (4) <strong>Physischer Entwurf</strong> → Ergebnis: physische Datenbankstruktur, abhängig von Hardware/Betriebssystem. Jede Phase baut auf der vorherigen auf; externe Einflussfaktoren (DBMS-Charakteristika, Hardware) fließen erst in die späteren Phasen ein.",
+        "question": "Nennen und erläutere kurz die vier Phasen des Datenbankentwurfs. In welcher Reihenfolge werden sie durchlaufen und was ist das jeweilige Ergebnis jeder Phase?",
+        "modelAnswer": "Der Datenbankentwurf durchläuft vier Phasen in folgender Reihenfolge: (1) <strong>Anforderungsanalyse</strong>: Informations- und Verarbeitungsanforderungen werden gesammelt; Ergebnis ist die <em>Anforderungsspezifikation</em>. (2) <strong>Konzeptueller Entwurf</strong>: Die Realwelt wird in einem DBMS-unabhängigen Modell (z.B. ER-Schema) abgebildet; Ergebnis ist die <em>Informationsstruktur</em>. (3) <strong>Implementationsentwurf</strong>: Das konzeptuelle Schema wird unter Berücksichtigung der DBMS-Charakteristika in ein logisches Schema überführt; Ergebnis ist die <em>logische Datenbankstruktur</em>. (4) <strong>Physischer Entwurf</strong>: Hardware- und Betriebssystemeigenschaften bestimmen die Speicherstrukturen; Ergebnis ist die <em>physische Datenbankstruktur</em>.<br>Merkhilfe: <strong>A-K-I-P</strong> (Anforderung → Konzept → Implementation → Physisch).",
         "keyPoints": [
-          "Vier Phasen: Anforderungsanalyse → Konzeptuell → Implementationsentwurf → Physisch",
-          "Ergebnis je Phase korrekt benennen (Spezifikation, ER-Schema, logische Struktur, physische Struktur)",
-          "DBMS-Charakteristika beeinflussen Implementationsentwurf; Hardware/BS den physischen Entwurf"
+          "4 Phasen: Anforderungsanalyse, Konzeptueller Entwurf, Implementationsentwurf, Physischer Entwurf",
+          "Ergebnis jeder Phase korrekt zugeordnet (Spezifikation / ER-Schema / logische / physische Struktur)",
+          "DBMS-Charakteristika fließen in den Implementationsentwurf ein",
+          "Hardware/BS-Charakteristika fließen in den physischen Entwurf ein"
         ],
         "difficulty": "easy",
         "category": "Phasen des Datenbankentwurfs"
       },
       {
         "id": "oq2",
-        "question": "Erkläre, warum die Anforderungsanalyse ein iterativer Prozess ist. Welche typischen Probleme entstehen, wenn Anwender und Entwickler nicht ausreichend miteinander kommunizieren?",
-        "modelAnswer": "Die Anforderungsanalyse ist iterativ, weil Anwender ihre Wünsche oft nicht vollständig oder präzise formulieren können und Entwickler die Fachdomäne nicht vollständig kennen. Der typische Ablauf: Anwender schildert Anforderungen → Entwickler dokumentiert sie in technischer Sprache → übersetzt zurück in Anwendersprache → Anwender erkennt Missverständnisse → Änderungswünsche → Wiederholung. Das klassische Problem zeigt die <strong>Schaukel-Metapher</strong>: Geldgeber, Designer, Programmierer und Betreiber verstehen dasselbe Dokument unterschiedlich, sodass das Endprodukt (eine Schaukel am falschen Ort) nicht dem entspricht, was der Kunde eigentlich wollte (ein Reifen am Baum). Konsequenz: teure Nachbesserungen oder falsch implementierte Systeme.",
+        "question": "Was versteht man im ER-Modell unter den Grundbausteinen Entitätentyp, Attribut und Schlüssel? Illustriere deine Antwort am Beispiel einer Universitätsdatenbank.",
+        "modelAnswer": "Ein <strong>Entitätentyp</strong> beschreibt eine Klasse gleichartiger Objekte aus der realen Welt (z.B. Personen, Konzepte) und wird im ER-Diagramm durch ein <em>Rechteck</em> dargestellt. Ein <strong>Attribut</strong> ist eine Eigenschaft, die Instanzen eines Entitätentyps beschreibt; es wird durch eine <em>Ellipse</em> repräsentiert und besitzt einen Wertebereich (z.B. Integer, String). Ein <strong>Schlüssel</strong> ist ein Attribut (oder eine Attributkombination), das eine Entität eindeutig identifiziert; er wird im Diagramm durch Unterstreichung hervorgehoben.<br>Beispiel: Der Entitätentyp <em>Student</em> besitzt die Attribute <em>MatrNr</em> (Schlüssel), <em>Name</em> und <em>Geburtstag</em>. MatrNr identifiziert jeden Studenten eindeutig.",
         "keyPoints": [
-          "Iterativer Prozess wegen unterschiedlichem Verständnis beider Seiten",
-          "Anwender ↔ Entwickler müssen sich gegenseitig verstehen",
-          "Gefahr: Missverständnisse akkumulieren über Phasen (Schaukel-Analogie)",
-          "Änderungswünsche führen zurück zum Dokumentationsschritt"
+          "Entitätentyp = Klasse von Objekten, Darstellung als Rechteck",
+          "Attribut = Eigenschaft mit Wertebereich, Darstellung als Ellipse",
+          "Schlüssel = eindeutig identifizierendes Attribut, Darstellung als unterstrichenes Attribut",
+          "Konkretes Beispiel (z.B. Student mit MatrNr)"
         ],
         "difficulty": "easy",
-        "category": "Anforderungsanalyse"
+        "category": "ER-Modelle"
       },
       {
         "id": "oq3",
-        "question": "Was sind die grundlegenden Bausteine des Entity-Relationship-Modells? Erkläre jeden Baustein an einem konkreten Beispiel aus einer Universitätsdatenbank.",
-        "modelAnswer": "Das ER-Modell besteht aus fünf Grundbausteinen: <br><strong>Entitätentyp</strong>: Klasse von realen Objekten, dargestellt als Rechteck. Beispiel: <em>Student</em> oder <em>Vorlesung</em>.<br><strong>Attribut</strong>: Eigenschaft einer Entität, dargestellt als Ellipse. Beispiel: <em>MatrNr</em>, <em>Name</em>, <em>Geburtstag</em> von Student.<br><strong>Schlüssel</strong>: Attribut, das eine Entität eindeutig identifiziert (unterstrichen). Beispiel: <em>MatrNr</em> bei Student.<br><strong>Relationship (Beziehungstyp)</strong>: Verbindung zwischen Entitätstypen, dargestellt als Raute. Beispiel: <em>besucht</em> zwischen Student und Vorlesung.<br><strong>Rolle</strong>: Beschreibt die Funktion einer Entität in einer Beziehung, besonders nützlich bei rekursiven Beziehungen. Beispiel: Vorlesung als <em>Vorgänger</em> und <em>Nachfolger</em> in der Beziehung <em>setzt_voraus</em>.",
+        "question": "Erkläre die vier Funktionalitätstypen (1:1, 1:N, N:1, N:M) von Beziehungen im ER-Modell anhand je eines konkreten Beispiels aus einer Hochschuldatenbank.",
+        "modelAnswer": "<strong>Funktionalitäten</strong> drücken aus, mit wie vielen anderen Entitäten eine Entität eine Beziehung eingehen kann.<br><strong>1:1</strong>: Jeder Professor hat genau ein Büro, jedes Büro gehört genau einem Professor – z.B. <em>Professor belegt Büro</em>.<br><strong>1:N</strong>: Ein Professor hält mehrere Vorlesungen, aber eine Vorlesung wird von genau einem Professor gehalten – z.B. <em>Professor hält Vorlesung</em>.<br><strong>N:1</strong>: Viele Assistenten arbeiten für einen Professor – z.B. <em>Assistent arbeitet_für Professor</em>.<br><strong>N:M</strong>: Ein Student besucht mehrere Vorlesungen, und eine Vorlesung wird von mehreren Studenten besucht – z.B. <em>Student besucht Vorlesung</em>.",
         "keyPoints": [
-          "5 Bausteine: Entitätentyp, Attribut, Schlüssel, Relationship, Rolle",
-          "Korrekte grafische Notation: Rechteck, Ellipse, Raute",
-          "Schlüssel = identifizierendes Attribut (unterstrichen)",
-          "Rolle besonders relevant bei rekursiven/selbstbezüglichen Beziehungen"
+          "1:1: beide Seiten maximal einmal beteiligt",
+          "1:N / N:1: eine Seite kann mehrfach vorkommen",
+          "N:M: beide Seiten können mehrfach vorkommen",
+          "Je ein sinnvolles, fachpassendes Beispiel pro Typ"
         ],
         "difficulty": "easy",
         "category": "ER-Modelle"
       },
       {
         "id": "oq4",
-        "question": "Erkläre die vier Funktionalitätstypen (1:1, 1:N, N:1, N:M) einer binären Beziehung. Gib für jeden Typ ein realistisches Beispiel aus einer Hochschulumgebung und erläutere, welche Auswirkungen der Typ auf die Schlüsselwahl bei der Übersetzung ins relationale Modell hat.",
-        "modelAnswer": "<strong>1:1</strong>: Jede Entität auf beiden Seiten steht mit genau einer Entität der anderen Seite in Beziehung. Beispiel: Professor ↔ Büro (jeder Prof hat genau ein Büro). Bei der Übersetzung kann einer der beiden Entitätsschlüssel gewählt werden.<br><strong>1:N</strong>: Eine Entität der linken Seite steht mit mehreren der rechten Seite in Beziehung. Beispiel: Professor <em>hält</em> N Vorlesungen. Schlüssel der N-Seite (Vorlesung.Nr) wird Schlüssel der Beziehungsrelation – diese kann dann mit der N-seitigen Entitätsrelation zusammengeführt werden.<br><strong>N:1</strong>: Spiegelung von 1:N. Analoges Vorgehen.<br><strong>N:M</strong>: Mehrere Entitäten beider Seiten stehen miteinander in Beziehung. Beispiel: Student <em>besucht</em> M Vorlesungen, eine Vorlesung hat N Studenten. Schlüssel setzt sich aus der Kombination beider Entitätsschlüssel zusammen → eigenständige Relation notwendig, z.B. <em>besucht(MatrNr, Nr)</em>.",
+        "question": "Was ist eine schwache Entität im ER-Modell? Wann setzt man sie ein, und wie erkennt man sie im ER-Diagramm? Gib ein Beispiel.",
+        "modelAnswer": "Eine <strong>schwache Entität</strong> ist ein Entitätentyp, der nicht eigenständig existieren kann und keinen eigenen vollständigen Schlüssel besitzt. Sie benötigt eine assoziierte <em>starke Entität</em>, um eindeutig identifiziert zu werden; gemeinsam bilden sie einen <strong>zusammengesetzten Schlüssel</strong>. Im ER-Diagramm wird die schwache Entität durch ein <em>doppelt umrandetes Rechteck</em> und ihre Beziehung zur starken Entität durch eine doppelt umrandete Raute dargestellt. Die Beziehung ist stets <strong>1:N</strong>.<br>Beispiel: <em>Zimmer</em> ist eine schwache Entität – Zimmer 101 in Gebäude A ist ein anderes als Zimmer 101 in Gebäude B. Erst die Kombination (GebäudeNr, ZimmerNr) identifiziert ein Zimmer eindeutig.",
         "keyPoints": [
-          "Alle vier Typen korrekt erklären",
-          "N:M → zusammengesetzter Schlüssel, eigenständige Relation",
-          "1:N / N:1 → Schlüssel der N-Seite, Schemavereinfachung möglich",
-          "1:1 → freie Wahl eines der beiden Schlüssel",
-          "Konkrete Beispiele nennen"
+          "Schwache Entität kann nicht eigenständig existieren",
+          "Kein vollständiger eigener Schlüssel – zusammengesetzter Schlüssel mit starker Entität",
+          "Darstellung: doppelt umrandetes Rechteck (und doppelte Raute für die Beziehung)",
+          "Beziehung zur starken Entität ist 1:N",
+          "Konkretes Beispiel (Gebäude/Zimmer o.ä.)"
         ],
         "difficulty": "medium",
-        "category": "ER-Modelle"
+        "category": "Weiterführende ER-Konzepte"
       },
       {
         "id": "oq5",
-        "question": "Was ist eine schwache Entität? Wann muss man sie verwenden? Zeige anhand eines Beispiels, wie eine schwache Entität ins relationale Schema übersetzt wird.",
-        "modelAnswer": "Eine <strong>schwache Entität</strong> kann nicht eigenständig existieren – sie benötigt eine zugehörige <strong>starke Entität</strong>, um eindeutig identifiziert werden zu können. Sie wird mit einem doppelt umrandeten Rechteck dargestellt, ihr Schlüssel ist gestrichelt unterstrichen. Beispiel: <em>Zimmer</em> ist schwach gegenüber <em>Gebäude</em>: Die ZimmerNr 101 existiert in Gebäude A und Gebäude B – ohne den Gebäudebezug ist sie nicht eindeutig. Die Beziehung ist immer 1:N (1 Gebäude hat N Zimmer). Bei der Übersetzung erhält die schwache Entität einen <strong>zusammengesetzten Primärschlüssel</strong> aus dem Schlüssel der starken Entität und ihrem eigenen Teilschlüssel: <em>Zimmer(<u>GebäudeNr</u>, <u>ZimmerNr</u>, ...)</em>.",
+        "question": "Erkläre den Unterschied zwischen Generalisierung und Aggregation im ER-Modell. Wann setzt man welches Konzept ein? Illustriere anhand von Beispielen aus dem Vorlesungsmaterial.",
+        "modelAnswer": "<strong>Generalisierung (is-a)</strong> modelliert eine Typ-Subtyp-Hierarchie: Ein Untertyp <em>erbt</em> alle Attribute des Obertyps und besitzt zusätzliche eigene Attribute. Einsatz: wenn verschiedene Entitätstypen gemeinsame Eigenschaften teilen und sich durch spezifische Merkmale unterscheiden. Beispiel aus dem Material: <em>Angestellte</em> ist der Obertyp, <em>Professor</em> und <em>Assistent</em> sind Untertypen – beide erben <em>PersNr</em> und <em>Name</em>, besitzen aber eigene Attribute (ZimmerNr bzw. Fachgebiet).<br><strong>Aggregation (part-of)</strong> modelliert eine <em>Teil-von-Beziehung</em>: Mehrere Entitäten bilden gemeinsam ein zusammengesetztes Ganzes. Einsatz: wenn Objekte aus Teilobjekten bestehen. Beispiel: Ein <em>Auto</em> besteht aus <em>Fahrgestell</em>, <em>Karosserie</em> und <em>Rädern</em>.",
         "keyPoints": [
-          "Schwache Entität existiert nicht eigenständig, braucht starke Entität",
-          "Beziehung ist immer 1:N oder 1:1",
-          "Zusammengesetzter Primärschlüssel bei der Übersetzung",
-          "Beispiel: Zimmer (schwach) ↔ Gebäude (stark)"
+          "Generalisierung = is-a / Vererbung von Attributen vom Ober- auf den Untertyp",
+          "Aggregation = part-of / Zusammensetzung aus Teilen",
+          "Generalisierung: Beispiel Angestellte → Professor/Assistent",
+          "Aggregation: Beispiel Auto → Fahrgestell/Karosserie/Räder",
+          "Klare Abgrenzung des Einsatzzwecks"
         ],
         "difficulty": "medium",
-        "category": "Weiterführende Konzepte"
+        "category": "Weiterführende ER-Konzepte"
       },
       {
         "id": "oq6",
-        "question": "Erkläre das Konzept der Generalisierung im ER-Modell. Welche drei Strategien gibt es, eine Generalisierungshierarchie ins relationale Modell zu übersetzen? Nenne je einen Vor- und Nachteil.",
-        "modelAnswer": "Die <strong>Generalisierung</strong> (is-a-Beziehung) modelliert Vererbung: Ein Obertyp teilt gemeinsame Attribute mit Untertypen, die zusätzlich eigene Attribute besitzen. Beispiel: <em>Angestellte</em> (PersNr, Name) ist Obertyp von <em>Professor</em> (ZimmerNr) und <em>Assistent</em> (Fachgebiet).<br>Drei Übersetzungsstrategien:<br><strong>(1) Nur Obertyp</strong>: Eine Relation mit allen Attributen aller Untertypen. <em>Vorteil</em>: Einfache Abfragen. <em>Nachteil</em>: NULL-Werte für nicht zutreffende Attribute.<br><strong>(2) Nur Untertypen</strong>: Je eine Relation pro Untertyp mit geerbten Attributen. <em>Vorteil</em>: Keine NULL-Werte. <em>Nachteil</em>: Angestellte, die weder Professor noch Assistent sind, haben keinen Platz.<br><strong>(3) Alle Typen</strong>: Eine Relation pro Typ, Untertypen referenzieren den Obertyp per Fremdschlüssel. <em>Vorteil</em>: Sauberste Modellierung, kein Datenverlust. <em>Nachteil</em>: Information auf mehrere Relationen verteilt, Joins notwendig.",
+        "question": "Was ist die 'Connection Trap' im Datenbankdesign? Beschreibe das Problem und erkläre, wie man es erkennt und vermeidet.",
+        "modelAnswer": "Die <strong>Connection Trap</strong> bezeichnet das Problem <em>redundanter, zyklischer Beziehungen</em> in einem ER-Schema. Sie tritt auf, wenn eine Beziehung bereits implizit durch zwei andere Beziehungen ausgedrückt wird, sodass die dritte Beziehung überflüssig ist und zu Inkonsistenzen führen kann.<br>Erkennungsmerkmal: Es entsteht ein Zyklus aus drei Entitäten und drei Beziehungen.<br>Beispiel aus dem Material: <em>Student besucht Vorlesung</em> wäre redundant, wenn bereits die Beziehungen <em>Student besucht Vorlesung</em> und <em>Professor hält Vorlesung</em> modelliert sind – man kann über diese beiden Beziehungen indirekt ableiten, bei welchem Professor ein Student hört.<br>Vermeidung: Vor dem Hinzufügen einer neuen Beziehung prüfen, ob sie durch bestehende Beziehungspfade bereits ableitbar ist.",
         "keyPoints": [
-          "Generalisierung = is-a-Beziehung, Vererbung von Attributen",
-          "3 Strategien: Nur Obertyp / Nur Untertypen / Alle Typen",
-          "Nur Obertyp → NULL-Problem",
-          "Nur Untertypen → Problem bei nicht spezialisierten Instanzen",
-          "Alle Typen → verteilte Information, Joins nötig"
+          "Definition: redundante, zyklische Beziehung",
+          "Erkennung: Zyklus aus Entitäten und Beziehungen, bei dem eine Beziehung ableitbar ist",
+          "Konsequenz: Redundanz und potenzielle Inkonsistenz",
+          "Vermeidung: Prüfung der Ableitbarkeit vor Hinzufügen neuer Beziehungen"
         ],
         "difficulty": "medium",
-        "category": "ER → Relational"
+        "category": "Entwurfsentscheidungen"
       },
       {
         "id": "oq7",
-        "question": "Was versteht man unter einer 'Connection Trap'? Beschreibe das Problem und erkläre, warum die redundante Beziehung entfernt werden sollte.",
-        "modelAnswer": "Eine <strong>Connection Trap</strong> entsteht, wenn in einem ER-Schema eine Beziehung vorhanden ist, die bereits durch eine Kombination anderer Beziehungen ausgedrückt wird – also eine <strong>redundante, zyklische Beziehung</strong>. Im Uni-Beispiel: Die Beziehung <em>besucht_Vorlesung</em> (Student – Professor) ist redundant, weil man über <em>besucht</em> (Student → Vorlesung) und <em>hält</em> (Vorlesung → Professor) denselben Sachverhalt ableiten kann. Das Problem der Connection Trap: Sie suggeriert eine direkte Abhängigkeit, die inhaltlich nicht existiert, kann zu Inkonsistenzen führen (wenn eine Beziehung aktualisiert wird, die andere aber nicht), und bläht das Schema unnötig auf. Die Lösung ist, die redundante Beziehung zu entfernen.",
+        "question": "Erkläre, wie eine N:M-Beziehung und eine 1:N-Beziehung im ER-Modell jeweils in ein relationales Schema übersetzt werden. Was passiert bei der Schemavereinfachung und warum?",
+        "modelAnswer": "Bei einer <strong>N:M-Beziehung</strong> (z.B. <em>Student besucht Vorlesung</em>) wird eine eigenständige Relation angelegt, deren <strong>Primärschlüssel</strong> sich aus der Kombination beider Entitätsschlüssel zusammensetzt: <code>besucht(<u>MatrNr</u>, <u>Nr</u>)</code>. Diese Relation bleibt selbstständig, da kein Entitätsschlüssel allein die Beziehung eindeutig identifiziert.<br>Bei einer <strong>1:N-Beziehung</strong> (z.B. <em>Professor hält Vorlesung</em>) besitzt die Beziehungsrelation denselben Schlüssel wie die N-seitige Entität: <code>hält(<u>Nr</u>, PersNr)</code>. Im Zuge der <strong>Schemavereinfachung</strong> werden die Entitätsrelation <em>Vorlesung(Nr, Titel, Credits)</em> und die Beziehungsrelation <em>hält(Nr, PersNr)</em> – da sie denselben Schlüssel teilen – zu einer einzigen Relation zusammengeführt: <code>Vorlesung(<u>Nr</u>, Titel, Credits, ProfPersNr)</code>. ProfPersNr ist dabei ein <strong>Fremdschlüssel</strong>, der auf Professor verweist.",
         "keyPoints": [
-          "Connection Trap = redundante, zyklische Beziehung im ER-Schema",
-          "Beziehung ist ableitbar aus anderen bestehenden Beziehungen",
-          "Gefahr: Inkonsistenzen bei Updates",
-          "Lösung: redundante Beziehung streichen"
+          "N:M → eigene Relation mit zusammengesetztem Primärschlüssel aus beiden Entitätsschlüsseln",
+          "1:N → Schlüssel der N-Seite wird Schlüssel der Beziehungsrelation",
+          "Schemavereinfachung: Relationen mit gleichem Schlüssel werden zusammengeführt",
+          "Entstehung eines Fremdschlüssels nach der Vereinfachung",
+          "Bei N:M keine Vereinfachung möglich"
         ],
         "difficulty": "medium",
-        "category": "Entwurfsentscheidungen"
+        "category": "Übersetzung ER → Relational"
       },
       {
         "id": "oq8",
-        "question": "Wann modelliert man etwas als eigenständige Entität, und wann als Attribut? Erkläre die Entscheidungskriterien und illustriere sie am Beispiel 'Adresse eines Kunden'.",
-        "modelAnswer": "Die Entscheidung <strong>Entität vs. Attribut</strong> hängt von zwei Kriterien ab: (1) <strong>Mehrwertigkeit</strong>: Attribute dürfen im klassischen ER-Modell nicht mehrwertig sein. Hat ein Objekt mehrere Ausprägungen eines Wertes, muss es als Entität modelliert werden. (2) <strong>Zerlegbarkeit</strong>: Soll ein Wert in Teilkomponenten zerlegt werden (für separate Abfragen oder Constraints), sind eigene Attribute oder eine eigene Entität sinnvoll.<br>Beispiel Adresse: Wenn ein Kunde <em>genau eine</em> Adresse als einfachen String hat → <strong>Attribut</strong> reicht. Wenn ein Kunde <em>mehrere</em> Adressen haben kann → <strong>eigene Entität Adresse</strong> notwendig. Wenn die Adresse in Straße, PLZ, Stadt etc. zerlegt werden soll → eigene Attribute oder Entität mit mehreren Attributen. Faustregel: Entität ist flexibler, Attribut einfacher.",
+        "question": "Im ER-Modell gibt es drei Strategien, eine Generalisierungshierarchie in ein relationales Schema zu übersetzen. Beschreibe alle drei Strategien und nenne jeweils das spezifische Problem.",
+        "modelAnswer": "Für die Generalisierung <em>Angestellte → {Professor, Assistent}</em> existieren drei Übersetzungsstrategien:<br><strong>(1) Nur Obertyp:</strong> Eine einzige Relation enthält alle Attribute aller Typen: <code>Angestellte(PersNr, Name, Fachgebiet, ZimmerNr)</code>. <em>Problem:</em> Attribute, die nur für einen Untertyp gelten, sind für andere NULL – viele <strong>NULL-Werte</strong>.<br><strong>(2) Nur Untertypen:</strong> Pro Subtyp eine Relation, Obertyp-Attribute werden wiederholt: <code>Assistent(PersNr, Name, Fachgebiet)</code>, <code>Professor(PersNr, Name, ZimmerNr)</code>. <em>Problem:</em> Angestellte, die weder Professor noch Assistent sind, lassen sich nicht speichern; <strong>Redundanz</strong> der gemeinsamen Attribute.<br><strong>(3) Alle Typen:</strong> Separate Relationen für Ober- und Untertypen: <code>Angestellte(PersNr, Name)</code>, <code>Assistent(PersNr, Fachgebiet)</code>, <code>Professor(PersNr, ZimmerNr)</code>. <em>Problem:</em> Informationen sind über mehrere Relationen verteilt – <strong>JOIN-Aufwand</strong> bei Abfragen.",
         "keyPoints": [
-          "Attribut: einfacher Wert, einmalig, keine eigene Identität",
-          "Entität: mehrwertig ODER zerlegbar ODER eigene Beziehungen",
-          "Attribute dürfen nicht mengenwertig sein",
-          "Beispiel Adresse: mehrere Adressen → Entität; einzelne → Attribut"
+          "Strategie 1 (Nur Obertyp): NULL-Wert-Problem",
+          "Strategie 2 (Nur Untertypen): Problem bei reinen Obertyp-Instanzen, Redundanz",
+          "Strategie 3 (Alle Typen): verteilte Information, JOIN-Aufwand",
+          "Es gibt keine direkte äquivalente Übersetzung ins relationale Modell",
+          "Konkrete Relationsschemata für die gewählten Typen angeben"
         ],
-        "difficulty": "medium",
-        "category": "Entwurfsentscheidungen"
+        "difficulty": "hard",
+        "category": "Übersetzung ER → Relational"
       },
       {
         "id": "oq9",
-        "question": "Beschreibe vollständig, wie man das ER-Diagramm 'Student –[N:M besucht]– Vorlesung –[N:1 hält]– Professor' in ein relationales Schema übersetzt, inklusive Schemavereinfachung. Welche Relationen entstehen und warum?",
-        "modelAnswer": "<strong>Schritt 1 – Entitäten übersetzen:</strong><br><em>Student(MatrNr, Name, Geburtstag)</em><br><em>Vorlesung(Nr, Titel, Credits)</em><br><em>Professor(PersNr, Name, ZimmerNr)</em><br><br><strong>Schritt 2 – Beziehungen übersetzen:</strong><br><em>besucht(MatrNr, Nr)</em> – N:M → zusammengesetzter Schlüssel aus beiden Entitätsschlüsseln.<br><em>hält(Nr, PersNr)</em> – N:1 → Schlüssel der N-Seite (Nr) wird Schlüssel.<br><br><strong>Schritt 3 – Schemavereinfachung:</strong><br><em>hält</em> hat denselben Schlüssel wie <em>Vorlesung</em> (Nr) → beide Relationen werden zusammengeführt:<br><em>Vorlesung(Nr, Titel, Credits, ProfPersNr)</em><br>ProfPersNr ist <strong>Fremdschlüssel</strong>, der auf Professor.PersNr verweist. Die N:M-Beziehung <em>besucht</em> bleibt als eigenständige Relation bestehen, da ihr Schlüssel zusammengesetzt ist und mit keiner Entitätsrelation übereinstimmt.",
+        "question": "Wann sollte man im ER-Entwurf einen Sachverhalt als Entität modellieren und wann als Beziehung? Erkläre den Unterschied und begründe anhand des Beispiels 'mehrere Prüfungen für dieselbe Vorlesung beim selben Professor'.",
+        "modelAnswer": "Die Grundregel lautet: Eine <strong>Beziehung</strong> ist einfacher zu modellieren, aber sie besitzt <em>keine eigene Identität</em> – dieselben Entitäten können nicht mehr als einmal dieselbe Beziehung eingehen. Eine <strong>Entität</strong> ist flexibler und kann durch einen eigenen Schlüssel mehrfach instanziiert werden.<br>Im Beispiel: Wenn ein Student eine Vorlesung bei einem Professor mehrfach belegen und unterschiedliche Noten erhalten kann (z.B. bei Wiederholungsprüfung), reicht die Beziehung <em>prüft(Student, Professor, Vorlesung)</em> nicht aus – denn dieselbe Kombination (Student, Professor, Vorlesung) kann nur einmal in der Beziehung vorkommen. Lösung: <em>Prüfung</em> wird als eigenständige <strong>Entität</strong> mit eigenem Schlüssel (PrüfungsNr) und Attributen (Note, Datum) modelliert; Student und Professor werden über separate Beziehungen (<em>meldet</em>, <em>benotet</em>) damit verknüpft.",
         "keyPoints": [
-          "3 Schritte: Entitäten → Beziehungen → Vereinfachung",
-          "N:M bleibt eigenständige Relation mit zusammengesetztem Schlüssel",
-          "1:N → Beziehungsrelation wird mit N-seitiger Entitätsrelation zusammengeführt",
-          "Fremdschlüssel benennen und referenziertes Attribut angeben",
-          "Schemavereinfachung nur möglich bei gleichen Schlüsseln"
+          "Beziehung: keine eigene Identität, dieselben Entitäten nur einmal verknüpfbar",
+          "Entität: eigener Schlüssel, mehrfache Instanziierung möglich",
+          "Entscheidungskriterium: Kann die Kombination mehrfach auftreten? → Entität",
+          "Beispiel: Prüfung als Entität mit PrüfungsNr statt als ternäre Beziehung prüft"
         ],
         "difficulty": "medium",
-        "category": "ER → Relational"
-      },
-      {
-        "id": "oq10",
-        "question": "Erkläre den Unterschied zwischen einer echten ternären Beziehung und einer Beziehung, die fälschlicherweise ternär modelliert wurde. Woran erkennt man den Unterschied, und wie löst man den Fall der falsch modellierten ternären Beziehung auf?",
-        "modelAnswer": "Eine <strong>echte ternäre Beziehung</strong> benötigt alle drei beteiligten Entitäten, um die Beziehung eindeutig zu beschreiben – keine der drei kann weggelassen werden. Beispiel: <em>prüft(Professor, Student, Vorlesung)</em> – erst die Kombination aller drei macht die Prüfung eindeutig identifizierbar. <br>Eine <strong>unechte (auflösbare) ternäre Beziehung</strong> lässt sich in zwei binäre Beziehungen zerlegen, ohne Information zu verlieren. Erkennungsmerkmal: Wenn man aus zwei der drei Entitäten die dritte bereits eindeutig ableiten kann, ist die Beziehung nicht wirklich ternär. Beispiel: <em>DiplArbeit(Student, Professor_Erstgutachter, Professor_Zweitgutachter)</em> – hier ist dieselbe Professor-Entität zweimal in verschiedenen Rollen beteiligt; das lässt sich als zwei getrennte 1-Beziehungen mit <strong>Rollen</strong> (Erstgutachter, Zweitgutachter) modellieren. Auflösung: Rollen einführen und zwei binäre Beziehungen verwenden.",
-        "keyPoints": [
-          "Echte ternäre Beziehung: alle 3 Entitäten zur Identifikation nötig",
-          "Unechte ternäre Beziehung: ableitbar aus Teilmengen der Entitäten",
-          "Erkennungsmerkmal: Funktionale Abhängigkeit zwischen Teilmengen",
-          "Lösung bei unechter Ternäre: in binäre Beziehungen mit Rollen aufteilen"
-        ],
-        "difficulty": "hard",
         "category": "Entwurfsentscheidungen"
       },
       {
-        "id": "oq11",
-        "question": "Erläutere den Unterschied zwischen der Funktionalitätsangabe (1, N, M) und der (min,max)-Notation im ER-Modell. Warum ist Vorsicht geboten, wenn man zwischen beiden wechselt?",
-        "modelAnswer": "Die <strong>Funktionalitätsangabe</strong> (1, N, M) beschreibt, mit wie vielen Entitäten der anderen Seite eine Entität in Beziehung stehen <em>darf</em> – es ist eine Obergrenze, keine Pflicht. Sie steht direkt an der Kante neben der Entität, auf die sie sich bezieht.<br>Die <strong>(min, max)-Notation</strong> gibt dagegen an, mit <em>mindestens min</em> und <em>höchstens max</em> Gegenseiten-Entitäten eine Beziehung einzugehen – sie erzwingt also auch eine Untergrenze (Teilnahmezwang). Dabei beschreibt das Paar an der Kante die Einschränkung für die Entität, an der es steht.<br><strong>Vorsicht:</strong> Die Semantik ist gespiegelt zur UML-Multiplizitätsangabe und zur einfachen Funktionalitätsangabe: Beim ER steht (min,max) direkt bei der betroffenen Entität; in UML steht die Multiplizität beim <em>gegenüberliegenden</em> Ende. Diese Verwechslung führt zu inhaltlich falschen Modellen. Beispiel: Polyeder–Hülle–Flächen: (4,*) bei Flächen bedeutet, jede Fläche gehört zu mindestens 4 Polyedern.",
+        "id": "oq10",
+        "question": "Erkläre die (min, max)-Notation für Funktionalitäten im ER-Modell. Was bedeutet die Angabe (1,1) bzw. (0,*) an einer Kante, und wie unterscheidet sie sich von der einfachen N- bzw. 1-Notation?",
+        "modelAnswer": "Die <strong>(min, max)-Notation</strong> präzisiert die Kardinalität an jeder Seite einer Beziehung: Für jede Entität e_i des Typs E_i gibt es <em>mindestens min_i</em> und <em>höchstens max_i</em> Tupel in der Beziehungsrelation, die e_i enthalten (*, falls unbeschränkt).<br><strong>(1,1)</strong> bedeutet: Jede Entität nimmt <em>genau einmal</em> an der Beziehung teil – Pflichtbeteiligung ohne Wiederholung. Beispiel aus dem Polyeder-Modell: Jede Kante gehört zu genau 2 Flächen (2,2).<br><strong>(0,*)</strong> bedeutet: Optionale Beteiligung, beliebig oft möglich – die Entität muss nicht teilnehmen, kann es aber beliebig oft.<br>Unterschied zur einfachen N/1-Notation: Die einfache Notation gibt nur die <em>maximale</em> Kardinalität an (1 = höchstens einmal, N = beliebig oft). Die (min,max)-Notation ergänzt zusätzlich die <strong>Mindestbeteiligung</strong> (Existenzbedingung) – sie ist damit ausdrucksstärker.",
         "keyPoints": [
-          "Funktionalitätsangabe: Obergrenze (1, N, M), keine Pflichtbeteiligung",
-          "(min,max)-Notation: Unter- UND Obergrenze, erzwingt Teilnahme",
-          "Semantik der Stelle der Annotation beachten (steht bei der betroffenen Entität)",
-          "UML-Multiplizität ist zur ER-(min,max)-Notation gespiegelt – Verwechslungsgefahr!"
+          "(min, max) gibt Minimum UND Maximum der Beteiligung an",
+          "(1,1) = Pflichtbeteiligung, genau einmal",
+          "(0,*) = optional, beliebig oft",
+          "Unterschied zur einfachen N/1-Notation: min/max gibt zusätzlich Mindestbeteiligung an",
+          "* steht für unbeschränktes Maximum"
         ],
         "difficulty": "hard",
         "category": "ER-Modelle"
       },
       {
-        "id": "oq12",
-        "question": "Vergleiche ER-Diagramme und UML-Klassendiagramme als Werkzeuge zur konzeptuellen Datenmodellierung. Welche Gemeinsamkeiten und welche wesentlichen Unterschiede gibt es?",
-        "modelAnswer": "<strong>Gemeinsamkeiten:</strong> Beide modellieren Entitäten/Klassen mit Attributen, Beziehungen zwischen ihnen (mit Multiplizitäten/Funktionalitäten), Generalisierungshierarchien (is-a) und Aggregationen (part-of). Beide sind grafisch und können von Nicht-Informatikern verstanden werden.<br><strong>Unterschiede:</strong> UML-Klassen kapseln zusätzlich <strong>Verhalten</strong> (Methoden/Operationen), ER-Modelle nur Daten. UML verwendet Rechtecke mit drei Abschnitten (Name, Attribute, Methoden); ER verwendet Rechtecke, Ellipsen und Rauten. Die <strong>Multiplizitätsangabe</strong> in UML (i..j steht am Zielende) ist semantisch zur ER-(min,max)-Notation gespiegelt – Vorsicht! ER-Modelle haben schwache Entitäten als eigenständiges Konzept; UML nutzt dafür Komposition. UML ist der De-facto-Standard im OO-Software-Engineering, ER der klassische Standard im Datenbankbereich.",
+        "id": "oq11",
+        "question": "Was ist Schemakonsolidierung und warum ist sie im Datenbankentwicklungsprozess notwendig? Beschreibe das grundsätzliche Vorgehen.",
+        "modelAnswer": "<strong>Schemakonsolidierung</strong> (auch: Schema-Integration) bezeichnet den Prozess, mehrere unabhängig erstellte <em>Teilschemata</em> zu einem konsistenten <em>Gesamtschema</em> zusammenzuführen. Sie ist notwendig, weil in der Praxis verschiedene Personengruppen (z.B. Abteilungen einer Organisation) die Anwendung aus unterschiedlichen Blickwinkeln modellieren und dabei unterschiedliche Begriffe, Strukturen oder Abstraktionsniveaus verwenden können.<br>Vorgehen: Die Teilschemata werden iterativ zu Zwischenschemata zusammengeführt (z.B. S1 + S2 → S12, dann S12 + S3 → S123 usw.), bis ein globales Schema entsteht. Dabei müssen <strong>Namenskonflikte</strong> (gleiche Konzepte, verschiedene Namen), <strong>Strukturkonflikte</strong> (gleiche Konzepte, verschiedene Modellierungsentscheidungen) und <strong>semantische Konflikte</strong> aufgelöst werden.",
         "keyPoints": [
-          "Gemeinsamkeit: Entitäten/Klassen, Beziehungen, Generalisierung, Aggregation",
-          "UML ergänzt Verhalten (Methoden), ER nur strukturell",
-          "Unterschiedliche Notation (Raute vs. Assoziation)",
-          "Multiplizitätsangabe in UML semantisch gespiegelt zur ER-(min,max)-Notation",
-          "UML: De-facto-Standard OO; ER: Datenbankdomäne"
+          "Definition: Zusammenführung mehrerer Teilschemata zum Gesamtschema",
+          "Ursache: verschiedene Perspektiven / Personengruppen bei der Modellierung",
+          "Iteratives Vorgehen: paarweise Zusammenführung zu Zwischenschemata",
+          "Konflikttypen: Namens-, Struktur- und semantische Konflikte"
         ],
-        "difficulty": "hard",
-        "category": "UML"
+        "difficulty": "medium",
+        "category": "Schemakonsolidierung"
+      },
+      {
+        "id": "oq12",
+        "question": "Erkläre den Begriff 'Fremdschlüssel' im relationalen Modell. Wie entsteht ein Fremdschlüssel bei der Übersetzung eines ER-Schemas und welche Integritätsbedingung ist damit verbunden?",
+        "modelAnswer": "Ein <strong>Fremdschlüssel</strong> ist ein Attribut (oder eine Attributkombination) in einer Relation, dessen Werte den <em>Primärschlüssel einer anderen (oder derselben) Relation</em> referenzieren. Er entsteht bei der ER-Übersetzung durch die <strong>Schemavereinfachung</strong>: Wenn eine 1:N-Beziehungsrelation mit dem gleichen Schlüssel wie eine Entitätsrelation zusammengeführt wird, bleiben die Schlüssel der anderen Entitäten als Fremdschlüssel in der zusammengeführten Relation zurück.<br>Beispiel: Nach der Zusammenführung von <em>Vorlesung(Nr, Titel, Credits)</em> und <em>hält(Nr, PersNr)</em> entsteht <code>Vorlesung(<u>Nr</u>, Titel, Credits, ProfPersNr)</code>. <em>ProfPersNr</em> ist Fremdschlüssel auf <em>Professor(PersNr)</em>.<br>Die dazugehörige Integritätsbedingung ist die <strong>referentielle Integrität</strong>: Jeder Wert des Fremdschlüssels muss entweder NULL sein oder als Primärschlüsselwert in der referenzierten Relation existieren.",
+        "keyPoints": [
+          "Fremdschlüssel referenziert den Primärschlüssel einer anderen Relation",
+          "Entsteht durch Schemavereinfachung bei 1:N / N:1 / 1:1 Beziehungen",
+          "Integritätsbedingung: referentielle Integrität (Wert muss in Zieltabelle existieren oder NULL sein)",
+          "Konkretes Beispiel (z.B. ProfPersNr in Vorlesung verweist auf Professor)"
+        ],
+        "difficulty": "medium",
+        "category": "Übersetzung ER → Relational"
       },
       {
         "id": "oq13",
-        "question": "Warum ist es notwendig, ein ER-Schema vor der Implementierung in ein relationales Schema zu übersetzen? Welche Konzepte des ER-Modells haben keine direkte Entsprechung im relationalen Modell, und wie geht man damit um?",
-        "modelAnswer": "Das <strong>ER-Modell</strong> ist ein konzeptuelles, technologieneutrales Modell – es beschreibt die Informationsstruktur der realen Welt. Relationale Datenbanksysteme kennen ausschließlich <strong>Relationen (Tabellen)</strong>; Konzepte wie Rauten, Ellipsen oder is-a-Pfeile existieren dort nicht. Die Übersetzung ist daher zwingend. Konzepte ohne direkte Entsprechung: (1) <strong>Generalisierung (is-a)</strong>: Kein natives Konstrukt im relationalen Modell → drei Optionen mit unterschiedlichen Trade-offs (nur Obertyp, nur Untertypen, alle Typen). (2) <strong>Schwache Entitäten</strong>: Werden durch zusammengesetzte Primärschlüssel und Fremdschlüsselbedingungen abgebildet. (3) <strong>N:M-Beziehungen</strong>: Erfordern eine eigene Zwischentabelle. (4) <strong>Mehrwertige Attribute</strong>: Müssen als eigene Entität ausgegliedert werden. Die Übersetzung ist regelbasiert, aber erfordert Entwurfsentscheidungen (z.B. bei Generalisierungen), die die Qualität des Schemas beeinflussen.",
+        "question": "Vergleiche das ER-Modell mit UML-Klassendiagrammen als Werkzeuge für den konzeptuellen Datenbankentwurf. Was sind die wesentlichen Gemeinsamkeiten und Unterschiede?",
+        "modelAnswer": "<strong>Gemeinsamkeiten:</strong> Beide Notationen modellieren <em>Entitäten/Klassen</em> mit Attributen, <em>Beziehungen/Assoziationen</em> zwischen ihnen sowie <em>Kardinalitäten</em>, <em>Generalisierungshierarchien</em> (is-a) und <em>Aggregationen</em> (part-of). Beide dienen der DBMS-unabhängigen konzeptuellen Modellierung.<br><strong>Unterschiede:</strong> UML-Klassen modellieren zusätzlich das <em>Verhalten</em> durch Operationen/Methoden – ER-Modelle hingegen beschreiben ausschließlich die Datenstruktur. UML verwendet <strong>Multiplizitäten</strong> der Form i..j (analog zur (min,max)-Notation), die einfache ER-Notation kennt nur N und 1 als Maxima. UML ist der <em>De-facto-Standard</em> im objektorientierten Software-Engineering und unterstützt weitere Diagrammtypen (Use-Case-, Interaktionsdiagramme), die für die Anforderungsanalyse genutzt werden. <strong>Achtung:</strong> Die Multiplizitätsangabe in UML ist an der gegenüberliegenden Seite der Beziehung zu lesen – nicht zur (min,max)-Angabe des ER-Modells direkt analog.",
         "keyPoints": [
-          "Relationales Modell kennt nur Tabellen → ER-Konzepte müssen übersetzt werden",
-          "Generalisierung hat keine direkte Entsprechung (3 Optionen)",
-          "Schwache Entitäten → zusammengesetzter Schlüssel",
-          "N:M → Zwischentabelle mit zusammengesetztem Schlüssel",
-          "Übersetzung ist regelbasiert, aber Entwurfsentscheidungen bleiben nötig"
+          "Gemeinsamkeit: Entitäten/Klassen, Attribute, Beziehungen, Generalisierung, Aggregation",
+          "Unterschied: UML modelliert auch Verhalten (Operationen), ER nur Daten",
+          "UML verwendet Multiplizitäten i..j (ähnlich (min,max))",
+          "Vorsicht: Leserichtung UML-Multiplizität ≠ direkt (min,max)-Notation des ER-Modells",
+          "UML ist breiter einsetzbar (Use Cases, Sequenzdiagramme etc.)"
         ],
         "difficulty": "hard",
-        "category": "ER → Relational"
+        "category": "UML"
       }
     ]
   }
