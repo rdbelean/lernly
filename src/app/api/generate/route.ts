@@ -32,6 +32,7 @@ import {
   ModelJsonError,
   TaskTimeoutError,
 } from "@/lib/retry";
+import { MODEL_FOR, HAIKU } from "@/lib/taskModels";
 
 export const runtime = "nodejs";
 // 800s is the Vercel Fluid Compute max — needed because large image-heavy PDFs
@@ -66,8 +67,6 @@ const PDF_CHAR_BUDGET = 280_000;
 const VISION_CHARS_PER_PAGE = 800; // below this (chars/page) a PDF is image-heavy
 const VISION_MAX_PAGES = 100; // Anthropic per-PDF document limit
 const VISION_MAX_TOTAL_PAGES = 150; // cost cap on vision pages per generation
-
-const MODEL = "claude-sonnet-4-6";
 
 const ANALYSIS_MAX_TOKENS = 4000;
 // Cap the analysis pass's own deadline so a flaky/slow Pass 1 can't eat the whole
@@ -145,7 +144,7 @@ async function runTaskOnce(
   try {
     const stream = client.messages.stream(
       {
-        model: MODEL,
+        model: MODEL_FOR[key],
         max_tokens: maxTokens,
         thinking: { type: "disabled" },
         system: BASE_SYSTEM_PROMPT,
@@ -241,7 +240,7 @@ async function runAnalysisOnce(
   try {
     const stream = client.messages.stream(
       {
-        model: MODEL,
+        model: HAIKU,
         max_tokens: ANALYSIS_MAX_TOKENS,
         thinking: { type: "disabled" },
         system: BASE_SYSTEM_PROMPT,
@@ -290,9 +289,6 @@ async function runAnalysisPass(
   );
 }
 
-// When a brief is present, the material is already cached by the analysis pass,
-// so all gated tasks run in parallel. Otherwise (single-pass) warm the cache with
-// the cheapest required task first, then run the rest in parallel.
 async function runGatedTasks(
   client: Anthropic,
   materialBlocks: Anthropic.Messages.ContentBlockParam[],
@@ -311,26 +307,44 @@ async function runGatedTasks(
           })
       : runTask(client, k, materialBlocks, deadlineMs, brief);
 
-  if (brief) {
-    const results = await Promise.all(active.map(runOne));
-    const byKey: Partial<Record<GenTaskKey, unknown>> = {};
-    active.forEach((k, i) => {
-      byKey[k] = results[i];
-    });
-    return byKey;
+  // Anthropic prompt caching is per-model, so each model tier caches the
+  // material independently — group the active tasks by model and warm each
+  // group's cache separately.
+  const groups = new Map<string, GenTaskKey[]>();
+  for (const k of active) {
+    const m = MODEL_FOR[k];
+    const arr = groups.get(m);
+    if (arr) arr.push(k);
+    else groups.set(m, [k]);
   }
 
-  const required = active.filter((k) => k !== "visualMap");
-  const warmKey = [...required].sort(
-    (a, b) => TASKS[a].maxTokens - TASKS[b].maxTokens,
-  )[0];
-  const warmResult = await runOne(warmKey);
-  const restKeys = active.filter((k) => k !== warmKey);
-  const restResults = await Promise.all(restKeys.map(runOne));
-  const byKey: Partial<Record<GenTaskKey, unknown>> = { [warmKey]: warmResult };
-  restKeys.forEach((k, i) => {
-    byKey[k] = restResults[i];
-  });
+  const byKey: Partial<Record<GenTaskKey, unknown>> = {};
+  await Promise.all(
+    [...groups].map(async ([model, keys]) => {
+      // In two-pass the analysis pass (Haiku) already warmed the Haiku cache.
+      const preCached = Boolean(brief) && model === HAIKU;
+      if (preCached || keys.length === 1) {
+        const results = await Promise.all(keys.map(runOne));
+        keys.forEach((k, i) => {
+          byKey[k] = results[i];
+        });
+        return;
+      }
+      // Warm this model's material cache with the cheapest required task
+      // (never visualMap — it's best-effort), then run the rest in parallel.
+      const required = keys.filter((k) => k !== "visualMap");
+      const warmPool = required.length ? required : keys;
+      const warmKey = [...warmPool].sort(
+        (a, b) => TASKS[a].maxTokens - TASKS[b].maxTokens,
+      )[0];
+      byKey[warmKey] = await runOne(warmKey);
+      const restKeys = keys.filter((k) => k !== warmKey);
+      const restResults = await Promise.all(restKeys.map(runOne));
+      restKeys.forEach((k, i) => {
+        byKey[k] = restResults[i];
+      });
+    }),
+  );
   return byKey;
 }
 
