@@ -27,8 +27,8 @@ const STEPS: Record<
 };
 
 const WAIT_COPY: Record<Language, string> = {
-  en: "Average wait time: ~30-60 seconds",
-  de: "Durchschnittliche Wartezeit: ~30-60 Sekunden",
+  en: "Average wait time: ~1-3 minutes",
+  de: "Durchschnittliche Wartezeit: ~1-3 Minuten",
 };
 
 export default function GenerationProgress({

@@ -347,7 +347,7 @@ export default function NewPackPage() {
             className="text-[12px]"
             style={{ color: "rgba(255,255,255,0.45)" }}
           >
-            Generierung dauert ~30–60 Sekunden
+            Generierung dauert ~1–3 Minuten
           </p>
           <button
             type="button"
