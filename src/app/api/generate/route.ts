@@ -9,7 +9,9 @@ import {
   TASK_META,
   TASK_VISUAL_MAP,
   TASK_OPEN_QUESTIONS,
+  TASK_ANALYSIS,
 } from "@/lib/prompts";
+import { shouldUseTwoPass } from "@/lib/twoPass";
 import { activeTasksFor, type GenTaskKey } from "@/lib/examTasks";
 import {
   StudyPackSchema,
@@ -66,6 +68,10 @@ const VISION_MAX_PAGES = 100; // Anthropic per-PDF document limit
 const VISION_MAX_TOTAL_PAGES = 150; // cost cap on vision pages per generation
 
 const MODEL = "claude-sonnet-4-6";
+
+const ANALYSIS_MAX_TOKENS = 4000;
+const ANALYSIS_HEADER =
+  "=== ANALYSE — WAS IST PRÜFUNGSRELEVANT (nutze dies zum Priorisieren) ===\n";
 
 const GENERATION_BUDGET_MS = 780_000; // 20s buffer under maxDuration (800)
 const PER_ATTEMPT_TIMEOUT_MS = 180_000;
@@ -125,6 +131,7 @@ async function runTaskOnce(
   key: TaskKey,
   materialBlocks: Anthropic.Messages.ContentBlockParam[],
   attemptTimeoutMs: number,
+  brief?: string,
 ): Promise<unknown> {
   const t0 = Date.now();
   const { instruction, maxTokens } = TASKS[key];
@@ -144,6 +151,9 @@ async function runTaskOnce(
             role: "user",
             content: [
               ...materialBlocks,
+              ...(brief
+                ? [{ type: "text" as const, text: ANALYSIS_HEADER + brief }]
+                : []),
               { type: "text", text: instruction },
             ],
           },
@@ -194,9 +204,11 @@ async function runTask(
   key: TaskKey,
   materialBlocks: Anthropic.Messages.ContentBlockParam[],
   deadlineMs: number,
+  brief?: string,
 ): Promise<unknown> {
   return retryWithBudget(
-    (attemptTimeoutMs) => runTaskOnce(client, key, materialBlocks, attemptTimeoutMs),
+    (attemptTimeoutMs) =>
+      runTaskOnce(client, key, materialBlocks, attemptTimeoutMs, brief),
     {
       classify: classifyError,
       deadlineMs,
@@ -211,6 +223,112 @@ async function runTask(
       random: Math.random,
     },
   );
+}
+
+// Pass 1: free-text exam-relevance brief. Returns raw text (no JSON parse, no
+// max_tokens throw — a truncated brief is still useful). Caches the material.
+async function runAnalysisOnce(
+  client: Anthropic,
+  materialBlocks: Anthropic.Messages.ContentBlockParam[],
+  attemptTimeoutMs: number,
+): Promise<string> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), attemptTimeoutMs);
+  let final;
+  try {
+    const stream = client.messages.stream(
+      {
+        model: MODEL,
+        max_tokens: ANALYSIS_MAX_TOKENS,
+        thinking: { type: "disabled" },
+        system: BASE_SYSTEM_PROMPT,
+        messages: [
+          {
+            role: "user",
+            content: [...materialBlocks, { type: "text", text: TASK_ANALYSIS }],
+          },
+        ],
+      },
+      { signal: controller.signal },
+    );
+    final = await stream.finalMessage();
+  } catch (e) {
+    if (controller.signal.aborted)
+      throw new TaskTimeoutError("Analyse-Pass timed out");
+    throw e;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+  const tb = final.content.find((b) => b.type === "text");
+  return tb && "text" in tb ? tb.text.trim() : "";
+}
+
+async function runAnalysisPass(
+  client: Anthropic,
+  materialBlocks: Anthropic.Messages.ContentBlockParam[],
+  deadlineMs: number,
+): Promise<string> {
+  return retryWithBudget(
+    (attemptTimeoutMs) =>
+      runAnalysisOnce(client, materialBlocks, attemptTimeoutMs),
+    {
+      classify: classifyError,
+      deadlineMs,
+      maxAttempts: MAX_ATTEMPTS,
+      maxAttemptMs: PER_ATTEMPT_TIMEOUT_MS,
+      minAttemptMs: MIN_ATTEMPT_MS,
+      safetyMs: SAFETY_MS,
+      baseBackoffMs: BASE_BACKOFF_MS,
+      maxBackoffMs: MAX_BACKOFF_MS,
+      now: Date.now,
+      sleep: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+      random: Math.random,
+    },
+  );
+}
+
+// When a brief is present, the material is already cached by the analysis pass,
+// so all gated tasks run in parallel. Otherwise (single-pass) warm the cache with
+// the cheapest required task first, then run the rest in parallel.
+async function runGatedTasks(
+  client: Anthropic,
+  materialBlocks: Anthropic.Messages.ContentBlockParam[],
+  deadlineMs: number,
+  examType: ExamType,
+  brief?: string,
+): Promise<Partial<Record<GenTaskKey, unknown>>> {
+  const active = activeTasksFor(examType);
+  const runOne = (k: GenTaskKey): Promise<unknown> =>
+    k === "visualMap"
+      ? runTask(client, k, materialBlocks, deadlineMs, brief)
+          .then((r) => (r as { visualMap?: unknown }).visualMap ?? null)
+          .catch((e) => {
+            console.error("[/api/generate] visualMap soft-failed", e);
+            return null;
+          })
+      : runTask(client, k, materialBlocks, deadlineMs, brief);
+
+  if (brief) {
+    const results = await Promise.all(active.map(runOne));
+    const byKey: Partial<Record<GenTaskKey, unknown>> = {};
+    active.forEach((k, i) => {
+      byKey[k] = results[i];
+    });
+    return byKey;
+  }
+
+  const required = active.filter((k) => k !== "visualMap");
+  const warmKey = [...required].sort(
+    (a, b) => TASKS[a].maxTokens - TASKS[b].maxTokens,
+  )[0];
+  const warmResult = await runOne(warmKey);
+  const restKeys = active.filter((k) => k !== warmKey);
+  const restResults = await Promise.all(restKeys.map(runOne));
+  const byKey: Partial<Record<GenTaskKey, unknown>> = { [warmKey]: warmResult };
+  restKeys.forEach((k, i) => {
+    byKey[k] = restResults[i];
+  });
+  return byKey;
 }
 
 function extractClientIp(request: Request): string | null {
@@ -412,9 +530,11 @@ export async function POST(request: Request) {
     // than the user's monthly subscription quota. Used at the end to skip
     // bump_pack_usage so we don't double-charge.
     let creditKindConsumed: string | null = null;
+    let userPlan: string | null = null;
 
     if (user && !usesByok) {
       const { data: quota, error: qErr } = await supabase.rpc("check_pack_quota");
+      if (quota?.plan) userPlan = quota.plan as string;
       if (qErr) {
         console.error("[/api/generate] quota check failed", qErr);
       } else if (quota && quota.ok === false) {
@@ -606,34 +726,30 @@ export async function POST(request: Request) {
       user?.id ?? "anon",
     );
 
-    // examType decides what we generate: always the core (cards, meta, visualMap)
-    // plus exactly one matching trainer.
-    const active = activeTasksFor(examType);
-    // visualMap is best-effort; the rest are required. Warm the cache with the
-    // cheapest required task, then run the others in parallel reading the cache.
-    const required = active.filter((k) => k !== "visualMap");
-    const warmKey = [...required].sort(
-      (a, b) => TASKS[a].maxTokens - TASKS[b].maxTokens,
-    )[0];
+    const useTwoPass = shouldUseTwoPass({ isAnonymous, usesByok, plan: userPlan });
+    let brief = "";
+    if (useTwoPass) {
+      brief = await runAnalysisPass(client, materialBlocks, deadline).catch(
+        (e) => {
+          console.error(
+            "[/api/generate] analysis pass failed, falling back to single-pass",
+            e,
+          );
+          return "";
+        },
+      );
+    }
+    console.log(
+      `[/api/generate] two-pass=${useTwoPass} brief=${brief.length} chars`,
+    );
 
-    const runOne = (k: GenTaskKey): Promise<unknown> =>
-      k === "visualMap"
-        ? runTask(client, k, materialBlocks, deadline)
-            .then((r) => (r as { visualMap?: unknown }).visualMap ?? null)
-            .catch((e) => {
-              console.error("[/api/generate] visualMap soft-failed", e);
-              return null;
-            })
-        : runTask(client, k, materialBlocks, deadline);
-
-    const warmResult = await runOne(warmKey);
-    const restKeys = active.filter((k) => k !== warmKey);
-    const restResults = await Promise.all(restKeys.map(runOne));
-
-    const byKey: Partial<Record<GenTaskKey, unknown>> = { [warmKey]: warmResult };
-    restKeys.forEach((k, i) => {
-      byKey[k] = restResults[i];
-    });
+    const byKey = await runGatedTasks(
+      client,
+      materialBlocks,
+      deadline,
+      examType,
+      brief || undefined,
+    );
 
     const cards =
       (byKey.cards as { flashcards?: Flashcard[] } | undefined)?.flashcards ?? [];
