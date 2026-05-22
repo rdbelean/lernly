@@ -19,6 +19,7 @@ import {
   createServiceClient,
 } from "@/lib/supabase/server";
 import { decryptApiKey } from "@/lib/byok";
+import { parseModelJson } from "@/lib/parseModelJson";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -90,34 +91,6 @@ async function extractPdfText(
   return { text: cleaned, pages: totalPages };
 }
 
-function parseJsonResponse(raw: string): unknown {
-  let resultText = raw;
-  resultText = resultText.replace(/^[\s\S]*?```(?:json)?\s*/i, "");
-  resultText = resultText.replace(/\s*```[\s\S]*$/i, "");
-  const firstBrace = resultText.indexOf("{");
-  const lastBrace = resultText.lastIndexOf("}");
-  if (firstBrace !== -1 && lastBrace !== -1) {
-    resultText = resultText.substring(firstBrace, lastBrace + 1);
-  }
-  resultText = resultText.replace(/,\s*}/g, "}").replace(/,\s*]/g, "]");
-
-  try {
-    return JSON.parse(resultText);
-  } catch {
-    let raw2 = raw.replace(/```json\s*/gi, "").replace(/```/g, "");
-    const start = raw2.indexOf("{");
-    const end = raw2.lastIndexOf("}");
-    if (start === -1 || end === -1) {
-      throw new Error("Kein JSON-Objekt in der Antwort gefunden");
-    }
-    raw2 = raw2.substring(start, end + 1);
-    raw2 = raw2.replace(/"([^"]*)\n([^"]*?)"/g, (match) =>
-      match.replace(/\n/g, " "),
-    );
-    return JSON.parse(raw2);
-  }
-}
-
 function stripHtml(s: string): string {
   return s.replace(/<[^>]+>/gi, "").replace(/\s+/g, " ").trim();
 }
@@ -186,7 +159,7 @@ async function runTask(
     );
   }
   try {
-    return parseJsonResponse(raw);
+    return parseModelJson(raw);
   } catch (e) {
     console.error(
       `[/api/generate] task=${key} JSON parse failed:`,

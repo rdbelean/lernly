@@ -16,6 +16,7 @@ import {
   TASK_VISUAL_MAP,
 } from "../src/lib/prompts";
 import { StudyPackSchema, type Flashcard } from "../src/lib/schema";
+import { parseModelJson } from "../src/lib/parseModelJson";
 import "dotenv/config";
 
 const MODEL = "claude-sonnet-4-6";
@@ -45,26 +46,6 @@ async function extractPdfText(buffer: Buffer): Promise<{ text: string; pages: nu
   return { text: merged.trim(), pages: totalPages };
 }
 
-function parseJsonResponse(raw: string): unknown {
-  let r = raw
-    .replace(/^[\s\S]*?```(?:json)?\s*/i, "")
-    .replace(/\s*```[\s\S]*$/i, "");
-  const first = r.indexOf("{");
-  const last = r.lastIndexOf("}");
-  if (first !== -1 && last !== -1) r = r.substring(first, last + 1);
-  r = r.replace(/,\s*}/g, "}").replace(/,\s*]/g, "]");
-  try {
-    return JSON.parse(r);
-  } catch {
-    let r2 = raw.replace(/```json\s*/gi, "").replace(/```/g, "");
-    const s = r2.indexOf("{");
-    const e = r2.lastIndexOf("}");
-    if (s === -1 || e === -1) throw new Error("no JSON object");
-    r2 = r2.substring(s, e + 1).replace(/"([^"]*)\n([^"]*?)"/g, (m) => m.replace(/\n/g, " "));
-    return JSON.parse(r2);
-  }
-}
-
 async function runTask(
   client: Anthropic,
   key: TaskKey,
@@ -92,7 +73,7 @@ async function runTask(
   if (final.stop_reason === "max_tokens") {
     throw new Error(`${key}: hit max_tokens=${maxTokens}`);
   }
-  return parseJsonResponse(raw);
+  return parseModelJson(raw);
 }
 
 function stripHtml(s: string): string {
