@@ -641,7 +641,7 @@ export default function DemoPacksSection({ language, onTryYourOwn }: Props) {
         track("demo_pack_viewed", {
           slug: activeSlug,
           cards: pack.flashcards.length,
-          quiz: pack.simulator.questions.length,
+          quiz: pack.simulator?.questions.length ?? 0,
         });
       })
       .catch((e) => {

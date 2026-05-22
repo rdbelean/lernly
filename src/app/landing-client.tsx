@@ -5,7 +5,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useRef,
   useState,
   type Dispatch,
@@ -18,10 +17,7 @@ import GenerationProgress from "@/components/GenerationProgress";
 import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
 import ClaudeLogo from "@/components/ClaudeLogo";
-import FlashcardDeck from "@/components/pack/FlashcardDeck";
-import EssayBlueprintView from "@/components/pack/EssayBlueprintView";
-import OverviewView from "@/components/pack/OverviewView";
-import ExamSimulator from "@/components/pack/ExamSimulator";
+import PackView from "@/components/pack/PackView";
 import DemoPacksSection from "@/components/landing/DemoPacksSection";
 import SectionHeading from "@/components/landing/SectionHeading";
 import TurnstileWidget from "@/components/TurnstileWidget";
@@ -114,6 +110,7 @@ const OpenBookIcon: ExamIcon = ({ className }) => (
 const EXAM_OPTIONS: { value: ExamType; label: string; Icon: ExamIcon }[] = [
   { value: "essay", label: "Essay", Icon: EssayIcon },
   { value: "multiple_choice", label: "Multiple Choice", Icon: MultipleChoiceIcon },
+  { value: "open_questions", label: "Offene Fragen", Icon: EssayIcon },
   { value: "oral", label: "Oral", Icon: OralIcon },
   { value: "open_book", label: "Open Book", Icon: OpenBookIcon },
 ];
@@ -731,13 +728,17 @@ function UploadDemo({
           ? isEn
             ? "Multiple choice"
             : "Multiple Choice"
-          : option.value === "oral"
+          : option.value === "open_questions"
             ? isEn
-              ? "Oral"
-              : "Mündlich"
-            : isEn
-              ? "Open book"
-              : "Open Book",
+              ? "Open questions"
+              : "Offene Fragen"
+            : option.value === "oral"
+              ? isEn
+                ? "Oral"
+                : "Mündlich"
+              : isEn
+                ? "Open book"
+                : "Open Book",
   }));
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -1965,30 +1966,8 @@ function HowItWorks() {
 
 /* ========== RESULT SECTION ========== */
 
-type ResultTab = "flashcards" | "overview" | "blueprint" | "simulator";
-const RESULT_TABS: { id: ResultTab; label: string; emoji: string }[] = [
-  { id: "flashcards", label: "Karteikarten", emoji: "🎴" },
-  { id: "overview", label: "Übersicht", emoji: "🧠" },
-  { id: "blueprint", label: "Blueprint", emoji: "📐" },
-  { id: "simulator", label: "Übungsklausur", emoji: "🎯" },
-];
-
 function ResultSection({ pack, onReset }: { pack: StudyPack; onReset: () => void }) {
-  const [tab, setTab] = useState<ResultTab>("flashcards");
   const isEn = useLanguage() === "en";
-  const tabs = RESULT_TABS.map((item) => ({
-    ...item,
-    label:
-      item.id === "flashcards"
-        ? isEn
-          ? "Flashcards"
-          : "Karteikarten"
-        : item.id === "overview"
-          ? isEn
-            ? "Overview"
-            : "Übersicht"
-          : item.label,
-  }));
   return (
     <div className="px-6 py-20 md:py-24">
       <div className="mx-auto max-w-[920px]">
@@ -2011,12 +1990,16 @@ function ResultSection({ pack, onReset }: { pack: StudyPack; onReset: () => void
                 {pack.overview.topics.reduce((n, t) => n + t.concepts.length, 0)}{" "}
                 {isEn ? "concepts" : "Konzepte"}
               </span>
-              <span className="ln-mono-tag">{pack.simulator.questions.length} Quiz</span>
-              <span className="ln-mono-tag">
-                {isEn
-                  ? `${pack.essayBlueprint.parts.length}-part blueprint`
-                  : `${pack.essayBlueprint.parts.length}-teiliger Blueprint`}
-              </span>
+              {pack.simulator && (
+                <span className="ln-mono-tag">{pack.simulator.questions.length} Quiz</span>
+              )}
+              {pack.essayBlueprint && (
+                <span className="ln-mono-tag">
+                  {isEn
+                    ? `${pack.essayBlueprint.parts.length}-part blueprint`
+                    : `${pack.essayBlueprint.parts.length}-teiliger Blueprint`}
+                </span>
+              )}
             </div>
           </div>
           <button
@@ -2027,48 +2010,8 @@ function ResultSection({ pack, onReset }: { pack: StudyPack; onReset: () => void
           </button>
         </div>
 
-        <div className="ln-glass-card mt-10 overflow-hidden">
-          <div className="flex border-b border-white/10 px-4 md:px-8">
-            {tabs.map((t) => {
-              const active = tab === t.id;
-              return (
-                <button
-                  key={t.id}
-                  onClick={() => setTab(t.id)}
-                  className={
-                    "flex items-center gap-2 border-b-2 px-4 py-4 text-[14px] font-medium transition " +
-                    (active
-                      ? "border-[color:var(--color-ln-cyan)] text-white"
-                      : "border-transparent text-white/50 hover:text-white/80")
-                  }
-                >
-                  <span>{t.emoji}</span>
-                  <span className="hidden sm:inline">{t.label}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="p-6 md:p-9">
-            {tab === "flashcards" && (
-              <FlashcardDeck cards={pack.flashcards} language={isEn ? "en" : "de"} />
-            )}
-            {tab === "overview" && (
-              <OverviewView overview={pack.overview} language={isEn ? "en" : "de"} />
-            )}
-            {tab === "blueprint" && (
-              <EssayBlueprintView
-                blueprint={pack.essayBlueprint}
-                language={isEn ? "en" : "de"}
-              />
-            )}
-            {tab === "simulator" && (
-              <ExamSimulator
-                questions={pack.simulator.questions}
-                language={isEn ? "en" : "de"}
-              />
-            )}
-          </div>
+        <div className="mt-10">
+          <PackView pack={pack} language={isEn ? "en" : "de"} />
         </div>
 
         <EmailCapture pack={pack} />
