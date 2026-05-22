@@ -19,6 +19,7 @@ import {
   TASK_META,
   TASK_VISUAL_MAP,
   TASK_OPEN_QUESTIONS,
+  TASK_ANALYSIS,
 } from "../src/lib/prompts";
 import { StudyPackSchema, type Flashcard, type ExamType } from "../src/lib/schema";
 import { activeTasksFor, type GenTaskKey } from "../src/lib/examTasks";
@@ -41,6 +42,9 @@ const VISION_MAX_TOTAL_PAGES = 150;
 
 // Sonnet 4.6 list price ($/1M tokens) — for a rough cost estimate only.
 const PRICE = { in: 3, cacheWrite: 3.75, cacheRead: 0.3, out: 15 };
+
+const ANALYSIS_HEADER =
+  "=== ANALYSE — WAS IST PRÜFUNGSRELEVANT (nutze dies zum Priorisieren) ===\n";
 
 const TASKS = {
   cards: { instruction: TASK_CARDS, maxTokens: 14000 },
@@ -89,6 +93,7 @@ async function runTask(
   client: Anthropic,
   key: TaskKey,
   materialBlocks: Anthropic.Messages.ContentBlockParam[],
+  brief?: string,
 ): Promise<{ data: unknown; usage: Usage; ms: number; stop: string | null }> {
   const t0 = Date.now();
   const { instruction, maxTokens } = TASKS[key];
@@ -102,6 +107,9 @@ async function runTask(
         role: "user",
         content: [
           ...materialBlocks,
+          ...(brief
+            ? [{ type: "text" as const, text: ANALYSIS_HEADER + brief }]
+            : []),
           { type: "text", text: instruction },
         ],
       },
@@ -153,15 +161,37 @@ async function runTaskSettled(
   client: Anthropic,
   key: TaskKey,
   materialBlocks: Anthropic.Messages.ContentBlockParam[],
+  brief?: string,
 ): Promise<
   PromiseSettledResult<{ data: unknown; usage: Usage; ms: number; stop: string | null }>
 > {
   try {
-    const value = await runTask(client, key, materialBlocks);
+    const value = await runTask(client, key, materialBlocks, brief);
     return { status: "fulfilled", value };
   } catch (reason) {
     return { status: "rejected", reason } as PromiseRejectedResult;
   }
+}
+
+async function runAnalysis(
+  client: Anthropic,
+  materialBlocks: Anthropic.Messages.ContentBlockParam[],
+): Promise<string> {
+  const stream = client.messages.stream({
+    model: MODEL,
+    max_tokens: 4000,
+    thinking: { type: "disabled" },
+    system: BASE_SYSTEM_PROMPT,
+    messages: [
+      {
+        role: "user",
+        content: [...materialBlocks, { type: "text", text: TASK_ANALYSIS }],
+      },
+    ],
+  });
+  const final = await stream.finalMessage();
+  const tb = final.content.find((b) => b.type === "text");
+  return tb && "text" in tb ? tb.text.trim() : "";
 }
 
 async function main() {
@@ -172,6 +202,7 @@ async function main() {
   const only = onlyArg
     ? new Set(onlyArg.split("=")[1].split(",") as TaskKey[])
     : null;
+  const twoPass = args.includes("--two-pass");
   const positional = args.filter((a) => !a.startsWith("--"));
   const examType = positional[0] ?? "multiple_choice";
   const pdfPaths = positional.slice(1);
@@ -253,12 +284,19 @@ async function main() {
 
   const client = new Anthropic();
 
+  let brief = "";
+  if (twoPass) {
+    console.log("two-pass: running analysis pass...");
+    brief = await runAnalysis(client, materialBlocks);
+    console.log(`two-pass: brief = ${brief.length} chars`);
+  }
+
   // Diagnosis mode: run only the named task(s), persist raw, report parse result.
   if (only) {
     console.log(`--only=${[...only].join(",")} (raw → scripts/eval-output/raw/)\n`);
     for (const k of only) {
       try {
-        await runTask(client, k, materialBlocks);
+        await runTask(client, k, materialBlocks, brief || undefined);
         console.log(`  [${k}] parsed OK`);
       } catch (e) {
         console.error(`  [${k}] FAILED: ${(e as Error).message}`);
@@ -278,10 +316,10 @@ async function main() {
   const settledByKey: Partial<
     Record<GenTaskKey, PromiseSettledResult<{ data: unknown; usage: Usage }>>
   > = {};
-  settledByKey[warmKey] = await runTaskSettled(client, warmKey, materialBlocks);
+  settledByKey[warmKey] = await runTaskSettled(client, warmKey, materialBlocks, brief || undefined);
   const restKeys = active.filter((k) => k !== warmKey);
   const restSettled = await Promise.all(
-    restKeys.map((k) => runTaskSettled(client, k, materialBlocks)),
+    restKeys.map((k) => runTaskSettled(client, k, materialBlocks, brief || undefined)),
   );
   restKeys.forEach((k, i) => {
     settledByKey[k] = restSettled[i];
