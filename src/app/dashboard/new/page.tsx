@@ -24,6 +24,7 @@ const ACCEPTED_MIME = {
 const EXAM_OPTIONS: { value: ExamType; emoji: string; sub: string }[] = [
   { value: "essay", emoji: "📝", sub: "Geschriebener Aufsatz" },
   { value: "multiple_choice", emoji: "✅", sub: "MC-Klausur" },
+  { value: "open_questions", emoji: "✍️", sub: "Schriftlich, offene Fragen" },
   { value: "oral", emoji: "🗣", sub: "Mündliche Prüfung" },
   { value: "open_book", emoji: "📋", sub: "Take-Home / Open Book" },
 ];
@@ -286,7 +287,7 @@ export default function NewPackPage() {
           >
             Prüfungsformat
           </h2>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {EXAM_OPTIONS.map((opt) => {
               const active = examType === opt.value;
               return (
