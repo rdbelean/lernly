@@ -22,6 +22,7 @@ import {
 } from "@/lib/supabase/server";
 import { decryptApiKey } from "@/lib/byok";
 import { parseModelJson } from "@/lib/parseModelJson";
+import { shouldUseVision } from "@/lib/pdfVision";
 import {
   classifyError,
   retryWithBudget,
@@ -56,6 +57,10 @@ const EXAM_LABEL: Record<ExamType, string> = {
 const ALLOWED_FILE = /\.(pdf|txt|md|markdown)$/i;
 
 const PDF_CHAR_BUDGET = 280_000;
+
+const VISION_CHARS_PER_PAGE = 800; // below this (chars/page) a PDF is image-heavy
+const VISION_MAX_PAGES = 100; // Anthropic per-PDF document limit
+const VISION_MAX_TOTAL_PAGES = 150; // cost cap on vision pages per generation
 
 const MODEL = "claude-sonnet-4-6";
 
@@ -116,7 +121,7 @@ function deriveQuizletExport(cards: Flashcard[]): string {
 async function runTaskOnce(
   client: Anthropic,
   key: TaskKey,
-  materialText: string,
+  materialBlocks: Anthropic.Messages.ContentBlockParam[],
   attemptTimeoutMs: number,
 ): Promise<unknown> {
   const t0 = Date.now();
@@ -136,11 +141,7 @@ async function runTaskOnce(
           {
             role: "user",
             content: [
-              {
-                type: "text",
-                text: materialText,
-                cache_control: { type: "ephemeral" },
-              },
+              ...materialBlocks,
               { type: "text", text: instruction },
             ],
           },
@@ -189,11 +190,11 @@ async function runTaskOnce(
 async function runTask(
   client: Anthropic,
   key: TaskKey,
-  materialText: string,
+  materialBlocks: Anthropic.Messages.ContentBlockParam[],
   deadlineMs: number,
 ): Promise<unknown> {
   return retryWithBudget(
-    (attemptTimeoutMs) => runTaskOnce(client, key, materialText, attemptTimeoutMs),
+    (attemptTimeoutMs) => runTaskOnce(client, key, materialBlocks, attemptTimeoutMs),
     {
       classify: classifyError,
       deadlineMs,
@@ -477,17 +478,32 @@ export async function POST(request: Request) {
         : "lernly";
 
     let totalChars = 0;
+    let visionPagesUsed = 0;
     const fileSummaries: string[] = [];
-    const fileSections: string[] = [];
+    const materialBlocks: Anthropic.Messages.ContentBlockParam[] = [];
+
+    materialBlocks.push({
+      type: "text",
+      text: [
+        `Prüfungsformat: ${EXAM_LABEL[examType]}`,
+        extraInfo.trim() ? `Zusatzinfos zur Prüfung: ${extraInfo.trim()}` : "",
+        "",
+        "=== KURSMATERIAL ===",
+      ]
+        .filter(Boolean)
+        .join("\n"),
+    });
+
     for (const file of files) {
       const buffer = Buffer.from(await file.arrayBuffer());
       const name = file.name;
       const lower = name.toLowerCase();
+      const isPdf = lower.endsWith(".pdf");
 
       let text: string;
       let pageInfo = "";
       let pageCount = 0;
-      if (lower.endsWith(".pdf")) {
+      if (isPdf) {
         try {
           const extracted = await extractPdfText(buffer, name);
           text = extracted.text;
@@ -512,16 +528,49 @@ export async function POST(request: Request) {
         );
       }
 
-      if (text.length > PDF_CHAR_BUDGET) {
-        text =
-          text.slice(0, PDF_CHAR_BUDGET) +
-          `\n\n[... ${name} wurde nach ${PDF_CHAR_BUDGET.toLocaleString("de-DE")} Zeichen gekürzt ...]`;
+      const charsPerPage = pageCount > 0 ? text.length / pageCount : Infinity;
+      const useVision = shouldUseVision({
+        isPdf,
+        isAnonymous,
+        charsPerPage,
+        pages: pageCount,
+        visionPagesSoFar: visionPagesUsed,
+        charsPerPageThreshold: VISION_CHARS_PER_PAGE,
+        maxPages: VISION_MAX_PAGES,
+        maxTotalPages: VISION_MAX_TOTAL_PAGES,
+      });
+
+      if (useVision) {
+        visionPagesUsed += pageCount;
+        materialBlocks.push({
+          type: "text",
+          text: `--- ${name}${pageInfo} (bild-lastiges PDF, als Dokument gesendet) ---`,
+        });
+        materialBlocks.push({
+          type: "document",
+          source: {
+            type: "base64",
+            media_type: "application/pdf",
+            data: buffer.toString("base64"),
+          },
+        });
+        fileSummaries.push(`${name}${pageInfo}: VISION (${pageCount} Seiten)`);
+      } else {
+        let t = text;
+        if (t.length > PDF_CHAR_BUDGET) {
+          t =
+            t.slice(0, PDF_CHAR_BUDGET) +
+            `\n\n[... ${name} wurde nach ${PDF_CHAR_BUDGET.toLocaleString("de-DE")} Zeichen gekürzt ...]`;
+        }
+        totalChars += t.length;
+        materialBlocks.push({
+          type: "text",
+          text: `--- ${name}${pageInfo} ---\n${t}`,
+        });
+        fileSummaries.push(
+          `${name}${pageInfo}: ${t.length.toLocaleString("de-DE")} Zeichen`,
+        );
       }
-      totalChars += text.length;
-      fileSummaries.push(
-        `${name}${pageInfo}: ${text.length.toLocaleString("de-DE")} Zeichen`,
-      );
-      fileSections.push(`--- ${name}${pageInfo} ---\n${text}`);
     }
 
     if (isAnonymous && totalChars > ANON_MAX_CHARS) {
@@ -534,21 +583,21 @@ export async function POST(request: Request) {
       );
     }
 
-    const materialText = [
-      `Prüfungsformat: ${EXAM_LABEL[examType]}`,
-      extraInfo.trim() ? `Zusatzinfos zur Prüfung: ${extraInfo.trim()}` : "",
-      "",
-      "=== KURSMATERIAL ===",
-      fileSections.join("\n\n"),
-    ]
-      .filter(Boolean)
-      .join("\n");
+    // Cache the whole material prefix; the per-task instruction (appended later)
+    // stays uncached so each task reuses the cached material.
+    const lastBlock = materialBlocks[materialBlocks.length - 1];
+    if (lastBlock)
+      (lastBlock as Anthropic.Messages.TextBlockParam).cache_control = {
+        type: "ephemeral",
+      };
 
     console.log(
-      "[/api/generate] starting parallel generation, files:",
+      "[/api/generate] starting generation, files:",
       fileSummaries,
-      "total chars:",
+      "text chars:",
       totalChars.toLocaleString("de-DE"),
+      "vision pages:",
+      visionPagesUsed,
       "key:",
       keySource,
       "user:",
@@ -567,13 +616,13 @@ export async function POST(request: Request) {
 
     const runOne = (k: GenTaskKey): Promise<unknown> =>
       k === "visualMap"
-        ? runTask(client, k, materialText, deadline)
+        ? runTask(client, k, materialBlocks, deadline)
             .then((r) => (r as { visualMap?: unknown }).visualMap ?? null)
             .catch((e) => {
               console.error("[/api/generate] visualMap soft-failed", e);
               return null;
             })
-        : runTask(client, k, materialText, deadline);
+        : runTask(client, k, materialBlocks, deadline);
 
     const warmResult = await runOne(warmKey);
     const restKeys = active.filter((k) => k !== warmKey);

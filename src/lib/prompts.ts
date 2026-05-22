@@ -13,6 +13,7 @@ QUALITÄTS-MESSLATTE (zentrales Prinzip)
 - MNEMONICS (Eselsbrücken): wo immer eine Liste >3 Begriffe ist, baue eine Merkhilfe (z.B. "CLSSS" für 5 Benefits, "Restaurant vs Uber Eats" für Make-or-Buy)
 - CROSS-REFERENCES: wenn Konzepte aus verschiedenen Themen zusammenhängen, benenne die Verbindung explizit ("Das Principal-Agent-Problem aus Session 12 erklärt, warum CEOs auch wertvernichtende M&As durchziehen")
 - BOLD-HIGHLIGHTS: in Antworten und Erklärungen <strong>kritische Begriffe markieren</strong>, damit der Student die Schlüsselwörter sofort sieht
+- DIAGRAMME NUTZEN: Das Material kann Abbildungen/Diagramme enthalten (z.B. ER-Diagramme, Schaubilder, Tabellen). Lies sie und baue ihren Inhalt in Konzepte, Karten und v.a. die Visual Map ein — nicht nur den Fließtext.
 
 OUTPUT-FORMAT
 - Antworte mit EINEM JSON-Objekt — keine Markdown-Backticks, kein Text davor oder danach
