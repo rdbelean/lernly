@@ -179,22 +179,37 @@ export const VisualMapSchema = z.object({
   blocks: z.array(VisualBlockSchema),
 });
 
+export const OpenQuestionSchema = z.object({
+  id: z.string(),
+  question: z.string(),
+  modelAnswer: z.string(),
+  keyPoints: z.array(z.string()),
+  difficulty: z.enum(["easy", "medium", "hard"]).optional(),
+  category: z.string().optional(),
+});
+
+export const OpenQuestionsSchema = z.object({
+  questions: z.array(OpenQuestionSchema),
+});
+
 export const StudyPackSchema = z.object({
   courseTitle: z.string(),
-  examType: z.enum(["essay", "multiple_choice", "oral", "open_book"]),
+  examType: z.enum(["essay", "multiple_choice", "oral", "open_book", "open_questions"]),
   flashcards: z.array(FlashcardSchema),
-  essayBlueprint: EssayBlueprintSchema,
-  simulator: SimulatorSchema,
+  essayBlueprint: EssayBlueprintSchema.optional(),
+  simulator: SimulatorSchema.optional(),
   overview: OverviewSchema,
   authors: z.array(AuthorSchema),
   schedule: ScheduleSchema,
   quizletExport: z.string(),
   visualMap: VisualMapSchema.optional(),
+  openQuestions: OpenQuestionsSchema.optional(),
 });
 
 export type StudyPack = z.infer<typeof StudyPackSchema>;
 export type Flashcard = z.infer<typeof FlashcardSchema>;
 export type SimulatorQuestion = z.infer<typeof SimulatorQuestionSchema>;
+export type OpenQuestion = z.infer<typeof OpenQuestionSchema>;
 
 export type ExamType = StudyPack["examType"];
 
@@ -203,4 +218,5 @@ export const EXAM_TYPE_LABELS: Record<ExamType, string> = {
   multiple_choice: "Multiple Choice",
   oral: "Mündliche Prüfung",
   open_book: "Open Book / Take-Home",
+  open_questions: "Offene Fragen",
 };
