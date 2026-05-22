@@ -13,6 +13,19 @@ test("keeps <br> in both forms, normalized", () => {
   assert.equal(toSafeInlineHtml("a<br>b<br/>c"), "a<br/>b<br/>c");
 });
 
+test("keeps <code>, <sub>, <sup> for technical notation", () => {
+  assert.equal(
+    toSafeInlineHtml("Tabelle <code>Student(MatrNr: integer)</code>"),
+    "Tabelle <code>Student(MatrNr: integer)</code>",
+  );
+  // relational algebra: code with a nested subscript (from a real model answer)
+  assert.equal(
+    toSafeInlineHtml("<code>σ<sub>MatrNr ≤ 3</sub>(Student)</code>"),
+    "<code>σ<sub>MatrNr ≤ 3</sub>(Student)</code>",
+  );
+  assert.equal(toSafeInlineHtml("x<sup>2</sup>"), "x<sup>2</sup>");
+});
+
 test("escapes math less-than/greater-than instead of treating as tags", () => {
   assert.equal(
     toSafeInlineHtml("if in-house costs < market costs > 0"),
