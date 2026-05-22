@@ -84,7 +84,7 @@ JSON-SCHEMA (genau diese Struktur):
 export const TASK_BLUEPRINT = `AUFGABE: Erstelle das Essay-Blueprint für dieses Lernpaket.
 
 REGELN
-- Bei examType="essay": detailliertes, prüfungsnahes Blueprint. Bei anderen Prüfungstypen: minimal aber schema-valide (2 Parts mit je einem Absatz als grobe Struktur).
+- Erstelle immer ein detailliertes, prüfungsnahes Blueprint (dieser Task läuft nur für Essay- und Open-Book-Klausuren).
 - Klare Struktur: Einleitung, Hauptteil (mehrere Absätze), Schluss
 - Jeder Absatz liefert: Ziel (instruction), 1-2 Template-Sätze (template), benötigte Referenzen (references), realistische Wortzahl + Zeitbudget
 - Template-Sätze enthalten KONKRETE Referenzen mit echten Autoren ("Nach <strong>Barney (1991)</strong>..."), KEINE Platzhalter wie "[Autor einfügen]"
@@ -221,6 +221,24 @@ JSON-SCHEMA (genau diese Struktur):
     "daysUntilExam": number,
     "days": [
       { "day": number, "label": "string", "tasks": ["string"] }
+    ]
+  }
+}`;
+
+export const TASK_OPEN_QUESTIONS = `AUFGABE: Erstelle den Offene-Fragen-Trainer — prüfungsnahe, frei zu beantwortende Fragen (KEINE Multiple-Choice), wie sie in einer schriftlichen Klausur mit offenen Fragen oder einer mündlichen Prüfung drankommen.
+
+REGELN
+- Mindestens 10 Fragen, breit über das Material verteilt, Schwierigkeit gemischt (~40% easy, ~40% medium, ~20% hard)
+- Jede Frage ist eine echte Prüfungsfrage ("Erkläre...", "Vergleiche...", "Wann setzt man X ein und warum?") — anwendungs-/verständnisorientiert, nicht bloße Begriffsabfrage
+- modelAnswer: prägnante, vollständige Musterlösung wie von einem 1,0-Studenten — strukturiert, mit <strong>Schlüsselbegriffen</strong> und konkretem, fachpassendem Beispiel. Kein Roman: 3-6 Sätze.
+- keyPoints: 2-5 knappe, prüfbare Stichpunkte "Das muss in deine Antwort rein" — die Punkte, die ein Korrektor abhakt
+- difficulty pro Frage; category = Hauptthema der Frage (für Filter)
+
+JSON-SCHEMA (genau diese Struktur):
+{
+  "openQuestions": {
+    "questions": [
+      { "id": "oq1", "question": "string", "modelAnswer": "string (HTML <strong>/<em>/<br> erlaubt)", "keyPoints": ["string"], "difficulty": "easy" | "medium" | "hard", "category": "string" }
     ]
   }
 }`;
