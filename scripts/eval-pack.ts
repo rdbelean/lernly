@@ -22,6 +22,7 @@ import {
 } from "../src/lib/prompts";
 import { StudyPackSchema, type Flashcard, type ExamType } from "../src/lib/schema";
 import { activeTasksFor, type GenTaskKey } from "../src/lib/examTasks";
+import { shouldUseVision } from "../src/lib/pdfVision";
 import { parseModelJson } from "../src/lib/parseModelJson";
 import { config } from "dotenv";
 
@@ -33,6 +34,10 @@ config({
 
 const MODEL = "claude-sonnet-4-6";
 const PDF_CHAR_BUDGET = 280_000;
+
+const VISION_CHARS_PER_PAGE = 800;
+const VISION_MAX_PAGES = 100;
+const VISION_MAX_TOTAL_PAGES = 150;
 
 // Sonnet 4.6 list price ($/1M tokens) — for a rough cost estimate only.
 const PRICE = { in: 3, cacheWrite: 3.75, cacheRead: 0.3, out: 15 };
@@ -81,7 +86,7 @@ async function extractPdfText(
 async function runTask(
   client: Anthropic,
   key: TaskKey,
-  materialText: string,
+  materialBlocks: Anthropic.Messages.ContentBlockParam[],
 ): Promise<{ data: unknown; usage: Usage; ms: number; stop: string | null }> {
   const t0 = Date.now();
   const { instruction, maxTokens } = TASKS[key];
@@ -94,7 +99,7 @@ async function runTask(
       {
         role: "user",
         content: [
-          { type: "text", text: materialText, cache_control: { type: "ephemeral" } },
+          ...materialBlocks,
           { type: "text", text: instruction },
         ],
       },
@@ -145,12 +150,12 @@ function costOf(u: Usage): number {
 async function runTaskSettled(
   client: Anthropic,
   key: TaskKey,
-  materialText: string,
+  materialBlocks: Anthropic.Messages.ContentBlockParam[],
 ): Promise<
   PromiseSettledResult<{ data: unknown; usage: Usage; ms: number; stop: string | null }>
 > {
   try {
-    const value = await runTask(client, key, materialText);
+    const value = await runTask(client, key, materialBlocks);
     return { status: "fulfilled", value };
   } catch (reason) {
     return { status: "rejected", reason } as PromiseRejectedResult;
@@ -179,28 +184,70 @@ async function main() {
 
   const t0 = Date.now();
   let totalChars = 0;
-  const fileSections: string[] = [];
+  let visionPagesUsed = 0;
   const fileSummaries: string[] = [];
+  const materialBlocks: Anthropic.Messages.ContentBlockParam[] = [];
+
+  materialBlocks.push({
+    type: "text",
+    text: [
+      `Prüfungsformat: ${EXAM_LABEL[examType]}`,
+      "",
+      "=== KURSMATERIAL ===",
+    ].join("\n"),
+  });
+
   for (const p of pdfPaths) {
     const buf = readFileSync(p);
     const { text, pages } = await extractPdfText(buf);
     const name = basename(p);
-    let t = text;
-    if (t.length > PDF_CHAR_BUDGET) t = t.slice(0, PDF_CHAR_BUDGET);
-    totalChars += t.length;
-    fileSummaries.push(`${name} (${pages}p / ${t.length} chars)`);
-    fileSections.push(`--- ${name} (${pages} Seiten) ---\n${t}`);
+    const pageInfo = ` (${pages} Seiten)`;
+    const charsPerPage = pages > 0 ? text.length / pages : Infinity;
+    const useVision = shouldUseVision({
+      isPdf: true,
+      isAnonymous: false,
+      charsPerPage,
+      pages,
+      visionPagesSoFar: visionPagesUsed,
+      charsPerPageThreshold: VISION_CHARS_PER_PAGE,
+      maxPages: VISION_MAX_PAGES,
+      maxTotalPages: VISION_MAX_TOTAL_PAGES,
+    });
+
+    if (useVision) {
+      visionPagesUsed += pages;
+      materialBlocks.push({
+        type: "text",
+        text: `--- ${name}${pageInfo} (bild-lastiges PDF, als Dokument gesendet) ---`,
+      });
+      materialBlocks.push({
+        type: "document",
+        source: {
+          type: "base64",
+          media_type: "application/pdf",
+          data: buf.toString("base64"),
+        },
+      });
+      fileSummaries.push(`${name}${pageInfo}: VISION (${pages} Seiten)`);
+      console.log(`  ${name}: VISION (${pages}p)`);
+    } else {
+      let t = text;
+      if (t.length > PDF_CHAR_BUDGET) t = t.slice(0, PDF_CHAR_BUDGET);
+      totalChars += t.length;
+      materialBlocks.push({
+        type: "text",
+        text: `--- ${name}${pageInfo} ---\n${t}`,
+      });
+      fileSummaries.push(`${name}${pageInfo}: ${t.length.toLocaleString("de-DE")} Zeichen`);
+      console.log(`  ${name}: TEXT (${pages}p / ${t.length} chars)`);
+    }
   }
 
-  const materialText = [
-    `Prüfungsformat: ${EXAM_LABEL[examType]}`,
-    "",
-    "=== KURSMATERIAL ===",
-    fileSections.join("\n\n"),
-  ].join("\n");
+  // Cache the whole material prefix; per-task instruction stays uncached.
+  (materialBlocks[materialBlocks.length - 1] as Anthropic.Messages.TextBlockParam).cache_control = { type: "ephemeral" };
 
   console.log(`examType=${examType}  files: ${fileSummaries.join(", ")}`);
-  console.log(`total material chars: ${totalChars.toLocaleString("de-DE")}`);
+  console.log(`total material chars: ${totalChars.toLocaleString("de-DE")}  vision pages: ${visionPagesUsed}`);
 
   const client = new Anthropic();
 
@@ -209,7 +256,7 @@ async function main() {
     console.log(`--only=${[...only].join(",")} (raw → scripts/eval-output/raw/)\n`);
     for (const k of only) {
       try {
-        await runTask(client, k, materialText);
+        await runTask(client, k, materialBlocks);
         console.log(`  [${k}] parsed OK`);
       } catch (e) {
         console.error(`  [${k}] FAILED: ${(e as Error).message}`);
@@ -229,10 +276,10 @@ async function main() {
   const settledByKey: Partial<
     Record<GenTaskKey, PromiseSettledResult<{ data: unknown; usage: Usage }>>
   > = {};
-  settledByKey[warmKey] = await runTaskSettled(client, warmKey, materialText);
+  settledByKey[warmKey] = await runTaskSettled(client, warmKey, materialBlocks);
   const restKeys = active.filter((k) => k !== warmKey);
   const restSettled = await Promise.all(
-    restKeys.map((k) => runTaskSettled(client, k, materialText)),
+    restKeys.map((k) => runTaskSettled(client, k, materialBlocks)),
   );
   restKeys.forEach((k, i) => {
     settledByKey[k] = restSettled[i];
