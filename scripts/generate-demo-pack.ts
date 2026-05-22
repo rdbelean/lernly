@@ -162,7 +162,7 @@ async function main() {
   writeFileSync(outPath, JSON.stringify(parsed.data, null, 2));
   const ms = ((Date.now() - t0) / 1000).toFixed(1);
   console.log(
-    `[${slug}] saved ${outPath} (${parsed.data.flashcards.length} cards, ${parsed.data.simulator.questions.length} quiz) in ${ms}s`,
+    `[${slug}] saved ${outPath} (${parsed.data.flashcards.length} cards, ${parsed.data.simulator?.questions.length ?? 0} quiz) in ${ms}s`,
   );
 }
 

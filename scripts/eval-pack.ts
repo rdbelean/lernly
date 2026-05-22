@@ -18,8 +18,10 @@ import {
   TASK_BLUEPRINT,
   TASK_META,
   TASK_VISUAL_MAP,
+  TASK_OPEN_QUESTIONS,
 } from "../src/lib/prompts";
-import { StudyPackSchema, type Flashcard } from "../src/lib/schema";
+import { StudyPackSchema, type Flashcard, type ExamType } from "../src/lib/schema";
+import { activeTasksFor, type GenTaskKey } from "../src/lib/examTasks";
 import { parseModelJson } from "../src/lib/parseModelJson";
 import { config } from "dotenv";
 
@@ -41,8 +43,9 @@ const TASKS = {
   blueprint: { instruction: TASK_BLUEPRINT, maxTokens: 4000 },
   meta: { instruction: TASK_META, maxTokens: 12000 },
   visualMap: { instruction: TASK_VISUAL_MAP, maxTokens: 10000 },
+  openQuestions: { instruction: TASK_OPEN_QUESTIONS, maxTokens: 12000 },
 } as const;
-type TaskKey = keyof typeof TASKS;
+type TaskKey = GenTaskKey;
 
 const EXAM_LABEL: Record<string, string> = {
   essay: "Essay-Klausur (geschriebener Aufsatz in der Prüfung)",
@@ -214,49 +217,63 @@ async function main() {
     return;
   }
 
-  console.log("warming cache with blueprint, then 4 parallel...\n");
-  const bpResult = await runTaskSettled(client, "blueprint", materialText);
-  const [cardsR2, simR2, metaR2, vmR2] = await Promise.all([
-    runTaskSettled(client, "cards", materialText),
-    runTaskSettled(client, "simulator", materialText),
-    runTaskSettled(client, "meta", materialText),
-    runTaskSettled(client, "visualMap", materialText),
-  ]);
-  const results = [cardsR2, simR2, bpResult, metaR2, vmR2];
+  // Gate by examType, mirroring production: core + one matching trainer.
+  const active = activeTasksFor(examType as ExamType);
+  const required = active.filter((k) => k !== "visualMap");
+  const warmKey = [...required].sort(
+    (a, b) => TASKS[a].maxTokens - TASKS[b].maxTokens,
+  )[0];
+  console.log(`gated tasks: ${active.join(", ")} (warmup: ${warmKey})\n`);
 
-  const [cardsR, simR, bpR, metaR, vmR] = results;
-  const get = (r: PromiseSettledResult<{ data: unknown }>): unknown =>
-    r.status === "fulfilled" ? r.value.data : undefined;
+  const settledByKey: Partial<
+    Record<GenTaskKey, PromiseSettledResult<{ data: unknown; usage: Usage }>>
+  > = {};
+  settledByKey[warmKey] = await runTaskSettled(client, warmKey, materialText);
+  const restKeys = active.filter((k) => k !== warmKey);
+  const restSettled = await Promise.all(
+    restKeys.map((k) => runTaskSettled(client, k, materialText)),
+  );
+  restKeys.forEach((k, i) => {
+    settledByKey[k] = restSettled[i];
+  });
 
+  const results = Object.values(settledByKey).filter(
+    Boolean,
+  ) as PromiseSettledResult<{ data: unknown; usage: Usage }>[];
   const usages: Usage[] = [];
   for (const r of results) if (r.status === "fulfilled") usages.push(r.value.usage);
-
   for (const r of results) {
-    if (r.status === "rejected") console.error("  TASK FAILED:", r.reason?.message ?? r.reason);
+    if (r.status === "rejected")
+      console.error("  TASK FAILED:", r.reason?.message ?? r.reason);
   }
 
-  const cards = (get(cardsR) as { flashcards?: Flashcard[] } | undefined)?.flashcards ?? [];
-  const sim = get(simR) as { simulator?: unknown } | undefined;
-  const bp = get(bpR) as { essayBlueprint?: unknown } | undefined;
-  const meta = get(metaR) as {
-    courseTitle?: string;
-    overview?: unknown;
-    authors?: unknown;
-    schedule?: unknown;
-  } | undefined;
-  const vm = (get(vmR) as { visualMap?: unknown } | undefined)?.visualMap ?? null;
+  const get = (k: GenTaskKey): unknown => {
+    const r = settledByKey[k];
+    return r && r.status === "fulfilled" ? r.value.data : undefined;
+  };
+
+  const cards =
+    (get("cards") as { flashcards?: Flashcard[] } | undefined)?.flashcards ?? [];
+  const meta = get("meta") as
+    | { courseTitle?: string; overview?: unknown; authors?: unknown; schedule?: unknown }
+    | undefined;
+  const vm = (get("visualMap") as { visualMap?: unknown } | undefined)?.visualMap ?? null;
+  const bp = get("blueprint") as { essayBlueprint?: unknown } | undefined;
+  const sim = get("simulator") as { simulator?: unknown } | undefined;
+  const oq = get("openQuestions") as { openQuestions?: unknown } | undefined;
 
   const merged = {
     courseTitle: meta?.courseTitle,
     examType,
     flashcards: cards,
-    essayBlueprint: bp?.essayBlueprint,
-    simulator: sim?.simulator,
     overview: meta?.overview,
     authors: meta?.authors,
     schedule: meta?.schedule,
     quizletExport: deriveQuizletExport(cards),
     ...(vm ? { visualMap: vm } : {}),
+    ...(bp?.essayBlueprint ? { essayBlueprint: bp.essayBlueprint } : {}),
+    ...(sim?.simulator ? { simulator: sim.simulator } : {}),
+    ...(oq?.openQuestions ? { openQuestions: oq.openQuestions } : {}),
   };
 
   const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -299,6 +316,12 @@ function main_summary(pack: any) {
   line(`  sample[0]: ${q[0]?.scenario ? "[scenario] " + q[0].scenario + " — " : ""}${q[0]?.question}`);
   line(`    options: ${JSON.stringify(q[0]?.options)}`);
   line(`    explanation: ${q[0]?.explanation}`);
+
+  const oq: any[] = pack.openQuestions?.questions ?? [];
+  line(`\nOPEN QUESTIONS: ${oq.length} questions`);
+  line(`  sample[0] Q: ${oq[0]?.question}`);
+  line(`  sample[0] modelAnswer: ${oq[0]?.modelAnswer}`);
+  line(`  sample[0] keyPoints: ${JSON.stringify(oq[0]?.keyPoints)}`);
 
   const blocks: any[] = pack.visualMap?.blocks ?? [];
   const kinds = blocks.flatMap((b) => (b.frameworks ?? []).map((f: any) => f.kind));
