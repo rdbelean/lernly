@@ -22,6 +22,13 @@ import {
 } from "@/lib/supabase/server";
 import { decryptApiKey } from "@/lib/byok";
 import { parseModelJson } from "@/lib/parseModelJson";
+import {
+  classifyError,
+  retryWithBudget,
+  MaxTokensError,
+  ModelJsonError,
+  TaskTimeoutError,
+} from "@/lib/retry";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -52,7 +59,13 @@ const PDF_CHAR_BUDGET = 280_000;
 
 const MODEL = "claude-sonnet-4-6";
 
-const PER_TASK_TIMEOUT_MS = 180_000;
+const GENERATION_BUDGET_MS = 280_000; // 20s buffer under maxDuration (300)
+const PER_ATTEMPT_TIMEOUT_MS = 180_000;
+const MAX_ATTEMPTS = 3;
+const MIN_ATTEMPT_MS = 20_000;
+const SAFETY_MS = 2_000;
+const BASE_BACKOFF_MS = 800;
+const MAX_BACKOFF_MS = 5_000;
 
 type TaskKey = GenTaskKey;
 
@@ -104,11 +117,12 @@ async function runTaskOnce(
   client: Anthropic,
   key: TaskKey,
   materialText: string,
+  attemptTimeoutMs: number,
 ): Promise<unknown> {
   const t0 = Date.now();
   const { instruction, maxTokens } = TASKS[key];
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), PER_TASK_TIMEOUT_MS);
+  const timeoutId = setTimeout(() => controller.abort(), attemptTimeoutMs);
 
   let final;
   try {
@@ -137,8 +151,8 @@ async function runTaskOnce(
     final = await stream.finalMessage();
   } catch (e) {
     if (controller.signal.aborted) {
-      throw new Error(
-        `Sub-Task ${key} hat länger als ${PER_TASK_TIMEOUT_MS / 1000}s gedauert — Anthropic ist gerade langsam, bitte erneut versuchen.`,
+      throw new TaskTimeoutError(
+        `Sub-Task ${key} hat länger als ${Math.round(attemptTimeoutMs / 1000)}s gedauert.`,
       );
     }
     throw e;
@@ -153,8 +167,8 @@ async function runTaskOnce(
     `[/api/generate] task=${key} done in ${(ms / 1000).toFixed(1)}s — stop=${final.stop_reason} in=${usage.input_tokens} cache_read=${usage.cache_read_input_tokens ?? 0} cache_write=${usage.cache_creation_input_tokens ?? 0} out=${usage.output_tokens}`,
   );
   if (final.stop_reason === "max_tokens") {
-    throw new Error(
-      `Sub-Task ${key} hat das Token-Budget gesprengt (${usage.output_tokens} tokens). Bitte erneut versuchen oder weniger Material hochladen.`,
+    throw new MaxTokensError(
+      `Sub-Task ${key} hat das Token-Budget gesprengt (${usage.output_tokens} tokens). Bitte weniger Material hochladen.`,
     );
   }
   try {
@@ -166,26 +180,34 @@ async function runTaskOnce(
       "raw (first 400):",
       raw.slice(0, 400),
     );
-    throw new Error(`Sub-Task ${key} hat kein valides JSON zurückgegeben.`);
+    throw new ModelJsonError(`Sub-Task ${key} hat kein valides JSON zurückgegeben.`);
   }
 }
 
-// One retry covers transient API errors and the occasional malformed-JSON
-// response, so a single hiccup no longer fails the entire generation.
+// Retry transient API failures within the request's time budget; never retry
+// fatal errors (max_tokens); never start an attempt that can't finish in time.
 async function runTask(
   client: Anthropic,
   key: TaskKey,
   materialText: string,
+  deadlineMs: number,
 ): Promise<unknown> {
-  try {
-    return await runTaskOnce(client, key, materialText);
-  } catch (e) {
-    console.warn(
-      `[/api/generate] task=${key} attempt 1 failed, retrying:`,
-      e instanceof Error ? e.message : e,
-    );
-    return await runTaskOnce(client, key, materialText);
-  }
+  return retryWithBudget(
+    (attemptTimeoutMs) => runTaskOnce(client, key, materialText, attemptTimeoutMs),
+    {
+      classify: classifyError,
+      deadlineMs,
+      maxAttempts: MAX_ATTEMPTS,
+      maxAttemptMs: PER_ATTEMPT_TIMEOUT_MS,
+      minAttemptMs: MIN_ATTEMPT_MS,
+      safetyMs: SAFETY_MS,
+      baseBackoffMs: BASE_BACKOFF_MS,
+      maxBackoffMs: MAX_BACKOFF_MS,
+      now: Date.now,
+      sleep: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+      random: Math.random,
+    },
+  );
 }
 
 function extractClientIp(request: Request): string | null {
@@ -226,6 +248,7 @@ async function verifyTurnstileToken(
 
 export async function POST(request: Request) {
   const t0 = Date.now();
+  const deadline = t0 + GENERATION_BUDGET_MS;
   try {
     const formData = await request.formData();
 
@@ -544,13 +567,13 @@ export async function POST(request: Request) {
 
     const runOne = (k: GenTaskKey): Promise<unknown> =>
       k === "visualMap"
-        ? runTask(client, k, materialText)
+        ? runTask(client, k, materialText, deadline)
             .then((r) => (r as { visualMap?: unknown }).visualMap ?? null)
             .catch((e) => {
               console.error("[/api/generate] visualMap soft-failed", e);
               return null;
             })
-        : runTask(client, k, materialText);
+        : runTask(client, k, materialText, deadline);
 
     const warmResult = await runOne(warmKey);
     const restKeys = active.filter((k) => k !== warmKey);
