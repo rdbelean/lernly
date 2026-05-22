@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { StudyPack } from "@/lib/schema";
+import { toSafeInlineHtml } from "@/lib/richText";
 
 type Language = "en" | "de";
 
@@ -182,9 +183,12 @@ export default function EssayBlueprintView({
                           >
                             {p.label}
                           </div>
-                          <div className="mt-1.5 text-[13.5px] text-white">
-                            {p.instruction}
-                          </div>
+                          <div
+                            className="mt-1.5 text-[13.5px] text-white"
+                            dangerouslySetInnerHTML={{
+                              __html: toSafeInlineHtml(p.instruction),
+                            }}
+                          />
                           <div
                             className="mt-3 rounded-lg border p-3 text-[13px] italic leading-relaxed"
                             style={{
@@ -193,7 +197,13 @@ export default function EssayBlueprintView({
                               color: "rgba(255,255,255,0.78)",
                             }}
                           >
-                            &ldquo;{p.template}&rdquo;
+                            &ldquo;
+                            <span
+                              dangerouslySetInnerHTML={{
+                                __html: toSafeInlineHtml(p.template),
+                              }}
+                            />
+                            &rdquo;
                           </div>
                           {p.references.length > 0 && (
                             <div className="mt-3 flex flex-wrap gap-1.5">

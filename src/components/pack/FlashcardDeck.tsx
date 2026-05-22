@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 import confetti from "canvas-confetti";
 import type { Flashcard } from "@/lib/schema";
 import { track } from "@/lib/analytics";
+import { toSafeInlineHtml } from "@/lib/richText";
 
 type Language = "en" | "de";
 type CardStatus = "new" | "again" | "almost" | "known";
@@ -315,7 +316,9 @@ export default function FlashcardDeck({
                   </div>
                   <div
                     className="mt-3 text-[16px] leading-relaxed text-white"
-                    dangerouslySetInnerHTML={{ __html: card.answer }}
+                    dangerouslySetInnerHTML={{
+                      __html: toSafeInlineHtml(card.answer),
+                    }}
                   />
                 </div>
               </div>

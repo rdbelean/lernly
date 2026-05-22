@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import type { StudyPack } from "@/lib/schema";
+import { toSafeInlineHtml } from "@/lib/richText";
 
 type Language = "en" | "de";
 
@@ -157,9 +158,10 @@ export default function OverviewView({
                     <p
                       className="mt-2 text-[13.5px] leading-relaxed"
                       style={{ color: "var(--color-ln-ink-soft)" }}
-                    >
-                      {c.definition}
-                    </p>
+                      dangerouslySetInnerHTML={{
+                        __html: toSafeInlineHtml(c.definition),
+                      }}
+                    />
                     {c.examRelevance && (
                       <div
                         className="mt-3 rounded-lg border p-3"
@@ -179,9 +181,10 @@ export default function OverviewView({
                           <p
                             className="text-[12.5px] leading-relaxed"
                             style={{ color: "rgba(255,255,255,0.8)" }}
-                          >
-                            {c.examRelevance}
-                          </p>
+                            dangerouslySetInnerHTML={{
+                              __html: toSafeInlineHtml(c.examRelevance),
+                            }}
+                          />
                         </div>
                       </div>
                     )}
