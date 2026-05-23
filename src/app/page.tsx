@@ -27,32 +27,23 @@ const META_EN = {
   locale: "en_US",
 } as const;
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: Promise<{ lang?: string }>;
-}): Promise<Metadata> {
-  const { lang } = await searchParams;
-  const isEn = lang === "en";
+export async function generateMetadata(): Promise<Metadata> {
+  // EN temporarily disabled — metadata pinned to German. To revive English,
+  // restore the ?lang=en handling and the en-US hreflang/alternateLocale below.
+  const isEn = false;
   const m = isEn ? META_EN : META_DE;
-  const canonical = isEn ? "/?lang=en" : "/";
+  const canonical = "/";
 
   return {
     title: m.title,
     description: m.description,
     alternates: {
       canonical,
-      languages: {
-        "de-DE": "/",
-        "en-US": "/?lang=en",
-        "x-default": "/",
-      },
     },
     openGraph: {
       title: m.ogTitle,
       description: m.ogDescription,
       locale: m.locale,
-      alternateLocale: isEn ? ["de_DE"] : ["en_US"],
       images: [
         {
           url: "/lernly-og.png",

@@ -195,7 +195,9 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [apiKey, setApiKey] = useState<string | null>(null);
   const [isConnectOpen, setConnectOpen] = useState(false);
-  const [language, setLanguage] = useState<Language>("de");
+  // EN temporarily disabled — pinned to German. Re-add setLanguage + the
+  // SiteNav onLanguageChange wiring below to bring the language toggle back.
+  const [language] = useState<Language>("de");
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
 
@@ -234,10 +236,8 @@ export default function Home() {
     }
     const savedKey = localStorage.getItem(API_KEY_STORAGE);
     if (savedKey) setApiKey(savedKey);
-    const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE);
-    if (savedLanguage === "en" || savedLanguage === "de") {
-      setLanguage(savedLanguage);
-    }
+    // EN temporarily disabled — site is German-only for now.
+    // Language is no longer restored from localStorage to avoid flipping to "en".
   }, []);
 
   useEffect(() => {
@@ -358,7 +358,6 @@ export default function Home() {
         <SiteNav
           onActivateUpload={activateUpload}
           language={language}
-          onLanguageChange={setLanguage}
         />
         <main className="flex flex-1 flex-col">
           <Hero

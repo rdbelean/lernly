@@ -23,7 +23,7 @@ const FOOTER_COPY: Record<
   },
 };
 
-export default function SiteFooter({ language = "en" }: { language?: Language }) {
+export default function SiteFooter({ language = "de" }: { language?: Language }) {
   const copy = FOOTER_COPY[language];
 
   return (

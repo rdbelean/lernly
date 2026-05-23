@@ -52,7 +52,7 @@ const NAV_COPY: Record<
 
 export default function SiteNav({
   onActivateUpload,
-  language = "en",
+  language = "de",
   onLanguageChange,
 }: Props) {
   const [open, setOpen] = useState(false);
@@ -311,15 +311,17 @@ export default function SiteNav({
                 </a>
               ))}
 
-            <div className="flex items-center justify-between">
-              <span
-                className="text-[12px]"
-                style={{ color: "rgba(255,255,255,0.5)" }}
-              >
-                {copy.languageLabel}
-              </span>
-              {renderLanguageToggle()}
-            </div>
+            {onLanguageChange && (
+              <div className="flex items-center justify-between">
+                <span
+                  className="text-[12px]"
+                  style={{ color: "rgba(255,255,255,0.5)" }}
+                >
+                  {copy.languageLabel}
+                </span>
+                {renderLanguageToggle()}
+              </div>
+            )}
           </div>
         </div>
       )}

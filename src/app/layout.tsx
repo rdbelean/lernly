@@ -14,11 +14,6 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   alternates: {
     canonical: "/",
-    languages: {
-      "de-DE": "/",
-      "en-US": "/?lang=en",
-      "x-default": "/",
-    },
   },
   icons: {
     icon: [
@@ -34,7 +29,6 @@ export const metadata: Metadata = {
     description:
       "8 PDFs, 3 Tage, kein Plan? Lernly macht aus deinem Skript ein komplettes Lernpaket — Karteikarten, Klausur-Simulator, Essay-Blueprint. Gratis testen.",
     locale: "de_DE",
-    alternateLocale: ["en_US"],
     images: [
       {
         url: "/lernly-og.png",
