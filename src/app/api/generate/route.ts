@@ -66,8 +66,8 @@ const ALLOWED_FILE = /\.(pdf|txt|md|markdown)$/i;
 const PDF_CHAR_BUDGET = 280_000;
 
 const VISION_CHARS_PER_PAGE = 800; // below this (chars/page) a PDF is image-heavy
-const VISION_MAX_PAGES = 100; // Anthropic per-PDF document limit
-const VISION_MAX_TOTAL_PAGES = 150; // cost cap on vision pages per generation
+const VISION_MAX_PAGES = 100; // per-PDF cap (Anthropic allows ≤100 pages/request)
+const VISION_MAX_TOTAL_PAGES = 100; // Anthropic hard limit: ≤100 PDF pages per request
 
 const ANALYSIS_MAX_TOKENS = 4000;
 // Cap the analysis pass's own deadline so a flaky/slow Pass 1 can't eat the whole
@@ -961,7 +961,7 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("[/api/generate] error", err);
-    const message =
+    let message =
       err instanceof Anthropic.APIError
         ? err.message
         : err instanceof Error
@@ -969,6 +969,12 @@ export async function POST(request: Request) {
           : "Unbekannter Fehler";
     const status =
       err instanceof Anthropic.APIError ? (err.status ?? 500) : 500;
+    // Anthropic caps a request at 100 PDF pages; turn the raw API error into
+    // actionable guidance instead of leaking the JSON to the user.
+    if (/100 PDF pages/i.test(message)) {
+      message =
+        "Zu viele bild-lastige PDF-Seiten auf einmal (Limit: 100 Seiten pro Generierung). Bitte das PDF aufteilen oder weniger Dateien hochladen.";
+    }
     return NextResponse.json({ error: message }, { status });
   } finally {
     // Best-effort cleanup: by this point the buffers are already in memory /
