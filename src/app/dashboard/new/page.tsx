@@ -8,10 +8,23 @@ import QuotaHitModal, {
   type QuotaHitDetails,
 } from "@/components/dashboard/QuotaHitModal";
 import { track } from "@/lib/analytics";
+import { STUDY_UPLOADS_BUCKET, buildUploadPath } from "@/lib/uploads";
+import { parseJsonResponse } from "@/lib/safeJson";
 import {
   EXAM_TYPE_LABELS,
   type ExamType,
 } from "@/lib/schema";
+
+type GenerateApiResponse = {
+  error?: string;
+  reason?: string;
+  used?: number;
+  limit?: number;
+  plan?: string;
+  saved?: boolean;
+  id?: string;
+  pack?: { flashcards?: unknown[]; simulator?: { questions?: unknown[] } };
+};
 
 const MAX_FILES = 8;
 const MAX_FILE_BYTES = 25 * 1024 * 1024; // 25 MB
@@ -101,19 +114,51 @@ export default function NewPackPage() {
     setError(null);
     setCompleted(false);
 
-    const fd = new FormData();
-    fd.set("examType", examType);
-    if (extraInfo.trim()) fd.set("extraInfo", extraInfo.trim());
-    for (const file of files) fd.append("files", file);
-
     const t0 = Date.now();
     try {
-      const res = await fetch("/api/generate", { method: "POST", body: fd });
-      const json = await res.json();
+      const { createClient } = await import("@/lib/supabase/browser");
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        window.location.href = "/login?next=/dashboard/new";
+        return;
+      }
+
+      // 1) Upload each file straight to Storage — bypasses Vercel's ~4.5 MB
+      //    request-body cap so large lecture PDFs go through.
+      const refs: { path: string; name: string; size: number; type: string }[] =
+        [];
+      for (const file of files) {
+        const path = buildUploadPath(user.id, file.name);
+        const { error: upErr } = await supabase.storage
+          .from(STUDY_UPLOADS_BUCKET)
+          .upload(path, file, {
+            contentType: file.type || "application/octet-stream",
+            upsert: false,
+          });
+        if (upErr) {
+          throw new Error(`Upload fehlgeschlagen (${file.name}): ${upErr.message}`);
+        }
+        refs.push({ path, name: file.name, size: file.size, type: file.type });
+      }
+
+      // 2) Kick off generation with a tiny JSON body (only the storage refs).
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          examType,
+          extraInfo: extraInfo.trim() || undefined,
+          files: refs,
+        }),
+      });
+      const json = await parseJsonResponse<GenerateApiResponse>(res);
       if (!res.ok) {
         if (json.reason === "quota_exceeded" && typeof json.limit === "number") {
           setQuotaHit({
-            used: json.used,
+            used: json.used ?? 0,
             limit: json.limit,
             plan: json.plan ?? "free",
           });
