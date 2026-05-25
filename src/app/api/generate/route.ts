@@ -47,6 +47,14 @@ const MAX_FILES = 8;
 const MAX_FILE_BYTES = 25 * 1024 * 1024;
 const MAX_TOTAL_BYTES = 50 * 1024 * 1024;
 
+// Per-pack input ceiling for logged-in users. Generation runs as one long
+// request; beyond this it reliably outlives the connection window (gateway
+// timeout → "Failed to fetch" on the client). We reject upfront with
+// actionable guidance instead of letting it time out. Tune these to what
+// actually finishes in time on the deployment.
+const MAX_PAGES_PER_PACK = 60;
+const MAX_CHARS_PER_PACK = 250_000;
+
 // Anonymous (lead-magnet) hard caps — protect Lernly's Anthropic bill.
 const ANON_MAX_FILES = 1;
 const ANON_MAX_PAGES = 30;
@@ -98,6 +106,13 @@ const MATERIAL_TOO_LARGE_MSG =
   "automatischer Kürzung passt es nicht. Teile es in kleinere Häppchen auf (am besten " +
   "pro Kapitel oder Vorlesung, Richtwert ~30–40 Seiten pro Paket) und erstelle mehrere " +
   "Pakete. Kleinere Pakete sind außerdem fokussierter und besser zum Lernen.";
+
+// Shown upfront (before generation) when the material exceeds the per-pack ceiling.
+const MATERIAL_TOO_LARGE_UPFRONT_MSG =
+  `Dein Material ist zu groß für ein einzelnes Lernpaket (max. ~${MAX_PAGES_PER_PACK} Seiten ` +
+  `oder ${MAX_CHARS_PER_PACK.toLocaleString("de-DE")} Zeichen). Teile es in kleinere Häppchen auf — ` +
+  `am besten pro Kapitel oder Vorlesung — und erstelle mehrere Pakete. Kleinere Pakete sind ` +
+  `fokussierter, schneller fertig und besser zum Lernen.`;
 
 type TaskKey = GenTaskKey;
 
@@ -749,6 +764,7 @@ export async function POST(request: Request) {
         : "lernly";
 
     let totalChars = 0;
+    let totalPages = 0;
     let visionPagesUsed = 0;
     const fileSummaries: string[] = [];
     const materialBlocks: Anthropic.Messages.ContentBlockParam[] = [];
@@ -799,6 +815,7 @@ export async function POST(request: Request) {
         );
       }
 
+      totalPages += pageCount;
       const charsPerPage = pageCount > 0 ? text.length / pageCount : Infinity;
       const useVision = shouldUseVision({
         isPdf,
@@ -850,6 +867,19 @@ export async function POST(request: Request) {
           error: `Ohne Account ist max. ${ANON_MAX_CHARS.toLocaleString("de-DE")} Zeichen erlaubt — du hast ${totalChars.toLocaleString("de-DE")}. Logge dich ein für größere Pakete.`,
           reason: "anonymous_char_limit",
         },
+        { status: 413 },
+      );
+    }
+
+    // Reject material too large to finish within one request window — upfront,
+    // before spending the slow, paid generation. Turns a connection timeout
+    // ("Failed to fetch") into actionable guidance and saves Anthropic cost.
+    if (totalPages > MAX_PAGES_PER_PACK || totalChars > MAX_CHARS_PER_PACK) {
+      console.warn(
+        `[/api/generate] material too large: ${totalPages} pages / ${totalChars} chars`,
+      );
+      return NextResponse.json(
+        { error: MATERIAL_TOO_LARGE_UPFRONT_MSG, reason: "material_too_large" },
         { status: 413 },
       );
     }
