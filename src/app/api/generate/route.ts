@@ -84,6 +84,21 @@ const SAFETY_MS = 2_000;
 const BASE_BACKOFF_MS = 800;
 const MAX_BACKOFF_MS = 5_000;
 
+// When a sub-task overflows its token budget (truncated → invalid JSON), retry
+// it once with this directive so dense material still produces a valid pack.
+const SHRINK_DIRECTIVE =
+  "WICHTIG: Deine vorige Antwort war zu lang und wurde abgeschnitten. " +
+  "Antworte JETZT deutlich kürzer und knapper — höchstens die Hälfte der Einträge, " +
+  "kürzere Texte, keine optionalen Ausschmückungen. Ein vollständiges, gültiges JSON " +
+  "ist wichtiger als inhaltliche Vollständigkeit.";
+
+// Shown when even the shrink-retry overflows — the material is genuinely too big.
+const MATERIAL_TOO_LARGE_MSG =
+  "Dein Material ist zu umfangreich für ein einzelnes Lernpaket — selbst nach " +
+  "automatischer Kürzung passt es nicht. Teile es in kleinere Häppchen auf (am besten " +
+  "pro Kapitel oder Vorlesung, Richtwert ~30–40 Seiten pro Paket) und erstelle mehrere " +
+  "Pakete. Kleinere Pakete sind außerdem fokussierter und besser zum Lernen.";
+
 type TaskKey = GenTaskKey;
 
 const TASKS: Record<TaskKey, { instruction: string; maxTokens: number }> = {
@@ -135,6 +150,7 @@ async function runTaskOnce(
   materialBlocks: Anthropic.Messages.ContentBlockParam[],
   attemptTimeoutMs: number,
   brief?: string,
+  extraInstruction?: string,
 ): Promise<unknown> {
   const t0 = Date.now();
   const { instruction, maxTokens } = TASKS[key];
@@ -157,7 +173,12 @@ async function runTaskOnce(
               ...(brief
                 ? [{ type: "text" as const, text: ANALYSIS_HEADER + brief }]
                 : []),
-              { type: "text", text: instruction },
+              {
+                type: "text",
+                text: extraInstruction
+                  ? `${instruction}\n\n${extraInstruction}`
+                  : instruction,
+              },
             ],
           },
         ],
@@ -209,23 +230,57 @@ async function runTask(
   deadlineMs: number,
   brief?: string,
 ): Promise<unknown> {
-  return retryWithBudget(
-    (attemptTimeoutMs) =>
-      runTaskOnce(client, key, materialBlocks, attemptTimeoutMs, brief),
-    {
-      classify: classifyError,
-      deadlineMs,
-      maxAttempts: MAX_ATTEMPTS,
-      maxAttemptMs: PER_ATTEMPT_TIMEOUT_MS,
-      minAttemptMs: MIN_ATTEMPT_MS,
-      safetyMs: SAFETY_MS,
-      baseBackoffMs: BASE_BACKOFF_MS,
-      maxBackoffMs: MAX_BACKOFF_MS,
-      now: Date.now,
-      sleep: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
-      random: Math.random,
-    },
-  );
+  const attempt = (extraInstruction?: string) =>
+    retryWithBudget(
+      (attemptTimeoutMs) =>
+        runTaskOnce(
+          client,
+          key,
+          materialBlocks,
+          attemptTimeoutMs,
+          brief,
+          extraInstruction,
+        ),
+      {
+        classify: classifyError,
+        deadlineMs,
+        maxAttempts: MAX_ATTEMPTS,
+        maxAttemptMs: PER_ATTEMPT_TIMEOUT_MS,
+        minAttemptMs: MIN_ATTEMPT_MS,
+        safetyMs: SAFETY_MS,
+        baseBackoffMs: BASE_BACKOFF_MS,
+        maxBackoffMs: MAX_BACKOFF_MS,
+        now: Date.now,
+        sleep: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+        random: Math.random,
+      },
+    );
+
+  try {
+    return await attempt();
+  } catch (e) {
+    // A token-budget overflow is fatal to the first pass, but dense material
+    // usually fits once we tell the model to be drastically shorter. Retry once
+    // with the shrink directive if there's still time; if it STILL overflows,
+    // surface actionable guidance instead of a raw budget error.
+    if (e instanceof MaxTokensError) {
+      if (Date.now() < deadlineMs - MIN_ATTEMPT_MS) {
+        console.warn(
+          `[/api/generate] task=${key} truncated — retrying with shrink directive`,
+        );
+        try {
+          return await attempt(SHRINK_DIRECTIVE);
+        } catch (e2) {
+          if (e2 instanceof MaxTokensError) {
+            throw new MaxTokensError(MATERIAL_TOO_LARGE_MSG);
+          }
+          throw e2;
+        }
+      }
+      throw new MaxTokensError(MATERIAL_TOO_LARGE_MSG);
+    }
+    throw e;
+  }
 }
 
 // Pass 1: free-text exam-relevance brief. Returns raw text (no JSON parse, no
