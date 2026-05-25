@@ -33,6 +33,7 @@ import {
   TaskTimeoutError,
 } from "@/lib/retry";
 import { MODEL_FOR, HAIKU } from "@/lib/taskModels";
+import { STUDY_UPLOADS_BUCKET } from "@/lib/uploads";
 
 export const runtime = "nodejs";
 // 800s is the Vercel Fluid Compute max — needed because large image-heavy PDFs
@@ -384,23 +385,105 @@ async function verifyTurnstileToken(
   }
 }
 
+// A file from either upload path, normalized to what the pipeline needs
+// (the validation loop reads .name/.size; the material loop calls .arrayBuffer()).
+type SourceFile = {
+  name: string;
+  size: number;
+  arrayBuffer: () => Promise<ArrayBuffer>;
+};
+
+type GenerateJsonBody = {
+  examType?: ExamType;
+  extraInfo?: string;
+  userApiKey?: string;
+  files?: { path: string; name?: string; size?: number; type?: string }[];
+};
+
 export async function POST(request: Request) {
   const t0 = Date.now();
   const deadline = t0 + GENERATION_BUDGET_MS;
+  const uploadedPaths: string[] = [];
   try {
-    const formData = await request.formData();
-
-    const examType = formData.get("examType") as ExamType | null;
-    const extraInfo = (formData.get("extraInfo") as string | null) ?? "";
-    const userApiKeyRaw = (formData.get("userApiKey") as string | null) ?? "";
-    const userApiKey = userApiKeyRaw.trim();
-    const files = formData
-      .getAll("files")
-      .filter((v): v is File => v instanceof File);
-    const turnstileToken =
-      (formData.get("cf-turnstile-response") as string | null) ?? null;
     const clientIp = extractClientIp(request);
     const userAgent = request.headers.get("user-agent") ?? "";
+    const contentType = request.headers.get("content-type") ?? "";
+
+    const supabase = await createSupabaseServer();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const isAnonymous = !user;
+
+    let examType: ExamType | null;
+    let extraInfo = "";
+    let userApiKey = "";
+    let turnstileToken: string | null = null;
+    let files: SourceFile[] = [];
+
+    if (contentType.includes("application/json")) {
+      // Storage-backed path: the browser uploaded the raw files straight to
+      // Supabase Storage (bypassing Vercel's ~4.5 MB body cap) and sends only
+      // their storage paths here.
+      if (!user) {
+        return NextResponse.json(
+          {
+            error: "Bitte einloggen, um ein Lernpaket zu erstellen.",
+            reason: "auth_required",
+          },
+          { status: 401 },
+        );
+      }
+      let body: GenerateJsonBody;
+      try {
+        body = (await request.json()) as GenerateJsonBody;
+      } catch {
+        return NextResponse.json({ error: "Ungültige Anfrage." }, { status: 400 });
+      }
+      examType = body.examType ?? null;
+      extraInfo = body.extraInfo ?? "";
+      userApiKey = (body.userApiKey ?? "").trim();
+      const refs = Array.isArray(body.files) ? body.files : [];
+      const service = createServiceClient();
+      for (const ref of refs) {
+        // Ownership guard: service-role downloads bypass RLS, so enforce that
+        // the path lives inside the requesting user's folder.
+        if (typeof ref?.path !== "string" || !ref.path.startsWith(`${user.id}/`)) {
+          return NextResponse.json(
+            { error: "Ungültiger Datei-Verweis." },
+            { status: 400 },
+          );
+        }
+        uploadedPaths.push(ref.path);
+        const dl = await service.storage
+          .from(STUDY_UPLOADS_BUCKET)
+          .download(ref.path);
+        if (dl.error || !dl.data) {
+          return NextResponse.json(
+            { error: `Datei nicht gefunden: ${ref.name ?? ref.path}` },
+            { status: 400 },
+          );
+        }
+        const blob = dl.data;
+        files.push({
+          name: ref.name ?? ref.path.split("/").pop() ?? "datei",
+          size: blob.size,
+          arrayBuffer: () => blob.arrayBuffer(),
+        });
+      }
+    } else {
+      // Legacy multipart path (anonymous / back-compat). Subject to Vercel's
+      // body-size cap, but anonymous generation sends at most one small file.
+      const formData = await request.formData();
+      examType = formData.get("examType") as ExamType | null;
+      extraInfo = (formData.get("extraInfo") as string | null) ?? "";
+      userApiKey = ((formData.get("userApiKey") as string | null) ?? "").trim();
+      turnstileToken =
+        (formData.get("cf-turnstile-response") as string | null) ?? null;
+      files = formData
+        .getAll("files")
+        .filter((v): v is File => v instanceof File);
+    }
 
     if (!examType || !EXAM_LABEL[examType]) {
       return NextResponse.json({ error: "Ungültiger Prüfungstyp" }, { status: 400 });
@@ -419,12 +502,6 @@ export async function POST(request: Request) {
       );
     }
 
-    const supabase = await createSupabaseServer();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    const isAnonymous = !user;
 
     if (
       isAnonymous &&
@@ -893,5 +970,17 @@ export async function POST(request: Request) {
     const status =
       err instanceof Anthropic.APIError ? (err.status ?? 500) : 500;
     return NextResponse.json({ error: message }, { status });
+  } finally {
+    // Best-effort cleanup: by this point the buffers are already in memory /
+    // sent to Claude, so the raw uploads are no longer needed.
+    if (uploadedPaths.length > 0) {
+      try {
+        await createServiceClient()
+          .storage.from(STUDY_UPLOADS_BUCKET)
+          .remove(uploadedPaths);
+      } catch (cleanupErr) {
+        console.error("[/api/generate] upload cleanup failed", cleanupErr);
+      }
+    }
   }
 }
