@@ -54,6 +54,15 @@ export function getCreditPriceId(product: CreditProduct): string | null {
   }
 }
 
+// Cram-mode is a one-time premium upcharge — NOT a pack_credit. It triggers
+// background job processing, so it has its own price + the webhook keys off the
+// cram_job_id metadata (not off a credit product).
+export const CRAM_PRICE_EUR = 6.99;
+
+export function getCramPriceId(): string | null {
+  return process.env.STRIPE_PRICE_CRAM ?? null;
+}
+
 export function creditProductFromPriceId(
   priceId: string | undefined | null,
 ): CreditProduct | null {
