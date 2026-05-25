@@ -57,6 +57,7 @@ export default function NewPackPage() {
   const [busy, setBusy] = useState(false);
   const [quotaHit, setQuotaHit] = useState<QuotaHitDetails | null>(null);
   const [completed, setCompleted] = useState(false);
+  const [mode, setMode] = useState<"single" | "cram">("single");
 
   // If the user arrived here from the landing-page login-gate, restore the
   // exam-type they had picked so they don't have to re-pick it.
@@ -189,6 +190,59 @@ export default function NewPackPage() {
     }
   };
 
+  const submitCram = async () => {
+    if (files.length === 0) {
+      setError("Mindestens eine Datei hochladen.");
+      return;
+    }
+    setBusy(true);
+    setError(null);
+    try {
+      const { createClient } = await import("@/lib/supabase/browser");
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        window.location.href = "/login?next=/dashboard/new";
+        return;
+      }
+      const refs: { path: string; name: string }[] = [];
+      for (const file of files) {
+        const path = buildUploadPath(user.id, file.name);
+        const { error: upErr } = await supabase.storage
+          .from(STUDY_UPLOADS_BUCKET)
+          .upload(path, file, {
+            contentType: file.type || "application/octet-stream",
+            upsert: false,
+          });
+        if (upErr)
+          throw new Error(
+            `Upload fehlgeschlagen (${file.name}): ${upErr.message}`,
+          );
+        refs.push({ path, name: file.name });
+      }
+      const res = await fetch("/api/cram/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          examType,
+          extraInfo: extraInfo.trim() || undefined,
+          files: refs,
+        }),
+      });
+      const json = await parseJsonResponse<{ url?: string; error?: string }>(
+        res,
+      );
+      if (!res.ok || !json.url)
+        throw new Error(json.error ?? `HTTP ${res.status}`);
+      window.location.href = json.url; // → Stripe checkout
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unbekannter Fehler");
+      setBusy(false);
+    }
+  };
+
   if (busy) {
     return (
       <main className="px-6 py-16">
@@ -255,6 +309,33 @@ export default function NewPackPage() {
           >
             {error}
           </div>
+        )}
+
+        <div className="mb-6 flex gap-2">
+          <button
+            type="button"
+            onClick={() => setMode("single")}
+            className={`rounded-lg px-4 py-2 text-[14px] font-semibold ${mode === "single" ? "bg-white text-[color:var(--color-ln-bg-bot)]" : "border border-white/15 text-white"}`}
+          >
+            Ein Paket
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode("cram")}
+            className={`rounded-lg px-4 py-2 text-[14px] font-semibold ${mode === "cram" ? "bg-white text-[color:var(--color-ln-bg-bot)]" : "border border-white/15 text-white"}`}
+          >
+            Alles reinwerfen (Cram) · €6,99
+          </button>
+        </div>
+        {mode === "cram" && (
+          <p
+            className="mb-4 text-[13px]"
+            style={{ color: "rgba(255,255,255,0.6)" }}
+          >
+            Wirf dein komplettes Klausur-Material rein — wir machen pro Kapitel
+            ein Lernpaket. Läuft im Hintergrund; du bekommst Bescheid, wenn
+            alles fertig ist.
+          </p>
         )}
 
         <section
@@ -397,11 +478,13 @@ export default function NewPackPage() {
           </p>
           <button
             type="button"
-            onClick={submit}
+            onClick={mode === "cram" ? submitCram : submit}
             disabled={files.length === 0}
             className="rounded-full bg-white px-6 py-3 text-[14px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            Paket generieren →
+            {mode === "cram"
+              ? "Alles reinwerfen · €6,99 →"
+              : "Paket generieren →"}
           </button>
         </div>
       </div>
