@@ -30,7 +30,7 @@ const NAV_COPY: Record<
     features: "Features",
     how: "How it works",
     pricing: "Pricing",
-    create: "Drop in slides →",
+    create: "Try it free →",
     toApp: "Open app →",
     signIn: "Sign in",
     apiKey: "Own API key",
@@ -41,7 +41,7 @@ const NAV_COPY: Record<
     features: "Features",
     how: "So geht's",
     pricing: "Preise",
-    create: "Folien reinwerfen →",
+    create: "Jetzt gratis testen →",
     toApp: "Zur App →",
     signIn: "Anmelden",
     apiKey: "Eigener API-Key",
@@ -135,7 +135,8 @@ export default function SiteNav({
       </a>
     ) : null;
 
-  // Single CTA: 'Folien reinwerfen' for unauthed, 'Zur App' for authed.
+  // Primary CTA: 'Jetzt gratis testen' for unauthed, 'Zur App' for authed.
+  // Unauthed users also get a quiet 'Anmelden' link (returning users sign in).
   const ctaLabel = user ? copy.toApp : copy.create;
   const ctaHref = user ? "/dashboard" : null;
   const ctaButton = onActivateUpload && !user;
@@ -195,6 +196,15 @@ export default function SiteNav({
 
           {renderLanguageToggle()}
           {authLoaded && renderUserPill()}
+
+          {authLoaded && !user && (
+            <a
+              href="/login"
+              className="text-[14px] font-medium text-white transition hover:opacity-70"
+            >
+              {copy.signIn}
+            </a>
+          )}
 
           {ctaButton ? (
             <button

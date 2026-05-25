@@ -478,7 +478,7 @@ function Hero(props: HeroProps) {
             className="rounded-full px-7 py-[14px] text-[16px] font-semibold transition hover:bg-white/90"
             style={{ background: "#ffffff", color: "#1a2647" }}
           >
-            {isEn ? "Drop in slides →" : "Folien reinwerfen →"}
+            {isEn ? "Try it free →" : "Jetzt gratis testen →"}
           </button>
           <a
             href="#how"
@@ -2947,7 +2947,7 @@ function BottomCta() {
             href="#upload"
             className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-[15px] font-semibold text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
           >
-            {isEn ? "Drop in slides" : "Folien reinwerfen"}
+            {isEn ? "Try it free" : "Jetzt gratis testen"}
             <span>↓</span>
           </a>
           <p

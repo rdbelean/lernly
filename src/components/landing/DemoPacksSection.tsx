@@ -667,7 +667,7 @@ function PostDemoBar({
         }}
         className="shrink-0 rounded-full bg-white px-5 py-2.5 text-[13.5px] font-semibold text-[#0F1535] transition hover:bg-white/90"
       >
-        {isEn ? "Drop in slides →" : "Folien reinwerfen →"}
+        {isEn ? "Try it free →" : "Jetzt gratis testen →"}
       </button>
     </div>
   );
