@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import CramJobsPanel from "@/components/dashboard/CramJobsPanel";
 
 type PackSummary = {
   id: string;
@@ -405,6 +406,8 @@ export default async function DashboardPage() {
             />
           </div>
         </div>
+
+        <CramJobsPanel />
 
         {allPacks.length === 0 ? (
           <EmptyState />
