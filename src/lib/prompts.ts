@@ -23,7 +23,7 @@ OUTPUT-FORMAT
 export const TASK_CARDS = `AUFGABE: Erstelle die Flashcards für dieses Lernpaket.
 
 REGELN
-- Mindestens 25 Karten, in 3-5 sinnvollen Kategorien gruppiert (folgen der Kursstruktur, nicht alphabetisch)
+- 25-40 Karten (NICHT mehr), in 3-5 sinnvollen Kategorien gruppiert (folgen der Kursstruktur, nicht alphabetisch). Bei sehr viel Material: die prüfungsrelevantesten auswählen statt alles abzudecken.
 - Jede FRAGE ist SPEZIFISCH und PRÜFUNGSREIF: "Was sind die 4 Building Blocks of Competitive Advantage?" — NICHT "Erkläre Wettbewerbsvorteil"
 - Jede ANTWORT ist strukturiert in genau dieser Reihenfolge:
   1. <strong>Kernaussage in einem Satz</strong> (Schlüsselbegriffe gefettet)
@@ -46,7 +46,7 @@ JSON-SCHEMA (genau diese Struktur):
 export const TASK_SIMULATOR = `AUFGABE: Erstelle den Prüfungs-Simulator (Multiple-Choice-Fragen) für dieses Lernpaket.
 
 REGELN
-- Mindestens 12 Fragen, möglichst breit über das Kursmaterial verteilt
+- 12-18 Fragen (NICHT mehr), möglichst breit über das Kursmaterial verteilt
 - SZENARIO-BASIERT mit konkreten, fachpassenden Akteuren (Firma, System, Institution …) — nicht "Was ist X?", sondern "Akteur X tut Y. Das ist ein Beispiel für..."
 - Jede Frage testet ANWENDUNG, nicht Definition. Beispielmuster:
   * "Netflix wechselte vom Lizenzieren von Inhalten zum Eigenproduzieren. Das ist ein Beispiel für: a) Forward Integration  b) <strong>Backward Integration</strong>  c) Horizontal Merger  d) Unrelated Diversification"
@@ -182,6 +182,7 @@ COURSE TITLE
 Klarer, präziser Titel des Kurses/Themas ("Global Strategic Management — Session 9: Strategic Change and Innovation").
 
 OVERVIEW (das WICHTIGSTE Feld nach Simulator)
+- HARTE GRENZE: höchstens 6 Topics, je höchstens 6 Konzepte — insgesamt MAXIMAL ~28 Konzepte. Bei viel Material NICHT alles auflisten, sondern gnadenlos die prüfungsrelevantesten auswählen.
 - Gruppiere Konzepte nach Kursthemen (topics) — NICHT alphabetisch, sondern in der Reihenfolge wie sie aufeinander aufbauen
 - Markiere die 5-8 wichtigsten Konzepte mit importance: "high" — sei selektiv, nicht jedes Konzept ist "high"
 - Jedes Konzept liefert:
@@ -197,13 +198,13 @@ Wo Konzepte aus VERSCHIEDENEN Topics zusammenhängen, baue die Verbindung in die
 - ✅ "Setzt voraus, dass du <strong>Porter's Diamond</strong> aus Session 14 verstanden hast — Diamond sagt WO Industrien stark sind, dieser Begriff sagt WIE das ausgenutzt wird."
 
 AUTHORS CHEAT-SHEET
-Für jeden wichtigen Autor:
+Für jeden wichtigen Autor (höchstens 8 — nur die prüfungsrelevanten):
 - name: voller Name
 - theory: in EINEM Satz seine Kernaussage
 - useInExam: konkrete Anweisung "Nimm Barney, wenn die Frage X stellt. Nicht verwechseln mit Y."
 
 SCHEDULE
-Tag-für-Tag-Plan. Wenn kein Datum im Material: gehe von 7 Tagen aus. Jeder Tag bekommt konkrete, abhakbare Aufgaben (z.B. "Tag 1: Sessions 9-10 querlesen + Karteikarten Kategorie 'Strategy' durchgehen").
+Tag-für-Tag-Plan (höchstens 10 Tage). Wenn kein Datum im Material: gehe von 7 Tagen aus. Jeder Tag bekommt 2-4 konkrete, abhakbare Aufgaben (z.B. "Tag 1: Sessions 9-10 querlesen + Karteikarten Kategorie 'Strategy' durchgehen").
 
 JSON-SCHEMA (genau diese Struktur):
 {
@@ -229,7 +230,7 @@ JSON-SCHEMA (genau diese Struktur):
 export const TASK_OPEN_QUESTIONS = `AUFGABE: Erstelle den Offene-Fragen-Trainer — prüfungsnahe, frei zu beantwortende Fragen (KEINE Multiple-Choice), wie sie in einer schriftlichen Klausur mit offenen Fragen oder einer mündlichen Prüfung drankommen.
 
 REGELN
-- Mindestens 10 Fragen, breit über das Material verteilt, Schwierigkeit gemischt (~40% easy, ~40% medium, ~20% hard)
+- 10-15 Fragen (NICHT mehr), breit über das Material verteilt, Schwierigkeit gemischt (~40% easy, ~40% medium, ~20% hard)
 - Jede Frage ist eine echte Prüfungsfrage ("Erkläre...", "Vergleiche...", "Wann setzt man X ein und warum?") — anwendungs-/verständnisorientiert, nicht bloße Begriffsabfrage
 - modelAnswer: prägnante, vollständige Musterlösung wie von einem 1,0-Studenten — strukturiert, mit <strong>Schlüsselbegriffen</strong> und konkretem, fachpassendem Beispiel. Kein Roman: 3-6 Sätze.
 - keyPoints: 2-5 knappe, prüfbare Stichpunkte "Das muss in deine Antwort rein" — die Punkte, die ein Korrektor abhakt
