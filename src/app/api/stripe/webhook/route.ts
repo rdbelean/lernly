@@ -76,6 +76,47 @@ export async function POST(request: Request) {
     }
   }
 
+  async function activateCramJob(session: Stripe.Checkout.Session): Promise<void> {
+    const jobId = session.metadata?.cram_job_id;
+    if (!jobId) return;
+
+    // Idempotent: only materialize from an awaiting_payment job. A re-delivered
+    // webhook finds the job already 'queued' and does nothing.
+    const { data: job } = await service
+      .from("cram_jobs")
+      .select("id, user_id, status, chunk_plan")
+      .eq("id", jobId)
+      .single();
+    if (!job || job.status !== "awaiting_payment") return;
+
+    const plan = (job.chunk_plan ?? []) as {
+      source_path: string;
+      label: string;
+      page_start: number | null;
+      page_end: number | null;
+    }[];
+
+    const rows = plan.map((c) => ({
+      user_id: job.user_id,
+      cram_job_id: job.id,
+      status: "queued",
+      source_path: c.source_path,
+      page_start: c.page_start,
+      page_end: c.page_end,
+      chunk_label: c.label,
+      title: "wird erstellt …",
+      exam_type: "essay", // overwritten by the worker with the real pack
+      pack_data: {},
+    }));
+
+    const { error: insErr } = await service.from("study_packs").insert(rows);
+    if (insErr) {
+      console.error("[stripe webhook] cram chunk insert failed", insErr);
+      return;
+    }
+    await service.from("cram_jobs").update({ status: "queued", updated_at: new Date().toISOString() }).eq("id", job.id);
+  }
+
   async function grantCreditsFromSession(
     session: Stripe.Checkout.Session,
   ): Promise<void> {
@@ -143,7 +184,11 @@ export async function POST(request: Request) {
         );
         await applySubscriptionToUser(sub);
       } else if (session.mode === "payment") {
-        await grantCreditsFromSession(session);
+        if (session.metadata?.cram_job_id) {
+          await activateCramJob(session);
+        } else {
+          await grantCreditsFromSession(session);
+        }
       }
       break;
     }
