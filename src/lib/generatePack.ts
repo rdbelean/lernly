@@ -84,7 +84,6 @@ const TASKS: Record<TaskKey, { instruction: string; maxTokens: number }> = {
 
 async function extractPdfText(
   buffer: Buffer,
-  filename: string,
 ): Promise<{ text: string; pages: number }> {
   // Copy the bytes: pdf.js detaches the ArrayBuffer it's handed, which would
   // neuter the caller's `buffer` (breaking a later buffer.toString("base64")
@@ -98,11 +97,9 @@ async function extractPdfText(
     .replace(/[ \t]+\n/g, "\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
-  if (!cleaned) {
-    throw new Error(
-      `Konnte aus ${filename} keinen Text extrahieren — vermutlich gescannte PDF ohne OCR.`,
-    );
-  }
+  // Empty text = scanned / image-only PDF. Return empty (don't throw) so the
+  // caller routes it to Claude vision, which can read scanned PDFs. Genuine
+  // parse failures already threw above (getDocumentProxy / extractText).
   return { text: cleaned, pages: totalPages };
 }
 
@@ -426,7 +423,7 @@ export async function buildMaterialBlocks(
     let pageInfo = "";
     let pageCount = 0;
     if (isPdf) {
-      const extracted = await extractPdfText(buffer, name); // throws on unreadable
+      const extracted = await extractPdfText(buffer); // empty text → vision below
       text = extracted.text;
       pageCount = extracted.pages;
       pageInfo = ` (${extracted.pages} Seiten)`;
