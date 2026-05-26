@@ -1,3 +1,5 @@
+import { renderMathInHtml } from "./renderMath";
+
 // Several model-generated fields are HTML with a small set of inline tags:
 // <strong>/<em> for emphasis, <br> for breaks, and — for technical subjects —
 // <code> for schema/SQL snippets and <sub>/<sup> for notation like the indices
@@ -14,4 +16,10 @@ export function toSafeInlineHtml(input: string): string {
   return escaped
     .replace(/&lt;(\/?)(strong|em|code|sub|sup)&gt;/gi, "<$1$2>")
     .replace(/&lt;br\s*\/?&gt;/gi, "<br/>");
+}
+
+// The single entry point for rendering study-pack content: sanitize to the tag
+// whitelist, then typeset any \(…\)/\[…\] math with KaTeX.
+export function renderRichText(input: string): string {
+  return renderMathInHtml(toSafeInlineHtml(input));
 }
