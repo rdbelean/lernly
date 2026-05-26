@@ -55,6 +55,17 @@ export async function POST(request: Request) {
     const examType = (job?.exam_type ?? "essay") as ExamType;
     const extraInfo = job?.extra_info ?? "";
 
+    // Crash-loop guard: a chunk reclaimed beyond MAX_ATTEMPTS (e.g. the worker
+    // kept dying mid-generation, so the stale-recovery kept re-claiming it) is
+    // given up on rather than reprocessed forever.
+    if (row.attempts > MAX_ATTEMPTS) {
+      console.error(`[cram/worker] chunk ${row.id} exceeded ${MAX_ATTEMPTS} attempts — marking failed`);
+      await service.from("study_packs").update({ status: "failed" }).eq("id", row.id);
+      await service.rpc("complete_cram_chunk", { p_pack_id: row.id, p_ok: false });
+      failed++;
+      continue;
+    }
+
     try {
       const dl = await service.storage.from(STUDY_UPLOADS_BUCKET).download(row.source_path);
       if (dl.error || !dl.data) throw new Error(`download_failed: ${row.source_path}`);
