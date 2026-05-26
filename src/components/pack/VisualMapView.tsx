@@ -12,7 +12,7 @@ import type {
   VisualBlockColorSchema,
 } from "@/lib/schema";
 import type { z } from "zod";
-import { toSafeInlineHtml } from "@/lib/richText";
+import { renderRichText } from "@/lib/richText";
 
 type BlockColor = z.infer<typeof VisualBlockColorSchema>;
 type FlowFw = z.infer<typeof FlowFrameworkSchema>;
@@ -85,7 +85,7 @@ function FlowFramework({ fw, color }: { fw: FlowFw; color: BlockColor }) {
         <p
           className="mt-3 text-[12.5px] leading-relaxed"
           style={{ color: "rgba(255,255,255,0.62)" }}
-          dangerouslySetInnerHTML={{ __html: toSafeInlineHtml(fw.explanation) }}
+          dangerouslySetInnerHTML={{ __html: renderRichText(fw.explanation) }}
         />
       )}
     </div>
@@ -176,7 +176,7 @@ function Matrix2x2Framework({
         <p
           className="mt-3 text-[12.5px] leading-relaxed"
           style={{ color: "rgba(255,255,255,0.62)" }}
-          dangerouslySetInnerHTML={{ __html: toSafeInlineHtml(fw.explanation) }}
+          dangerouslySetInnerHTML={{ __html: renderRichText(fw.explanation) }}
         />
       )}
     </div>
@@ -301,7 +301,7 @@ function ComparisonFramework({ fw }: { fw: ComparisonFw }) {
                   </span>
                   <span
                     style={{ color: "rgba(255,255,255,0.85)" }}
-                    dangerouslySetInnerHTML={{ __html: toSafeInlineHtml(item) }}
+                    dangerouslySetInnerHTML={{ __html: renderRichText(item) }}
                   />
                 </li>
               ))}
@@ -313,7 +313,7 @@ function ComparisonFramework({ fw }: { fw: ComparisonFw }) {
         <p
           className="mt-3 text-[12.5px] leading-relaxed"
           style={{ color: "rgba(255,255,255,0.62)" }}
-          dangerouslySetInnerHTML={{ __html: toSafeInlineHtml(fw.explanation) }}
+          dangerouslySetInnerHTML={{ __html: renderRichText(fw.explanation) }}
         />
       )}
     </div>
@@ -439,7 +439,7 @@ function LinkNoteFramework({ fw }: { fw: LinkNoteFw }) {
           <p
             className="text-[13px] leading-relaxed"
             style={{ color: "rgba(255,255,255,0.82)" }}
-            dangerouslySetInnerHTML={{ __html: toSafeInlineHtml(fw.explanation) }}
+            dangerouslySetInnerHTML={{ __html: renderRichText(fw.explanation) }}
           />
         </div>
       </div>

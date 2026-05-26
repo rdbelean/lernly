@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import type { StudyPack } from "@/lib/schema";
-import { toSafeInlineHtml } from "@/lib/richText";
+import { renderRichText } from "@/lib/richText";
 
 type Language = "en" | "de";
 
@@ -159,7 +159,7 @@ export default function OverviewView({
                       className="mt-2 text-[13.5px] leading-relaxed"
                       style={{ color: "var(--color-ln-ink-soft)" }}
                       dangerouslySetInnerHTML={{
-                        __html: toSafeInlineHtml(c.definition),
+                        __html: renderRichText(c.definition),
                       }}
                     />
                     {c.examRelevance && (
@@ -182,7 +182,7 @@ export default function OverviewView({
                             className="text-[12.5px] leading-relaxed"
                             style={{ color: "rgba(255,255,255,0.8)" }}
                             dangerouslySetInnerHTML={{
-                              __html: toSafeInlineHtml(c.examRelevance),
+                              __html: renderRichText(c.examRelevance),
                             }}
                           />
                         </div>

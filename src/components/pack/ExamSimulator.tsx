@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import confetti from "canvas-confetti";
 import type { SimulatorQuestion } from "@/lib/schema";
-import { toSafeInlineHtml } from "@/lib/richText";
+import { renderRichText } from "@/lib/richText";
 
 type Language = "en" | "de";
 
@@ -310,7 +310,7 @@ export default function ExamSimulator({
                   className="mt-2 text-[14px] leading-relaxed"
                   style={{ color: "rgba(255,255,255,0.85)" }}
                   dangerouslySetInnerHTML={{
-                    __html: toSafeInlineHtml(q.explanation),
+                    __html: renderRichText(q.explanation),
                   }}
                 />
                 <motion.button

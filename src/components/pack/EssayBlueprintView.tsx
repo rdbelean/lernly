@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { StudyPack } from "@/lib/schema";
-import { toSafeInlineHtml } from "@/lib/richText";
+import { renderRichText } from "@/lib/richText";
 
 type Language = "en" | "de";
 
@@ -186,7 +186,7 @@ export default function EssayBlueprintView({
                           <div
                             className="mt-1.5 text-[13.5px] text-white"
                             dangerouslySetInnerHTML={{
-                              __html: toSafeInlineHtml(p.instruction),
+                              __html: renderRichText(p.instruction),
                             }}
                           />
                           <div
@@ -200,7 +200,7 @@ export default function EssayBlueprintView({
                             &ldquo;
                             <span
                               dangerouslySetInnerHTML={{
-                                __html: toSafeInlineHtml(p.template),
+                                __html: renderRichText(p.template),
                               }}
                             />
                             &rdquo;

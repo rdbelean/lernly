@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { OpenQuestion } from "@/lib/schema";
-import { toSafeInlineHtml } from "@/lib/richText";
+import { renderRichText } from "@/lib/richText";
 
 type Language = "en" | "de";
 
@@ -83,7 +83,7 @@ export default function OpenQuestionsView({
                   <div
                     className="text-[14px] leading-relaxed text-white/90"
                     dangerouslySetInnerHTML={{
-                      __html: toSafeInlineHtml(q.modelAnswer),
+                      __html: renderRichText(q.modelAnswer),
                     }}
                   />
                 </div>
@@ -111,7 +111,7 @@ export default function OpenQuestionsView({
                             ✓
                           </span>
                           <span
-                            dangerouslySetInnerHTML={{ __html: toSafeInlineHtml(kp) }}
+                            dangerouslySetInnerHTML={{ __html: renderRichText(kp) }}
                           />
                         </li>
                       ))}
