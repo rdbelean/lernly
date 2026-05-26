@@ -321,7 +321,7 @@ export async function POST(request: Request) {
     // Whether this generation was paid for via a one-time pack_credit rather
     // than the user's monthly subscription quota. Used at the end to skip
     // bump_pack_usage so we don't double-charge.
-    let creditKindConsumed: string | null = null;
+    let willUseCredit = false;
     let userPlan: string | null = null;
 
     if (user && !usesByok) {
@@ -344,23 +344,23 @@ export async function POST(request: Request) {
           );
         }
         if (quota.reason === "quota_exceeded") {
-          // Pricing v2: try to consume a one-time pack credit
-          // (Sprint / PAYG / Pro-topup) before failing with 402.
-          const { data: consumed, error: consumeErr } = await supabase.rpc(
-            "consume_pack_credit",
+          // A one-time credit (Sprint / PAYG / Pro-topup) can cover this. Only
+          // CHECK availability here; we consume it AFTER a successful, saved
+          // generation (see save block) so a failed run never costs a credit.
+          const { data: avail, error: availErr } = await supabase.rpc(
+            "available_pack_credits",
           );
-          if (consumeErr) {
-            console.error("[/api/generate] consume_pack_credit failed", consumeErr);
+          if (availErr) {
+            console.error("[/api/generate] available_pack_credits failed", availErr);
           }
-          if (typeof consumed === "string" && consumed) {
-            creditKindConsumed = consumed;
+          if (typeof avail === "number" && avail > 0) {
+            willUseCredit = true;
             console.log(
-              "[/api/generate] quota exhausted; consumed pack credit",
-              consumed,
+              "[/api/generate] quota exhausted; will consume a pack credit on success",
+              avail,
             );
           } else {
-            // No credits available either → tell the client so it can show the
-            // quota-hit modal with Sprint/PAYG offers.
+            // No credits → client shows the quota-hit modal with Sprint/PAYG offers.
             return NextResponse.json(
               {
                 error: `Monatslimit erreicht: ${quota.used}/${quota.limit} Pakete im ${quota.plan}-Plan.`,
@@ -493,12 +493,24 @@ export async function POST(request: Request) {
           savedId = row.id as string;
         }
 
-        // Only bump the monthly quota counter if this generation actually
-        // consumed the subscription quota (not BYOK, not a one-time credit).
-        if (!usesByok && !creditKindConsumed) {
-          const { error: bumpErr } = await supabase.rpc("bump_pack_usage");
-          if (bumpErr) {
-            console.error("[/api/generate] usage bump failed", bumpErr);
+        // Charge exactly once, only now that the pack is saved: consume a pack
+        // credit if this run used one, otherwise count it against the monthly
+        // quota. A failed/unsaved generation reaches neither — never costs anything.
+        if (savedId) {
+          if (willUseCredit) {
+            const { data: consumed, error: consumeErr } = await supabase.rpc(
+              "consume_pack_credit",
+            );
+            if (consumeErr) {
+              console.error("[/api/generate] consume_pack_credit failed", consumeErr);
+            } else {
+              console.log("[/api/generate] consumed pack credit on success", consumed);
+            }
+          } else if (!usesByok) {
+            const { error: bumpErr } = await supabase.rpc("bump_pack_usage");
+            if (bumpErr) {
+              console.error("[/api/generate] usage bump failed", bumpErr);
+            }
           }
         }
       } catch (saveErr) {

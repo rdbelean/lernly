@@ -286,16 +286,23 @@ function EmptyState() {
   );
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ credit_purchased?: string; cram?: string }>;
+}) {
+  const params = await searchParams;
   const supabase = await createClient();
 
-  const [packsRes, userRowRes] = await Promise.all([
+  const [packsRes, userRowRes, creditsRes] = await Promise.all([
     supabase.rpc("list_pack_summaries"),
     supabase
       .from("users")
       .select("plan, packs_used_this_month")
       .single(),
+    supabase.rpc("available_pack_credits"),
   ]);
+  const credits = typeof creditsRes.data === "number" ? creditsRes.data : 0;
 
   const { data: packs, error } = packsRes as {
     data: PackSummary[] | null;
@@ -327,6 +334,19 @@ export default async function DashboardPage() {
   return (
     <main className="px-6 py-12 md:py-16">
       <div className="mx-auto max-w-[1080px]">
+        {params.credit_purchased === "1" && (
+          <div
+            className="mb-6 rounded-2xl p-4 text-[14px]"
+            style={{
+              background: "rgba(124,196,160,0.12)",
+              border: "1px solid rgba(124,196,160,0.35)",
+              color: "#9FD4B8",
+            }}
+          >
+            <span className="font-medium">Extra-Paket gutgeschrieben ✓</span>
+            <span className="opacity-80"> — du kannst wieder Lernpakete erstellen.</span>
+          </div>
+        )}
         <div className="mb-8 flex items-end justify-between gap-4">
           <div>
             <p
@@ -370,8 +390,13 @@ export default async function DashboardPage() {
               <span>
                 {used} / {planLimit} Pakete diesen Monat
               </span>
+              {credits > 0 && (
+                <span className="ml-2" style={{ color: "#9BD8EB" }}>
+                  · +{credits} Extra-Paket{credits === 1 ? "" : "e"} verfügbar
+                </span>
+              )}
             </div>
-            {quotaReached ? (
+            {quotaReached && credits === 0 ? (
               <a
                 href="/dashboard/settings"
                 className="rounded-full bg-white px-4 py-1.5 text-[13px] font-semibold text-[#0F1535] transition hover:bg-white/90"
