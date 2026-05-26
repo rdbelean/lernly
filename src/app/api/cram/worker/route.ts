@@ -9,6 +9,10 @@ import {
   type SourceFile,
 } from "@/lib/generatePack";
 import type { ExamType } from "@/lib/schema";
+import { renderEmail } from "@/lib/email/layout";
+import { sendEmail } from "@/lib/email/send";
+import { APP_URL } from "@/lib/email/brand";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 export const runtime = "nodejs";
 export const maxDuration = 800;
@@ -26,6 +30,45 @@ type QueuedPack = {
   chunk_label: string | null;
   attempts: number;
 };
+
+// Send the "packs ready" email exactly once, the moment a job reaches 'done'.
+// The conditional UPDATE atomically claims the notification (only one invocation
+// wins), so concurrent workers can't double-send.
+async function notifyJobDoneOnce(service: SupabaseClient, jobId: string): Promise<void> {
+  const { data: claimed } = await service
+    .from("cram_jobs")
+    .update({ done_notified_at: new Date().toISOString() })
+    .eq("id", jobId)
+    .eq("status", "done")
+    .is("done_notified_at", null)
+    .select("id, user_id");
+  if (!claimed || claimed.length === 0) return; // not done yet, or already notified
+
+  const userId = claimed[0].user_id as string;
+  const { data: udata } = await service.auth.admin.getUserById(userId);
+  const email = udata?.user?.email;
+  if (!email) return;
+
+  const { data: chunks } = await service
+    .from("study_packs")
+    .select("status")
+    .eq("cram_job_id", jobId);
+  const ready = (chunks ?? []).filter((c) => c.status === "ready").length;
+  const failed = (chunks ?? []).filter((c) => c.status === "failed").length;
+
+  const failedLine =
+    failed > 0
+      ? `<p style="margin:14px 0 0;">${failed} ${failed === 1 ? "Paket konnte" : "Pakete konnten"} nicht erstellt werden — im Dashboard kannst du sie erneut versuchen.</p>`
+      : "";
+  const html = renderEmail({
+    preheader: `${ready} Lernpakete sind fertig`,
+    heading: "Deine Lernpakete sind fertig 🎉",
+    bodyHtml: `<p style="margin:0;">Wir haben <strong>${ready} Lernpaket${ready === 1 ? "" : "e"}</strong> aus deinem Material erstellt. Viel Erfolg beim Lernen!</p>${failedLine}`,
+    ctaText: "Zu deinen Paketen →",
+    ctaUrl: `${APP_URL}/dashboard`,
+  });
+  await sendEmail({ to: email, subject: "Deine Lernpakete sind fertig 🎉", html });
+}
 
 export async function POST(request: Request) {
   if (request.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -106,6 +149,16 @@ export async function POST(request: Request) {
         // Re-queue for the next cron tick.
         await service.from("study_packs").update({ status: "queued" }).eq("id", row.id);
       }
+    }
+  }
+
+  // Notify once for any job that just reached 'done' during this run.
+  const touchedJobIds = [...new Set(rows.map((r) => r.cram_job_id))];
+  for (const jobId of touchedJobIds) {
+    try {
+      await notifyJobDoneOnce(service, jobId);
+    } catch (e) {
+      console.error("[cram/worker] done-notification failed", e);
     }
   }
 
