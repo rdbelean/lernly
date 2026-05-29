@@ -159,6 +159,42 @@ export const LinkNoteFrameworkSchema = z.object({
   explanation: z.string(),
 });
 
+export const CalloutToneSchema = z.enum([
+  "definition",
+  "warning",
+  "insight",
+  "neutral",
+]);
+
+export const CalloutFrameworkSchema = z.object({
+  kind: z.literal("callout"),
+  tone: CalloutToneSchema.optional(),
+  title: z.string().optional(),
+  body: z.string(),
+});
+
+export const TableFrameworkSchema = z.object({
+  kind: z.literal("table"),
+  title: z.string().optional(),
+  headers: z.array(z.string()).optional(),
+  rows: z.array(z.array(z.string())).min(1),
+  caption: z.string().optional(),
+});
+
+export const ConceptCardSchema = z.object({
+  title: z.string(),
+  body: z.string(),
+  icon: z.string().optional(),
+  accent: VisualBlockColorSchema.optional(),
+});
+
+export const ConceptGridFrameworkSchema = z.object({
+  kind: z.literal("concept_grid"),
+  title: z.string().optional(),
+  cards: z.array(ConceptCardSchema).min(2),
+  accentEdge: z.enum(["top", "left"]).optional(),
+});
+
 export const VisualFrameworkSchema = z.discriminatedUnion("kind", [
   FlowFrameworkSchema,
   Matrix2x2FrameworkSchema,
@@ -166,12 +202,25 @@ export const VisualFrameworkSchema = z.discriminatedUnion("kind", [
   FormulaFrameworkSchema,
   MnemonicFrameworkSchema,
   LinkNoteFrameworkSchema,
+  CalloutFrameworkSchema,
+  TableFrameworkSchema,
+  ConceptGridFrameworkSchema,
+]);
+
+export const VisualBlockPrioritySchema = z.enum([
+  "highest",
+  "high",
+  "moderate",
+  "quick_win",
 ]);
 
 export const VisualBlockSchema = z.object({
   title: z.string(),
   subtitle: z.string().optional(),
   color: VisualBlockColorSchema,
+  icon: z.string().optional(),
+  priority: VisualBlockPrioritySchema.optional(),
+  timeMinutes: z.number().int().positive().optional(),
   frameworks: z.array(VisualFrameworkSchema),
 });
 

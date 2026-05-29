@@ -114,53 +114,80 @@ JSON-SCHEMA (genau diese Struktur):
   }
 }`;
 
-export const TASK_VISUAL_MAP = `AUFGABE: Erstelle eine VISUAL MAP — die wichtigsten Konzepte des Materials als visuelle Frameworks, nicht als Fließtext. Das ist das HERZSTÜCK des Lernpakets für ADHS-freundliche Wiederholung.
+export const TASK_VISUAL_MAP = `AUFGABE: Erstelle eine VISUAL MAP — die wichtigsten Konzepte des Materials als typisierte visuelle Bausteine, NICHT als Fließtext und NICHT als gleichförmige Karten-Wand. Das ist das HERZSTÜCK des Lernpakets.
+
+GOLDENE REGEL (das Wichtigste)
+WÄHLE FÜR JEDEN INHALT DEN FRAMEWORK-TYP, DESSEN FORM ZU IHM PASST.
+- Zwei oder drei Sachen, die man kontrastiert → **comparison**
+- Eine Definition oder ein "das musst du auswendig wissen" → **callout**
+- Eine Abfolge / ein Prozess / eine Wertschöpfungskette → **flow**
+- Eine Begriff→Erklärung-Liste oder "Kritiker vs Befürworter" Tabelle → **table**
+- 2-4 verwandte gleichrangige Konzepte (Geschwister) → **concept_grid**
+- Eine 2x2-Logik (zwei Achsen) → **matrix2x2**
+- Eine Liste mit Akronym/Eselsbrücke → **mnemonic**
+- Eine Kernformel oder zentrale Bedingung → **formula**
+- Cross-Reference zwischen zwei Themen → **link_note**
+NIEMALS alles als concept_grid abladen. Niemals Fließtext in einem callout, wenn es eine Tabelle sein sollte. Die VISUAL FORM ist der eigentliche Lerneffekt.
 
 WAS DU BAUST
-Eine Liste von "blocks" (Themenblöcken). Jeder Block bündelt Frameworks zu EINEM Hauptthema (z.B. "Vertical Integration", "Going Global", "Diversification"). Innerhalb eines Blocks: 3-6 Frameworks, die das Thema visuell aufschließen.
+Eine Liste von "blocks" (Themen-Sektionen). Jeder Block ist EIN Hauptthema und enthält 2-5 Frameworks. Innerhalb eines Blocks: variiere die Typen — eine reine Wand aus dem gleichen Typ ist genauso schlecht wie Fließtext.
+
+PRÜFUNGS-PRIORITÄT (entscheidend für UI-Hierarchie)
+Setze pro Block:
+- "priority": "highest" | "high" | "moderate" | "quick_win"  — wie wichtig dieses Thema für die Prüfung ist
+- "timeMinutes": geschätzte Lernzeit in Minuten (10-60)
+- "icon": EIN einzelner Emoji der das Thema visuell verankert (🚪 für Entry Modes, ⚠️ für Risiken, 🌐 für Globalisierung, 🏢 für Unternehmen, 💱 für Finanzen, 🔬 für Methoden …)
+- "subtitle": KURZER Tag-Text in der Form "Topic N — Foundation" / "Topic N — HIGHEST EXAM PRIORITY" / "Topic N — Quick Win". Wird als uppercase Tag angezeigt.
+
+Priorität bedeutet WIRKLICH Prüfungsrelevanz, nicht Kapitelreihenfolge: das Kern-Modell aus dem Material ist "highest"; die Randnotiz ist "quick_win". Sei mutig — wenn alles "high" ist, ist nichts "high".
 
 FARB-CODIERUNG
-Jeder Block bekommt eine "color": "blue" | "cyan" | "green" | "amber" | "violet" | "rose". Themen mit ähnlicher Logik bekommen ähnliche Farben. Beispiel: drei "Dimensionen einer Sache" → drei verschiedene Farben (cyan/green/amber). Erster Block ist meistens blue (der Big Picture / Einstieg).
+Jeder Block bekommt eine "color": "blue" | "cyan" | "green" | "amber" | "violet" | "rose". Wechsle die Farben durch, sodass benachbarte Blöcke unterscheidbar sind. Erster Block typischerweise blue (Big Picture).
 
-DIE 6 FRAMEWORK-TYPEN
+CONTENT-DIÄT (ruthless)
+- Nur prüfungsrelevantes. Wenn ein Detail nicht in einer realistischen Klausur-Frage auftauchen würde, lass es weg.
+- KONKRETE, fachpassende Beispiele in den Erklärungen (echte Firmen/Systeme/Studien) — keine generischen "Firma X".
+- Pro Block max 5 Frameworks. Lieber 3 dichte als 6 lockere.
 
-1. **flow** — Prozessfluss / Wertschöpfungskette / "von A zu Z" oder "Optionen auf einem Spektrum"
-   Beispiele: "Raw Materials → Manufacturing → Distribution", "Full Integration ↔ Long-term Contracts ↔ Spot Market"
-   Felder: title, boxes (mindestens 2, jeweils { label, sub?, accent? }), arrows ("right" | "bidirectional" | "plus"), explanation?
+DIE 9 FRAMEWORK-TYPEN
 
-2. **matrix2x2** — 2x2-Matrix mit zwei Achsen
-   Beispiele: Integration-Responsiveness Framework (Cost Pressure × Local Responsiveness → Global/International/Multidomestic/Transnational), BCG Matrix
-   Felder: title, xAxis { label, low, high }, yAxis { label, low, high }, cells (4 Stück, je { x: "low"|"high", y: "low"|"high", title, sub?, highlight? }), explanation?
-   highlight: setze true auf die EINE wichtigste Zelle (z.B. "Transnational" als holy grail).
+1. **callout** — Definition, "know this cold", zentrale Aussage
+   tone: "definition" (blau) | "insight" (violett) | "warning" (rot) | "neutral"
+   Felder: kind, tone?, title?, body (HTML <strong>/<em> erlaubt)
 
-3. **comparison** — Gegenüberstellung (Pro/Con, Vor/Nachteile, A vs B)
-   Beispiele: "5 Benefits vs 4 Risks der vertikalen Integration", "Backward vs Forward Integration"
-   Felder: title, left { label, tone: "pro"|"con"|"neutral"?, items[] }, right { label, tone?, items[] }, explanation?
-   tone "pro" → grüner Stil, tone "con" → roter Stil, sonst neutral.
+2. **comparison** — A vs B, Pro vs Con, zwei Schulen
+   Felder: kind, title, left { label, tone?: "pro"|"con"|"neutral", items[] }, right { label, tone?, items[] }, explanation?
 
-4. **formula** — Kernformel oder eine zentrale Bedingung
-   Beispiele: "If in-house costs < market costs → MAKE", "ALL three Porter tests must pass"
-   Felder: formula (Hauptaussage), sub? (Nebenbedingung), title?
+3. **flow** — Prozessfluss, Spektrum, "von A zu Z"
+   Felder: kind, title, boxes (≥2, je { label, sub?, accent? }), arrows ("right" | "bidirectional" | "plus"), explanation?
 
-5. **mnemonic** — Eselsbrücke mit Akronym
-   Beispiele: "CLSSS" für Benefits, "MIC" + "LLL" für Internationalization, "VGP" für Vertical/Geographic/Product
-   Felder: title, acronym, expansion[] (je { letter, meaning }), hook? (Analogie/Merksatz: "Wie eine GPS für Strategie")
+4. **table** — Begriffsliste, Kritiker/Befürworter, mehrspaltige Übersicht
+   Felder: kind, title?, headers? (Spaltenüberschriften, optional), rows[][] (jede Zeile ein String-Array mit gleicher Länge), caption?
+   Beispiel: { "headers": ["Topic", "Kritiker", "Befürworter"], "rows": [["Jobs", "...", "..."], ["Inequality", "...", "..."]] }
 
-6. **link_note** — Cross-Reference zwischen Themen ("Das hängt mit X zusammen, weil...")
-   Beispiele: "Principal-Agent aus Session 12 erklärt, warum M&As in Session 15 trotzdem stattfinden"
-   Felder: fromTopic, toTopic, explanation
+5. **concept_grid** — 2-4 gleichrangige Geschwister-Konzepte
+   Felder: kind, title?, cards[] (je { title, body, icon?, accent? }), accentEdge?: "top" | "left"
+   accentEdge "top" = farbige Linie oben (gut für 4er-Grid), "left" = links (gut für 2er-Reihe). Default: "top".
 
-PRIORISIERUNG
-- mindestens 1 matrix2x2 wenn das Material eine 2x2-Logik hat (sie sind die "wow"-Frames)
-- mindestens 1 mnemonic pro Block, wenn Listen vorkommen
-- mindestens 1 link_note insgesamt, wenn das Material >1 Thema umfasst
-- KONKRETE, fachpassende Beispiele in den Erklärungen (Firmen bei Wirtschaft, reale Systeme/Algorithmen bei Informatik, Phänomene bei Naturwissenschaft) — keine generischen "Firma X"
+6. **matrix2x2** — 2x2-Matrix
+   Felder: kind, title, xAxis { label, low, high }, yAxis { label, low, high }, cells (4 Stück: { x, y, title, sub?, highlight? }), explanation?
+   highlight: true auf der einen "holy grail"-Zelle.
 
-ANTI-PATTERN
-- ❌ Nur ein Block mit 10 Frameworks alles bunt durcheinander — strukturiere nach Hauptthema
-- ❌ Mnemonic ohne hook ("CLSSS" ohne dass klar wird WIE man sich's merkt)
-- ❌ Comparison ohne tone — du musst sagen welche Seite gut/schlecht/neutral ist
-- ❌ Matrix2x2 mit Achsen-Labels, die man nicht aus dem Material ableiten kann
+7. **mnemonic** — Akronym + Hook
+   Felder: kind, title, acronym, expansion[] (je { letter, meaning }), hook? (Analogie/Merksatz)
+
+8. **formula** — Kernformel oder zentrale Bedingung
+   Felder: kind, title?, formula, sub?
+
+9. **link_note** — Cross-Reference zwischen Themen
+   Felder: kind, fromTopic, toTopic, explanation
+
+ANTI-PATTERN (mach das NICHT)
+- ❌ Alles in concept_grid stopfen — das ist die "Wall of Cards"-Falle. Eine Tabelle gehört in table, ein Prozess in flow, eine Definition in callout.
+- ❌ Block ohne priority/timeMinutes/icon — die Roadmap fällt sonst aus.
+- ❌ Comparison ohne tone, table ohne headers (wenn die Spalten Bedeutung haben), callout ohne tone.
+- ❌ Concept-Cards mit Roman-Body — body sollte 1-3 prägnante Sätze sein.
+- ❌ Fließtext-Frames mit 4 langen Absätzen.
 
 JSON-SCHEMA (genau diese Struktur):
 {
@@ -168,14 +195,20 @@ JSON-SCHEMA (genau diese Struktur):
     "blocks": [
       {
         "title": "string",
-        "subtitle": "string (optional, kurzer Untertitel)",
+        "subtitle": "string (z.B. 'Topic 4 — HIGHEST EXAM PRIORITY')",
         "color": "blue" | "cyan" | "green" | "amber" | "violet" | "rose",
+        "icon": "string (ein Emoji)",
+        "priority": "highest" | "high" | "moderate" | "quick_win",
+        "timeMinutes": number,
         "frameworks": [
-          { "kind": "flow", "title": "string", "boxes": [{"label": "string", "sub": "string", "accent": "blue|cyan|green|amber|violet|rose"}], "arrows": "right|bidirectional|plus", "explanation": "string" },
-          { "kind": "matrix2x2", "title": "string", "xAxis": {"label": "string", "low": "string", "high": "string"}, "yAxis": {"label": "string", "low": "string", "high": "string"}, "cells": [{"x": "low|high", "y": "low|high", "title": "string", "sub": "string", "highlight": true|false}], "explanation": "string" },
+          { "kind": "callout", "tone": "definition|insight|warning|neutral", "title": "string", "body": "string (HTML <strong>/<em> erlaubt)" },
           { "kind": "comparison", "title": "string", "left": {"label": "string", "tone": "pro|con|neutral", "items": ["string"]}, "right": {"label": "string", "tone": "pro|con|neutral", "items": ["string"]}, "explanation": "string" },
-          { "kind": "formula", "title": "string", "formula": "string", "sub": "string" },
+          { "kind": "flow", "title": "string", "boxes": [{"label": "string", "sub": "string", "accent": "blue|cyan|green|amber|violet|rose"}], "arrows": "right|bidirectional|plus", "explanation": "string" },
+          { "kind": "table", "title": "string", "headers": ["string"], "rows": [["string"]], "caption": "string" },
+          { "kind": "concept_grid", "title": "string", "cards": [{"title": "string", "body": "string", "icon": "string", "accent": "blue|cyan|green|amber|violet|rose"}], "accentEdge": "top|left" },
+          { "kind": "matrix2x2", "title": "string", "xAxis": {"label": "string", "low": "string", "high": "string"}, "yAxis": {"label": "string", "low": "string", "high": "string"}, "cells": [{"x": "low|high", "y": "low|high", "title": "string", "sub": "string", "highlight": true|false}], "explanation": "string" },
           { "kind": "mnemonic", "title": "string", "acronym": "string", "expansion": [{"letter": "C", "meaning": "Costs lower"}], "hook": "string" },
+          { "kind": "formula", "title": "string", "formula": "string", "sub": "string" },
           { "kind": "link_note", "fromTopic": "string", "toTopic": "string", "explanation": "string" }
         ]
       }
