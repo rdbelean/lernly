@@ -8,7 +8,9 @@ import {
   TASK_META,
   TASK_VISUAL_MAP,
   TASK_QUIZ,
+  TASK_ESSAY_PREDICTIONS,
   TASK_ANALYSIS,
+  buildFormatDirective,
 } from "@/lib/prompts";
 import { activeTasksFor, type GenTaskKey } from "@/lib/examTasks";
 import {
@@ -80,6 +82,7 @@ const TASKS: Record<TaskKey, { instruction: string; maxTokens: number }> = {
   meta: { instruction: TASK_META, maxTokens: 12000 },
   visualMap: { instruction: TASK_VISUAL_MAP, maxTokens: 16000 },
   quiz: { instruction: TASK_QUIZ, maxTokens: 12000 },
+  essayPredictions: { instruction: TASK_ESSAY_PREDICTIONS, maxTokens: 8000 },
 };
 
 async function extractPdfText(
@@ -118,6 +121,7 @@ async function runTaskOnce(
   key: TaskKey,
   materialBlocks: Anthropic.Messages.ContentBlockParam[],
   attemptTimeoutMs: number,
+  examType: ExamType,
   brief?: string,
   extraInstruction?: string,
 ): Promise<unknown> {
@@ -133,7 +137,8 @@ async function runTaskOnce(
         model: MODEL_FOR[key],
         max_tokens: maxTokens,
         thinking: { type: "disabled" },
-        system: BASE_SYSTEM_PROMPT,
+        system:
+          BASE_SYSTEM_PROMPT + "\n\n" + buildFormatDirective(examType),
         messages: [
           {
             role: "user",
@@ -197,6 +202,7 @@ async function runTask(
   key: TaskKey,
   materialBlocks: Anthropic.Messages.ContentBlockParam[],
   deadlineMs: number,
+  examType: ExamType,
   brief?: string,
 ): Promise<unknown> {
   const attempt = (extraInstruction?: string) =>
@@ -207,6 +213,7 @@ async function runTask(
           key,
           materialBlocks,
           attemptTimeoutMs,
+          examType,
           brief,
           extraInstruction,
         ),
@@ -258,6 +265,7 @@ async function runAnalysisOnce(
   client: Anthropic,
   materialBlocks: Anthropic.Messages.ContentBlockParam[],
   attemptTimeoutMs: number,
+  examType: ExamType,
 ): Promise<string> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), attemptTimeoutMs);
@@ -268,7 +276,8 @@ async function runAnalysisOnce(
         model: HAIKU,
         max_tokens: ANALYSIS_MAX_TOKENS,
         thinking: { type: "disabled" },
-        system: BASE_SYSTEM_PROMPT,
+        system:
+          BASE_SYSTEM_PROMPT + "\n\n" + buildFormatDirective(examType),
         messages: [
           {
             role: "user",
@@ -294,10 +303,11 @@ async function runAnalysisPass(
   client: Anthropic,
   materialBlocks: Anthropic.Messages.ContentBlockParam[],
   deadlineMs: number,
+  examType: ExamType,
 ): Promise<string> {
   return retryWithBudget(
     (attemptTimeoutMs) =>
-      runAnalysisOnce(client, materialBlocks, attemptTimeoutMs),
+      runAnalysisOnce(client, materialBlocks, attemptTimeoutMs, examType),
     {
       classify: classifyError,
       deadlineMs,
@@ -324,13 +334,13 @@ async function runGatedTasks(
   const active = activeTasksFor(examType);
   const runOne = (k: GenTaskKey): Promise<unknown> =>
     k === "visualMap"
-      ? runTask(client, k, materialBlocks, deadlineMs, brief)
+      ? runTask(client, k, materialBlocks, deadlineMs, examType, brief)
           .then((r) => (r as { visualMap?: unknown }).visualMap ?? null)
           .catch((e) => {
             console.error("[/api/generate] visualMap soft-failed", e);
             return null;
           })
-      : runTask(client, k, materialBlocks, deadlineMs, brief);
+      : runTask(client, k, materialBlocks, deadlineMs, examType, brief);
 
   // Anthropic prompt caching is per-model, so each model tier caches the
   // material independently — group the active tasks by model and warm each
@@ -483,7 +493,7 @@ export async function generatePack(opts: {
   let brief = "";
   if (twoPass) {
     const analysisDeadline = Math.min(deadline, Date.now() + ANALYSIS_BUDGET_MS);
-    brief = await runAnalysisPass(client, blocks, analysisDeadline).catch(() => "");
+    brief = await runAnalysisPass(client, blocks, analysisDeadline, examType).catch(() => "");
   }
   const byKey = await runGatedTasks(client, blocks, deadline, examType, brief || undefined);
 
@@ -502,6 +512,13 @@ export async function generatePack(opts: {
     ...(byKey.blueprint ? { essayBlueprint: (byKey.blueprint as { essayBlueprint?: unknown }).essayBlueprint } : {}),
     ...(byKey.simulator ? { simulator: (byKey.simulator as { simulator?: unknown }).simulator } : {}),
     ...(byKey.quiz ? { quiz: (byKey.quiz as { quiz?: unknown }).quiz } : {}),
+    ...(byKey.essayPredictions
+      ? {
+          essayPredictions: (
+            byKey.essayPredictions as { essayPredictions?: unknown }
+          ).essayPredictions,
+        }
+      : {}),
   };
   const parsed = StudyPackSchema.safeParse(merged);
   if (!parsed.success) throw new Error("schema_validation_failed");

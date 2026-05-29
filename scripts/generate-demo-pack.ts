@@ -15,6 +15,7 @@ import {
   TASK_META,
   TASK_VISUAL_MAP,
   TASK_QUIZ,
+  TASK_ESSAY_PREDICTIONS,
 } from "../src/lib/prompts";
 import {
   StudyPackSchema,
@@ -57,6 +58,7 @@ const TASKS: Record<GenTaskKey, { instruction: string; maxTokens: number }> = {
   meta: { instruction: TASK_META, maxTokens: 12000 },
   visualMap: { instruction: TASK_VISUAL_MAP, maxTokens: 16000 },
   quiz: { instruction: TASK_QUIZ, maxTokens: 12000 },
+  essayPredictions: { instruction: TASK_ESSAY_PREDICTIONS, maxTokens: 8000 },
 };
 
 const EXAM_LABEL: Record<ExamType, string> = {

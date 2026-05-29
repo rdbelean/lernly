@@ -8,7 +8,7 @@ test("extractive tasks route to Haiku", () => {
 });
 
 test("quality-critical tasks stay on Sonnet", () => {
-  for (const k of ["simulator", "blueprint", "visualMap", "quiz"] as const) {
+  for (const k of ["simulator", "blueprint", "visualMap", "quiz", "essayPredictions"] as const) {
     assert.equal(MODEL_FOR[k], SONNET);
   }
 });

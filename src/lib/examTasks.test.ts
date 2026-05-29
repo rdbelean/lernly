@@ -2,8 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { activeTasksFor, TRAINER_FOR } from "./examTasks";
 
-test("essay -> core + blueprint", () => {
-  assert.deepEqual(activeTasksFor("essay"), ["cards", "meta", "visualMap", "blueprint"]);
+test("essay -> core + essayPredictions", () => {
+  assert.deepEqual(activeTasksFor("essay"), ["cards", "meta", "visualMap", "essayPredictions"]);
 });
 
 test("multiple_choice -> simulator", () => {

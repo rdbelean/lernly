@@ -6,11 +6,12 @@ export type GenTaskKey =
   | "blueprint"
   | "meta"
   | "visualMap"
-  | "quiz";
+  | "quiz"
+  | "essayPredictions";
 
 // Exactly one format-specific trainer per exam type.
 export const TRAINER_FOR: Record<ExamType, GenTaskKey> = {
-  essay: "blueprint",
+  essay: "essayPredictions",
   open_book: "blueprint",
   multiple_choice: "simulator",
   open_questions: "quiz",

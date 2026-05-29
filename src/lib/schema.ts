@@ -265,6 +265,19 @@ export const QuizSchema = z.object({
   questions: z.array(QuizQuestionSchema),
 });
 
+export const EssayPredictionSchema = z.object({
+  id: z.string(),
+  question: z.string(),
+  thesis: z.string(),
+  structure: z.array(z.string()).min(3).max(5),
+  paragraphCues: z.array(z.string()),
+  examples: z.array(z.string()),
+});
+
+export const EssayPredictionsSchema = z.object({
+  predictions: z.array(EssayPredictionSchema),
+});
+
 export const StudyPackSchema = z.object({
   courseTitle: z.string(),
   examType: z.enum(["essay", "multiple_choice", "oral", "open_book", "open_questions"]),
@@ -278,6 +291,7 @@ export const StudyPackSchema = z.object({
   visualMap: VisualMapSchema.optional(),
   openQuestions: OpenQuestionsSchema.optional(),
   quiz: QuizSchema.optional(),
+  essayPredictions: EssayPredictionsSchema.optional(),
 });
 
 export type StudyPack = z.infer<typeof StudyPackSchema>;
@@ -285,6 +299,7 @@ export type Flashcard = z.infer<typeof FlashcardSchema>;
 export type SimulatorQuestion = z.infer<typeof SimulatorQuestionSchema>;
 export type OpenQuestion = z.infer<typeof OpenQuestionSchema>;
 export type QuizQuestion = z.infer<typeof QuizQuestionSchema>;
+export type EssayPrediction = z.infer<typeof EssayPredictionSchema>;
 
 export type ExamType = StudyPack["examType"];
 

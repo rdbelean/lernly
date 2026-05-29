@@ -399,3 +399,107 @@ Schreibe knappen, strukturierten FLIESSTEXT (KEIN JSON, keine Markdown-Codeblöc
 6. PRÜFUNGSTYP-FOKUS: was beim oben genannten Prüfungsformat besonders zählt.
 
 Maximal ~400 Wörter. Priorisiere hart — lieber wenige scharfe Punkte als eine Aufzählung von allem.`;
+
+// =========================================================================
+// FORMAT-SPECIFIC EMPHASIS
+// =========================================================================
+// Appended to the system prompt for every generation so each task tunes its
+// output to the user's exam format. The Verstehens-Layer (Visual Map,
+// Übersicht, Karteikarten) are format-independent — the directive shifts
+// emphasis, not structure.
+
+// Map the internal exam_type values (with `multiple_choice`) to the short
+// form the directive uses in its rules block (mc / open_questions / etc).
+const FORMAT_SLUG: Record<string, string> = {
+  multiple_choice: "mc",
+  open_questions: "open_questions",
+  oral: "oral",
+  open_book: "open_book",
+  essay: "essay",
+};
+
+const FORMAT_HUMAN: Record<string, string> = {
+  multiple_choice: "Multiple Choice",
+  open_questions: "Offene Fragen (schriftlich)",
+  oral: "Mündliche Prüfung",
+  open_book: "Open Book / Take-Home",
+  essay: "Klausur-Aufsatz",
+};
+
+export function buildFormatDirective(examType: string): string {
+  const slug = FORMAT_SLUG[examType] ?? "mc";
+  const human = FORMAT_HUMAN[examType] ?? "Multiple Choice";
+  return `=== PRÜFUNGSFORMAT (steuert Emphase aller Aufgaben) ===
+
+Der Nutzer wird in folgendem Format geprüft: ${slug} (${human}).
+Priorisiere die Inhalte entsprechend — Verstehens-Layer (Visual Map,
+Übersicht, Karteikarten) bleiben immer gleich, aber der Übungsteil muss
+zum Prüfungsformat passen:
+
+- mc (Multiple Choice): Erzeuge VIELE knifflige MC-Fragen, tiefer und mehr
+  als sonst. Distraktoren nach den MC-Regeln (plausibel, gleiche Länge,
+  Anwendung statt Wiedererkennen).
+- open_questions (Offene Fragen, schriftlich): Kurze offene Fragen mit
+  klaren Musterantworten und den Stichpunkten, die die Korrektur sehen will.
+- oral (Mündliche Prüfung): Schnelle Recall- und Erklär-Prompts
+  ("Erklär X laut in 30 Sekunden"), typische Nachfragen des Prüfers,
+  Stolperfallen im Gespräch.
+- open_book (Open Book / Take-Home): Weniger Auswendiglernen, mehr
+  "wo steht das" und "wie wende ich es auf einen Fall an" — Anwendung
+  und Navigation statt Memorieren.
+- essay (Klausur-Aufsatz): Generiere einen Aufsatz-Plan mit wahrscheinlichen
+  Klausurfragen, je mit Kernthese, 3-5 Argumentschritten, Absatz-Cues und
+  konkreten Beispielen — der Student soll den Skelett-Aufbau seiner Antwort
+  vor der Klausur einmal komplett gedacht haben.`;
+}
+
+// =========================================================================
+// TASK_ESSAY_PREDICTIONS — runs ONLY when exam_type === "essay"
+// =========================================================================
+
+export const TASK_ESSAY_PREDICTIONS = `AUFGABE: Erstelle einen AUFSATZ-PLAN — eine Liste der 5-8 wahrscheinlichsten Klausurfragen für diese Essay-Prüfung. Für jede Frage produzierst du das Gerüst der Antwort, sodass der Student den Skelett-Aufbau einmal komplett gedacht hat, bevor er in die Klausur geht.
+
+WAS DU LIEFERST PRO FRAGE
+1. **question** — die wahrscheinliche Klausurfrage (deutsch). Klingt wie eine echte Prüfungsfrage: anwendungs-/diskursorientiert, nicht "Was ist X?". Beispiele:
+   - "Diskutiere die Trade-offs von Vertikaler Integration anhand eines selbst gewählten Beispiels."
+   - "Welche Strategie würdest du für Netflix nach 2023 empfehlen und warum?"
+   - "Vergleiche Mintzbergs Sicht auf Strategie mit Porter's und beziehe Stellung."
+
+2. **thesis** — EIN Satz, der die Kernaussage der Antwort verdichtet. Eine echte These, nicht "Vertikale Integration ist wichtig". Sondern: "Vertikale Integration zahlt sich nur aus, wenn die internen Transaktionskosten der Eigenproduktion klar unter denen des Markts liegen — sonst zerstört sie Wert."
+
+3. **structure** — 3-5 Argumentationsschritte, in der Reihenfolge, in der sie im Aufsatz kommen. Jeder Schritt ist eine kompakte Aussage, NICHT ein Absatztitel.
+   Beispiel: ["Definiere VI über das Make-or-Buy-Trade-off-Modell", "Zeige die 5 Benefits (CLSSS)", "Konter mit den 4 Risiken", "Wende auf Tesla-Fallbeispiel an", "Schließe mit Bedingung: TCE < Marktkosten"]
+
+4. **paragraphCues** — Für jeden Hauptabsatz EIN Satz: was kommt rein + welcher Begriff / welche Quelle wird zitiert. Format: "Absatz N: [Inhalt] — zitiere [Autor/Konzept]."
+   Beispiel: ["Absatz 1 — Einleitung: definiere VI; nenne Make-or-Buy-Frage als Anker.", "Absatz 2 — Benefits: zitiere CLSSS-Mnemonic, Beispiel Tesla-Batterieproduktion.", "Absatz 3 — Risiken: zitiere Williamson (TCE), Beispiel Boeing-787-Outsourcing-Krise."]
+
+5. **examples** — 1-2 konkrete, fachpassende Beispiele, die der Student in die Antwort einbauen soll. Echte Firmen, Studien oder Fälle. KEIN "Unternehmen X".
+   Beispiel: ["Tesla — vertikale Integration der Batterieproduktion als Cost+SecureSupply-Beleg.", "Boeing 787 Dreamliner — gescheiterte Outsourcing-Strategie 2007-2011 als Risiko-Beleg."]
+
+REGELN
+- Wähle Fragen, die zu diesem konkreten Material passen — keine generischen Klausurfragen "an sich". Wenn das Material auf BWL spezialisiert ist, frag BWL-Sachen. Bei Jura → echte Fallkonstellationen. Bei Informatik → Architektur-/Entwurfsfragen.
+- 5-8 Fragen insgesamt (NICHT mehr). Decke unterschiedliche Themenbereiche ab, die in der Klausur wahrscheinlich kombiniert werden.
+- Wenn das Material mehrere Schulen/Theorien gegeneinanderstellt, mache mindestens EINE Frage zu einem Vergleich oder einer Diskussion ("Wäge ab", "Vergleiche", "Stellung beziehen").
+
+ANTI-PATTERN
+- ❌ "Erkläre X" als Aufsatzfrage. Aufsatzfragen sind argumentativ, nicht beschreibend.
+- ❌ Generische These ("X ist ein wichtiges Konzept").
+- ❌ Structure mit weniger als 3 oder mehr als 5 Schritten.
+- ❌ Paragraph-Cues ohne Zitat/Quelle.
+- ❌ Examples mit "Unternehmen X" oder "ein bekanntes Beispiel".
+
+JSON-SCHEMA (genau diese Struktur):
+{
+  "essayPredictions": {
+    "predictions": [
+      {
+        "id": "ep1",
+        "question": "string",
+        "thesis": "string (ein Satz)",
+        "structure": ["string", "string", "string"],
+        "paragraphCues": ["string"],
+        "examples": ["string"]
+      }
+    ]
+  }
+}`;

@@ -11,4 +11,5 @@ export const MODEL_FOR: Record<GenTaskKey, string> = {
   blueprint: SONNET,
   visualMap: SONNET,
   quiz: SONNET,
+  essayPredictions: SONNET,
 };
