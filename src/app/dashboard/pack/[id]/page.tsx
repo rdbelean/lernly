@@ -2,14 +2,18 @@ import { notFound } from "next/navigation";
 import PackView from "@/components/pack/PackView";
 import { createClient } from "@/lib/supabase/server";
 import { StudyPackSchema } from "@/lib/schema";
+import { DEMO_VISUAL_MAP_V2 } from "@/lib/fixtures/visualMapDemo";
 import DeletePackButton from "./delete-button";
 
 export default async function PackDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ demo?: string }>;
 }) {
   const { id } = await params;
+  const { demo } = await searchParams;
 
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -53,9 +57,28 @@ export default async function PackDetailPage({
 
   const pack = parsed.data;
 
+  const isDemo = demo === "visualmap-v2";
+  if (isDemo) {
+    pack.visualMap = DEMO_VISUAL_MAP_V2;
+  }
+
   return (
     <main className="px-6 py-12">
       <div className="mx-auto max-w-[920px]">
+        {isDemo && (
+          <div
+            className="mb-6 rounded-xl border px-4 py-3 text-[12.5px]"
+            style={{
+              background: "rgba(251,191,36,0.08)",
+              borderColor: "rgba(251,191,36,0.3)",
+              color: "rgba(255,224,160,0.95)",
+            }}
+          >
+            <strong>Demo-Modus aktiv:</strong> Visual Map wird aus einem
+            Fixture-Datensatz gerendert (visualmap-v2 Vorschau). Andere Tabs
+            zeigen weiterhin die echten Pack-Daten.
+          </div>
+        )}
         <nav
           aria-label="Breadcrumb"
           className="flex items-center gap-2 text-[12px]"
