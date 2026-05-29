@@ -95,8 +95,12 @@ type GenerateJsonBody = {
   examType?: ExamType;
   extraInfo?: string;
   userApiKey?: string;
+  examId?: string | null;
   files?: { path: string; name?: string; size?: number; type?: string }[];
 };
+
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function POST(request: Request) {
   const t0 = Date.now();
@@ -118,6 +122,7 @@ export async function POST(request: Request) {
     let userApiKey = "";
     let turnstileToken: string | null = null;
     let files: SourceFile[] = [];
+    let examId: string | null = null;
 
     if (contentType.includes("application/json")) {
       // Storage-backed path: the browser uploaded the raw files straight to
@@ -141,6 +146,9 @@ export async function POST(request: Request) {
       examType = body.examType ?? null;
       extraInfo = body.extraInfo ?? "";
       userApiKey = (body.userApiKey ?? "").trim();
+      if (typeof body.examId === "string" && UUID_RE.test(body.examId)) {
+        examId = body.examId;
+      }
       const refs = Array.isArray(body.files) ? body.files : [];
       const service = createServiceClient();
       for (const ref of refs) {
@@ -477,6 +485,21 @@ export async function POST(request: Request) {
     let savedId: string | null = null;
     if (user) {
       try {
+        // Verify the assigned exam belongs to this user. The FK only enforces
+        // existence, not ownership — RLS on exams hides others' rows on SELECT
+        // but doesn't block referencing them. Silently fall back to loose
+        // (exam_id = null) so a stale/deleted exam doesn't fail the whole
+        // generation; the user can re-assign from the dashboard.
+        let resolvedExamId: string | null = null;
+        if (examId) {
+          const { data: ownedExam } = await supabase
+            .from("exams")
+            .select("id")
+            .eq("id", examId)
+            .maybeSingle();
+          if (ownedExam) resolvedExamId = examId;
+        }
+
         const { data: row, error: dbError } = await supabase
           .from("study_packs")
           .insert({
@@ -484,6 +507,7 @@ export async function POST(request: Request) {
             title: pack.courseTitle,
             exam_type: pack.examType,
             pack_data: pack,
+            exam_id: resolvedExamId,
           })
           .select("id")
           .single();

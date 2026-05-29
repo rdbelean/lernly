@@ -26,6 +26,15 @@ export default async function PackDetailPage({
     notFound();
   }
 
+  // Stamp last_opened_at so the dashboard's "Weiterlernen" CTA can pick up
+  // the most recently studied pack. Fire-and-forget — don't await; a failure
+  // here must not break the pack view. RLS scopes this to the user's own pack.
+  void supabase
+    .from("study_packs")
+    .update({ last_opened_at: new Date().toISOString() })
+    .eq("id", id)
+    .then(() => {});
+
   const parsed = StudyPackSchema.safeParse(data.pack_data);
   if (!parsed.success) {
     return (

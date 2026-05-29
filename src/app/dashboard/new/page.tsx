@@ -58,6 +58,37 @@ export default function NewPackPage() {
   const [quotaHit, setQuotaHit] = useState<QuotaHitDetails | null>(null);
   const [completed, setCompleted] = useState(false);
   const [mode, setMode] = useState<"single" | "cram">("single");
+  const [examChoices, setExamChoices] = useState<
+    { id: string; title: string }[]
+  >([]);
+  const [examId, setExamId] = useState<string | null>(null);
+
+  // Load the user's exams so they can assign this pack to one at creation.
+  // Pre-select via ?exam=<uuid> if the dashboard deep-linked here.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { createClient } = await import("@/lib/supabase/browser");
+        const supabase = createClient();
+        const { data } = await supabase
+          .from("exams")
+          .select("id, title")
+          .order("exam_date", { ascending: true, nullsFirst: false });
+        if (cancelled) return;
+        const rows = (data ?? []) as { id: string; title: string }[];
+        setExamChoices(rows);
+        const url = new URL(window.location.href);
+        const preset = url.searchParams.get("exam");
+        if (preset && rows.some((r) => r.id === preset)) setExamId(preset);
+      } catch {
+        /* ignore — picker just stays empty */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // If the user arrived here from the landing-page login-gate, restore the
   // exam-type they had picked so they don't have to re-pick it.
@@ -153,6 +184,7 @@ export default function NewPackPage() {
           examType,
           extraInfo: extraInfo.trim() || undefined,
           files: refs,
+          examId,
         }),
       });
       const json = await parseJsonResponse<GenerateApiResponse>(res);
@@ -405,6 +437,33 @@ export default function NewPackPage() {
             </ul>
           )}
         </section>
+
+        {examChoices.length > 0 && (
+          <section className="mt-6">
+            <h2
+              className="mb-3 text-[12px] uppercase tracking-[0.22em]"
+              style={{ color: "rgba(255,255,255,0.55)" }}
+            >
+              Klausur <span className="lowercase">(optional)</span>
+            </h2>
+            <select
+              value={examId ?? ""}
+              onChange={(e) => setExamId(e.target.value || null)}
+              className="w-full appearance-none rounded-2xl px-4 py-3 text-[14px] text-white outline-none transition focus:border-white/40"
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.14)",
+              }}
+            >
+              <option value="">Keine zugeordnet</option>
+              {examChoices.map((e) => (
+                <option key={e.id} value={e.id}>
+                  {e.title}
+                </option>
+              ))}
+            </select>
+          </section>
+        )}
 
         <section className="mt-6">
           <h2
