@@ -63,7 +63,10 @@ create policy study_packs_update_own on public.study_packs
 -- list_pack_summaries — extend to include exam_id + last_opened_at
 -- =========================================================================
 -- Dashboard groups packs by exam_id, so the existing summary RPC needs to
--- surface that column. Same SQL otherwise.
+-- surface those columns. Postgres can't CREATE OR REPLACE FUNCTION across a
+-- RETURNS-TABLE signature change, so drop the old one explicitly first.
+
+drop function if exists public.list_pack_summaries();
 
 create or replace function public.list_pack_summaries()
 returns table (
