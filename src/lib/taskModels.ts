@@ -10,5 +10,5 @@ export const MODEL_FOR: Record<GenTaskKey, string> = {
   simulator: SONNET,
   blueprint: SONNET,
   visualMap: SONNET,
-  openQuestions: SONNET,
+  quiz: SONNET,
 };

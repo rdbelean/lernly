@@ -63,11 +63,11 @@ export default async function PackDetailPage({
   }
 
   return (
-    <main className="px-6 py-12">
-      <div className="mx-auto max-w-[920px]">
+    <main className="px-4 py-10 sm:px-6 sm:py-12 lg:px-10">
+      <div className="mx-auto max-w-[1200px]">
         {isDemo && (
           <div
-            className="mb-6 rounded-xl border px-4 py-3 text-[12.5px]"
+            className="mx-auto mb-6 max-w-[920px] rounded-xl border px-4 py-3 text-[12.5px]"
             style={{
               background: "rgba(251,191,36,0.08)",
               borderColor: "rgba(251,191,36,0.3)",
@@ -79,6 +79,7 @@ export default async function PackDetailPage({
             zeigen weiterhin die echten Pack-Daten.
           </div>
         )}
+        <div className="mx-auto max-w-[920px]">
         <nav
           aria-label="Breadcrumb"
           className="flex items-center gap-2 text-[12px]"
@@ -141,14 +142,21 @@ export default async function PackDetailPage({
                   {pack.essayBlueprint.parts.length}-teiliger Blueprint
                 </span>
               )}
-              {pack.openQuestions && (
+              {pack.quiz && pack.quiz.questions.length > 0 ? (
                 <span className="ln-mono-tag">
-                  {pack.openQuestions.questions.length} offene Fragen
+                  {pack.quiz.questions.length} MC-Fragen
                 </span>
+              ) : (
+                pack.openQuestions && (
+                  <span className="ln-mono-tag">
+                    {pack.openQuestions.questions.length} offene Fragen
+                  </span>
+                )
               )}
             </div>
           </div>
           <DeletePackButton id={data.id} />
+        </div>
         </div>
 
         <div className="mt-10">

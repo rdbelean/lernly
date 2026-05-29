@@ -10,9 +10,9 @@ test("multiple_choice -> simulator", () => {
   assert.equal(TRAINER_FOR.multiple_choice, "simulator");
 });
 
-test("open_questions and oral -> openQuestions", () => {
-  assert.equal(TRAINER_FOR.open_questions, "openQuestions");
-  assert.equal(TRAINER_FOR.oral, "openQuestions");
+test("open_questions and oral -> quiz", () => {
+  assert.equal(TRAINER_FOR.open_questions, "quiz");
+  assert.equal(TRAINER_FOR.oral, "quiz");
 });
 
 test("open_book -> blueprint", () => {

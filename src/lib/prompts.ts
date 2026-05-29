@@ -227,6 +227,7 @@ OVERVIEW (das WICHTIGSTE Feld nach Simulator)
 - Markiere die 5-8 wichtigsten Konzepte mit importance: "high" — sei selektiv, nicht jedes Konzept ist "high"
 - Jedes Konzept liefert:
   * term: kompakter Begriff
+  * essence: GENAU EIN Satzteil, MAX 6 Wörter, der das Konzept auf den Punkt bringt. Wird im Scan-View als One-Liner unter dem term gezeigt. KEIN Punkt am Ende, keine Definition — die kondensierte Essenz. Beispiele: "verstärkende Aktivitäten = Wettbewerbsvorteil", "Plan + Anpassung = Realisierte Strategie", "Diagnose → Leitidee → Aktionen". Ruthless kurz.
   * author: Quelle/Autor (oder "" wenn kein spezifischer Autor)
   * definition: 1-2 knappe Sätze, KEINE Romane. Mit <strong>Schlüsselbegriffen gefettet</strong>.
   * importance: "high" | "medium" | "low"
@@ -252,7 +253,7 @@ JSON-SCHEMA (genau diese Struktur):
   "overview": {
     "topics": [
       { "name": "string", "concepts": [
-        { "term": "string", "definition": "string (HTML <strong>/<em> erlaubt)", "author": "string", "importance": "high" | "medium" | "low", "examRelevance": "string (HTML <strong>/<em> erlaubt, mit Cross-References wo sinnvoll)" }
+        { "term": "string", "essence": "string (max. 6 Wörter, kein Punkt)", "definition": "string (HTML <strong>/<em> erlaubt)", "author": "string", "importance": "high" | "medium" | "low", "examRelevance": "string (HTML <strong>/<em> erlaubt, mit Cross-References wo sinnvoll)" }
       ] }
     ]
   },
@@ -263,6 +264,108 @@ JSON-SCHEMA (genau diese Struktur):
     "daysUntilExam": number,
     "days": [
       { "day": number, "label": "string", "tasks": ["string"] }
+    ]
+  }
+}`;
+
+export const TASK_QUIZ = `AUFGABE: Erstelle ein MULTIPLE-CHOICE-QUIZ — der zentrale Aktiv-Lernteil für offene-Fragen- und mündliche Prüfungen. Ziel: Fragen, die nur jemand richtig beantworten kann, der den Stoff WIRKLICH verstanden hat. Raten darf nicht funktionieren.
+
+UMFANG
+- 18-30 Fragen (NICHT mehr). Lieber 20 dichte Fragen als 40 lockere.
+- Jede Frage hat genau 4 Optionen (A-D), genau EINE ist richtig.
+- Verteile die Fragen breit über den Stoff. Setze "category" pro Frage auf das Hauptthema (für Filter im UI).
+
+DU GENERIERST EIN MULTIPLE-CHOICE-QUIZ.
+
+Ziel: Fragen, die nur jemand richtig beantworten kann, der den Stoff WIRKLICH
+verstanden hat. Raten darf nicht funktionieren. Das ist der einzige Maßstab.
+
+Jede Frage hat genau 4 Optionen (A–D), genau EINE ist richtig.
+
+REGELN FÜR DIE FALSCHEN ANTWORTEN (Distraktoren) — das Wichtigste:
+
+1. PLAUSIBEL, NICHT ABSURD.
+   Jeder Distraktor muss für jemanden, der den Stoff halb gelernt hat,
+   verlockend wirken. Erlaubt sind:
+   - ein häufig verwechseltes Nachbarkonzept (z.B. Tactic statt Strategy)
+   - eine verbreitete Fehlannahme
+   - eine wahre, aber für die Frage irrelevante Aussage
+   - das richtige Konzept, falsch angewendet auf den Fall
+   VERBOTEN: offensichtlich falsche, alberne oder leere Optionen
+   ("Das Unternehmen sollte aufgeben"). Wenn ein Distraktor sofort als
+   falsch erkennbar ist, ist die Frage wertlos — verwirf ihn.
+
+2. GLEICHE LÄNGE UND FORM.
+   Alle 4 Optionen müssen etwa gleich lang sein und dieselbe grammatische
+   Struktur haben. Die richtige Antwort darf NIE die längste, detaillierteste
+   oder am stärksten relativierte Option sein — das ist der häufigste Verräter
+   in schlechten Quizzes. Keine Option enthält Wörter wie "immer", "nie",
+   "alle", "ausschließlich", es sei denn, alle vier tun es.
+
+3. ANWENDUNG STATT WIEDERERKENNEN.
+   Bevorzuge Szenario-Fragen, bei denen man das Konzept auf eine konkrete
+   Situation anwenden muss, statt "Was ist X?".
+   Schlecht: "Was ist eine emergente Strategie?"
+   Gut:      "Ein Spielzeughersteller plant Lernspiele, landet aber zufällig
+             einen viralen Hit mit einem Zappel-Spielzeug. Dieses
+             weiterzuführen ist:"
+
+4. EINE EINDEUTIG RICHTIGE ANTWORT.
+   Es darf nicht "zwei könnten stimmen" geben. Wenn zwei Optionen verteidigbar
+   sind, schärfe den Stem oder ändere die Optionen.
+
+5. ERKLÄRUNG.
+   Die Erklärung sagt knapp, WARUM die richtige Antwort richtig ist UND warum
+   der verlockendste Distraktor falsch ist. Max. 2 Sätze.
+
+6. MISCHUNG.
+   Variiere die Frageart über das Quiz: Definition-Abgrenzung, Anwendung-auf-Fall,
+   Was-fehlt, Zwei-Konzepte-vergleichen, Wahr/Falsch-als-MC.
+
+7. POSITION DER RICHTIGEN ANTWORT zufällig über A–D verteilen. Nicht clustern.
+
+SELBSTTEST vor der Ausgabe — verwirf jede Frage, die das nicht besteht:
+- Könnte man die richtige Antwort allein an Länge/Formulierung erraten? → neu schreiben.
+- Ist mindestens ein Distraktor offensichtlich Quatsch? → ersetzen.
+- Würde ein Experte zwei Optionen für richtig halten? → schärfen.
+
+Sprache: Deutsch (oder die Sprache des Materials). Stem und Optionen klingen wie eine echte Klausurfrage,
+nicht wie ein Lückentext.
+
+BEISPIEL EINER GUTEN FRAGE:
+{
+  "type": "apply",
+  "stem": "Eine Billigfluglinie führt eine First Class ein. Das größte Risiko ist:",
+  "options": [
+    "First Class ist weltweit grundsätzlich unprofitabel",
+    "Es bricht den Fit im Low-Cost-Aktivitätssystem auf",
+    "Kunden wollen auf Billigfliegern nie Premium-Angebote",
+    "Aufsichtsbehörden verbieten das Mischen von Klassen"
+  ],
+  "correctIndex": 1,
+  "explanation": "Das Low-Cost-Modell beruht auf sich gegenseitig verstärkenden Aktivitäten; eine First Class bricht diesen Fit. Die anderen Optionen klingen plausibel, sind aber pauschal falsch.",
+  "conceptRef": "activity-system"
+}
+Beachte: alle vier Optionen sind ähnlich lang, keine ist offensichtlich Quatsch,
+und man muss das Aktivitätssystem-Konzept anwenden, nicht nur erkennen.
+
+CONCEPTREF
+Wenn die Frage einen Begriff aus der OVERVIEW prüft, setze "conceptRef" auf genau diesen "term" (case-sensitive Match), damit das UI eine Theorie-Karte einblenden kann. Wenn unklar, lass es weg — lieber kein Ref als ein falscher.
+
+JSON-SCHEMA (genau diese Struktur):
+{
+  "quiz": {
+    "questions": [
+      {
+        "id": "qz1",
+        "type": "definition" | "apply" | "whats_missing" | "compare" | "true_false",
+        "stem": "string",
+        "options": ["string", "string", "string", "string"],
+        "correctIndex": 0 | 1 | 2 | 3,
+        "explanation": "string (max. 2 Sätze, HTML <strong>/<em> erlaubt)",
+        "conceptRef": "string (optional, Term aus der Overview)",
+        "category": "string (Hauptthema für UI-Filter)"
+      }
     ]
   }
 }`;

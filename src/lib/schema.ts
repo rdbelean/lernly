@@ -49,6 +49,7 @@ export const ConceptSchema = z.object({
   author: z.string(),
   importance: z.enum(["high", "medium", "low"]),
   examRelevance: z.string().optional(),
+  essence: z.string().optional(),
 });
 
 export const TopicSchema = z.object({
@@ -241,6 +242,29 @@ export const OpenQuestionsSchema = z.object({
   questions: z.array(OpenQuestionSchema),
 });
 
+export const QuizQuestionTypeSchema = z.enum([
+  "definition",
+  "apply",
+  "whats_missing",
+  "compare",
+  "true_false",
+]);
+
+export const QuizQuestionSchema = z.object({
+  id: z.string(),
+  stem: z.string(),
+  options: z.array(z.string()).length(4),
+  correctIndex: z.number().int().min(0).max(3),
+  explanation: z.string(),
+  conceptRef: z.string().optional(),
+  type: QuizQuestionTypeSchema,
+  category: z.string().optional(),
+});
+
+export const QuizSchema = z.object({
+  questions: z.array(QuizQuestionSchema),
+});
+
 export const StudyPackSchema = z.object({
   courseTitle: z.string(),
   examType: z.enum(["essay", "multiple_choice", "oral", "open_book", "open_questions"]),
@@ -253,12 +277,14 @@ export const StudyPackSchema = z.object({
   quizletExport: z.string(),
   visualMap: VisualMapSchema.optional(),
   openQuestions: OpenQuestionsSchema.optional(),
+  quiz: QuizSchema.optional(),
 });
 
 export type StudyPack = z.infer<typeof StudyPackSchema>;
 export type Flashcard = z.infer<typeof FlashcardSchema>;
 export type SimulatorQuestion = z.infer<typeof SimulatorQuestionSchema>;
 export type OpenQuestion = z.infer<typeof OpenQuestionSchema>;
+export type QuizQuestion = z.infer<typeof QuizQuestionSchema>;
 
 export type ExamType = StudyPack["examType"];
 

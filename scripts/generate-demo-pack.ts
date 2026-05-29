@@ -14,7 +14,7 @@ import {
   TASK_BLUEPRINT,
   TASK_META,
   TASK_VISUAL_MAP,
-  TASK_OPEN_QUESTIONS,
+  TASK_QUIZ,
 } from "../src/lib/prompts";
 import {
   StudyPackSchema,
@@ -56,7 +56,7 @@ const TASKS: Record<GenTaskKey, { instruction: string; maxTokens: number }> = {
   blueprint: { instruction: TASK_BLUEPRINT, maxTokens: 4000 },
   meta: { instruction: TASK_META, maxTokens: 12000 },
   visualMap: { instruction: TASK_VISUAL_MAP, maxTokens: 16000 },
-  openQuestions: { instruction: TASK_OPEN_QUESTIONS, maxTokens: 12000 },
+  quiz: { instruction: TASK_QUIZ, maxTokens: 12000 },
 };
 
 const EXAM_LABEL: Record<ExamType, string> = {
@@ -278,10 +278,9 @@ async function main() {
     ...(byKey.simulator
       ? { simulator: (byKey.simulator as { simulator?: unknown }).simulator }
       : {}),
-    ...(byKey.openQuestions
+    ...(byKey.quiz
       ? {
-          openQuestions: (byKey.openQuestions as { openQuestions?: unknown })
-            .openQuestions,
+          quiz: (byKey.quiz as { quiz?: unknown }).quiz,
         }
       : {}),
   };
@@ -298,7 +297,7 @@ async function main() {
   const outPath = resolve(outDir, `${slug}.json`);
   writeFileSync(outPath, JSON.stringify(parsed.data, null, 2));
   console.log(
-    `[${slug}] saved ${parsed.data.flashcards.length} cards, ${parsed.data.simulator?.questions.length ?? 0} quiz, ${parsed.data.openQuestions?.questions.length ?? 0} open-q, ${parsed.data.overview.topics.length} topics in ${((Date.now() - t0) / 1000).toFixed(1)}s`,
+    `[${slug}] saved ${parsed.data.flashcards.length} cards, ${parsed.data.simulator?.questions.length ?? 0} sim-q, ${parsed.data.quiz?.questions.length ?? 0} mc-q, ${parsed.data.overview.topics.length} topics in ${((Date.now() - t0) / 1000).toFixed(1)}s`,
   );
 }
 

@@ -7,7 +7,7 @@ import {
   TASK_BLUEPRINT,
   TASK_META,
   TASK_VISUAL_MAP,
-  TASK_OPEN_QUESTIONS,
+  TASK_QUIZ,
   TASK_ANALYSIS,
 } from "@/lib/prompts";
 import { activeTasksFor, type GenTaskKey } from "@/lib/examTasks";
@@ -79,7 +79,7 @@ const TASKS: Record<TaskKey, { instruction: string; maxTokens: number }> = {
   blueprint: { instruction: TASK_BLUEPRINT, maxTokens: 4000 },
   meta: { instruction: TASK_META, maxTokens: 12000 },
   visualMap: { instruction: TASK_VISUAL_MAP, maxTokens: 16000 },
-  openQuestions: { instruction: TASK_OPEN_QUESTIONS, maxTokens: 12000 },
+  quiz: { instruction: TASK_QUIZ, maxTokens: 12000 },
 };
 
 async function extractPdfText(
@@ -501,7 +501,7 @@ export async function generatePack(opts: {
     ...(visualMap ? { visualMap } : {}),
     ...(byKey.blueprint ? { essayBlueprint: (byKey.blueprint as { essayBlueprint?: unknown }).essayBlueprint } : {}),
     ...(byKey.simulator ? { simulator: (byKey.simulator as { simulator?: unknown }).simulator } : {}),
-    ...(byKey.openQuestions ? { openQuestions: (byKey.openQuestions as { openQuestions?: unknown }).openQuestions } : {}),
+    ...(byKey.quiz ? { quiz: (byKey.quiz as { quiz?: unknown }).quiz } : {}),
   };
   const parsed = StudyPackSchema.safeParse(merged);
   if (!parsed.success) throw new Error("schema_validation_failed");

@@ -18,7 +18,7 @@ import {
   TASK_BLUEPRINT,
   TASK_META,
   TASK_VISUAL_MAP,
-  TASK_OPEN_QUESTIONS,
+  TASK_QUIZ,
   TASK_ANALYSIS,
 } from "../src/lib/prompts";
 import { StudyPackSchema, type Flashcard, type ExamType } from "../src/lib/schema";
@@ -55,7 +55,7 @@ const TASKS = {
   blueprint: { instruction: TASK_BLUEPRINT, maxTokens: 4000 },
   meta: { instruction: TASK_META, maxTokens: 12000 },
   visualMap: { instruction: TASK_VISUAL_MAP, maxTokens: 16000 },
-  openQuestions: { instruction: TASK_OPEN_QUESTIONS, maxTokens: 12000 },
+  quiz: { instruction: TASK_QUIZ, maxTokens: 12000 },
 } as const;
 type TaskKey = GenTaskKey;
 
@@ -352,7 +352,7 @@ async function main() {
   const vm = (get("visualMap") as { visualMap?: unknown } | undefined)?.visualMap ?? null;
   const bp = get("blueprint") as { essayBlueprint?: unknown } | undefined;
   const sim = get("simulator") as { simulator?: unknown } | undefined;
-  const oq = get("openQuestions") as { openQuestions?: unknown } | undefined;
+  const qz = get("quiz") as { quiz?: unknown } | undefined;
 
   const merged = {
     courseTitle: meta?.courseTitle,
@@ -365,7 +365,7 @@ async function main() {
     ...(vm ? { visualMap: vm } : {}),
     ...(bp?.essayBlueprint ? { essayBlueprint: bp.essayBlueprint } : {}),
     ...(sim?.simulator ? { simulator: sim.simulator } : {}),
-    ...(oq?.openQuestions ? { openQuestions: oq.openQuestions } : {}),
+    ...(qz?.quiz ? { quiz: qz.quiz } : {}),
   };
 
   const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -409,11 +409,12 @@ function main_summary(pack: any) {
   line(`    options: ${JSON.stringify(q[0]?.options)}`);
   line(`    explanation: ${q[0]?.explanation}`);
 
-  const oq: any[] = pack.openQuestions?.questions ?? [];
-  line(`\nOPEN QUESTIONS: ${oq.length} questions`);
-  line(`  sample[0] Q: ${oq[0]?.question}`);
-  line(`  sample[0] modelAnswer: ${oq[0]?.modelAnswer}`);
-  line(`  sample[0] keyPoints: ${JSON.stringify(oq[0]?.keyPoints)}`);
+  const qz: any[] = pack.quiz?.questions ?? [];
+  line(`\nQUIZ (MC): ${qz.length} questions`);
+  line(`  sample[0] stem: ${qz[0]?.stem}`);
+  line(`  sample[0] options: ${JSON.stringify(qz[0]?.options)}`);
+  line(`  sample[0] correctIndex: ${qz[0]?.correctIndex}`);
+  line(`  sample[0] explanation: ${qz[0]?.explanation}`);
 
   const blocks: any[] = pack.visualMap?.blocks ?? [];
   const kinds = blocks.flatMap((b) => (b.frameworks ?? []).map((f: any) => f.kind));

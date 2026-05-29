@@ -9,6 +9,7 @@ import ExamSimulator from "./ExamSimulator";
 import VisualMapView from "./VisualMapView";
 import { track } from "@/lib/analytics";
 import OpenQuestionsView from "./OpenQuestionsView";
+import QuizView from "./QuizView";
 
 type Language = "en" | "de";
 type Tab =
@@ -44,7 +45,8 @@ export default function PackView({
       flashcards: pack.flashcards.length > 0,
       blueprint: Boolean(pack.essayBlueprint && pack.essayBlueprint.parts.length > 0),
       openQuestions: Boolean(
-        pack.openQuestions && pack.openQuestions.questions.length > 0,
+        (pack.quiz && pack.quiz.questions.length > 0) ||
+          (pack.openQuestions && pack.openQuestions.questions.length > 0),
       ),
       overview: pack.overview.topics.length > 0,
     };
@@ -73,7 +75,7 @@ export default function PackView({
 
   return (
     <div className="ln-glass-card overflow-hidden">
-      <div className="flex overflow-x-auto border-b border-white/10 px-4 md:px-8">
+      <div className="flex overflow-x-auto border-b border-white/10 px-4 md:px-8 lg:px-10">
         {tabs.map((t) => {
           const active = tab === t.id;
           return (
@@ -83,7 +85,7 @@ export default function PackView({
               className={
                 "flex shrink-0 items-center gap-2 border-b-2 px-4 py-4 text-[14px] font-medium transition " +
                 (active
-                  ? "border-[color:var(--color-ln-cyan)] text-white"
+                  ? "border-[color:var(--color-ln-cyan)] bg-[color:var(--color-ln-cyan)]/5 text-white"
                   : "border-transparent text-white/50 hover:text-white/80")
               }
             >
@@ -94,7 +96,7 @@ export default function PackView({
         })}
       </div>
 
-      <div className="p-6 md:p-9">
+      <div className="p-5 sm:p-6 md:p-9 lg:p-10">
         {tab === "visualMap" && pack.visualMap && (
           <VisualMapView map={pack.visualMap} />
         )}
@@ -107,12 +109,21 @@ export default function PackView({
         {tab === "blueprint" && pack.essayBlueprint && (
           <EssayBlueprintView blueprint={pack.essayBlueprint} language={language} />
         )}
-        {tab === "openQuestions" && pack.openQuestions && (
-          <OpenQuestionsView
-            questions={pack.openQuestions.questions}
+        {tab === "openQuestions" && pack.quiz && pack.quiz.questions.length > 0 ? (
+          <QuizView
+            questions={pack.quiz.questions}
+            overview={pack.overview}
             language={language}
           />
-        )}
+        ) : null}
+        {tab === "openQuestions" &&
+          !(pack.quiz && pack.quiz.questions.length > 0) &&
+          pack.openQuestions && (
+            <OpenQuestionsView
+              questions={pack.openQuestions.questions}
+              language={language}
+            />
+          )}
         {tab === "overview" && (
           <OverviewView overview={pack.overview} language={language} />
         )}

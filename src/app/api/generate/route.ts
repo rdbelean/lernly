@@ -471,7 +471,7 @@ export async function POST(request: Request) {
 
     const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
     console.log(
-      `[/api/generate] done in ${elapsed}s — ${pack.flashcards.length} cards, ${pack.simulator?.questions.length ?? 0} quiz, ${pack.openQuestions?.questions.length ?? 0} open-q`,
+      `[/api/generate] done in ${elapsed}s — ${pack.flashcards.length} cards, ${pack.simulator?.questions.length ?? 0} sim-q, ${pack.quiz?.questions.length ?? 0} mc-q, ${pack.openQuestions?.questions.length ?? 0} open-q`,
     );
 
     let savedId: string | null = null;
