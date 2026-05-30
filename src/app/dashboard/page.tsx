@@ -4,7 +4,6 @@ import NewExamForm from "@/components/dashboard/NewExamForm";
 import ExamCard from "@/components/dashboard/ExamCard";
 import LoosePacksSection from "@/components/dashboard/LoosePacksSection";
 import { LAYOUT } from "@/lib/layout";
-import { ArrowRight, Plus } from "lucide-react";
 import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
 
 type PackSummary = {
@@ -202,7 +201,7 @@ export default async function DashboardPage({
           <PrimaryCTALink
             size="sm"
             href="/dashboard/new"
-            leadingIcon={Plus}
+            leadingIconName="plus"
             className="hidden sm:inline-flex"
           >
             Neues Paket
@@ -242,7 +241,7 @@ export default async function DashboardPage({
               <PrimaryCTALink
                 size="sm"
                 href="/dashboard/settings"
-                trailingIcon={ArrowRight}
+                trailingIconName="arrow-right"
               >
                 Upgrade
               </PrimaryCTALink>

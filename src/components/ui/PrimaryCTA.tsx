@@ -1,7 +1,12 @@
 "use client";
 
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
-import { type LucideIcon } from "lucide-react";
+import {
+  ArrowRight,
+  Plus,
+  Sparkles,
+  type LucideIcon,
+} from "lucide-react";
 
 // =========================================================================
 // PrimaryCTA — the ONE primary-action button. Every "Weiterlernen",
@@ -9,20 +14,37 @@ import { type LucideIcon } from "lucide-react";
 // route through this component so the deep-indigo fill (#2B3499) can
 // never drift back to charcoal again.
 // =========================================================================
-// Usage:
-//   <PrimaryCTA href="…">Neues Paket</PrimaryCTA>
-//   <PrimaryCTA size="lg" leadingIcon={Sparkles} trailingIcon={ArrowRight}
-//               eyebrow="Weiterlernen" subtitle="Teste dich im Klausur-Stil">
-//     Übungsklausur starten
-//   </PrimaryCTA>
+// Two ways to pass icons:
+//   • `leadingIcon={Plus}`             — lucide component ref. Only safe
+//                                        from CLIENT components (passing a
+//                                        function ref across the RSC
+//                                        boundary is rejected by Next.js).
+//   • `leadingIconName="plus"`         — serializable string identifier,
+//                                        resolved internally. Safe to call
+//                                        from SERVER components.
+// Both forms exist so client callers can keep the type-safe component
+// reference, while server-component callsites (dashboard/page.tsx, etc.)
+// pick the string form and don't crash with
+// "Functions cannot be passed directly to Client Components."
 // =========================================================================
 
 type Size = "sm" | "md" | "lg";
+
+// Keep this registry small and intentional — every new icon needs to land
+// here before a server component can use it via string name.
+const ICON_BY_NAME = {
+  "arrow-right": ArrowRight,
+  plus: Plus,
+  sparkles: Sparkles,
+} as const;
+export type PrimaryCTAIconName = keyof typeof ICON_BY_NAME;
 
 type CommonProps = {
   size?: Size;
   leadingIcon?: LucideIcon;
   trailingIcon?: LucideIcon;
+  leadingIconName?: PrimaryCTAIconName;
+  trailingIconName?: PrimaryCTAIconName;
   eyebrow?: ReactNode;
   subtitle?: ReactNode;
   children: ReactNode;
@@ -49,12 +71,21 @@ const SIZE_ICON: Record<Size, number> = { sm: 14, md: 16, lg: 20 };
 
 function CTABody({
   size = "md",
-  leadingIcon: Leading,
-  trailingIcon: Trailing,
+  leadingIcon,
+  trailingIcon,
+  leadingIconName,
+  trailingIconName,
   eyebrow,
   subtitle,
   children,
 }: Omit<CommonProps, "fullWidth" | "className">) {
+  // Resolve string name → icon if provided; otherwise use the direct ref.
+  // The string path keeps PrimaryCTA usable from server components.
+  const Leading =
+    leadingIcon ?? (leadingIconName ? ICON_BY_NAME[leadingIconName] : undefined);
+  const Trailing =
+    trailingIcon ??
+    (trailingIconName ? ICON_BY_NAME[trailingIconName] : undefined);
   const hasHero = Boolean(eyebrow || subtitle);
   return (
     <>
@@ -142,6 +173,8 @@ export function PrimaryCTAButton({
   size = "md",
   leadingIcon,
   trailingIcon,
+  leadingIconName,
+  trailingIconName,
   eyebrow,
   subtitle,
   children,
@@ -161,6 +194,8 @@ export function PrimaryCTAButton({
         size={size}
         leadingIcon={leadingIcon}
         trailingIcon={trailingIcon}
+        leadingIconName={leadingIconName}
+        trailingIconName={trailingIconName}
         eyebrow={eyebrow}
         subtitle={subtitle}
       >
@@ -177,6 +212,8 @@ export function PrimaryCTALink({
   size = "md",
   leadingIcon,
   trailingIcon,
+  leadingIconName,
+  trailingIconName,
   eyebrow,
   subtitle,
   children,
@@ -194,6 +231,8 @@ export function PrimaryCTALink({
         size={size}
         leadingIcon={leadingIcon}
         trailingIcon={trailingIcon}
+        leadingIconName={leadingIconName}
+        trailingIconName={trailingIconName}
         eyebrow={eyebrow}
         subtitle={subtitle}
       >
