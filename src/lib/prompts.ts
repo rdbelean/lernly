@@ -17,8 +17,8 @@ QUALITÄTS-MESSLATTE (zentrales Prinzip)
 - KONKRET vor abstrakt: jede Aussage braucht ein Beispiel oder eine Anwendung
 - ANWENDUNG vor Definition: Klausurfragen testen "in welcher Situation würde man X einsetzen?", nicht "was ist X?"
 - KONKRETE, zur Domäne des Materials passende Beispiele — nie generische Platzhalter wie "Unternehmen X". Leite die Beispiele aus dem Fach ab: Wirtschaft → echte Firmen (Netflix, Tesla …); Informatik → reale Systeme/Datensätze/Algorithmen; Naturwissenschaft → konkrete Phänomene/Experimente; Jura → echte Fälle/Paragraphen.
-- MNEMONICS (Eselsbrücken): wo immer eine Liste >3 Begriffe ist, baue eine Merkhilfe (z.B. "CLSSS" für 5 Benefits, "Restaurant vs Uber Eats" für Make-or-Buy)
-- CROSS-REFERENCES: wenn Konzepte aus verschiedenen Themen zusammenhängen, benenne die Verbindung explizit ("Das Principal-Agent-Problem aus Session 12 erklärt, warum CEOs auch wertvernichtende M&As durchziehen")
+- MNEMONICS: wo immer eine Liste >3 Begriffe ist, baue eine Merkhilfe (Akronym, Analogie, Sound-alike — in der Output-Sprache).
+- CROSS-REFERENCES: wenn Konzepte aus verschiedenen Themen zusammenhängen, benenne die Verbindung explizit (Pattern: "Concept X from session N explains why pattern Y from session M holds" — in der Output-Sprache).
 - BOLD-HIGHLIGHTS: in Antworten und Erklärungen <strong>kritische Begriffe markieren</strong>, damit der Student die Schlüsselwörter sofort sieht
 - DIAGRAMME NUTZEN: Das Material kann Abbildungen/Diagramme enthalten (z.B. ER-Diagramme, Schaubilder, Tabellen). Lies sie und baue ihren Inhalt in Konzepte, Karten und v.a. die Visual Map ein — nicht nur den Fließtext.
 
@@ -31,17 +31,18 @@ export const TASK_CARDS = `AUFGABE: Erstelle die Flashcards für dieses Lernpake
 
 REGELN
 - 25-40 Karten (NICHT mehr), in 3-5 sinnvollen Kategorien gruppiert (folgen der Kursstruktur, nicht alphabetisch). Bei sehr viel Material: die prüfungsrelevantesten auswählen statt alles abzudecken.
-- Jede FRAGE ist SPEZIFISCH und PRÜFUNGSREIF: "Was sind die 4 Building Blocks of Competitive Advantage?" — NICHT "Erkläre Wettbewerbsvorteil"
+- Jede FRAGE ist SPEZIFISCH und PRÜFUNGSREIF: nenne die Zahl oder Kategorie konkret (Pattern: "What are the N <items> of <concept>?", "Which <X> is …?"). KEINE abstrakten "explain X" / "erkläre X"-Fragen.
 - Jede ANTWORT ist strukturiert in genau dieser Reihenfolge:
   1. <strong>Kernaussage in einem Satz</strong> (Schlüsselbegriffe gefettet)
-  2. <br>Erklärung mit einem KONKRETEN, benannten Beispiel — PFLICHT in JEDER Antwort, niemals abstrakt (echtes System/Firma/Fall/Experiment, z.B. PostgreSQL, Amazon, eine konkrete Studenten-DB — je nach Fach). Eine Karte ohne konkretes Beispiel ist ein Fehler.
-  3. <br><em>Eselsbrücke:</em> wenn eine Liste >3 Elemente hat ODER der Begriff verwechselbar ist, baue eine Merkhilfe (Akronym, Analogie, "B goes Back"-Trick)
-- Autoren/Quellen in der Antwort nennen wo relevant (z.B. "<strong>Barney (1991)</strong>")
-- Difficulty-Verteilung über alle Karten: ~40% easy, ~40% medium, ~20% hard — sei ehrlich, nicht alles mittel
+  2. <br>Erklärung mit einem KONKRETEN, benannten Beispiel — PFLICHT in JEDER Antwort, niemals abstrakt. Nutze echte Systeme/Firmen/Fälle/Experimente, je nach Fach (Wirtschaft: echte Firmen; Informatik: reale Systeme; Naturwissenschaft: benannte Studien). Eine Karte ohne konkretes Beispiel ist ein Fehler.
+  3. <br><em>Mnemonic:</em> wenn eine Liste >3 Elemente hat ODER der Begriff verwechselbar ist, baue eine Merkhilfe (Akronym, Analogie, Sound-alike) — auf der Output-Sprache. Format: "<strong>Mnemonic '<ACRONYM>'</strong>" gefolgt von der Auflösung jeder Buchstabe→Bedeutung.
+- Autoren/Quellen in der Antwort nennen wo relevant (Format: "<strong>AuthorName (Year)</strong>").
+- Difficulty-Verteilung über alle Karten: ~40% easy, ~40% medium, ~20% hard — sei ehrlich, nicht alles mittel.
 
 ANTI-PATTERN (mach das NICHT)
-- ❌ "Was ist Vertikale Integration?" → "Vertikale Integration ist, wenn ein Unternehmen mehrere Stufen der Wertschöpfungskette kontrolliert."  (trocken, kein Beispiel, keine Merkhilfe)
-- ✅ "Was sind die 5 Benefits der vertikalen Integration?" → "<strong>5 Benefits — Eselsbrücke 'CLSSS'</strong><br>Costs lower, qua<strong>L</strong>ity better, <strong>S</strong>cheduling easier, <strong>S</strong>pecialized assets, <strong>S</strong>ecure supply.<br>Beispiel: Tesla integriert die Batterieproduktion (specialized asset), Apple öffnet eigene Stores (secure distribution).<br><em>Eselsbrücke:</em> 'CLSSS' — wie Cliff's, deine Lieblings-Lernhilfe."
+- Karten ohne benanntes Beispiel (Firma/System/Fall): defekt.
+- Karten ohne Mnemonic bei einer Liste mit >3 Elementen: defekt.
+- Definitions-only Fragen ("What is X?"): zu trocken — prüfe Anwendung / Anzahl / Vergleich stattdessen.
 
 JSON-SCHEMA (genau diese Struktur):
 {
@@ -227,26 +228,24 @@ OVERVIEW (das WICHTIGSTE Feld nach Simulator)
 - Markiere die 5-8 wichtigsten Konzepte mit importance: "high" — sei selektiv, nicht jedes Konzept ist "high"
 - Jedes Konzept liefert:
   * term: kompakter Begriff
-  * essence: GENAU EIN Satzteil, MAX 6 Wörter, der das Konzept auf den Punkt bringt. Wird im Scan-View als One-Liner unter dem term gezeigt. KEIN Punkt am Ende, keine Definition — die kondensierte Essenz. Beispiele: "verstärkende Aktivitäten = Wettbewerbsvorteil", "Plan + Anpassung = Realisierte Strategie", "Diagnose → Leitidee → Aktionen". Ruthless kurz.
+  * essence: GENAU EIN Satzteil, MAX 6 Wörter, der das Konzept auf den Punkt bringt. KEIN Punkt am Ende, keine Definition — die kondensierte Essenz. Format-Pattern: "<keyword> = <consequence>" oder "<part1> + <part2> = <result>" oder "<step1> → <step2> → <step3>". Output in der Material-Sprache.
   * author: Quelle/Autor (oder "" wenn kein spezifischer Autor)
   * definition: 1-2 knappe Sätze, KEINE Romane. Mit <strong>Schlüsselbegriffen gefettet</strong>.
   * importance: "high" | "medium" | "low"
-  * examRelevance: ein präziser Satz "Wird in Klausuren häufig als [Fragetyp] gefragt, weil [Grund]". Konkret, nicht generisch.
+  * examRelevance: ein präziser Satz im Pattern "Often asked as a <question-type>, because <reason>" — konkret, nicht generisch. In der Material-Sprache.
   * relevanceTag: NUR setzen, wenn ein ALTKLAUSUR-LENS aktiv ist (siehe System-Prompt). Werte: "kam dran" (Konzept hat Profil-Evidenz / war in der Altklausur), "Prof-Hinweis" (vom Prof in den Hinweisen markiert), "beides" (Profil UND Hinweise). Ohne Lens-Brief: weglassen.
 
 CROSS-REFERENCES (mach es)
-Wo Konzepte aus VERSCHIEDENEN Topics zusammenhängen, baue die Verbindung in die examRelevance ein:
-- ✅ "Das <strong>Principal-Agent-Problem</strong> aus Session 12 erklärt, warum CEOs auch wertvernichtende M&As (Session 15) durchziehen — ihr Bonus hängt an Firmen-Größe, nicht Profit."
-- ✅ "Setzt voraus, dass du <strong>Porter's Diamond</strong> aus Session 14 verstanden hast — Diamond sagt WO Industrien stark sind, dieser Begriff sagt WIE das ausgenutzt wird."
+Wo Konzepte aus VERSCHIEDENEN Topics zusammenhängen, baue die Verbindung in die examRelevance ein. Pattern: "Concept X from session N explains why pattern Y from session M holds" — output in der Material-Sprache.
 
 AUTHORS CHEAT-SHEET
 Für jeden wichtigen Autor (höchstens 8 — nur die prüfungsrelevanten):
-- name: voller Name
-- theory: in EINEM Satz seine Kernaussage
-- useInExam: konkrete Anweisung "Nimm Barney, wenn die Frage X stellt. Nicht verwechseln mit Y."
+- name: voller Name (im Original)
+- theory: in EINEM Satz seine Kernaussage (in der Material-Sprache).
+- useInExam: konkrete Anweisung im Pattern "Use <author> when the question asks <X>. Don't confuse with <Y>" — in der Material-Sprache.
 
 SCHEDULE
-Tag-für-Tag-Plan (höchstens 10 Tage). Wenn kein Datum im Material: gehe von 7 Tagen aus. Jeder Tag bekommt 2-4 konkrete, abhakbare Aufgaben (z.B. "Tag 1: Sessions 9-10 querlesen + Karteikarten Kategorie 'Strategy' durchgehen").
+Tag-für-Tag-Plan (höchstens 10 Tage). Wenn kein Datum im Material: gehe von 7 Tagen aus. Jeder Tag bekommt 2-4 konkrete, abhakbare Aufgaben — Pattern: "Day N: <skim sessions A-B> + <review flashcards category 'X'>" — output in der Material-Sprache.
 
 JSON-SCHEMA (genau diese Struktur):
 {
@@ -859,7 +858,7 @@ The TASK rules below are written in German for you as the model — they describ
 Exceptions (NEVER translate): enum tokens (importance values "high"/"medium"/"low", relevanceTag values "kam dran"/"Prof-Hinweis"/"beides", framework "kind" values, color names like "blue"/"cyan"/"sage"), proper nouns, brand names, author names, technical terms in their conventional English form.
 === END OF LANGUAGE LOCK ===`,
       post: `=== LANGUAGE LOCK REMINDER ===
-Final check before emitting JSON: every human-readable content string in your output is in ENGLISH. Material is English → output is English. If you find yourself writing "Wird in Klausuren häufig…" or "Was sind die…" — rewrite in English.
+Final check before emitting JSON: every human-readable content string in your output is in ENGLISH. Material is English → output is English. The task instructions above contain a few German pattern markers ("Wird in Klausuren häufig…", "Was sind die N…", "Eselsbrücke", "Nimm <author> wenn…", "Tag N: …") — these are German because the task itself is in German for you as the model. WHEN YOU GENERATE: translate every such phrase to English. Flashcard questions in English. Concept essences in English. examRelevance in English ("Often asked as …"). Author useInExam in English ("Use Barney when …"). Schedule in English ("Day 1: review …"). Mnemonic in English. If any output string mirrors a German phrase from the task instruction, REWRITE IT IN ENGLISH before emitting.
 === END ===`,
     };
   }
