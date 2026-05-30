@@ -2,6 +2,8 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { Check } from "lucide-react";
+import { PrimaryCTAButton } from "@/components/ui/PrimaryCTA";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleString("de-DE", {
@@ -80,15 +82,26 @@ export default function BYOKForm({ keySetAt }: { keySetAt: string | null }) {
         <div
           className="mb-5 flex items-center justify-between gap-3 rounded-xl px-4 py-3"
           style={{
-            background: "rgba(111, 199, 227, 0.08)",
-            border: "1px solid rgba(111, 199, 227, 0.35)",
+            background: "rgba(79, 209, 165, 0.08)",
+            border: "1px solid rgba(79, 209, 165, 0.3)",
           }}
         >
-          <div className="text-[13px] text-white">
-            <div className="font-medium">✓ Key aktiv</div>
+          <div
+            className="text-[13px]"
+            style={{ color: "var(--color-text)" }}
+          >
+            <div className="inline-flex items-center gap-1.5 font-semibold">
+              <Check
+                size={13}
+                strokeWidth={2.2}
+                color="var(--color-cat-teal)"
+                aria-hidden
+              />
+              Key aktiv
+            </div>
             <div
               className="text-[11.5px]"
-              style={{ color: "rgba(255,255,255,0.55)" }}
+              style={{ color: "var(--color-text-dim)" }}
             >
               Hinzugefügt am {formatDate(keySetAt)}
             </div>
@@ -99,10 +112,10 @@ export default function BYOKForm({ keySetAt }: { keySetAt: string | null }) {
                 type="button"
                 onClick={remove}
                 disabled={pending}
-                className="rounded-full px-3 py-1.5 text-[12.5px] font-medium text-white transition disabled:opacity-50"
+                className="rounded-full px-3 py-1.5 text-[12.5px] font-semibold transition hover:brightness-110 disabled:opacity-50"
                 style={{
-                  background: "rgba(217,119,87,0.18)",
-                  border: "1px solid rgba(217,119,87,0.45)",
+                  background: "var(--color-cat-coral)",
+                  color: "white",
                 }}
               >
                 {pending ? "Lösche…" : "Wirklich entfernen"}
@@ -111,7 +124,8 @@ export default function BYOKForm({ keySetAt }: { keySetAt: string | null }) {
                 type="button"
                 onClick={() => setConfirmingDelete(false)}
                 disabled={pending}
-                className="text-[12.5px] text-white/55 transition hover:text-white"
+                className="text-[12.5px] transition hover:text-white"
+                style={{ color: "var(--color-text-dim)" }}
               >
                 Abbrechen
               </button>
@@ -120,7 +134,11 @@ export default function BYOKForm({ keySetAt }: { keySetAt: string | null }) {
             <button
               type="button"
               onClick={() => setConfirmingDelete(true)}
-              className="rounded-full border border-white/15 px-3 py-1.5 text-[12.5px] text-white/55 transition hover:border-[color:var(--color-ln-rose)]/40 hover:text-white"
+              className="rounded-full border px-3 py-1.5 text-[12.5px] transition hover:text-white"
+              style={{
+                borderColor: "rgba(255,255,255,0.10)",
+                color: "var(--color-text-dim)",
+              }}
             >
               Entfernen
             </button>
@@ -130,8 +148,8 @@ export default function BYOKForm({ keySetAt }: { keySetAt: string | null }) {
 
       <label
         htmlFor="apiKey"
-        className="block text-[12px] uppercase tracking-[0.18em]"
-        style={{ color: "rgba(255,255,255,0.55)" }}
+        className="block text-[12px] font-semibold uppercase tracking-[0.14em]"
+        style={{ color: "var(--color-text-faint)" }}
       >
         {keySetAt ? "Neuen Key eintragen (ersetzt den alten)" : "API-Key"}
       </label>
@@ -143,27 +161,30 @@ export default function BYOKForm({ keySetAt }: { keySetAt: string | null }) {
           onChange={(e) => setApiKey(e.target.value)}
           placeholder="sk-ant-..."
           autoComplete="off"
-          className="flex-1 rounded-2xl px-4 py-3 text-[14px] text-white outline-none transition focus:border-white/40"
+          className="flex-1 rounded-xl px-4 py-3 text-[14px] outline-none transition focus:border-white/40"
           style={{
-            background: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.14)",
+            background: "var(--color-surface-2)",
+            border: "1px solid rgba(255,255,255,0.10)",
+            color: "var(--color-text)",
           }}
         />
-        <button
-          type="button"
+        <PrimaryCTAButton
+          size="md"
           onClick={save}
           disabled={pending || apiKey.length < 8}
-          className="rounded-full bg-white px-5 py-3 text-[14px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90 disabled:opacity-40"
         >
           {pending ? "Speichere…" : "Speichern & testen"}
-        </button>
+        </PrimaryCTAButton>
       </div>
 
       {message && (
         <p
           className="mt-4 text-[13px]"
           style={{
-            color: message.kind === "ok" ? "#9BD8EB" : "#E8A88D",
+            color:
+              message.kind === "ok"
+                ? "var(--color-cat-teal)"
+                : "var(--color-cat-coral)",
           }}
         >
           {message.text}

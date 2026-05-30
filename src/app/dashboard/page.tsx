@@ -4,6 +4,7 @@ import NewExamForm from "@/components/dashboard/NewExamForm";
 import ExamCard from "@/components/dashboard/ExamCard";
 import LoosePacksSection from "@/components/dashboard/LoosePacksSection";
 import { LAYOUT } from "@/lib/layout";
+import { PLAN_LABEL, PLAN_LIMITS } from "@/lib/quota";
 import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
 
 type PackSummary = {
@@ -24,17 +25,6 @@ type Exam = {
   created_at: string;
 };
 
-const PLAN_LIMITS: Record<string, number> = {
-  free: 2,
-  pro: 25,
-  team: 60,
-};
-
-const PLAN_LABEL: Record<string, string> = {
-  free: "Gratis",
-  pro: "Pro",
-  team: "Team",
-};
 
 function EmptyState() {
   return (
