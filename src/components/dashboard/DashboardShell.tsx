@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Toaster } from "sonner";
 import {
@@ -146,12 +147,13 @@ function SidebarContent({
           lineHeight: 1,
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/lernly-icon-nav.svg"
+        <Image
+          src="/lernly-mark.png"
           alt="Lernly"
           width={28}
           height={28}
+          priority
+          className="shrink-0"
         />
         <span>Lernly</span>
       </a>
@@ -332,12 +334,13 @@ export default function DashboardShell({ email, recentPacks, children }: Props) 
               color: "var(--color-text)",
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/lernly-icon-nav.svg"
+            <Image
+              src="/lernly-mark.png"
               alt="Lernly"
               width={22}
               height={22}
+              priority
+              className="shrink-0"
             />
             <span>Lernly</span>
           </a>
