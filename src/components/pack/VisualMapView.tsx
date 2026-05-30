@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import { motion } from "motion/react";
 import type {
   CalloutFrameworkSchema,
@@ -32,6 +33,97 @@ type ConceptGridFw = z.infer<typeof ConceptGridFrameworkSchema>;
 
 type VisualMap = NonNullable<StudyPack["visualMap"]>;
 type VisualBlock = VisualMap["blocks"][number];
+type Overview = StudyPack["overview"];
+type Topic = Overview["topics"][number];
+type Concept = Topic["concepts"][number];
+type Language = "en" | "de";
+
+// Priority ranking — higher = more exam-relevant. Used both for sorting
+// (highest first) and for size emphasis (highest = big, quick_win = quiet).
+const PRIORITY_RANK: Record<Priority | "_default", number> = {
+  highest: 4,
+  high: 3,
+  moderate: 2,
+  quick_win: 1,
+  _default: 2,
+};
+
+type SizingTier = {
+  iconClass: string;
+  titleClass: string;
+  containerClass: string;
+};
+
+const PRIORITY_SIZING: Record<Priority | "_default", SizingTier> = {
+  highest: {
+    iconClass:
+      "h-12 w-12 rounded-2xl text-[24px] shrink-0 sm:h-14 sm:w-14 sm:text-[28px]",
+    titleClass: "text-[19px] font-extrabold sm:text-[22px]",
+    containerClass: "p-5 sm:p-6",
+  },
+  high: {
+    iconClass:
+      "h-11 w-11 rounded-xl text-[22px] shrink-0 sm:h-12 sm:w-12 sm:rounded-2xl sm:text-[24px]",
+    titleClass: "text-[18px] font-extrabold sm:text-[20px]",
+    containerClass: "p-4 sm:p-5",
+  },
+  moderate: {
+    iconClass:
+      "h-10 w-10 rounded-xl text-[20px] shrink-0 sm:h-11 sm:w-11 sm:text-[22px]",
+    titleClass: "text-[17px] font-bold sm:text-[18px]",
+    containerClass: "p-3.5 sm:p-4",
+  },
+  quick_win: {
+    iconClass:
+      "h-9 w-9 rounded-lg text-[18px] shrink-0 sm:h-10 sm:w-10 sm:text-[20px]",
+    titleClass: "text-[15px] font-bold sm:text-[16px]",
+    containerClass: "p-3 sm:p-3.5",
+  },
+  _default: {
+    iconClass:
+      "h-11 w-11 rounded-xl text-[22px] shrink-0 sm:h-12 sm:w-12 sm:rounded-2xl sm:text-[24px]",
+    titleClass: "text-[18px] font-extrabold sm:text-[20px]",
+    containerClass: "p-4 sm:p-5",
+  },
+};
+
+function priorityKey(p: Priority | undefined): keyof typeof PRIORITY_SIZING {
+  return p ?? "_default";
+}
+
+function priorityRank(p: Priority | undefined): number {
+  return PRIORITY_RANK[p ?? "_default"];
+}
+
+// Topic-by-name index over the pack's overview. Block titles are matched
+// to topic names so the Visual Map can render the matching concept chips
+// (the valuable bit folded over from the old Übersicht).
+type TopicIndex = { byLower: Map<string, Topic>; topics: Topic[] };
+
+function buildTopicIndex(overview: Overview | undefined): TopicIndex {
+  const topics = overview?.topics ?? [];
+  const byLower = new Map<string, Topic>();
+  for (const t of topics) byLower.set(t.name.toLowerCase().trim(), t);
+  return { byLower, topics };
+}
+
+function findTopicForBlock(
+  block: VisualBlock,
+  idx: TopicIndex,
+): Topic | undefined {
+  const blockLower = block.title.toLowerCase().trim();
+  // Exact match first.
+  const exact = idx.byLower.get(blockLower);
+  if (exact) return exact;
+  // Substring contains either way (block title may carry a Topic-N prefix,
+  // overview topic may be shorter or longer).
+  for (const t of idx.topics) {
+    const tLower = t.name.toLowerCase().trim();
+    if (tLower.length < 4 || blockLower.length < 4) continue;
+    if (blockLower.includes(tLower) || tLower.includes(blockLower)) return t;
+  }
+  return undefined;
+}
 
 const COLOR_RGB: Record<BlockColor, string> = {
   blue: "108,142,239",
@@ -775,11 +867,20 @@ function RoadmapView({ blocks }: { blocks: VisualBlock[] }) {
   );
 }
 
-function SectionHeader({ block }: { block: VisualBlock }) {
+function SectionHeader({
+  block,
+  sizing,
+}: {
+  block: VisualBlock;
+  sizing?: SizingTier;
+}) {
+  const s = sizing ?? PRIORITY_SIZING._default;
   return (
     <div className="mb-4 flex flex-wrap items-start gap-3 sm:flex-nowrap sm:items-center sm:gap-4">
       <div
-        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-[22px] sm:h-12 sm:w-12 sm:rounded-2xl sm:text-[24px]"
+        className={
+          "flex items-center justify-center " + s.iconClass
+        }
         style={{
           background: `linear-gradient(135deg, ${rgba(block.color, 0.85)}, ${rgba(block.color, 0.5)})`,
         }}
@@ -796,7 +897,11 @@ function SectionHeader({ block }: { block: VisualBlock }) {
             {block.subtitle}
           </div>
         )}
-        <h3 className="mt-0.5 text-[18px] font-extrabold tracking-[-0.3px] text-white sm:text-[20px]">
+        <h3
+          className={
+            "mt-0.5 tracking-[-0.3px] text-white " + s.titleClass
+          }
+        >
           {block.title}
         </h3>
       </div>
@@ -812,7 +917,195 @@ function SectionHeader({ block }: { block: VisualBlock }) {
   );
 }
 
-export default function VisualMapView({ map }: { map: VisualMap }) {
+// Concept chip strip — folded over from the now-removed Übersicht. Renders
+// the matched topic's concepts as compact tap-to-expand chips at the top
+// of each block. Importance + relevanceTag drive emphasis; tap reveals
+// definition + examRelevance inline. Returns null when topic has no
+// concepts so blocks without an overview match render cleanly.
+function ConceptChipStrip({
+  concepts,
+  language,
+}: {
+  concepts: Concept[];
+  language: Language;
+}) {
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  if (!concepts || concepts.length === 0) return null;
+  const isEn = language === "en";
+
+  // Sort: high importance first, then with-tag, then medium, then low.
+  const sorted = [...concepts].sort((a, b) => {
+    const rank = (c: Concept) =>
+      (c.importance === "high" ? 100 : c.importance === "medium" ? 50 : 10) +
+      (c.relevanceTag ? 50 : 0);
+    return rank(b) - rank(a);
+  });
+
+  const toggle = (term: string) =>
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(term)) next.delete(term);
+      else next.add(term);
+      return next;
+    });
+
+  return (
+    <div className="mb-4">
+      <div
+        className="mb-2 text-[10.5px] font-bold uppercase tracking-[0.12em]"
+        style={{ color: "rgba(255,255,255,0.5)" }}
+      >
+        {isEn ? "Concepts to know" : "Konzepte in diesem Thema"}
+      </div>
+      <ul className="space-y-1.5">
+        {sorted.map((c) => {
+          const isOpen = expanded.has(c.term);
+          const isHigh = c.importance === "high";
+          const accent = isHigh
+            ? "rgba(34,211,238,0.55)"
+            : c.importance === "medium"
+              ? "rgba(255,255,255,0.18)"
+              : "rgba(255,255,255,0.08)";
+          return (
+            <li key={c.term}>
+              <button
+                type="button"
+                onClick={() => toggle(c.term)}
+                aria-expanded={isOpen}
+                className="block w-full rounded-lg border bg-black/15 px-3 py-2 text-left transition hover:bg-black/25"
+                style={{
+                  borderColor: isHigh
+                    ? "rgba(34,211,238,0.3)"
+                    : "rgba(255,255,255,0.08)",
+                  borderLeft: `3px solid ${accent}`,
+                }}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <span
+                    className={
+                      "flex-1 text-[13.5px] font-semibold leading-snug " +
+                      (isHigh ? "text-white" : "text-white/90")
+                    }
+                  >
+                    {c.term}
+                  </span>
+                  <span
+                    aria-hidden
+                    className="shrink-0 text-[10px] text-white/35"
+                  >
+                    {isOpen ? "▾" : "▸"}
+                  </span>
+                </div>
+                {c.essence && (
+                  <div
+                    className="mt-0.5 truncate text-[12px] leading-snug"
+                    style={{ color: "rgba(255,255,255,0.55)" }}
+                    title={c.essence}
+                  >
+                    {c.essence}
+                  </div>
+                )}
+                <div className="mt-1 flex flex-wrap gap-1">
+                  {isHigh && (
+                    <span
+                      className="inline-flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-[0.08em]"
+                      style={{
+                        background: "rgba(34,211,238,0.14)",
+                        borderColor: "rgba(34,211,238,0.4)",
+                        color: "rgb(165,243,252)",
+                      }}
+                    >
+                      ✦ {isEn ? "High" : "Wichtig"}
+                    </span>
+                  )}
+                  {c.relevanceTag && (
+                    <span
+                      className="inline-flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-[0.08em]"
+                      style={{
+                        background: "rgba(124,196,160,0.14)",
+                        borderColor: "rgba(124,196,160,0.4)",
+                        color: "var(--color-ln-sage)",
+                      }}
+                    >
+                      ✦ {c.relevanceTag}
+                    </span>
+                  )}
+                </div>
+                {isOpen && (
+                  <div className="mt-3 border-t border-white/5 pt-3">
+                    {c.author && (
+                      <div
+                        className="mb-1.5 text-[10.5px] font-medium uppercase tracking-[0.1em]"
+                        style={{ color: "rgba(255,255,255,0.4)" }}
+                      >
+                        {c.author}
+                      </div>
+                    )}
+                    <p
+                      className="text-[12.5px] leading-relaxed"
+                      style={{ color: "rgba(255,255,255,0.78)" }}
+                      dangerouslySetInnerHTML={{
+                        __html: renderRichText(c.definition),
+                      }}
+                    />
+                    {c.examRelevance && (
+                      <div
+                        className="mt-2.5 rounded-lg border p-2.5"
+                        style={{
+                          background: "rgba(34,211,238,0.05)",
+                          borderColor: "rgba(34,211,238,0.18)",
+                        }}
+                      >
+                        <div className="flex items-start gap-2">
+                          <span aria-hidden className="mt-[1px] text-[11px]">
+                            🎯
+                          </span>
+                          <p
+                            className="text-[11.5px] leading-relaxed"
+                            style={{ color: "rgba(255,255,255,0.72)" }}
+                            dangerouslySetInnerHTML={{
+                              __html: renderRichText(c.examRelevance),
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+export default function VisualMapView({
+  map,
+  overview,
+  language = "de",
+}: {
+  map: VisualMap;
+  overview?: Overview;
+  language?: Language;
+}) {
+  // Sort blocks by priority desc (highest → quick_win → undefined) so the
+  // most exam-relevant topics appear first. timeMinutes is a tiebreaker so
+  // longer-study topics float above shorter ones within the same priority.
+  const sortedBlocks = useMemo(() => {
+    return [...map.blocks].sort((a, b) => {
+      const ra = priorityRank(a.priority);
+      const rb = priorityRank(b.priority);
+      if (ra !== rb) return rb - ra;
+      return (b.timeMinutes ?? 0) - (a.timeMinutes ?? 0);
+    });
+  }, [map.blocks]);
+
+  // Index overview topics so each block can show its matching concept chips
+  // (folded over from the removed Übersicht tab).
+  const topicIndex = useMemo(() => buildTopicIndex(overview), [overview]);
+
   if (!map.blocks.length) {
     return (
       <p className="text-[14px]" style={{ color: "var(--color-ln-mute)" }}>
@@ -823,34 +1116,47 @@ export default function VisualMapView({ map }: { map: VisualMap }) {
 
   return (
     <div className="space-y-10">
-      <RoadmapView blocks={map.blocks} />
-      {map.blocks.map((block, bi) => (
-        <motion.section
-          key={`${block.title}-${bi}`}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: bi * 0.05, duration: 0.4 }}
-        >
-          <SectionHeader block={block} />
-
-          {/* Frameworks within block */}
-          <div
-            className="rounded-2xl border p-4 sm:p-5"
-            style={{
-              background: rgba(block.color, 0.03),
-              borderColor: rgba(block.color, 0.14),
-            }}
+      <RoadmapView blocks={sortedBlocks} />
+      {sortedBlocks.map((block, bi) => {
+        const sizing = PRIORITY_SIZING[priorityKey(block.priority)];
+        const topic = findTopicForBlock(block, topicIndex);
+        return (
+          <motion.section
+            key={`${block.title}-${bi}`}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: bi * 0.05, duration: 0.4 }}
           >
-            {block.frameworks.map((fw, fi) => (
-              <FrameworkSwitch
-                key={`${block.title}-fw-${fi}`}
-                fw={fw}
-                color={block.color}
-              />
-            ))}
-          </div>
-        </motion.section>
-      ))}
+            <SectionHeader block={block} sizing={sizing} />
+
+            {/* Frameworks within block — concept-chip strip first (folded
+                from the old Übersicht), then the existing framework
+                rendering. Padding scales with priority so highest-priority
+                topics dominate visually. */}
+            <div
+              className={"rounded-2xl border " + sizing.containerClass}
+              style={{
+                background: rgba(block.color, 0.03),
+                borderColor: rgba(block.color, 0.14),
+              }}
+            >
+              {topic && (
+                <ConceptChipStrip
+                  concepts={topic.concepts}
+                  language={language}
+                />
+              )}
+              {block.frameworks.map((fw, fi) => (
+                <FrameworkSwitch
+                  key={`${block.title}-fw-${fi}`}
+                  fw={fw}
+                  color={block.color}
+                />
+              ))}
+            </div>
+          </motion.section>
+        );
+      })}
     </div>
   );
 }

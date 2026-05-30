@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import type { StudyPack } from "@/lib/schema";
 import FlashcardDeck from "./FlashcardDeck";
 import EssayBlueprintView from "./EssayBlueprintView";
-import OverviewView from "./OverviewView";
 import ExamSimulator from "./ExamSimulator";
 import VisualMapView from "./VisualMapView";
 import { track } from "@/lib/analytics";
@@ -13,14 +12,15 @@ import QuizView from "./QuizView";
 import EssayPredictionsView from "./EssayPredictionsView";
 
 type Language = "en" | "de";
+// The Übersicht tab was removed — its exam-relevance ranking + concept
+// chips are now folded into the Visual Map (single big-picture surface).
 type Tab =
   | "visualMap"
   | "essayPredictions"
   | "simulator"
   | "flashcards"
   | "blueprint"
-  | "openQuestions"
-  | "overview";
+  | "openQuestions";
 
 type TabDef = { id: Tab; emoji: string; de: string; en: string };
 
@@ -31,17 +31,18 @@ const ALL_TABS: TabDef[] = [
   { id: "flashcards", emoji: "🃏", de: "Karteikarten", en: "Flashcards" },
   { id: "blueprint", emoji: "📝", de: "Blueprint", en: "Blueprint" },
   { id: "openQuestions", emoji: "✍️", de: "Offene Fragen", en: "Open Questions" },
-  { id: "overview", emoji: "🗺", de: "Übersicht", en: "Overview" },
 ];
 
 // Hero tab on pack open — chosen by exam format. Falls back to the first
 // available tab if the preferred one isn't present (e.g. legacy essay packs
-// that only have a blueprint).
+// that only have a blueprint). open_book previously pointed at the
+// Übersicht; redirected to the Visual Map now that it's the single
+// big-picture surface.
 const HERO_TAB_FOR_FORMAT: Record<string, Tab> = {
   multiple_choice: "openQuestions",
   open_questions: "openQuestions",
   oral: "flashcards",
-  open_book: "overview",
+  open_book: "visualMap",
   essay: "essayPredictions",
 };
 
@@ -67,7 +68,6 @@ export default function PackView({
         (pack.quiz && pack.quiz.questions.length > 0) ||
           (pack.openQuestions && pack.openQuestions.questions.length > 0),
       ),
-      overview: pack.overview.topics.length > 0,
     };
     return ALL_TABS.filter((t) => has[t.id]);
   }, [pack]);
@@ -79,7 +79,7 @@ export default function PackView({
   const defaultTab =
     (preferredHero && tabs.find((t) => t.id === preferredHero)?.id) ??
     tabs[0]?.id ??
-    "overview";
+    "visualMap";
   const [tab, setTab] = useState<Tab>(defaultTab);
   const isEn = language === "en";
 
@@ -122,7 +122,11 @@ export default function PackView({
 
       <div className="py-6 sm:py-7 md:py-9">
         {tab === "visualMap" && pack.visualMap && (
-          <VisualMapView map={pack.visualMap} />
+          <VisualMapView
+            map={pack.visualMap}
+            overview={pack.overview}
+            language={language}
+          />
         )}
         {tab === "essayPredictions" && pack.essayPredictions && (
           <EssayPredictionsView
@@ -155,9 +159,6 @@ export default function PackView({
               language={language}
             />
           )}
-        {tab === "overview" && (
-          <OverviewView overview={pack.overview} language={language} />
-        )}
       </div>
     </div>
   );
