@@ -30,7 +30,17 @@ const FIDELITY_OPTIONS: { value: Fidelity; label: string; sub: string }[] = [
   },
 ];
 
-export default function NewExamForm() {
+type Props = {
+  // When embedded inside another flow (e.g. /dashboard/new's Klausur picker),
+  // skip the toggle button — the parent owns visibility — and report back the
+  // newly created exam via `onCreated` so the parent can wire up its own
+  // follow-up (set examId, close the inline reveal, refresh choices).
+  embedded?: boolean;
+  onCreated?: (exam: { id: string; title: string }) => void;
+  onCancel?: () => void;
+};
+
+export default function NewExamForm({ embedded, onCreated, onCancel: onParentCancel }: Props = {}) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -60,7 +70,11 @@ export default function NewExamForm() {
 
   const onCancel = () => {
     reset();
-    setOpen(false);
+    if (embedded) {
+      onParentCancel?.();
+    } else {
+      setOpen(false);
+    }
   };
 
   const onSubmit = () => {
@@ -132,9 +146,14 @@ export default function NewExamForm() {
           }
         }
 
+        const createdTitle = title.trim();
         reset();
-        setOpen(false);
-        router.refresh();
+        if (embedded) {
+          onCreated?.({ id, title: createdTitle });
+        } else {
+          setOpen(false);
+          router.refresh();
+        }
       } catch (e) {
         setError(e instanceof Error ? e.message : "Konnte nicht speichern.");
         setBusyLabel(null);
@@ -142,7 +161,9 @@ export default function NewExamForm() {
     });
   };
 
-  if (!open) {
+  // When embedded inside another flow, the parent controls visibility — skip
+  // the standalone toggle button and always render the form.
+  if (!embedded && !open) {
     return (
       <button
         type="button"

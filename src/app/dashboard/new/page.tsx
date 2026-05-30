@@ -11,6 +11,7 @@ import { track } from "@/lib/analytics";
 import { STUDY_UPLOADS_BUCKET, buildUploadPath } from "@/lib/uploads";
 import { parseJsonResponse } from "@/lib/safeJson";
 import { type ExamType } from "@/lib/schema";
+import NewExamForm from "@/components/dashboard/NewExamForm";
 
 type GenerateApiResponse = {
   error?: string;
@@ -89,13 +90,11 @@ export default function NewPackPage() {
     { id: string; title: string }[]
   >([]);
   const [examId, setExamId] = useState<string | null>(null);
-  // When the user picks "+ Neue Klausur anlegen…", we collect a title (+
-  // optional date) inline and create the exam in Supabase on submit, then
-  // use the new id as the pack's exam_id. Sentinel value "__new__" in the
-  // select toggles this branch.
-  const [newExamMode, setNewExamMode] = useState(false);
-  const [newExamTitle, setNewExamTitle] = useState("");
-  const [newExamDate, setNewExamDate] = useState("");
+  // When the user picks "+ Neue Klausur anlegen…", we reveal the full
+  // NewExamForm (3-path picker + Altklausur upload + hints + fidelity) —
+  // same component the dashboard uses, so Path A is reachable from here.
+  // Sentinel value "__new__" in the select toggles this.
+  const [creatingNewExam, setCreatingNewExam] = useState(false);
 
   // Load the user's exams so they can assign this pack to one at creation.
   // Pre-select via ?exam=<uuid> if the dashboard deep-linked here.
@@ -187,8 +186,8 @@ export default function NewPackPage() {
       setError("Essay-Format kommt bald — wähl bitte ein anderes.");
       return;
     }
-    if (newExamMode && !newExamTitle.trim()) {
-      setError("Titel der neuen Klausur darf nicht leer sein.");
+    if (creatingNewExam) {
+      setError("Bitte erst die neue Klausur anlegen — klick auf 'Anlegen' oben.");
       return;
     }
     setBusy(true);
@@ -207,18 +206,9 @@ export default function NewPackPage() {
         return;
       }
 
-      // 0) If the user chose "+ Neue Klausur anlegen", persist the exam first
-      //    so the pack can reference its id and so it appears on the dashboard
-      //    with its countdown immediately.
-      let resolvedExamId: string | null = examId;
-      if (newExamMode) {
-        const { createExam } = await import("@/app/dashboard/actions");
-        const created = await createExam({
-          title: newExamTitle.trim(),
-          exam_date: newExamDate || null,
-        });
-        resolvedExamId = created.id;
-      }
+      // Klausur was already created (and possibly Altklausur-analysed) by the
+      // embedded NewExamForm before this submit ran — examId is set or null.
+      const resolvedExamId: string | null = examId;
 
       // 1) Upload each file straight to Storage — bypasses Vercel's ~4.5 MB
       //    request-body cap so large lecture PDFs go through. Per-file
@@ -571,14 +561,14 @@ export default function NewPackPage() {
             Klausur <span className="lowercase">(optional)</span>
           </h2>
           <select
-            value={newExamMode ? "__new__" : (examId ?? "")}
+            value={creatingNewExam ? "__new__" : (examId ?? "")}
             onChange={(e) => {
               const v = e.target.value;
               if (v === "__new__") {
-                setNewExamMode(true);
+                setCreatingNewExam(true);
                 setExamId(null);
               } else {
-                setNewExamMode(false);
+                setCreatingNewExam(false);
                 setExamId(v || null);
               }
             }}
@@ -597,29 +587,25 @@ export default function NewPackPage() {
             <option value="__new__">+ Neue Klausur anlegen…</option>
           </select>
 
-          {newExamMode && (
-            <div className="mt-3 grid gap-2 sm:grid-cols-[1fr_180px]">
-              <input
-                autoFocus
-                value={newExamTitle}
-                onChange={(e) => setNewExamTitle(e.target.value)}
-                placeholder="Titel (z. B. Global Strategic Management)"
-                className="w-full rounded-xl px-3 py-2.5 text-[14px] text-white outline-none transition focus:border-white/40"
-                style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.14)",
+          {creatingNewExam && (
+            <div className="mt-3">
+              <p
+                className="mb-2 text-[12.5px] leading-relaxed"
+                style={{ color: "rgba(255,255,255,0.65)" }}
+              >
+                Hast du eine Altklausur? Lade sie hoch für Fragen im Stil
+                deiner echten Prüfung — siehe „Pfad A" unten.
+              </p>
+              <NewExamForm
+                embedded
+                onCreated={({ id, title }) => {
+                  setExamChoices((prev) => [...prev, { id, title }]);
+                  setExamId(id);
+                  setCreatingNewExam(false);
                 }}
-              />
-              <input
-                type="date"
-                value={newExamDate}
-                onChange={(e) => setNewExamDate(e.target.value)}
-                placeholder="Datum"
-                className="w-full rounded-xl px-3 py-2.5 text-[14px] text-white outline-none transition focus:border-white/40"
-                style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.14)",
-                  colorScheme: "dark",
+                onCancel={() => {
+                  setCreatingNewExam(false);
+                  setExamId(null);
                 }}
               />
             </div>
