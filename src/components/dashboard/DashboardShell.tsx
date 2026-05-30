@@ -137,21 +137,21 @@ function SidebarContent({
       <a
         href="/dashboard"
         onClick={onClose}
-        className="mb-7 flex items-center gap-2.5 px-3"
+        className="mb-7 flex items-center gap-3 px-3"
         style={{
           fontFamily: "var(--font-display)",
-          fontSize: "20px",
+          fontSize: "24px",
           fontWeight: 600,
           color: "var(--color-text)",
-          letterSpacing: "-0.4px",
+          letterSpacing: "-0.5px",
           lineHeight: 1,
         }}
       >
         <Image
           src="/lernly-mark.png"
           alt="Lernly"
-          width={28}
-          height={28}
+          width={40}
+          height={40}
           priority
           className="shrink-0"
         />
