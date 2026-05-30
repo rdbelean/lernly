@@ -1,6 +1,10 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { extractPdfText } from "@/lib/textExtract";
 import {
+  detectMaterialLanguage,
+  type MaterialLanguage,
+} from "@/lib/detectLanguage";
+import {
   BASE_SYSTEM_PROMPT,
   TASK_CARDS,
   TASK_SIMULATOR,
@@ -12,6 +16,7 @@ import {
   TASK_ANALYSIS,
   buildFormatDirective,
   buildTaskUserAddendum,
+  buildLanguageDirective,
   type LensContext,
 } from "@/lib/prompts";
 import { activeTasksFor, type GenTaskKey } from "@/lib/examTasks";
@@ -137,6 +142,7 @@ async function runTaskOnce(
   relevanceBrief?: string | null,
   lensContext?: LensContext | null,
   extraInfo?: string,
+  materialLanguage: MaterialLanguage = "de",
 ): Promise<unknown> {
   const t0 = Date.now();
   const { instruction, maxTokens } = TASKS[key];
@@ -161,6 +167,15 @@ async function runTaskOnce(
       extraInfo ?? "",
     );
 
+    // LANGUAGE LOCK — written IN the target language so the model is primed
+    // at the strongest recency position. Sandwiches the task instruction.
+    const lang = buildLanguageDirective(materialLanguage);
+    const lockedInstruction = [
+      lang.pre,
+      extraInstruction ? `${instruction}\n\n${extraInstruction}` : instruction,
+      lang.post,
+    ].join("\n\n");
+
     const stream = client.messages.stream(
       {
         model: MODEL_FOR[key],
@@ -180,9 +195,7 @@ async function runTaskOnce(
                 : []),
               {
                 type: "text",
-                text: extraInstruction
-                  ? `${instruction}\n\n${extraInstruction}`
-                  : instruction,
+                text: lockedInstruction,
               },
             ],
           },
@@ -238,6 +251,7 @@ async function runTask(
   relevanceBrief?: string | null,
   lensContext?: LensContext | null,
   extraInfo?: string,
+  materialLanguage: MaterialLanguage = "de",
 ): Promise<unknown> {
   const attempt = (extraInstruction?: string) =>
     retryWithBudget(
@@ -253,6 +267,7 @@ async function runTask(
           relevanceBrief,
           lensContext,
           extraInfo,
+          materialLanguage,
         ),
       {
         classify: classifyError,
@@ -370,17 +385,18 @@ async function runGatedTasks(
   relevanceBrief?: string | null,
   lensContext?: LensContext | null,
   extraInfo?: string,
+  materialLanguage: MaterialLanguage = "de",
 ): Promise<Partial<Record<GenTaskKey, unknown>>> {
   const active = activeTasksFor(examType);
   const runOne = (k: GenTaskKey): Promise<unknown> =>
     k === "visualMap"
-      ? runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief, lensContext, extraInfo)
+      ? runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief, lensContext, extraInfo, materialLanguage)
           .then((r) => (r as { visualMap?: unknown }).visualMap ?? null)
           .catch((e) => {
             console.error("[/api/generate] visualMap soft-failed", e);
             return null;
           })
-      : runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief, lensContext, extraInfo);
+      : runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief, lensContext, extraInfo, materialLanguage);
 
   // Anthropic prompt caching is per-model, so each model tier caches the
   // material independently — group the active tasks by model and warm each
@@ -444,6 +460,13 @@ export type MaterialResult = {
   // (vision capacity exhausted, etc). The caller should fail fast with
   // a "no readable text" message rather than generate against nothing.
   emptyPdfs: string[];
+  // Detected source-material language. Passed into every generation task
+  // as a hard LANGUAGE LOCK so the German prompt prose doesn't drift the
+  // output away from the material's actual language.
+  materialLanguage: MaterialLanguage;
+  // Scores from the detector — surfaced for log debugging and so the route
+  // can warn if both scores are zero (no extractable text → vision-only).
+  languageScores: { de: number; en: number; noSignal: boolean };
 };
 
 // Build the Anthropic content blocks for a set of files (extraction + vision
@@ -555,6 +578,18 @@ export async function buildMaterialBlocks(
   const last = blocks[blocks.length - 1];
   if (last) (last as Anthropic.Messages.TextBlockParam).cache_control = { type: "ephemeral" };
 
+  // Detect material language from the extracted text + the user's Zusatzinfos
+  // (extraInfo may be the only signal when material is image-only / vision).
+  // Decision is deterministic; threaded into every task as LANGUAGE LOCK so
+  // the German prompt prose doesn't anchor the output to German.
+  const langSample =
+    (extraInfo ? extraInfo + "\n" : "") +
+    textPayloads.map((p) => p.body).join("\n");
+  const detection = detectMaterialLanguage(langSample);
+  console.log(
+    `[material] detected language=${detection.lang} (de=${detection.deScore} en=${detection.enScore} noSignal=${detection.noSignal})`,
+  );
+
   return {
     blocks,
     totalChars,
@@ -564,6 +599,12 @@ export async function buildMaterialBlocks(
     perFile,
     wasTruncated,
     emptyPdfs,
+    materialLanguage: detection.lang,
+    languageScores: {
+      de: detection.deScore,
+      en: detection.enScore,
+      noSignal: detection.noSignal,
+    },
   };
 }
 
@@ -579,6 +620,7 @@ export async function generatePack(opts: {
   relevanceBrief?: string | null;
   lensContext?: LensContext | null;
   extraInfo?: string;
+  materialLanguage?: MaterialLanguage;
 }): Promise<StudyPack> {
   const {
     client,
@@ -589,6 +631,7 @@ export async function generatePack(opts: {
     relevanceBrief,
     lensContext,
     extraInfo,
+    materialLanguage = "de",
   } = opts;
   let brief = "";
   if (twoPass) {
@@ -604,6 +647,7 @@ export async function generatePack(opts: {
     relevanceBrief ?? null,
     lensContext ?? null,
     extraInfo,
+    materialLanguage,
   );
 
   const cards = (byKey.cards as { flashcards?: Flashcard[] } | undefined)?.flashcards ?? [];

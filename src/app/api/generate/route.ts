@@ -536,6 +536,7 @@ export async function POST(request: Request) {
         relevanceBrief,
         lensContext,
         extraInfo,
+        materialLanguage: material.materialLanguage,
       });
     } catch (e) {
       const msg = e instanceof Error ? e.message : "";
