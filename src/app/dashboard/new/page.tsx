@@ -31,14 +31,21 @@ const ACCEPTED_MIME = {
   "text/markdown": [".md", ".markdown"],
 };
 
+// Feature flag — flip to `true` to ship the Essay format. The enum value,
+// the Essay-Blueprint code paths, and the predictions task all stay live;
+// only the picker (and a submit guard) gate it.
+const ESSAY_ENABLED = false;
+
 // Three formats live here. `oral` and `open_book` stay in the schema enum
 // so legacy packs render, but they're gone from the picker — the user can
 // only create the three that produce real, distinct practice content.
+// Order matters: MC first (and default-selected), Offene Fragen, Essay last.
 const EXAM_OPTIONS: {
   value: ExamType;
   title: string;
   description: string;
   emoji: string;
+  locked?: boolean;
 }[] = [
   {
     value: "multiple_choice",
@@ -47,16 +54,17 @@ const EXAM_OPTIONS: {
     emoji: "✅",
   },
   {
-    value: "essay",
-    title: "Essay (Klausur)",
-    description: "Essay-Baupläne: These, Struktur & Beispiele pro Frage",
-    emoji: "📝",
-  },
-  {
     value: "open_questions",
     title: "Offene Fragen",
     description: "Offene Fragen mit Musterantworten zum Selbstabfragen",
     emoji: "✍️",
+  },
+  {
+    value: "essay",
+    title: "Essay (Klausur)",
+    description: "Essay-Baupläne — kommt bald",
+    emoji: "📝",
+    locked: !ESSAY_ENABLED,
   },
 ];
 
@@ -122,7 +130,14 @@ export default function NewPackPage() {
       const raw = sessionStorage.getItem("lernly-pending-generation");
       if (!raw) return;
       const parsed = JSON.parse(raw) as { examType?: ExamType };
-      if (parsed.examType) setExamType(parsed.examType);
+      // Skip restore if the persisted choice points at a currently-locked
+      // format (essay while ESSAY_ENABLED is false) — the default holds.
+      if (
+        parsed.examType &&
+        !(parsed.examType === "essay" && !ESSAY_ENABLED)
+      ) {
+        setExamType(parsed.examType);
+      }
       sessionStorage.removeItem("lernly-pending-generation");
     } catch {
       /* ignore */
@@ -165,6 +180,10 @@ export default function NewPackPage() {
   const submit = async () => {
     if (files.length === 0) {
       setError("Mindestens eine Datei hochladen.");
+      return;
+    }
+    if (examType === "essay" && !ESSAY_ENABLED) {
+      setError("Essay-Format kommt bald — wähl bitte ein anderes.");
       return;
     }
     if (newExamMode && !newExamTitle.trim()) {
@@ -554,13 +573,22 @@ export default function NewPackPage() {
           </p>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             {EXAM_OPTIONS.map((opt) => {
-              const active = examType === opt.value;
+              const active = examType === opt.value && !opt.locked;
+              const locked = opt.locked === true;
               return (
                 <button
                   key={opt.value}
                   type="button"
-                  onClick={() => setExamType(opt.value)}
-                  className="rounded-2xl px-4 py-4 text-left transition"
+                  onClick={() => {
+                    if (locked) return;
+                    setExamType(opt.value);
+                  }}
+                  disabled={locked}
+                  aria-disabled={locked}
+                  className={
+                    "relative rounded-2xl px-4 py-4 text-left transition " +
+                    (locked ? "cursor-not-allowed" : "")
+                  }
                   style={{
                     background: active
                       ? "rgba(111,199,227,0.08)"
@@ -570,15 +598,28 @@ export default function NewPackPage() {
                         ? "rgba(111,199,227,0.5)"
                         : "rgba(255,255,255,0.12)"
                     }`,
+                    opacity: locked ? 0.55 : 1,
                   }}
                 >
-                  <div className="text-[18px]">{opt.emoji}</div>
+                  {locked && (
+                    <span
+                      className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.1em]"
+                      style={{
+                        background: "rgba(255,255,255,0.08)",
+                        color: "rgba(255,255,255,0.7)",
+                        border: "1px solid rgba(255,255,255,0.14)",
+                      }}
+                    >
+                      Bald verfügbar
+                    </span>
+                  )}
+                  <div className="text-[18px]">{locked ? "🔒" : opt.emoji}</div>
                   <div className="mt-2 text-[14px] font-semibold text-white">
                     {opt.title}
                   </div>
                   <div
                     className="mt-1 text-[12px] leading-snug"
-                    style={{ color: "rgba(255,255,255,0.6)" }}
+                    style={{ color: "rgba(255,255,255,0.55)" }}
                   >
                     {opt.description}
                   </div>
