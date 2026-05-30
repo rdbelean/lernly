@@ -3,6 +3,7 @@ import CramJobsPanel from "@/components/dashboard/CramJobsPanel";
 import NewExamForm from "@/components/dashboard/NewExamForm";
 import ExamCard from "@/components/dashboard/ExamCard";
 import LoosePacksSection from "@/components/dashboard/LoosePacksSection";
+import { LAYOUT } from "@/lib/layout";
 
 type PackSummary = {
   id: string;
@@ -132,8 +133,8 @@ export default async function DashboardPage({
 
   if (error) {
     return (
-      <main className="px-6 py-16">
-        <div className="mx-auto max-w-[1200px]">
+      <main>
+        <div className={LAYOUT.pageContainerClass}>
           <p className="text-[15px]" style={{ color: "rgba(255,200,120,0.85)" }}>
             Pakete konnten nicht geladen werden: {error.message}
           </p>
@@ -159,8 +160,8 @@ export default async function DashboardPage({
   const isEmpty = exams.length === 0 && loosePacks.length === 0;
 
   return (
-    <main className="px-4 py-10 sm:px-6 sm:py-12 lg:px-10 lg:py-16">
-      <div className="mx-auto max-w-[1200px]">
+    <main>
+      <div className={LAYOUT.pageContainerClass}>
         {params.credit_purchased === "1" && (
           <div
             className="mb-6 rounded-2xl p-4 text-[14px]"

@@ -1,9 +1,13 @@
 import { notFound } from "next/navigation";
 import PackView from "@/components/pack/PackView";
+import PackHeader, {
+  type PackExamSummary,
+  type PackMeta,
+} from "@/components/pack/PackHeader";
 import { createClient } from "@/lib/supabase/server";
 import { StudyPackSchema } from "@/lib/schema";
+import { LAYOUT } from "@/lib/layout";
 import { DEMO_VISUAL_MAP_V2 } from "@/lib/fixtures/visualMapDemo";
-import DeletePackButton from "./delete-button";
 
 export default async function PackDetailPage({
   params,
@@ -18,7 +22,7 @@ export default async function PackDetailPage({
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("study_packs")
-    .select("id, title, exam_type, pack_data, created_at")
+    .select("id, title, exam_type, pack_data, created_at, exam_id")
     .eq("id", id)
     .maybeSingle();
 
@@ -35,11 +39,30 @@ export default async function PackDetailPage({
     .eq("id", id)
     .then(() => {});
 
+  // Load the exam (if assigned) so PackHeader can show the exam pill +
+  // countdown. RLS-scoped, second query so a missing/deleted exam row
+  // (FK is ON DELETE SET NULL) degrades silently to "no exam pill".
+  let exam: PackExamSummary | null = null;
+  if (data.exam_id) {
+    const { data: examRow } = await supabase
+      .from("exams")
+      .select("title, exam_date, color")
+      .eq("id", data.exam_id)
+      .maybeSingle();
+    if (examRow) {
+      exam = {
+        title: examRow.title as string,
+        exam_date: (examRow.exam_date as string | null) ?? null,
+        color: (examRow.color as string | null) ?? null,
+      };
+    }
+  }
+
   const parsed = StudyPackSchema.safeParse(data.pack_data);
   if (!parsed.success) {
     return (
-      <main className="px-6 py-16">
-        <div className="mx-auto max-w-[920px] text-white">
+      <main>
+        <div className={LAYOUT.pageContainerClass}>
           <nav
             aria-label="Breadcrumb"
             className="flex items-center gap-2 text-[12px]"
@@ -71,12 +94,38 @@ export default async function PackDetailPage({
     pack.visualMap = DEMO_VISUAL_MAP_V2;
   }
 
+  // Compose the meta-chip row from whatever the pack carries.
+  const meta: PackMeta[] = [
+    { label: `${pack.flashcards.length} Karten` },
+    {
+      label: `${pack.overview.topics.reduce(
+        (n, t) => n + t.concepts.length,
+        0,
+      )} Konzepte`,
+    },
+  ];
+  if (pack.simulator) {
+    meta.push({ label: `${pack.simulator.questions.length} Quiz` });
+  }
+  if (pack.essayBlueprint) {
+    meta.push({
+      label: `${pack.essayBlueprint.parts.length}-teiliger Blueprint`,
+    });
+  }
+  if (pack.quiz && pack.quiz.questions.length > 0) {
+    meta.push({ label: `${pack.quiz.questions.length} MC-Fragen` });
+  } else if (pack.openQuestions) {
+    meta.push({
+      label: `${pack.openQuestions.questions.length} offene Fragen`,
+    });
+  }
+
   return (
-    <main className="px-4 py-10 sm:px-6 sm:py-12 lg:px-10">
-      <div className="mx-auto max-w-[1200px]">
+    <main>
+      <div className={LAYOUT.pageContainerClass}>
         {isDemo && (
           <div
-            className="mx-auto mb-6 max-w-[920px] rounded-xl border px-4 py-3 text-[12.5px]"
+            className="mb-6 rounded-xl border px-4 py-3 text-[12.5px]"
             style={{
               background: "rgba(251,191,36,0.08)",
               borderColor: "rgba(251,191,36,0.3)",
@@ -88,87 +137,15 @@ export default async function PackDetailPage({
             zeigen weiterhin die echten Pack-Daten.
           </div>
         )}
-        <div className="mx-auto max-w-[920px]">
-        <nav
-          aria-label="Breadcrumb"
-          className="flex items-center gap-2 text-[12px]"
-          style={{ color: "rgba(255,255,255,0.45)" }}
-        >
-          <a
-            href="/dashboard"
-            className="transition hover:text-white"
-          >
-            Bibliothek
-          </a>
-          <svg
-            width="10"
-            height="10"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden
-          >
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
-          <span className="truncate" style={{ color: "rgba(255,255,255,0.75)" }}>
-            {pack.courseTitle}
-          </span>
-        </nav>
 
-        <div className="mt-6 flex items-start justify-between gap-4">
-          <div>
-            <span
-              className="ln-section-label"
-              style={{ color: "var(--color-ln-sage)" }}
-            >
-              ✓ Dein Lernpaket
-            </span>
-            <h1
-              className="mt-3 font-bold leading-[1.05] tracking-[-1.5px] text-white"
-              style={{ fontSize: "clamp(28px, 4.5vw, 44px)" }}
-            >
-              {pack.courseTitle}
-            </h1>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <span className="ln-mono-tag">{pack.flashcards.length} Karten</span>
-              <span className="ln-mono-tag">
-                {pack.overview.topics.reduce(
-                  (n, t) => n + t.concepts.length,
-                  0,
-                )}{" "}
-                Konzepte
-              </span>
-              {pack.simulator && (
-                <span className="ln-mono-tag">
-                  {pack.simulator.questions.length} Quiz
-                </span>
-              )}
-              {pack.essayBlueprint && (
-                <span className="ln-mono-tag">
-                  {pack.essayBlueprint.parts.length}-teiliger Blueprint
-                </span>
-              )}
-              {pack.quiz && pack.quiz.questions.length > 0 ? (
-                <span className="ln-mono-tag">
-                  {pack.quiz.questions.length} MC-Fragen
-                </span>
-              ) : (
-                pack.openQuestions && (
-                  <span className="ln-mono-tag">
-                    {pack.openQuestions.questions.length} offene Fragen
-                  </span>
-                )
-              )}
-            </div>
-          </div>
-          <DeletePackButton id={data.id} />
-        </div>
-        </div>
+        <PackHeader
+          courseTitle={pack.courseTitle}
+          packId={data.id}
+          meta={meta}
+          exam={exam}
+        />
 
-        <div className="mt-10">
+        <div className="mt-8 sm:mt-10">
           <PackView pack={pack} packId={data.id} />
         </div>
       </div>
