@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email/send";
-import { renderExamReminderEmail } from "@/lib/email/examReminder";
+import {
+  renderExamReminderEmail,
+  renderExamReminderText,
+} from "@/lib/email/examReminder";
 
 export const runtime = "nodejs";
 
@@ -136,17 +139,26 @@ export async function GET(request: Request) {
       const packsCount = packs?.length ?? 0;
       const packId = packs && packs.length > 0 ? (packs[0].id as string) : null;
 
-      const html = renderExamReminderEmail({
+      const reminderInput = {
         examTitle: exam.title,
         daysLeft: days,
-        packsCount,
         packId,
-      });
+      };
+      const html = renderExamReminderEmail(reminderInput);
+      const text = renderExamReminderText(reminderInput);
       const subject =
         days === 1
           ? `Morgen: ${exam.title}`
           : `Noch ${days} Tage: ${exam.title}`;
-      const { ok } = await sendEmail({ to: user.email, subject, html });
+      const { ok } = await sendEmail({
+        to: user.email,
+        subject,
+        html,
+        text,
+      });
+      // packsCount referenced for narrowing — currently unused in the
+      // template, but cheap to keep available for future copy tweaks.
+      void packsCount;
       if (ok) summary[days].sent++;
       else summary[days].skipped++;
     }
