@@ -1,5 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { extractText, getDocumentProxy } from "unpdf";
+import { extractPdfText } from "@/lib/textExtract";
 import {
   BASE_SYSTEM_PROMPT,
   TASK_CARDS,
@@ -114,27 +114,6 @@ const TASKS: Record<TaskKey, { instruction: string; maxTokens: number }> = {
   essayPredictions: { instruction: TASK_ESSAY_PREDICTIONS, maxTokens: 8000 },
 };
 
-async function extractPdfText(
-  buffer: Buffer,
-): Promise<{ text: string; pages: number }> {
-  // Copy the bytes: pdf.js detaches the ArrayBuffer it's handed, which would
-  // neuter the caller's `buffer` (breaking a later buffer.toString("base64")
-  // for the vision document block). A copy keeps the original intact.
-  const uint8 = new Uint8Array(buffer);
-  const pdf = await getDocumentProxy(uint8);
-  const { totalPages, text } = await extractText(pdf, { mergePages: true });
-  const merged = Array.isArray(text) ? text.join("\n\n") : text;
-  const cleaned = merged
-    .replace(/ /g, "")
-    .replace(/[ \t]+\n/g, "\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-  // Empty text = scanned / image-only PDF. Return empty (don't throw) so the
-  // caller routes it to Claude vision, which can read scanned PDFs. Genuine
-  // parse failures already threw above (getDocumentProxy / extractText).
-  return { text: cleaned, pages: totalPages };
-}
-
 function stripHtml(s: string): string {
   return s.replace(/<[^>]+>/gi, "").replace(/\s+/g, " ").trim();
 }
@@ -153,6 +132,7 @@ async function runTaskOnce(
   examType: ExamType,
   brief?: string,
   extraInstruction?: string,
+  relevanceBrief?: string | null,
 ): Promise<unknown> {
   const t0 = Date.now();
   const { instruction, maxTokens } = TASKS[key];
@@ -161,13 +141,17 @@ async function runTaskOnce(
 
   let final;
   try {
+    const systemParts = [
+      BASE_SYSTEM_PROMPT,
+      buildFormatDirective(examType),
+    ];
+    if (relevanceBrief) systemParts.push(relevanceBrief);
     const stream = client.messages.stream(
       {
         model: MODEL_FOR[key],
         max_tokens: maxTokens,
         thinking: { type: "disabled" },
-        system:
-          BASE_SYSTEM_PROMPT + "\n\n" + buildFormatDirective(examType),
+        system: systemParts.join("\n\n"),
         messages: [
           {
             role: "user",
@@ -233,6 +217,7 @@ async function runTask(
   deadlineMs: number,
   examType: ExamType,
   brief?: string,
+  relevanceBrief?: string | null,
 ): Promise<unknown> {
   const attempt = (extraInstruction?: string) =>
     retryWithBudget(
@@ -245,6 +230,7 @@ async function runTask(
           examType,
           brief,
           extraInstruction,
+          relevanceBrief,
         ),
       {
         classify: classifyError,
@@ -359,17 +345,18 @@ async function runGatedTasks(
   deadlineMs: number,
   examType: ExamType,
   brief?: string,
+  relevanceBrief?: string | null,
 ): Promise<Partial<Record<GenTaskKey, unknown>>> {
   const active = activeTasksFor(examType);
   const runOne = (k: GenTaskKey): Promise<unknown> =>
     k === "visualMap"
-      ? runTask(client, k, materialBlocks, deadlineMs, examType, brief)
+      ? runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief)
           .then((r) => (r as { visualMap?: unknown }).visualMap ?? null)
           .catch((e) => {
             console.error("[/api/generate] visualMap soft-failed", e);
             return null;
           })
-      : runTask(client, k, materialBlocks, deadlineMs, examType, brief);
+      : runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief);
 
   // Anthropic prompt caching is per-model, so each model tier caches the
   // material independently — group the active tasks by model and warm each
@@ -565,14 +552,22 @@ export async function generatePack(opts: {
   examType: ExamType;
   deadline: number;
   twoPass: boolean;
+  relevanceBrief?: string | null;
 }): Promise<StudyPack> {
-  const { client, blocks, examType, deadline, twoPass } = opts;
+  const { client, blocks, examType, deadline, twoPass, relevanceBrief } = opts;
   let brief = "";
   if (twoPass) {
     const analysisDeadline = Math.min(deadline, Date.now() + ANALYSIS_BUDGET_MS);
     brief = await runAnalysisPass(client, blocks, analysisDeadline, examType).catch(() => "");
   }
-  const byKey = await runGatedTasks(client, blocks, deadline, examType, brief || undefined);
+  const byKey = await runGatedTasks(
+    client,
+    blocks,
+    deadline,
+    examType,
+    brief || undefined,
+    relevanceBrief ?? null,
+  );
 
   const cards = (byKey.cards as { flashcards?: Flashcard[] } | undefined)?.flashcards ?? [];
   const meta = byKey.meta as { courseTitle?: string; overview?: unknown; authors?: unknown; schedule?: unknown } | undefined;

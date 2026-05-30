@@ -17,6 +17,7 @@ import {
   EXAM_LABEL,
   type SourceFile,
 } from "@/lib/generatePack";
+import { buildRelevanceBrief, type FidelityLevel } from "@/lib/prompts";
 
 export const runtime = "nodejs";
 // 800s is the Vercel Fluid Compute max — needed because large image-heavy PDFs
@@ -484,6 +485,29 @@ export async function POST(request: Request) {
       user?.id ?? "anon",
     );
 
+    // Resolve the assigned exam upfront so we can both validate ownership
+    // (only owner can attach) and pull the Altklausur-lens fields (profile,
+    // hints, fidelity) to build the relevance brief BEFORE generation.
+    // Silently degrades to null if exam doesn't exist or isn't owned —
+    // pack still generates without the lens.
+    let resolvedExamId: string | null = null;
+    let relevanceBrief: string | null = null;
+    if (examId && user) {
+      const { data: ownedExam } = await supabase
+        .from("exams")
+        .select("id, exam_profile, instructor_hints, fidelity")
+        .eq("id", examId)
+        .maybeSingle();
+      if (ownedExam) {
+        resolvedExamId = ownedExam.id as string;
+        relevanceBrief = buildRelevanceBrief({
+          profile: ownedExam.exam_profile,
+          hints: (ownedExam.instructor_hints as string | null) ?? null,
+          fidelity: ((ownedExam.fidelity as string | null) ?? "likely") as FidelityLevel,
+        });
+      }
+    }
+
     const useTwoPass = shouldUseTwoPass({ isAnonymous, usesByok, plan: userPlan });
     let pack: StudyPack;
     try {
@@ -493,6 +517,7 @@ export async function POST(request: Request) {
         examType,
         deadline,
         twoPass: useTwoPass,
+        relevanceBrief,
       });
     } catch (e) {
       const msg = e instanceof Error ? e.message : "";
@@ -511,21 +536,7 @@ export async function POST(request: Request) {
     let savedId: string | null = null;
     if (user) {
       try {
-        // Verify the assigned exam belongs to this user. The FK only enforces
-        // existence, not ownership — RLS on exams hides others' rows on SELECT
-        // but doesn't block referencing them. Silently fall back to loose
-        // (exam_id = null) so a stale/deleted exam doesn't fail the whole
-        // generation; the user can re-assign from the dashboard.
-        let resolvedExamId: string | null = null;
-        if (examId) {
-          const { data: ownedExam } = await supabase
-            .from("exams")
-            .select("id")
-            .eq("id", examId)
-            .maybeSingle();
-          if (ownedExam) resolvedExamId = examId;
-        }
-
+        // resolvedExamId was set upfront during the lens fetch (above).
         const { data: row, error: dbError } = await supabase
           .from("study_packs")
           .insert({

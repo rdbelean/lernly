@@ -1,7 +1,12 @@
 "use server";
 
+import Anthropic from "@anthropic-ai/sdk";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
+import { STUDY_UPLOADS_BUCKET } from "@/lib/uploads";
+import { extractTextFromUpload } from "@/lib/textExtract";
+import { analyzePastExam } from "@/lib/examAnalysis";
+import { FidelitySchema, type Fidelity } from "@/lib/schema";
 
 const ALLOWED_COLORS = new Set([
   "cyan",
@@ -36,6 +41,20 @@ function normalizeDate(d: string | null | undefined): string | null {
   return trimmed;
 }
 
+function normalizeFidelity(f: string | null | undefined): Fidelity | null {
+  if (!f) return null;
+  const parsed = FidelitySchema.safeParse(f.trim());
+  return parsed.success ? parsed.data : null;
+}
+
+function normalizeHints(h: string | null | undefined): string | null {
+  if (!h) return null;
+  const trimmed = h.trim();
+  if (!trimmed) return null;
+  // Generous cap — hints can include syllabus snippets, professor emails, etc.
+  return trimmed.length > 8_000 ? trimmed.slice(0, 8_000) : trimmed;
+}
+
 async function authedClient() {
   const supabase = await createClient();
   const { data } = await supabase.auth.getUser();
@@ -47,6 +66,8 @@ export async function createExam(input: {
   title: string;
   exam_date?: string | null;
   color?: string | null;
+  instructor_hints?: string | null;
+  fidelity?: string | null;
 }) {
   const { supabase, userId } = await authedClient();
   const row = {
@@ -54,6 +75,8 @@ export async function createExam(input: {
     title: normalizeTitle(input.title),
     exam_date: normalizeDate(input.exam_date),
     color: normalizeColor(input.color),
+    instructor_hints: normalizeHints(input.instructor_hints),
+    fidelity: normalizeFidelity(input.fidelity) ?? "likely",
   };
   const { data, error } = await supabase
     .from("exams")
@@ -70,6 +93,8 @@ export async function updateExam(input: {
   title?: string;
   exam_date?: string | null;
   color?: string | null;
+  instructor_hints?: string | null;
+  fidelity?: string | null;
 }) {
   const { supabase } = await authedClient();
   const patch: Record<string, unknown> = {};
@@ -77,6 +102,12 @@ export async function updateExam(input: {
   if (input.exam_date !== undefined)
     patch.exam_date = normalizeDate(input.exam_date);
   if (input.color !== undefined) patch.color = normalizeColor(input.color);
+  if (input.instructor_hints !== undefined)
+    patch.instructor_hints = normalizeHints(input.instructor_hints);
+  if (input.fidelity !== undefined) {
+    const fid = normalizeFidelity(input.fidelity);
+    if (fid) patch.fidelity = fid;
+  }
   if (Object.keys(patch).length === 0) return;
   const { error } = await supabase.from("exams").update(patch).eq("id", input.id);
   if (error) throw new Error(error.message);
@@ -90,6 +121,74 @@ export async function deleteExam(id: string) {
   const { error } = await supabase.from("exams").delete().eq("id", id);
   if (error) throw new Error(error.message);
   revalidatePath("/dashboard");
+}
+
+// Phase-1 brief §7-step-3: when Path A has a past exam, download from Storage,
+// extract text, run analyzePastExam, persist the reference + the analysis.
+// Graceful degradation — if analysis fails (timeout, schema invalid, model
+// error), the reference row still gets stored and exam_profile stays null
+// so the user can retry later (or proceed without the lens).
+export async function attachPastExamToExam(input: {
+  examId: string;
+  storagePath: string;
+  filename: string;
+}): Promise<{ ok: boolean; reason?: string }> {
+  const { userId } = await authedClient();
+  // Ownership guard: service-role downloads bypass RLS, so enforce that the
+  // path is in the requesting user's folder before touching it.
+  if (!input.storagePath.startsWith(`${userId}/`)) {
+    throw new Error("Ungültiger Datei-Verweis.");
+  }
+  const service = createServiceClient();
+  const dl = await service.storage
+    .from(STUDY_UPLOADS_BUCKET)
+    .download(input.storagePath);
+  if (dl.error || !dl.data) {
+    throw new Error(`Konnte Datei nicht laden: ${dl.error?.message ?? "leer"}`);
+  }
+  const buffer = Buffer.from(await dl.data.arrayBuffer());
+  const extracted = await extractTextFromUpload(buffer, input.filename);
+  if (!extracted.text.trim()) {
+    throw new Error(
+      "Aus dieser Datei konnte kein Text gelesen werden (vermutlich gescannt). Lade die Originaldatei mit echtem Text hoch.",
+    );
+  }
+
+  // Insert the reference first — that survives even if analysis fails.
+  // Use the user-scoped client so RLS applies.
+  const supabase = await createClient();
+  const { error: insErr } = await supabase.from("exam_references").insert({
+    exam_id: input.examId,
+    user_id: userId,
+    filename: input.filename,
+    extracted_text: extracted.text,
+    kind: "past_exam",
+  });
+  if (insErr) throw new Error(insErr.message);
+
+  // Now run analysis. The default Anthropic client uses ANTHROPIC_API_KEY
+  // from env — same as the generation pipeline. BYOK isn't applied to
+  // analysis in V1 (small call, run on Lernly's bill).
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    // Reference is saved, profile stays null. Caller can retry later.
+    return { ok: false, reason: "no_api_key" };
+  }
+  const client = new Anthropic({ apiKey });
+  const result = await analyzePastExam(client, extracted.text);
+  if (!result.ok) {
+    return { ok: false, reason: result.reason };
+  }
+  const { error: upErr } = await supabase
+    .from("exams")
+    .update({ exam_profile: result.profile })
+    .eq("id", input.examId);
+  if (upErr) {
+    console.error("[attachPastExamToExam] persist profile failed", upErr);
+    return { ok: false, reason: "persist_failed" };
+  }
+  revalidatePath("/dashboard");
+  return { ok: true };
 }
 
 export async function assignPackToExam(input: {

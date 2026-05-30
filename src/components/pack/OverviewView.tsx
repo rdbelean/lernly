@@ -235,6 +235,19 @@ export default function OverviewView({
                                 {essence}
                               </div>
                             )}
+                            {c.relevanceTag && (
+                              <span
+                                className="mt-1 inline-flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-[0.08em]"
+                                style={{
+                                  background: "rgba(124,196,160,0.12)",
+                                  borderColor: "rgba(124,196,160,0.35)",
+                                  color: "var(--color-ln-sage)",
+                                }}
+                                title="Aus Altklausur-Lens"
+                              >
+                                ✦ {c.relevanceTag}
+                              </span>
+                            )}
                           </div>
                         </div>
                         {isOpen && (

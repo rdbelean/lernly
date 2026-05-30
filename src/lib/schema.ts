@@ -50,6 +50,10 @@ export const ConceptSchema = z.object({
   importance: z.enum(["high", "medium", "low"]),
   examRelevance: z.string().optional(),
   essence: z.string().optional(),
+  // Short marker set by the generator when an Altklausur-derived relevance
+  // brief is active. Values: "kam dran" (past_exam evidence), "Prof-Hinweis"
+  // (instructor hint), or "beides" (both). Rendered as a chip in the Übersicht.
+  relevanceTag: z.string().optional(),
 });
 
 export const TopicSchema = z.object({
@@ -293,6 +297,35 @@ export const StudyPackSchema = z.object({
   quiz: QuizSchema.optional(),
   essayPredictions: EssayPredictionsSchema.optional(),
 });
+
+// =========================================================================
+// Exam-Relevance Engine — Altklausur-derived profile (the "lens")
+// =========================================================================
+
+export const FidelitySchema = z.enum(["strict", "likely", "broad"]);
+export type Fidelity = z.infer<typeof FidelitySchema>;
+
+export const ExamProfileSchema = z.object({
+  formats: z.array(
+    z.object({
+      type: z.enum(["mc", "essay", "short_answer", "calculation", "case"]),
+      share: z.number().min(0).max(1),
+    }),
+  ),
+  topics: z.array(
+    z.object({
+      name: z.string(),
+      weight: z.number().min(0).max(1),
+      evidence: z.string(),
+    }),
+  ),
+  depth: z.enum(["recall", "apply", "analyze"]),
+  recurring_patterns: z.array(z.string()),
+  phrasing_style: z.string(),
+  structure: z.string(),
+  notes: z.string(),
+});
+export type ExamProfile = z.infer<typeof ExamProfileSchema>;
 
 export type StudyPack = z.infer<typeof StudyPackSchema>;
 export type Flashcard = z.infer<typeof FlashcardSchema>;

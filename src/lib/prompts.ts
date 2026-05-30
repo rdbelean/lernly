@@ -232,6 +232,7 @@ OVERVIEW (das WICHTIGSTE Feld nach Simulator)
   * definition: 1-2 knappe Sätze, KEINE Romane. Mit <strong>Schlüsselbegriffen gefettet</strong>.
   * importance: "high" | "medium" | "low"
   * examRelevance: ein präziser Satz "Wird in Klausuren häufig als [Fragetyp] gefragt, weil [Grund]". Konkret, nicht generisch.
+  * relevanceTag: NUR setzen, wenn ein ALTKLAUSUR-LENS aktiv ist (siehe System-Prompt). Werte: "kam dran" (Konzept hat Profil-Evidenz / war in der Altklausur), "Prof-Hinweis" (vom Prof in den Hinweisen markiert), "beides" (Profil UND Hinweise). Ohne Lens-Brief: weglassen.
 
 CROSS-REFERENCES (mach es)
 Wo Konzepte aus VERSCHIEDENEN Topics zusammenhängen, baue die Verbindung in die examRelevance ein:
@@ -253,7 +254,7 @@ JSON-SCHEMA (genau diese Struktur):
   "overview": {
     "topics": [
       { "name": "string", "concepts": [
-        { "term": "string", "essence": "string (max. 6 Wörter, kein Punkt)", "definition": "string (HTML <strong>/<em> erlaubt)", "author": "string", "importance": "high" | "medium" | "low", "examRelevance": "string (HTML <strong>/<em> erlaubt, mit Cross-References wo sinnvoll)" }
+        { "term": "string", "essence": "string (max. 6 Wörter, kein Punkt)", "definition": "string (HTML <strong>/<em> erlaubt)", "author": "string", "importance": "high" | "medium" | "low", "examRelevance": "string (HTML <strong>/<em> erlaubt, mit Cross-References wo sinnvoll)", "relevanceTag": "kam dran | Prof-Hinweis | beides (NUR mit aktivem Altklausur-Lens)" }
       ] }
     ]
   },
@@ -425,6 +426,64 @@ const FORMAT_HUMAN: Record<string, string> = {
   open_book: "Open Book / Take-Home",
   essay: "Klausur-Aufsatz",
 };
+
+// =========================================================================
+// RELEVANCE BRIEF — Altklausur-engine lens
+// =========================================================================
+// Built from the exam's persisted profile (analysed past exam), instructor
+// hints, and the user-chosen fidelity. Appended to BASE_SYSTEM_PROMPT for
+// every task call when the user picked Path A or supplied hints.
+//
+// Returns null when there's nothing to inject (no profile + no hints) so
+// the caller can skip the directive entirely.
+
+export type FidelityLevel = "strict" | "likely" | "broad";
+
+const FIDELITY_GUIDANCE: Record<FidelityLevel, string> = {
+  strict:
+    "BLEIB ENG am Profil + Hinweisen. Generiere fast ausschließlich zu den Themen, die laut Profil hohes weight haben oder vom Prof markiert wurden. Imitiere den Phrasing-Style 1:1. Themen ohne Evidenz: weglassen.",
+  likely:
+    "GEWICHTE klar nach Profil + Hinweisen, aber nimm angrenzende Themen mit hohem Lern-ROI mit. Wenn ein Konzept zwar nicht in der Altklausur kam, aber direkt mit einem zentralen Profil-Thema verknüpft ist, gehört es leicht-priorisiert dazu.",
+  broad:
+    "DECKE BREIT AB. Nutze das Profil nur als sanfte Priorisierung — bei Tie-Breakern bevorzugt, aber kein hartes Filter. Der Studierende will keine Lücken riskieren.",
+};
+
+export function buildRelevanceBrief(input: {
+  profile: unknown; // ExamProfile JSON or null
+  hints: string | null;
+  fidelity: FidelityLevel;
+}): string | null {
+  const hasProfile =
+    input.profile && typeof input.profile === "object" && Object.keys(input.profile as object).length > 0;
+  const hasHints = !!input.hints && input.hints.trim().length > 0;
+  if (!hasProfile && !hasHints) return null;
+
+  const profileBlock = hasProfile
+    ? JSON.stringify(input.profile, null, 2)
+    : "(keine Altklausur-Analyse vorhanden)";
+  const hintsBlock = hasHints ? input.hints!.trim() : "(keine zusätzlichen Hinweise)";
+  const fidelityName = input.fidelity;
+  const fidelityGuide = FIDELITY_GUIDANCE[input.fidelity];
+
+  return `=== ALTKLAUSUR-LENS (gewichte den Stoff danach) ===
+
+SO SIEHT DIE ECHTE PRÜFUNG AUS (aus der Altklausur des Nutzers abgeleitet):
+${profileBlock}
+
+ZUSÄTZLICHE HINWEISE DES NUTZERS / PROFS:
+${hintsBlock}
+
+FIDELITY: ${fidelityName}
+${fidelityGuide}
+
+GEWICHTE DEN LERNSTOFF ENTSPRECHEND:
+- Priorisiere Themen mit hohem 'weight' im Profil. Generiere dort MEHR und TIEFERE Übungen, Karten und Konzepte.
+- Kürze oder überspringe Stoff, der laut Profil nie geprüft wird (außer Verstehens-Layer, die universal sind).
+- Imitiere die Fragestile und 'phrasing_style' der Altklausur (z. B. Fallbeispiele statt reiner Definitionsfragen, wenn die Altklausur so ist).
+- Markiere im Übersichts-Output JEDES Schwerpunkt-Konzept mit einem "relevanceTag" der erklärt WARUM es Schwerpunkt ist: "kam dran" (Profil-Evidenz), "Prof-Hinweis" (aus Hinweisen), oder "beides".
+
+Wichtig: Das ist eine Wahrscheinlichkeits-Gewichtung, keine Garantie.`;
+}
 
 export function buildFormatDirective(examType: string): string {
   const slug = FORMAT_SLUG[examType] ?? "mc";
