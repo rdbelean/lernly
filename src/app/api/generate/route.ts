@@ -11,6 +11,7 @@ import {
 import { decryptApiKey } from "@/lib/byok";
 import { shouldUseTwoPass } from "@/lib/twoPass";
 import { STUDY_UPLOADS_BUCKET } from "@/lib/uploads";
+import { MAX_FILE_BYTES } from "@/lib/uploadConfig";
 import {
   buildMaterialBlocks,
   generatePack,
@@ -28,8 +29,9 @@ export const maxDuration = 800;
 const defaultClient = new Anthropic();
 
 const MAX_FILES = 8;
-const MAX_FILE_BYTES = 75 * 1024 * 1024;     // 75 MB per file
-const MAX_TOTAL_BYTES = 200 * 1024 * 1024;   // 200 MB per pack (8 files × ~25 MB avg headroom)
+// MAX_FILE_BYTES is the SHARED cap (50 MB Free-safe by default) — see
+// @/lib/uploadConfig for the upgrade path to higher values on Pro.
+const MAX_TOTAL_BYTES = MAX_FILE_BYTES * MAX_FILES; // 8 × 50 MB = 400 MB pack ceiling
 
 // Per-pack input ceiling for logged-in users. Generation runs as one long
 // request; beyond this it reliably outlives the connection window (gateway

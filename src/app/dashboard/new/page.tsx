@@ -9,6 +9,7 @@ import QuotaHitModal, {
 } from "@/components/dashboard/QuotaHitModal";
 import { track } from "@/lib/analytics";
 import { STUDY_UPLOADS_BUCKET, buildUploadPath } from "@/lib/uploads";
+import { MAX_FILE_BYTES, MAX_FILE_MB } from "@/lib/uploadConfig";
 import { parseJsonResponse } from "@/lib/safeJson";
 import { type ExamType } from "@/lib/schema";
 import NewExamForm from "@/components/dashboard/NewExamForm";
@@ -26,7 +27,8 @@ type GenerateApiResponse = {
 };
 
 const MAX_FILES = 8;
-const MAX_FILE_BYTES = 75 * 1024 * 1024; // 75 MB — text is extracted server-side, so MB is no longer the real constraint (tokens are).
+// MAX_FILE_BYTES + MAX_FILE_MB live in @/lib/uploadConfig now — single
+// source of truth shared with the server validator and the bucket cap.
 const ACCEPTED_MIME = {
   "application/pdf": [".pdf"],
   "text/plain": [".txt"],
@@ -249,7 +251,7 @@ export default function NewPackPage() {
           console.error("[upload] storage rejected", { file: file.name, sizeMB, status, err });
           const hint =
             status === "413" || /payload too large/i.test(err.message)
-              ? ` Tipp: max. ${MAX_FILE_BYTES / 1024 / 1024} MB pro Datei.`
+              ? ` Tipp: max. ${MAX_FILE_MB} MB pro Datei. Sehr große Vorlesungen besser in Kapitel teilen.`
               : "";
           throw new Error(
             `Upload fehlgeschlagen: "${file.name}" (${sizeMB} MB) — ${err.message} [HTTP ${status}].${hint}`,
