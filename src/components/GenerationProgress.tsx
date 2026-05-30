@@ -1,48 +1,134 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Language = "en" | "de";
 
-const STEPS: Record<
-  Language,
-  { icon: string; text: string; duration: number }[]
-> = {
-  en: [
-    { icon: "📄", text: "Reading your files...", duration: 3000 },
-    { icon: "🔍", text: "Extracting key concepts...", duration: 5000 },
-    { icon: "🎴", text: "Building flashcards...", duration: 8000 },
-    { icon: "📐", text: "Structuring the essay blueprint...", duration: 6000 },
-    { icon: "🎮", text: "Configuring the exam simulator...", duration: 5000 },
-    { icon: "✨", text: "Finishing your study pack...", duration: 10000 },
-  ],
+// Threshold above which we tell the user "this will take 5-10 min" and slow
+// the staged progression down. Matches the experience on a ~35 MB / 300-slide
+// upload: extraction is fast, but ~4 task calls to Sonnet on long material
+// dominate the wait.
+const LARGE_BYTES = 15 * 1024 * 1024;
+
+type StepKey =
+  | "extract"
+  | "analyze_lens"
+  | "overview"
+  | "cards"
+  | "quiz"
+  | "finish";
+
+type Step = { key: StepKey; icon: string; text: string; weight: number };
+
+// Step weights sum to "1 normal-job unit" (~75 s). For large jobs we multiply
+// the per-step durations by LARGE_MULTIPLIER so total stretches to ~7.5 min —
+// after which the final step keeps spinning until `completed` flips, which
+// is honest ("Letzter Schliff…") for the tail of a long generation.
+const STEPS_BY_LANG: Record<Language, Step[]> = {
   de: [
-    { icon: "📄", text: "Dateien werden gelesen...", duration: 3000 },
-    { icon: "🔍", text: "Schlüsselkonzepte werden extrahiert...", duration: 5000 },
-    { icon: "🎴", text: "Karteikarten werden erstellt...", duration: 8000 },
-    { icon: "📐", text: "Essay-Blueprint wird gebaut...", duration: 6000 },
-    { icon: "🎮", text: "Prüfungssimulator wird konfiguriert...", duration: 5000 },
-    { icon: "✨", text: "Lernpaket wird fertiggestellt...", duration: 10000 },
+    { key: "extract", icon: "📄", text: "Material wird gelesen…", weight: 5 },
+    {
+      key: "analyze_lens",
+      icon: "🎯",
+      text: "Altklausur wird einbezogen…",
+      weight: 5,
+    },
+    {
+      key: "overview",
+      icon: "🗺",
+      text: "Konzepte & Übersicht werden erstellt…",
+      weight: 25,
+    },
+    {
+      key: "cards",
+      icon: "🃏",
+      text: "Karteikarten werden gebaut…",
+      weight: 25,
+    },
+    { key: "quiz", icon: "🎯", text: "Quiz wird generiert…", weight: 25 },
+    {
+      key: "finish",
+      icon: "✨",
+      text: "Letzter Schliff…",
+      weight: 15,
+    },
+  ],
+  en: [
+    { key: "extract", icon: "📄", text: "Reading your material…", weight: 5 },
+    {
+      key: "analyze_lens",
+      icon: "🎯",
+      text: "Applying past-exam lens…",
+      weight: 5,
+    },
+    {
+      key: "overview",
+      icon: "🗺",
+      text: "Building concepts & overview…",
+      weight: 25,
+    },
+    {
+      key: "cards",
+      icon: "🃏",
+      text: "Building flashcards…",
+      weight: 25,
+    },
+    {
+      key: "quiz",
+      icon: "🎯",
+      text: "Generating the quiz…",
+      weight: 25,
+    },
+    {
+      key: "finish",
+      icon: "✨",
+      text: "Final polish…",
+      weight: 15,
+    },
   ],
 };
 
-const WAIT_COPY: Record<Language, string> = {
-  en: "Average wait time: ~1-3 minutes",
-  de: "Durchschnittliche Wartezeit: ~1-3 Minuten",
+const LARGE_MULTIPLIER = 6; // ~75 s × 6 ≈ 7.5 min staged progression
+
+const NORMAL_WAIT_COPY: Record<Language, string> = {
+  de: "Durchschnittliche Wartezeit: ~1–3 Minuten",
+  en: "Average wait time: ~1–3 minutes",
+};
+
+const LARGE_WAIT_COPY: Record<Language, string> = {
+  de: "Große Datei — das kann 5–10 Minuten dauern. Die KI liest alles durch und baut dein personalisiertes Paket. Lass den Tab offen.",
+  en: "Large file — this can take 5–10 minutes. The model reads through everything and builds your personalized pack. Keep this tab open.",
 };
 
 export default function GenerationProgress({
   completed = false,
   language = "en",
+  totalBytes,
+  hasExam = false,
 }: {
   completed?: boolean;
   language?: Language;
+  totalBytes?: number;
+  hasExam?: boolean;
 }) {
+  const isLarge =
+    typeof totalBytes === "number" && totalBytes > LARGE_BYTES;
+  const multiplier = isLarge ? LARGE_MULTIPLIER : 1;
+
+  // Filter out the lens step if no exam is assigned; honest about what the
+  // pipeline is actually doing. Scale durations per `multiplier`.
+  const steps = useMemo<(Step & { duration: number })[]>(() => {
+    return STEPS_BY_LANG[language]
+      .filter((s) => s.key !== "analyze_lens" || hasExam)
+      .map((s) => ({ ...s, duration: s.weight * 1000 * multiplier }));
+  }, [language, hasExam, multiplier]);
+
   const [internalStep, setInternalStep] = useState(0);
   const [internalProgress, setInternalProgress] = useState(0);
-  const steps = STEPS[language];
 
   useEffect(() => {
+    setInternalStep(0);
+    setInternalProgress(0);
     const stepTimers: ReturnType<typeof setTimeout>[] = [];
     let accumulated = 0;
 
@@ -52,12 +138,16 @@ export default function GenerationProgress({
     });
 
     const totalDuration = steps.reduce((sum, s) => sum + s.duration, 0);
+    // Cap at 90%: 10% reserved for the actual completion event so the bar
+    // never overpromises. Tick rate scales with totalDuration so very long
+    // jobs still get smooth motion.
+    const tickMs = Math.max(100, Math.min(500, totalDuration / 600));
     const progressInterval = setInterval(() => {
       setInternalProgress((prev) => {
         if (prev >= 90) return 90;
-        return prev + 90 / (totalDuration / 100);
+        return prev + 90 / (totalDuration / tickMs);
       });
-    }, 100);
+    }, tickMs);
 
     return () => {
       stepTimers.forEach(clearTimeout);
@@ -102,13 +192,31 @@ export default function GenerationProgress({
         />
       </div>
 
+      {isLarge && (
+        <p
+          style={{
+            fontSize: "13px",
+            lineHeight: 1.5,
+            color: "rgba(255,224,160,0.92)",
+            background: "rgba(251,191,36,0.06)",
+            border: "1px solid rgba(251,191,36,0.25)",
+            borderRadius: "10px",
+            padding: "10px 14px",
+            margin: "0 auto 18px",
+            maxWidth: "440px",
+          }}
+        >
+          {LARGE_WAIT_COPY[language]}
+        </p>
+      )}
+
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
         {steps.map((step, i) => {
           const isDone = i < currentStep;
           const isActive = i === currentStep;
           return (
             <div
-              key={i}
+              key={step.key}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -134,6 +242,7 @@ export default function GenerationProgress({
                     : isDone
                       ? "rgba(255,255,255,0.35)"
                       : "rgba(255,255,255,0.15)",
+                  textAlign: "left",
                 }}
               >
                 {step.text}
@@ -157,16 +266,18 @@ export default function GenerationProgress({
         })}
       </div>
 
-      <p
-        style={{
-          fontSize: "13px",
-          color: "rgba(255,255,255,0.3)",
-          marginTop: "20px",
-          fontFamily: "var(--font-mono, monospace)",
-        }}
-      >
-        {WAIT_COPY[language]}
-      </p>
+      {!isLarge && (
+        <p
+          style={{
+            fontSize: "13px",
+            color: "rgba(255,255,255,0.3)",
+            marginTop: "20px",
+            fontFamily: "var(--font-mono, monospace)",
+          }}
+        >
+          {NORMAL_WAIT_COPY[language]}
+        </p>
+      )}
 
       <style>{`
         @keyframes ln-progress-spin {

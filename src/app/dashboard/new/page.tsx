@@ -404,7 +404,12 @@ export default function NewPackPage() {
               backdropFilter: "blur(24px)",
             }}
           >
-            <GenerationProgress completed={completed} language="de" />
+            <GenerationProgress
+              completed={completed}
+              language="de"
+              totalBytes={files.reduce((sum, f) => sum + f.size, 0)}
+              hasExam={Boolean(examId)}
+            />
           </div>
         </div>
       </main>
@@ -706,7 +711,9 @@ export default function NewPackPage() {
             className="text-[12px]"
             style={{ color: "rgba(255,255,255,0.45)" }}
           >
-            Generierung dauert ~1–3 Minuten
+            {files.reduce((sum, f) => sum + f.size, 0) > 15 * 1024 * 1024
+              ? "Große Datei — Generierung dauert ~5–10 Minuten. Lass den Tab offen."
+              : "Generierung dauert ~1–3 Minuten"}
           </p>
           <button
             type="button"
