@@ -8,6 +8,7 @@ import {
 } from "@/app/dashboard/actions";
 import { EXAM_COLORS, examRgba } from "@/lib/exams";
 import { STUDY_UPLOADS_BUCKET, buildUploadPath } from "@/lib/uploads";
+import { Target } from "lucide-react";
 
 type StudyPath = "A" | "B" | "C";
 type Fidelity = "strict" | "likely" | "broad";
@@ -277,7 +278,7 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
             onSelect={setPath}
             title="Ich hab eine Altklausur oder weiß, was drankommt"
             sub="Lade die Altklausur hoch, gib Prof-Hinweise — der Lens macht den Rest."
-            badge="🎯 Beste Ergebnisse"
+            badge="Beste Ergebnisse"
           />
           <PathRow
             value="B"
@@ -489,13 +490,14 @@ function PathRow({
         </div>
         {badge && (
           <span
-            className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em]"
+            className="inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em]"
             style={{
-              background: "rgba(124,196,160,0.14)",
-              color: "var(--color-ln-sage)",
-              border: "1px solid rgba(124,196,160,0.35)",
+              background: "rgba(79, 209, 165, 0.14)",
+              color: "var(--color-cat-teal)",
+              border: "1px solid rgba(79, 209, 165, 0.35)",
             }}
           >
+            <Target size={10} strokeWidth={2.2} aria-hidden />
             {badge}
           </span>
         )}

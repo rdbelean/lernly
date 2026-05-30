@@ -12,6 +12,16 @@ import QuizView from "./QuizView";
 import EssayPredictionsView from "./EssayPredictionsView";
 import PackHub, { type LatestAttempt } from "./PackHub";
 import type { PackExamSummary } from "./PackHeader";
+import {
+  Brain,
+  FileText,
+  Home,
+  Layers,
+  PenLine,
+  Pin,
+  Target,
+  type LucideIcon,
+} from "lucide-react";
 
 type Language = "en" | "de";
 // The pack now opens to a Hub (situation + Weiterlernen + mode launcher
@@ -27,16 +37,16 @@ type Tab =
   | "blueprint"
   | "openQuestions";
 
-type TabDef = { id: Tab; emoji: string; de: string; en: string };
+type TabDef = { id: Tab; icon: LucideIcon; de: string; en: string };
 
 const ALL_TABS: TabDef[] = [
-  { id: "hub", emoji: "🏠", de: "Hub", en: "Hub" },
-  { id: "visualMap", emoji: "🧠", de: "Visual Map", en: "Visual Map" },
-  { id: "essayPredictions", emoji: "📌", de: "Aufsatz-Plan", en: "Essay Plan" },
-  { id: "simulator", emoji: "🎯", de: "Übungsklausur", en: "Exam Trainer" },
-  { id: "flashcards", emoji: "🃏", de: "Karteikarten", en: "Flashcards" },
-  { id: "blueprint", emoji: "📝", de: "Blueprint", en: "Blueprint" },
-  { id: "openQuestions", emoji: "✍️", de: "Offene Fragen", en: "Open Questions" },
+  { id: "hub", icon: Home, de: "Hub", en: "Hub" },
+  { id: "visualMap", icon: Brain, de: "Visual Map", en: "Visual Map" },
+  { id: "essayPredictions", icon: Pin, de: "Aufsatz-Plan", en: "Essay Plan" },
+  { id: "simulator", icon: Target, de: "Übungsklausur", en: "Exam Trainer" },
+  { id: "flashcards", icon: Layers, de: "Karteikarten", en: "Flashcards" },
+  { id: "blueprint", icon: FileText, de: "Blueprint", en: "Blueprint" },
+  { id: "openQuestions", icon: PenLine, de: "Offene Fragen", en: "Open Questions" },
 ];
 
 export default function PackView({
@@ -99,21 +109,37 @@ export default function PackView({
 
   return (
     <div>
-      <div className="flex overflow-x-auto border-b border-white/10">
+      <div
+        className="flex overflow-x-auto border-b"
+        style={{ borderColor: "rgba(255,255,255,0.06)" }}
+      >
         {tabs.map((t) => {
           const active = tab === t.id;
+          const Icon = t.icon;
           return (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className={
-                "flex shrink-0 items-center gap-2 border-b-2 px-4 py-4 text-[14px] font-medium transition " +
-                (active
-                  ? "border-[color:var(--color-ln-cyan)] text-white"
-                  : "border-transparent text-white/50 hover:text-white/80")
-              }
+              className="flex shrink-0 items-center gap-2 border-b-2 px-4 py-4 text-[14px] font-medium transition"
+              style={{
+                borderColor: active
+                  ? "var(--color-primary-bright)"
+                  : "transparent",
+                color: active
+                  ? "var(--color-text)"
+                  : "var(--color-text-dim)",
+              }}
             >
-              <span>{t.emoji}</span>
+              <Icon
+                size={16}
+                strokeWidth={1.75}
+                color={
+                  active
+                    ? "var(--color-primary-bright)"
+                    : "var(--color-text-faint)"
+                }
+                aria-hidden
+              />
               <span className="hidden sm:inline">{isEn ? t.en : t.de}</span>
             </button>
           );

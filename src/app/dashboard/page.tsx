@@ -4,6 +4,7 @@ import NewExamForm from "@/components/dashboard/NewExamForm";
 import ExamCard from "@/components/dashboard/ExamCard";
 import LoosePacksSection from "@/components/dashboard/LoosePacksSection";
 import { LAYOUT } from "@/lib/layout";
+import { ArrowRight, Plus } from "lucide-react";
 
 type PackSummary = {
   id: string;
@@ -199,9 +200,14 @@ export default async function DashboardPage({
           </div>
           <a
             href="/dashboard/new"
-            className="hidden shrink-0 rounded-full bg-white px-5 py-2.5 text-[14px] font-semibold text-[#0F1535] transition hover:bg-white/90 sm:inline-flex"
+            className="hidden shrink-0 items-center gap-1.5 rounded-full px-5 py-2.5 text-[14px] font-semibold transition hover:brightness-110 sm:inline-flex"
+            style={{
+              background: "var(--color-primary)",
+              color: "white",
+            }}
           >
-            ✦ Neues Paket
+            <Plus size={15} strokeWidth={2} aria-hidden />
+            Neues Paket
           </a>
         </div>
 
@@ -228,9 +234,14 @@ export default async function DashboardPage({
             {quotaReached && credits === 0 ? (
               <a
                 href="/dashboard/settings"
-                className="rounded-full bg-white px-4 py-1.5 text-[13px] font-semibold text-[#0F1535] transition hover:bg-white/90"
+                className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[13px] font-semibold transition hover:brightness-110"
+                style={{
+                  background: "var(--color-primary)",
+                  color: "white",
+                }}
               >
-                Upgrade →
+                Upgrade
+                <ArrowRight size={13} strokeWidth={2} aria-hidden />
               </a>
             ) : (
               plan === "free" && (

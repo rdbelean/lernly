@@ -10,10 +10,10 @@ import {
 import {
   EXAM_COLORS,
   countdownInfo,
-  countdownToneRgba,
   examRgba,
   formatExamDate,
 } from "@/lib/exams";
+import { ArrowRight, Clock, Plus, Sparkles } from "lucide-react";
 
 type Pack = {
   id: string;
@@ -218,17 +218,19 @@ export default function ExamCard({
                 </button>
               )}
               <span
-                className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-[0.1em]"
+                className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-[0.1em]"
                 style={{
-                  background: countdownToneRgba(countdown.tone, 0.14),
-                  color: countdownToneRgba(
-                    countdown.tone,
+                  background:
                     countdown.tone === "past" || countdown.tone === "undated"
-                      ? 0.55
-                      : 1,
-                  ),
+                      ? "rgba(255,255,255,0.06)"
+                      : "rgba(242, 163, 60, 0.14)",
+                  color:
+                    countdown.tone === "past" || countdown.tone === "undated"
+                      ? "var(--color-text-faint)"
+                      : "var(--color-amber)",
                 }}
               >
+                <Clock size={10} strokeWidth={2.2} aria-hidden />
                 {countdown.label}
               </span>
             </div>
@@ -333,25 +335,36 @@ export default function ExamCard({
           {cont ? (
             <a
               href={`/dashboard/pack/${cont.id}`}
-              className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[13px] font-bold text-[#0F1535] transition hover:bg-white/90"
+              className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold transition hover:brightness-110"
+              style={{
+                background: "var(--color-primary)",
+                color: "white",
+              }}
             >
-              ✦ Weiterlernen
-              <span aria-hidden>→</span>
+              <Sparkles size={13} strokeWidth={2} aria-hidden />
+              Weiterlernen
+              <ArrowRight size={14} strokeWidth={2} aria-hidden />
             </a>
           ) : (
             <a
               href={`/dashboard/new?exam=${exam.id}`}
-              className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[13px] font-bold text-[#0F1535] transition hover:bg-white/90"
+              className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold transition hover:brightness-110"
+              style={{
+                background: "var(--color-primary)",
+                color: "white",
+              }}
             >
-              ✦ Erstes Paket hochladen
+              <Plus size={14} strokeWidth={2} aria-hidden />
+              Erstes Paket hochladen
             </a>
           )}
           {cont && (
             <a
               href={`/dashboard/new?exam=${exam.id}`}
-              className="text-[12.5px] text-white/55 underline-offset-2 hover:underline"
+              className="inline-flex items-center gap-1 text-[12.5px] text-white/55 transition hover:text-white"
             >
-              + Paket hinzufügen
+              <Plus size={12} strokeWidth={2} aria-hidden />
+              Paket hinzufügen
             </a>
           )}
         </div>

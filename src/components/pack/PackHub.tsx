@@ -3,21 +3,34 @@
 import type { StudyPack } from "@/lib/schema";
 import {
   countdownInfo,
-  countdownToneRgba,
   examRgba,
 } from "@/lib/exams";
 import type { PackExamSummary } from "@/components/pack/PackHeader";
+import {
+  ArrowRight,
+  Brain,
+  BookOpen,
+  Clock,
+  FileText,
+  Layers,
+  PenLine,
+  Pin,
+  Sparkles,
+  Target,
+  Trophy,
+  type LucideIcon,
+} from "lucide-react";
 
 // =========================================================================
 // PackHub — the landing view of a pack. Replaces "open straight into a tab"
-// with "orient → pick mode → study → return home". Model = Quizlet's set
-// page: situation + primary CTA + mode launcher cards.
+// with "orient → pick mode → study → return home". UI #3 refresh swaps the
+// emoji marks for lucide icons in tinted chips, restyles the Weiterlernen
+// CTA to the indigo --color-primary surface, and converts the mode launcher
+// from a grid of big-emoji squares into a tight vertical list of rows.
 // =========================================================================
 
 type Language = "en" | "de";
 
-// Subset of the Tab union from PackView so we don't create a circular dep.
-// PackView controls the actual switch via onEnterMode(tab).
 type ModeTab =
   | "visualMap"
   | "essayPredictions"
@@ -60,13 +73,6 @@ function availableModes(pack: StudyPack): AvailableModes {
   };
 }
 
-// Smart "Weiterlernen" — picks the most useful next mode given the data
-// we have. Priority cascade is intentionally simple (no scheduler in V1):
-//   1. Quiz available + a past attempt with weak topics → "Schwächen üben"
-//      (still enters Übungsklausur; the re-practice button lives inside).
-//   2. Quiz available, no prior attempt → "Übungsklausur starten".
-//   3. Essay-format pack with predictions → "Aufsatz-Plan ansehen".
-//   4. Fallback → "Karteikarten durchgehen".
 function pickWeiterlernen(
   modes: AvailableModes,
   latestAttempt: LatestAttempt | null,
@@ -118,9 +124,28 @@ function pickWeiterlernen(
   };
 }
 
+// Each launcher card carries a tinted icon chip — tone token tells the chip
+// which category color to use. Picked once per tab so the visual rhythm is
+// stable across sessions.
+type ChipTone = "blue" | "teal" | "coral" | "primary";
+
+const CHIP_BG: Record<ChipTone, string> = {
+  blue: "rgba(142, 154, 245, 0.14)",
+  teal: "rgba(79, 209, 165, 0.14)",
+  coral: "rgba(242, 132, 92, 0.14)",
+  primary: "rgba(110, 128, 242, 0.16)",
+};
+const CHIP_FG: Record<ChipTone, string> = {
+  blue: "var(--color-cat-blue)",
+  teal: "var(--color-cat-teal)",
+  coral: "var(--color-cat-coral)",
+  primary: "var(--color-primary-bright)",
+};
+
 type ModeCard = {
   tab: ModeTab;
-  icon: string;
+  icon: LucideIcon;
+  tone: ChipTone;
   title: string;
   sub: string;
   count: string;
@@ -137,7 +162,8 @@ function buildModeCards(
   if (modes.visualMap) {
     cards.push({
       tab: "visualMap",
-      icon: "🧠",
+      icon: Brain,
+      tone: "primary",
       title: "Visual Map",
       sub: isEn
         ? "Big picture: what matters most"
@@ -152,7 +178,8 @@ function buildModeCards(
       pack.quiz?.questions.length ?? pack.openQuestions?.questions.length ?? 0;
     cards.push({
       tab: "openQuestions",
-      icon: "✍️",
+      icon: PenLine,
+      tone: "coral",
       title: pack.quiz ? "Übungsklausur" : "Offene Fragen",
       sub: isEn
         ? "Test yourself in exam format"
@@ -163,7 +190,8 @@ function buildModeCards(
   if (modes.flashcards) {
     cards.push({
       tab: "flashcards",
-      icon: "🃏",
+      icon: Layers,
+      tone: "teal",
       title: "Karteikarten",
       sub: isEn ? "Active recall, card by card" : "Aktiv wiederholen",
       count: isEn
@@ -174,7 +202,8 @@ function buildModeCards(
   if (modes.essayPredictions) {
     cards.push({
       tab: "essayPredictions",
-      icon: "📌",
+      icon: Pin,
+      tone: "blue",
       title: "Aufsatz-Plan",
       sub: isEn
         ? "Likely essay questions with skeletons"
@@ -187,7 +216,8 @@ function buildModeCards(
   if (modes.simulator) {
     cards.push({
       tab: "simulator",
-      icon: "🎯",
+      icon: Target,
+      tone: "coral",
       title: "Übungs-Trainer",
       sub: isEn
         ? "Multiple-choice in exam style"
@@ -200,7 +230,8 @@ function buildModeCards(
   if (modes.blueprint) {
     cards.push({
       tab: "blueprint",
-      icon: "📝",
+      icon: FileText,
+      tone: "blue",
       title: "Essay-Blueprint",
       sub: isEn
         ? "Paragraph structure + checklist"
@@ -253,50 +284,68 @@ export default function PackHub({
 
   return (
     <div className="space-y-8">
-      {/* Situation — countdown + last quiz + content counts. Shown only if
-          there's at least one signal worth surfacing. */}
+      {/* Situation — countdown + last quiz + content counts. Tinted icon
+          chips replace the previous emoji marks. */}
       {(exam || latestAttempt) && (
         <section
           className="rounded-2xl border p-4 sm:p-5"
           style={{
-            background: "rgba(20,22,28,0.5)",
-            borderColor: "rgba(255,255,255,0.08)",
+            background: "var(--color-surface)",
+            borderColor: "rgba(255,255,255,0.06)",
           }}
         >
           <div
-            className="mb-3 text-[11px] font-bold uppercase tracking-[0.12em]"
-            style={{ color: "rgba(255,255,255,0.5)" }}
+            className="mb-3 text-[11px] font-semibold uppercase tracking-[0.16em]"
+            style={{ color: "var(--color-text-faint)" }}
           >
             {isEn ? "Your situation" : "Deine Situation"}
           </div>
           <div className="grid gap-3 sm:grid-cols-[1fr_1fr_1fr]">
             {exam && countdown && (
               <SituationStat
-                icon="⏱"
+                icon={Clock}
+                chipBg="rgba(242, 163, 60, 0.14)"
+                chipFg="var(--color-amber)"
                 label={isEn ? "Until exam" : "Bis zur Klausur"}
                 value={countdown.label}
-                valueColor={countdownToneRgba(countdown.tone, 1)}
+                valueColor="var(--color-amber)"
                 sub={exam.title}
                 subColor={examRgba(exam.color, 0.9)}
               />
             )}
             {latestAttempt && lastPct !== null && (
               <SituationStat
-                icon="📊"
+                icon={Trophy}
+                chipBg={
+                  lastPct >= 80
+                    ? "rgba(79, 209, 165, 0.14)"
+                    : lastPct >= 60
+                      ? "rgba(242, 163, 60, 0.14)"
+                      : "rgba(242, 132, 92, 0.14)"
+                }
+                chipFg={
+                  lastPct >= 80
+                    ? "var(--color-cat-teal)"
+                    : lastPct >= 60
+                      ? "var(--color-amber)"
+                      : "var(--color-cat-coral)"
+                }
                 label={isEn ? "Last quiz" : "Letztes Quiz"}
                 value={`${lastPct}%`}
                 valueColor={
                   lastPct >= 80
-                    ? "#34d399"
+                    ? "var(--color-cat-teal)"
                     : lastPct >= 60
-                      ? "#fbbf24"
-                      : "#fb7185"
+                      ? "var(--color-amber)"
+                      : "var(--color-cat-coral)"
                 }
                 sub={`${latestAttempt.correct_count}/${latestAttempt.total_questions} · ${formatRelative(latestAttempt.created_at, language)}`}
               />
             )}
             <SituationStat
-              icon="📚"
+              icon={BookOpen}
+              chipBg="rgba(110, 128, 242, 0.14)"
+              chipFg="var(--color-primary-bright)"
               label={isEn ? "Content" : "Inhalt"}
               value={`${pack.flashcards.length} ${isEn ? "cards" : "Karten"}`}
               sub={isEn
@@ -307,105 +356,136 @@ export default function PackHub({
         </section>
       )}
 
-      {/* Primary Weiterlernen CTA — bold, single button, picks the
-          smartest mode given available data. */}
+      {/* Primary Weiterlernen CTA — filled indigo button, single decisive
+          action. */}
       <section>
         <button
           type="button"
           onClick={() => onEnterMode(cta.target)}
-          className="group flex w-full items-center justify-between gap-4 rounded-2xl bg-white px-5 py-4 text-left transition hover:bg-white/95 sm:px-6 sm:py-5"
+          className="group flex w-full items-center justify-between gap-4 rounded-2xl px-5 py-4 text-left transition hover:brightness-110 sm:px-6 sm:py-5"
+          style={{
+            background: "var(--color-primary)",
+            color: "white",
+          }}
         >
           <div className="min-w-0">
             <div
-              className="text-[11px] font-bold uppercase tracking-[0.12em]"
-              style={{ color: "rgba(15,21,53,0.55)" }}
+              className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.16em]"
+              style={{ color: "rgba(255,255,255,0.7)" }}
             >
-              ✦ {isEn ? "Continue learning" : "Weiterlernen"}
+              <Sparkles size={12} strokeWidth={2} aria-hidden />
+              {isEn ? "Continue learning" : "Weiterlernen"}
             </div>
-            <div className="mt-1 text-[17px] font-extrabold leading-snug text-[#0F1535] sm:text-[19px]">
+            <div
+              className="mt-1 text-[18px] font-semibold leading-snug sm:text-[20px]"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
               {cta.label}
             </div>
             <div
-              className="mt-0.5 text-[12.5px] leading-snug"
-              style={{ color: "rgba(15,21,53,0.65)" }}
+              className="mt-0.5 text-[13px] leading-snug"
+              style={{ color: "rgba(255,255,255,0.78)" }}
             >
               {cta.sub}
             </div>
           </div>
-          <span
+          <ArrowRight
+            size={20}
+            strokeWidth={2}
             aria-hidden
-            className="shrink-0 text-[20px] text-[#0F1535] transition-transform group-hover:translate-x-0.5"
-          >
-            →
-          </span>
+            className="shrink-0 transition-transform group-hover:translate-x-0.5"
+          />
         </button>
       </section>
 
-      {/* Mode launcher — big tappable cards, one per available mode. */}
+      {/* Mode launcher — vertical list of rows with tinted icon chips. */}
       <section>
         <h2
-          className="mb-3 text-[12px] font-bold uppercase tracking-[0.12em]"
-          style={{ color: "rgba(255,255,255,0.55)" }}
+          className="mb-3 text-[11px] font-semibold uppercase tracking-[0.16em]"
+          style={{ color: "var(--color-text-faint)" }}
         >
           {isEn ? "Pick a study mode" : "Wähl deinen Lernmodus"}
         </h2>
-        <div
-          className="grid gap-2.5"
-          style={{
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          }}
-        >
-          {cards.map((c) => (
-            <button
-              key={c.tab}
-              type="button"
-              onClick={() => onEnterMode(c.tab)}
-              className="group flex flex-col gap-2 rounded-2xl border bg-black/15 p-4 text-left transition hover:bg-black/25 hover:-translate-y-0.5 sm:p-5"
-              style={{
-                borderColor: "rgba(255,255,255,0.1)",
-              }}
-            >
-              <div className="flex items-start justify-between gap-2">
-                <span className="text-[28px] leading-none" aria-hidden>
-                  {c.icon}
-                </span>
-                <span
-                  aria-hidden
-                  className="text-[14px] text-white/40 transition group-hover:text-white/70"
+        <ul className="flex flex-col gap-2">
+          {cards.map((c) => {
+            const Icon = c.icon;
+            return (
+              <li key={c.tab}>
+                <button
+                  type="button"
+                  onClick={() => onEnterMode(c.tab)}
+                  className="group flex w-full items-center gap-3.5 rounded-xl border p-3.5 text-left transition hover:-translate-y-px sm:gap-4 sm:p-4"
+                  style={{
+                    background: "var(--color-surface)",
+                    borderColor: "rgba(255,255,255,0.06)",
+                  }}
                 >
-                  →
-                </span>
-              </div>
-              <div className="text-[15.5px] font-bold text-white">{c.title}</div>
-              <div
-                className="text-[12.5px] leading-snug"
-                style={{ color: "rgba(255,255,255,0.6)" }}
-              >
-                {c.sub}
-              </div>
-              <div
-                className="mt-1 text-[11px] font-semibold tabular-nums"
-                style={{ color: "rgba(255,255,255,0.45)" }}
-              >
-                {c.count}
-              </div>
-            </button>
-          ))}
-        </div>
+                  <span
+                    aria-hidden
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl sm:h-11 sm:w-11"
+                    style={{ background: CHIP_BG[c.tone] }}
+                  >
+                    <Icon
+                      size={20}
+                      strokeWidth={1.75}
+                      color={CHIP_FG[c.tone]}
+                    />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div
+                      className="text-[14.5px] font-semibold leading-tight"
+                      style={{
+                        color: "var(--color-text)",
+                        fontFamily: "var(--font-display)",
+                      }}
+                    >
+                      {c.title}
+                    </div>
+                    <div
+                      className="mt-0.5 truncate text-[12.5px]"
+                      style={{ color: "var(--color-text-dim)" }}
+                    >
+                      {c.sub}
+                    </div>
+                  </div>
+                  <div className="hidden shrink-0 text-right sm:block">
+                    <div
+                      className="text-[11px] font-semibold tabular-nums uppercase tracking-[0.12em]"
+                      style={{ color: "var(--color-text-faint)" }}
+                    >
+                      {c.count}
+                    </div>
+                  </div>
+                  <ArrowRight
+                    size={16}
+                    strokeWidth={1.75}
+                    aria-hidden
+                    className="shrink-0 transition-transform group-hover:translate-x-0.5"
+                    color="var(--color-text-faint)"
+                  />
+                </button>
+              </li>
+            );
+          })}
+        </ul>
       </section>
     </div>
   );
 }
 
 function SituationStat({
-  icon,
+  icon: Icon,
+  chipBg,
+  chipFg,
   label,
   value,
   valueColor,
   sub,
   subColor,
 }: {
-  icon: string;
+  icon: LucideIcon;
+  chipBg: string;
+  chipFg: string;
   label: string;
   value: string;
   valueColor?: string;
@@ -413,28 +493,39 @@ function SituationStat({
   subColor?: string;
 }) {
   return (
-    <div>
-      <div
-        className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.1em]"
-        style={{ color: "rgba(255,255,255,0.55)" }}
+    <div className="flex items-start gap-3">
+      <span
+        aria-hidden
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
+        style={{ background: chipBg }}
       >
-        <span aria-hidden>{icon}</span>
-        {label}
-      </div>
-      <div
-        className="mt-1 text-[18px] font-extrabold leading-tight sm:text-[20px]"
-        style={{ color: valueColor ?? "white" }}
-      >
-        {value}
-      </div>
-      {sub && (
+        <Icon size={16} strokeWidth={1.9} color={chipFg} />
+      </span>
+      <div className="min-w-0 flex-1">
         <div
-          className="mt-0.5 truncate text-[12px] leading-snug"
-          style={{ color: subColor ?? "rgba(255,255,255,0.5)" }}
+          className="text-[10.5px] font-semibold uppercase tracking-[0.14em]"
+          style={{ color: "var(--color-text-faint)" }}
         >
-          {sub}
+          {label}
         </div>
-      )}
+        <div
+          className="mt-0.5 text-[17px] font-semibold leading-tight sm:text-[19px]"
+          style={{
+            color: valueColor ?? "var(--color-text)",
+            fontFamily: "var(--font-display)",
+          }}
+        >
+          {value}
+        </div>
+        {sub && (
+          <div
+            className="mt-0.5 truncate text-[12px] leading-snug"
+            style={{ color: subColor ?? "var(--color-text-dim)" }}
+          >
+            {sub}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

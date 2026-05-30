@@ -8,17 +8,40 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-sans: var(--font-display);
+  /* Typography — Sora (display/headings) + Inter (UI/body), loaded via
+     next/font in src/app/layout.tsx and exposed as CSS vars on <html>. */
+  --font-display: var(--font-sora), -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
   --font-heading: var(--font-display);
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
   --tracking-hero: -2px;
   --tracking-h2: -1px;
 
-  /* Lernly — logo-lit navy base */
-  --color-ln-bg-top: #10183f;
-  --color-ln-bg-mid: #0b1030;
-  --color-ln-bg-bot: #060923;
+  /* ============================================================
+     NEW DESIGN SYSTEM TOKENS (UI #3)
+     ============================================================
+     One palette, used everywhere. Pure white (#fff) is text-only —
+     never a large fill. Primary CTAs use --color-primary (deep indigo). */
+  --color-bg: #0F1322;          /* page background — warm deep indigo */
+  --color-bg-deep: #0C0F1C;     /* sidebar / deepest surface */
+  --color-surface: #141930;     /* cards */
+  --color-surface-2: #171C30;   /* chips, nav hover, inputs */
+  --color-text: #EAEDF7;
+  --color-text-dim: #9098B6;
+  --color-text-faint: #6F7799;
+  --color-primary: #2B3499;        /* deep indigo — primary CTA fills */
+  --color-primary-bright: #6E80F2; /* small accents: active nav, links */
+  --color-amber: #F2A33C;          /* urgency, countdown */
+  --color-cat-blue: #8E9AF5;
+  --color-cat-teal: #4FD1A5;
+  --color-cat-coral: #F2845C;
+
+  /* Legacy aliases — bg-top/mid/bot remap to the new palette so
+     existing .ln-page-bg + everything that references --color-ln-bg-*
+     adopts the new look without each call-site change. */
+  --color-ln-bg-top: #131A33;
+  --color-ln-bg-mid: #10162B;
+  --color-ln-bg-bot: #0C0F1C;
 
   --color-ln-cyan: #5bb8d8;
   --color-ln-sky: #6a95e8;
@@ -163,11 +186,13 @@
   font-weight: 500;
 }
 
-/* Lernly background: quiet navy base with subtle logo-blue light. */
+/* Lernly background: calm deep-indigo base, much-toned-down highlights.
+   The new palette wants quiet — radial gradients dropped to ~6% so the
+   bg reads as flat indigo with a hint of warmth, not as a dramatic stage. */
 .ln-page-bg {
   background:
-    radial-gradient(circle at 16% 2%, rgba(42, 56, 232, 0.22), transparent 32%),
-    radial-gradient(circle at 82% 10%, rgba(20, 33, 197, 0.16), transparent 34%),
+    radial-gradient(circle at 16% 2%, rgba(110, 128, 242, 0.08), transparent 36%),
+    radial-gradient(circle at 82% 10%, rgba(43, 52, 153, 0.10), transparent 38%),
     linear-gradient(
       180deg,
       var(--color-ln-bg-top) 0%,

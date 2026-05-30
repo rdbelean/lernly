@@ -12,6 +12,7 @@ import { STUDY_UPLOADS_BUCKET, buildUploadPath } from "@/lib/uploads";
 import { MAX_FILE_BYTES, MAX_FILE_MB } from "@/lib/uploadConfig";
 import { parseJsonResponse } from "@/lib/safeJson";
 import { type ExamType } from "@/lib/schema";
+import { Lock } from "lucide-react";
 import NewExamForm from "@/components/dashboard/NewExamForm";
 
 type GenerateApiResponse = {
@@ -670,7 +671,18 @@ export default function NewPackPage() {
                       Bald verfügbar
                     </span>
                   )}
-                  <div className="text-[18px]">{locked ? "🔒" : opt.emoji}</div>
+                  <div className="text-[18px]">
+                    {locked ? (
+                      <Lock
+                        size={18}
+                        strokeWidth={1.9}
+                        color="var(--color-text-faint)"
+                        aria-hidden
+                      />
+                    ) : (
+                      opt.emoji
+                    )}
+                  </div>
                   <div className="mt-2 text-[14px] font-semibold text-white">
                     {opt.title}
                   </div>

@@ -8,6 +8,7 @@ import { track } from "@/lib/analytics";
 import { renderRichText } from "@/lib/richText";
 import TutorChat from "./TutorChat";
 import type { TutorScope } from "@/lib/tutorPrompt";
+import { Check, Minus, RotateCcw, Sparkles, type LucideIcon } from "lucide-react";
 
 type Language = "en" | "de";
 type CardStatus = "new" | "again" | "almost" | "known";
@@ -351,7 +352,10 @@ export default function FlashcardDeck({
               color: "var(--color-ln-cyan)",
             }}
           >
-            ✨ {isEn ? "Explain it" : "Erklär's mir"}
+            <span className="inline-flex items-center gap-1.5">
+              <Sparkles size={13} strokeWidth={1.9} aria-hidden />
+              {isEn ? "Explain it" : "Erklär's mir"}
+            </span>
           </button>
         </div>
       )}
@@ -359,21 +363,21 @@ export default function FlashcardDeck({
       {/* Rate buttons */}
       <div className="mt-5 grid grid-cols-3 gap-2">
         <RateButton
-          emoji="😕"
+          icon={RotateCcw}
           label={isEn ? "Again" : "Nochmal"}
           tone="rose"
           disabled={!flipped || isAnimating}
           onClick={() => rate("again", "rose")}
         />
         <RateButton
-          emoji="🤔"
+          icon={Minus}
           label={isEn ? "Almost" : "Fast"}
           tone="amber"
           disabled={!flipped || isAnimating}
           onClick={() => rate("almost", "amber")}
         />
         <RateButton
-          emoji="✅"
+          icon={Check}
           label={isEn ? "Got it" : "Kann ich"}
           tone="sage"
           disabled={!flipped || isAnimating}
@@ -401,30 +405,36 @@ export default function FlashcardDeck({
 }
 
 function RateButton({
-  emoji,
+  icon: Icon,
   label,
   tone,
   disabled,
   onClick,
 }: {
-  emoji: string;
+  icon: LucideIcon;
   label: string;
   tone: Tone;
   disabled?: boolean;
   onClick: () => void;
 }) {
+  const iconColor =
+    tone === "rose"
+      ? "var(--color-cat-coral)"
+      : tone === "amber"
+        ? "var(--color-amber)"
+        : "var(--color-cat-teal)";
   const hoverBorder =
     tone === "rose"
-      ? "rgba(244,114,98,0.55)"
+      ? "rgba(242, 132, 92, 0.55)"
       : tone === "amber"
-        ? "rgba(251,191,36,0.55)"
-        : "rgba(74,222,128,0.55)";
+        ? "rgba(242, 163, 60, 0.55)"
+        : "rgba(79, 209, 165, 0.55)";
   const hoverBg =
     tone === "rose"
-      ? "rgba(244,114,98,0.08)"
+      ? "rgba(242, 132, 92, 0.08)"
       : tone === "amber"
-        ? "rgba(251,191,36,0.08)"
-        : "rgba(74,222,128,0.08)";
+        ? "rgba(242, 163, 60, 0.08)"
+        : "rgba(79, 209, 165, 0.08)";
 
   return (
     <motion.button
@@ -453,7 +463,7 @@ function RateButton({
         e.currentTarget.style.background = "";
       }}
     >
-      <span className="text-[20px]">{emoji}</span>
+      <Icon size={20} strokeWidth={2} color={iconColor} aria-hidden />
       <span>{label}</span>
     </motion.button>
   );

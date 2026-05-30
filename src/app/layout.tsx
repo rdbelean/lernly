@@ -1,6 +1,24 @@
 import type { Metadata, Viewport } from "next";
+import { Inter, Sora } from "next/font/google";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import "./globals.css";
+
+// Body / UI typeface. Inter at the standard set of weights we use across
+// nav, buttons, body text, captions.
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+// Display / heading typeface. Sora — geometric humanist, calmer than the
+// system-stack we had. Weight 600 is the primary heading weight per spec.
+const sora = Sora({
+  subsets: ["latin"],
+  variable: "--font-sora",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://lernly-app.de"),
@@ -75,7 +93,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de" className="h-full antialiased">
+    <html
+      lang="de"
+      className={`h-full antialiased ${inter.variable} ${sora.variable}`}
+    >
       <body className="ln-page-bg min-h-full flex flex-col text-[color:var(--color-ln-ink)]">
         <script
           type="application/ld+json"

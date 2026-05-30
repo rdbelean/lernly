@@ -4,6 +4,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { QuizQuestion, StudyPack } from "@/lib/schema";
 import { renderRichText } from "@/lib/richText";
 import { saveQuizAttempt } from "@/app/dashboard/pack/[id]/actions";
+import {
+  BookOpen,
+  RefreshCw,
+  Sparkles,
+  Target,
+  XCircle,
+} from "lucide-react";
 
 type Language = "en" | "de";
 
@@ -14,7 +21,7 @@ const T = (en: boolean) => ({
   q: en ? "Question" : "Frage",
   of: en ? "of" : "von",
   answered: en ? "answered" : "beantwortet",
-  showTheory: en ? "View concept first" : "📖 Konzept zuerst ansehen",
+  showTheory: en ? "View concept first" : "Konzept zuerst ansehen",
   hideTheory: en ? "Hide concept" : "Konzept ausblenden",
   checkAll: en ? "Check all answers" : "Alle Antworten prüfen",
   results: en ? "Results" : "Ergebnis",
@@ -25,12 +32,12 @@ const T = (en: boolean) => ({
   verdictMid: en ? "Borderline. Noch ein paar Lücken." : "Grenzwertig. Noch ein paar Lücken.",
   verdictFail: en ? "Noch nicht durch. Schau die Erklärungen an." : "Noch nicht durch. Schau die Erklärungen an.",
   filterAll: en ? "All" : "Alle",
-  filterWrong: en ? "❌ Wrong only" : "❌ Nur falsche",
-  restart: en ? "🔄 New quiz" : "🔄 Neues Quiz",
+  filterWrong: en ? "Wrong only" : "Nur falsche",
+  restart: en ? "New quiz" : "Neues Quiz",
   explanationLabel: en ? "Explanation" : "Erklärung",
-  shouldRepeat: en ? "🎯 You should review:" : "🎯 Das solltest du wiederholen:",
+  shouldRepeat: en ? "You should review:" : "Das solltest du wiederholen:",
   breakdownHeader: en ? "Per topic" : "Pro Thema",
-  repractice: en ? "✨ Fresh questions on my weak spots" : "✨ Neue Fragen zu meinen Schwächen",
+  repractice: en ? "Fresh questions on my weak spots" : "Neue Fragen zu meinen Schwächen",
   repracticing: en
     ? "Generating fresh questions (~30 s)…"
     : "Generiere neue Fragen (~30 s)…",
@@ -364,7 +371,10 @@ export default function QuizView({
                   : "border-white/10 text-white/55 hover:text-white")
               }
             >
-              {labels.filterWrong}
+              <span className="inline-flex items-center gap-1.5">
+                <XCircle size={12} strokeWidth={1.9} aria-hidden />
+                {labels.filterWrong}
+              </span>
             </button>
           </div>
         )}
@@ -420,7 +430,8 @@ export default function QuizView({
                 border: "1px solid rgba(154,140,224,0.35)",
               }}
             >
-              ✨ {labels.rePracticedBadge}
+              <Sparkles size={11} strokeWidth={2} aria-hidden />
+              {labels.rePracticedBadge}
             </div>
           )}
 
@@ -437,7 +448,10 @@ export default function QuizView({
                 className="text-[12px] font-bold uppercase tracking-[0.1em]"
                 style={{ color: "#fb7185" }}
               >
-                {labels.shouldRepeat}
+                <span className="inline-flex items-center gap-1.5">
+                  <Target size={12} strokeWidth={2} aria-hidden />
+                  {labels.shouldRepeat}
+                </span>
               </div>
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {weakTopics.map((t) => (
@@ -513,20 +527,34 @@ export default function QuizView({
               <button
                 onClick={loadRepractice}
                 disabled={repracticing}
-                className="rounded-full bg-white px-4 py-2 text-[13px] font-bold text-[#0F1535] transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-semibold transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+                style={{
+                  background: "var(--color-primary)",
+                  color: "white",
+                }}
               >
+                <Sparkles size={14} strokeWidth={2} aria-hidden />
                 {repracticing ? labels.repracticing : labels.repractice}
               </button>
             )}
             <button
               onClick={restart}
               className={
-                "rounded-full px-4 py-2 text-[13px] font-bold transition " +
+                "inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-semibold transition " +
                 (weakTopics.length > 0 && packId
                   ? "border border-white/15 text-white/80 hover:text-white"
-                  : "bg-white text-[#0F1535] hover:bg-white/90")
+                  : "")
+              }
+              style={
+                !(weakTopics.length > 0 && packId)
+                  ? {
+                      background: "var(--color-primary)",
+                      color: "white",
+                    }
+                  : undefined
               }
             >
+              <RefreshCw size={14} strokeWidth={2} aria-hidden />
               {labels.restart}
             </button>
           </div>
@@ -601,6 +629,7 @@ export default function QuizView({
                       : "border-white/15 text-white/65 hover:text-white")
                   }
                 >
+                  <BookOpen size={12} strokeWidth={1.9} aria-hidden />
                   {theoryOpen ? labels.hideTheory : labels.showTheory}
                   {!theoryOpen && (
                     <span
@@ -788,8 +817,9 @@ export default function QuizView({
         <div className="mt-6 flex justify-center">
           <button
             onClick={restart}
-            className="rounded-full border border-white/15 px-5 py-2.5 text-[13px] font-semibold text-white/80 transition hover:text-white"
+            className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-[13px] font-semibold text-white/80 transition hover:text-white"
           >
+            <RefreshCw size={14} strokeWidth={2} aria-hidden />
             {labels.restart}
           </button>
         </div>
