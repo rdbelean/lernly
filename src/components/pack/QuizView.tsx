@@ -3,10 +3,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { QuizQuestion, StudyPack } from "@/lib/schema";
 import { renderRichText } from "@/lib/richText";
+import { saveQuizAttempt } from "@/app/dashboard/pack/[id]/actions";
 
 type Language = "en" | "de";
 
 const LETTERS = ["A", "B", "C", "D"] as const;
+const WEAK_TOPIC_THRESHOLD = 0.6; // < 60% accuracy = weak (counts only answered)
 
 const T = (en: boolean) => ({
   q: en ? "Question" : "Frage",
@@ -26,7 +28,60 @@ const T = (en: boolean) => ({
   filterWrong: en ? "❌ Wrong only" : "❌ Nur falsche",
   restart: en ? "🔄 New quiz" : "🔄 Neues Quiz",
   explanationLabel: en ? "Explanation" : "Erklärung",
+  shouldRepeat: en ? "🎯 You should review:" : "🎯 Das solltest du wiederholen:",
+  breakdownHeader: en ? "Per topic" : "Pro Thema",
+  repractice: en ? "✨ Fresh questions on my weak spots" : "✨ Neue Fragen zu meinen Schwächen",
+  repracticing: en
+    ? "Generating fresh questions (~30 s)…"
+    : "Generiere neue Fragen (~30 s)…",
+  repracticeFailed: en
+    ? "Couldn't generate fresh questions — please try again."
+    : "Konnte keine neuen Fragen generieren — bitte erneut versuchen.",
+  rePracticedBadge: en ? "Re-practice round" : "Wiederholungs-Runde",
+  uncategorized: en ? "Other" : "Allgemein",
 });
+
+type TopicScore = { correct: number; wrong: number; skipped: number };
+type PerTopic = Record<string, TopicScore>;
+
+function computePerTopic(
+  deck: QuizQuestion[],
+  answers: Record<string, number>,
+  uncategorizedLabel: string,
+): PerTopic {
+  const out: PerTopic = {};
+  for (const q of deck) {
+    const key = (q.category && q.category.trim()) || uncategorizedLabel;
+    if (!out[key]) out[key] = { correct: 0, wrong: 0, skipped: 0 };
+    const picked = answers[q.id];
+    if (picked === undefined) out[key].skipped++;
+    else if (picked === q.correctIndex) out[key].correct++;
+    else out[key].wrong++;
+  }
+  return out;
+}
+
+function topicAccuracy(score: TopicScore): number {
+  const answered = score.correct + score.wrong;
+  return answered === 0 ? 0 : score.correct / answered;
+}
+
+function topicTone(
+  score: TopicScore,
+): "weak" | "warn" | "strong" | "skipped" {
+  if (score.correct + score.wrong === 0) return "skipped";
+  const acc = topicAccuracy(score);
+  if (acc < WEAK_TOPIC_THRESHOLD) return "weak";
+  if (acc < 0.8) return "warn";
+  return "strong";
+}
+
+const TONE_COLOR: Record<"weak" | "warn" | "strong" | "skipped", string> = {
+  weak: "#fb7185",
+  warn: "#fbbf24",
+  strong: "#34d399",
+  skipped: "rgba(255,255,255,0.4)",
+};
 
 function shuffle<T>(arr: T[]): T[] {
   const out = arr.slice();
@@ -59,10 +114,12 @@ export default function QuizView({
   questions,
   overview,
   language = "de",
+  packId,
 }: {
   questions: QuizQuestion[];
   overview: StudyPack["overview"];
   language?: Language;
+  packId?: string;
 }) {
   const isEn = language === "en";
   const labels = T(isEn);
@@ -73,15 +130,25 @@ export default function QuizView({
   const [checked, setChecked] = useState(false);
   const [filter, setFilter] = useState<"all" | "wrong">("all");
   const [openTheory, setOpenTheory] = useState<Record<string, boolean>>({});
+  // Stems the user has already been shown — accumulates across re-practice
+  // rounds so freshly-generated questions don't repeat. Reset only via the
+  // "🔄 Neues Quiz" full restart.
+  const [seenStems, setSeenStems] = useState<string[]>([]);
+  const [isRePractice, setIsRePractice] = useState(false);
+  const [repracticing, setRepracticing] = useState(false);
+  const [repracticeError, setRepracticeError] = useState<string | null>(null);
   const resultsRef = useRef<HTMLDivElement | null>(null);
 
-  // If the parent ever swaps questions, reset state.
+  // If the parent ever swaps questions (different pack opened), full reset.
   useEffect(() => {
     setDeck(shuffle(questions));
     setAnswers({});
     setChecked(false);
     setFilter("all");
     setOpenTheory({});
+    setSeenStems([]);
+    setIsRePractice(false);
+    setRepracticeError(null);
   }, [questions]);
 
   if (deck.length === 0) {
@@ -115,6 +182,31 @@ export default function QuizView({
       ? deck.filter((q) => answers[q.id] !== q.correctIndex)
       : deck;
 
+  // Per-topic breakdown — only meaningful after check. Sort weakest first
+  // so "what to review" is at the top of the results panel.
+  const perTopic = useMemo<PerTopic>(
+    () => (checked ? computePerTopic(deck, answers, labels.uncategorized) : {}),
+    [checked, deck, answers, labels.uncategorized],
+  );
+  const topicEntries = useMemo(
+    () =>
+      Object.entries(perTopic).sort(([, a], [, b]) => {
+        // Weak topics first; among ties, more wrong answers ranks higher.
+        const accA = topicAccuracy(a);
+        const accB = topicAccuracy(b);
+        if (accA !== accB) return accA - accB;
+        return b.wrong - a.wrong;
+      }),
+    [perTopic],
+  );
+  const weakTopics = useMemo(
+    () =>
+      topicEntries
+        .filter(([, s]) => topicTone(s) === "weak")
+        .map(([name]) => name),
+    [topicEntries],
+  );
+
   const select = (qid: string, idx: number) => {
     if (checked) return;
     setAnswers((prev) => ({ ...prev, [qid]: idx }));
@@ -125,6 +217,40 @@ export default function QuizView({
     requestAnimationFrame(() => {
       resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
+    // Persist the attempt + accumulate seen stems for any future re-practice.
+    // Fire-and-forget — a save failure mustn't block the UI; the action
+    // logs server-side and silently returns.
+    const persistDeck = deck;
+    const persistAnswers = answers;
+    if (packId) {
+      const finalPerTopic = computePerTopic(
+        persistDeck,
+        persistAnswers,
+        labels.uncategorized,
+      );
+      void saveQuizAttempt({
+        packId,
+        totalQuestions: persistDeck.length,
+        correctCount: persistDeck.filter(
+          (q) => persistAnswers[q.id] === q.correctIndex,
+        ).length,
+        wrongCount: persistDeck.filter(
+          (q) =>
+            q.id in persistAnswers &&
+            persistAnswers[q.id] !== q.correctIndex,
+        ).length,
+        skippedCount:
+          persistDeck.length - Object.keys(persistAnswers).length,
+        perTopic: finalPerTopic,
+        questionIds: persistDeck.map((q) => q.id),
+        isRePractice,
+      }).catch((e) => console.error("[QuizView] saveQuizAttempt threw", e));
+    }
+    setSeenStems((prev) => {
+      const next = new Set(prev);
+      for (const q of persistDeck) next.add(q.stem);
+      return Array.from(next);
+    });
   };
 
   const restart = () => {
@@ -133,6 +259,55 @@ export default function QuizView({
     setChecked(false);
     setFilter("all");
     setOpenTheory({});
+    setSeenStems([]);
+    setIsRePractice(false);
+    setRepracticeError(null);
+  };
+
+  // Load a fresh re-practice deck scoped to current weak topics. Server route
+  // builds new questions, filtered to those topics, that don't duplicate any
+  // stem we've already shown. Replaces the deck; resets check state; keeps
+  // seenStems so subsequent re-practice keeps avoiding duplicates.
+  const loadRepractice = async () => {
+    if (!packId || weakTopics.length === 0) return;
+    setRepracticing(true);
+    setRepracticeError(null);
+    try {
+      const res = await fetch("/api/quiz/repractice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          packId,
+          weakTopics,
+          seenStems,
+        }),
+      });
+      if (!res.ok) {
+        const body = (await res.json().catch(() => ({}))) as { error?: string };
+        throw new Error(body.error ?? labels.repracticeFailed);
+      }
+      const body = (await res.json()) as { questions: QuizQuestion[] };
+      if (!Array.isArray(body.questions) || body.questions.length === 0) {
+        throw new Error(labels.repracticeFailed);
+      }
+      // Swap deck, reset interaction state. seenStems already includes the
+      // round we just finished (added in checkAll above).
+      setDeck(shuffle(body.questions));
+      setAnswers({});
+      setChecked(false);
+      setFilter("all");
+      setOpenTheory({});
+      setIsRePractice(true);
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    } catch (e) {
+      setRepracticeError(
+        e instanceof Error ? e.message : labels.repracticeFailed,
+      );
+    } finally {
+      setRepracticing(false);
+    }
   };
 
   const toggleTheory = (qid: string) =>
@@ -236,14 +411,133 @@ export default function QuizView({
               />
             </div>
           </div>
+          {isRePractice && (
+            <div
+              className="mt-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em]"
+              style={{
+                background: "rgba(154,140,224,0.14)",
+                color: "var(--color-ln-violet)",
+                border: "1px solid rgba(154,140,224,0.35)",
+              }}
+            >
+              ✨ {labels.rePracticedBadge}
+            </div>
+          )}
+
+          {/* Weak topics — scannable "what to review" block, big at top */}
+          {weakTopics.length > 0 && (
+            <div
+              className="mt-5 rounded-xl border p-3.5"
+              style={{
+                background: "rgba(251,113,133,0.06)",
+                borderColor: "rgba(251,113,133,0.3)",
+              }}
+            >
+              <div
+                className="text-[12px] font-bold uppercase tracking-[0.1em]"
+                style={{ color: "#fb7185" }}
+              >
+                {labels.shouldRepeat}
+              </div>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {weakTopics.map((t) => (
+                  <span
+                    key={t}
+                    className="rounded-full px-2.5 py-1 text-[12px] font-semibold"
+                    style={{
+                      background: "rgba(251,113,133,0.12)",
+                      color: "#fda4af",
+                      border: "1px solid rgba(251,113,133,0.35)",
+                    }}
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Per-topic breakdown */}
+          {topicEntries.length > 0 && (
+            <div className="mt-5">
+              <div
+                className="mb-2 text-[11px] font-bold uppercase tracking-[0.12em]"
+                style={{ color: "rgba(255,255,255,0.55)" }}
+              >
+                {labels.breakdownHeader}
+              </div>
+              <ul className="space-y-1.5">
+                {topicEntries.map(([name, score]) => {
+                  const answered = score.correct + score.wrong;
+                  const acc = topicAccuracy(score);
+                  const tone = topicTone(score);
+                  const color = TONE_COLOR[tone];
+                  const pct = answered === 0 ? 0 : Math.round(acc * 100);
+                  return (
+                    <li
+                      key={name}
+                      className="flex flex-wrap items-center gap-2 rounded-lg border px-3 py-2 text-[13px]"
+                      style={{
+                        background: "rgba(255,255,255,0.025)",
+                        borderColor: "rgba(255,255,255,0.08)",
+                        borderLeft: `3px solid ${color}`,
+                      }}
+                    >
+                      <span className="flex-1 text-white" style={{ minWidth: "10ch" }}>
+                        {name}
+                      </span>
+                      <span
+                        className="tabular-nums"
+                        style={{ color: "rgba(255,255,255,0.55)" }}
+                      >
+                        {score.correct}/{answered || score.skipped} {answered === 0 ? labels.skipped.toLowerCase() : ""}
+                      </span>
+                      <span
+                        className="rounded-full px-2 py-0.5 text-[11px] font-bold tabular-nums"
+                        style={{
+                          background: `${color}1f`,
+                          color,
+                        }}
+                      >
+                        {answered === 0 ? "—" : `${pct}%`}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+
           <div className="mt-5 flex flex-wrap gap-2">
+            {weakTopics.length > 0 && packId && (
+              <button
+                onClick={loadRepractice}
+                disabled={repracticing}
+                className="rounded-full bg-white px-4 py-2 text-[13px] font-bold text-[#0F1535] transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {repracticing ? labels.repracticing : labels.repractice}
+              </button>
+            )}
             <button
               onClick={restart}
-              className="rounded-full bg-white px-4 py-2 text-[13px] font-bold text-[#0F1535] transition hover:bg-white/90"
+              className={
+                "rounded-full px-4 py-2 text-[13px] font-bold transition " +
+                (weakTopics.length > 0 && packId
+                  ? "border border-white/15 text-white/80 hover:text-white"
+                  : "bg-white text-[#0F1535] hover:bg-white/90")
+              }
             >
               {labels.restart}
             </button>
           </div>
+          {repracticeError && (
+            <p
+              className="mt-3 text-[12.5px]"
+              style={{ color: "rgba(255,170,170,0.95)" }}
+            >
+              {repracticeError}
+            </p>
+          )}
         </div>
       )}
 

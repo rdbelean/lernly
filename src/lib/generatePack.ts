@@ -676,6 +676,9 @@ export async function generatePack(opts: {
     // input survives in pack_data (useful for future "regenerate with same
     // inputs" features and for debugging why a pack looks the way it does).
     ...(extraInfo && extraInfo.trim() ? { extraInfo: extraInfo.trim() } : {}),
+    // Persist the detected material language so re-practice + regeneration
+    // can drive the LANGUAGE LOCK without rebuilding the detection pipeline.
+    materialLanguage,
   };
   const parsed = StudyPackSchema.safeParse(merged);
   if (!parsed.success) throw new Error("schema_validation_failed");

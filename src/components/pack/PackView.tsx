@@ -48,9 +48,11 @@ const HERO_TAB_FOR_FORMAT: Record<string, Tab> = {
 export default function PackView({
   pack,
   language = "de",
+  packId,
 }: {
   pack: StudyPack;
   language?: Language;
+  packId?: string;
 }) {
   const tabs = useMemo<TabDef[]>(() => {
     const has: Record<Tab, boolean> = {
@@ -142,6 +144,7 @@ export default function PackView({
             questions={pack.quiz.questions}
             overview={pack.overview}
             language={language}
+            packId={packId}
           />
         ) : null}
         {tab === "openQuestions" &&

@@ -169,7 +169,7 @@ export default async function PackDetailPage({
         </div>
 
         <div className="mt-10">
-          <PackView pack={pack} />
+          <PackView pack={pack} packId={data.id} />
         </div>
       </div>
     </main>

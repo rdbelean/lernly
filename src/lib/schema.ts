@@ -299,6 +299,9 @@ export const StudyPackSchema = z.object({
   // Verbatim "Zusatzinfos" the user typed at pack creation. Persisted so
   // the original steering input is recoverable (e.g. for future regen).
   extraInfo: z.string().optional(),
+  // Detected material language at generation time. Persisted so re-practice
+  // / regeneration features can drive the LANGUAGE LOCK without re-detecting.
+  materialLanguage: z.enum(["de", "en"]).optional(),
 });
 
 // =========================================================================
