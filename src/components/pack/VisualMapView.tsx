@@ -1,7 +1,27 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { motion } from "motion/react";
+import {
+  AlertTriangle,
+  ArrowLeftRight,
+  ArrowRight,
+  BookOpen,
+  Brain,
+  ChevronDown,
+  ChevronRight,
+  Check,
+  Clock,
+  Lightbulb,
+  Link2,
+  Map as MapIcon,
+  Plus,
+  Sparkles,
+  Star,
+  Target,
+  X,
+  type LucideIcon,
+} from "lucide-react";
 import type {
   CalloutFrameworkSchema,
   ComparisonFrameworkSchema,
@@ -13,13 +33,11 @@ import type {
   MnemonicFrameworkSchema,
   StudyPack,
   TableFrameworkSchema,
-  VisualBlockColorSchema,
   VisualBlockPrioritySchema,
 } from "@/lib/schema";
 import type { z } from "zod";
 import { renderRichText } from "@/lib/richText";
 
-type BlockColor = z.infer<typeof VisualBlockColorSchema>;
 type Priority = z.infer<typeof VisualBlockPrioritySchema>;
 type FlowFw = z.infer<typeof FlowFrameworkSchema>;
 type Matrix2x2Fw = z.infer<typeof Matrix2x2FrameworkSchema>;
@@ -38,8 +56,37 @@ type Topic = Overview["topics"][number];
 type Concept = Topic["concepts"][number];
 type Language = "en" | "de";
 
-// Priority ranking — higher = more exam-relevant. Used both for sorting
-// (highest first) and for size emphasis (highest = big, quick_win = quiet).
+// =========================================================================
+// Visual Map — unified design pass
+// =========================================================================
+// Color rule (the WHOLE legend, applied identically everywhere):
+//   default surfaces       → #141930 bg, rgba(255,255,255,0.06) border
+//   highlight (key thing)  → #6E80F2 border + rgba(110,128,242,0.09) tint
+//   callout / Merke / trap → #F2A33C amber left border
+//   priority badges        → highest=#F2845C coral · high=#6E80F2 indigo
+//                            quick_win=#F2A33C amber · moderate=neutral
+//   relevance / comparison → kam dran/pro = #4FD1A5 teal, con = #F2845C coral
+// Stored block.color / accent / icon (legacy rainbow + emoji) is ignored at
+// the render layer — old packs look unified without regeneration.
+// =========================================================================
+
+const NEUTRAL_BG = "#141930";
+const NEUTRAL_BG_2 = "#171C30";
+const NEUTRAL_BORDER = "rgba(255,255,255,0.06)";
+const NEUTRAL_BORDER_2 = "rgba(255,255,255,0.10)";
+const TEXT = "#EAEDF7";
+const TEXT_DIM = "#9098B6";
+const TEXT_FAINT = "#6F7799";
+const HIGHLIGHT_FG = "#6E80F2";
+const HIGHLIGHT_TINT = "rgba(110,128,242,0.09)";
+const AMBER = "#F2A33C";
+const AMBER_TINT = "rgba(242,163,60,0.10)";
+const CORAL = "#F2845C";
+const CORAL_TINT = "rgba(242,132,92,0.10)";
+const TEAL = "#4FD1A5";
+const TEAL_TINT = "rgba(79,209,165,0.10)";
+const DISPLAY_FONT = "var(--font-display)";
+
 const PRIORITY_RANK: Record<Priority | "_default", number> = {
   highest: 4,
   high: 3,
@@ -48,56 +95,57 @@ const PRIORITY_RANK: Record<Priority | "_default", number> = {
   _default: 2,
 };
 
-type SizingTier = {
-  iconClass: string;
-  titleClass: string;
-  containerClass: string;
-};
-
-const PRIORITY_SIZING: Record<Priority | "_default", SizingTier> = {
-  highest: {
-    iconClass:
-      "h-12 w-12 rounded-2xl text-[24px] shrink-0 sm:h-14 sm:w-14 sm:text-[28px]",
-    titleClass: "text-[19px] font-extrabold sm:text-[22px]",
-    containerClass: "p-5 sm:p-6",
-  },
-  high: {
-    iconClass:
-      "h-11 w-11 rounded-xl text-[22px] shrink-0 sm:h-12 sm:w-12 sm:rounded-2xl sm:text-[24px]",
-    titleClass: "text-[18px] font-extrabold sm:text-[20px]",
-    containerClass: "p-4 sm:p-5",
-  },
+const PRIORITY_TONE: Record<
+  Priority,
+  { fg: string; bg: string; label: string }
+> = {
+  highest: { fg: CORAL, bg: CORAL_TINT, label: "HÖCHSTE PRIORITÄT" },
+  high: { fg: HIGHLIGHT_FG, bg: HIGHLIGHT_TINT, label: "WICHTIG" },
   moderate: {
-    iconClass:
-      "h-10 w-10 rounded-xl text-[20px] shrink-0 sm:h-11 sm:w-11 sm:text-[22px]",
-    titleClass: "text-[17px] font-bold sm:text-[18px]",
-    containerClass: "p-3.5 sm:p-4",
+    fg: TEXT_FAINT,
+    bg: "rgba(255,255,255,0.04)",
+    label: "BASIS",
   },
-  quick_win: {
-    iconClass:
-      "h-9 w-9 rounded-lg text-[18px] shrink-0 sm:h-10 sm:w-10 sm:text-[20px]",
-    titleClass: "text-[15px] font-bold sm:text-[16px]",
-    containerClass: "p-3 sm:p-3.5",
-  },
-  _default: {
-    iconClass:
-      "h-11 w-11 rounded-xl text-[22px] shrink-0 sm:h-12 sm:w-12 sm:rounded-2xl sm:text-[24px]",
-    titleClass: "text-[18px] font-extrabold sm:text-[20px]",
-    containerClass: "p-4 sm:p-5",
-  },
+  quick_win: { fg: AMBER, bg: AMBER_TINT, label: "QUICK WIN" },
 };
-
-function priorityKey(p: Priority | undefined): keyof typeof PRIORITY_SIZING {
-  return p ?? "_default";
-}
 
 function priorityRank(p: Priority | undefined): number {
   return PRIORITY_RANK[p ?? "_default"];
 }
 
-// Topic-by-name index over the pack's overview. Block titles are matched
-// to topic names so the Visual Map can render the matching concept chips
-// (the valuable bit folded over from the old Übersicht).
+// Strip emoji + variation selectors that the model bakes into older packs
+// so the unified icon system is the only thing the eye lands on. Covers
+// the common pictograph blocks plus zero-width joiner sequences.
+const EMOJI_RE =
+  /[\u{1F1E6}-\u{1F1FF}\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE00}-\u{FE0F}\u{200D}]+/gu;
+function stripEmoji(s: string | undefined | null): string {
+  if (!s) return "";
+  return s.replace(EMOJI_RE, "").replace(/\s+/g, " ").trim();
+}
+
+// Hash-based block-icon pick from a tiny lucide pool. The model's stored
+// `block.icon` is ignored (it's an arbitrary emoji); we want the same
+// title to always pick the same icon so re-renders stay stable.
+const BLOCK_ICON_POOL: LucideIcon[] = [
+  BookOpen,
+  Brain,
+  Lightbulb,
+  MapIcon,
+  Target,
+  Sparkles,
+  Link2,
+];
+function pickBlockIcon(title: string): LucideIcon {
+  let hash = 0;
+  for (let i = 0; i < title.length; i++) {
+    hash = (hash * 31 + title.charCodeAt(i)) | 0;
+  }
+  return BLOCK_ICON_POOL[Math.abs(hash) % BLOCK_ICON_POOL.length];
+}
+
+// =========================================================================
+// Topic index — same as before, unchanged
+// =========================================================================
 type TopicIndex = { byLower: Map<string, Topic>; topics: Topic[] };
 
 function buildTopicIndex(overview: Overview | undefined): TopicIndex {
@@ -111,12 +159,9 @@ function findTopicForBlock(
   block: VisualBlock,
   idx: TopicIndex,
 ): Topic | undefined {
-  const blockLower = block.title.toLowerCase().trim();
-  // Exact match first.
+  const blockLower = stripEmoji(block.title).toLowerCase().trim();
   const exact = idx.byLower.get(blockLower);
   if (exact) return exact;
-  // Substring contains either way (block title may carry a Topic-N prefix,
-  // overview topic may be shorter or longer).
   for (const t of idx.topics) {
     const tLower = t.name.toLowerCase().trim();
     if (tLower.length < 4 || blockLower.length < 4) continue;
@@ -125,100 +170,94 @@ function findTopicForBlock(
   return undefined;
 }
 
-const COLOR_RGB: Record<BlockColor, string> = {
-  blue: "108,142,239",
-  cyan: "91,196,216",
-  green: "74,222,128",
-  amber: "251,191,36",
-  violet: "167,139,250",
-  rose: "251,113,133",
-};
+// =========================================================================
+// Chips
+// =========================================================================
 
-function rgba(color: BlockColor, alpha: number): string {
-  return `rgba(${COLOR_RGB[color]},${alpha})`;
-}
-
-const PRIORITY_RGB: Record<Priority, string> = {
-  highest: "239,68,68",
-  high: "139,92,246",
-  moderate: "245,158,11",
-  quick_win: "249,115,22",
-};
-
-const PRIORITY_LABEL: Record<Priority, string> = {
-  highest: "HÖCHSTE PRIORITÄT",
-  high: "WICHTIG",
-  moderate: "BASIS",
-  quick_win: "QUICK WIN",
-};
-
-function priorityRgba(p: Priority, alpha: number): string {
-  return `rgba(${PRIORITY_RGB[p]},${alpha})`;
-}
-
-const CALLOUT_TONE_RGB: Record<NonNullable<CalloutFw["tone"]>, string> = {
-  definition: "108,142,239",
-  insight: "167,139,250",
-  warning: "239,68,68",
-  neutral: "255,255,255",
-};
-
-function calloutRgba(
-  tone: NonNullable<CalloutFw["tone"]> | undefined,
-  alpha: number,
-): string {
-  const rgb = CALLOUT_TONE_RGB[tone ?? "neutral"];
-  return `rgba(${rgb},${alpha})`;
-}
-
-function FlowFramework({ fw, color }: { fw: FlowFw; color: BlockColor }) {
-  const arrowChar =
-    fw.arrows === "bidirectional" ? "↔" : fw.arrows === "plus" ? "+" : "→";
-
+function PriorityChip({ priority }: { priority: Priority }) {
+  const tone = PRIORITY_TONE[priority];
   return (
-    <div className="mt-3">
-      <h4 className="mb-3 text-[15px] font-semibold text-white">{fw.title}</h4>
+    <span
+      className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.1em]"
+      style={{ background: tone.bg, color: tone.fg }}
+    >
+      {tone.label}
+    </span>
+  );
+}
+
+function TimeChip({ minutes }: { minutes: number }) {
+  return (
+    <span
+      className="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10.5px] font-semibold"
+      style={{
+        background: "rgba(255,255,255,0.03)",
+        borderColor: NEUTRAL_BORDER,
+        color: TEXT_DIM,
+      }}
+    >
+      <Clock size={11} strokeWidth={2} aria-hidden />
+      {minutes} Min
+    </span>
+  );
+}
+
+// =========================================================================
+// Frameworks
+// =========================================================================
+
+function FlowFramework({ fw }: { fw: FlowFw }) {
+  const Arrow =
+    fw.arrows === "bidirectional"
+      ? ArrowLeftRight
+      : fw.arrows === "plus"
+        ? Plus
+        : ArrowRight;
+  return (
+    <div className="mt-4">
+      <h4
+        className="mb-3 text-[14px] font-semibold"
+        style={{ color: TEXT, fontFamily: DISPLAY_FONT }}
+      >
+        {stripEmoji(fw.title)}
+      </h4>
       <div className="flex flex-wrap items-center justify-center gap-2">
-        {fw.boxes.map((box, i) => {
-          const boxColor = box.accent ?? color;
-          return (
-            <>
-              <div
-                key={`box-${i}`}
-                className="min-w-[110px] rounded-xl border px-3.5 py-2.5 text-center text-[12px] font-semibold"
-                style={{
-                  background: `rgba(20,22,28,0.6)`,
-                  borderColor: rgba(boxColor, 0.4),
-                  color: "white",
-                }}
-              >
-                <div>{box.label}</div>
-                {box.sub && (
-                  <div
-                    className="mt-0.5 text-[10px] font-normal"
-                    style={{ color: rgba(boxColor, 0.9) }}
-                  >
-                    {box.sub}
-                  </div>
-                )}
+        {fw.boxes.map((box, i) => (
+          <Fragment key={`flow-${i}`}>
+            <div
+              className="min-w-[110px] rounded-xl border px-3.5 py-2.5 text-center"
+              style={{
+                background: NEUTRAL_BG_2,
+                borderColor: NEUTRAL_BORDER,
+              }}
+            >
+              <div className="text-[12px] font-semibold" style={{ color: TEXT }}>
+                {stripEmoji(box.label)}
               </div>
-              {i < fw.boxes.length - 1 && (
-                <span
-                  key={`arrow-${i}`}
-                  className="text-[18px]"
-                  style={{ color: "rgba(255,255,255,0.4)" }}
+              {box.sub && (
+                <div
+                  className="mt-0.5 text-[10.5px]"
+                  style={{ color: TEXT_DIM }}
                 >
-                  {arrowChar}
-                </span>
+                  {stripEmoji(box.sub)}
+                </div>
               )}
-            </>
-          );
-        })}
+            </div>
+            {i < fw.boxes.length - 1 && (
+              <Arrow
+                size={16}
+                strokeWidth={1.5}
+                color={TEXT_FAINT}
+                aria-hidden
+              />
+            )}
+          </Fragment>
+        ))}
       </div>
       {fw.explanation && (
         <p
           className="mt-3 text-[12.5px] leading-relaxed"
-          style={{ color: "rgba(255,255,255,0.62)" }}
+          style={{ color: TEXT_DIM }}
           dangerouslySetInnerHTML={{ __html: renderRichText(fw.explanation) }}
         />
       )}
@@ -226,19 +265,26 @@ function FlowFramework({ fw, color }: { fw: FlowFw; color: BlockColor }) {
   );
 }
 
-function Matrix2x2Framework({
-  fw,
-  color,
-}: {
-  fw: Matrix2x2Fw;
-  color: BlockColor;
-}) {
+function Matrix2x2Framework({ fw }: { fw: Matrix2x2Fw }) {
   const cellAt = (x: "low" | "high", y: "low" | "high") =>
     fw.cells.find((c) => c.x === x && c.y === y);
 
+  const axisLabel = (
+    <span
+      className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.1em]"
+      style={{ color: TEXT_DIM }}
+    />
+  );
+  void axisLabel; // referenced for type-only intent — unused at runtime
+
   return (
-    <div className="mt-3">
-      <h4 className="mb-3 text-[15px] font-semibold text-white">{fw.title}</h4>
+    <div className="mt-4">
+      <h4
+        className="mb-3 text-[14px] font-semibold"
+        style={{ color: TEXT, fontFamily: DISPLAY_FONT }}
+      >
+        {stripEmoji(fw.title)}
+      </h4>
       <div className="overflow-x-auto">
         <div
           className="grid min-w-[460px] gap-1 text-[12px]"
@@ -247,69 +293,74 @@ function Matrix2x2Framework({
             gridTemplateRows: "auto 1fr 1fr",
           }}
         >
-          {/* Top-left empty */}
           <div />
-          {/* X-axis labels */}
           <div
             className="px-2 py-1.5 text-center text-[11px] font-medium uppercase tracking-[0.1em]"
-            style={{ color: rgba(color, 0.85) }}
+            style={{ color: TEXT_DIM }}
           >
-            {fw.xAxis.low}
+            {stripEmoji(fw.xAxis.low)}
           </div>
           <div
             className="px-2 py-1.5 text-center text-[11px] font-medium uppercase tracking-[0.1em]"
-            style={{ color: rgba(color, 0.85) }}
+            style={{ color: TEXT_DIM }}
           >
-            {fw.xAxis.high}
+            {stripEmoji(fw.xAxis.high)}
           </div>
-          {/* Y high row */}
           <div
             className="flex items-center justify-center px-2 py-2 text-[11px] font-medium uppercase tracking-[0.1em]"
-            style={{ color: rgba(color, 0.85) }}
+            style={{ color: TEXT_DIM }}
           >
             <span
-              style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
+              style={{
+                writingMode: "vertical-rl",
+                transform: "rotate(180deg)",
+              }}
             >
-              {fw.yAxis.high}
+              {stripEmoji(fw.yAxis.high)}
             </span>
           </div>
-          {(["low", "high"] as const).map((x) => {
-            const cell = cellAt(x, "high");
-            return (
-              <MatrixCell key={`hi-${x}`} cell={cell} color={color} />
-            );
-          })}
-          {/* Y low row */}
+          {(["low", "high"] as const).map((x) => (
+            <MatrixCell key={`hi-${x}`} cell={cellAt(x, "high")} />
+          ))}
           <div
             className="flex items-center justify-center px-2 py-2 text-[11px] font-medium uppercase tracking-[0.1em]"
-            style={{ color: rgba(color, 0.85) }}
+            style={{ color: TEXT_DIM }}
           >
             <span
-              style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
+              style={{
+                writingMode: "vertical-rl",
+                transform: "rotate(180deg)",
+              }}
             >
-              {fw.yAxis.low}
+              {stripEmoji(fw.yAxis.low)}
             </span>
           </div>
-          {(["low", "high"] as const).map((x) => {
-            const cell = cellAt(x, "low");
-            return (
-              <MatrixCell key={`lo-${x}`} cell={cell} color={color} />
-            );
-          })}
+          {(["low", "high"] as const).map((x) => (
+            <MatrixCell key={`lo-${x}`} cell={cellAt(x, "low")} />
+          ))}
         </div>
       </div>
       <div
-        className="mt-2 text-[11px]"
-        style={{ color: "rgba(255,255,255,0.45)" }}
+        className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]"
+        style={{ color: TEXT_FAINT }}
       >
-        ↕ {fw.yAxis.label}{" "}
-        <span className="mx-1 opacity-60">×</span>
-        ↔ {fw.xAxis.label}
+        <ArrowLeftRight
+          size={11}
+          strokeWidth={1.5}
+          aria-hidden
+          style={{ transform: "rotate(90deg)" }}
+        />
+        <span>{stripEmoji(fw.yAxis.label)}</span>
+        <span aria-hidden className="mx-1 opacity-60">
+          ×
+        </span>
+        <ArrowLeftRight size={11} strokeWidth={1.5} aria-hidden />
+        <span>{stripEmoji(fw.xAxis.label)}</span>
       </div>
       {fw.explanation && (
         <p
           className="mt-3 text-[12.5px] leading-relaxed"
-          style={{ color: "rgba(255,255,255,0.62)" }}
+          style={{ color: TEXT_DIM }}
           dangerouslySetInnerHTML={{ __html: renderRichText(fw.explanation) }}
         />
       )}
@@ -319,10 +370,8 @@ function Matrix2x2Framework({
 
 function MatrixCell({
   cell,
-  color,
 }: {
   cell: Matrix2x2Fw["cells"][number] | undefined;
-  color: BlockColor;
 }) {
   if (!cell) {
     return (
@@ -330,36 +379,41 @@ function MatrixCell({
         className="rounded-lg border border-dashed"
         style={{
           background: "rgba(0,0,0,0.15)",
-          borderColor: "rgba(255,255,255,0.08)",
+          borderColor: NEUTRAL_BORDER,
         }}
       />
     );
   }
+  const hl = cell.highlight === true;
   return (
     <div
       className="rounded-lg border p-3 text-center"
       style={{
-        background: cell.highlight
-          ? rgba(color, 0.14)
-          : "rgba(20,22,28,0.6)",
-        borderColor: cell.highlight
-          ? rgba(color, 0.55)
-          : "rgba(255,255,255,0.1)",
+        background: hl ? HIGHLIGHT_TINT : NEUTRAL_BG_2,
+        borderColor: hl ? HIGHLIGHT_FG : NEUTRAL_BORDER,
       }}
     >
       <div
-        className="text-[13px] font-semibold"
-        style={{ color: cell.highlight ? rgba(color, 1) : "white" }}
+        className="inline-flex items-center gap-1.5 text-[13px] font-semibold"
+        style={{ color: hl ? HIGHLIGHT_FG : TEXT }}
       >
-        {cell.highlight && "🌟 "}
-        {cell.title}
+        {hl && (
+          <Star
+            size={12}
+            strokeWidth={2}
+            aria-hidden
+            fill={HIGHLIGHT_FG}
+            color={HIGHLIGHT_FG}
+          />
+        )}
+        {stripEmoji(cell.title)}
       </div>
       {cell.sub && (
         <div
           className="mt-1 text-[11px] leading-snug"
-          style={{ color: "rgba(255,255,255,0.55)" }}
+          style={{ color: TEXT_DIM }}
         >
-          {cell.sub}
+          {stripEmoji(cell.sub)}
         </div>
       )}
     </div>
@@ -367,86 +421,97 @@ function MatrixCell({
 }
 
 function ComparisonFramework({ fw }: { fw: ComparisonFw }) {
+  type SideStyle = {
+    fg: string;
+    bg: string;
+    border: string;
+    Icon: LucideIcon | null;
+  };
   const sideStyle = (
     tone: ComparisonFw["left"]["tone"] | undefined,
-  ): { bg: string; border: string; text: string } => {
+  ): SideStyle => {
     if (tone === "pro")
       return {
-        bg: "rgba(74,222,128,0.05)",
-        border: "rgba(74,222,128,0.18)",
-        text: "rgb(134,239,172)",
+        fg: TEAL,
+        bg: TEAL_TINT,
+        border: "rgba(79,209,165,0.22)",
+        Icon: Check,
       };
     if (tone === "con")
       return {
-        bg: "rgba(248,113,113,0.05)",
-        border: "rgba(248,113,113,0.18)",
-        text: "rgb(252,165,165)",
+        fg: CORAL,
+        bg: CORAL_TINT,
+        border: "rgba(242,132,92,0.22)",
+        Icon: X,
       };
     return {
-      bg: "rgba(255,255,255,0.04)",
-      border: "rgba(255,255,255,0.12)",
-      text: "rgba(255,255,255,0.85)",
+      fg: TEXT_DIM,
+      bg: NEUTRAL_BG_2,
+      border: NEUTRAL_BORDER,
+      Icon: null,
     };
   };
-
   const left = sideStyle(fw.left.tone);
   const right = sideStyle(fw.right.tone);
-
+  const sides = [
+    { side: fw.left, style: left },
+    { side: fw.right, style: right },
+  ];
   return (
-    <div className="mt-3">
-      <h4 className="mb-3 text-[15px] font-semibold text-white">{fw.title}</h4>
+    <div className="mt-4">
+      <h4
+        className="mb-3 text-[14px] font-semibold"
+        style={{ color: TEXT, fontFamily: DISPLAY_FONT }}
+      >
+        {stripEmoji(fw.title)}
+      </h4>
       <div className="grid gap-2 md:grid-cols-2">
-        {[
-          { side: fw.left, style: left },
-          { side: fw.right, style: right },
-        ].map((col, idx) => (
-          <div
-            key={idx}
-            className="rounded-xl border p-4"
-            style={{
-              background: col.style.bg,
-              borderColor: col.style.border,
-            }}
-          >
+        {sides.map((col, idx) => {
+          const ItemIcon = col.style.Icon;
+          return (
             <div
-              className="mb-2 text-[11px] font-bold uppercase tracking-[0.12em]"
-              style={{ color: col.style.text }}
+              key={idx}
+              className="rounded-xl border p-4"
+              style={{ background: col.style.bg, borderColor: col.style.border }}
             >
-              {col.side.tone === "pro"
-                ? "✓ "
-                : col.side.tone === "con"
-                  ? "✗ "
-                  : "• "}
-              {col.side.label}
+              <div
+                className="mb-2 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.12em]"
+                style={{ color: col.style.fg }}
+              >
+                {ItemIcon && (
+                  <ItemIcon size={12} strokeWidth={2.2} aria-hidden />
+                )}
+                {stripEmoji(col.side.label)}
+              </div>
+              <ul className="space-y-1.5 text-[13px] leading-relaxed">
+                {col.side.items.map((item, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span
+                      aria-hidden
+                      className="mt-[3px] shrink-0"
+                      style={{ color: col.style.fg }}
+                    >
+                      {ItemIcon ? (
+                        <ItemIcon size={11} strokeWidth={2.2} aria-hidden />
+                      ) : (
+                        "•"
+                      )}
+                    </span>
+                    <span
+                      style={{ color: TEXT }}
+                      dangerouslySetInnerHTML={{ __html: renderRichText(item) }}
+                    />
+                  </li>
+                ))}
+              </ul>
             </div>
-            <ul className="space-y-1.5 text-[13px] leading-relaxed">
-              {col.side.items.map((item, i) => (
-                <li key={i} className="flex items-start gap-2">
-                  <span
-                    aria-hidden
-                    className="mt-[2px] shrink-0 text-[12px]"
-                    style={{ color: col.style.text }}
-                  >
-                    {col.side.tone === "pro"
-                      ? "✓"
-                      : col.side.tone === "con"
-                        ? "✗"
-                        : "•"}
-                  </span>
-                  <span
-                    style={{ color: "rgba(255,255,255,0.85)" }}
-                    dangerouslySetInnerHTML={{ __html: renderRichText(item) }}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+          );
+        })}
       </div>
       {fw.explanation && (
         <p
           className="mt-3 text-[12.5px] leading-relaxed"
-          style={{ color: "rgba(255,255,255,0.62)" }}
+          style={{ color: TEXT_DIM }}
           dangerouslySetInnerHTML={{ __html: renderRichText(fw.explanation) }}
         />
       )}
@@ -454,39 +519,37 @@ function ComparisonFramework({ fw }: { fw: ComparisonFw }) {
   );
 }
 
-function FormulaFramework({
-  fw,
-  color,
-}: {
-  fw: FormulaFw;
-  color: BlockColor;
-}) {
+function FormulaFramework({ fw }: { fw: FormulaFw }) {
   return (
-    <div className="mt-3">
+    <div className="mt-4">
       {fw.title && (
-        <h4 className="mb-2 text-[15px] font-semibold text-white">
-          {fw.title}
+        <h4
+          className="mb-2 text-[14px] font-semibold"
+          style={{ color: TEXT, fontFamily: DISPLAY_FONT }}
+        >
+          {stripEmoji(fw.title)}
         </h4>
       )}
       <div
-        className="rounded-xl border-l-[3px] border-y border-r px-5 py-4 text-center"
+        className="rounded-xl px-5 py-4 text-center"
         style={{
-          background: rgba(color, 0.06),
-          borderLeftColor: rgba(color, 0.7),
-          borderTopColor: rgba(color, 0.15),
-          borderRightColor: rgba(color, 0.15),
-          borderBottomColor: rgba(color, 0.15),
+          background: NEUTRAL_BG_2,
+          border: `1px solid ${NEUTRAL_BORDER}`,
+          borderLeft: `3px solid ${HIGHLIGHT_FG}`,
         }}
       >
-        <div className="text-[15px] font-semibold leading-snug text-white">
+        <div
+          className="text-[15px] font-semibold leading-snug"
+          style={{ color: TEXT }}
+        >
           {fw.formula}
         </div>
         {fw.sub && (
           <div
             className="mt-1.5 text-[12px]"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+            style={{ color: TEXT_DIM }}
           >
-            {fw.sub}
+            {stripEmoji(fw.sub)}
           </div>
         )}
       </div>
@@ -494,28 +557,32 @@ function FormulaFramework({
   );
 }
 
-function MnemonicFramework({
-  fw,
-  color,
-}: {
-  fw: MnemonicFw;
-  color: BlockColor;
-}) {
+function MnemonicFramework({ fw }: { fw: MnemonicFw }) {
   return (
-    <div className="mt-3">
-      <h4 className="mb-2 text-[15px] font-semibold text-white">{fw.title}</h4>
+    <div className="mt-4">
+      <h4
+        className="mb-2 text-[14px] font-semibold"
+        style={{ color: TEXT, fontFamily: DISPLAY_FONT }}
+      >
+        {stripEmoji(fw.title)}
+      </h4>
       <div
         className="rounded-xl border p-4"
         style={{
-          background: rgba(color, 0.05),
-          borderColor: rgba(color, 0.22),
+          background: NEUTRAL_BG_2,
+          borderColor: NEUTRAL_BORDER,
         }}
       >
         <div className="flex items-center gap-2">
-          <span className="text-[20px]">🧠</span>
+          <Brain
+            size={20}
+            strokeWidth={1.75}
+            color={HIGHLIGHT_FG}
+            aria-hidden
+          />
           <span
-            className="text-[20px] font-extrabold tracking-[0.08em]"
-            style={{ color: rgba(color, 1) }}
+            className="text-[20px] font-semibold tracking-[0.08em]"
+            style={{ color: HIGHLIGHT_FG, fontFamily: DISPLAY_FONT }}
           >
             {fw.acronym}
           </span>
@@ -525,27 +592,24 @@ function MnemonicFramework({
             <li
               key={i}
               className="flex gap-3 text-[13px]"
-              style={{ color: "rgba(255,255,255,0.78)" }}
+              style={{ color: TEXT }}
             >
               <span
-                className="w-6 shrink-0 font-bold"
-                style={{ color: rgba(color, 1) }}
+                className="w-6 shrink-0 font-semibold"
+                style={{ color: HIGHLIGHT_FG }}
               >
                 {row.letter}
               </span>
-              <span>{row.meaning}</span>
+              <span>{stripEmoji(row.meaning)}</span>
             </li>
           ))}
         </ul>
         {fw.hook && (
           <div
             className="mt-3 rounded-lg px-3 py-2 text-[12px] italic leading-relaxed"
-            style={{
-              background: "rgba(0,0,0,0.18)",
-              color: "rgba(255,255,255,0.7)",
-            }}
+            style={{ background: "rgba(0,0,0,0.18)", color: TEXT_DIM }}
           >
-            {fw.hook}
+            {stripEmoji(fw.hook)}
           </div>
         )}
       </div>
@@ -556,23 +620,38 @@ function MnemonicFramework({
 function LinkNoteFramework({ fw }: { fw: LinkNoteFw }) {
   return (
     <div
-      className="mt-3 rounded-xl border p-4"
+      className="mt-4 rounded-xl border p-4"
       style={{
-        background: "rgba(167,139,250,0.06)",
-        borderColor: "rgba(167,139,250,0.22)",
+        background: NEUTRAL_BG_2,
+        borderColor: NEUTRAL_BORDER,
       }}
     >
       <div className="flex items-start gap-2.5">
-        <span className="text-[14px] leading-none">🔗</span>
-        <div className="flex-1">
-          <div className="mb-1 flex flex-wrap items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.1em]">
-            <span style={{ color: "rgb(196,181,253)" }}>{fw.fromTopic}</span>
-            <span style={{ color: "rgba(255,255,255,0.4)" }}>→</span>
-            <span style={{ color: "rgb(196,181,253)" }}>{fw.toTopic}</span>
+        <Link2
+          size={14}
+          strokeWidth={1.75}
+          color={HIGHLIGHT_FG}
+          aria-hidden
+          className="mt-0.5 shrink-0"
+        />
+        <div className="flex-1 min-w-0">
+          <div className="mb-1 flex flex-wrap items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.12em]">
+            <span style={{ color: HIGHLIGHT_FG }}>
+              {stripEmoji(fw.fromTopic)}
+            </span>
+            <ArrowRight
+              size={11}
+              strokeWidth={1.75}
+              color={TEXT_FAINT}
+              aria-hidden
+            />
+            <span style={{ color: HIGHLIGHT_FG }}>
+              {stripEmoji(fw.toTopic)}
+            </span>
           </div>
           <p
             className="text-[13px] leading-relaxed"
-            style={{ color: "rgba(255,255,255,0.82)" }}
+            style={{ color: TEXT }}
             dangerouslySetInnerHTML={{ __html: renderRichText(fw.explanation) }}
           />
         </div>
@@ -581,52 +660,61 @@ function LinkNoteFramework({ fw }: { fw: LinkNoteFw }) {
   );
 }
 
-function CalloutFramework({
-  fw,
-  color,
-}: {
-  fw: CalloutFw;
-  color: BlockColor;
-}) {
-  const tone = fw.tone;
-  const accent = tone && tone !== "neutral" ? calloutRgba(tone, 1) : rgba(color, 0.85);
-  const tint = tone && tone !== "neutral" ? calloutRgba(tone, 0.05) : rgba(color, 0.04);
-
+function CalloutFramework({ fw }: { fw: CalloutFw }) {
+  // Every callout uses amber per the unified legend. The stored `tone` only
+  // picks the leading icon — never the color, so the eye learns "amber =
+  // pause and pay attention" regardless of what kind of note it is.
+  const Icon =
+    fw.tone === "warning"
+      ? AlertTriangle
+      : fw.tone === "definition"
+        ? BookOpen
+        : fw.tone === "insight"
+          ? Lightbulb
+          : null;
   return (
     <div
-      className="mt-3 rounded-r-xl border-l-[3px] px-4 py-3 sm:px-5 sm:py-3.5"
-      style={{ background: tint, borderLeftColor: accent }}
+      className="mt-4 rounded-r-xl px-4 py-3 sm:px-5 sm:py-3.5"
+      style={{
+        background: AMBER_TINT,
+        borderLeft: `3px solid ${AMBER}`,
+      }}
     >
       {fw.title && (
         <div
-          className="mb-1 text-[12px] font-bold uppercase tracking-[0.1em]"
-          style={{ color: accent }}
+          className="mb-1 inline-flex items-center gap-1.5 text-[12px] font-semibold uppercase tracking-[0.1em]"
+          style={{ color: AMBER }}
         >
-          {fw.title}
+          {Icon && <Icon size={13} strokeWidth={2.2} aria-hidden />}
+          {stripEmoji(fw.title)}
         </div>
       )}
       <div
         className="text-[13.5px] leading-relaxed"
-        style={{ color: "rgba(255,255,255,0.85)" }}
+        style={{ color: TEXT }}
         dangerouslySetInnerHTML={{ __html: renderRichText(fw.body) }}
       />
     </div>
   );
 }
 
-function TableFramework({ fw, color }: { fw: TableFw; color: BlockColor }) {
+function TableFramework({ fw }: { fw: TableFw }) {
   const colCount = fw.headers?.length ?? fw.rows[0]?.length ?? 0;
-
   return (
-    <div className="mt-3">
+    <div className="mt-4">
       {fw.title && (
-        <h4 className="mb-3 text-[15px] font-semibold text-white">{fw.title}</h4>
+        <h4
+          className="mb-3 text-[14px] font-semibold"
+          style={{ color: TEXT, fontFamily: DISPLAY_FONT }}
+        >
+          {stripEmoji(fw.title)}
+        </h4>
       )}
       <div
         className="overflow-x-auto rounded-xl border"
         style={{
-          background: rgba(color, 0.025),
-          borderColor: "rgba(255,255,255,0.08)",
+          background: NEUTRAL_BG_2,
+          borderColor: NEUTRAL_BORDER,
         }}
       >
         <table className="w-full border-collapse text-[12.5px]">
@@ -636,13 +724,15 @@ function TableFramework({ fw, color }: { fw: TableFw; color: BlockColor }) {
                 {fw.headers.map((h, i) => (
                   <th
                     key={i}
-                    className="border-b-2 px-3 py-2.5 text-left text-[11px] font-bold uppercase tracking-[0.08em]"
+                    className="px-3.5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.08em]"
                     style={{
-                      background: "rgba(255,255,255,0.04)",
-                      borderBottomColor: rgba(color, 0.35),
-                      color: rgba(color, 1),
+                      background: "rgba(255,255,255,0.02)",
+                      borderBottom: `1px solid ${NEUTRAL_BORDER}`,
+                      color: TEXT_DIM,
                     }}
-                    dangerouslySetInnerHTML={{ __html: renderRichText(h) }}
+                    dangerouslySetInnerHTML={{
+                      __html: renderRichText(stripEmoji(h)),
+                    }}
                   />
                 ))}
               </tr>
@@ -651,20 +741,22 @@ function TableFramework({ fw, color }: { fw: TableFw; color: BlockColor }) {
           <tbody>
             {fw.rows.map((row, ri) => (
               <tr key={ri}>
-                {Array.from({ length: colCount }).map((_, ci) => {
-                  const cell = row[ci] ?? "";
-                  return (
-                    <td
-                      key={ci}
-                      className="border-b px-3 py-2.5 align-top leading-relaxed"
-                      style={{
-                        borderBottomColor: "rgba(255,255,255,0.06)",
-                        color: "rgba(255,255,255,0.78)",
-                      }}
-                      dangerouslySetInnerHTML={{ __html: renderRichText(cell) }}
-                    />
-                  );
-                })}
+                {Array.from({ length: colCount }).map((_, ci) => (
+                  <td
+                    key={ci}
+                    className="px-3.5 py-3 align-top leading-relaxed"
+                    style={{
+                      borderBottom:
+                        ri < fw.rows.length - 1
+                          ? "1px solid rgba(255,255,255,0.03)"
+                          : "none",
+                      color: TEXT,
+                    }}
+                    dangerouslySetInnerHTML={{
+                      __html: renderRichText(row[ci] ?? ""),
+                    }}
+                  />
+                ))}
               </tr>
             ))}
           </tbody>
@@ -673,28 +765,25 @@ function TableFramework({ fw, color }: { fw: TableFw; color: BlockColor }) {
       {fw.caption && (
         <p
           className="mt-2 text-[11.5px]"
-          style={{ color: "rgba(255,255,255,0.5)" }}
+          style={{ color: TEXT_FAINT }}
         >
-          {fw.caption}
+          {stripEmoji(fw.caption)}
         </p>
       )}
     </div>
   );
 }
 
-function ConceptGridFramework({
-  fw,
-  color,
-}: {
-  fw: ConceptGridFw;
-  color: BlockColor;
-}) {
-  const edge = fw.accentEdge ?? "top";
-
+function ConceptGridFramework({ fw }: { fw: ConceptGridFw }) {
   return (
-    <div className="mt-3">
+    <div className="mt-4">
       {fw.title && (
-        <h4 className="mb-3 text-[15px] font-semibold text-white">{fw.title}</h4>
+        <h4
+          className="mb-3 text-[14px] font-semibold"
+          style={{ color: TEXT, fontFamily: DISPLAY_FONT }}
+        >
+          {stripEmoji(fw.title)}
+        </h4>
       )}
       <div
         className="grid gap-2.5"
@@ -702,44 +791,29 @@ function ConceptGridFramework({
           gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
         }}
       >
-        {fw.cards.map((card, i) => {
-          const accent = card.accent ?? color;
-          const borderStyle: React.CSSProperties =
-            edge === "left"
-              ? {
-                  borderLeftColor: rgba(accent, 0.7),
-                  borderLeftWidth: 3,
-                }
-              : {
-                  borderTopColor: rgba(accent, 0.7),
-                  borderTopWidth: 3,
-                };
-          return (
+        {fw.cards.map((card, i) => (
+          <div
+            key={i}
+            className="rounded-xl border p-4"
+            style={{
+              background: NEUTRAL_BG_2,
+              borderColor: NEUTRAL_BORDER,
+            }}
+          >
             <div
-              key={i}
-              className="rounded-xl border p-4 transition-colors"
-              style={{
-                background: "rgba(20,22,28,0.5)",
-                borderColor: "rgba(255,255,255,0.08)",
-                ...borderStyle,
+              className="mb-1.5 text-[14px] font-semibold"
+              style={{ color: TEXT, fontFamily: DISPLAY_FONT }}
+              dangerouslySetInnerHTML={{
+                __html: renderRichText(stripEmoji(card.title)),
               }}
-            >
-              <div className="mb-1.5 flex items-center gap-2 text-[14px] font-semibold text-white">
-                {card.icon && <span className="text-[16px]">{card.icon}</span>}
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: renderRichText(card.title),
-                  }}
-                />
-              </div>
-              <p
-                className="text-[12.5px] leading-relaxed"
-                style={{ color: "rgba(255,255,255,0.7)" }}
-                dangerouslySetInnerHTML={{ __html: renderRichText(card.body) }}
-              />
-            </div>
-          );
-        })}
+            />
+            <p
+              className="text-[12.5px] leading-relaxed"
+              style={{ color: TEXT_DIM }}
+              dangerouslySetInnerHTML={{ __html: renderRichText(card.body) }}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -747,110 +821,83 @@ function ConceptGridFramework({
 
 type AnyFramework = VisualMap["blocks"][number]["frameworks"][number];
 
-function FrameworkSwitch({
-  fw,
-  color,
-}: {
-  fw: AnyFramework;
-  color: BlockColor;
-}) {
+function FrameworkSwitch({ fw }: { fw: AnyFramework }) {
   switch (fw.kind) {
     case "flow":
-      return <FlowFramework fw={fw} color={color} />;
+      return <FlowFramework fw={fw} />;
     case "matrix2x2":
-      return <Matrix2x2Framework fw={fw} color={color} />;
+      return <Matrix2x2Framework fw={fw} />;
     case "comparison":
       return <ComparisonFramework fw={fw} />;
     case "formula":
-      return <FormulaFramework fw={fw} color={color} />;
+      return <FormulaFramework fw={fw} />;
     case "mnemonic":
-      return <MnemonicFramework fw={fw} color={color} />;
+      return <MnemonicFramework fw={fw} />;
     case "link_note":
       return <LinkNoteFramework fw={fw} />;
     case "callout":
-      return <CalloutFramework fw={fw} color={color} />;
+      return <CalloutFramework fw={fw} />;
     case "table":
-      return <TableFramework fw={fw} color={color} />;
+      return <TableFramework fw={fw} />;
     case "concept_grid":
-      return <ConceptGridFramework fw={fw} color={color} />;
+      return <ConceptGridFramework fw={fw} />;
   }
 }
 
-function PriorityChip({ priority }: { priority: Priority }) {
-  return (
-    <span
-      className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em]"
-      style={{
-        background: priorityRgba(priority, 0.12),
-        color: priorityRgba(priority, 1),
-      }}
-    >
-      {PRIORITY_LABEL[priority]}
-    </span>
-  );
-}
-
-function TimeChip({ minutes }: { minutes: number }) {
-  return (
-    <span
-      className="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10.5px] font-semibold"
-      style={{
-        background: "rgba(255,255,255,0.04)",
-        borderColor: "rgba(255,255,255,0.1)",
-        color: "rgba(255,255,255,0.7)",
-      }}
-    >
-      <span aria-hidden>⏱</span>
-      {minutes} Min
-    </span>
-  );
-}
+// =========================================================================
+// Roadmap + Section header
+// =========================================================================
 
 function RoadmapView({ blocks }: { blocks: VisualBlock[] }) {
   const steps = blocks.filter((b) => b.priority && b.timeMinutes);
   if (steps.length < 2) return null;
-
   const total = steps.reduce((sum, s) => sum + (s.timeMinutes ?? 0), 0);
-
   return (
     <div className="mb-10">
       <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
         <div className="flex items-center gap-2">
-          <span className="text-[18px]" aria-hidden>
-            🗺️
-          </span>
-          <h3 className="text-[18px] font-bold tracking-[-0.3px] text-white">
+          <MapIcon
+            size={18}
+            strokeWidth={1.75}
+            color={TEXT_DIM}
+            aria-hidden
+          />
+          <h3
+            className="text-[18px] font-semibold tracking-[-0.3px]"
+            style={{ color: TEXT, fontFamily: DISPLAY_FONT }}
+          >
             Dein Lern-Pfad
           </h3>
         </div>
-        <p className="text-[12px]" style={{ color: "rgba(255,255,255,0.55)" }}>
+        <p className="text-[12px]" style={{ color: TEXT_FAINT }}>
           {steps.length} Themen · ~{total} Min
         </p>
       </div>
-      <ol className="space-y-2.5">
+      <ol className="space-y-2">
         {steps.map((step, i) => {
           const p = step.priority as Priority;
+          const tone = PRIORITY_TONE[p];
           return (
             <li
               key={`step-${i}`}
-              className="flex gap-3 rounded-xl border p-3.5 sm:gap-4 sm:p-4"
+              className="flex gap-3 rounded-xl border p-3.5 sm:gap-4"
               style={{
-                background: "rgba(20,22,28,0.5)",
-                borderColor: "rgba(255,255,255,0.08)",
+                background: NEUTRAL_BG_2,
+                borderColor: NEUTRAL_BORDER,
               }}
             >
               <div
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[15px] font-extrabold text-white sm:h-10 sm:w-10"
-                style={{
-                  background: `linear-gradient(135deg, ${priorityRgba(p, 1)}, ${priorityRgba(p, 0.7)})`,
-                }}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[14px] font-semibold"
+                style={{ background: tone.bg, color: tone.fg }}
               >
                 {i + 1}
               </div>
               <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2 text-[14px] font-bold text-white sm:text-[15px]">
-                  {step.icon && <span aria-hidden>{step.icon}</span>}
-                  <span className="truncate">{step.title}</span>
+                <div
+                  className="truncate text-[14px] font-semibold"
+                  style={{ color: TEXT, fontFamily: DISPLAY_FONT }}
+                >
+                  {stripEmoji(step.title)}
                 </div>
                 <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                   <PriorityChip priority={p} />
@@ -867,42 +914,36 @@ function RoadmapView({ blocks }: { blocks: VisualBlock[] }) {
   );
 }
 
-function SectionHeader({
-  block,
-  sizing,
-}: {
-  block: VisualBlock;
-  sizing?: SizingTier;
-}) {
-  const s = sizing ?? PRIORITY_SIZING._default;
+function SectionHeader({ block }: { block: VisualBlock }) {
+  const tone = block.priority ? PRIORITY_TONE[block.priority] : null;
+  const Icon = pickBlockIcon(block.title);
   return (
     <div className="mb-4 flex flex-wrap items-start gap-3 sm:flex-nowrap sm:items-center sm:gap-4">
-      <div
-        className={
-          "flex items-center justify-center " + s.iconClass
-        }
-        style={{
-          background: `linear-gradient(135deg, ${rgba(block.color, 0.85)}, ${rgba(block.color, 0.5)})`,
-        }}
+      <span
         aria-hidden
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl"
+        style={{ background: tone?.bg ?? "rgba(255,255,255,0.04)" }}
       >
-        {block.icon ?? "✨"}
-      </div>
+        <Icon
+          size={20}
+          strokeWidth={1.75}
+          color={tone?.fg ?? TEXT_FAINT}
+        />
+      </span>
       <div className="min-w-0 flex-1">
         {block.subtitle && (
           <div
-            className="text-[10.5px] font-bold uppercase tracking-[0.12em]"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+            className="text-[10.5px] font-semibold uppercase tracking-[0.14em]"
+            style={{ color: TEXT_FAINT }}
           >
-            {block.subtitle}
+            {stripEmoji(block.subtitle)}
           </div>
         )}
         <h3
-          className={
-            "mt-0.5 tracking-[-0.3px] text-white " + s.titleClass
-          }
+          className="mt-0.5 text-[18px] font-semibold tracking-[-0.3px] sm:text-[20px]"
+          style={{ color: TEXT, fontFamily: DISPLAY_FONT }}
         >
-          {block.title}
+          {stripEmoji(block.title)}
         </h3>
       </div>
       {(block.priority || block.timeMinutes) && (
@@ -917,11 +958,10 @@ function SectionHeader({
   );
 }
 
-// Concept chip strip — folded over from the now-removed Übersicht. Renders
-// the matched topic's concepts as compact tap-to-expand chips at the top
-// of each block. Importance + relevanceTag drive emphasis; tap reveals
-// definition + examRelevance inline. Returns null when topic has no
-// concepts so blocks without an overview match render cleanly.
+// =========================================================================
+// Concept chip strip
+// =========================================================================
+
 function ConceptChipStrip({
   concepts,
   language,
@@ -933,7 +973,6 @@ function ConceptChipStrip({
   if (!concepts || concepts.length === 0) return null;
   const isEn = language === "en";
 
-  // Sort: high importance first, then with-tag, then medium, then low.
   const sorted = [...concepts].sort((a, b) => {
     const rank = (c: Concept) =>
       (c.importance === "high" ? 100 : c.importance === "medium" ? 50 : 10) +
@@ -952,8 +991,8 @@ function ConceptChipStrip({
   return (
     <div className="mb-4">
       <div
-        className="mb-2 text-[10.5px] font-bold uppercase tracking-[0.12em]"
-        style={{ color: "rgba(255,255,255,0.5)" }}
+        className="mb-2 text-[10.5px] font-semibold uppercase tracking-[0.14em]"
+        style={{ color: TEXT_FAINT }}
       >
         {isEn ? "Concepts to know" : "Konzepte in diesem Thema"}
       </div>
@@ -961,89 +1000,91 @@ function ConceptChipStrip({
         {sorted.map((c) => {
           const isOpen = expanded.has(c.term);
           const isHigh = c.importance === "high";
-          const accent = isHigh
-            ? "rgba(34,211,238,0.55)"
-            : c.importance === "medium"
-              ? "rgba(255,255,255,0.18)"
-              : "rgba(255,255,255,0.08)";
           return (
             <li key={c.term}>
               <button
                 type="button"
                 onClick={() => toggle(c.term)}
                 aria-expanded={isOpen}
-                className="block w-full rounded-lg border bg-black/15 px-3 py-2 text-left transition hover:bg-black/25"
+                className="block w-full rounded-lg border px-3 py-2 text-left transition hover:brightness-110"
                 style={{
-                  borderColor: isHigh
-                    ? "rgba(34,211,238,0.3)"
-                    : "rgba(255,255,255,0.08)",
-                  borderLeft: `3px solid ${accent}`,
+                  background: NEUTRAL_BG_2,
+                  borderColor: NEUTRAL_BORDER,
+                  borderLeft: `3px solid ${isHigh ? HIGHLIGHT_FG : NEUTRAL_BORDER}`,
                 }}
               >
                 <div className="flex items-start justify-between gap-2">
                   <span
-                    className={
-                      "flex-1 text-[13.5px] font-semibold leading-snug " +
-                      (isHigh ? "text-white" : "text-white/90")
-                    }
+                    className="flex-1 text-[13.5px] font-semibold leading-snug"
+                    style={{ color: TEXT }}
                   >
-                    {c.term}
+                    {stripEmoji(c.term)}
                   </span>
                   <span
                     aria-hidden
-                    className="shrink-0 text-[10px] text-white/35"
+                    className="shrink-0"
+                    style={{ color: TEXT_FAINT }}
                   >
-                    {isOpen ? "▾" : "▸"}
+                    {isOpen ? (
+                      <ChevronDown size={13} strokeWidth={2} />
+                    ) : (
+                      <ChevronRight size={13} strokeWidth={2} />
+                    )}
                   </span>
                 </div>
                 {c.essence && (
                   <div
                     className="mt-0.5 truncate text-[12px] leading-snug"
-                    style={{ color: "rgba(255,255,255,0.55)" }}
+                    style={{ color: TEXT_DIM }}
                     title={c.essence}
                   >
-                    {c.essence}
+                    {stripEmoji(c.essence)}
                   </div>
                 )}
                 <div className="mt-1 flex flex-wrap gap-1">
                   {isHigh && (
                     <span
-                      className="inline-flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-[0.08em]"
+                      className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.08em]"
                       style={{
-                        background: "rgba(34,211,238,0.14)",
-                        borderColor: "rgba(34,211,238,0.4)",
-                        color: "rgb(165,243,252)",
+                        background: HIGHLIGHT_TINT,
+                        borderColor: HIGHLIGHT_FG,
+                        color: HIGHLIGHT_FG,
                       }}
                     >
-                      ✦ {isEn ? "High" : "Wichtig"}
+                      <Star size={9} strokeWidth={2.2} aria-hidden />
+                      {isEn ? "High" : "Wichtig"}
                     </span>
                   )}
                   {c.relevanceTag && (
                     <span
-                      className="inline-flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-[0.08em]"
+                      className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.08em]"
                       style={{
-                        background: "rgba(124,196,160,0.14)",
-                        borderColor: "rgba(124,196,160,0.4)",
-                        color: "var(--color-ln-sage)",
+                        background: TEAL_TINT,
+                        borderColor: TEAL,
+                        color: TEAL,
                       }}
                     >
-                      ✦ {c.relevanceTag}
+                      <Sparkles size={9} strokeWidth={2.2} aria-hidden />
+                      {stripEmoji(c.relevanceTag)}
                     </span>
                   )}
                 </div>
                 {isOpen && (
-                  <div className="mt-3 border-t border-white/5 pt-3">
+                  <div
+                    className="mt-3 border-t pt-3"
+                    style={{ borderColor: NEUTRAL_BORDER }}
+                  >
                     {c.author && (
                       <div
                         className="mb-1.5 text-[10.5px] font-medium uppercase tracking-[0.1em]"
-                        style={{ color: "rgba(255,255,255,0.4)" }}
+                        style={{ color: TEXT_FAINT }}
                       >
-                        {c.author}
+                        {stripEmoji(c.author)}
                       </div>
                     )}
                     <p
                       className="text-[12.5px] leading-relaxed"
-                      style={{ color: "rgba(255,255,255,0.78)" }}
+                      style={{ color: TEXT }}
                       dangerouslySetInnerHTML={{
                         __html: renderRichText(c.definition),
                       }}
@@ -1052,17 +1093,21 @@ function ConceptChipStrip({
                       <div
                         className="mt-2.5 rounded-lg border p-2.5"
                         style={{
-                          background: "rgba(34,211,238,0.05)",
-                          borderColor: "rgba(34,211,238,0.18)",
+                          background: HIGHLIGHT_TINT,
+                          borderColor: NEUTRAL_BORDER_2,
                         }}
                       >
                         <div className="flex items-start gap-2">
-                          <span aria-hidden className="mt-[1px] text-[11px]">
-                            🎯
-                          </span>
+                          <Target
+                            size={11}
+                            strokeWidth={2}
+                            color={HIGHLIGHT_FG}
+                            aria-hidden
+                            className="mt-0.5 shrink-0"
+                          />
                           <p
                             className="text-[11.5px] leading-relaxed"
-                            style={{ color: "rgba(255,255,255,0.72)" }}
+                            style={{ color: TEXT }}
                             dangerouslySetInnerHTML={{
                               __html: renderRichText(c.examRelevance),
                             }}
@@ -1081,6 +1126,10 @@ function ConceptChipStrip({
   );
 }
 
+// =========================================================================
+// Main
+// =========================================================================
+
 export default function VisualMapView({
   map,
   overview,
@@ -1090,9 +1139,6 @@ export default function VisualMapView({
   overview?: Overview;
   language?: Language;
 }) {
-  // Sort blocks by priority desc (highest → quick_win → undefined) so the
-  // most exam-relevant topics appear first. timeMinutes is a tiebreaker so
-  // longer-study topics float above shorter ones within the same priority.
   const sortedBlocks = useMemo(() => {
     return [...map.blocks].sort((a, b) => {
       const ra = priorityRank(a.priority);
@@ -1102,23 +1148,20 @@ export default function VisualMapView({
     });
   }, [map.blocks]);
 
-  // Index overview topics so each block can show its matching concept chips
-  // (folded over from the removed Übersicht tab).
   const topicIndex = useMemo(() => buildTopicIndex(overview), [overview]);
 
   if (!map.blocks.length) {
     return (
-      <p className="text-[14px]" style={{ color: "var(--color-ln-mute)" }}>
+      <p className="text-[14px]" style={{ color: TEXT_DIM }}>
         Keine visuelle Übersicht verfügbar.
       </p>
     );
   }
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8">
       <RoadmapView blocks={sortedBlocks} />
       {sortedBlocks.map((block, bi) => {
-        const sizing = PRIORITY_SIZING[priorityKey(block.priority)];
         const topic = findTopicForBlock(block, topicIndex);
         return (
           <motion.section
@@ -1127,17 +1170,12 @@ export default function VisualMapView({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: bi * 0.05, duration: 0.4 }}
           >
-            <SectionHeader block={block} sizing={sizing} />
-
-            {/* Frameworks within block — concept-chip strip first (folded
-                from the old Übersicht), then the existing framework
-                rendering. Padding scales with priority so highest-priority
-                topics dominate visually. */}
+            <SectionHeader block={block} />
             <div
-              className={"rounded-2xl border " + sizing.containerClass}
+              className="rounded-2xl border p-4 sm:p-5"
               style={{
-                background: rgba(block.color, 0.03),
-                borderColor: rgba(block.color, 0.14),
+                background: NEUTRAL_BG,
+                borderColor: NEUTRAL_BORDER,
               }}
             >
               {topic && (
@@ -1150,7 +1188,6 @@ export default function VisualMapView({
                 <FrameworkSwitch
                   key={`${block.title}-fw-${fi}`}
                   fw={fw}
-                  color={block.color}
                 />
               ))}
             </div>

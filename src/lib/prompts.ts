@@ -137,13 +137,13 @@ PRÜFUNGS-PRIORITÄT (entscheidend für UI-Hierarchie)
 Setze pro Block:
 - "priority": "highest" | "high" | "moderate" | "quick_win"  — wie wichtig dieses Thema für die Prüfung ist
 - "timeMinutes": geschätzte Lernzeit in Minuten (10-60)
-- "icon": EIN einzelner Emoji der das Thema visuell verankert (🚪 für Entry Modes, ⚠️ für Risiken, 🌐 für Globalisierung, 🏢 für Unternehmen, 💱 für Finanzen, 🔬 für Methoden …)
 - "subtitle": KURZER Tag-Text in der Form "Topic N — Foundation" / "Topic N — HIGHEST EXAM PRIORITY" / "Topic N — Quick Win". Wird als uppercase Tag angezeigt.
 
 Priorität bedeutet WIRKLICH Prüfungsrelevanz, nicht Kapitelreihenfolge: das Kern-Modell aus dem Material ist "highest"; die Randnotiz ist "quick_win". Sei mutig — wenn alles "high" ist, ist nichts "high".
 
-FARB-CODIERUNG
-Jeder Block bekommt eine "color": "blue" | "cyan" | "green" | "amber" | "violet" | "rose". Wechsle die Farben durch, sodass benachbarte Blöcke unterscheidbar sind. Erster Block typischerweise blue (Big Picture).
+KEIN EMOJI im Output
+Setze "icon" auf "" (leerer String) und lasse "accent" (Flow-Box, Concept-Card) weg. Das UI zeichnet selbst Vektor-Icons und färbt nach Semantik (Priorität, highlight, callout-amber). KEINE Emojis irgendwo im Output (auch nicht in titles, subtitles, labels, captions, hooks, body, explanation).
+"color" am Block: Pflichtfeld im Schema — setze für jeden Block "blue" (Wert wird vom UI ignoriert). Variation ist im UI über Priorität/Highlight geregelt, nicht über die gespeicherte Farbe.
 
 CONTENT-DIÄT (ruthless)
 - Nur prüfungsrelevantes. Wenn ein Detail nicht in einer realistischen Klausur-Frage auftauchen würde, lass es weg.
@@ -184,29 +184,30 @@ DIE 9 FRAMEWORK-TYPEN
    Felder: kind, fromTopic, toTopic, explanation
 
 ANTI-PATTERN (mach das NICHT)
-- ❌ Alles in concept_grid stopfen — das ist die "Wall of Cards"-Falle. Eine Tabelle gehört in table, ein Prozess in flow, eine Definition in callout.
-- ❌ Block ohne priority/timeMinutes/icon — die Roadmap fällt sonst aus.
-- ❌ Comparison ohne tone, table ohne headers (wenn die Spalten Bedeutung haben), callout ohne tone.
-- ❌ Concept-Cards mit Roman-Body — body sollte 1-3 prägnante Sätze sein.
-- ❌ Fließtext-Frames mit 4 langen Absätzen.
+- Alles in concept_grid stopfen — das ist die "Wall of Cards"-Falle. Eine Tabelle gehört in table, ein Prozess in flow, eine Definition in callout.
+- Block ohne priority/timeMinutes — die Roadmap fällt sonst aus.
+- Comparison ohne tone, table ohne headers (wenn die Spalten Bedeutung haben), callout ohne tone.
+- Concept-Cards mit Roman-Body — body sollte 1-3 prägnante Sätze sein.
+- Fließtext-Frames mit 4 langen Absätzen.
+- Emojis ODER Farb-Werte im Output. icon/color/accent gehören als leere Strings raus; die UI macht den Rest.
 
 JSON-SCHEMA (genau diese Struktur):
 {
   "visualMap": {
     "blocks": [
       {
-        "title": "string",
-        "subtitle": "string (z.B. 'Topic 4 — HIGHEST EXAM PRIORITY')",
-        "color": "blue" | "cyan" | "green" | "amber" | "violet" | "rose",
-        "icon": "string (ein Emoji)",
+        "title": "string (KEIN Emoji)",
+        "subtitle": "string (z.B. 'Topic 4 — HIGHEST EXAM PRIORITY', KEIN Emoji)",
+        "color": "blue (Pflichtfeld, Wert wird vom UI ignoriert — setze immer 'blue')",
+        "icon": "" (leerer String — UI zeichnet ein Vektor-Icon),
         "priority": "highest" | "high" | "moderate" | "quick_win",
         "timeMinutes": number,
         "frameworks": [
-          { "kind": "callout", "tone": "definition|insight|warning|neutral", "title": "string", "body": "string (HTML <strong>/<em> erlaubt)" },
+          { "kind": "callout", "tone": "definition|insight|warning|neutral", "title": "string (KEIN Emoji)", "body": "string (HTML <strong>/<em> erlaubt, KEIN Emoji)" },
           { "kind": "comparison", "title": "string", "left": {"label": "string", "tone": "pro|con|neutral", "items": ["string"]}, "right": {"label": "string", "tone": "pro|con|neutral", "items": ["string"]}, "explanation": "string" },
-          { "kind": "flow", "title": "string", "boxes": [{"label": "string", "sub": "string", "accent": "blue|cyan|green|amber|violet|rose"}], "arrows": "right|bidirectional|plus", "explanation": "string" },
+          { "kind": "flow", "title": "string", "boxes": [{"label": "string", "sub": "string"}], "arrows": "right|bidirectional|plus", "explanation": "string" },
           { "kind": "table", "title": "string", "headers": ["string"], "rows": [["string"]], "caption": "string" },
-          { "kind": "concept_grid", "title": "string", "cards": [{"title": "string", "body": "string", "icon": "string", "accent": "blue|cyan|green|amber|violet|rose"}], "accentEdge": "top|left" },
+          { "kind": "concept_grid", "title": "string", "cards": [{"title": "string", "body": "string"}], "accentEdge": "top|left" },
           { "kind": "matrix2x2", "title": "string", "xAxis": {"label": "string", "low": "string", "high": "string"}, "yAxis": {"label": "string", "low": "string", "high": "string"}, "cells": [{"x": "low|high", "y": "low|high", "title": "string", "sub": "string", "highlight": true|false}], "explanation": "string" },
           { "kind": "mnemonic", "title": "string", "acronym": "string", "expansion": [{"letter": "C", "meaning": "Costs lower"}], "hook": "string" },
           { "kind": "formula", "title": "string", "formula": "string", "sub": "string" },
