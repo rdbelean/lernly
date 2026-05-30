@@ -93,6 +93,13 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  /* IMPORTANT: do NOT remap --color-primary back to shadcn's --primary
+     here. The brand --color-primary (#2B3499 deep indigo) declared above
+     IS the source of truth — shadcn primitives that read bg-primary will
+     correctly pick up the indigo, instead of shadcn's default near-black.
+     Re-introducing `--color-primary: var(--primary)` will flip every CTA
+     back to charcoal-on-blue. */
+  --color-primary-bright-shadcn: var(--primary);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -201,6 +208,11 @@
     );
   background-attachment: fixed;
   min-height: 100vh;
+}
+
+/* Mode-launcher row hover (PackHub) — slightly lifted indigo tint. */
+.mode-row:hover {
+  background: #1B2138 !important;
 }
 
 /* Scroll reveal */

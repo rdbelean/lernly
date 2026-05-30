@@ -14,6 +14,7 @@ import {
   formatExamDate,
 } from "@/lib/exams";
 import { ArrowRight, Clock, Plus, Sparkles } from "lucide-react";
+import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
 
 type Pack = {
   id: string;
@@ -128,20 +129,14 @@ export default function ExamCard({
 
   return (
     <article
-      className="relative overflow-hidden rounded-2xl border"
+      className="relative overflow-hidden border"
       style={{
-        background: "rgba(20,22,28,0.55)",
-        borderColor: examRgba(exam.color, 0.25),
+        background: "#141930",
+        borderColor: "rgba(255,255,255,0.06)",
+        borderRadius: "16px",
       }}
     >
-      {/* Color stripe along the top */}
-      <div
-        aria-hidden
-        className="h-1.5 w-full"
-        style={{ background: examRgba(exam.color, 0.7) }}
-      />
-
-      <div className="p-4 sm:p-5">
+      <div className="p-5 sm:p-6">
         {/* Header row: color dot · title · ⋯ */}
         <div className="flex items-start gap-3">
           <button
@@ -331,37 +326,30 @@ export default function ExamCard({
         </div>
 
         {/* CTAs */}
-        <div className="mt-4 flex flex-wrap items-center gap-2">
+        <div className="mt-5 flex flex-wrap items-center gap-3">
           {cont ? (
-            <a
+            <PrimaryCTALink
+              size="sm"
               href={`/dashboard/pack/${cont.id}`}
-              className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold transition hover:brightness-110"
-              style={{
-                background: "var(--color-primary)",
-                color: "white",
-              }}
+              leadingIcon={Sparkles}
+              trailingIcon={ArrowRight}
             >
-              <Sparkles size={13} strokeWidth={2} aria-hidden />
               Weiterlernen
-              <ArrowRight size={14} strokeWidth={2} aria-hidden />
-            </a>
+            </PrimaryCTALink>
           ) : (
-            <a
+            <PrimaryCTALink
+              size="sm"
               href={`/dashboard/new?exam=${exam.id}`}
-              className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold transition hover:brightness-110"
-              style={{
-                background: "var(--color-primary)",
-                color: "white",
-              }}
+              leadingIcon={Plus}
             >
-              <Plus size={14} strokeWidth={2} aria-hidden />
               Erstes Paket hochladen
-            </a>
+            </PrimaryCTALink>
           )}
           {cont && (
             <a
               href={`/dashboard/new?exam=${exam.id}`}
-              className="inline-flex items-center gap-1 text-[12.5px] text-white/55 transition hover:text-white"
+              className="inline-flex items-center gap-1 text-[12.5px] transition"
+              style={{ color: "var(--color-text-dim)" }}
             >
               <Plus size={12} strokeWidth={2} aria-hidden />
               Paket hinzufügen

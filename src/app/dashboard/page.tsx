@@ -5,6 +5,7 @@ import ExamCard from "@/components/dashboard/ExamCard";
 import LoosePacksSection from "@/components/dashboard/LoosePacksSection";
 import { LAYOUT } from "@/lib/layout";
 import { ArrowRight, Plus } from "lucide-react";
+import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
 
 type PackSummary = {
   id: string;
@@ -39,11 +40,11 @@ const PLAN_LABEL: Record<string, string> = {
 function EmptyState() {
   return (
     <div
-      className="relative overflow-hidden rounded-3xl px-6 py-12 text-center sm:px-8 sm:py-14"
+      className="relative overflow-hidden px-6 py-12 text-center sm:px-8 sm:py-14"
       style={{
-        background: "rgba(20, 22, 28, 0.6)",
-        border: "1px solid rgba(255,255,255,0.14)",
-        backdropFilter: "blur(20px)",
+        background: "#141930",
+        border: "1px solid rgba(255,255,255,0.06)",
+        borderRadius: "16px",
       }}
     >
       <div
@@ -177,96 +178,100 @@ export default async function DashboardPage({
           </div>
         )}
 
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
           <div>
             <p
-              className="mb-2 text-[12px] uppercase tracking-[0.22em]"
-              style={{ color: "rgba(255,255,255,0.55)" }}
+              className="mb-2 text-[11px] uppercase tracking-[0.22em]"
+              style={{ color: "var(--color-text-faint)" }}
             >
               Deine Klausuren
             </p>
             <h1
-              className="text-white"
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "44px",
-                fontWeight: 700,
-                letterSpacing: "-1.4px",
+                fontSize: "40px",
+                fontWeight: 600,
+                letterSpacing: "-1.2px",
                 lineHeight: 1.05,
+                color: "var(--color-text)",
               }}
             >
               Bibliothek
             </h1>
           </div>
-          <a
+          <PrimaryCTALink
+            size="sm"
             href="/dashboard/new"
-            className="hidden shrink-0 items-center gap-1.5 rounded-full px-5 py-2.5 text-[14px] font-semibold transition hover:brightness-110 sm:inline-flex"
-            style={{
-              background: "var(--color-primary)",
-              color: "white",
-            }}
+            leadingIcon={Plus}
+            className="hidden sm:inline-flex"
           >
-            <Plus size={15} strokeWidth={2} aria-hidden />
             Neues Paket
-          </a>
+          </PrimaryCTALink>
         </div>
 
         <div
-          className="mb-8 overflow-hidden rounded-2xl"
+          className="mb-10 overflow-hidden"
           style={{
-            background: "rgba(20, 22, 28, 0.4)",
-            border: "1px solid rgba(255,255,255,0.1)",
+            background: "#141930",
+            border: "1px solid rgba(255,255,255,0.06)",
+            borderRadius: "16px",
           }}
         >
           <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
-            <div className="text-[13px]" style={{ color: "rgba(255,255,255,0.7)" }}>
-              <span className="font-medium text-white">{planLabel}-Plan</span>
-              <span className="mx-2 opacity-40">·</span>
+            <div
+              className="text-[13px]"
+              style={{ color: "var(--color-text-dim)" }}
+            >
+              <span style={{ color: "var(--color-text)", fontWeight: 500 }}>
+                {planLabel}-Plan
+              </span>
+              <span className="mx-2 opacity-50">·</span>
               <span>
                 {used} / {planLimit} Pakete diesen Monat
               </span>
               {credits > 0 && (
-                <span className="ml-2" style={{ color: "#9BD8EB" }}>
+                <span
+                  className="ml-2"
+                  style={{ color: "var(--color-primary-bright)" }}
+                >
                   · +{credits} Extra-Paket{credits === 1 ? "" : "e"} verfügbar
                 </span>
               )}
             </div>
             {quotaReached && credits === 0 ? (
-              <a
+              <PrimaryCTALink
+                size="sm"
                 href="/dashboard/settings"
-                className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[13px] font-semibold transition hover:brightness-110"
-                style={{
-                  background: "var(--color-primary)",
-                  color: "white",
-                }}
+                trailingIcon={ArrowRight}
               >
                 Upgrade
-                <ArrowRight size={13} strokeWidth={2} aria-hidden />
-              </a>
+              </PrimaryCTALink>
             ) : (
               plan === "free" && (
                 <a
                   href="/dashboard/settings"
                   className="text-[13px] underline-offset-2 hover:underline"
-                  style={{ color: "rgba(255,255,255,0.55)" }}
+                  style={{ color: "var(--color-text-dim)" }}
                 >
                   Upgrade auf Pro
                 </a>
               )
             )}
           </div>
+          {/* Calm single-tone progress bar — no rainbow gradient. Red only
+              when quota is fully consumed (signal, not decoration). */}
           <div
             aria-hidden
-            className="h-1 w-full"
-            style={{ background: "rgba(255,255,255,0.06)" }}
+            className="h-[3px] w-full"
+            style={{ background: "rgba(255,255,255,0.04)" }}
           >
             <div
               className="h-full transition-all"
               style={{
                 width: `${quotaPercent}%`,
                 background: quotaReached
-                  ? "linear-gradient(90deg, #f87171, #fb923c)"
-                  : "linear-gradient(90deg, rgba(99,102,241,0.95), rgba(168,85,247,0.9))",
+                  ? "var(--color-cat-coral)"
+                  : "var(--color-primary-bright)",
               }}
             />
           </div>
@@ -277,12 +282,10 @@ export default async function DashboardPage({
         {isEmpty ? (
           <EmptyState />
         ) : (
-          <>
-            <div className="mb-5">
-              <NewExamForm />
-            </div>
+          <div className="space-y-10">
+            <NewExamForm />
             {exams.length > 0 && (
-              <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+              <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                 {exams.map((e) => (
                   <ExamCard
                     key={e.id}
@@ -298,7 +301,7 @@ export default async function DashboardPage({
                 exams={examMenuOptions}
               />
             )}
-          </>
+          </div>
         )}
       </div>
     </main>

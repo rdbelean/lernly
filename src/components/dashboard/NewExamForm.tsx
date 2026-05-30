@@ -8,7 +8,8 @@ import {
 } from "@/app/dashboard/actions";
 import { EXAM_COLORS, examRgba } from "@/lib/exams";
 import { STUDY_UPLOADS_BUCKET, buildUploadPath } from "@/lib/uploads";
-import { Target } from "lucide-react";
+import { Plus, Target } from "lucide-react";
+import { PrimaryCTAButton } from "@/components/ui/PrimaryCTA";
 
 type StudyPath = "A" | "B" | "C";
 type Fidelity = "strict" | "likely" | "broad";
@@ -173,9 +174,14 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-[13px] font-semibold text-white/80 transition hover:border-white/30 hover:text-white"
+        className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-semibold transition hover:text-white"
+        style={{
+          borderColor: "rgba(255,255,255,0.10)",
+          color: "var(--color-text-dim)",
+        }}
       >
-        ✦ Neue Klausur
+        <Plus size={14} strokeWidth={2} aria-hidden />
+        Neue Klausur
       </button>
     );
   }
@@ -187,10 +193,12 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
 
   return (
     <div
-      className="rounded-2xl border p-4 sm:p-5"
+      className="border"
       style={{
-        background: "rgba(20,22,28,0.6)",
-        borderColor: "rgba(255,255,255,0.14)",
+        background: "#141930",
+        borderColor: "rgba(255,255,255,0.06)",
+        borderRadius: "16px",
+        padding: "20px",
       }}
     >
       {/* Title + date row */}
@@ -363,11 +371,11 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
                     className="block w-full rounded-lg border px-3 py-2 text-left transition"
                     style={{
                       background: sel
-                        ? "rgba(91,184,216,0.08)"
-                        : "rgba(20,22,28,0.4)",
+                        ? "rgba(110, 128, 242, 0.10)"
+                        : "#171C30",
                       borderColor: sel
-                        ? "rgba(91,184,216,0.5)"
-                        : "rgba(255,255,255,0.1)",
+                        ? "var(--color-primary-bright)"
+                        : "rgba(255,255,255,0.06)",
                     }}
                   >
                     <div className="text-[13px] font-semibold text-white">
@@ -430,18 +438,21 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
           type="button"
           onClick={onCancel}
           disabled={pending}
-          className="rounded-full border border-white/15 px-4 py-2 text-[13px] font-semibold text-white/70 transition hover:text-white disabled:opacity-50"
+          className="rounded-full border px-4 py-2 text-[13px] font-semibold transition hover:text-white disabled:opacity-50"
+          style={{
+            borderColor: "rgba(255,255,255,0.10)",
+            color: "var(--color-text-dim)",
+          }}
         >
           Abbrechen
         </button>
-        <button
-          type="button"
+        <PrimaryCTAButton
+          size="sm"
           onClick={onSubmit}
           disabled={pending || !title.trim()}
-          className="rounded-full bg-white px-5 py-2 text-[13px] font-bold text-[#0F1535] transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {pending ? (busyLabel ?? "Speichere…") : "Anlegen"}
-        </button>
+        </PrimaryCTAButton>
       </div>
     </div>
   );
@@ -471,11 +482,11 @@ function PathRow({
       className="block w-full rounded-xl border px-3 py-2.5 text-left transition"
       style={{
         background: selected
-          ? "rgba(91,184,216,0.08)"
-          : "rgba(20,22,28,0.4)",
+          ? "rgba(110, 128, 242, 0.10)"
+          : "#171C30",
         borderColor: selected
-          ? "rgba(91,184,216,0.5)"
-          : "rgba(255,255,255,0.1)",
+          ? "var(--color-primary-bright)"
+          : "rgba(255,255,255,0.06)",
       }}
     >
       <div className="flex items-start justify-between gap-2">

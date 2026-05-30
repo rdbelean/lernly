@@ -20,6 +20,7 @@ import {
   Trophy,
   type LucideIcon,
 } from "lucide-react";
+import { PrimaryCTAButton } from "@/components/ui/PrimaryCTA";
 
 // =========================================================================
 // PackHub — the landing view of a pack. Replaces "open straight into a tab"
@@ -356,46 +357,23 @@ export default function PackHub({
         </section>
       )}
 
-      {/* Primary Weiterlernen CTA — filled indigo button, single decisive
-          action. */}
+      {/* Primary Weiterlernen CTA — single decisive deep-indigo button. */}
       <section>
-        <button
-          type="button"
+        <PrimaryCTAButton
+          size="lg"
+          fullWidth
           onClick={() => onEnterMode(cta.target)}
-          className="group flex w-full items-center justify-between gap-4 rounded-2xl px-5 py-4 text-left transition hover:brightness-110 sm:px-6 sm:py-5"
-          style={{
-            background: "var(--color-primary)",
-            color: "white",
-          }}
-        >
-          <div className="min-w-0">
-            <div
-              className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.16em]"
-              style={{ color: "rgba(255,255,255,0.7)" }}
-            >
+          eyebrow={
+            <span className="inline-flex items-center gap-1.5">
               <Sparkles size={12} strokeWidth={2} aria-hidden />
               {isEn ? "Continue learning" : "Weiterlernen"}
-            </div>
-            <div
-              className="mt-1 text-[18px] font-semibold leading-snug sm:text-[20px]"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              {cta.label}
-            </div>
-            <div
-              className="mt-0.5 text-[13px] leading-snug"
-              style={{ color: "rgba(255,255,255,0.78)" }}
-            >
-              {cta.sub}
-            </div>
-          </div>
-          <ArrowRight
-            size={20}
-            strokeWidth={2}
-            aria-hidden
-            className="shrink-0 transition-transform group-hover:translate-x-0.5"
-          />
-        </button>
+            </span>
+          }
+          subtitle={cta.sub}
+          trailingIcon={ArrowRight}
+        >
+          {cta.label}
+        </PrimaryCTAButton>
       </section>
 
       {/* Mode launcher — vertical list of rows with tinted icon chips. */}
@@ -414,44 +392,47 @@ export default function PackHub({
                 <button
                   type="button"
                   onClick={() => onEnterMode(c.tab)}
-                  className="group flex w-full items-center gap-3.5 rounded-xl border p-3.5 text-left transition hover:-translate-y-px sm:gap-4 sm:p-4"
+                  className="mode-row group flex w-full items-center gap-3.5 text-left transition"
                   style={{
-                    background: "var(--color-surface)",
-                    borderColor: "rgba(255,255,255,0.06)",
+                    background: "#141930",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                    borderRadius: "12px",
+                    padding: "13px 15px",
                   }}
                 >
                   <span
                     aria-hidden
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl sm:h-11 sm:w-11"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px]"
                     style={{ background: CHIP_BG[c.tone] }}
                   >
                     <Icon
-                      size={20}
+                      size={18}
                       strokeWidth={1.75}
                       color={CHIP_FG[c.tone]}
                     />
                   </span>
                   <div className="min-w-0 flex-1">
                     <div
-                      className="text-[14.5px] font-semibold leading-tight"
+                      className="text-[14px] leading-tight"
                       style={{
                         color: "var(--color-text)",
                         fontFamily: "var(--font-display)",
+                        fontWeight: 600,
                       }}
                     >
                       {c.title}
                     </div>
                     <div
-                      className="mt-0.5 truncate text-[12.5px]"
-                      style={{ color: "var(--color-text-dim)" }}
+                      className="mt-0.5 truncate text-[12px]"
+                      style={{ color: "#8C95B6" }}
                     >
                       {c.sub}
                     </div>
                   </div>
                   <div className="hidden shrink-0 text-right sm:block">
                     <div
-                      className="text-[11px] font-semibold tabular-nums uppercase tracking-[0.12em]"
-                      style={{ color: "var(--color-text-faint)" }}
+                      className="text-[11px] font-medium tabular-nums"
+                      style={{ color: "#6F7799" }}
                     >
                       {c.count}
                     </div>
@@ -461,7 +442,7 @@ export default function PackHub({
                     strokeWidth={1.75}
                     aria-hidden
                     className="shrink-0 transition-transform group-hover:translate-x-0.5"
-                    color="var(--color-text-faint)"
+                    color="#5A627F"
                   />
                 </button>
               </li>

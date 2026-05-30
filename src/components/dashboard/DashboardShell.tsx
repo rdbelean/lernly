@@ -11,6 +11,7 @@ import {
   Menu,
   ChevronRight,
 } from "lucide-react";
+import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
 
 type RecentPack = {
   id: string;
@@ -64,35 +65,6 @@ function NavLink({
         }
         aria-hidden
       />
-      <span className="flex-1">{label}</span>
-    </a>
-  );
-}
-
-function PrimaryNavLink({
-  href,
-  icon: Icon,
-  label,
-  onClick,
-}: {
-  href: string;
-  icon: typeof Plus;
-  label: string;
-  onClick?: () => void;
-}) {
-  // Filled primary action — the "Neues Paket" button. Reads as the one
-  // place to take action from the rail.
-  return (
-    <a
-      href={href}
-      onClick={onClick}
-      className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[14px] font-semibold transition hover:brightness-110"
-      style={{
-        background: "var(--color-primary)",
-        color: "white",
-      }}
-    >
-      <Icon size={18} strokeWidth={2} aria-hidden />
       <span className="flex-1">{label}</span>
     </a>
   );
@@ -192,12 +164,15 @@ function SidebarContent({
           icon={Library}
           label="Bibliothek"
         />
-        <PrimaryNavLink
+        <PrimaryCTALink
+          size="sm"
           href="/dashboard/new"
           onClick={onClose}
-          icon={Plus}
-          label="Neues Paket"
-        />
+          leadingIcon={Plus}
+          fullWidth
+        >
+          Neues Paket
+        </PrimaryCTALink>
       </nav>
 
       {recentPacks.length > 0 && (

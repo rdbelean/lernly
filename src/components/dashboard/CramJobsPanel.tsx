@@ -80,8 +80,12 @@ export default function CramJobsPanel() {
         return (
           <div
             key={job.id}
-            className="overflow-hidden rounded-2xl"
-            style={{ background: "rgba(20,22,28,0.5)", border: "1px solid rgba(255,255,255,0.12)" }}
+            className="overflow-hidden"
+            style={{
+              background: "#141930",
+              border: "1px solid rgba(255,255,255,0.06)",
+              borderRadius: "16px",
+            }}
           >
             <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
               <div className="flex items-center gap-2 text-[14px] font-semibold text-white">
