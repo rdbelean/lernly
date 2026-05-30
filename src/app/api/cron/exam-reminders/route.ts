@@ -121,17 +121,26 @@ export async function GET(request: Request) {
         continue;
       }
 
-      // Count packs attached to this exam — adds context to the mail.
-      const { count: packsCount } = await service
+      // Pull every pack attached to this exam so we can both count them
+      // AND deep-link to the most-recently-opened one. last_opened_at
+      // already gets stamped by /dashboard/pack/[id] on every visit, so
+      // the most relevant pack rises to the top naturally.
+      const { data: packs } = await service
         .from("study_packs")
-        .select("id", { count: "exact", head: true })
+        .select("id, last_opened_at, created_at")
         .eq("user_id", user.id)
-        .eq("exam_id", exam.id);
+        .eq("exam_id", exam.id)
+        .order("last_opened_at", { ascending: false, nullsFirst: false })
+        .order("created_at", { ascending: false })
+        .limit(20);
+      const packsCount = packs?.length ?? 0;
+      const packId = packs && packs.length > 0 ? (packs[0].id as string) : null;
 
       const html = renderExamReminderEmail({
         examTitle: exam.title,
         daysLeft: days,
-        packsCount: packsCount ?? 0,
+        packsCount,
+        packId,
       });
       const subject =
         days === 1

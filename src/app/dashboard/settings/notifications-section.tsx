@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { Bell } from "lucide-react";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { Bell, Check } from "lucide-react";
 import { setExamReminderPreference } from "./actions";
 
 // Exam-reminder toggle. Actual sending lives in
@@ -18,6 +18,16 @@ export default function NotificationsSection({
   const [enabled, setEnabled] = useState(initialEnabled);
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [savedFlash, setSavedFlash] = useState(false);
+  const flashTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Clear the auto-hide timer on unmount so a quick toggle-then-leave
+  // doesn't try to setState on a dead component.
+  useEffect(() => {
+    return () => {
+      if (flashTimerRef.current) clearTimeout(flashTimerRef.current);
+    };
+  }, []);
 
   const toggle = () => {
     const next = !enabled;
@@ -28,7 +38,12 @@ export default function NotificationsSection({
       if (result.ok === false) {
         setEnabled(!next); // revert
         setError(result.error);
+        return;
       }
+      // Show "Gespeichert" for ~1.8s after each successful toggle.
+      if (flashTimerRef.current) clearTimeout(flashTimerRef.current);
+      setSavedFlash(true);
+      flashTimerRef.current = setTimeout(() => setSavedFlash(false), 1800);
     });
   };
 
@@ -83,6 +98,24 @@ export default function NotificationsSection({
           />
         </span>
       </label>
+
+      <div
+        aria-live="polite"
+        className="h-5 text-[12.5px]"
+        style={{
+          color: savedFlash
+            ? "var(--color-cat-teal)"
+            : "transparent",
+          transition: "color 200ms ease",
+        }}
+      >
+        {savedFlash && (
+          <span className="inline-flex items-center gap-1.5">
+            <Check size={12} strokeWidth={2.2} aria-hidden />
+            Gespeichert
+          </span>
+        )}
+      </div>
 
       {!emailProviderConfigured && (
         <div

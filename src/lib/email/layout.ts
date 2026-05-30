@@ -6,6 +6,11 @@ export type EmailParams = {
   bodyHtml: string; // caller-supplied safe HTML
   ctaText?: string;
   ctaUrl?: string;
+  // Optional opt-out link surfaced in the footer. User-initiated
+  // transactional templates (magic link, email-change confirm) leave
+  // this unset; lifecycle templates (reminders, digests) pass the
+  // settings URL so the recipient has a clear "switch this off" path.
+  unsubscribeUrl?: string;
 };
 
 export function renderEmail({
@@ -14,6 +19,7 @@ export function renderEmail({
   bodyHtml,
   ctaText,
   ctaUrl,
+  unsubscribeUrl,
 }: EmailParams): string {
   const cta =
     ctaUrl && ctaText
@@ -45,7 +51,11 @@ export function renderEmail({
       <a href="${APP_URL.replace("www.", "")}/impressum" style="color:${BRAND.footerInk};">Impressum</a> ·
       <a href="${APP_URL.replace("www.", "")}/datenschutz" style="color:${BRAND.footerInk};">Datenschutz</a> ·
       info@lernly-app.de<br>
-      Du erhältst diese E-Mail, weil du ein Lernly-Konto hast.
+      ${
+        unsubscribeUrl
+          ? `<a href="${unsubscribeUrl}" style="color:${BRAND.footerInk};text-decoration:underline;">Diese Erinnerungen ausschalten</a>`
+          : "Du erhältst diese E-Mail, weil du ein Lernly-Konto hast."
+      }
     </td></tr>
   </table>
 </td></tr></table>
