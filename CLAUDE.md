@@ -3,6 +3,14 @@
 
 ---
 
+# 0. CONVENTIONS (für Claude)
+
+**Supabase-Migrations:** Neue Migration-Files IMMER mit 14-stelligem Timestamp benennen (`YYYYMMDDhhmmss_<name>.sql`, z. B. `20260601094530_add_foo_column.sql`). 8-stellige Datumsprefixe kollidieren auf `supabase_migrations.schema_migrations.version` (PK) sobald mehrere Migrations am selben Tag entstehen → `supabase db push` schlägt fehl. Alte 8-stellige Dateien stehen lassen (schon angewendet); nur Neues 14-stellig.
+
+Wenn du Migrations via CLI anwendest, nimm `supabase db query --linked --file <path>` für eine einzelne — `supabase db push` ist im aktuellen Repo brüchig wegen der Versionierungs-Altlast.
+
+---
+
 # 1. WAS IST LERNLY?
 
 Lernly ist ein KI-gestütztes SaaS-Tool für Studenten. Der Student lädt sein Kursmaterial hoch (PDFs, Slides, Skripte) und bekommt in unter 2 Minuten ein komplettes, interaktives Lernpaket:
