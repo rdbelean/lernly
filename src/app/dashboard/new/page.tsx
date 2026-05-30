@@ -221,34 +221,74 @@ export default function NewPackPage() {
       }
 
       // 1) Upload each file straight to Storage — bypasses Vercel's ~4.5 MB
-      //    request-body cap so large lecture PDFs go through.
+      //    request-body cap so large lecture PDFs go through. Per-file
+      //    try/catch so we surface WHICH file + which step actually failed
+      //    instead of a generic "Failed to fetch".
       const refs: { path: string; name: string; size: number; type: string }[] =
         [];
       for (const file of files) {
         const path = buildUploadPath(user.id, file.name);
-        const { error: upErr } = await supabase.storage
-          .from(STUDY_UPLOADS_BUCKET)
-          .upload(path, file, {
-            contentType: file.type || "application/octet-stream",
-            upsert: false,
-          });
-        if (upErr) {
-          throw new Error(`Upload fehlgeschlagen (${file.name}): ${upErr.message}`);
+        const sizeMB = (file.size / 1024 / 1024).toFixed(1);
+        let upResult;
+        try {
+          upResult = await supabase.storage
+            .from(STUDY_UPLOADS_BUCKET)
+            .upload(path, file, {
+              contentType: file.type || "application/octet-stream",
+              upsert: false,
+            });
+        } catch (uploadEx) {
+          // Network-level failure during the upload call itself (DNS, TLS,
+          // connection drop, browser cancel). Distinct from a Storage 4xx/5xx.
+          console.error("[upload] network failure", { file: file.name, sizeMB, err: uploadEx });
+          throw new Error(
+            `Verbindungsproblem beim Hochladen von "${file.name}" (${sizeMB} MB). ` +
+              `Bitte erneut versuchen.`,
+          );
+        }
+        if (upResult.error) {
+          const err = upResult.error;
+          // statusCode lives on the StorageError in supabase-js v2+; falling
+          // back to status for older shapes. Include the raw message so the
+          // user gets the real reason ("Payload too large", "duplicate", …).
+          const errRecord = err as unknown as Record<string, unknown>;
+          const rawStatus = errRecord.statusCode ?? errRecord.status;
+          const status = typeof rawStatus === "string" || typeof rawStatus === "number"
+            ? String(rawStatus)
+            : "?";
+          console.error("[upload] storage rejected", { file: file.name, sizeMB, status, err });
+          const hint =
+            status === "413" || /payload too large/i.test(err.message)
+              ? ` Tipp: max. ${MAX_FILE_BYTES / 1024 / 1024} MB pro Datei.`
+              : "";
+          throw new Error(
+            `Upload fehlgeschlagen: "${file.name}" (${sizeMB} MB) — ${err.message} [HTTP ${status}].${hint}`,
+          );
         }
         refs.push({ path, name: file.name, size: file.size, type: file.type });
       }
 
       // 2) Kick off generation with a tiny JSON body (only the storage refs).
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          examType,
-          extraInfo: extraInfo.trim() || undefined,
-          files: refs,
-          examId: resolvedExamId,
-        }),
-      });
+      //    Wrap the fetch so a network-level failure (Failed to fetch) is
+      //    distinguishable from the API returning a 4xx/5xx response body.
+      let res;
+      try {
+        res = await fetch("/api/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            examType,
+            extraInfo: extraInfo.trim() || undefined,
+            files: refs,
+            examId: resolvedExamId,
+          }),
+        });
+      } catch (fetchEx) {
+        console.error("[/api/generate] network failure", fetchEx);
+        throw new Error(
+          "Verbindung zum Generator-Server fehlgeschlagen — bitte erneut versuchen.",
+        );
+      }
       const json = await parseJsonResponse<GenerateApiResponse>(res);
       if (!res.ok) {
         if (json.reason === "quota_exceeded" && typeof json.limit === "number") {
@@ -310,16 +350,33 @@ export default function NewPackPage() {
       const refs: { path: string; name: string }[] = [];
       for (const file of files) {
         const path = buildUploadPath(user.id, file.name);
-        const { error: upErr } = await supabase.storage
-          .from(STUDY_UPLOADS_BUCKET)
-          .upload(path, file, {
-            contentType: file.type || "application/octet-stream",
-            upsert: false,
-          });
-        if (upErr)
+        const sizeMB = (file.size / 1024 / 1024).toFixed(1);
+        let upResult;
+        try {
+          upResult = await supabase.storage
+            .from(STUDY_UPLOADS_BUCKET)
+            .upload(path, file, {
+              contentType: file.type || "application/octet-stream",
+              upsert: false,
+            });
+        } catch (uploadEx) {
+          console.error("[cram upload] network failure", { file: file.name, sizeMB, err: uploadEx });
           throw new Error(
-            `Upload fehlgeschlagen (${file.name}): ${upErr.message}`,
+            `Verbindungsproblem beim Hochladen von "${file.name}" (${sizeMB} MB). Bitte erneut versuchen.`,
           );
+        }
+        if (upResult.error) {
+          const err = upResult.error;
+          const errRecord = err as unknown as Record<string, unknown>;
+          const rawStatus = errRecord.statusCode ?? errRecord.status;
+          const status = typeof rawStatus === "string" || typeof rawStatus === "number"
+            ? String(rawStatus)
+            : "?";
+          console.error("[cram upload] storage rejected", { file: file.name, sizeMB, status, err });
+          throw new Error(
+            `Upload fehlgeschlagen: "${file.name}" (${sizeMB} MB) — ${err.message} [HTTP ${status}].`,
+          );
+        }
         refs.push({ path, name: file.name });
       }
       const res = await fetch("/api/cram/start", {
