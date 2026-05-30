@@ -305,6 +305,11 @@ export const StudyPackSchema = z.object({
 export const FidelitySchema = z.enum(["strict", "likely", "broad"]);
 export type Fidelity = z.infer<typeof FidelitySchema>;
 
+// Schema tolerance: `formats` and `topics` are structurally required —
+// without them the lens has nothing to weight by. Everything else is
+// optional + defaulted, so a slightly-incomplete model output (missing
+// `notes`, no `recurring_patterns`, etc.) still validates and persists as
+// a usable lens instead of silently falling back to no profile at all.
 export const ExamProfileSchema = z.object({
   formats: z.array(
     z.object({
@@ -316,14 +321,14 @@ export const ExamProfileSchema = z.object({
     z.object({
       name: z.string(),
       weight: z.number().min(0).max(1),
-      evidence: z.string(),
+      evidence: z.string().optional().default(""),
     }),
   ),
-  depth: z.enum(["recall", "apply", "analyze"]),
-  recurring_patterns: z.array(z.string()),
-  phrasing_style: z.string(),
-  structure: z.string(),
-  notes: z.string(),
+  depth: z.enum(["recall", "apply", "analyze"]).optional().default("apply"),
+  recurring_patterns: z.array(z.string()).optional().default([]),
+  phrasing_style: z.string().optional().default(""),
+  structure: z.string().optional().default(""),
+  notes: z.string().optional().default(""),
 });
 export type ExamProfile = z.infer<typeof ExamProfileSchema>;
 

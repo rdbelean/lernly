@@ -134,11 +134,15 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
           });
           if (!result.ok) {
             // Analysis failed but exam + reference saved. Surface a soft
-            // warning via toast; the exam still exists, the user can proceed.
+            // warning via toast that names the reason and points at a
+            // realistic retry path — re-upload a clearer/text-rich Altklausur
+            // by recreating the Klausur. (A retry button on the exam card
+            // would be nicer; tracked for V2.)
             const { toast } = await import("sonner");
+            const reason = result.reason ?? "unbekannt";
             toast.warning(
-              `Altklausur gespeichert, Analyse fehlgeschlagen (${result.reason ?? "unbekannt"}). Pakete werden ohne Lens-Brief generiert.`,
-              { duration: 8000 },
+              `Analyse der Altklausur fehlgeschlagen (${reason}) — Klausur gespeichert, aber Pakete laufen ohne Lens-Brief. Tipp: Klausur in der Bibliothek löschen und mit einer text-reichen, gut lesbaren PDF erneut anlegen.`,
+              { duration: 10000 },
             );
           } else {
             const { toast } = await import("sonner");
