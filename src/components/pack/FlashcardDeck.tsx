@@ -6,6 +6,8 @@ import confetti from "canvas-confetti";
 import type { Flashcard } from "@/lib/schema";
 import { track } from "@/lib/analytics";
 import { renderRichText } from "@/lib/richText";
+import TutorChat from "./TutorChat";
+import type { TutorScope } from "@/lib/tutorPrompt";
 
 type Language = "en" | "de";
 type CardStatus = "new" | "again" | "almost" | "known";
@@ -54,6 +56,10 @@ export default function FlashcardDeck({
   const [mode, setMode] = useState<"all" | "wrong">("all");
   const [streak, setStreak] = useState(0);
   const [exitTone, setExitTone] = useState<Tone | null>(null);
+  // Lernly KI-Hilfe — concept-scoped tutor chat invoked from the back of
+  // the current card. Closed by default; opens when the user taps the
+  // "Erklär's mir" button while the answer is visible.
+  const [tutorOpen, setTutorOpen] = useState(false);
 
   const queue = useMemo(() => {
     if (mode === "wrong") {
@@ -331,6 +337,25 @@ export default function FlashcardDeck({
         </AnimatePresence>
       </div>
 
+      {/* Lernly KI-Hilfe entry — concept-scoped tutor. Visible only after
+          flip so the student saw the model answer first. */}
+      {flipped && card && (
+        <div className="mt-4 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setTutorOpen(true)}
+            className="inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[12.5px] font-semibold transition"
+            style={{
+              background: "rgba(91,184,216,0.06)",
+              borderColor: "rgba(91,184,216,0.3)",
+              color: "var(--color-ln-cyan)",
+            }}
+          >
+            ✨ {isEn ? "Explain it" : "Erklär's mir"}
+          </button>
+        </div>
+      )}
+
       {/* Rate buttons */}
       <div className="mt-5 grid grid-cols-3 gap-2">
         <RateButton
@@ -355,6 +380,22 @@ export default function FlashcardDeck({
           onClick={() => rate("known", "sage")}
         />
       </div>
+
+      {card && (
+        <TutorChat
+          open={tutorOpen}
+          onClose={() => setTutorOpen(false)}
+          scope={
+            {
+              kind: "flashcard",
+              question: card.question,
+              answer: card.answer,
+              category: card.category,
+            } satisfies TutorScope
+          }
+          language={language}
+        />
+      )}
     </div>
   );
 }
