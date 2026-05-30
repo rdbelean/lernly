@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
+import { PROVIDER } from "@/lib/legal/provider";
 
 export const metadata: Metadata = {
   title: "Impressum",
@@ -65,13 +66,13 @@ function ImpressumContent() {
             <section style={sectionStyle}>
               <h2 style={headingStyle}>Angaben gemäß § 5 TMG</h2>
               <p style={bodyStyle}>
-                Rares Daniel Belean
+                {PROVIDER.name}
                 <br />
-                Am Hang 4
+                {PROVIDER.street}
                 <br />
-                69151 Neckargemünd
+                {PROVIDER.postal} {PROVIDER.city}
                 <br />
-                Deutschland
+                {PROVIDER.country}
               </p>
             </section>
 
@@ -80,20 +81,20 @@ function ImpressumContent() {
               <p style={bodyStyle}>
                 Telefon:{" "}
                 <a
-                  href="tel:+4915118164381"
+                  href={`tel:${PROVIDER.phone.replace(/\s+/g, "")}`}
                   style={linkStyle}
                   className="underline-offset-2 hover:underline"
                 >
-                  +49 151 18164381
+                  {PROVIDER.phone}
                 </a>
                 <br />
                 E-Mail:{" "}
                 <a
-                  href="mailto:info@lernly-app.de"
+                  href={`mailto:${PROVIDER.email}`}
                   style={linkStyle}
                   className="underline-offset-2 hover:underline"
                 >
-                  info@lernly-app.de
+                  {PROVIDER.email}
                 </a>
               </p>
             </section>
@@ -103,11 +104,11 @@ function ImpressumContent() {
                 Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV
               </h2>
               <p style={bodyStyle}>
-                Rares Daniel Belean
+                {PROVIDER.name}
                 <br />
-                Am Hang 4
+                {PROVIDER.street}
                 <br />
-                69151 Neckargemünd
+                {PROVIDER.postal} {PROVIDER.city}
               </p>
             </section>
 
