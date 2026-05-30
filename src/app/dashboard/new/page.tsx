@@ -10,10 +10,7 @@ import QuotaHitModal, {
 import { track } from "@/lib/analytics";
 import { STUDY_UPLOADS_BUCKET, buildUploadPath } from "@/lib/uploads";
 import { parseJsonResponse } from "@/lib/safeJson";
-import {
-  EXAM_TYPE_LABELS,
-  type ExamType,
-} from "@/lib/schema";
+import { type ExamType } from "@/lib/schema";
 
 type GenerateApiResponse = {
   error?: string;
@@ -34,12 +31,33 @@ const ACCEPTED_MIME = {
   "text/markdown": [".md", ".markdown"],
 };
 
-const EXAM_OPTIONS: { value: ExamType; emoji: string; sub: string }[] = [
-  { value: "essay", emoji: "📝", sub: "Geschriebener Aufsatz" },
-  { value: "multiple_choice", emoji: "✅", sub: "MC-Klausur" },
-  { value: "open_questions", emoji: "✍️", sub: "Schriftlich, offene Fragen" },
-  { value: "oral", emoji: "🗣", sub: "Mündliche Prüfung" },
-  { value: "open_book", emoji: "📋", sub: "Take-Home / Open Book" },
+// Three formats live here. `oral` and `open_book` stay in the schema enum
+// so legacy packs render, but they're gone from the picker — the user can
+// only create the three that produce real, distinct practice content.
+const EXAM_OPTIONS: {
+  value: ExamType;
+  title: string;
+  description: string;
+  emoji: string;
+}[] = [
+  {
+    value: "multiple_choice",
+    title: "Multiple Choice",
+    description: "Kniffliges MC-Quiz, das echtes Verstehen testet",
+    emoji: "✅",
+  },
+  {
+    value: "essay",
+    title: "Essay (Klausur)",
+    description: "Essay-Baupläne: These, Struktur & Beispiele pro Frage",
+    emoji: "📝",
+  },
+  {
+    value: "open_questions",
+    title: "Offene Fragen",
+    description: "Offene Fragen mit Musterantworten zum Selbstabfragen",
+    emoji: "✍️",
+  },
 ];
 
 function bytes(n: number) {
@@ -51,7 +69,7 @@ function bytes(n: number) {
 export default function NewPackPage() {
   const router = useRouter();
   const [files, setFiles] = useState<File[]>([]);
-  const [examType, setExamType] = useState<ExamType>("essay");
+  const [examType, setExamType] = useState<ExamType>("multiple_choice");
   const [extraInfo, setExtraInfo] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -62,6 +80,13 @@ export default function NewPackPage() {
     { id: string; title: string }[]
   >([]);
   const [examId, setExamId] = useState<string | null>(null);
+  // When the user picks "+ Neue Klausur anlegen…", we collect a title (+
+  // optional date) inline and create the exam in Supabase on submit, then
+  // use the new id as the pack's exam_id. Sentinel value "__new__" in the
+  // select toggles this branch.
+  const [newExamMode, setNewExamMode] = useState(false);
+  const [newExamTitle, setNewExamTitle] = useState("");
+  const [newExamDate, setNewExamDate] = useState("");
 
   // Load the user's exams so they can assign this pack to one at creation.
   // Pre-select via ?exam=<uuid> if the dashboard deep-linked here.
@@ -142,6 +167,10 @@ export default function NewPackPage() {
       setError("Mindestens eine Datei hochladen.");
       return;
     }
+    if (newExamMode && !newExamTitle.trim()) {
+      setError("Titel der neuen Klausur darf nicht leer sein.");
+      return;
+    }
     setBusy(true);
     setError(null);
     setCompleted(false);
@@ -156,6 +185,19 @@ export default function NewPackPage() {
       if (!user) {
         window.location.href = "/login?next=/dashboard/new";
         return;
+      }
+
+      // 0) If the user chose "+ Neue Klausur anlegen", persist the exam first
+      //    so the pack can reference its id and so it appears on the dashboard
+      //    with its countdown immediately.
+      let resolvedExamId: string | null = examId;
+      if (newExamMode) {
+        const { createExam } = await import("@/app/dashboard/actions");
+        const created = await createExam({
+          title: newExamTitle.trim(),
+          exam_date: newExamDate || null,
+        });
+        resolvedExamId = created.id;
       }
 
       // 1) Upload each file straight to Storage — bypasses Vercel's ~4.5 MB
@@ -184,7 +226,7 @@ export default function NewPackPage() {
           examType,
           extraInfo: extraInfo.trim() || undefined,
           files: refs,
-          examId,
+          examId: resolvedExamId,
         }),
       });
       const json = await parseJsonResponse<GenerateApiResponse>(res);
@@ -438,41 +480,79 @@ export default function NewPackPage() {
           )}
         </section>
 
-        {examChoices.length > 0 && (
-          <section className="mt-6">
-            <h2
-              className="mb-3 text-[12px] uppercase tracking-[0.22em]"
-              style={{ color: "rgba(255,255,255,0.55)" }}
-            >
-              Klausur <span className="lowercase">(optional)</span>
-            </h2>
-            <select
-              value={examId ?? ""}
-              onChange={(e) => setExamId(e.target.value || null)}
-              className="w-full appearance-none rounded-2xl px-4 py-3 text-[14px] text-white outline-none transition focus:border-white/40"
-              style={{
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.14)",
-              }}
-            >
-              <option value="">Keine zugeordnet</option>
-              {examChoices.map((e) => (
-                <option key={e.id} value={e.id}>
-                  {e.title}
-                </option>
-              ))}
-            </select>
-          </section>
-        )}
-
         <section className="mt-6">
           <h2
             className="mb-3 text-[12px] uppercase tracking-[0.22em]"
             style={{ color: "rgba(255,255,255,0.55)" }}
           >
-            Prüfungsformat
+            Klausur <span className="lowercase">(optional)</span>
           </h2>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+          <select
+            value={newExamMode ? "__new__" : (examId ?? "")}
+            onChange={(e) => {
+              const v = e.target.value;
+              if (v === "__new__") {
+                setNewExamMode(true);
+                setExamId(null);
+              } else {
+                setNewExamMode(false);
+                setExamId(v || null);
+              }
+            }}
+            className="w-full appearance-none rounded-2xl px-4 py-3 text-[14px] text-white outline-none transition focus:border-white/40"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.14)",
+            }}
+          >
+            <option value="">Keine zugeordnet</option>
+            {examChoices.map((e) => (
+              <option key={e.id} value={e.id}>
+                {e.title}
+              </option>
+            ))}
+            <option value="__new__">+ Neue Klausur anlegen…</option>
+          </select>
+
+          {newExamMode && (
+            <div className="mt-3 grid gap-2 sm:grid-cols-[1fr_180px]">
+              <input
+                autoFocus
+                value={newExamTitle}
+                onChange={(e) => setNewExamTitle(e.target.value)}
+                placeholder="Titel (z. B. Global Strategic Management)"
+                className="w-full rounded-xl px-3 py-2.5 text-[14px] text-white outline-none transition focus:border-white/40"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.14)",
+                }}
+              />
+              <input
+                type="date"
+                value={newExamDate}
+                onChange={(e) => setNewExamDate(e.target.value)}
+                placeholder="Datum"
+                className="w-full rounded-xl px-3 py-2.5 text-[14px] text-white outline-none transition focus:border-white/40"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.14)",
+                  colorScheme: "dark",
+                }}
+              />
+            </div>
+          )}
+        </section>
+
+        <section className="mt-6">
+          <p
+            className="mb-3 text-[13px] leading-relaxed"
+            style={{ color: "rgba(255,255,255,0.65)" }}
+          >
+            Jedes Paket enthält{" "}
+            <span className="text-white">Karteikarten, Visual Map &amp; Übersicht</span>
+            . Wähl dazu deinen Übungsmodus:
+          </p>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             {EXAM_OPTIONS.map((opt) => {
               const active = examType === opt.value;
               return (
@@ -492,15 +572,15 @@ export default function NewPackPage() {
                     }`,
                   }}
                 >
-                  <div className="text-[20px]">{opt.emoji}</div>
-                  <div className="mt-2 text-[14px] font-medium text-white">
-                    {EXAM_TYPE_LABELS[opt.value]}
+                  <div className="text-[18px]">{opt.emoji}</div>
+                  <div className="mt-2 text-[14px] font-semibold text-white">
+                    {opt.title}
                   </div>
                   <div
-                    className="text-[11px]"
-                    style={{ color: "rgba(255,255,255,0.5)" }}
+                    className="mt-1 text-[12px] leading-snug"
+                    style={{ color: "rgba(255,255,255,0.6)" }}
                   >
-                    {opt.sub}
+                    {opt.description}
                   </div>
                 </button>
               );
