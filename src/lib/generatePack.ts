@@ -38,7 +38,36 @@ export const EXAM_LABEL: Record<ExamType, string> = {
   open_questions: "Klausur mit offenen Fragen (Freitext-Antworten)",
 };
 
-const PDF_CHAR_BUDGET = 280_000;
+const PDF_CHAR_BUDGET = 500_000;
+
+// Pack-wide token budget. We aim to keep input under ~120k tokens to leave
+// room for the analysis brief + multiple task generations within Anthropic's
+// per-request limits and to keep latency reasonable. Estimated at ~4 chars
+// per token (rough English/German average) → ~480k chars.
+//
+// ============================================================
+// PHASE 2 SEAM — map-reduce chunker slots in HERE.
+// ------------------------------------------------------------
+// Today: if extracted text exceeds TOKEN_THRESHOLD_CHARS, the pack-text
+// payload is truncated and we set `wasTruncated = true` so the API
+// surfaces a friendly warning to the user.
+//
+// Phase 2 will replace the truncation branch in buildMaterialBlocks
+// with a chunker that:
+//   1. Splits the over-budget text into N coherent chunks (chapter /
+//      section boundaries where possible, ~80k tokens each).
+//   2. Runs each generation task per chunk in parallel.
+//   3. Merges the per-chunk pack fragments (dedupe flashcards by term,
+//      merge concept lists, union quiz questions, etc.).
+// Until then: truncate + warn. Function seam = the `if (textTotal >
+// TOKEN_THRESHOLD_CHARS)` block in buildMaterialBlocks.
+// ============================================================
+const TOKEN_THRESHOLD_CHARS = 480_000;
+
+// A PDF with fewer than this many extracted chars per page is almost
+// certainly scanned/image-only — used to detect "no readable text"
+// before we generate against empty content.
+const EMPTY_EXTRACTION_CHARS_PER_PAGE = 80;
 
 const VISION_CHARS_PER_PAGE = 800; // below this (chars/page) a PDF is image-heavy
 const VISION_MAX_PAGES = 100; // per-PDF cap (Anthropic allows ≤100 pages/request)
@@ -396,6 +425,14 @@ export type MaterialResult = {
   visionPagesUsed: number;
   fileSummaries: string[];
   perFile: { name: string; pages: number }[];
+  // True when the combined extracted text exceeded TOKEN_THRESHOLD_CHARS
+  // and was truncated. The API surfaces a friendly warning so the user
+  // knows to split next time.
+  wasTruncated: boolean;
+  // PDFs that yielded near-zero text AND didn't get routed to vision
+  // (vision capacity exhausted, etc). The caller should fail fast with
+  // a "no readable text" message rather than generate against nothing.
+  emptyPdfs: string[];
 };
 
 // Build the Anthropic content blocks for a set of files (extraction + vision
@@ -412,6 +449,10 @@ export async function buildMaterialBlocks(
   const fileSummaries: string[] = [];
   const perFile: { name: string; pages: number }[] = [];
   const blocks: Anthropic.Messages.ContentBlockParam[] = [];
+  // Per-file text payloads collected first, then merged + truncated
+  // pack-wide so we can enforce TOKEN_THRESHOLD_CHARS across all sources.
+  const textPayloads: { header: string; body: string }[] = [];
+  const emptyPdfs: string[] = [];
 
   blocks.push({
     type: "text",
@@ -463,20 +504,56 @@ export async function buildMaterialBlocks(
       });
       fileSummaries.push(`${name}${pageInfo}: VISION (${pageCount} Seiten)`);
     } else {
+      // Detect scanned-PDF that bypassed the vision branch (capacity exhausted
+      // or aggregate-cap reached). Tiny per-page text count is the signal.
+      if (
+        isPdf &&
+        pageCount > 0 &&
+        charsPerPage < EMPTY_EXTRACTION_CHARS_PER_PAGE
+      ) {
+        emptyPdfs.push(name);
+        // Skip emitting a block — caller will fail with a friendly message.
+        fileSummaries.push(`${name}${pageInfo}: EMPTY (scanned PDF, no readable text)`);
+        continue;
+      }
       let t = text;
       if (t.length > PDF_CHAR_BUDGET) {
         t = t.slice(0, PDF_CHAR_BUDGET) + `\n\n[... ${name} wurde nach ${PDF_CHAR_BUDGET.toLocaleString("de-DE")} Zeichen gekürzt ...]`;
       }
-      totalChars += t.length;
-      blocks.push({ type: "text", text: `--- ${name}${pageInfo} ---\n${t}` });
+      textPayloads.push({ header: `--- ${name}${pageInfo} ---`, body: t });
       fileSummaries.push(`${name}${pageInfo}: ${t.length.toLocaleString("de-DE")} Zeichen`);
     }
+  }
+
+  // Pack-wide token guard. PHASE 2 SEAM (see TOKEN_THRESHOLD_CHARS comment
+  // at the top of this file): swap this truncation block for a map-reduce
+  // chunker that runs per-task generation on each chunk and merges results.
+  let wasTruncated = false;
+  if (textPayloads.length > 0) {
+    let combined = textPayloads.map((p) => `${p.header}\n${p.body}`).join("\n\n");
+    if (combined.length > TOKEN_THRESHOLD_CHARS) {
+      wasTruncated = true;
+      combined =
+        combined.slice(0, TOKEN_THRESHOLD_CHARS) +
+        `\n\n[... gekürzt nach ${TOKEN_THRESHOLD_CHARS.toLocaleString("de-DE")} Zeichen — Material überschreitet das Token-Budget, der Rest wird in dieser Version nicht verarbeitet ...]`;
+    }
+    totalChars = combined.length;
+    blocks.push({ type: "text", text: combined });
   }
 
   const last = blocks[blocks.length - 1];
   if (last) (last as Anthropic.Messages.TextBlockParam).cache_control = { type: "ephemeral" };
 
-  return { blocks, totalChars, totalPages, visionPagesUsed, fileSummaries, perFile };
+  return {
+    blocks,
+    totalChars,
+    totalPages,
+    visionPagesUsed,
+    fileSummaries,
+    perFile,
+    wasTruncated,
+    emptyPdfs,
+  };
 }
 
 // Run analysis (optional) + the gated task fan-out + merge + Zod validation.

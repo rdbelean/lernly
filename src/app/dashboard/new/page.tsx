@@ -21,10 +21,11 @@ type GenerateApiResponse = {
   saved?: boolean;
   id?: string;
   pack?: { flashcards?: unknown[]; simulator?: { questions?: unknown[] } };
+  warning?: string;
 };
 
 const MAX_FILES = 8;
-const MAX_FILE_BYTES = 25 * 1024 * 1024; // 25 MB
+const MAX_FILE_BYTES = 75 * 1024 * 1024; // 75 MB — text is extracted server-side, so MB is no longer the real constraint (tokens are).
 const ACCEPTED_MIME = {
   "application/pdf": [".pdf"],
   "text/plain": [".txt"],
@@ -270,6 +271,12 @@ export default function NewPackPage() {
       });
       setCompleted(true);
       if (json.saved && json.id) {
+        // Surface the truncation warning before the redirect — Sonner toast
+        // is rendered by DashboardShell, so the message survives the navigation.
+        if (json.warning) {
+          const { toast } = await import("sonner");
+          toast.warning(json.warning, { duration: 8000 });
+        }
         // small delay so the user sees completion tick
         setTimeout(() => router.push(`/dashboard/pack/${json.id}`), 500);
       } else {

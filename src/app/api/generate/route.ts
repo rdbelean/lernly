@@ -27,16 +27,22 @@ export const maxDuration = 800;
 const defaultClient = new Anthropic();
 
 const MAX_FILES = 8;
-const MAX_FILE_BYTES = 25 * 1024 * 1024;
-const MAX_TOTAL_BYTES = 50 * 1024 * 1024;
+const MAX_FILE_BYTES = 75 * 1024 * 1024;     // 75 MB per file
+const MAX_TOTAL_BYTES = 200 * 1024 * 1024;   // 200 MB per pack (8 files × ~25 MB avg headroom)
 
 // Per-pack input ceiling for logged-in users. Generation runs as one long
 // request; beyond this it reliably outlives the connection window (gateway
 // timeout → "Failed to fetch" on the client). We reject upfront with
 // actionable guidance instead of letting it time out. Tune these to what
 // actually finishes in time on the deployment.
-const MAX_PAGES_PER_PACK = 60;
-const MAX_CHARS_PER_PACK = 250_000;
+//
+// These are now SANITY ceilings, not target caps. The real token budget is
+// enforced inside buildMaterialBlocks (TOKEN_THRESHOLD_CHARS) — anything
+// over that gets truncated with a friendly warning rather than rejected.
+// We still reject genuinely-pathological uploads (>2× the token budget)
+// upfront so the model isn't asked to summarize a small library.
+const MAX_PAGES_PER_PACK = 500;
+const MAX_CHARS_PER_PACK = 1_000_000;
 
 // Anonymous (lead-magnet) hard caps — protect Lernly's Anthropic bill.
 const ANON_MAX_FILES = 1;
@@ -50,10 +56,16 @@ const GENERATION_BUDGET_MS = 780_000; // 20s buffer under maxDuration (800)
 
 // Shown upfront (before generation) when the material exceeds the per-pack ceiling.
 const MATERIAL_TOO_LARGE_UPFRONT_MSG =
-  `Dein Material ist zu groß für ein einzelnes Lernpaket (max. ~${MAX_PAGES_PER_PACK} Seiten ` +
-  `oder ${MAX_CHARS_PER_PACK.toLocaleString("de-DE")} Zeichen). Teile es in kleinere Häppchen auf — ` +
+  `Dein Material überschreitet die absolute Obergrenze (${MAX_PAGES_PER_PACK} Seiten / ` +
+  `${MAX_CHARS_PER_PACK.toLocaleString("de-DE")} Zeichen). Teile es in kleinere Häppchen auf — ` +
   `am besten pro Kapitel oder Vorlesung — und erstelle mehrere Pakete. Kleinere Pakete sind ` +
   `fokussierter, schneller fertig und besser zum Lernen.`;
+
+// Soft truncation message — surfaced when material was processed but had to
+// be cut to the token budget (TOKEN_THRESHOLD_CHARS in generatePack.ts).
+export const MATERIAL_TRUNCATED_MSG =
+  `Dein Material ist sehr groß — wir haben den wichtigsten Teil verarbeitet. ` +
+  `Tipp: lade pro Paket ein Kapitel/Thema hoch, dann wird's vollständig.`;
 
 function extractClientIp(request: Request): string | null {
   const forwarded = request.headers.get("x-forwarded-for");
@@ -408,8 +420,22 @@ export async function POST(request: Request) {
         { status: 422 },
       );
     }
-    const { totalChars, totalPages, visionPagesUsed, fileSummaries, perFile } = material;
+    const { totalChars, totalPages, visionPagesUsed, fileSummaries, perFile, wasTruncated, emptyPdfs } = material;
     const materialBlocks = material.blocks;
+
+    // Scanned-PDF fallback: extraction yielded ~nothing AND vision capacity
+    // was exhausted (or otherwise skipped). Fail fast with a friendly message
+    // rather than spend a generation on empty input.
+    if (emptyPdfs.length > 0) {
+      const list = emptyPdfs.join(", ");
+      return NextResponse.json(
+        {
+          error: `Diese PDF${emptyPdfs.length > 1 ? "s" : ""} enthält keinen lesbaren Text (vermutlich gescannt): ${list}. Lade bitte die Originaldatei mit echtem Text hoch.`,
+          reason: "scanned_pdf_no_text",
+        },
+        { status: 422 },
+      );
+    }
 
     // Anonymous per-file page cap (was inline in the loop).
     if (isAnonymous) {
@@ -559,6 +585,7 @@ export async function POST(request: Request) {
       id: savedId ?? crypto.randomUUID(),
       saved: Boolean(savedId),
       pack,
+      ...(wasTruncated ? { warning: MATERIAL_TRUNCATED_MSG } : {}),
     });
   } catch (err) {
     console.error("[/api/generate] error", err);
