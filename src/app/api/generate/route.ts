@@ -18,7 +18,8 @@ import {
   EXAM_LABEL,
   type SourceFile,
 } from "@/lib/generatePack";
-import { buildRelevanceBrief, type FidelityLevel } from "@/lib/prompts";
+import { buildRelevanceBrief, type FidelityLevel, type LensContext } from "@/lib/prompts";
+import { ExamProfileSchema } from "@/lib/schema";
 
 export const runtime = "nodejs";
 // 800s is the Vercel Fluid Compute max — needed because large image-heavy PDFs
@@ -494,6 +495,11 @@ export async function POST(request: Request) {
     // pack still generates without the lens.
     let resolvedExamId: string | null = null;
     let relevanceBrief: string | null = null;
+    // Structured lens context used by the per-task addendum (slot allocation,
+    // topic ordering). Built only when there's a valid persisted profile —
+    // a hints-only exam still gets the system-level relevance brief but no
+    // task-level addendum (no topics to allocate by).
+    let lensContext: LensContext | null = null;
     if (examId && user) {
       const { data: ownedExam } = await supabase
         .from("exams")
@@ -502,11 +508,19 @@ export async function POST(request: Request) {
         .maybeSingle();
       if (ownedExam) {
         resolvedExamId = ownedExam.id as string;
+        const fidelity = ((ownedExam.fidelity as string | null) ?? "likely") as FidelityLevel;
         relevanceBrief = buildRelevanceBrief({
           profile: ownedExam.exam_profile,
           hints: (ownedExam.instructor_hints as string | null) ?? null,
-          fidelity: ((ownedExam.fidelity as string | null) ?? "likely") as FidelityLevel,
+          fidelity,
         });
+        // Validate the persisted profile before handing it to the allocator
+        // so a corrupted JSON column doesn't crash generation. Loosened
+        // schema means a partial profile (formats + topics) still validates.
+        const parsedProfile = ExamProfileSchema.safeParse(ownedExam.exam_profile);
+        if (parsedProfile.success && parsedProfile.data.topics.length > 0) {
+          lensContext = { profile: parsedProfile.data, fidelity };
+        }
       }
     }
 
@@ -520,6 +534,8 @@ export async function POST(request: Request) {
         deadline,
         twoPass: useTwoPass,
         relevanceBrief,
+        lensContext,
+        extraInfo,
       });
     } catch (e) {
       const msg = e instanceof Error ? e.message : "";

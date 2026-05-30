@@ -296,6 +296,9 @@ export const StudyPackSchema = z.object({
   openQuestions: OpenQuestionsSchema.optional(),
   quiz: QuizSchema.optional(),
   essayPredictions: EssayPredictionsSchema.optional(),
+  // Verbatim "Zusatzinfos" the user typed at pack creation. Persisted so
+  // the original steering input is recoverable (e.g. for future regen).
+  extraInfo: z.string().optional(),
 });
 
 // =========================================================================

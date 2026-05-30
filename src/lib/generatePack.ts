@@ -11,6 +11,8 @@ import {
   TASK_ESSAY_PREDICTIONS,
   TASK_ANALYSIS,
   buildFormatDirective,
+  buildTaskUserAddendum,
+  type LensContext,
 } from "@/lib/prompts";
 import { activeTasksFor, type GenTaskKey } from "@/lib/examTasks";
 import {
@@ -133,6 +135,8 @@ async function runTaskOnce(
   brief?: string,
   extraInstruction?: string,
   relevanceBrief?: string | null,
+  lensContext?: LensContext | null,
+  extraInfo?: string,
 ): Promise<unknown> {
   const t0 = Date.now();
   const { instruction, maxTokens } = TASKS[key];
@@ -146,6 +150,17 @@ async function runTaskOnce(
       buildFormatDirective(examType),
     ];
     if (relevanceBrief) systemParts.push(relevanceBrief);
+
+    // Per-task user-message addendum — slot allocations, ordering rules,
+    // and the user's Zusatzinfos restated. Goes RIGHT BEFORE the task
+    // instruction so recency is maximal. Empty string when no lens + no
+    // extraInfo, so Path-B keeps the exact same content-block sequence.
+    const taskAddendum = buildTaskUserAddendum(
+      key,
+      lensContext ?? null,
+      extraInfo ?? "",
+    );
+
     const stream = client.messages.stream(
       {
         model: MODEL_FOR[key],
@@ -159,6 +174,9 @@ async function runTaskOnce(
               ...materialBlocks,
               ...(brief
                 ? [{ type: "text" as const, text: ANALYSIS_HEADER + brief }]
+                : []),
+              ...(taskAddendum
+                ? [{ type: "text" as const, text: taskAddendum }]
                 : []),
               {
                 type: "text",
@@ -218,6 +236,8 @@ async function runTask(
   examType: ExamType,
   brief?: string,
   relevanceBrief?: string | null,
+  lensContext?: LensContext | null,
+  extraInfo?: string,
 ): Promise<unknown> {
   const attempt = (extraInstruction?: string) =>
     retryWithBudget(
@@ -231,6 +251,8 @@ async function runTask(
           brief,
           extraInstruction,
           relevanceBrief,
+          lensContext,
+          extraInfo,
         ),
       {
         classify: classifyError,
@@ -346,17 +368,19 @@ async function runGatedTasks(
   examType: ExamType,
   brief?: string,
   relevanceBrief?: string | null,
+  lensContext?: LensContext | null,
+  extraInfo?: string,
 ): Promise<Partial<Record<GenTaskKey, unknown>>> {
   const active = activeTasksFor(examType);
   const runOne = (k: GenTaskKey): Promise<unknown> =>
     k === "visualMap"
-      ? runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief)
+      ? runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief, lensContext, extraInfo)
           .then((r) => (r as { visualMap?: unknown }).visualMap ?? null)
           .catch((e) => {
             console.error("[/api/generate] visualMap soft-failed", e);
             return null;
           })
-      : runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief);
+      : runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief, lensContext, extraInfo);
 
   // Anthropic prompt caching is per-model, so each model tier caches the
   // material independently — group the active tasks by model and warm each
@@ -553,8 +577,19 @@ export async function generatePack(opts: {
   deadline: number;
   twoPass: boolean;
   relevanceBrief?: string | null;
+  lensContext?: LensContext | null;
+  extraInfo?: string;
 }): Promise<StudyPack> {
-  const { client, blocks, examType, deadline, twoPass, relevanceBrief } = opts;
+  const {
+    client,
+    blocks,
+    examType,
+    deadline,
+    twoPass,
+    relevanceBrief,
+    lensContext,
+    extraInfo,
+  } = opts;
   let brief = "";
   if (twoPass) {
     const analysisDeadline = Math.min(deadline, Date.now() + ANALYSIS_BUDGET_MS);
@@ -567,6 +602,8 @@ export async function generatePack(opts: {
     examType,
     brief || undefined,
     relevanceBrief ?? null,
+    lensContext ?? null,
+    extraInfo,
   );
 
   const cards = (byKey.cards as { flashcards?: Flashcard[] } | undefined)?.flashcards ?? [];
@@ -591,6 +628,10 @@ export async function generatePack(opts: {
           ).essayPredictions,
         }
       : {}),
+    // Persist the user's original Zusatzinfos on the pack so the steering
+    // input survives in pack_data (useful for future "regenerate with same
+    // inputs" features and for debugging why a pack looks the way it does).
+    ...(extraInfo && extraInfo.trim() ? { extraInfo: extraInfo.trim() } : {}),
   };
   const parsed = StudyPackSchema.safeParse(merged);
   if (!parsed.success) throw new Error("schema_validation_failed");

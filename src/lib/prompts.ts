@@ -562,3 +562,276 @@ JSON-SCHEMA (genau diese Struktur):
     ]
   }
 }`;
+
+// =========================================================================
+// PER-TASK LENS ADDENDUM — concentration, not just tagging
+// =========================================================================
+// The relevance brief in the system prompt told the model to "weight by
+// profile". In practice the rest of each task's instruction ("breit über
+// den Stoff verteilen" / "max 6 Topics × 6 Konzepte") dominated and the
+// lens shallowed out to tags. This addendum fixes that:
+//
+//   • Precomputes per-topic slot allocations from the profile weights.
+//   • Tells each task EXPLICITLY how many cards/questions/concepts per
+//     topic, plus the required order (topics by weight desc).
+//   • Replaces the contradicting "breit verteilen" lines for QUIZ /
+//     SIMULATOR when a lens is active.
+//   • Restates `extraInfo` near the task instruction so its steering
+//     isn't buried under 120k tokens of material.
+//
+// Injected as a user-message text block IMMEDIATELY BEFORE the task
+// instruction by runTaskOnce — strongest recency position. The system-
+// level relevance brief stays where it is (defense-in-depth).
+// =========================================================================
+
+// Re-uses the schema types so allocator math has typed access to topic[].weight.
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import type { ExamProfile } from "@/lib/schema";
+
+type LensTaskKey =
+  | "cards"
+  | "simulator"
+  | "blueprint"
+  | "meta"
+  | "visualMap"
+  | "quiz"
+  | "essayPredictions";
+
+export type LensContext = {
+  profile: ExamProfile;
+  fidelity: FidelityLevel;
+};
+
+// Fidelity-aware proportional allocator. Returns one entry per kept topic,
+// sorted by weight desc. In strict mode, topics with weight < 0.05 are
+// dropped entirely; in likely/broad they get at least 1 / 2 slots.
+function allocateSlots(
+  profile: ExamProfile,
+  totalBudget: number,
+  fidelity: FidelityLevel,
+): { name: string; weight: number; slots: number }[] {
+  const topics = profile.topics ?? [];
+  if (topics.length === 0) return [];
+
+  const STRICT_THRESHOLD = 0.05;
+  const pool =
+    fidelity === "strict"
+      ? topics.filter((t) => t.weight >= STRICT_THRESHOLD)
+      : topics;
+  const effective = pool.length > 0 ? pool : topics;
+  const sumWeights = effective.reduce((s, t) => s + t.weight, 0);
+
+  // Profile present but all weights zero → fall back to even split.
+  if (sumWeights === 0) {
+    const even = Math.max(1, Math.floor(totalBudget / effective.length));
+    return effective
+      .map((t) => ({ name: t.name, weight: t.weight, slots: even }))
+      .sort((a, b) => b.weight - a.weight);
+  }
+
+  const minPerTopic = fidelity === "broad" ? 2 : 1;
+  const allocated = effective.map((t) => ({
+    name: t.name,
+    weight: t.weight,
+    slots: Math.max(
+      minPerTopic,
+      Math.round((t.weight / sumWeights) * totalBudget),
+    ),
+  }));
+  return allocated.sort((a, b) => b.weight - a.weight);
+}
+
+function formatAllocationTable(
+  allocations: { name: string; weight: number; slots: number }[],
+  unitLabel: string,
+): string {
+  return allocations
+    .map(
+      (a) =>
+        `- ${a.name} (Profil-Gewicht ${a.weight.toFixed(2)}) → ${a.slots} ${unitLabel}`,
+    )
+    .join("\n");
+}
+
+function fidelityPolicyLine(fidelity: FidelityLevel): string {
+  if (fidelity === "strict")
+    return "Bei fidelity=strict: Themen ohne Profil-Evidenz KOMPLETT WEGLASSEN.";
+  if (fidelity === "likely")
+    return "Bei fidelity=likely: angrenzende Themen mit hohem ROI dürfen MINIMAL vorkommen, dominieren aber nicht.";
+  return "Bei fidelity=broad: breite Abdeckung; Profil-Gewichte sind weiche Priorisierung, kein Filter.";
+}
+
+// Task-specific budgets — match the same numeric targets the base TASK_X
+// prompts already mention, so the addendum's allocation totals roughly to
+// what the task would produce anyway.
+const TASK_BUDGET: Record<LensTaskKey, number> = {
+  cards: 30, // TASK_CARDS says 25-40
+  simulator: 15, // TASK_SIMULATOR says 12-18
+  quiz: 24, // TASK_QUIZ says 18-30
+  meta: 24, // TASK_META says max 6×6=28, we use 24 for the lens
+  blueprint: 0, // single artifact, no per-topic count
+  visualMap: 0, // block-ordering, not slot-counting
+  essayPredictions: 0, // 5-8 questions, we'll prose-instruct topic pick
+};
+
+function buildLensSectionForTask(
+  key: LensTaskKey,
+  lens: LensContext,
+): string {
+  const { profile, fidelity } = lens;
+  const phrasing = profile.phrasing_style?.trim()
+    ? `\nPhrasing-Style aus dem Profil (1:1 imitieren): "${profile.phrasing_style.trim()}"`
+    : "";
+  const patterns =
+    profile.recurring_patterns && profile.recurring_patterns.length > 0
+      ? `\nWiederkehrende Muster (einbauen): ${profile.recurring_patterns.join("; ")}`
+      : "";
+  const fidLine = fidelityPolicyLine(fidelity);
+
+  if (key === "meta") {
+    const alloc = allocateSlots(profile, TASK_BUDGET.meta, fidelity);
+    const table = formatAllocationTable(alloc, "Konzepte");
+    return `=== LENS-ADDENDUM FÜR ÜBERSICHT (jetzt anwenden, überschreibt die 6×6-Grenze) ===
+
+KONZEPT-SLOT-ALLOKATION nach Altklausur-Profil:
+${table}
+
+REGELN
+- TOPIC-REIHENFOLGE: Sortiere "topics" im Output ABSTEIGEND nach dem Profil-Gewicht. Erstes Topic = höchstes weight. NICHT nach Kapitel-Reihenfolge sortieren.
+- Folge der Allokation oben statt der "max 6×6=28"-Regel aus der Haupt-Anweisung.
+- importance="high" NUR auf Konzepten der 2-3 höchstgewichteten Topics.
+- relevanceTag setzen wie in der Haupt-Anweisung beschrieben.
+${fidLine}${phrasing}${patterns}`;
+  }
+
+  if (key === "cards") {
+    const alloc = allocateSlots(profile, TASK_BUDGET.cards, fidelity);
+    const table = formatAllocationTable(alloc, "Karten");
+    return `=== LENS-ADDENDUM FÜR KARTEIKARTEN (jetzt anwenden) ===
+
+KARTEN-ALLOKATION nach Altklausur-Profil:
+${table}
+
+REGELN
+- KATEGORIE-REIHENFOLGE: hochgewichtete Topics zuerst und mit MEHR Karten (siehe Tabelle).
+- Karten zu hochgewichteten Themen MÜSSEN tiefer sein (Anwendungs-Fragen, nicht reine Definitions-Abfrage).
+${fidLine}${phrasing}${patterns}`;
+  }
+
+  if (key === "quiz") {
+    const alloc = allocateSlots(profile, TASK_BUDGET.quiz, fidelity);
+    const table = formatAllocationTable(alloc, "Fragen");
+    return `=== LENS-ADDENDUM FÜR QUIZ (jetzt anwenden) ===
+
+ÜBERSCHREIBE die Regel "Verteile die Fragen breit über den Stoff" aus der Haupt-Anweisung. Stattdessen:
+
+FRAGEN-ALLOKATION nach Altklausur-Profil:
+${table}
+
+REGELN
+- Setze "category" pro Frage auf den exakten Topic-Namen aus der Tabelle, damit man die Verteilung im UI prüfen kann.
+- Stems sollen die Phrasierung der Altklausur imitieren (Fallbeispiele statt nur Definitionsfragen, wenn die Altklausur so ist).
+${fidLine}${phrasing}${patterns}`;
+  }
+
+  if (key === "simulator") {
+    const alloc = allocateSlots(profile, TASK_BUDGET.simulator, fidelity);
+    const table = formatAllocationTable(alloc, "Fragen");
+    return `=== LENS-ADDENDUM FÜR SIMULATOR (jetzt anwenden) ===
+
+ÜBERSCHREIBE die Regel "möglichst breit über das Kursmaterial verteilt" aus der Haupt-Anweisung. Stattdessen:
+
+FRAGEN-ALLOKATION nach Altklausur-Profil:
+${table}
+
+REGELN
+- Setze "category" pro Frage auf den exakten Topic-Namen aus der Tabelle.
+- Stems imitieren den Phrasing-Style der Altklausur.
+${fidLine}${phrasing}${patterns}`;
+  }
+
+  if (key === "visualMap") {
+    // Top-3 ordering hint; no per-block slot count (blocks ≈ topics).
+    const top = [...profile.topics]
+      .sort((a, b) => b.weight - a.weight)
+      .slice(0, 6);
+    const order = top
+      .map(
+        (t, i) =>
+          `${i + 1}. ${t.name} (Profil-Gewicht ${t.weight.toFixed(2)}) — priority="${t.weight >= 0.2 ? "highest" : t.weight >= 0.1 ? "high" : "moderate"}"`,
+      )
+      .join("\n");
+    return `=== LENS-ADDENDUM FÜR VISUAL MAP (jetzt anwenden) ===
+
+BLOCK-REIHENFOLGE (oben = höchstes Profil-Gewicht, MUSS so erscheinen):
+${order}
+
+REGELN
+- Der erste "block" im Output ist das Topic mit dem höchsten Profil-Gewicht.
+- priority="highest" NUR für Topics mit weight ≥ 0.20.
+- timeMinutes: hochgewichtete Topics bekommen mehr Lernzeit als niedriggewichtete.
+${fidLine}${phrasing}${patterns}`;
+  }
+
+  if (key === "essayPredictions") {
+    const top = [...profile.topics]
+      .sort((a, b) => b.weight - a.weight)
+      .slice(0, 6);
+    const list = top
+      .map((t) => `- ${t.name} (Profil-Gewicht ${t.weight.toFixed(2)})`)
+      .join("\n");
+    return `=== LENS-ADDENDUM FÜR AUFSATZ-PLAN (jetzt anwenden) ===
+
+WAHRSCHEINLICHE FRAGEN aus diesen Topics ziehen (oben = höchstes Profil-Gewicht):
+${list}
+
+REGELN
+- Mindestens 60% der Fragen aus den Top-3 Topics.
+- Fragen formulieren wie die Altklausur — Phrasing-Style 1:1.
+${fidLine}${phrasing}${patterns}`;
+  }
+
+  if (key === "blueprint") {
+    const top = profile.topics.length > 0
+      ? [...profile.topics].sort((a, b) => b.weight - a.weight)[0]
+      : null;
+    return `=== LENS-ADDENDUM FÜR ESSAY-BLUEPRINT (jetzt anwenden) ===
+
+${top
+  ? `Baue das Blueprint um das Top-Thema "${top.name}" (Profil-Gewicht ${top.weight.toFixed(2)}) herum. Falls die Klausur multiple Aufsätze hat: jeder Hauptteil = eines der Top-3 Profil-Themen.`
+  : "Kein klares Top-Thema im Profil — Standard-Blueprint."}
+
+REGELN
+- Template-Sätze imitieren den Phrasing-Style der Altklausur.
+${fidLine}${phrasing}${patterns}`;
+  }
+
+  return "";
+}
+
+// Public entry-point: returns the per-task user-message addendum block.
+// Returns "" when neither a lens nor user extraInfo is present, so Path-B
+// (no profile, no Zusatzinfos) keeps identical content blocks as before.
+export function buildTaskUserAddendum(
+  key: string,
+  lens: LensContext | null,
+  extraInfo: string,
+): string {
+  const parts: string[] = [];
+  if (
+    lens &&
+    lens.profile &&
+    Array.isArray(lens.profile.topics) &&
+    lens.profile.topics.length > 0
+  ) {
+    const section = buildLensSectionForTask(key as LensTaskKey, lens);
+    if (section) parts.push(section);
+  }
+  if (extraInfo && extraInfo.trim()) {
+    parts.push(
+      `=== EXPLIZITE USER-HINWEISE (HOCH PRIORISIERT, JETZT ANWENDEN) ===
+${extraInfo.trim()}`,
+    );
+  }
+  return parts.join("\n\n");
+}
