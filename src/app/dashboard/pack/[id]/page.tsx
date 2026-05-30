@@ -4,6 +4,7 @@ import PackHeader, {
   type PackExamSummary,
   type PackMeta,
 } from "@/components/pack/PackHeader";
+import type { LatestAttempt } from "@/components/pack/PackHub";
 import { createClient } from "@/lib/supabase/server";
 import { StudyPackSchema } from "@/lib/schema";
 import { LAYOUT } from "@/lib/layout";
@@ -56,6 +57,30 @@ export default async function PackDetailPage({
         color: (examRow.color as string | null) ?? null,
       };
     }
+  }
+
+  // Latest quiz attempt feeds the Hub's "Situation" panel + the smart
+  // Weiterlernen CTA (weak topics → "Schwächen üben"). RLS-scoped. null
+  // when no attempts yet — hub gracefully degrades.
+  let latestAttempt: LatestAttempt | null = null;
+  const { data: attemptRow } = await supabase
+    .from("quiz_attempts")
+    .select(
+      "total_questions, correct_count, wrong_count, per_topic, created_at",
+    )
+    .eq("pack_id", data.id)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (attemptRow) {
+    latestAttempt = {
+      total_questions: attemptRow.total_questions as number,
+      correct_count: attemptRow.correct_count as number,
+      wrong_count: attemptRow.wrong_count as number,
+      per_topic:
+        (attemptRow.per_topic as LatestAttempt["per_topic"]) ?? {},
+      created_at: attemptRow.created_at as string,
+    };
   }
 
   const parsed = StudyPackSchema.safeParse(data.pack_data);
@@ -146,7 +171,12 @@ export default async function PackDetailPage({
         />
 
         <div className="mt-8 sm:mt-10">
-          <PackView pack={pack} packId={data.id} />
+          <PackView
+            pack={pack}
+            packId={data.id}
+            exam={exam}
+            latestAttempt={latestAttempt}
+          />
         </div>
       </div>
     </main>

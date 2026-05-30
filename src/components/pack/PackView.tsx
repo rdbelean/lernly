@@ -10,11 +10,16 @@ import { track } from "@/lib/analytics";
 import OpenQuestionsView from "./OpenQuestionsView";
 import QuizView from "./QuizView";
 import EssayPredictionsView from "./EssayPredictionsView";
+import PackHub, { type LatestAttempt } from "./PackHub";
+import type { PackExamSummary } from "./PackHeader";
 
 type Language = "en" | "de";
-// The Übersicht tab was removed — its exam-relevance ranking + concept
-// chips are now folded into the Visual Map (single big-picture surface).
+// The pack now opens to a Hub (situation + Weiterlernen + mode launcher
+// cards) instead of dumping into a tab. The hub IS the home; mode cards
+// switch into the existing study modes. The tab bar persists so users can
+// jump between modes laterally once they've left the hub.
 type Tab =
+  | "hub"
   | "visualMap"
   | "essayPredictions"
   | "simulator"
@@ -25,6 +30,7 @@ type Tab =
 type TabDef = { id: Tab; emoji: string; de: string; en: string };
 
 const ALL_TABS: TabDef[] = [
+  { id: "hub", emoji: "🏠", de: "Hub", en: "Hub" },
   { id: "visualMap", emoji: "🧠", de: "Visual Map", en: "Visual Map" },
   { id: "essayPredictions", emoji: "📌", de: "Aufsatz-Plan", en: "Essay Plan" },
   { id: "simulator", emoji: "🎯", de: "Übungsklausur", en: "Exam Trainer" },
@@ -33,30 +39,22 @@ const ALL_TABS: TabDef[] = [
   { id: "openQuestions", emoji: "✍️", de: "Offene Fragen", en: "Open Questions" },
 ];
 
-// Hero tab on pack open — chosen by exam format. Falls back to the first
-// available tab if the preferred one isn't present (e.g. legacy essay packs
-// that only have a blueprint). open_book previously pointed at the
-// Übersicht; redirected to the Visual Map now that it's the single
-// big-picture surface.
-const HERO_TAB_FOR_FORMAT: Record<string, Tab> = {
-  multiple_choice: "openQuestions",
-  open_questions: "openQuestions",
-  oral: "flashcards",
-  open_book: "visualMap",
-  essay: "essayPredictions",
-};
-
 export default function PackView({
   pack,
   language = "de",
   packId,
+  exam = null,
+  latestAttempt = null,
 }: {
   pack: StudyPack;
   language?: Language;
   packId?: string;
+  exam?: PackExamSummary | null;
+  latestAttempt?: LatestAttempt | null;
 }) {
   const tabs = useMemo<TabDef[]>(() => {
     const has: Record<Tab, boolean> = {
+      hub: true, // Hub always available — it's the landing.
       visualMap: Boolean(pack.visualMap && pack.visualMap.blocks.length > 0),
       essayPredictions: Boolean(
         pack.essayPredictions && pack.essayPredictions.predictions.length > 0,
@@ -72,15 +70,11 @@ export default function PackView({
     return ALL_TABS.filter((t) => has[t.id]);
   }, [pack]);
 
-  // Default-active tab on open is determined by the pack's exam format.
-  // Falls back to the first available tab if the preferred one isn't present
-  // (e.g. an old essay pack without essayPredictions falls back to blueprint).
-  const preferredHero = HERO_TAB_FOR_FORMAT[pack.examType];
-  const defaultTab =
-    (preferredHero && tabs.find((t) => t.id === preferredHero)?.id) ??
-    tabs[0]?.id ??
-    "visualMap";
-  const [tab, setTab] = useState<Tab>(defaultTab);
+  // Default-active is always the Hub now. The previous HERO_TAB_FOR_FORMAT
+  // logic moved into the Hub's "Weiterlernen" CTA — it picks the smartest
+  // mode given exam format + latest attempt, and the user CHOOSES to enter
+  // it instead of being dropped into it.
+  const [tab, setTab] = useState<Tab>("hub");
   const isEn = language === "en";
 
   useEffect(() => {
@@ -96,6 +90,12 @@ export default function PackView({
     pack.examType,
     pack.visualMap,
   ]);
+
+  // Mode entry from the hub — narrowed to non-hub tabs so callers can't
+  // accidentally bounce back to themselves.
+  const onEnterMode = (target: Exclude<Tab, "hub">) => {
+    if (tabs.some((t) => t.id === target)) setTab(target);
+  };
 
   return (
     <div>
@@ -121,6 +121,15 @@ export default function PackView({
       </div>
 
       <div className="py-6 sm:py-7 md:py-9">
+        {tab === "hub" && (
+          <PackHub
+            pack={pack}
+            exam={exam}
+            latestAttempt={latestAttempt}
+            language={language}
+            onEnterMode={onEnterMode}
+          />
+        )}
         {tab === "visualMap" && pack.visualMap && (
           <VisualMapView
             map={pack.visualMap}

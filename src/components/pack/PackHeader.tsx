@@ -67,23 +67,20 @@ export default function PackHeader({
         </span>
       </nav>
 
-      {/* Title row — title left, exam-pill + delete right (wraps on mobile) */}
-      <div className="mt-5 flex flex-wrap items-start justify-between gap-4 sm:mt-6 sm:flex-nowrap">
+      {/* Title row — title left, exam-pill + delete right (wraps on mobile).
+          Title is intentionally compact: the breadcrumb above orients the
+          user, and the body of the page leads with action (hub + mode
+          launcher) instead of a hero headline. */}
+      <div className="mt-3 flex flex-wrap items-start justify-between gap-3 sm:mt-4 sm:flex-nowrap">
         <div className="min-w-0 flex-1">
-          <span
-            className="ln-section-label"
-            style={{ color: "var(--color-ln-sage)" }}
-          >
-            ✓ Dein Lernpaket
-          </span>
           <h1
-            className="mt-3 font-bold leading-[1.05] tracking-[-1.5px] text-white"
-            style={{ fontSize: "clamp(26px, 4.2vw, 44px)" }}
+            className="font-bold leading-tight tracking-[-0.5px] text-white"
+            style={{ fontSize: "clamp(20px, 3vw, 30px)" }}
           >
             {courseTitle}
           </h1>
           {meta.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="mt-3 flex flex-wrap gap-2">
               {meta.map((m, i) => (
                 <span key={i} className="ln-mono-tag">
                   {m.label}
