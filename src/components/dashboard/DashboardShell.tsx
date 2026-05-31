@@ -13,6 +13,8 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
+import WelcomeModal from "@/components/dashboard/WelcomeModal";
+import FeedbackLink from "@/components/FeedbackLink";
 
 type RecentPack = {
   id: string;
@@ -23,6 +25,8 @@ type RecentPack = {
 type Props = {
   email: string;
   recentPacks: RecentPack[];
+  name: string | null;
+  hasSeenWelcome: boolean;
   children: React.ReactNode;
 };
 
@@ -206,6 +210,9 @@ function SidebarContent({
           icon={Settings}
           label="Einstellungen"
         />
+        <div className="mt-2 px-3">
+          <FeedbackLink />
+        </div>
         <div
           className="mt-3 truncate px-3 text-[11px]"
           style={{ color: "var(--color-text-faint)" }}
@@ -227,7 +234,13 @@ function SidebarContent({
   );
 }
 
-export default function DashboardShell({ email, recentPacks, children }: Props) {
+export default function DashboardShell({
+  email,
+  recentPacks,
+  name,
+  hasSeenWelcome,
+  children,
+}: Props) {
   const pathname = usePathname() ?? "/dashboard";
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -365,6 +378,7 @@ export default function DashboardShell({ email, recentPacks, children }: Props) 
           },
         }}
       />
+      <WelcomeModal open={!hasSeenWelcome} initialName={name} />
     </div>
   );
 }
