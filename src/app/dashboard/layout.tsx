@@ -23,7 +23,7 @@ export default async function DashboardLayout({
   const supabase = await createClient();
   const [{ data: recentRaw }, { data: profile }] = await Promise.all([
     supabase.rpc("list_pack_summaries"),
-    supabase.from("users").select("name, has_seen_welcome").single(),
+    supabase.from("users").select("name, has_seen_welcome").maybeSingle(),
   ]);
   const recent: RecentPack[] = ((recentRaw ?? []) as RecentPack[]).slice(0, 5);
 
