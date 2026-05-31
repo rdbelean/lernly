@@ -21,6 +21,10 @@ Pre-revenue MVP **with live users**. Read this every session and follow the Work
   - **DROP / RENAME / destructive changes go in a SEPARATE follow-up migration**, applied only AFTER the new code is live and verified — never in the same migration as the code change. Pattern: add new → deploy code that uses it → later, separate migration removes the old.
   - **ALWAYS ask me before any `DROP` / `ALTER ... DROP` / rename**, and before applying any migration to prod. State the risk first.
 
+### Environment variables (Vercel)
+- **Every new env var MUST be set in ALL scopes** (Production + Preview + Development), not just Production. Production-only vars break preview deployments (this has bitten us 3×: Supabase, Resend, Turnstile). `NEXT_PUBLIC_*` vars are baked at build time → a redeploy is needed after adding them.
+- When you add or require a new env var, tell me explicitly to set it in all scopes.
+
 ### ASK me first before:
 merging to main · destructive DB changes · adding new dependencies/libraries · large refactors · anything touching auth, billing/Stripe, or legal pages.
 
