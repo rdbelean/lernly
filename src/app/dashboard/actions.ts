@@ -203,3 +203,30 @@ export async function assignPackToExam(input: {
   if (error) throw new Error(error.message);
   revalidatePath("/dashboard");
 }
+
+// =========================================================================
+// Welcome modal — persist the captured name (if any) and flip the one-time
+// has_seen_welcome flag so the modal never shows again.
+// =========================================================================
+// `name` null/empty  → only the flag is flipped (dismiss without typing).
+// `name` non-empty   → trimmed (≤80 chars) and stored, then flag flipped.
+// Uses the service client for the UPDATE to match setExamReminderPreference
+// (settings/actions.ts), which bypasses RLS for users-table writes.
+export async function saveWelcome(
+  name: string | null,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const { userId } = await authedClient();
+
+  const trimmed = (name ?? "").trim().slice(0, 80);
+  const patch: { has_seen_welcome: true; name?: string } = {
+    has_seen_welcome: true,
+  };
+  if (trimmed) patch.name = trimmed;
+
+  const service = createServiceClient();
+  const { error } = await service.from("users").update(patch).eq("id", userId);
+  if (error) return { ok: false, error: error.message };
+
+  revalidatePath("/dashboard");
+  return { ok: true };
+}
