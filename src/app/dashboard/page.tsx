@@ -6,6 +6,7 @@ import LoosePacksSection from "@/components/dashboard/LoosePacksSection";
 import { LAYOUT } from "@/lib/layout";
 import { PLAN_LABEL, PLAN_LIMITS } from "@/lib/quota";
 import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
+import { dashboardGreeting } from "@/lib/greeting";
 
 type PackSummary = {
   id: string;
@@ -103,7 +104,7 @@ export default async function DashboardPage({
       .from("exams")
       .select("id, title, exam_date, color, created_at")
       .order("exam_date", { ascending: true, nullsFirst: false }),
-    supabase.from("users").select("plan, packs_used_this_month").single(),
+    supabase.from("users").select("plan, packs_used_this_month, name").single(),
     supabase.rpc("available_pack_credits"),
   ]);
 
@@ -119,6 +120,7 @@ export default async function DashboardPage({
   const used = profile?.packs_used_this_month ?? 0;
   const planLimit = PLAN_LIMITS[plan] ?? 0;
   const planLabel = PLAN_LABEL[plan] ?? plan;
+  const greeting = dashboardGreeting(profile?.name as string | null | undefined);
   const quotaReached = used >= planLimit;
   const quotaPercent = planLimit > 0 ? Math.min(100, (used / planLimit) * 100) : 0;
 
@@ -169,6 +171,12 @@ export default async function DashboardPage({
 
         <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
           <div>
+            <p
+              className="mb-1 text-[15px] font-medium"
+              style={{ color: "var(--color-text)" }}
+            >
+              {greeting}
+            </p>
             <p
               className="mb-2 text-[11px] uppercase tracking-[0.22em]"
               style={{ color: "var(--color-text-faint)" }}
