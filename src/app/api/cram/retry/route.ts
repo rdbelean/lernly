@@ -37,7 +37,10 @@ export async function POST(request: Request) {
 
   // Re-queue atomically via service role (study_packs has no UPDATE RLS policy).
   const service = createServiceClient();
-  const { data: ok, error } = await service.rpc("requeue_cram_chunk", { p_pack_id: packId });
+  const { data: ok, error } = await service.rpc("requeue_cram_chunk", {
+    p_pack_id: packId,
+    p_user_id: user.id,
+  });
   if (error) {
     console.error("[cram/retry] requeue failed", error);
     return NextResponse.json({ error: "Konnte nicht wiederholen." }, { status: 500 });

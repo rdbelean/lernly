@@ -58,6 +58,32 @@ const ALLOWED_FILE = /\.(pdf|txt|md|markdown)$/i;
 
 const GENERATION_BUDGET_MS = 780_000; // 20s buffer under maxDuration (800)
 
+// Global concurrency cap on simultaneous Anthropic generations, enforced via a
+// DB slot counter (acquire_generation_slot / release_generation_slot). Sized to
+// keep Sonnet output under the Tier-2 90K OTPM limit; raise once dashboards show
+// headroom. The slot TTL (in the RPC) exceeds maxDuration so in-flight requests
+// never expire early.
+const GENERATION_MAX_CONCURRENCY = Number(
+  process.env.GENERATION_MAX_CONCURRENCY ?? 3,
+);
+
+// Warm, German "we're busy, your pack is coming" message for transient overload
+// (Anthropic 429/529, or our own slot cap). The client shows this + offers retry
+// instead of a raw English error or a 500.
+const BUSY_MSG =
+  "Gerade ist viel los — dein Lernpaket kommt gleich. Bitte versuch es in einem Moment nochmal.";
+
+// True when an error is a transient overload we want the user to simply retry:
+// Anthropic rate-limit (429) / overloaded (529) / 5xx. Maps to a friendly 503 +
+// retryable flag rather than leaking the raw error.
+function isTransientOverload(err: unknown): boolean {
+  if (err instanceof Anthropic.APIError) {
+    const s = err.status ?? 0;
+    return s === 429 || s === 529 || s === 503 || s === 500 || s === 502;
+  }
+  return false;
+}
+
 // Shown upfront (before generation) when the material exceeds the per-pack ceiling.
 const MATERIAL_TOO_LARGE_UPFRONT_MSG =
   `Dein Material überschreitet die absolute Obergrenze (${MAX_PAGES_PER_PACK} Seiten / ` +
@@ -525,6 +551,32 @@ export async function POST(request: Request) {
     }
 
     const useTwoPass = shouldUseTwoPass({ isAnonymous, usesByok, plan: userPlan });
+
+    // Concurrency gate: reserve a global slot before doing any Anthropic work.
+    // BYOK users bill their own Anthropic account, so they don't count against
+    // our shared Tier-2 token budget — let them through without a slot.
+    let slotHeld = false;
+    if (!usesByok) {
+      try {
+        const { data: acquired } = await createServiceClient().rpc(
+          "acquire_generation_slot",
+          { p_max: GENERATION_MAX_CONCURRENCY },
+        );
+        slotHeld = acquired === true;
+      } catch (e) {
+        // If the gate itself errors, fail open (better to attempt generation
+        // than to block every user because the counter hiccuped).
+        console.error("[/api/generate] acquire_generation_slot threw", e);
+        slotHeld = true;
+      }
+      if (!slotHeld) {
+        return NextResponse.json(
+          { error: BUSY_MSG, retryable: true },
+          { status: 503, headers: { "Retry-After": "20" } },
+        );
+      }
+    }
+
     let pack: StudyPack;
     try {
       pack = await generatePack({
@@ -545,6 +597,16 @@ export async function POST(request: Request) {
       if (msg === "zero_flashcards")
         return NextResponse.json({ error: "Die Generierung lieferte keine Karteikarten — bitte erneut versuchen." }, { status: 502 });
       throw e; // MaxTokensError (incl. MATERIAL_TOO_LARGE_MSG) etc. → handled by the outer catch
+    } finally {
+      // Release the slot the moment generation finishes (success OR failure),
+      // not in the outer finally — we want it freed before the DB save work.
+      if (slotHeld) {
+        try {
+          await createServiceClient().rpc("release_generation_slot");
+        } catch (e) {
+          console.error("[/api/generate] release_generation_slot threw", e);
+        }
+      }
     }
 
     const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
@@ -619,6 +681,15 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("[/api/generate] error", err);
+    // Transient overload (Anthropic 429/529/5xx, exhausted internal retries):
+    // give a warm German message + retryable flag instead of a raw English
+    // error / 500. The client can simply re-submit.
+    if (isTransientOverload(err)) {
+      return NextResponse.json(
+        { error: BUSY_MSG, retryable: true },
+        { status: 503, headers: { "Retry-After": "20" } },
+      );
+    }
     let message =
       err instanceof Anthropic.APIError
         ? err.message
