@@ -1,6 +1,7 @@
 import DeletePackButton from "@/app/dashboard/pack/[id]/delete-button";
 import { countdownInfo, examRgba } from "@/lib/exams";
 import { ChevronRight, Clock } from "lucide-react";
+import FeedbackLink from "@/components/FeedbackLink";
 
 // =========================================================================
 // PackHeader — the persistent "where am I" context bar at the top of every
@@ -50,6 +51,7 @@ export default function PackHeader({
         >
           {courseTitle}
         </span>
+        <FeedbackLink compact className="ml-auto" />
       </nav>
 
       <div className="mt-3 flex flex-wrap items-start justify-between gap-3 sm:mt-4 sm:flex-nowrap">

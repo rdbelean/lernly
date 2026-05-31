@@ -58,6 +58,7 @@ type UserRow = {
   id: string;
   email: string | null;
   exam_reminders_enabled: boolean;
+  name: string | null;
 };
 
 export async function GET(request: Request) {
@@ -87,7 +88,7 @@ export async function GET(request: Request) {
     const userIds = Array.from(new Set(exams.map((e) => e.user_id as string)));
     const { data: users } = await service
       .from("users")
-      .select("id, email, exam_reminders_enabled")
+      .select("id, email, exam_reminders_enabled, name")
       .in("id", userIds);
     const userById = new Map<string, UserRow>(
       ((users ?? []) as UserRow[]).map((u) => [u.id, u]),
@@ -143,6 +144,7 @@ export async function GET(request: Request) {
         examTitle: exam.title,
         daysLeft: days,
         packId,
+        name: user.name,
       };
       const html = renderExamReminderEmail(reminderInput);
       const text = renderExamReminderText(reminderInput);

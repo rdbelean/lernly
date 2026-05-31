@@ -21,8 +21,18 @@ export default async function DashboardLayout({
   }
 
   const supabase = await createClient();
-  const { data: recentRaw } = await supabase.rpc("list_pack_summaries");
+  const [{ data: recentRaw }, { data: profile }] = await Promise.all([
+    supabase.rpc("list_pack_summaries"),
+    supabase.from("users").select("name, has_seen_welcome").maybeSingle(),
+  ]);
   const recent: RecentPack[] = ((recentRaw ?? []) as RecentPack[]).slice(0, 5);
+
+  // Default has_seen_welcome to TRUE on a missing/failed read so we never
+  // flash the welcome modal at an established user because of a transient
+  // query error. A genuinely-new user's row has it set to false.
+  const name = (profile?.name as string | null) ?? null;
+  const hasSeenWelcome =
+    (profile?.has_seen_welcome as boolean | undefined) ?? true;
 
   return (
     <>
@@ -31,7 +41,12 @@ export default async function DashboardLayout({
         email={user.email ?? null}
         provider={user.app_metadata?.provider ?? null}
       />
-      <DashboardShell email={user.email ?? ""} recentPacks={recent}>
+      <DashboardShell
+        email={user.email ?? ""}
+        recentPacks={recent}
+        name={name}
+        hasSeenWelcome={hasSeenWelcome}
+      >
         {children}
       </DashboardShell>
     </>

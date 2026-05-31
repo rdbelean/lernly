@@ -31,6 +31,7 @@ export type ReminderInput = {
   examTitle: string;
   daysLeft: number; // 1, 3, or 7
   packId: string | null;
+  name?: string | null;
 };
 
 function countdownLine(daysLeft: number): { eyebrow: string; hero: string } {
@@ -39,6 +40,13 @@ function countdownLine(daysLeft: number): { eyebrow: string; hero: string } {
     eyebrow: "Deine Klausur rückt näher",
     hero: daysLeft === 1 ? "Noch 1 Tag" : `Noch ${daysLeft} Tage`,
   };
+}
+
+// "Hey <name>," when we have a usable name, else a neutral "Hallo,". The name
+// is HTML-escaped here so it's safe to inline directly into the email markup.
+function greetingLine(name?: string | null): string {
+  const trimmed = (name ?? "").trim();
+  return trimmed ? `Hey ${escapeHtml(trimmed)},` : "Hallo,";
 }
 
 function ctaForPack(packId: string | null): { url: string; text: string } {
@@ -55,7 +63,7 @@ function ctaForPack(packId: string | null): { url: string; text: string } {
 }
 
 export function renderExamReminderEmail(input: ReminderInput): string {
-  const { examTitle, daysLeft, packId } = input;
+  const { examTitle, daysLeft, packId, name } = input;
   const { eyebrow, hero } = countdownLine(daysLeft);
   const cta = ctaForPack(packId);
   const unsubscribeUrl = `${APP}/dashboard/settings`;
@@ -101,6 +109,9 @@ export function renderExamReminderEmail(input: ReminderInput): string {
             <td style="padding:32px 32px 8px 32px;font-family:${FONT_STACK};">
               <!-- Eyebrow -->
               <p style="margin:0 0 14px 0;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:${MUTED};">${escapeHtml(eyebrow)}</p>
+
+              <!-- Greeting -->
+              <p style="margin:0 0 12px 0;font-size:15px;font-weight:600;color:${INK};">${greetingLine(name)}</p>
 
               <!-- Hero countdown — the focal point -->
               <h1 style="margin:0 0 8px 0;font-size:36px;line-height:1.1;font-weight:700;color:${PRIMARY};letter-spacing:-0.8px;">${escapeHtml(hero)}</h1>
@@ -153,13 +164,15 @@ export function renderExamReminderEmail(input: ReminderInput): string {
 // Plain-text fallback shipped alongside the HTML. Resend uses it for
 // clients that strip HTML (and lower spam scores). Wrap at ~72 cols.
 export function renderExamReminderText(input: ReminderInput): string {
-  const { examTitle, daysLeft, packId } = input;
+  const { examTitle, daysLeft, packId, name } = input;
   const { hero } = countdownLine(daysLeft);
   const cta = ctaForPack(packId);
   const unsubscribeUrl = `${APP}/dashboard/settings`;
 
   return [
     "Lernly",
+    "",
+    greetingLine(name),
     "",
     "Deine Klausur rückt näher",
     "",
