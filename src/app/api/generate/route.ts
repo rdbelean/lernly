@@ -10,6 +10,12 @@ import {
 } from "@/lib/supabase/server";
 import { decryptApiKey } from "@/lib/byok";
 import { shouldUseTwoPass } from "@/lib/twoPass";
+import {
+  GENERATION_MAX_CONCURRENCY,
+  BUSY_MSG,
+  isTransientOverload,
+  slotGateOutcome,
+} from "@/lib/generationGate";
 import { STUDY_UPLOADS_BUCKET } from "@/lib/uploads";
 import { MAX_FILE_BYTES } from "@/lib/uploadConfig";
 import {
@@ -27,7 +33,13 @@ export const runtime = "nodejs";
 // Requires Fluid Compute enabled on the Vercel project.
 export const maxDuration = 800;
 
-const defaultClient = new Anthropic();
+// Lazy so importing this module (e.g. from route.test.ts) doesn't construct an
+// Anthropic client — the SDK throws at construction when ANTHROPIC_API_KEY is
+// unset, which would break test imports. Built on first real use instead.
+let _defaultClient: Anthropic | null = null;
+function getDefaultClient(): Anthropic {
+  return (_defaultClient ??= new Anthropic());
+}
 
 const MAX_FILES = 8;
 // MAX_FILE_BYTES is the SHARED cap (50 MB Free-safe by default) — see
@@ -63,26 +75,6 @@ const GENERATION_BUDGET_MS = 780_000; // 20s buffer under maxDuration (800)
 // keep Sonnet output under the Tier-2 90K OTPM limit; raise once dashboards show
 // headroom. The slot TTL (in the RPC) exceeds maxDuration so in-flight requests
 // never expire early.
-const GENERATION_MAX_CONCURRENCY = Number(
-  process.env.GENERATION_MAX_CONCURRENCY ?? 3,
-);
-
-// Warm, German "we're busy, your pack is coming" message for transient overload
-// (Anthropic 429/529, or our own slot cap). The client shows this + offers retry
-// instead of a raw English error or a 500.
-const BUSY_MSG =
-  "Gerade ist viel los — dein Lernpaket kommt gleich. Bitte versuch es in einem Moment nochmal.";
-
-// True when an error is a transient overload we want the user to simply retry:
-// Anthropic rate-limit (429) / overloaded (529) / 5xx. Maps to a friendly 503 +
-// retryable flag rather than leaking the raw error.
-function isTransientOverload(err: unknown): boolean {
-  if (err instanceof Anthropic.APIError) {
-    const s = err.status ?? 0;
-    return s === 429 || s === 529 || s === 503 || s === 500 || s === 502;
-  }
-  return false;
-}
 
 // Shown upfront (before generation) when the material exceeds the per-pack ceiling.
 const MATERIAL_TOO_LARGE_UPFRONT_MSG =
@@ -434,7 +426,7 @@ export async function POST(request: Request) {
     const effectiveKey = userApiKey || storedKey || null;
     const client = effectiveKey
       ? new Anthropic({ apiKey: effectiveKey })
-      : defaultClient;
+      : getDefaultClient();
     const keySource = userApiKey
       ? "user-transient"
       : storedKey
@@ -557,24 +549,27 @@ export async function POST(request: Request) {
     // our shared Tier-2 token budget — let them through without a slot.
     let slotHeld = false;
     if (!usesByok) {
+      let acquired: boolean | null = null;
       try {
-        const { data: acquired } = await createServiceClient().rpc(
+        const { data } = await createServiceClient().rpc(
           "acquire_generation_slot",
           { p_max: GENERATION_MAX_CONCURRENCY },
         );
-        slotHeld = acquired === true;
+        acquired = data === true ? true : data === false ? false : null;
       } catch (e) {
-        // If the gate itself errors, fail open (better to attempt generation
-        // than to block every user because the counter hiccuped).
+        // Limiter errored → fail open (better to attempt generation than to
+        // block every user because the counter hiccuped). acquired stays null.
         console.error("[/api/generate] acquire_generation_slot threw", e);
-        slotHeld = true;
       }
-      if (!slotHeld) {
+      if (slotGateOutcome({ usesByok, acquired }) === "busy") {
         return NextResponse.json(
           { error: BUSY_MSG, retryable: true },
           { status: 503, headers: { "Retry-After": "20" } },
         );
       }
+      // Only release a slot we ACTUALLY reserved. On fail-open (null) we never
+      // inserted a slot row, so releasing would wrongly free another request's.
+      slotHeld = acquired === true;
     }
 
     let pack: StudyPack;
