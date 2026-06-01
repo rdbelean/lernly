@@ -20,7 +20,9 @@ export default sentryEnabled
       // Upload source maps only when an auth token is present.
       sourcemaps: { disable: !process.env.SENTRY_AUTH_TOKEN },
       // Route Sentry's browser requests through our domain to dodge ad-blockers.
+      // NOTE: tunnelRoute + source-map upload only engage under webpack; this
+      // project builds with Turbopack, so they're inert today. Runtime error
+      // capture (instrumentation.ts + client init) works regardless of bundler.
       tunnelRoute: "/monitoring",
-      disableLogger: true,
     })
   : nextConfig;
