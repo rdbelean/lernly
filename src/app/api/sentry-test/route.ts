@@ -4,17 +4,32 @@ import * as Sentry from "@sentry/nextjs";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// TEMPORARY — Sentry activation smoke test. Hit GET /api/sentry-test once after
-// NEXT_PUBLIC_SENTRY_DSN is live to confirm events reach Sentry, then DELETE
-// this file. Throwing in a route is auto-captured by instrumentation.ts's
-// onRequestError; we ALSO captureException + flush explicitly because a
-// serverless function can exit before the async send completes.
+// TEMPORARY — Sentry activation DIAGNOSTIC. Reports whether the server SDK
+// actually initialized (getClient), the configured DSN host, the flush result,
+// and the captured event id, so we can see exactly why events do/don't land.
+// DELETE this file after Sentry is confirmed working.
 export async function GET() {
-  const err = new Error("Sentry activation smoke test — safe to ignore");
-  Sentry.captureException(err);
-  await Sentry.flush(2000);
+  const client = Sentry.getClient();
+  const dsn = client?.getOptions?.().dsn ?? null;
+  const dsnHost =
+    typeof dsn === "string" ? dsn.replace(/^https:\/\/[^@]+@/, "…@") : dsn;
+
+  const eventId = Sentry.captureException(
+    new Error("Sentry activation smoke test — safe to ignore"),
+  );
+  const flushed = await Sentry.flush(3000);
+
   return NextResponse.json(
-    { ok: true, sent: "check Sentry for: 'Sentry activation smoke test'" },
+    {
+      ok: true,
+      sdkInitialized: Boolean(client),
+      enabled: client?.getOptions?.().enabled ?? null,
+      dsnHost,
+      runtime: process.env.NEXT_RUNTIME ?? null,
+      hasDsnEnv: Boolean(process.env.NEXT_PUBLIC_SENTRY_DSN),
+      capturedEventId: eventId ?? null,
+      flushed,
+    },
     { status: 200 },
   );
 }
