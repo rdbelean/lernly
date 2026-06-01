@@ -201,6 +201,10 @@ export default function Home() {
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
 
+  // BYOK is paused ("bald verfügbar") — nothing opens the ConnectModal right
+  // now. Kept wired (closeConnect + the modal render below) so re-activating is
+  // a one-line change: call openConnect from the BYOK banner again.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const openConnect = useCallback(() => setConnectOpen(true), []);
   const closeConnect = useCallback(() => setConnectOpen(false), []);
 
@@ -338,14 +342,14 @@ export default function Home() {
             operatingSystem: "Web",
             url: "https://lernly-app.de",
             description:
-              "Lade Vorlesungs-PDFs hoch und bekomme in 2 Minuten interaktive Karteikarten, einen Klausur-Simulator und einen Essay-Blueprint.",
+              "Lade deine Vorlesungsfolien hoch und bekomme in 2 Minuten interaktive Karteikarten, einen Klausur-Simulator und einen Essay-Blueprint.",
             offers: [
               { "@type": "Offer", name: "Gratis", price: "0", priceCurrency: "EUR", description: "3 Pakete pro Monat" },
               { "@type": "Offer", name: "Pro", price: "6.99", priceCurrency: "EUR", description: "20 Pakete pro Monat" },
               { "@type": "Offer", name: "Team", price: "14.99", priceCurrency: "EUR", description: "50 Pakete pro Monat" },
             ],
             featureList: [
-              "Karteikarten aus PDF generieren",
+              "Karteikarten aus Vorlesungsfolien generieren",
               "Klausur-Simulator mit MC-Fragen",
               "Essay-Blueprint mit Template-Sätzen",
               "Themen-Übersicht mit Prüfungsrelevanz",
@@ -386,10 +390,7 @@ export default function Home() {
               <ResultSection pack={pack} onReset={clearPack} />
             </section>
           )}
-          <PricingSection
-            onActivateUpload={activateUpload}
-            onOpenConnect={openConnect}
-          />
+          <PricingSection onActivateUpload={activateUpload} />
           <FAQSection />
           <BottomCta />
         </main>
@@ -448,14 +449,18 @@ function Hero(props: HeroProps) {
 
       <div className="relative mx-auto max-w-[1080px]">
         <h1
-          className="ln-reveal text-center font-bold leading-[1.05] tracking-[-2.88px]"
+          className="ln-reveal text-center font-bold leading-[1.05] tracking-[-2.88px] sm:whitespace-nowrap"
           style={{
             color: "rgba(255, 255, 255, 0.7)",
-            fontSize: "clamp(48px, 8vw, 96px)",
+            // Desktop cap lowered to 64px so the longer "Aus 8 Vorlesungen wird
+            // ein Plan." (32 chars) fits on ONE line inside the 1080px container
+            // without overflow. Mobile keeps wrapping — the two spans go block
+            // below the sm breakpoint, so whitespace-nowrap only applies sm+.
+            fontSize: "clamp(38px, 6.2vw, 64px)",
           }}
         >
           <span className="block sm:inline">
-            {isEn ? "From 8 PDFs" : "Aus 8 PDFs"}
+            {isEn ? "From 8 lectures" : "Aus 8 Vorlesungen"}
           </span>{" "}
           <span className="block sm:inline" style={{ color: "rgb(255, 255, 255)" }}>
             {isEn ? "comes a plan." : "wird ein Plan."}
@@ -467,8 +472,8 @@ function Hero(props: HeroProps) {
           style={{ fontSize: "clamp(18px, 2.2vw, 22px)" }}
         >
           {isEn
-            ? "3 days to the exam. No plan. No stress."
-            : "3 Tage bis zur Klausur. Kein Plan. Kein Stress."}
+            ? "3 days to the exam, no plan? Drop in your slides — add your past exam and we build questions in your exam's style."
+            : "3 Tage bis zur Klausur, kein Plan? Wirf deine Folien rein — leg deine Altklausur dazu und wir bauen Fragen im Stil deiner Prüfung."}
         </p>
 
         <div className="ln-hero-actions ln-reveal mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -788,8 +793,8 @@ function UploadDemo({
             </div>
             <div className="text-[16px] font-semibold text-white">
               {isEn
-                ? "Sign up to upload your PDF"
-                : "Erstelle einen Account, um dein PDF hochzuladen"}
+                ? "Sign up to upload your slides"
+                : "Erstelle einen Account, um deine Folien hochzuladen"}
             </div>
             <div
               className="text-[13px]"
@@ -1060,7 +1065,7 @@ function ShowcaseSection() {
 
   const inputs: IoTile[] = [
     {
-      label: isEn ? "Lecture PDF" : "Vorlesungs-PDF",
+      label: isEn ? "Lecture slides" : "Vorlesungsfolien",
       sub: isEn ? "200+ slides, all in" : "200+ Slides, alles rein",
       icon: <FileIcon />,
     },
@@ -1318,8 +1323,8 @@ function ComparisonSection() {
           }
           boldPart={
             isEn
-              ? "ChatGPT, Notion, 8 Tabs."
-              : "ChatGPT, Notion, 8 Tabs."
+              ? "KI-Tool, Notion, 8 Tabs."
+              : "KI-Tool, Notion, 8 Tabs."
           }
           italicPart={
             isEn ? "Still alone." : "Trotzdem allein."
@@ -1348,7 +1353,7 @@ function ComparisonSection() {
 
           {/* Two paths */}
           <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-            {/* ChatGPT path (rose) */}
+            {/* Generic AI-tool path (rose) */}
             <div
               className="ln-glass-card flex flex-col p-6"
               style={{
@@ -1361,7 +1366,7 @@ function ComparisonSection() {
                 className="mb-3 text-[11px] font-semibold uppercase tracking-[0.16em]"
                 style={{ color: "rgb(252,165,165)" }}
               >
-                {isEn ? "Tue 23:47 → ChatGPT" : "Di 23:47 → ChatGPT"}
+                {isEn ? "Tue 23:47 → AI tool" : "Di 23:47 → KI-Tool"}
               </div>
               <p
                 className="text-[15px] leading-relaxed"
@@ -1472,7 +1477,7 @@ function ComparisonSection() {
                 />
               ))}
 
-              {/* ChatGPT decay — area + line */}
+              {/* AI-tool decay — area + line */}
               <path
                 d="M 40 58 C 240 90 380 200 760 224 L 760 232 L 40 232 Z"
                 fill="url(#ln-rose-fill)"
@@ -1531,7 +1536,7 @@ function ComparisonSection() {
                   <em className="lernly-italic" style={{ color: "white" }}>
                     holds
                   </em>
-                  . It's not a ChatGPT problem — it's a method problem.
+                  . It's not an AI-tool problem — it's a method problem.
                 </>
               ) : (
                 <>
@@ -1543,7 +1548,7 @@ function ComparisonSection() {
                   <em className="lernly-italic" style={{ color: "white" }}>
                     hält
                   </em>
-                  . Kein ChatGPT-Problem — ein Methoden-Problem.
+                  . Kein KI-Tool-Problem — ein Methoden-Problem.
                 </>
               )}
             </p>
@@ -1897,7 +1902,7 @@ function HowItWorks() {
         {
           label: "Step 1",
           title: "Drop it in",
-          desc: "8 PDFs open? Drop them all in — slides, notes, scripts. Lernly reads everything, you do not have to sort it first.",
+          desc: "8 lectures open? Drop them all in — slides, scripts, notes. Lernly reads everything, you do not have to sort it first.",
         },
         {
           label: "Step 2",
@@ -1914,7 +1919,7 @@ function HowItWorks() {
         {
           label: "Schritt 1",
           title: "Reinwerfen",
-          desc: "8 PDFs offen? Wirf sie alle rein — Slides, Mitschriften, Skripte. Lernly liest alles, du musst nichts sortieren.",
+          desc: "8 Vorlesungen offen? Wirf sie alle rein — Folien, Skripte, Mitschriften. Lernly liest alles, du musst nichts sortieren.",
         },
         {
           label: "Schritt 2",
@@ -1934,9 +1939,11 @@ function HowItWorks() {
         <SectionHeading
           eyebrow={isEn ? "From chaos to exam-ready" : "Vom Chaos zur Prüfung"}
           boldPart={
-            isEn
-              ? "Flashcards in three steps."
-              : "Karteikarten in drei Schritten."
+            <span className="sm:whitespace-nowrap">
+              {isEn
+                ? "Flashcards in three steps."
+                : "Karteikarten in drei Schritten."}
+            </span>
           }
           italicPart={
             isEn ? "Doable even at 2 a.m." : "Auch um 2 Uhr nachts."
@@ -1955,8 +1962,8 @@ function HowItWorks() {
 
         <p className="ln-reveal ln-pipeline-caption">
           {isEn
-            ? "From your PDFs, not from Wikipedia. Built exactly for your exam."
-            : "Aus deinen PDFs, nicht aus Wikipedia. Genau für deine Klausur."}
+            ? "From your slides, not from Wikipedia. Built exactly for your exam."
+            : "Aus deinen Folien, nicht aus Wikipedia. Genau für deine Klausur."}
         </p>
       </div>
     </section>
@@ -2389,10 +2396,8 @@ const PRICING_TIERS_EN: PricingTier[] = [
 
 function PricingSection({
   onActivateUpload,
-  onOpenConnect,
 }: {
   onActivateUpload: () => void;
-  onOpenConnect: () => void;
 }) {
   const isEn = useLanguage() === "en";
   const [authed, setAuthed] = useState(false);
@@ -2480,16 +2485,7 @@ function PricingSection({
           ))}
         </div>
 
-        <BYOKBanner onOpenConnect={onOpenConnect} />
-
-        <p
-          className="ln-reveal mt-6 text-center text-[12px]"
-          style={{ color: "rgba(255,255,255,0.3)" }}
-        >
-          {isEn
-            ? "Prices are final; no VAT charged (small business rule, § 19 UStG). Cancel anytime."
-            : "Endpreise — gemäß § 19 UStG (Kleinunternehmerregelung) wird keine Umsatzsteuer berechnet. Jederzeit kündbar."}
-        </p>
+        <BYOKBanner />
       </div>
     </section>
   );
@@ -2497,64 +2493,50 @@ function PricingSection({
 
 /* ========== BYOK BANNER (under the pricing cards) ========== */
 
-function BYOKBanner({ onOpenConnect }: { onOpenConnect: () => void }) {
+// BYOK is intentionally NOT promoted yet — we ship the core experience first.
+// Kept visible but clearly marked "coming soon": no active connect flow, no
+// price push. (Re-add an onOpenConnect prop here when we re-activate it.)
+function BYOKBanner() {
   const isEn = useLanguage() === "en";
-  const [authed, setAuthed] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    let active = true;
-    import("@/lib/supabase/browser").then(({ createClient }) => {
-      const supabase = createClient();
-      supabase.auth.getUser().then(({ data }) => {
-        if (active) setAuthed(Boolean(data.user));
-      });
-    });
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  const handleConnect = () => {
-    if (authed === null) {
-      onOpenConnect();
-      return;
-    }
-    window.location.href = authed
-      ? "/dashboard/settings"
-      : "/login?next=/dashboard/settings";
-  };
 
   return (
-    <div id="connect" className="ln-reveal byok-banner scroll-mt-24 mt-8">
+    <div
+      id="connect"
+      className="ln-reveal byok-banner scroll-mt-24 mt-8"
+      style={{ opacity: 0.6 }}
+      aria-label={isEn ? "Bring your own key — coming soon" : "Eigener API-Key — bald verfügbar"}
+    >
       <div className="byok-left">
         <div className="byok-icon">
           <ClaudeLogo size={22} />
         </div>
         <div>
           <span className="byok-bonus-eyebrow">
-            🔑 {isEn ? "Bonus for power users" : "Bonus für Power-User"}
+            {isEn ? "Planned for power users" : "Geplant für Power-User"}
           </span>
           <h4>
             {isEn
-              ? "Got your own Claude API key?"
-              : "Du hast einen eigenen Claude API Key?"}
+              ? "Bring your own API key"
+              : "Bald: eigener API-Key"}
           </h4>
           <p>
             {isEn
-              ? "Save €3/month and get unlimited packs."
-              : "Spar €3/Monat und kriege unbegrenzte Pakete."}
+              ? "Later you'll be able to connect your own key for unlimited packs. First we make sure the core runs perfectly."
+              : "Bald kannst du deinen eigenen Key verbinden — für unbegrenzte Pakete. Erst sorgen wir dafür, dass das Normale perfekt läuft."}
           </p>
         </div>
       </div>
       <div className="byok-right">
-        <div className="byok-prices">
-          <span>
-            Pro + Key: <strong>11.99€</strong> <s>14.99€</s>
-          </span>
-        </div>
-        <button type="button" onClick={handleConnect} className="byok-btn">
-          {isEn ? "Connect key →" : "Key verbinden →"}
-        </button>
+        <span
+          className="rounded-full px-4 py-2 text-[13px] font-semibold"
+          style={{
+            background: "rgba(255,255,255,0.06)",
+            border: "1px solid rgba(255,255,255,0.14)",
+            color: "rgba(255,255,255,0.7)",
+          }}
+        >
+          {isEn ? "Coming soon" : "Bald verfügbar"}
+        </span>
       </div>
     </div>
   );
@@ -3005,7 +2987,7 @@ function ResultPreview() {
             className="mt-4 max-w-3xl font-bold leading-[1.05] tracking-[-1.92px] text-white"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
-            {isEn ? "Not another PDF." : "Nicht noch ein PDF."}{" "}
+            {isEn ? "Not another summary." : "Nicht noch eine Zusammenfassung."}{" "}
             <span className="lernly-italic" style={{ color: "var(--color-ln-ink-soft)" }}>
               {isEn ? "Something to click." : "Was zum Klicken."}
             </span>
@@ -3217,7 +3199,7 @@ function PipelineCta({ onActivateUpload }: { onActivateUpload: () => void }) {
         className="rounded-full px-7 py-[14px] text-[16px] font-semibold transition hover:bg-white/90"
         style={{ background: "#ffffff", color: "#1a2647" }}
       >
-        {isEn ? "Start with your PDFs →" : "Mit deinen PDFs starten →"}
+        {isEn ? "Start with your slides →" : "Mit deinen Folien starten →"}
       </button>
     </div>
   );
@@ -3228,7 +3210,7 @@ function PipelineCta({ onActivateUpload }: { onActivateUpload: () => void }) {
 const FAQ_ITEMS_DE: { q: string; a: string }[] = [
   {
     q: "Was passiert mit meinen Dateien?",
-    a: "Nichts. Deine PDFs werden nur für die Generierung verarbeitet und danach gelöscht. Nichts wird dauerhaft gespeichert.",
+    a: "Nichts. Deine Folien werden nur für die Generierung verarbeitet und danach gelöscht. Nichts wird dauerhaft gespeichert.",
   },
   {
     q: "Welche Dateiformate funktionieren?",
@@ -3239,15 +3221,15 @@ const FAQ_ITEMS_DE: { q: string; a: string }[] = [
     a: "Konkret: jede Karte mit Quelle und Prüfungsrelevanz. Template-Sätze die du direkt im Essay verwenden kannst. Plus: in 2 Minuten fertig statt 45.",
   },
   {
-    q: "Was ist der Unterschied zu ChatGPT?",
-    a: "ChatGPT gibt dir Fließtext. Lernly gibt dir ein interaktives Lernsystem — Karteikarten zum Flippen, einen Prüfungssimulator mit Feedback und einen Essay-Blueprint mit fertigen Formulierungen.",
+    q: "Was ist der Unterschied zu anderen KI-Tools?",
+    a: "Die meisten KI-Tools geben dir Fließtext. Lernly gibt dir ein interaktives Lernsystem — Karteikarten zum Flippen, einen Prüfungssimulator mit Feedback und einen Essay-Blueprint mit fertigen Formulierungen.",
   },
 ];
 
 const FAQ_ITEMS_EN: { q: string; a: string }[] = [
   {
     q: "What happens to my files?",
-    a: "Nothing permanent. Your PDFs are processed only to generate the pack and are deleted afterwards. Nothing is stored long term.",
+    a: "Nothing permanent. Your slides are processed only to generate the pack and are deleted afterwards. Nothing is stored long term.",
   },
   {
     q: "Which file formats work?",
@@ -3258,8 +3240,8 @@ const FAQ_ITEMS_EN: { q: string; a: string }[] = [
     a: "Concretely: every card has its source and exam relevance. Template sentences you can drop straight into your essay. Plus: 2 minutes instead of 45.",
   },
   {
-    q: "How is this different from ChatGPT?",
-    a: "ChatGPT gives you long-form prose. Lernly gives you an interactive study system — flashcards to flip, an exam simulator with feedback, and an essay blueprint with ready phrasing.",
+    q: "How is this different from other AI tools?",
+    a: "Most AI tools give you long-form prose. Lernly gives you an interactive study system — flashcards to flip, an exam simulator with feedback, and an essay blueprint with ready phrasing.",
   },
 ];
 
