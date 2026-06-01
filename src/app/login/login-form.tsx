@@ -1,7 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
+import TurnstileWidget from "@/components/TurnstileWidget";
 import { loginWithGoogle, requestMagicLink, type MagicLinkState } from "./actions";
 
 function MagicSubmit() {
@@ -33,6 +34,7 @@ export default function LoginForm({ next }: { next: string }) {
     requestMagicLink,
     { ok: false },
   );
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   return (
     <>
@@ -106,6 +108,7 @@ export default function LoginForm({ next }: { next: string }) {
 
       <form action={action} noValidate className="flex flex-col gap-3">
         <input type="hidden" name="next" value={next} />
+        <input type="hidden" name="turnstileToken" value={turnstileToken} />
         <label
           htmlFor="email"
           className="text-[12px] uppercase tracking-[0.18em]"
@@ -124,6 +127,10 @@ export default function LoginForm({ next }: { next: string }) {
             background: "rgba(255,255,255,0.06)",
             border: "1px solid rgba(255,255,255,0.16)",
           }}
+        />
+        <TurnstileWidget
+          onVerify={setTurnstileToken}
+          onError={() => setTurnstileToken("")}
         />
         <MagicSubmit />
       </form>

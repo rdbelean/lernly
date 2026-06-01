@@ -5,6 +5,15 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function deletePack(id: string) {
   const supabase = await createClient();
+  // Explicit auth gate (defense-in-depth on top of RLS): never run the mutation
+  // for an unauthenticated caller. RLS (study_packs_delete_own) still scopes the
+  // delete to the owner's rows, so this can only ever delete the caller's pack.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    throw new Error("Nicht angemeldet.");
+  }
   const { error } = await supabase.from("study_packs").delete().eq("id", id);
   if (error) {
     throw new Error(error.message);

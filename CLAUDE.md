@@ -16,6 +16,14 @@ Pre-revenue MVP **with live users**. Read this every session and follow the Work
 - **Migration filenames: ALWAYS 14-digit timestamp** (`YYYYMMDDhhmmss_<name>.sql`, e.g. `20260601094530_add_foo.sql`). 8-digit date prefixes collide on `supabase_migrations.schema_migrations.version` (PK) when multiple land the same day → `supabase db push` fails. Leave old 8-digit files as-is (already applied); only new ones 14-digit.
 - Applying via CLI: use `supabase db query --linked --file <path>` for a single migration — `supabase db push` is brittle in this repo due to the versioning legacy.
 - **Additive migrations only by default** (add columns/tables = safe). **ASK before renaming/deleting columns** or any destructive/breaking change; explain the risk. Migrations must stay backward-compatible with the running version.
+- **⚠️ The database is SHARED between preview and production — branches/preview do NOT isolate it.** A migration hits prod the moment it's applied, even before the PR is merged. Therefore:
+  - **NEVER apply a migration that the currently-deployed production code can't handle.** It must be backward-compatible with what's live on `main` right now.
+  - **DROP / RENAME / destructive changes go in a SEPARATE follow-up migration**, applied only AFTER the new code is live and verified — never in the same migration as the code change. Pattern: add new → deploy code that uses it → later, separate migration removes the old.
+  - **ALWAYS ask me before any `DROP` / `ALTER ... DROP` / rename**, and before applying any migration to prod. State the risk first.
+
+### Environment variables (Vercel)
+- **Every new env var MUST be set in ALL scopes** (Production + Preview + Development), not just Production. Production-only vars break preview deployments (this has bitten us 3×: Supabase, Resend, Turnstile). `NEXT_PUBLIC_*` vars are baked at build time → a redeploy is needed after adding them.
+- When you add or require a new env var, tell me explicitly to set it in all scopes.
 
 ### ASK me first before:
 merging to main · destructive DB changes · adding new dependencies/libraries · large refactors · anything touching auth, billing/Stripe, or legal pages.
