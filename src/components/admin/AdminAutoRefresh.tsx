@@ -14,18 +14,20 @@ export default function AdminAutoRefresh() {
 
   const stamp = () => setUpdated(new Date().toLocaleTimeString("de-DE"));
 
-  // Initial stamp on mount.
+  // Stamp on mount + auto-refresh every 60s. The mount stamp runs in a 0ms
+  // timer (not synchronously in the effect body) so it doesn't trip
+  // react-hooks/set-state-in-effect, and it avoids an SSR/client hydration
+  // mismatch on the timestamp (server render shows the "…" placeholder).
   useEffect(() => {
-    stamp();
-  }, []);
-
-  // Auto-refresh every 60s.
-  useEffect(() => {
+    const mountId = setTimeout(stamp, 0);
     const id = setInterval(() => {
       router.refresh();
       stamp();
     }, 60_000);
-    return () => clearInterval(id);
+    return () => {
+      clearTimeout(mountId);
+      clearInterval(id);
+    };
   }, [router]);
 
   const reload = () => {
