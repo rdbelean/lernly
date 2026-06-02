@@ -87,8 +87,9 @@ export default async function AdminPage() {
           icon={MessageSquare}
         />
         <MetricCard label="Plan: Free" value={metrics.planSplit.free} icon={Users} />
-        <MetricCard label="Plan: Pro" value={metrics.planSplit.pro} icon={CreditCard} />
-        <MetricCard label="Plan: Team" value={metrics.planSplit.team} icon={CreditCard} />
+        <MetricCard label="Plan: Einzelklausur" value={metrics.planSplit.einzelklausur} icon={CreditCard} />
+        <MetricCard label="Plan: Semester" value={metrics.planSplit.semester} icon={CreditCard} />
+        <MetricCard label="Plan: Monatlich" value={metrics.planSplit.monthly} icon={CreditCard} />
         <MetricCard
           label="Cram-Jobs"
           value={metrics.cram.total}

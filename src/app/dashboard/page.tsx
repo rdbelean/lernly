@@ -4,7 +4,7 @@ import NewExamForm from "@/components/dashboard/NewExamForm";
 import ExamCard from "@/components/dashboard/ExamCard";
 import LoosePacksSection from "@/components/dashboard/LoosePacksSection";
 import { LAYOUT } from "@/lib/layout";
-import { PLAN_LABEL, PLAN_LIMITS } from "@/lib/quota";
+import { PLAN_LABEL, PLAN_LIMITS, effectivePlan } from "@/lib/quota";
 import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
 import { dashboardGreeting } from "@/lib/greeting";
 
@@ -93,7 +93,7 @@ function EmptyState() {
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ credit_purchased?: string; cram?: string }>;
+  searchParams: Promise<{ upgraded?: string; cram?: string }>;
 }) {
   const params = await searchParams;
   const supabase = await createClient();
@@ -104,7 +104,10 @@ export default async function DashboardPage({
       .from("exams")
       .select("id, title, exam_date, color, created_at")
       .order("exam_date", { ascending: true, nullsFirst: false }),
-    supabase.from("users").select("plan, packs_used_this_month, name").single(),
+    supabase
+      .from("users")
+      .select("plan, plan_expires_at, packs_used_this_month, name")
+      .single(),
     supabase.rpc("available_pack_credits"),
   ]);
 
@@ -116,7 +119,7 @@ export default async function DashboardPage({
   };
   const exams = (examsRes.data as Exam[] | null) ?? [];
   const profile = userRowRes.data;
-  const plan = profile?.plan ?? "free";
+  const plan = effectivePlan(profile?.plan, profile?.plan_expires_at);
   const used = profile?.packs_used_this_month ?? 0;
   const planLimit = PLAN_LIMITS[plan] ?? 0;
   const planLabel = PLAN_LABEL[plan] ?? plan;
@@ -155,7 +158,7 @@ export default async function DashboardPage({
   return (
     <main>
       <div className={LAYOUT.pageContainerClass}>
-        {params.credit_purchased === "1" && (
+        {params.upgraded === "1" && (
           <div
             className="mb-6 rounded-2xl p-4 text-[14px]"
             style={{
@@ -164,7 +167,7 @@ export default async function DashboardPage({
               color: "#9FD4B8",
             }}
           >
-            <span className="font-medium">Extra-Paket gutgeschrieben ✓</span>
+            <span className="font-medium">Zugang freigeschaltet ✓</span>
             <span className="opacity-80"> — du kannst wieder Lernpakete erstellen.</span>
           </div>
         )}

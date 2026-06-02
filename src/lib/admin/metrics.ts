@@ -69,10 +69,11 @@ export async function getAdminMetrics(
     byExamType[k] = (byExamType[k] ?? 0) + 1;
   }
 
-  const planSplit = { free: 0, pro: 0, team: 0 };
+  const planSplit = { free: 0, einzelklausur: 0, semester: 0, monthly: 0 };
   for (const r of (planRows.data ?? []) as { plan: string | null }[]) {
-    if (r.plan === "pro") planSplit.pro++;
-    else if (r.plan === "team") planSplit.team++;
+    if (r.plan === "einzelklausur") planSplit.einzelklausur++;
+    else if (r.plan === "semester") planSplit.semester++;
+    else if (r.plan === "monthly") planSplit.monthly++;
     else planSplit.free++;
   }
 

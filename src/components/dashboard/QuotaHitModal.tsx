@@ -7,7 +7,7 @@ import { track } from "@/lib/analytics";
 export type QuotaHitDetails = {
   used: number;
   limit: number;
-  plan: "free" | "pro" | "team" | string;
+  plan: string;
 };
 
 type Props = {
@@ -15,13 +15,11 @@ type Props = {
   onClose: () => void;
 };
 
-async function startCreditCheckout(
-  credit: "sprint" | "payg" | "payg_pro",
-): Promise<void> {
+async function startCheckout(plan: "einzelklausur" | "semester" | "monthly") {
   const res = await fetch("/api/stripe/checkout", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ credit }),
+    body: JSON.stringify({ plan }),
   });
   const json = await res.json();
   if (!res.ok || !json.url) {
@@ -32,15 +30,12 @@ async function startCreditCheckout(
 
 export default function QuotaHitModal({ details, onClose }: Props) {
   const [pending, setPending] = useState<string | null>(null);
-  const isProTier = details.plan === "pro" || details.plan === "team";
-  const paygCredit = isProTier ? "payg_pro" : "payg";
-  const paygPrice = isProTier ? "2,49 €" : "2,99 €";
 
-  const launch = (credit: "sprint" | "payg" | "payg_pro") => {
+  const launch = (plan: "einzelklausur" | "semester" | "monthly") => {
     if (pending) return;
-    setPending(credit);
-    track("checkout_started", { plan: credit, source: "quota_hit_modal" });
-    startCreditCheckout(credit).catch((e) => {
+    setPending(plan);
+    track("checkout_started", { plan, source: "quota_hit_modal" });
+    startCheckout(plan).catch((e) => {
       toast.error(e instanceof Error ? e.message : "Checkout fehlgeschlagen");
       setPending(null);
     });
@@ -80,7 +75,7 @@ export default function QuotaHitModal({ details, onClose }: Props) {
             className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em]"
             style={{ color: "rgba(255,255,255,0.55)" }}
           >
-            Monatslimit erreicht
+            Limit erreicht
           </p>
           <h2
             className="mb-3 text-balance text-[26px] font-bold leading-tight"
@@ -89,49 +84,48 @@ export default function QuotaHitModal({ details, onClose }: Props) {
               letterSpacing: "-0.6px",
             }}
           >
-            {details.used} / {details.limit} Pakete diesen Monat
+            {details.used} / {details.limit} Pakete genutzt
           </h2>
           <p
             className="mb-6 text-[14px] leading-relaxed"
             style={{ color: "rgba(255,255,255,0.7)" }}
           >
-            {isProTier
-              ? "Du hast dein Pro-Limit ausgenutzt. Hol dir Extra-Pakete für die heiße Klausurphase — oder lade dein Limit nächsten Monat automatisch wieder auf."
-              : "Brauchst du mehr Pakete diesen Monat? Sprint deckt eine ganze Klausurwoche ab, oder du holst dir ein einzelnes Pack."}
+            Nur diese eine Klausur? Hol dir Einzelklausur. Lernst du das ganze
+            Semester durch, ist Semester der günstigste Weg.
           </p>
 
-          {!isProTier && (
-            <button
-              type="button"
-              onClick={() => launch("sprint")}
-              disabled={Boolean(pending)}
-              className="mb-3 flex w-full items-center justify-between rounded-2xl border px-5 py-4 text-left transition hover:border-white/30 disabled:opacity-50"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(99,102,241,0.18), rgba(168,85,247,0.12))",
-                borderColor: "rgba(255,255,255,0.18)",
-              }}
-            >
-              <div>
-                <div className="text-[16px] font-semibold">
-                  ✦ Sprint · 4,99 €
-                </div>
-                <div
-                  className="mt-0.5 text-[12.5px]"
-                  style={{ color: "rgba(255,255,255,0.7)" }}
-                >
-                  5 Pakete · 7 Tage gültig · einmalig zahlen
-                </div>
-              </div>
-              <div className="text-[18px] opacity-70">
-                {pending === "sprint" ? "…" : "→"}
-              </div>
-            </button>
-          )}
-
+          {/* Einzelklausur — one-time, the low-commitment entry. */}
           <button
             type="button"
-            onClick={() => launch(paygCredit)}
+            onClick={() => launch("einzelklausur")}
+            disabled={Boolean(pending)}
+            className="mb-3 flex w-full items-center justify-between rounded-2xl border px-5 py-4 text-left transition hover:border-white/30 disabled:opacity-50"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(99,102,241,0.18), rgba(168,85,247,0.12))",
+              borderColor: "rgba(255,255,255,0.18)",
+            }}
+          >
+            <div>
+              <div className="text-[16px] font-semibold">
+                Einzelklausur · 4,99 €
+              </div>
+              <div
+                className="mt-0.5 text-[12.5px]"
+                style={{ color: "rgba(255,255,255,0.7)" }}
+              >
+                5 Pakete · 14 Tage · einmalig, kein Abo
+              </div>
+            </div>
+            <div className="text-[18px] opacity-70">
+              {pending === "einzelklausur" ? "…" : "→"}
+            </div>
+          </button>
+
+          {/* Semester — the hero / best value. */}
+          <button
+            type="button"
+            onClick={() => launch("semester")}
             disabled={Boolean(pending)}
             className="flex w-full items-center justify-between rounded-2xl border px-5 py-4 text-left transition hover:border-white/30 disabled:opacity-50"
             style={{
@@ -141,37 +135,35 @@ export default function QuotaHitModal({ details, onClose }: Props) {
           >
             <div>
               <div className="text-[15px] font-semibold">
-                Einzelnes Paket · {paygPrice}
+                Semester · 29,99 €
               </div>
               <div
                 className="mt-0.5 text-[12px]"
                 style={{ color: "rgba(255,255,255,0.55)" }}
               >
-                {isProTier
-                  ? "Pro-Rabatt: 2,49 € statt 2,99 €."
-                  : "Genau dieses eine Paket. Kein Abo."}
+                Das ganze Semester, 60 Pakete/Monat — 6× Einzelklausur = 30 €.
               </div>
             </div>
             <div className="text-[16px] opacity-50">
-              {pending === paygCredit ? "…" : "→"}
+              {pending === "semester" ? "…" : "→"}
             </div>
           </button>
 
-          {!isProTier && (
-            <p
-              className="mt-5 text-center text-[12px]"
-              style={{ color: "rgba(255,255,255,0.45)" }}
+          <p
+            className="mt-5 text-center text-[12px]"
+            style={{ color: "rgba(255,255,255,0.45)" }}
+          >
+            Lieber monatlich kündbar?{" "}
+            <button
+              type="button"
+              onClick={() => launch("monthly")}
+              disabled={Boolean(pending)}
+              className="underline-offset-2 hover:underline disabled:opacity-50"
+              style={{ color: "rgba(255,255,255,0.75)" }}
             >
-              Lernst du das ganze Semester durch?{" "}
-              <a
-                href="/dashboard/settings"
-                className="underline-offset-2 hover:underline"
-                style={{ color: "rgba(255,255,255,0.75)" }}
-              >
-                Pro für 14,99 € / Monat
-              </a>
-            </p>
-          )}
+              Monatlich für 8,99 € / Monat
+            </button>
+          </p>
 
           <button
             type="button"

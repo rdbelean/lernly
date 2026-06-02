@@ -13,7 +13,12 @@ export type AdminMetrics = {
   active: { last24h: number; last7d: number };
   packs: { today: number; total: number; byExamType: Record<string, number> };
   tutorMessagesThisMonth: number;
-  planSplit: { free: number; pro: number; team: number };
+  planSplit: {
+    free: number;
+    einzelklausur: number;
+    semester: number;
+    monthly: number;
+  };
   cram: { total: number; failed: number; stuck: number };
 };
 

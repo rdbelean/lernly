@@ -119,9 +119,8 @@ const MAX_FILES = 3;
 const MAX_SIZE = 10 * 1024 * 1024;
 
 // Founder pricing — cohort-based: as long as Lernly has fewer than
-// FOUNDER_PRICING_LIMIT paying Pro subscribers, the price stays at €6.99.
-// Once we cross the limit, raise the
-// listed Pro/Team prices to the anchorPrice. Honesty is the whole point.
+// FOUNDER_PRICING_LIMIT paying students, the listed prices are locked in for
+// early adopters and won't creep up later. Honesty is the whole point.
 const FOUNDER_PRICING_LIMIT = 1000;
 
 function useScrollReveal() {
@@ -344,9 +343,10 @@ export default function Home() {
             description:
               "Lade deine Vorlesungsfolien hoch und bekomme in 2 Minuten interaktive Karteikarten, einen Klausur-Simulator und einen Essay-Blueprint.",
             offers: [
-              { "@type": "Offer", name: "Gratis", price: "0", priceCurrency: "EUR", description: "3 Pakete pro Monat" },
-              { "@type": "Offer", name: "Pro", price: "6.99", priceCurrency: "EUR", description: "20 Pakete pro Monat" },
-              { "@type": "Offer", name: "Team", price: "14.99", priceCurrency: "EUR", description: "50 Pakete pro Monat" },
+              { "@type": "Offer", name: "Gratis", price: "0", priceCurrency: "EUR", description: "2 Pakete pro Monat" },
+              { "@type": "Offer", name: "Einzelklausur", price: "4.99", priceCurrency: "EUR", description: "Einmalig — 5 Pakete, 14 Tage Zugang" },
+              { "@type": "Offer", name: "Semester", price: "29.99", priceCurrency: "EUR", description: "60 Pakete pro Monat, 6 Monate Zugang" },
+              { "@type": "Offer", name: "Monatlich", price: "8.99", priceCurrency: "EUR", description: "50 Pakete pro Monat" },
             ],
             featureList: [
               "Karteikarten aus Vorlesungsfolien generieren",
@@ -2190,12 +2190,12 @@ function PricingPreviewStrip({ language }: { language: "en" | "de" }) {
           <span className="opacity-30">·</span>
           <span className="font-medium" style={{ color: "rgba(255,255,255,0.85)" }}>
             <span className="font-bold text-white">4,99€</span>{" "}
-            {isEn ? "Sprint" : "Sprint"}
+            {isEn ? "Single Exam" : "Einzelklausur"}
           </span>
           <span className="opacity-30">·</span>
           <span className="font-medium" style={{ color: "rgba(255,255,255,0.85)" }}>
-            <span className="font-bold text-white">14,99€</span>/{isEn ? "mo" : "mo"}{" "}
-            Pro
+            <span className="font-bold text-white">29,99€</span>{" "}
+            {isEn ? "Semester" : "Semester"}
           </span>
         </div>
         <span
@@ -2218,7 +2218,7 @@ type PricingBullet = {
 };
 
 type PricingTier = {
-  plan: "free" | "sprint" | "pro" | "team";
+  plan: "free" | "einzelklausur" | "semester" | "monthly";
   name: string;
   tagline: string;
   outcomeHeadline: string;
@@ -2255,63 +2255,58 @@ const PRICING_TIERS_DE: PricingTier[] = [
     ctaFilled: false,
   },
   {
-    plan: "sprint",
-    name: "Sprint",
-    tagline: "Eine Klausur. Eine Woche.",
-    outcomeHeadline: "Eine Klausurwoche überleben",
-    price: "4.99€",
+    plan: "einzelklausur",
+    name: "Einzelklausur",
+    tagline: "Eine Klausur. Voller Zugriff.",
+    outcomeHeadline: "Eine Klausur durchziehen",
+    price: "4,99€",
     priceSize: "44px",
     subtitle: "einmalig",
     badge: "OHNE ABO",
     bullets: [
-      { text: "5 Pakete in 7 Tagen" },
-      { text: "Perfekt für die EINE Klausur nächste Woche" },
+      { text: "5 Pakete in 14 Tagen" },
+      { text: "Alles reinwerfen (Cram) inklusive" },
       { text: "Kein Abo, kein Vergessen-zu-Kündigen" },
-      { text: "Visual Maps + Mnemonics + Klausur-Trainer" },
+      { text: "Voller KI-Tutor + Visual Maps + Klausur-Trainer" },
     ],
-    ctaLabel: "Sprint kaufen",
+    ctaLabel: "Einzelklausur holen",
     ctaFilled: false,
   },
   {
-    plan: "pro",
-    name: "Pro",
+    plan: "semester",
+    name: "Semester",
     tagline: "Das ganze Semester durchziehen",
     outcomeHeadline: "Semester durchziehen",
-    price: "14.99€",
+    price: "29,99€",
     priceSize: "48px",
-    subtitle: "/ Monat",
-    anchorPrice: "19.99€",
-    badge: "BELIEBT",
+    subtitle: "/ Semester",
+    badge: "BESTE WAHL",
     bullets: [
-      { text: "25 Pakete pro Monat" },
-      { text: "Visual Maps mit 2×2-Matrizen + Flow-Diagrammen" },
-      { text: "Szenario-Klausurfragen mit echten Firmen" },
-      { text: "Essay-Blueprint + interaktive Checkliste" },
-      { text: "Extra-Pakete für 2,49€ statt 2,99€" },
+      { text: "60 Pakete pro Monat — quasi unbegrenzt" },
+      { text: "6× Einzelklausur = 30 € — Semester = ein Preis, 5 Monate" },
+      { text: "Voller KI-Tutor + Visual Maps + Essay-Blueprint" },
+      { text: "29,99 € alle 6 Monate — günstigster Weg pro Klausur" },
     ],
-    ctaLabel: "Pro holen",
+    ctaLabel: "Semester holen",
     ctaFilled: true,
     highlighted: true,
   },
   {
-    plan: "team",
-    name: "Team",
-    tagline: "Skripte mit der WG poolen",
-    outcomeHeadline: "Lernpakete poolen",
-    price: "24.99€",
+    plan: "monthly",
+    name: "Monatlich",
+    tagline: "Flexibel, monatlich kündbar",
+    outcomeHeadline: "Monat für Monat lernen",
+    price: "8,99€",
     priceSize: "44px",
     subtitle: "/ Monat",
-    anchorPrice: "34.99€",
-    badge: "BALD",
     bullets: [
-      { text: "60 Pakete pro Monat — shared zwischen 3 Sitzen" },
-      { text: "Günstiger als 3× Pro einzeln" },
-      { text: "Alles aus Pro inklusive" },
-      { text: "Priorisierter Support" },
+      { text: "50 Pakete pro Monat" },
+      { text: "Voller KI-Tutor + Visual Maps + Klausur-Trainer" },
+      { text: "Monatlich kündbar — keine lange Bindung" },
+      { text: "Alles reinwerfen (Cram) inklusive" },
     ],
-    ctaLabel: "Bald verfügbar",
+    ctaLabel: "Monatlich holen",
     ctaFilled: false,
-    comingSoon: true,
   },
 ];
 
@@ -2334,63 +2329,58 @@ const PRICING_TIERS_EN: PricingTier[] = [
     ctaFilled: false,
   },
   {
-    plan: "sprint",
-    name: "Sprint",
-    tagline: "One exam. One week.",
-    outcomeHeadline: "Survive one exam week",
-    price: "4.99€",
+    plan: "einzelklausur",
+    name: "Single Exam",
+    tagline: "One exam. Full access.",
+    outcomeHeadline: "Get through one exam",
+    price: "4,99€",
     priceSize: "44px",
     subtitle: "one-time",
     badge: "NO SUBSCRIPTION",
     bullets: [
-      { text: "5 packs in 7 days" },
-      { text: "Perfect for the ONE exam next week" },
+      { text: "5 packs in 14 days" },
+      { text: "Bulk upload (Cram) included" },
       { text: "No subscription, no forgot-to-cancel" },
-      { text: "Visual Maps + mnemonics + exam trainer" },
+      { text: "Full AI tutor + Visual Maps + exam trainer" },
     ],
-    ctaLabel: "Buy Sprint",
+    ctaLabel: "Buy Single Exam",
     ctaFilled: false,
   },
   {
-    plan: "pro",
-    name: "Pro",
+    plan: "semester",
+    name: "Semester",
     tagline: "For the whole semester",
     outcomeHeadline: "Push through the semester",
-    price: "14.99€",
+    price: "29,99€",
     priceSize: "48px",
-    subtitle: "/ month",
-    anchorPrice: "19.99€",
-    badge: "POPULAR",
+    subtitle: "/ semester",
+    badge: "BEST VALUE",
     bullets: [
-      { text: "25 packs per month" },
-      { text: "Visual Maps with 2×2 matrices + flow diagrams" },
-      { text: "Scenario exam questions with real companies" },
-      { text: "Essay blueprint + interactive checklist" },
-      { text: "Extra packs for €2.49 instead of €2.99" },
+      { text: "60 packs per month — basically unlimited" },
+      { text: "6× Single Exam = €30 — Semester = one price, 5 months" },
+      { text: "Full AI tutor + Visual Maps + essay blueprint" },
+      { text: "€29.99 every 6 months — cheapest per exam" },
     ],
-    ctaLabel: "Get Pro",
+    ctaLabel: "Get Semester",
     ctaFilled: true,
     highlighted: true,
   },
   {
-    plan: "team",
-    name: "Team",
-    tagline: "Your study group, one account",
-    outcomeHeadline: "Pool packs together",
-    price: "24.99€",
+    plan: "monthly",
+    name: "Monthly",
+    tagline: "Flexible, cancel anytime",
+    outcomeHeadline: "Learn month to month",
+    price: "8,99€",
     priceSize: "44px",
     subtitle: "/ month",
-    anchorPrice: "34.99€",
-    badge: "SOON",
     bullets: [
-      { text: "60 packs per month — shared across 3 seats" },
-      { text: "Cheaper than 3× Pro" },
-      { text: "Everything in Pro included" },
-      { text: "Priority support" },
+      { text: "50 packs per month" },
+      { text: "Full AI tutor + Visual Maps + exam trainer" },
+      { text: "Cancel monthly — no long commitment" },
+      { text: "Bulk upload (Cram) included" },
     ],
-    ctaLabel: "Coming soon",
+    ctaLabel: "Get Monthly",
     ctaFilled: false,
-    comingSoon: true,
   },
 ];
 
@@ -2419,34 +2409,33 @@ function PricingSection({
     ? "/dashboard/settings"
     : "/login?next=/dashboard/settings";
 
-  const handleTierCta = (plan: "free" | "sprint" | "pro" | "team") => {
+  const handleTierCta = (
+    plan: "free" | "einzelklausur" | "semester" | "monthly",
+  ) => {
     if (plan === "free") {
       onActivateUpload();
       return;
     }
-    if (plan === "sprint") {
-      // Sprint is a one-time credit purchase. Unauth → login then jump to
-      // checkout, authed → fire checkout directly.
-      if (!authed) {
-        window.location.href = "/login?next=/dashboard?buy=sprint";
-        return;
-      }
-      track("checkout_started", { plan: "sprint", source: "pricing_section" });
-      fetch("/api/stripe/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ credit: "sprint" }),
-      })
-        .then((r) => r.json())
-        .then((j) => {
-          if (j.url) window.location.href = j.url as string;
-        })
-        .catch(() => {
-          window.location.href = paidUpgradeHref;
-        });
+    // Paid tiers all go through Stripe checkout. Unauth → login then settings
+    // (where they can complete the purchase); authed → fire checkout directly.
+    if (!authed) {
+      window.location.href = paidUpgradeHref;
       return;
     }
-    window.location.href = paidUpgradeHref;
+    track("checkout_started", { plan, source: "pricing_section" });
+    fetch("/api/stripe/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ plan }),
+    })
+      .then((r) => r.json())
+      .then((j) => {
+        if (j.url) window.location.href = j.url as string;
+        else window.location.href = paidUpgradeHref;
+      })
+      .catch(() => {
+        window.location.href = paidUpgradeHref;
+      });
   };
   const tiers = isEn ? PRICING_TIERS_EN : PRICING_TIERS_DE;
   return (
@@ -2470,8 +2459,8 @@ function PricingSection({
             <strong>{isEn ? "Founder pricing" : "Gründerpreis"}</strong>
             {" — "}
             {isEn
-              ? `Pro stays at €14.99 (instead of €19.99) while we're still under the first ${FOUNDER_PRICING_LIMIT.toLocaleString()} paying students. Lifetime, not just the first month.`
-              : `Solange wir unter den ersten ${FOUNDER_PRICING_LIMIT.toLocaleString("de-DE")} zahlenden Studis sind, bleibt Pro bei €14,99 statt €19,99. Lebenslang, nicht nur den ersten Monat.`}
+              ? `Founder prices while we're still under the first ${FOUNDER_PRICING_LIMIT.toLocaleString()} paying students. Lock in your rate — it stays, it won't creep up later.`
+              : `Solange wir unter den ersten ${FOUNDER_PRICING_LIMIT.toLocaleString("de-DE")} zahlenden Studis sind, gelten Gründerpreise. Dein Preis bleibt — er steigt später nicht.`}
           </span>
         </div>
 
