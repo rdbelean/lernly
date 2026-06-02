@@ -452,11 +452,12 @@ function Hero(props: HeroProps) {
           className="ln-reveal text-center font-bold leading-[1.05] tracking-[-2.88px] sm:whitespace-nowrap"
           style={{
             color: "rgba(255, 255, 255, 0.7)",
-            // Desktop cap lowered to 64px so the longer "Aus 8 Vorlesungen wird
-            // ein Plan." (32 chars) fits on ONE line inside the 1080px container
+            // Desktop cap is 76px — bigger presence on wide screens while the
+            // 6.2vw term still ties width to the viewport so "Aus 8 Vorlesungen
+            // wird ein Plan." (32 chars) stays on ONE line (sm:whitespace-nowrap)
             // without overflow. Mobile keeps wrapping — the two spans go block
             // below the sm breakpoint, so whitespace-nowrap only applies sm+.
-            fontSize: "clamp(38px, 6.2vw, 64px)",
+            fontSize: "clamp(38px, 6.2vw, 76px)",
           }}
         >
           <span className="block sm:inline">
