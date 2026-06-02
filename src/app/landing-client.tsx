@@ -448,33 +448,43 @@ function Hero(props: HeroProps) {
       />
 
       <div className="relative mx-auto max-w-[1080px]">
+        <p
+          className="ln-reveal mb-5 text-center text-[13px] font-semibold uppercase tracking-[0.18em]"
+          style={{ color: "rgba(255, 255, 255, 0.5)" }}
+        >
+          {isEn
+            ? "Your exam is closer than you think."
+            : "Die Klausur ist näher als du denkst."}
+        </p>
+
         <h1
-          className="ln-reveal text-center font-bold leading-[1.05] tracking-[-2.88px] sm:whitespace-nowrap"
+          className="ln-reveal text-center font-bold leading-[1.05] tracking-[-1.6px] sm:whitespace-nowrap"
           style={{
             color: "rgba(255, 255, 255, 0.7)",
-            // Desktop cap is 76px — bigger presence on wide screens while the
-            // 6.2vw term still ties width to the viewport so "Aus 8 Vorlesungen
-            // wird ein Plan." (32 chars) stays on ONE line (sm:whitespace-nowrap)
-            // without overflow. Mobile keeps wrapping — the two spans go block
-            // below the sm breakpoint, so whitespace-nowrap only applies sm+.
-            fontSize: "clamp(38px, 6.2vw, 76px)",
+            // Desktop cap 52px — the headline is a long two-sentence line
+            // (~55 chars), so the 3.7vw term ties width to the viewport and the
+            // cap keeps it on ONE line (sm:whitespace-nowrap) without overflow.
+            // Mobile wraps — the two spans go block below the sm breakpoint.
+            fontSize: "clamp(28px, 3.7vw, 52px)",
           }}
         >
           <span className="block sm:inline">
-            {isEn ? "From 8 lectures" : "Aus 8 Vorlesungen"}
+            {isEn ? "Drop in your slides." : "Wirf deine Folien rein."}
           </span>{" "}
           <span className="block sm:inline" style={{ color: "rgb(255, 255, 255)" }}>
-            {isEn ? "comes a plan." : "wird ein Plan."}
+            {isEn
+              ? "Walk into the exam prepared."
+              : "Geh vorbereitet in die Klausur."}
           </span>
         </h1>
 
         <p
-          className="ln-reveal mx-auto mt-8 max-w-[680px] text-center leading-[1.4] text-white"
-          style={{ fontSize: "clamp(18px, 2.2vw, 22px)" }}
+          className="ln-reveal mx-auto mt-8 max-w-[840px] text-center leading-[1.4] text-white"
+          style={{ fontSize: "clamp(17px, 2vw, 20px)" }}
         >
           {isEn
-            ? "3 days to the exam, no plan? Drop in your slides — add your past exam and we build questions in your exam's style."
-            : "3 Tage bis zur Klausur, kein Plan? Wirf deine Folien rein — leg deine Altklausur dazu und wir bauen Fragen im Stil deiner Prüfung."}
+            ? "Add your past exam — and practice flashcards & quizzes in the style of your real test. Done in 2 minutes, from your own material."
+            : "Leg deine Altklausur dazu — und übe Karteikarten & Quiz im Stil deiner echten Prüfung. Fertig in 2 Minuten, aus deinem eigenen Stoff."}
         </p>
 
         <div className="ln-hero-actions ln-reveal mt-8 flex flex-wrap items-center justify-center gap-3">
