@@ -458,20 +458,25 @@ function Hero(props: HeroProps) {
         </p>
 
         <h1
-          className="ln-reveal text-center font-bold leading-[1.05] tracking-[-1.6px] sm:whitespace-nowrap"
+          className="ln-reveal text-center font-bold leading-[1.08] tracking-[-2.4px]"
           style={{
             color: "rgba(255, 255, 255, 0.7)",
-            // Desktop cap 52px — the headline is a long two-sentence line
-            // (~55 chars), so the 3.7vw term ties width to the viewport and the
-            // cap keeps it on ONE line (sm:whitespace-nowrap) without overflow.
-            // Mobile wraps — the two spans go block below the sm breakpoint.
-            fontSize: "clamp(28px, 3.7vw, 52px)",
+            // Each sentence is its own block → exactly TWO lines on every width.
+            // sm:whitespace-nowrap forbids a sentence from wrapping on desktop,
+            // so the H1 can NEVER become 3 lines (a too-long line would overflow
+            // rather than wrap — the 6.2vw term keeps the longest line, "Geh
+            // vorbereitet in die Klausur." (31 chars), inside the viewport up to
+            // the 80px cap). Mobile keeps wrapping (no nowrap below sm).
+            fontSize: "clamp(30px, 6.2vw, 80px)",
           }}
         >
-          <span className="block sm:inline">
+          <span className="block sm:whitespace-nowrap">
             {isEn ? "Drop in your slides." : "Wirf deine Folien rein."}
-          </span>{" "}
-          <span className="block sm:inline" style={{ color: "rgb(255, 255, 255)" }}>
+          </span>
+          <span
+            className="block sm:whitespace-nowrap"
+            style={{ color: "rgb(255, 255, 255)" }}
+          >
             {isEn
               ? "Walk into the exam prepared."
               : "Geh vorbereitet in die Klausur."}
