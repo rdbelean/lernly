@@ -197,6 +197,15 @@ export default function NewPackPage() {
     setError(null);
     setCompleted(false);
 
+    track("pack_generation_started", {
+      exam_type: examType,
+      file_count: files.length,
+      total_mb: Number(
+        (files.reduce((sum, f) => sum + f.size, 0) / 1024 / 1024).toFixed(1),
+      ),
+      path: "generate",
+    });
+
     const t0 = Date.now();
     try {
       const { createClient } = await import("@/lib/supabase/browser");
@@ -285,6 +294,11 @@ export default function NewPackPage() {
       const json = await parseJsonResponse<GenerateApiResponse>(res);
       if (!res.ok) {
         if (json.reason === "quota_exceeded" && typeof json.limit === "number") {
+          track("generation_quota_hit", {
+            plan: json.plan ?? "free",
+            used: json.used ?? 0,
+            limit: json.limit,
+          });
           setQuotaHit({
             used: json.used ?? 0,
             limit: json.limit,
@@ -330,6 +344,14 @@ export default function NewPackPage() {
     }
     setBusy(true);
     setError(null);
+    track("pack_generation_started", {
+      exam_type: examType,
+      file_count: files.length,
+      total_mb: Number(
+        (files.reduce((sum, f) => sum + f.size, 0) / 1024 / 1024).toFixed(1),
+      ),
+      path: "cram",
+    });
     try {
       const { createClient } = await import("@/lib/supabase/browser");
       const supabase = createClient();

@@ -283,41 +283,96 @@ export default function Home() {
   const handleGenerate = async () => {
     if (files.length === 0 || isGenerating) return;
 
-    // Login-gate: every generation goes through an account so we can save the
-    // pack + count it against the user's quota (Free/Pro/Team). Anonymous
-    // generation on landing is deprecated — the demo packs section + the
-    // existing live demo modal cover the 'try-before-signup' need.
-    setIsGenerating(true);
-    setError(null);
+    // Anonymous trial: a logged-out visitor generates a real pack on the
+    // landing page BEFORE being asked to sign up — value first, account
+    // after. The result (ResultSection below) becomes the signup CTA. The
+    // backend handles the anonymous path (Turnstile + 1-pack/day/IP via
+    // check_anonymous_quota); we just POST multipart here.
     try {
       const { createClient } = await import("@/lib/supabase/browser");
       const supabase = createClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user) {
-        track("signup_started", { source: "landing_generate_click" });
-        // Persist the user's intent so /dashboard/new can prefill the
-        // exam-type after signup (files have to be re-picked because Blob
-        // doesn't survive a navigation).
-        try {
-          sessionStorage.setItem(
-            "lernly-pending-generation",
-            JSON.stringify({ examType }),
-          );
-        } catch {
-          /* ignore quota errors */
-        }
-        window.location.href = "/login?next=/dashboard/new";
+      if (user) {
+        // Authed user somehow on the marketing page — bounce to the real
+        // dashboard flow (saves + counts against their quota). The root page
+        // already redirects authed users; this is a defensive fallback.
+        window.location.href = "/dashboard/new";
         return;
       }
-      // Authed user somehow landing on the marketing page — bounce to the
-      // dashboard flow. The root page already redirects authed users; this
-      // is a defensive fallback.
-      window.location.href = "/dashboard/new";
     } catch (e) {
-      console.error("[landing] auth check failed", e);
-      window.location.href = "/login?next=/dashboard/new";
+      // Auth probe failed (offline, Supabase hiccup) — treat as anonymous and
+      // let the trial flow proceed rather than blocking the user.
+      console.error("[landing] auth check failed, continuing as anonymous", e);
+    }
+
+    // Without an account only ONE file is allowed (server enforces ANON_MAX_FILES
+    // = 1). Validate up-front with a clear hint so the user isn't surprised by a
+    // server rejection mid-generation.
+    if (files.length > 1) {
+      setError(
+        "Ohne Account kannst du 1 Datei testen. Logge dich ein, um mehrere Dateien zu kombinieren.",
+      );
+      return;
+    }
+
+    setIsGenerating(true);
+    setCompleted(false);
+    setError(null);
+    const t0 = Date.now();
+    track("anon_generate_started", {
+      exam_type: examType,
+      file_count: files.length,
+    });
+
+    try {
+      const form = new FormData();
+      form.append("examType", examType);
+      form.append("files", files[0]);
+      if (turnstileToken) form.append("cf-turnstile-response", turnstileToken);
+
+      let res: Response;
+      try {
+        res = await fetch("/api/generate", { method: "POST", body: form });
+      } catch {
+        throw new Error(
+          "Verbindung zum Generator fehlgeschlagen — bitte erneut versuchen.",
+        );
+      }
+
+      const json = (await res.json().catch(() => ({}))) as {
+        pack?: StudyPack;
+        error?: string;
+        reason?: string;
+      };
+
+      if (!res.ok || !json.pack) {
+        track("anon_generate_failed", {
+          reason: json.reason ?? `http_${res.status}`,
+        });
+        throw new Error(
+          json.error ??
+            "Generierung fehlgeschlagen — bitte erneut versuchen.",
+        );
+      }
+
+      setPack(json.pack);
+      setCompleted(true);
+      try {
+        sessionStorage.setItem("lernly-pack", JSON.stringify(json.pack));
+      } catch {
+        /* ignore storage quota */
+      }
+      track("anon_generate_completed", {
+        duration_ms: Date.now() - t0,
+        cards: json.pack.flashcards?.length ?? 0,
+        exam_type: examType,
+      });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unbekannter Fehler");
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -988,8 +1043,8 @@ function UploadDemo({
         style={{ color: "var(--color-ln-mute)" }}
       >
         {isEn
-          ? "Free · 2 packs per month · Sign up to start"
-          : "Kostenlos · 2 Pakete pro Monat · Anmelden zum Starten"}
+          ? "Free · no account needed · 1 file to try"
+          : "Kostenlos · ohne Account · 1 Datei zum Testen"}
       </p>
     </div>
   );
@@ -2097,6 +2152,7 @@ function EmailCapture({ pack }: { pack: StudyPack }) {
   };
 
   const handleStartSignup = () => {
+    track("signup_started", { source: "anon_result_cta" });
     try {
       localStorage.setItem("lernly:pendingPack", JSON.stringify(pack));
     } catch {
@@ -2143,6 +2199,7 @@ function EmailCapture({ pack }: { pack: StudyPack }) {
           <a
             href="/login?next=/dashboard/claim"
             onClick={() => {
+              track("signup_started", { source: "anon_result_cta_existing" });
               try {
                 localStorage.setItem(
                   "lernly:pendingPack",

@@ -79,6 +79,20 @@ export default function FlashcardDeck({
 
   const firstRateFired = useRef(false);
   const completionFired = useRef(false);
+  const firstViewFired = useRef(false);
+
+  // Activation event: a rendered deck means the user reached a flashcard. Fires
+  // once on mount, independent of interaction — this is the numerator for
+  // "% of users who reached a card" (the Gate-4 activation rate).
+  useEffect(() => {
+    if (firstViewFired.current) return;
+    if (cards.length === 0) return;
+    firstViewFired.current = true;
+    track("first_flashcard_viewed", {
+      total_cards: cards.length,
+      language,
+    });
+  }, [cards.length, language]);
 
   useEffect(() => {
     if (!done) return;

@@ -38,7 +38,7 @@ type Props = {
   // newly created exam via `onCreated` so the parent can wire up its own
   // follow-up (set examId, close the inline reveal, refresh choices).
   embedded?: boolean;
-  onCreated?: (exam: { id: string; title: string }) => void;
+  onCreated?: (exam: { id: string; title: string; hasPastExam?: boolean }) => void;
   onCancel?: () => void;
 };
 
@@ -153,9 +153,10 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
         }
 
         const createdTitle = title.trim();
+        const attachedPastExam = path === "A" && Boolean(pastExamFile);
         reset();
         if (embedded) {
-          onCreated?.({ id, title: createdTitle });
+          onCreated?.({ id, title: createdTitle, hasPastExam: attachedPastExam });
         } else {
           setOpen(false);
           router.refresh();

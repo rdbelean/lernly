@@ -14,7 +14,17 @@ function isConfigured(): boolean {
 export function initAnalytics(): void {
   if (initialized) return;
   if (typeof window === "undefined") return;
-  if (!isConfigured()) return;
+  if (!isConfigured()) {
+    // Make the silent no-op visible outside production so a missing key shows up
+    // in dev/preview instead of failing quietly (the funnel records nothing
+    // without these). No-op in production to avoid console noise.
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(
+        "[analytics] PostHog not configured (NEXT_PUBLIC_POSTHOG_KEY / _HOST missing) — no events will be sent",
+      );
+    }
+    return;
+  }
 
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
     api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST!,
@@ -37,9 +47,16 @@ export type FunnelEvent =
   | "anon_generate_failed"
   | "signup_started"
   | "signup_completed"
+  | "pack_generation_started"
   | "auth_generate_completed"
+  | "generation_quota_hit"
   | "pack_opened"
+  | "first_flashcard_viewed"
   | "flashcard_rated"
+  | "walkthrough_started"
+  | "walkthrough_step_completed"
+  | "walkthrough_completed"
+  | "walkthrough_skipped"
   | "checkout_started"
   | "demo_pack_viewed"
   | "demo_to_upload_clicked"
