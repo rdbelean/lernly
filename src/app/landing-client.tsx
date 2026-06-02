@@ -199,6 +199,9 @@ export default function Home() {
   const [language] = useState<Language>("de");
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
+  // Funnel: fire upload_started once when the visitor first adds a file. These
+  // are anonymous (no account) — the TikTok/landing top-of-funnel.
+  const uploadStartedRef = useRef(false);
 
   // BYOK is paused ("bald verfügbar") — nothing opens the ConnectModal right
   // now. Kept wired (closeConnect + the modal render below) so re-activating is
@@ -255,6 +258,10 @@ export default function Home() {
         rejected[0].errors[0]?.message ??
           (language === "en" ? "File rejected" : "Datei abgelehnt"),
       );
+    }
+    if (accepted.length > 0 && !uploadStartedRef.current) {
+      uploadStartedRef.current = true;
+      track("upload_started", { anonymous: true, file_count: accepted.length });
     }
     setFiles((prev) => [...prev, ...accepted].slice(0, MAX_FILES));
   }, [language]);
@@ -367,6 +374,14 @@ export default function Home() {
       track("anon_generate_completed", {
         duration_ms: Date.now() - t0,
         cards: json.pack.flashcards?.length ?? 0,
+        exam_type: examType,
+      });
+      // Unified funnel step (anon + authed share this), so the PostHog funnel
+      // has one "Paket fertig" event to break down by $device_type.
+      track("pack_generated", {
+        anonymous: true,
+        cards: json.pack.flashcards?.length ?? 0,
+        has_quiz: Boolean(json.pack.simulator?.questions?.length),
         exam_type: examType,
       });
     } catch (e) {

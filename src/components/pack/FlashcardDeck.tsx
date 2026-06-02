@@ -80,6 +80,20 @@ export default function FlashcardDeck({
   const firstRateFired = useRef(false);
   const completionFired = useRef(false);
   const firstViewFired = useRef(false);
+  const firstFlipFired = useRef(false);
+
+  // Funnel: the user turned a card over to see the answer — the active-learning
+  // moment. Fires once, the first time a card is flipped to its back.
+  const flipCard = () => {
+    if (isAnimating) return;
+    setFlipped((f) => {
+      if (!f && !firstFlipFired.current) {
+        firstFlipFired.current = true;
+        track("first_card_flipped", { total_cards: cards.length, language });
+      }
+      return !f;
+    });
+  };
 
   // Activation event: a rendered deck means the user reached a flashcard. Fires
   // once on mount, independent of interaction — this is the numerator for
@@ -281,7 +295,7 @@ export default function FlashcardDeck({
                 : { opacity: 0, y: -20, scale: 0.95 }
             }
             transition={{ type: "spring", stiffness: 280, damping: 24 }}
-            onClick={() => !isAnimating && setFlipped((f) => !f)}
+            onClick={flipCard}
             className="absolute inset-0 cursor-pointer rounded-2xl text-left"
             style={{
               transformStyle: "preserve-3d",
