@@ -1326,265 +1326,282 @@ function FlowConnector() {
   );
 }
 
-/* ========== COMPARISON ========== */
+/* ========== ALTKLAUSUR-RELEVANZ (Lernlys biggest differentiator) ========== */
+// Replaces the old "active recall / retention curve" comparison. Shows the one
+// thing no other tool does: read the user's past exam, rank topics by exam
+// probability, and mirror the exam's question style. Example data only —
+// framed as illustrative, no guarantee, no named competitor. teal = "kam dran".
 
 function ComparisonSection() {
   const isEn = useLanguage() === "en";
+  const teal = "rgb(91, 184, 216)";
+
+  const topics = [
+    {
+      name: isEn ? "Competitive dynamics (Chen)" : "Wettbewerbsdynamik (Chen)",
+      pct: 34,
+      hit: true,
+    },
+    { name: isEn ? "BCG matrix" : "BCG-Matrix", pct: 22, hit: true },
+    { name: "Five Forces", pct: 15, hit: false },
+    { name: isEn ? "Market dynamics" : "Marktdynamik", pct: 11, hit: false },
+  ];
+
+  const options = [
+    { key: "A", text: "Five Forces", correct: false },
+    { key: "B", text: isEn ? "BCG matrix" : "BCG-Matrix", correct: false },
+    {
+      key: "C",
+      text: isEn ? "Competitive dynamics" : "Wettbewerbsdynamik",
+      correct: true,
+    },
+    {
+      key: "D",
+      text: isEn ? "Market segmentation" : "Marktsegmentierung",
+      correct: false,
+    },
+  ];
+
+  const cardStyle = {
+    background: "#141930",
+    border: "1px solid rgba(255,255,255,0.06)",
+    borderRadius: "16px",
+  } as const;
+
   return (
     <section className="px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[1200px]">
         <SectionHeading
-          eyebrow={
-            isEn ? "You've already tried it" : "Du hast es schon probiert"
-          }
-          boldPart={
-            isEn
-              ? "KI-Tool, Notion, 8 Tabs."
-              : "KI-Tool, Notion, 8 Tabs."
-          }
-          italicPart={
-            isEn ? "Still alone." : "Trotzdem allein."
-          }
+          eyebrow={isEn ? "No other tool can do this" : "Das kann kein anderes Tool"}
+          boldPart={isEn ? "Stop guessing" : "Hör auf zu raten,"}
+          boldColor="var(--color-ln-ink-soft)"
+          italicPart={isEn ? "what's on the exam." : "was drankommt."}
+          italicColor="#ffffff"
         />
 
-        {/* "Zwei Mittwoche": same Tuesday night, two outcomes. Split-path
-            cards + a self-drawing retention curve as the proof element.
-            Argument is method-based ('reading decays, recall holds'), not a
-            tool attack. */}
-        <div className="ln-reveal mx-auto mt-12 max-w-[860px]">
-          {/* Shared time anchor */}
-          <div className="flex justify-center">
-            <span
-              className="inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-[12px] font-semibold tracking-[0.1em]"
-              style={{
-                background: "rgba(255,255,255,0.05)",
-                borderColor: "rgba(255,255,255,0.14)",
-                color: "rgba(255,255,255,0.75)",
-              }}
-            >
-              <span className="ln-pulse-dot" aria-hidden />
-              {isEn ? "WED 09:00 · EXAM" : "MITTWOCH 09:00 · KLAUSUR"}
-            </span>
-          </div>
+        <p
+          className="ln-reveal mx-auto mt-6 max-w-[760px] text-center leading-[1.45]"
+          style={{
+            fontSize: "clamp(16px, 1.9vw, 19px)",
+            color: "rgba(255,255,255,0.72)",
+          }}
+        >
+          {isEn
+            ? "Add your past exam. Lernly spots which topics actually get tested — and builds cards & quizzes right on those, in the style of your real exam."
+            : "Leg deine Altklausur dazu. Lernly erkennt, welche Themen wirklich geprüft werden — und baut Karten & Quiz genau darauf, im Stil deiner echten Prüfung."}
+        </p>
 
-          {/* Two paths */}
-          <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-            {/* Generic AI-tool path (rose) */}
-            <div
-              className="ln-glass-card flex flex-col p-6"
-              style={{
-                background:
-                  "linear-gradient(160deg, rgba(20,22,28,0.7), rgba(251,113,133,0.04))",
-                borderColor: "rgba(251,113,133,0.18)",
-              }}
-            >
-              <div
-                className="mb-3 text-[11px] font-semibold uppercase tracking-[0.16em]"
-                style={{ color: "rgb(252,165,165)" }}
+        {/* Two-part visual, styled like the real app (solid #141930 surfaces) */}
+        <div className="mx-auto mt-12 grid max-w-[1000px] grid-cols-1 gap-4 md:grid-cols-2">
+          {/* A) Topic ranking by exam probability */}
+          <div className="ln-reveal p-6" style={cardStyle}>
+            <div className="mb-5 flex items-center gap-3">
+              <span
+                className="flex h-9 w-9 items-center justify-center rounded-lg"
+                style={{ background: "rgba(91,184,216,0.12)" }}
               >
-                {isEn ? "Tue 23:47 → AI tool" : "Di 23:47 → KI-Tool"}
-              </div>
-              <p
-                className="text-[15px] leading-relaxed"
-                style={{ color: "rgba(255,255,255,0.8)" }}
-              >
-                {isEn
-                  ? "Slides in. Summary out. Read it. Tab closed."
-                  : "Folien rein. Zusammenfassung raus. Gelesen. Tab zu."}
-              </p>
-              <div
-                className="mt-auto pt-5 text-[15px] font-semibold"
-                style={{ color: "rgb(252,165,165)" }}
-              >
-                {isEn ? "Wednesday: blank." : "Mittwoch: leerer Kopf."}
-              </div>
-            </div>
-
-            {/* Lernly path (cyan/sage) */}
-            <div
-              className="ln-glass-card flex flex-col p-6"
-              style={{
-                background:
-                  "linear-gradient(160deg, rgba(20,22,28,0.7), rgba(124,196,160,0.06))",
-                borderColor: "rgba(124,196,160,0.22)",
-              }}
-            >
-              <div
-                className="mb-3 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.16em]"
-                style={{ color: "rgb(134,239,172)" }}
-              >
-                <span className="ln-pulse-dot-green" aria-hidden />
-                {isEn ? "Tue 23:47 → Lernly" : "Di 23:47 → Lernly"}
-              </div>
-              <p
-                className="text-[15px] leading-relaxed"
-                style={{ color: "rgba(255,255,255,0.8)" }}
-              >
-                {isEn
-                  ? "It quizzes you back. Again. Until it sticks."
-                  : "Es fragt dich zurück. Wieder. Bis es sitzt."}
-              </p>
-              <div
-                className="mt-auto pt-5 text-[15px] font-semibold"
-                style={{ color: "rgb(134,239,172)" }}
-              >
-                {isEn ? "Wednesday: it sticks." : "Mittwoch: sitzt."}
-              </div>
-            </div>
-          </div>
-
-          {/* Retention curve — the proof. Proper aspect ratio (no stretch),
-              smooth bezier curves, area gradient fills, circular markers. */}
-          <div
-            className="ln-glass-card mt-4 px-6 py-7 md:px-8"
-            style={{
-              background: "rgba(20, 22, 28, 0.5)",
-              borderColor: "rgba(255,255,255,0.1)",
-            }}
-          >
-            <div className="mb-1 flex items-center justify-between font-mono text-[11px]">
-              <span style={{ color: "rgba(255,255,255,0.4)" }}>Di 23:47</span>
-              <span style={{ color: "rgba(255,255,255,0.55)" }}>
-                {isEn ? "What sticks" : "Was hängenbleibt"}
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke={teal}
+                  strokeWidth="1.9"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <line x1="12" y1="20" x2="12" y2="10" />
+                  <line x1="18" y1="20" x2="18" y2="4" />
+                  <line x1="6" y1="20" x2="6" y2="16" />
+                </svg>
               </span>
-              <span style={{ color: "rgba(255,255,255,0.4)" }}>Mi 09:00</span>
+              <div
+                className="text-[14px] font-semibold"
+                style={{ color: "#EAEDF7", fontFamily: "var(--font-display)" }}
+              >
+                {isEn
+                  ? "Topics by exam probability"
+                  : "Themen nach Klausur-Wahrscheinlichkeit"}
+              </div>
             </div>
 
-            <svg
-              className="w-full"
-              viewBox="0 0 800 260"
-              fill="none"
-              role="img"
-              aria-label={
-                isEn
-                  ? "Retention over time: reading decays, active recall stays high"
-                  : "Erinnerung über Zeit: Lesen verfällt, aktives Abfragen bleibt hoch"
-              }
-              style={{ height: "auto" }}
-            >
-              <defs>
-                <linearGradient id="ln-rose-fill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="rgba(251,113,133,0.22)" />
-                  <stop offset="100%" stopColor="rgba(251,113,133,0)" />
-                </linearGradient>
-                <linearGradient id="ln-cyan-fill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="rgba(91,184,216,0.28)" />
-                  <stop offset="100%" stopColor="rgba(91,184,216,0)" />
-                </linearGradient>
-                <filter id="ln-dot-glow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur stdDeviation="4" result="b" />
-                  <feMerge>
-                    <feMergeNode in="b" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-
-              {/* subtle horizontal gridlines */}
-              {[60, 130, 200].map((y) => (
-                <line
-                  key={y}
-                  x1="40"
-                  y1={y}
-                  x2="760"
-                  y2={y}
-                  stroke="rgba(255,255,255,0.05)"
-                  strokeWidth="1"
-                />
+            <div className="space-y-3.5">
+              {topics.map((t) => (
+                <div key={t.name}>
+                  <div className="mb-1.5 flex items-start gap-2">
+                    <span
+                      className="min-w-0 text-[13.5px] leading-snug"
+                      style={{ color: "rgba(255,255,255,0.88)" }}
+                    >
+                      {t.name}
+                      {t.hit && (
+                        <span
+                          className="ml-1.5 inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 align-middle text-[11px] font-semibold"
+                          style={{ background: "rgba(91,184,216,0.12)", color: teal }}
+                        >
+                          <span aria-hidden>✦</span>
+                          {isEn ? "was tested" : "kam dran"}
+                        </span>
+                      )}
+                    </span>
+                    <span
+                      className="ml-auto shrink-0 pt-0.5 text-[13px] font-semibold tabular-nums"
+                      style={{ color: "rgba(255,255,255,0.7)" }}
+                    >
+                      {t.pct}%
+                    </span>
+                  </div>
+                  <div
+                    className="h-2 overflow-hidden rounded-full"
+                    style={{ background: "rgba(255,255,255,0.06)" }}
+                  >
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${Math.round((t.pct / 34) * 100)}%`,
+                        background: t.hit ? teal : "rgba(255,255,255,0.22)",
+                      }}
+                    />
+                  </div>
+                </div>
               ))}
-
-              {/* AI-tool decay — area + line */}
-              <path
-                d="M 40 58 C 240 90 380 200 760 224 L 760 232 L 40 232 Z"
-                fill="url(#ln-rose-fill)"
-              />
-              <path
-                className="ln-curve-line ln-curve-rose"
-                d="M 40 58 C 240 90 380 200 760 224"
-                stroke="var(--color-ln-rose)"
-                strokeWidth="3"
-                strokeLinecap="round"
-              />
-
-              {/* Lernly recall — area + smooth wavy line that stays high */}
-              <path
-                d="M 40 58 C 150 96 210 96 280 60 C 380 92 440 92 520 54 C 620 86 660 86 760 46 L 760 232 L 40 232 Z"
-                fill="url(#ln-cyan-fill)"
-              />
-              <path
-                className="ln-curve-line ln-curve-sage"
-                d="M 40 58 C 150 96 210 96 280 60 C 380 92 440 92 520 54 C 620 86 660 86 760 46"
-                stroke="var(--color-ln-cyan)"
-                strokeWidth="3"
-                strokeLinecap="round"
-              />
-
-              {/* recall markers sitting on the cyan line */}
-              <circle className="ln-curve-dot" cx="280" cy="60" r="5" fill="var(--color-ln-cyan)" filter="url(#ln-dot-glow)" />
-              <circle className="ln-curve-dot" cx="520" cy="54" r="5" fill="var(--color-ln-cyan)" filter="url(#ln-dot-glow)" />
-              <circle className="ln-curve-dot" cx="760" cy="46" r="5.5" fill="var(--color-ln-cyan)" filter="url(#ln-dot-glow)" />
-              {/* end marker on the rose line */}
-              <circle className="ln-curve-dot" cx="760" cy="224" r="5" fill="var(--color-ln-rose)" filter="url(#ln-dot-glow)" />
-            </svg>
-
-            <div className="mt-3 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[12px]">
-              <span className="inline-flex items-center gap-1.5" style={{ color: "rgb(252,165,165)" }}>
-                <span className="inline-block h-2 w-2 rounded-full" style={{ background: "var(--color-ln-rose)" }} />
-                {isEn ? "Read a summary" : "Zusammenfassung gelesen"}
-              </span>
-              <span className="inline-flex items-center gap-1.5" style={{ color: "rgb(134,239,172)" }}>
-                <span className="inline-block h-2 w-2 rounded-full" style={{ background: "var(--color-ln-cyan)" }} />
-                {isEn ? "Actively quizzed" : "Aktiv abgefragt"}
-              </span>
             </div>
 
             <p
-              className="mt-4 text-center text-[13.5px] leading-relaxed"
-              style={{ color: "rgba(255,255,255,0.62)" }}
+              className="mt-5 text-[11.5px] leading-snug"
+              style={{ color: "rgba(255,255,255,0.4)" }}
             >
-              {isEn ? (
-                <>
-                  Reading{" "}
-                  <em className="lernly-italic" style={{ color: "white" }}>
-                    decays
-                  </em>
-                  . Recall{" "}
-                  <em className="lernly-italic" style={{ color: "white" }}>
-                    holds
-                  </em>
-                  . It's not an AI-tool problem — it's a method problem.
-                </>
-              ) : (
-                <>
-                  Lesen{" "}
-                  <em className="lernly-italic" style={{ color: "white" }}>
-                    verfällt
-                  </em>
-                  . Abfragen{" "}
-                  <em className="lernly-italic" style={{ color: "white" }}>
-                    hält
-                  </em>
-                  . Kein KI-Tool-Problem — ein Methoden-Problem.
-                </>
-              )}
+              {isEn
+                ? "Focus from your past exam — example, no guarantee."
+                : "Schwerpunkt aus deiner Altklausur — Beispiel, keine Garantie."}
             </p>
           </div>
 
-          {/* CTA */}
-          <div className="mt-6 flex flex-col items-center gap-3">
-            <a
-              href="#demo"
-              className="rounded-full bg-white px-6 py-3 text-[14px] font-semibold text-[#0F1535] transition hover:bg-white/90"
+          {/* B) Example question in the exam's style */}
+          <div className="ln-reveal p-6" style={cardStyle}>
+            <div
+              className="mb-4 inline-flex items-center gap-1.5 text-[12px] font-semibold"
+              style={{ color: teal }}
             >
-              {isEn ? "See a real pack →" : "Echtes Paket ansehen →"}
-            </a>
-            <span
-              className="text-[12px]"
-              style={{ color: "rgba(255,255,255,0.45)" }}
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke={teal}
+                strokeWidth="1.9"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <polyline points="15 10 20 15 15 20" />
+                <path d="M4 4v7a4 4 0 0 0 4 4h12" />
+              </svg>
+              {isEn
+                ? "Question in your past-exam style"
+                : "Frage im Stil deiner Altklausur"}
+            </div>
+
+            <div
+              className="rounded-xl p-3.5 text-[13px] leading-relaxed"
+              style={{
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(255,255,255,0.05)",
+                color: "rgba(255,255,255,0.7)",
+              }}
             >
-              {isEn ? "60 seconds, no signup" : "60 Sekunden, kein Login"}
-            </span>
+              {isEn
+                ? "Sony launches the PS5; months later Microsoft counters with the Xbox Series X at the same price."
+                : "Sony bringt die PS5, Microsoft kontert Monate später mit der Xbox Series X zum gleichen Preis."}
+            </div>
+
+            <p
+              className="mt-3.5 text-[14px] font-semibold leading-snug"
+              style={{ color: "#EAEDF7" }}
+            >
+              {isEn
+                ? "Which concept by Chen (1996) describes this best?"
+                : "Welches Konzept von Chen (1996) beschreibt das am besten?"}
+            </p>
+
+            <div className="mt-3 space-y-2">
+              {options.map((o) => (
+                <div
+                  key={o.key}
+                  className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[13px]"
+                  style={
+                    o.correct
+                      ? {
+                          background: "rgba(91,184,216,0.1)",
+                          border: "1px solid rgba(91,184,216,0.45)",
+                          color: "#EAEDF7",
+                        }
+                      : {
+                          background: "rgba(255,255,255,0.02)",
+                          border: "1px solid rgba(255,255,255,0.06)",
+                          color: "rgba(255,255,255,0.75)",
+                        }
+                  }
+                >
+                  <span
+                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold"
+                    style={
+                      o.correct
+                        ? { background: teal, color: "#0F1322" }
+                        : {
+                            background: "rgba(255,255,255,0.08)",
+                            color: "rgba(255,255,255,0.6)",
+                          }
+                    }
+                  >
+                    {o.correct ? (
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#0F1322"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    ) : (
+                      o.key
+                    )}
+                  </span>
+                  <span>{o.text}</span>
+                </div>
+              ))}
+            </div>
           </div>
+        </div>
+
+        {/* Caption */}
+        <p className="ln-reveal mx-auto mt-10 max-w-[720px] text-center text-[17px] font-semibold leading-snug md:text-[19px]">
+          <span style={{ color: "rgba(255,255,255,0.55)" }}>
+            {isEn
+              ? "Other tools give you everything. "
+              : "Andere Tools geben dir alles. "}
+          </span>
+          <span style={{ color: "#ffffff" }}>
+            {isEn
+              ? "Lernly gives you what's on the exam."
+              : "Lernly gibt dir das, was drankommt."}
+          </span>
+        </p>
+
+        {/* CTA */}
+        <div className="ln-reveal mt-7 flex justify-center">
+          <a
+            href="#upload"
+            className="rounded-full bg-white px-6 py-3 text-[14px] font-semibold text-[#0F1535] transition hover:bg-white/90"
+          >
+            {isEn ? "Try it free →" : "Jetzt gratis testen →"}
+          </a>
         </div>
       </div>
     </section>
