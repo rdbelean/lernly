@@ -1,6 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { effectivePlan } from "@/lib/quota";
 import { HAIKU } from "@/lib/taskModels";
 import {
   TUTOR_SYSTEM_PROMPT,
@@ -93,14 +94,21 @@ export async function POST(request: Request): Promise<Response> {
 
   // Load plan + current usage. Two queries, both RLS-scoped.
   const [{ data: profile }, { data: usage }] = await Promise.all([
-    supabase.from("users").select("plan").eq("id", userId).maybeSingle(),
+    supabase
+      .from("users")
+      .select("plan, plan_expires_at")
+      .eq("id", userId)
+      .maybeSingle(),
     supabase
       .from("tutor_usage")
       .select("period_start, messages_used")
       .eq("user_id", userId)
       .maybeSingle(),
   ]);
-  const plan = (profile?.plan as string | null) ?? "free";
+  const plan = effectivePlan(
+    profile?.plan as string | null,
+    profile?.plan_expires_at as string | null,
+  );
   const limit = tutorLimitForPlan(plan);
   const now = new Date();
   const monthStart = startOfMonth(now);

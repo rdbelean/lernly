@@ -11,9 +11,10 @@ test("logged-in Free → single-pass", () => {
 test("BYOK → two-pass", () => {
   assert.equal(shouldUseTwoPass({ isAnonymous: false, usesByok: true, plan: null }), true);
 });
-test("Pro and Team → two-pass", () => {
-  assert.equal(shouldUseTwoPass({ isAnonymous: false, usesByok: false, plan: "pro" }), true);
-  assert.equal(shouldUseTwoPass({ isAnonymous: false, usesByok: false, plan: "team" }), true);
+test("paid plans → two-pass", () => {
+  assert.equal(shouldUseTwoPass({ isAnonymous: false, usesByok: false, plan: "einzelklausur" }), true);
+  assert.equal(shouldUseTwoPass({ isAnonymous: false, usesByok: false, plan: "semester" }), true);
+  assert.equal(shouldUseTwoPass({ isAnonymous: false, usesByok: false, plan: "monthly" }), true);
 });
 test("logged-in unknown plan, no BYOK → single-pass", () => {
   assert.equal(shouldUseTwoPass({ isAnonymous: false, usesByok: false, plan: null }), false);

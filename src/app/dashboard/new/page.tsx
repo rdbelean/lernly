@@ -381,12 +381,12 @@ export default function NewPackPage() {
           files: refs,
         }),
       });
-      const json = await parseJsonResponse<{ url?: string; error?: string }>(
+      const json = await parseJsonResponse<{ jobId?: string; error?: string }>(
         res,
       );
-      if (!res.ok || !json.url)
+      if (!res.ok || !json.jobId)
         throw new Error(json.error ?? `HTTP ${res.status}`);
-      window.location.href = json.url; // → Stripe checkout
+      window.location.href = `/dashboard?cram=${json.jobId}`; // → background job
     } catch (e) {
       setError(e instanceof Error ? e.message : "Unbekannter Fehler");
       setBusy(false);
@@ -479,7 +479,7 @@ export default function NewPackPage() {
             onClick={() => setMode("cram")}
             className={`rounded-lg px-4 py-2 text-[14px] font-semibold ${mode === "cram" ? "bg-white text-[color:var(--color-ln-bg-bot)]" : "border border-white/15 text-white"}`}
           >
-            Alles reinwerfen (Cram) · €6,99
+            Alles reinwerfen (Cram)
           </button>
         </div>
         {mode === "cram" && (
@@ -734,7 +734,7 @@ export default function NewPackPage() {
             className="rounded-full bg-white px-6 py-3 text-[14px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-40"
           >
             {mode === "cram"
-              ? "Alles reinwerfen · €6,99 →"
+              ? "Alles reinwerfen →"
               : "Paket generieren →"}
           </button>
         </div>

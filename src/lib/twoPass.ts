@@ -7,5 +7,9 @@ export function shouldUseTwoPass(o: {
 }): boolean {
   if (o.isAnonymous) return false;
   if (o.usesByok) return true;
-  return o.plan === "pro" || o.plan === "team";
+  return (
+    o.plan === "einzelklausur" ||
+    o.plan === "semester" ||
+    o.plan === "monthly"
+  );
 }

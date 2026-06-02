@@ -5,7 +5,7 @@ import { ArrowRight, ExternalLink } from "lucide-react";
 import { track } from "@/lib/analytics";
 import { PrimaryCTAButton } from "@/components/ui/PrimaryCTA";
 
-type Plan = "pro" | "team" | "pro_byok" | "team_byok";
+type CheckoutPlan = "einzelklausur" | "semester" | "monthly";
 
 function formatDate(iso: string | null) {
   if (!iso) return null;
@@ -32,9 +32,12 @@ export default function BillingSection({
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  const startCheckout = (target: Plan) => {
+  // Active recurring subscription → self-service via the Stripe portal.
+  const isSubscription = plan === "semester" || plan === "monthly";
+
+  const startCheckout = (target: CheckoutPlan) => {
     setError(null);
-    track("checkout_started", { plan: target });
+    track("checkout_started", { plan: target, source: "settings_billing" });
     startTransition(async () => {
       try {
         const res = await fetch("/api/stripe/checkout", {
@@ -89,7 +92,8 @@ export default function BillingSection({
             className="text-[12.5px]"
             style={{ color: "var(--color-text-dim)" }}
           >
-            · läuft bis {formatDate(periodEnd)}
+            · {isSubscription ? "verlängert sich" : "läuft bis"}{" "}
+            {formatDate(periodEnd)}
           </span>
         )}
       </div>
@@ -108,22 +112,25 @@ export default function BillingSection({
         </div>
       )}
 
-      {plan === "free" && (
+      {!isSubscription && (
         <>
           <p
             className="text-[13px]"
             style={{ color: "var(--color-text-dim)" }}
           >
-            Mehr Pakete pro Monat:
+            {plan === "einzelklausur"
+              ? "Mehr als eine Klausur? Sichere dir das ganze Semester:"
+              : "Mehr Pakete — wähl, was passt:"}
           </p>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {/* Semester — hero / best value, first slot. */}
             <button
               type="button"
               disabled={!billingConfigured || pending}
-              onClick={() => startCheckout("pro")}
+              onClick={() => startCheckout("semester")}
               className="rounded-2xl px-5 py-4 text-left transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
               style={{
-                background: "rgba(110, 128, 242, 0.08)",
+                background: "rgba(110, 128, 242, 0.10)",
                 border: "1px solid var(--color-primary-bright)",
               }}
             >
@@ -134,19 +141,20 @@ export default function BillingSection({
                   fontFamily: "var(--font-display)",
                 }}
               >
-                Pro · 14,99 € / Monat
+                Semester · 29,99 €
               </div>
               <div
                 className="text-[12.5px]"
                 style={{ color: "var(--color-text-dim)" }}
               >
-                25 Pakete pro Monat
+                Beste Wahl · 60 Pakete/Monat · 6 Monate
               </div>
             </button>
+            {/* Monatlich. */}
             <button
               type="button"
               disabled={!billingConfigured || pending}
-              onClick={() => startCheckout("team")}
+              onClick={() => startCheckout("monthly")}
               className="rounded-2xl px-5 py-4 text-left transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
               style={{
                 background: "var(--color-surface-2)",
@@ -160,20 +168,47 @@ export default function BillingSection({
                   fontFamily: "var(--font-display)",
                 }}
               >
-                Team · 24,99 € / Monat
+                Monatlich · 8,99 €
               </div>
               <div
                 className="text-[12.5px]"
                 style={{ color: "var(--color-text-dim)" }}
               >
-                60 Pakete pro Monat
+                50 Pakete/Monat · monatlich kündbar
+              </div>
+            </button>
+            {/* Einzelklausur — one-time. */}
+            <button
+              type="button"
+              disabled={!billingConfigured || pending}
+              onClick={() => startCheckout("einzelklausur")}
+              className="rounded-2xl px-5 py-4 text-left transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
+              style={{
+                background: "var(--color-surface-2)",
+                border: "1px solid rgba(255,255,255,0.10)",
+              }}
+            >
+              <div
+                className="text-[15px] font-semibold"
+                style={{
+                  color: "var(--color-text)",
+                  fontFamily: "var(--font-display)",
+                }}
+              >
+                Einzelklausur · 4,99 €
+              </div>
+              <div
+                className="text-[12.5px]"
+                style={{ color: "var(--color-text-dim)" }}
+              >
+                5 Pakete · 14 Tage · einmalig
               </div>
             </button>
           </div>
         </>
       )}
 
-      {plan !== "free" && hasStripeCustomer && (
+      {isSubscription && hasStripeCustomer && (
         <div className="space-y-2">
           <PrimaryCTAButton
             size="sm"
@@ -194,10 +229,9 @@ export default function BillingSection({
         </div>
       )}
 
-      {/* Free users with an existing stripe_customer_id (downgraded after
-          cancel) still get a portal link so they can re-subscribe / pull
-          old invoices. */}
-      {plan === "free" && hasStripeCustomer && billingConfigured && (
+      {/* Non-sub users with an existing stripe_customer_id (one-time buyers or
+          downgraded subscribers) still get a portal link for old invoices. */}
+      {!isSubscription && hasStripeCustomer && billingConfigured && (
         <button
           type="button"
           onClick={openPortal}

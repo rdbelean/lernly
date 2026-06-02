@@ -10,7 +10,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { getUser } from "@/lib/dal";
 import { createServiceClient } from "@/lib/supabase/server";
-import { PLAN_LIMITS } from "@/lib/quota";
+import { PLAN_LIMITS, PLAN_LABEL, effectivePlan } from "@/lib/quota";
 import { tutorLimitForPlan } from "@/lib/tutorPrompt";
 import BYOKForm from "./byok-form";
 import BillingSection from "./billing-section";
@@ -19,14 +19,6 @@ import UsageSection from "./usage-section";
 import NotificationsSection from "./notifications-section";
 import DangerZone from "./danger-zone";
 import LegalLinks from "./legal-links";
-
-const PLAN_LABEL: Record<string, string> = {
-  free: "Gratis",
-  pro: "Pro",
-  team: "Team",
-  pro_byok: "Pro (BYOK)",
-  team_byok: "Team (BYOK)",
-};
 
 // =========================================================================
 // /dashboard/settings  —  Konto
@@ -108,7 +100,7 @@ export default async function SettingsPage() {
     service
       .from("users")
       .select(
-        "plan, current_period_end, stripe_customer_id, packs_used_this_month, exam_reminders_enabled",
+        "plan, plan_expires_at, stripe_customer_id, packs_used_this_month, exam_reminders_enabled",
       )
       .eq("id", uid)
       .single(),
@@ -121,8 +113,10 @@ export default async function SettingsPage() {
 
   const keySetAt = secretRes.data?.anthropic_key_set_at ?? null;
   const profile = profileRes.data;
-  const plan = profile?.plan ?? "free";
-  const periodEnd = profile?.current_period_end ?? null;
+  const planExpiresAt = profile?.plan_expires_at ?? null;
+  // Effective plan: a lapsed paid plan reads as free (matches the DB gate).
+  const plan = effectivePlan(profile?.plan, planExpiresAt);
+  const periodEnd = plan === "free" ? null : planExpiresAt;
   const hasStripeCustomer = Boolean(profile?.stripe_customer_id);
   const billingConfigured = Boolean(process.env.STRIPE_SECRET_KEY);
   const emailConfigured = Boolean(process.env.RESEND_API_KEY);

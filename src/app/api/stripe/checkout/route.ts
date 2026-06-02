@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server";
 import {
-  CREDIT_PRODUCTS,
-  creditProductFromPriceId,
-  getCreditPriceId,
-  getPriceId,
+  getEinzelklausurPriceId,
   getStripe,
-  type CreditProduct,
-  type Plan,
+  getSubscriptionPriceId,
+  type SubscriptionPlan,
 } from "@/lib/stripe";
 import {
   createClient as createSupabaseServer,
@@ -15,8 +12,7 @@ import {
 
 export const runtime = "nodejs";
 
-const VALID_PLANS: Plan[] = ["pro", "team", "pro_byok", "team_byok"];
-const VALID_CREDITS: CreditProduct[] = ["sprint", "payg", "payg_pro"];
+const SUBSCRIPTION_PLANS: SubscriptionPlan[] = ["semester", "monthly"];
 
 export async function POST(request: Request) {
   const stripe = getStripe();
@@ -27,30 +23,29 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: { plan?: string; credit?: string };
+  let body: { plan?: string };
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  // Decide whether this is a subscription checkout or a one-time credit
-  // purchase. Exactly one of plan/credit must be present.
+  // Exactly one of three products: einzelklausur (one-time) or a subscription
+  // (semester / monthly).
+  const isEinzelklausur = body.plan === "einzelklausur";
   const isSubscription =
-    body.plan && VALID_PLANS.includes(body.plan as Plan);
-  const isCredit =
-    body.credit && VALID_CREDITS.includes(body.credit as CreditProduct);
+    !!body.plan && SUBSCRIPTION_PLANS.includes(body.plan as SubscriptionPlan);
 
-  if (!isSubscription && !isCredit) {
+  if (!isEinzelklausur && !isSubscription) {
     return NextResponse.json(
-      { error: "plan oder credit muss gesetzt sein" },
+      { error: "Ungültiger Plan." },
       { status: 400 },
     );
   }
 
-  const priceId = isSubscription
-    ? getPriceId(body.plan as Plan)
-    : getCreditPriceId(body.credit as CreditProduct);
+  const priceId = isEinzelklausur
+    ? getEinzelklausurPriceId()
+    : getSubscriptionPriceId(body.plan as SubscriptionPlan);
   if (!priceId) {
     return NextResponse.json(
       { error: "Preis nicht konfiguriert." },
@@ -64,26 +59,6 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-  }
-
-  // Defense: only Pro users get the discounted PAYG. We don't trust the
-  // frontend to pick the right product.
-  if (body.credit === "payg_pro") {
-    const service = createServiceClient();
-    const { data: profile } = await service
-      .from("users")
-      .select("plan")
-      .eq("id", user.id)
-      .single();
-    if (profile?.plan !== "pro" && profile?.plan !== "team") {
-      return NextResponse.json(
-        {
-          error:
-            "PAYG-Pro-Preis ist nur für Pro/Team-Mitglieder verfügbar — bitte 'payg' nutzen.",
-        },
-        { status: 403 },
-      );
-    }
   }
 
   const service = createServiceClient();
@@ -109,8 +84,8 @@ export async function POST(request: Request) {
   const url = new URL(request.url);
   const origin = `${url.protocol}//${url.host}`;
 
-  // Subscriptions stay in subscription mode; credit purchases use payment mode
-  // and never auto-renew.
+  // Subscriptions stay in subscription mode; Einzelklausur uses payment mode
+  // and never auto-renews.
   const session = await stripe.checkout.sessions.create(
     isSubscription
       ? {
@@ -126,14 +101,10 @@ export async function POST(request: Request) {
           mode: "payment",
           customer: customerId,
           line_items: [{ price: priceId, quantity: 1 }],
-          success_url: `${origin}/dashboard?credit_purchased=1`,
-          cancel_url: `${origin}/dashboard?credit_cancelled=1`,
+          success_url: `${origin}/dashboard?upgraded=1`,
+          cancel_url: `${origin}/dashboard/settings?cancelled=1`,
           client_reference_id: user.id,
-          // The webhook reads this to know which credit product was purchased.
-          metadata: {
-            user_id: user.id,
-            credit_product: body.credit as CreditProduct,
-          },
+          metadata: { user_id: user.id, product: "einzelklausur" },
         },
   );
 
@@ -146,8 +117,3 @@ export async function POST(request: Request) {
 
   return NextResponse.json({ url: session.url });
 }
-
-// Reference the helpers so unused-import warnings stay quiet when this file
-// is rebuilt in isolation.
-void CREDIT_PRODUCTS;
-void creditProductFromPriceId;

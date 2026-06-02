@@ -30,14 +30,15 @@ export type TutorMessage = {
   content: string;
 };
 
-// Per-tier monthly message allowance. Free tier gets a small taste; Pro is
-// the daily-driver size; Team gets the highest. BYOK (user's own API key)
-// isn't honoured for tutor in V1 — they still get the tier limit. Easy to
-// open up later if BYOK demand materialises.
+// Per-tier monthly message allowance. Free tier gets a small taste; paid
+// plans get a generous, daily-driver size. BYOK (user's own API key) isn't
+// honoured for tutor in V1 — they still get the tier limit. Easy to open up
+// later if BYOK demand materialises.
 export const TIER_LIMITS: Record<string, number> = {
   free: 10,
-  pro: 200,
-  team: 500,
+  einzelklausur: 150,
+  monthly: 500,
+  semester: 500,
 };
 
 export const DEFAULT_TIER = "free";

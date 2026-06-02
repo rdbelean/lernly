@@ -146,13 +146,15 @@ function AgbContent() {
             <section style={sectionStyle}>
               <h2 style={headingStyle}>5. Preise und Bezahlung</h2>
               <p style={bodyStyle}>
-                Der Gratis-Tarif erlaubt die Erstellung von drei Lernpaketen
-                pro Monat. Pro und Team sind kostenpflichtige Tarife mit
+                Der Gratis-Tarif erlaubt die Erstellung von zwei Lernpaketen
+                pro Monat. Einzelklausur ist ein einmaliger Kauf mit 14 Tagen
+                Zugang; Semester und Monatlich sind kostenpflichtige Abos mit
                 erweiterten Kontingenten. Alle Preise sind Endpreise — gemäß
                 § 19 UStG wird keine Umsatzsteuer berechnet
-                (Kleinunternehmerregelung). Die Bezahlung erfolgt über
-                Stripe; das Abo verlängert sich monatlich automatisch und
-                ist jederzeit zum Ende der laufenden Periode kündbar.
+                (Kleinunternehmerregelung). Die Bezahlung erfolgt über Stripe;
+                Abos verlängern sich automatisch zum Ende der laufenden Periode
+                (Semester alle sechs Monate, Monatlich monatlich) und sind
+                jederzeit zum Periodenende kündbar.
               </p>
             </section>
 
