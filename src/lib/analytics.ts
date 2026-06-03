@@ -36,8 +36,14 @@ export function initAnalytics(): void {
 }
 
 function safeClient(): PostHog | null {
-  if (!initialized || !isConfigured()) return null;
   if (typeof window === "undefined") return null;
+  if (!isConfigured()) return null;
+  // Self-initialize if an event fires before AnalyticsProvider's mount effect
+  // has run. React runs child effects before parent effects, so a page's
+  // on-mount track() (e.g. landing_variant_seen) can otherwise race ahead of
+  // initAnalytics() and be silently dropped. initAnalytics() is idempotent.
+  if (!initialized) initAnalytics();
+  if (!initialized) return null;
   return posthog;
 }
 
