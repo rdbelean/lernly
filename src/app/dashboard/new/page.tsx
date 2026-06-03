@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDropzone, type FileRejection } from "react-dropzone";
 import GenerationProgress from "@/components/GenerationProgress";
@@ -93,6 +93,8 @@ export default function NewPackPage() {
     { id: string; title: string }[]
   >([]);
   const [examId, setExamId] = useState<string | null>(null);
+  // Funnel: upload_started fires once when an authed user first adds a file.
+  const uploadStartedRef = useRef(false);
   // When the user picks "+ Neue Klausur anlegen…", we reveal the full
   // NewExamForm (3-path picker + Altklausur upload + hints + fidelity) —
   // same component the dashboard uses, so Path A is reachable from here.
@@ -155,6 +157,10 @@ export default function NewPackPage() {
         const reason = first.errors[0]?.message ?? "Datei abgelehnt";
         setError(`${first.file.name}: ${reason}`);
       }
+      if (accepted.length > 0 && !uploadStartedRef.current) {
+        uploadStartedRef.current = true;
+        track("upload_started", { anonymous: false, file_count: accepted.length });
+      }
       setFiles((prev) => {
         const next = [...prev];
         for (const f of accepted) {
@@ -196,6 +202,15 @@ export default function NewPackPage() {
     setBusy(true);
     setError(null);
     setCompleted(false);
+
+    track("pack_generation_started", {
+      exam_type: examType,
+      file_count: files.length,
+      total_mb: Number(
+        (files.reduce((sum, f) => sum + f.size, 0) / 1024 / 1024).toFixed(1),
+      ),
+      path: "generate",
+    });
 
     const t0 = Date.now();
     try {
@@ -285,6 +300,11 @@ export default function NewPackPage() {
       const json = await parseJsonResponse<GenerateApiResponse>(res);
       if (!res.ok) {
         if (json.reason === "quota_exceeded" && typeof json.limit === "number") {
+          track("generation_quota_hit", {
+            plan: json.plan ?? "free",
+            used: json.used ?? 0,
+            limit: json.limit,
+          });
           setQuotaHit({
             used: json.used ?? 0,
             limit: json.limit,
@@ -301,6 +321,14 @@ export default function NewPackPage() {
         quiz: json.pack?.simulator?.questions?.length,
         exam_type: examType,
         file_count: files.length,
+      });
+      // Unified funnel step shared with the anon path → one "Paket fertig"
+      // event to break down by $device_type.
+      track("pack_generated", {
+        anonymous: false,
+        cards: json.pack?.flashcards?.length ?? 0,
+        has_quiz: Boolean(json.pack?.simulator?.questions?.length),
+        exam_type: examType,
       });
       setCompleted(true);
       if (json.saved && json.id) {
@@ -330,6 +358,14 @@ export default function NewPackPage() {
     }
     setBusy(true);
     setError(null);
+    track("pack_generation_started", {
+      exam_type: examType,
+      file_count: files.length,
+      total_mb: Number(
+        (files.reduce((sum, f) => sum + f.size, 0) / 1024 / 1024).toFixed(1),
+      ),
+      path: "cram",
+    });
     try {
       const { createClient } = await import("@/lib/supabase/browser");
       const supabase = createClient();

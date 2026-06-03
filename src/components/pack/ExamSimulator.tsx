@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 import confetti from "canvas-confetti";
 import type { SimulatorQuestion } from "@/lib/schema";
 import { renderRichText } from "@/lib/richText";
+import { track } from "@/lib/analytics";
 
 type Language = "en" | "de";
 
@@ -45,6 +46,7 @@ export default function ExamSimulator({
   const progress = (index / questions.length) * 100;
 
   const completionFired = useRef(false);
+  const firstAnswerFired = useRef(false);
 
   useEffect(() => {
     if (!done) return;
@@ -102,6 +104,14 @@ export default function ExamSimulator({
 
   const pick = (i: number) => {
     if (revealed) return;
+    if (!firstAnswerFired.current) {
+      firstAnswerFired.current = true;
+      track("first_quiz_answered", {
+        mode: "simulator",
+        total_questions: questions.length,
+        language,
+      });
+    }
     setAnswers((prev) => {
       const next = [...prev];
       next[index] = i;

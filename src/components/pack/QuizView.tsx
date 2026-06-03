@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { QuizQuestion, StudyPack } from "@/lib/schema";
 import { renderRichText } from "@/lib/richText";
+import { track } from "@/lib/analytics";
 import { saveQuizAttempt } from "@/app/dashboard/pack/[id]/actions";
 import {
   BookOpen,
@@ -145,6 +146,7 @@ export default function QuizView({
   const [repracticing, setRepracticing] = useState(false);
   const [repracticeError, setRepracticeError] = useState<string | null>(null);
   const resultsRef = useRef<HTMLDivElement | null>(null);
+  const firstAnswerFired = useRef(false);
 
   // If the parent ever swaps questions (different pack opened), full reset.
   useEffect(() => {
@@ -216,6 +218,14 @@ export default function QuizView({
 
   const select = (qid: string, idx: number) => {
     if (checked) return;
+    if (!firstAnswerFired.current) {
+      firstAnswerFired.current = true;
+      track("first_quiz_answered", {
+        mode: "open_questions",
+        total_questions: deck.length,
+        language,
+      });
+    }
     setAnswers((prev) => ({ ...prev, [qid]: idx }));
   };
 
