@@ -15,6 +15,7 @@ import {
 import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
 import WelcomeModal from "@/components/dashboard/WelcomeModal";
 import FeedbackLink from "@/components/FeedbackLink";
+import { PwaInstall, PwaInstallEntry } from "@/components/pwa/PwaInstall";
 
 type RecentPack = {
   id: string;
@@ -210,8 +211,9 @@ function SidebarContent({
           icon={Settings}
           label="Einstellungen"
         />
-        <div className="mt-2 px-3">
+        <div className="mt-2 flex flex-col gap-2 px-3">
           <FeedbackLink />
+          <PwaInstallEntry />
         </div>
         <div
           className="mt-3 truncate px-3 text-[11px]"
@@ -379,6 +381,8 @@ export default function DashboardShell({
         }}
       />
       <WelcomeModal open={!hasSeenWelcome} initialName={name} />
+      {/* Auto-show only once the welcome flow is done, so the two don't collide. */}
+      <PwaInstall autoShow={hasSeenWelcome} />
     </div>
   );
 }
