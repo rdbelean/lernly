@@ -442,6 +442,26 @@ function Hero(props: HeroProps) {
       />
 
       <div className="relative mx-auto max-w-[1080px]">
+        {/* Honest "freshly launched" signal — small, on-brand, links to feedback. */}
+        <div className="ln-reveal mb-5 flex justify-center">
+          <a
+            href="mailto:info@lernly-app.de?subject=Lernly%20Feedback"
+            className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[12px] font-semibold transition hover:border-white/25"
+            style={{
+              borderColor: "rgba(43,52,153,0.55)",
+              background: "rgba(43,52,153,0.14)",
+              color: "rgba(255,255,255,0.78)",
+            }}
+          >
+            <span
+              aria-hidden
+              className="h-1.5 w-1.5 rounded-full"
+              style={{ background: "var(--color-ln-sage, #4ade80)" }}
+            />
+            {isEn ? "Just launched · Beta" : "Frisch gelauncht · Beta"}
+          </a>
+        </div>
+
         <p
           className="ln-reveal mb-5 text-center text-[13px] font-semibold uppercase tracking-[0.18em]"
           style={{ color: "rgba(255, 255, 255, 0.5)" }}

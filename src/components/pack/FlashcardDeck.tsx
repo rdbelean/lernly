@@ -246,10 +246,13 @@ export default function FlashcardDeck({
         />
       </div>
 
-      {/* Card stack */}
+      {/* Card stack — height is driven by the active (in-flow) card so it grows
+          with content; ghosts sit absolutely behind it. The rate buttons live
+          AFTER this container in normal flow, so a long answer can never overlap
+          them. */}
       <div
         className="relative mt-6"
-        style={{ perspective: "1400px", minHeight: "280px" }}
+        style={{ perspective: "1400px" }}
       >
         {/* Ghost cards behind (rendered deepest first so DOM order = back-to-front) */}
         {ghosts
@@ -296,7 +299,7 @@ export default function FlashcardDeck({
             }
             transition={{ type: "spring", stiffness: 280, damping: 24 }}
             onClick={flipCard}
-            className="absolute inset-0 cursor-pointer rounded-2xl text-left"
+            className="relative block w-full cursor-pointer rounded-2xl text-left"
             style={{
               transformStyle: "preserve-3d",
             }}
@@ -304,13 +307,14 @@ export default function FlashcardDeck({
             <motion.div
               animate={{ rotateY: flipped ? 180 : 0 }}
               transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
-              className="relative h-full w-full"
-              style={{ transformStyle: "preserve-3d", minHeight: "260px" }}
+              className="grid w-full"
+              style={{ transformStyle: "preserve-3d", minHeight: "240px" }}
             >
               {/* Question face */}
               <div
-                className="absolute inset-0 flex flex-col justify-between rounded-2xl border border-white/15 p-7"
+                className="flex flex-col justify-between rounded-2xl border border-white/15 p-6 sm:p-7"
                 style={{
+                  gridArea: "1 / 1",
                   backfaceVisibility: "hidden",
                   WebkitBackfaceVisibility: "hidden",
                   background: "rgba(20, 22, 28, 0.92)",
@@ -338,8 +342,9 @@ export default function FlashcardDeck({
 
               {/* Answer face (rotated 180deg) */}
               <div
-                className="absolute inset-0 flex flex-col justify-between rounded-2xl border border-white/15 p-7"
+                className="flex flex-col justify-between rounded-2xl border border-white/15 p-6 sm:p-7"
                 style={{
+                  gridArea: "1 / 1",
                   backfaceVisibility: "hidden",
                   WebkitBackfaceVisibility: "hidden",
                   transform: "rotateY(180deg)",
@@ -354,7 +359,7 @@ export default function FlashcardDeck({
                     {isEn ? "Answer" : "Antwort"}
                   </div>
                   <div
-                    className="mt-3 text-[16px] leading-relaxed text-white"
+                    className="mt-3 break-words text-[16px] leading-relaxed text-white"
                     dangerouslySetInnerHTML={{
                       __html: renderRichText(card.answer),
                     }}
