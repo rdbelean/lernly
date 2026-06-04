@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Loader2, Sparkles, AlertTriangle } from "lucide-react";
 
 const STORAGE_KEY = "lernly:pendingPack";
 
@@ -55,22 +56,26 @@ export default function ClaimPage() {
     <main className="px-6 py-16">
       <div className="mx-auto max-w-[560px]">
         <div
-          className="rounded-2xl p-10 text-center"
+          className="rounded-2xl border p-10 text-center"
           style={{
-            background: "rgba(20, 22, 28, 0.6)",
-            border: "1px solid rgba(255,255,255,0.14)",
-            backdropFilter: "blur(20px)",
+            background: "#141930",
+            borderColor: "rgba(255,255,255,0.06)",
           }}
         >
           {status === "working" && (
             <>
-              <div className="text-[36px]">💾</div>
+              <div
+                className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl"
+                style={{ background: "rgba(43,52,153,0.20)", color: "#9aa6ff" }}
+              >
+                <Loader2 size={22} strokeWidth={2} aria-hidden className="animate-spin" />
+              </div>
               <h1 className="mt-4 text-[22px] font-semibold text-white">
                 Pack wird gespeichert…
               </h1>
               <p
                 className="mt-2 text-[14px]"
-                style={{ color: "rgba(255,255,255,0.6)" }}
+                style={{ color: "var(--color-text-dim, #9098B6)" }}
               >
                 Wir hängen dein Probepaket an deinen frischen Account.
               </p>
@@ -79,29 +84,40 @@ export default function ClaimPage() {
 
           {status === "empty" && (
             <>
-              <div className="text-[36px]">👋</div>
+              <div
+                className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl"
+                style={{ background: "rgba(43,52,153,0.20)", color: "#9aa6ff" }}
+              >
+                <Sparkles size={22} strokeWidth={2} aria-hidden />
+              </div>
               <h1 className="mt-4 text-[22px] font-semibold text-white">
                 Willkommen
               </h1>
               <p
                 className="mt-2 text-[14px]"
-                style={{ color: "rgba(255,255,255,0.6)" }}
+                style={{ color: "var(--color-text-dim, #9098B6)" }}
               >
                 Wir haben kein offenes Paket zum Speichern gefunden — geh ins
                 Dashboard und erstelle ein neues.
               </p>
               <a
                 href="/dashboard"
-                className="mt-5 inline-block rounded-full bg-white px-5 py-2.5 text-[14px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
+                className="mt-5 inline-block rounded-xl px-5 py-2.5 text-[14px] font-semibold text-white transition hover:opacity-90"
+                style={{ background: "#2B3499" }}
               >
-                Zum Dashboard →
+                Zum Dashboard
               </a>
             </>
           )}
 
           {status === "error" && (
             <>
-              <div className="text-[36px]">⚠️</div>
+              <div
+                className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl"
+                style={{ background: "rgba(244,114,98,0.16)", color: "#f47262" }}
+              >
+                <AlertTriangle size={22} strokeWidth={2} aria-hidden />
+              </div>
               <h1 className="mt-4 text-[22px] font-semibold text-white">
                 Speichern fehlgeschlagen
               </h1>
@@ -113,7 +129,8 @@ export default function ClaimPage() {
               </p>
               <a
                 href="/dashboard"
-                className="mt-5 inline-block rounded-full border border-white/20 px-5 py-2.5 text-[14px] font-medium text-white transition hover:bg-white/5"
+                className="mt-5 inline-block rounded-xl border px-5 py-2.5 text-[14px] font-medium text-white transition hover:bg-white/5"
+                style={{ borderColor: "rgba(255,255,255,0.14)" }}
               >
                 Zum Dashboard
               </a>

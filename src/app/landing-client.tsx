@@ -22,6 +22,20 @@ import DemoPacksSection from "@/components/landing/DemoPacksSection";
 import SectionHeading from "@/components/landing/SectionHeading";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import { track } from "@/lib/analytics";
+import { EXAM_FORMATS } from "@/lib/examFormats";
+import Image from "next/image";
+import {
+  Upload,
+  FileText,
+  Check,
+  X,
+  RotateCcw,
+  AlertTriangle,
+  Sparkles,
+  Lock,
+  Download,
+  Info,
+} from "lucide-react";
 
 type Language = "en" | "de";
 
@@ -32,88 +46,10 @@ function useLanguage() {
   return useContext(LanguageContext);
 }
 
-type ExamIcon = (props: { className?: string }) => React.JSX.Element;
-
-const EssayIcon: ExamIcon = ({ className }) => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.7"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-    aria-hidden
-  >
-    <path d="M12 20h9" />
-    <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
-  </svg>
-);
-
-const MultipleChoiceIcon: ExamIcon = ({ className }) => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.7"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-    aria-hidden
-  >
-    <polyline points="9 11 12 14 22 4" />
-    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-  </svg>
-);
-
-const OralIcon: ExamIcon = ({ className }) => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.7"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-    aria-hidden
-  >
-    <rect x="9" y="2" width="6" height="12" rx="3" />
-    <path d="M5 10a7 7 0 0 0 14 0" />
-    <line x1="12" y1="19" x2="12" y2="22" />
-  </svg>
-);
-
-const OpenBookIcon: ExamIcon = ({ className }) => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.7"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-    aria-hidden
-  >
-    <path d="M2 4.5A1.5 1.5 0 0 1 3.5 3H8a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-    <path d="M22 4.5A1.5 1.5 0 0 0 20.5 3H16a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-  </svg>
-);
-
-const EXAM_OPTIONS: { value: ExamType; label: string; Icon: ExamIcon }[] = [
-  { value: "essay", label: "Essay", Icon: EssayIcon },
-  { value: "multiple_choice", label: "Multiple Choice", Icon: MultipleChoiceIcon },
-  { value: "open_questions", label: "Offene Fragen", Icon: EssayIcon },
-  { value: "oral", label: "Oral", Icon: OralIcon },
-  { value: "open_book", label: "Open Book", Icon: OpenBookIcon },
-];
+// The exam-format picker is now driven by the shared single-source-of-truth
+// config (src/lib/examFormats.ts) — same three formats as the in-app
+// /dashboard/new picker, with lucide icons. (The old bespoke SVG icons and the
+// 5-format local list lived here and caused the landing/app drift.)
 
 const MAX_FILES = 3;
 const MAX_SIZE = 10 * 1024 * 1024;
@@ -186,7 +122,7 @@ const SIGNUP_HREF = "/login?next=/dashboard/new";
 export default function Home() {
   const [mode, setMode] = useState<"demo" | "upload">("demo");
   const [files, setFiles] = useState<File[]>([]);
-  const [examType, setExamType] = useState<ExamType>("essay");
+  const [examType, setExamType] = useState<ExamType>("multiple_choice");
   const [isGenerating, setIsGenerating] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [elapsedSec, setElapsedSec] = useState(0);
@@ -198,7 +134,6 @@ export default function Home() {
   // SiteNav onLanguageChange wiring below to bring the language toggle back.
   const [language] = useState<Language>("de");
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const resultRef = useRef<HTMLDivElement>(null);
   // Funnel: fire upload_started once when the visitor first adds a file. These
   // are anonymous (no account) — the TikTok/landing top-of-funnel.
   const uploadStartedRef = useRef(false);
@@ -279,13 +214,6 @@ export default function Home() {
     }, 1000);
     return () => clearInterval(id);
   }, [isGenerating]);
-
-  // Scroll to the result the moment a fresh pack is rendered. Fires after React
-  // commits the DOM, so resultRef.current is guaranteed to be populated.
-  useEffect(() => {
-    if (!pack) return;
-    resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [pack]);
 
   const handleGenerate = async () => {
     if (files.length === 0 || isGenerating) return;
@@ -455,11 +383,7 @@ export default function Home() {
           <ShowcaseSection />
           <BentoFeatures />
           <ComparisonSection />
-          {pack && (
-            <section ref={resultRef} id="result" className="scroll-mt-24">
-              <ResultSection pack={pack} onReset={clearPack} />
-            </section>
-          )}
+          {pack && <ResultSection pack={pack} onReset={clearPack} />}
           <PricingSection onActivateUpload={activateUpload} />
           <FAQSection />
           <BottomCta />
@@ -809,27 +733,8 @@ function UploadDemo({
 }: HeroProps) {
   const language = useLanguage();
   const isEn = language === "en";
-  const examOptions = EXAM_OPTIONS.map((option) => ({
-    ...option,
-    label:
-      option.value === "essay"
-        ? "Essay"
-        : option.value === "multiple_choice"
-          ? isEn
-            ? "Multiple choice"
-            : "Multiple Choice"
-          : option.value === "open_questions"
-            ? isEn
-              ? "Open questions"
-              : "Offene Fragen"
-            : option.value === "oral"
-              ? isEn
-                ? "Oral"
-                : "Mündlich"
-              : isEn
-                ? "Open book"
-                : "Open Book",
-  }));
+  // Shared format config — identical to the in-app /dashboard/new picker.
+  const examOptions = EXAM_FORMATS;
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     maxFiles: MAX_FILES,
@@ -930,11 +835,7 @@ function UploadDemo({
               color: "var(--color-ln-cyan)",
             }}
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 15V3" />
-              <path d="M7 8l5-5 5 5" />
-              <path d="M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4" />
-            </svg>
+            <Upload size={22} strokeWidth={1.6} aria-hidden />
           </div>
           <div className="text-[15px] font-medium text-white">
             {isDragActive
@@ -965,18 +866,18 @@ function UploadDemo({
               key={`${f.name}-${i}`}
               className="flex items-center gap-2 rounded-full border border-white/10 bg-black/25 px-3 py-1.5 text-[13px] text-white"
             >
-              <span>📄</span>
+              <FileText size={14} strokeWidth={1.9} aria-hidden className="text-white/70" />
               <span className="max-w-[180px] truncate">{f.name}</span>
-              <span style={{ color: "var(--color-ln-sage)" }}>✓</span>
+              <Check size={14} strokeWidth={2.2} aria-hidden style={{ color: "var(--color-ln-sage)" }} />
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   removeFile(i);
                 }}
-                className="ml-1 text-white/50 transition hover:text-white"
+                className="ml-1 inline-flex text-white/50 transition hover:text-white"
                 aria-label={isEn ? "Remove" : "Entfernen"}
               >
-                ×
+                <X size={14} strokeWidth={2} aria-hidden />
               </button>
             </li>
           ))}
@@ -985,21 +886,35 @@ function UploadDemo({
 
       <div className="mt-5 flex flex-wrap gap-1.5 rounded-xl border border-white/10 bg-black/20 p-1.5">
         {examOptions.map((opt) => {
-          const active = examType === opt.value;
-          const IconComp = opt.Icon;
+          const active = examType === opt.value && !opt.locked;
+          const IconComp = opt.locked ? Lock : opt.Icon;
           return (
             <button
               key={opt.value}
-              onClick={() => setExamType(opt.value)}
+              type="button"
+              onClick={() => {
+                if (opt.locked) return;
+                setExamType(opt.value);
+              }}
+              disabled={opt.locked}
+              aria-disabled={opt.locked}
+              title={opt.locked ? "Bald verfügbar" : undefined}
               className={
                 "flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 text-[13px] font-medium transition " +
-                (active
-                  ? "bg-white/10 text-white ring-1 ring-white/15"
-                  : "text-white/60 hover:text-white")
+                (opt.locked
+                  ? "cursor-not-allowed text-white/30"
+                  : active
+                    ? "bg-white/10 text-white ring-1 ring-white/15"
+                    : "text-white/60 hover:text-white")
               }
             >
-              <IconComp />
-              <span className="hidden sm:inline">{opt.label}</span>
+              <IconComp size={15} strokeWidth={1.9} aria-hidden />
+              <span className="hidden sm:inline">{opt.shortLabel}</span>
+              {opt.locked && (
+                <span className="hidden text-[10px] uppercase tracking-wide text-white/30 md:inline">
+                  bald
+                </span>
+              )}
             </button>
           );
         })}
@@ -1019,12 +934,17 @@ function UploadDemo({
             alignItems: "center",
           }}
         >
-          <span style={{ fontSize: "14px", color: "rgba(255, 130, 130, 0.9)" }}>
-            ⚠️ {error}
+          <span
+            className="inline-flex items-center gap-2"
+            style={{ fontSize: "14px", color: "rgba(255, 130, 130, 0.9)" }}
+          >
+            <AlertTriangle size={15} strokeWidth={2} aria-hidden />
+            {error}
           </span>
           <button
             onClick={onGenerate}
             disabled={files.length === 0}
+            className="inline-flex items-center gap-1.5"
             style={{
               padding: "8px 20px",
               borderRadius: "8px",
@@ -1037,7 +957,8 @@ function UploadDemo({
               opacity: files.length === 0 ? 0.4 : 1,
             }}
           >
-            ↻ {isEn ? "Try again" : "Erneut versuchen"}
+            <RotateCcw size={14} strokeWidth={2} aria-hidden />
+            {isEn ? "Try again" : "Erneut versuchen"}
           </button>
         </div>
       )}
@@ -1045,9 +966,10 @@ function UploadDemo({
       <button
         onClick={onGenerate}
         disabled={files.length === 0}
-        className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 text-[15px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90 disabled:cursor-not-allowed disabled:bg-white/20 disabled:text-white/40"
+        className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-[15px] font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+        style={{ background: "#2B3499" }}
       >
-        <span>✦</span>
+        <Sparkles size={16} strokeWidth={2} aria-hidden />
         <span>
           {isEn ? "Create pack (about 2 min)" : "Paket erstellen (ca. 2 Min)"}
         </span>
@@ -2075,69 +1997,139 @@ function HowItWorks() {
 
 /* ========== RESULT SECTION ========== */
 
+// Fullscreen result overlay — once an anonymous visitor's pack is generated, a
+// clean full-screen surface with its OWN slim app chrome (NOT the marketing
+// navbar) slides over the landing, so it feels like "I'm in the product now".
+// Renders the REAL PackView; closing returns to the landing. The persistent
+// "Speichern (kostenlos)" CTA opens the save modal (value first, then gate).
 function ResultSection({ pack, onReset }: { pack: StudyPack; onReset: () => void }) {
-  const isEn = useLanguage() === "en";
-  return (
-    <div className="px-6 py-20 md:py-24">
-      <div className="mx-auto max-w-[920px]">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <span className="ln-section-label" style={{ color: "var(--color-ln-sage)" }}>
-              ✓ {isEn ? "Your study pack" : "Dein Lernpaket"}
-            </span>
-            <h2
-              className="mt-3 font-bold leading-[1.05] tracking-[-1.5px] text-white"
-              style={{ fontSize: "clamp(28px, 4.5vw, 44px)" }}
-            >
-              {pack.courseTitle}
-            </h2>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <span className="ln-mono-tag">
-                {pack.flashcards.length} {isEn ? "cards" : "Karten"}
-              </span>
-              <span className="ln-mono-tag">
-                {pack.overview.topics.reduce((n, t) => n + t.concepts.length, 0)}{" "}
-                {isEn ? "concepts" : "Konzepte"}
-              </span>
-              {pack.simulator && (
-                <span className="ln-mono-tag">{pack.simulator.questions.length} Quiz</span>
-              )}
-              {pack.essayBlueprint && (
-                <span className="ln-mono-tag">
-                  {isEn
-                    ? `${pack.essayBlueprint.parts.length}-part blueprint`
-                    : `${pack.essayBlueprint.parts.length}-teiliger Blueprint`}
-                </span>
-              )}
-              {pack.openQuestions && (
-                <span className="ln-mono-tag">
-                  {pack.openQuestions.questions.length}{" "}
-                  {isEn ? "open questions" : "offene Fragen"}
-                </span>
-              )}
-            </div>
-          </div>
-          <button
-            onClick={onReset}
-            className="text-[13px] text-white/60 transition hover:text-white"
-          >
-            {isEn ? "Start over" : "Neu starten"}
-          </button>
-        </div>
+  const language = useLanguage();
+  const isEn = language === "en";
+  const [showSave, setShowSave] = useState(false);
+  const [hintDismissed, setHintDismissed] = useState(false);
 
-        <div className="mt-10">
+  // Lock background scroll while the overlay is open.
+  useEffect(() => {
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, []);
+
+  // Esc closes the save modal first, then the overlay.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setShowSave((open) => {
+        if (open) return false;
+        onReset();
+        return open;
+      });
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onReset]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[120] flex flex-col"
+      style={{ background: "#0F1322" }}
+    >
+      {/* Slim app chrome — deliberately NOT the marketing SiteNav. */}
+      <header
+        className="flex items-center gap-3 border-b px-4 py-3 sm:px-6"
+        style={{ borderColor: "rgba(255,255,255,0.06)", background: "#0C0F1C" }}
+      >
+        <Image
+          src="/lernly-mark.png"
+          alt=""
+          width={24}
+          height={24}
+          aria-hidden
+          className="shrink-0"
+        />
+        <span
+          className="flex-1 truncate text-[13px] font-semibold tracking-[0.02em]"
+          style={{ color: "rgba(255,255,255,0.55)" }}
+        >
+          {isEn ? "Your study pack" : "Dein Lernpaket"}
+        </span>
+        <button
+          onClick={() => setShowSave(true)}
+          className="hidden shrink-0 items-center gap-2 rounded-xl px-4 py-2 text-[13px] font-semibold text-white transition hover:opacity-90 sm:inline-flex"
+          style={{ background: "#2B3499" }}
+        >
+          <Download size={15} strokeWidth={2} aria-hidden />
+          {isEn ? "Save (free)" : "Speichern (kostenlos)"}
+        </button>
+        <button
+          onClick={() => setShowSave(true)}
+          aria-label={isEn ? "Save pack" : "Paket speichern"}
+          className="inline-flex shrink-0 items-center justify-center rounded-xl p-2 text-white sm:hidden"
+          style={{ background: "#2B3499" }}
+        >
+          <Download size={16} strokeWidth={2} aria-hidden />
+        </button>
+        <button
+          onClick={onReset}
+          aria-label={isEn ? "Close" : "Schließen"}
+          className="inline-flex shrink-0 items-center justify-center rounded-xl p-2 text-white/60 transition hover:bg-white/5 hover:text-white"
+        >
+          <X size={18} strokeWidth={2} aria-hidden />
+        </button>
+      </header>
+
+      {/* Scrollable product surface — the real PackView. */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="mx-auto w-full max-w-[1000px] px-4 py-6 sm:px-6 sm:py-8">
+          {!hintDismissed && (
+            <div
+              className="mb-5 flex items-start gap-3 rounded-2xl border px-4 py-3"
+              style={{
+                borderColor: "rgba(43,52,153,0.45)",
+                background: "rgba(43,52,153,0.12)",
+              }}
+            >
+              <Info
+                size={16}
+                strokeWidth={2}
+                aria-hidden
+                className="mt-0.5 shrink-0"
+                style={{ color: "#9aa6ff" }}
+              />
+              <div className="min-w-0 flex-1 text-[13px] leading-relaxed text-white/80">
+                {isEn
+                  ? "This is your pack — Hub for the overview, Flashcards to flip, Exam Trainer to test yourself. Tap a mode below to start."
+                  : "Das ist dein Paket — Hub für den Überblick, Karteikarten zum Flippen, Übungsklausur zum Selbsttesten. Tipp unten auf einen Modus."}
+              </div>
+              <button
+                onClick={() => setHintDismissed(true)}
+                aria-label={isEn ? "Dismiss" : "Ausblenden"}
+                className="shrink-0 text-white/40 transition hover:text-white"
+              >
+                <X size={15} strokeWidth={2} aria-hidden />
+              </button>
+            </div>
+          )}
+
           <PackView pack={pack} language={isEn ? "en" : "de"} />
         </div>
-
-        <EmailCapture pack={pack} />
       </div>
+
+      {showSave && <SaveModal pack={pack} onClose={() => setShowSave(false)} />}
     </div>
   );
 }
 
-/* ========== EMAIL CAPTURE + DOWNLOAD ========== */
+/* ========== SAVE MODAL (signup-to-save, "sanft") ========== */
 
-function EmailCapture({ pack }: { pack: StudyPack }) {
+// Clean signup modal in the app design system (Indigo CTA, #141930 surface,
+// lucide-Lock — no emojis). Opens only on an explicit Save/Download click
+// (persistent CTA in the overlay chrome) — value first, then the gate. On
+// signup the anonymous pack is carried over to the new account via
+// /dashboard/claim (lernly:pendingPack → /api/packs/save).
+function SaveModal({ pack, onClose }: { pack: StudyPack; onClose: () => void }) {
   const language = useLanguage();
   const isEn = language === "en";
   const [authed, setAuthed] = useState<boolean | null>(null);
@@ -2145,10 +2137,11 @@ function EmailCapture({ pack }: { pack: StudyPack }) {
   useEffect(() => {
     let active = true;
     import("@/lib/supabase/browser").then(({ createClient }) => {
-      const supabase = createClient();
-      supabase.auth.getUser().then(({ data }) => {
-        if (active) setAuthed(Boolean(data.user));
-      });
+      createClient()
+        .auth.getUser()
+        .then(({ data }) => {
+          if (active) setAuthed(Boolean(data.user));
+        });
     });
     return () => {
       active = false;
@@ -2166,8 +2159,8 @@ function EmailCapture({ pack }: { pack: StudyPack }) {
     URL.revokeObjectURL(url);
   };
 
-  const handleStartSignup = () => {
-    track("signup_started", { source: "anon_result_cta" });
+  const startSignup = (source: string) => {
+    track("signup_started", { source });
     try {
       localStorage.setItem("lernly:pendingPack", JSON.stringify(pack));
     } catch {
@@ -2176,87 +2169,127 @@ function EmailCapture({ pack }: { pack: StudyPack }) {
     window.location.href = "/login?next=/dashboard/claim";
   };
 
-  if (authed === null) {
-    return <div className="ln-glass-card mt-6 p-7 md:p-9 opacity-0" aria-hidden />;
-  }
-
-  if (!authed) {
-    return (
-      <div className="ln-glass-card mt-6 p-7 md:p-9">
-        <div className="flex items-center gap-3">
-          <span className="text-[24px]">🔒</span>
-          <h3 className="text-[22px] font-semibold tracking-[-0.3px] text-white">
-            {isEn
-              ? "Save this pack — free account in 10 seconds"
-              : "Paket speichern — kostenloser Account in 10 Sekunden"}
-          </h3>
-        </div>
-        <p className="mt-2 text-[14px]" style={{ color: "var(--color-ln-mute)" }}>
-          {isEn
-            ? "Create a free account to download this pack, keep it in your dashboard, and generate more — for free."
-            : "Erstelle einen kostenlosen Account, um dieses Paket herunterzuladen, im Dashboard zu behalten und weitere zu erstellen — gratis."}
-        </p>
-        <ul
-          className="mt-4 space-y-1.5 text-[13px]"
-          style={{ color: "var(--color-ln-ink-soft)" }}
-        >
-          <li>✓ {isEn ? "Save & download as HTML" : "Speichern & als HTML herunterladen"}</li>
-          <li>✓ {isEn ? "Access from any device" : "Von jedem Gerät zugreifen"}</li>
-          <li>✓ {isEn ? "2 packs free / month" : "2 Pakete gratis / Monat"}</li>
-        </ul>
-        <div className="mt-5 flex flex-wrap gap-3">
-          <button
-            onClick={handleStartSignup}
-            className="rounded-lg bg-white px-5 py-2.5 text-[13.5px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
-          >
-            {isEn ? "Create free account →" : "Kostenlosen Account erstellen →"}
-          </button>
-          <a
-            href="/login?next=/dashboard/claim"
-            onClick={() => {
-              track("signup_started", { source: "anon_result_cta_existing" });
-              try {
-                localStorage.setItem(
-                  "lernly:pendingPack",
-                  JSON.stringify(pack),
-                );
-              } catch {}
-            }}
-            className="rounded-lg border border-white/20 bg-transparent px-5 py-2.5 text-[13.5px] font-medium text-white transition hover:bg-white/5"
-          >
-            {isEn ? "I already have an account" : "Ich hab schon einen Account"}
-          </a>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="ln-glass-card mt-6 p-7 md:p-9">
-      <div className="flex items-center gap-3">
-        <span className="text-[24px]">🎉</span>
-        <h3 className="text-[22px] font-semibold tracking-[-0.3px] text-white">
-          {isEn ? "Saved to your dashboard" : "In deinem Dashboard gespeichert"}
-        </h3>
-      </div>
-      <p className="mt-2 text-[14px]" style={{ color: "var(--color-ln-mute)" }}>
-        {isEn
-          ? "You can come back to this pack any time. Or download it for offline use right now."
-          : "Du kannst jederzeit zu diesem Paket zurück. Oder lade es direkt offline runter."}
-      </p>
-      <div className="mt-5 flex flex-wrap gap-3">
+    <div
+      role="dialog"
+      aria-modal="true"
+      className="fixed inset-0 z-[130] flex items-center justify-center px-4 py-6"
+    >
+      <button
+        aria-label={isEn ? "Close" : "Schließen"}
+        onClick={onClose}
+        className="absolute inset-0"
+        style={{ background: "rgba(0,0,0,0.65)", backdropFilter: "blur(4px)" }}
+      />
+      <div
+        className="relative w-full max-w-[440px] overflow-hidden rounded-3xl border p-7 text-white"
+        style={{
+          background: "#141930",
+          borderColor: "rgba(255,255,255,0.10)",
+          boxShadow: "0 24px 60px rgba(0,0,0,0.7)",
+        }}
+      >
         <button
-          onClick={handleDownload}
-          className="rounded-lg bg-white px-5 py-2.5 text-[13.5px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
+          onClick={onClose}
+          aria-label={isEn ? "Close" : "Schließen"}
+          className="absolute right-4 top-4 inline-flex text-white/50 transition hover:text-white"
         >
-          {isEn ? "Save offline" : "Offline speichern"}
+          <X size={18} strokeWidth={2} aria-hidden />
         </button>
-        <a
-          href="/dashboard"
-          className="rounded-lg border border-white/20 bg-transparent px-5 py-2.5 text-[13.5px] font-medium text-white transition hover:bg-white/5"
-        >
-          {isEn ? "Open dashboard" : "Dashboard öffnen"}
-        </a>
+
+        {authed === null ? (
+          <div className="py-12 text-center text-[13px] text-white/40">…</div>
+        ) : !authed ? (
+          <>
+            <div
+              className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl"
+              style={{ background: "rgba(43,52,153,0.20)", color: "#9aa6ff" }}
+            >
+              <Lock size={20} strokeWidth={2} aria-hidden />
+            </div>
+            <h3
+              className="text-[20px] font-semibold leading-tight"
+              style={{ fontFamily: "var(--font-display)", letterSpacing: "-0.4px" }}
+            >
+              {isEn
+                ? "Save your pack — free account in 10 seconds"
+                : "Speichere dein Paket — kostenloser Account in 10 Sekunden"}
+            </h3>
+            <p className="mt-2 text-[14px]" style={{ color: "var(--color-text-dim, #9098B6)" }}>
+              {isEn
+                ? "Keep this pack in your dashboard, study it from any device, and create more — free."
+                : "Behalte dieses Paket im Dashboard, lerne von jedem Gerät und erstelle weitere — gratis."}
+            </p>
+            <ul className="mt-4 space-y-2 text-[13px]" style={{ color: "rgba(255,255,255,0.7)" }}>
+              {[
+                isEn ? "Saved to your dashboard" : "Im Dashboard gespeichert",
+                isEn ? "Access from any device" : "Von jedem Gerät zugreifen",
+                isEn ? "2 packs free / month" : "2 Pakete gratis / Monat",
+              ].map((t) => (
+                <li key={t} className="flex items-center gap-2">
+                  <Check size={15} strokeWidth={2.2} aria-hidden style={{ color: "var(--color-ln-sage)" }} />
+                  {t}
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={() => startSignup("anon_result_cta")}
+              className="mt-5 flex w-full items-center justify-center rounded-xl px-5 py-3.5 text-[15px] font-semibold text-white transition hover:opacity-90"
+              style={{ background: "#2B3499" }}
+            >
+              {isEn ? "Create free account" : "Kostenlosen Account erstellen"}
+            </button>
+            <button
+              onClick={() => startSignup("anon_result_cta_existing")}
+              className="mt-2 w-full rounded-xl border px-5 py-3 text-[14px] font-medium text-white transition hover:bg-white/5"
+              style={{ borderColor: "rgba(255,255,255,0.14)" }}
+            >
+              {isEn ? "I already have an account" : "Ich hab schon einen Account"}
+            </button>
+            <button
+              onClick={handleDownload}
+              className="mt-3 flex w-full items-center justify-center gap-1.5 text-[13px] text-white/45 transition hover:text-white/80"
+            >
+              <Download size={14} strokeWidth={2} aria-hidden />
+              {isEn ? "Just download (HTML)" : "Nur herunterladen (HTML)"}
+            </button>
+          </>
+        ) : (
+          <>
+            <div
+              className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl"
+              style={{ background: "rgba(74,222,128,0.16)", color: "var(--color-ln-sage)" }}
+            >
+              <Check size={22} strokeWidth={2.4} aria-hidden />
+            </div>
+            <h3
+              className="text-[20px] font-semibold leading-tight"
+              style={{ fontFamily: "var(--font-display)", letterSpacing: "-0.4px" }}
+            >
+              {isEn ? "Saved to your dashboard" : "In deinem Dashboard gespeichert"}
+            </h3>
+            <p className="mt-2 text-[14px]" style={{ color: "var(--color-text-dim, #9098B6)" }}>
+              {isEn
+                ? "Come back any time, or download it for offline use right now."
+                : "Komm jederzeit zurück, oder lade es direkt offline herunter."}
+            </p>
+            <a
+              href="/dashboard"
+              className="mt-5 flex w-full items-center justify-center rounded-xl px-5 py-3.5 text-[15px] font-semibold text-white transition hover:opacity-90"
+              style={{ background: "#2B3499" }}
+            >
+              {isEn ? "Open dashboard" : "Dashboard öffnen"}
+            </a>
+            <button
+              onClick={handleDownload}
+              className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-xl border px-5 py-3 text-[14px] font-medium text-white transition hover:bg-white/5"
+              style={{ borderColor: "rgba(255,255,255,0.14)" }}
+            >
+              <Download size={14} strokeWidth={2} aria-hidden />
+              {isEn ? "Download (HTML)" : "Herunterladen (HTML)"}
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

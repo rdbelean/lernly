@@ -1,6 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
+import {
+  FileText,
+  Target,
+  Map as MapIcon,
+  Layers,
+  Sparkles,
+  Check,
+  Circle,
+  type LucideIcon,
+} from "lucide-react";
 
 type Language = "en" | "de";
 
@@ -18,7 +29,7 @@ type StepKey =
   | "quiz"
   | "finish";
 
-type Step = { key: StepKey; icon: string; text: string; weight: number };
+type Step = { key: StepKey; Icon: LucideIcon; text: string; weight: number };
 
 // Step weights sum to "1 normal-job unit" (~75 s). For large jobs we multiply
 // the per-step durations by LARGE_MULTIPLIER so total stretches to ~7.5 min —
@@ -26,62 +37,62 @@ type Step = { key: StepKey; icon: string; text: string; weight: number };
 // is honest ("Letzter Schliff…") for the tail of a long generation.
 const STEPS_BY_LANG: Record<Language, Step[]> = {
   de: [
-    { key: "extract", icon: "📄", text: "Material wird gelesen…", weight: 5 },
+    { key: "extract", Icon: FileText, text: "Material wird gelesen…", weight: 5 },
     {
       key: "analyze_lens",
-      icon: "🎯",
+      Icon: Target,
       text: "Altklausur wird einbezogen…",
       weight: 5,
     },
     {
       key: "overview",
-      icon: "🗺",
+      Icon: MapIcon,
       text: "Konzepte & Übersicht werden erstellt…",
       weight: 25,
     },
     {
       key: "cards",
-      icon: "🃏",
+      Icon: Layers,
       text: "Karteikarten werden gebaut…",
       weight: 25,
     },
-    { key: "quiz", icon: "🎯", text: "Quiz wird generiert…", weight: 25 },
+    { key: "quiz", Icon: Target, text: "Quiz wird generiert…", weight: 25 },
     {
       key: "finish",
-      icon: "✨",
+      Icon: Sparkles,
       text: "Letzter Schliff…",
       weight: 15,
     },
   ],
   en: [
-    { key: "extract", icon: "📄", text: "Reading your material…", weight: 5 },
+    { key: "extract", Icon: FileText, text: "Reading your material…", weight: 5 },
     {
       key: "analyze_lens",
-      icon: "🎯",
+      Icon: Target,
       text: "Applying past-exam lens…",
       weight: 5,
     },
     {
       key: "overview",
-      icon: "🗺",
+      Icon: MapIcon,
       text: "Building concepts & overview…",
       weight: 25,
     },
     {
       key: "cards",
-      icon: "🃏",
+      Icon: Layers,
       text: "Building flashcards…",
       weight: 25,
     },
     {
       key: "quiz",
-      icon: "🎯",
+      Icon: Target,
       text: "Generating the quiz…",
       weight: 25,
     },
     {
       key: "finish",
-      icon: "✨",
+      Icon: Sparkles,
       text: "Final polish…",
       weight: 15,
     },
@@ -160,15 +171,32 @@ export default function GenerationProgress({
 
   return (
     <div style={{ padding: "32px 0", textAlign: "center" }}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/lernly-logo.svg"
-        alt="Lernly"
-        width={64}
-        height={64}
-        style={{ display: "block", margin: "0 auto 24px" }}
-        className="ln-loading-logo"
-      />
+      {/* Discreet brand mark — small and calm, not a big centered pulsing logo. */}
+      <div
+        className="ln-loading-mark"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "8px",
+          marginBottom: "20px",
+          opacity: 0.85,
+        }}
+      >
+        <Image src="/lernly-mark.png" alt="" width={20} height={20} aria-hidden />
+        <span
+          style={{
+            fontSize: "12px",
+            fontWeight: 600,
+            letterSpacing: "0.04em",
+            color: "rgba(255,255,255,0.55)",
+          }}
+        >
+          {language === "de"
+            ? "Lernly baut dein Paket"
+            : "Lernly is building your pack"}
+        </span>
+      </div>
 
       <div
         style={{
@@ -229,8 +257,21 @@ export default function GenerationProgress({
                 background: isActive ? "rgba(255,255,255,0.04)" : "transparent",
               }}
             >
-              <span style={{ fontSize: "16px", width: "24px", textAlign: "center" }}>
-                {isDone ? "✅" : isActive ? step.icon : "○"}
+              <span
+                style={{
+                  width: "24px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {isDone ? (
+                  <Check size={16} strokeWidth={2.4} color="var(--color-ln-sage)" aria-hidden />
+                ) : isActive ? (
+                  <step.Icon size={16} strokeWidth={2} color="var(--color-ln-cyan)" aria-hidden />
+                ) : (
+                  <Circle size={9} strokeWidth={2} color="rgba(255,255,255,0.25)" aria-hidden />
+                )}
               </span>
 
               <span

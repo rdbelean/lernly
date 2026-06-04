@@ -13,6 +13,7 @@ import { MAX_FILE_BYTES, MAX_FILE_MB } from "@/lib/uploadConfig";
 import { parseJsonResponse } from "@/lib/safeJson";
 import { type ExamType } from "@/lib/schema";
 import { Lock } from "lucide-react";
+import { EXAM_FORMATS, ESSAY_ENABLED } from "@/lib/examFormats";
 import NewExamForm from "@/components/dashboard/NewExamForm";
 
 type GenerateApiResponse = {
@@ -39,39 +40,9 @@ const ACCEPTED_MIME = {
 // Feature flag — flip to `true` to ship the Essay format. The enum value,
 // the Essay-Blueprint code paths, and the predictions task all stay live;
 // only the picker (and a submit guard) gate it.
-const ESSAY_ENABLED = false;
-
-// Three formats live here. `oral` and `open_book` stay in the schema enum
-// so legacy packs render, but they're gone from the picker — the user can
-// only create the three that produce real, distinct practice content.
-// Order matters: MC first (and default-selected), Offene Fragen, Essay last.
-const EXAM_OPTIONS: {
-  value: ExamType;
-  title: string;
-  description: string;
-  emoji: string;
-  locked?: boolean;
-}[] = [
-  {
-    value: "multiple_choice",
-    title: "Multiple Choice",
-    description: "Kniffliges MC-Quiz, das echtes Verstehen testet",
-    emoji: "✅",
-  },
-  {
-    value: "open_questions",
-    title: "Offene Fragen",
-    description: "Offene Fragen mit Musterantworten zum Selbstabfragen",
-    emoji: "✍️",
-  },
-  {
-    value: "essay",
-    title: "Essay (Klausur)",
-    description: "Essay-Baupläne — kommt bald",
-    emoji: "📝",
-    locked: !ESSAY_ENABLED,
-  },
-];
+// Exam-format options now live in the shared single-source-of-truth config
+// (src/lib/examFormats.ts), used by BOTH this picker and the anonymous landing
+// try-widget so they never drift. `ESSAY_ENABLED` is re-exported from there.
 
 function bytes(n: number) {
   if (n < 1024) return `${n} B`;
@@ -666,7 +637,7 @@ export default function NewPackPage() {
             . Wähl dazu deinen Übungsmodus:
           </p>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-            {EXAM_OPTIONS.map((opt) => {
+            {EXAM_FORMATS.map((opt) => {
               const active = examType === opt.value && !opt.locked;
               const locked = opt.locked === true;
               return (
@@ -716,7 +687,12 @@ export default function NewPackPage() {
                         aria-hidden
                       />
                     ) : (
-                      opt.emoji
+                      <opt.Icon
+                        size={18}
+                        strokeWidth={1.9}
+                        color={active ? "var(--color-ln-cyan)" : "rgba(255,255,255,0.7)"}
+                        aria-hidden
+                      />
                     )}
                   </div>
                   <div className="mt-2 text-[14px] font-semibold text-white">
