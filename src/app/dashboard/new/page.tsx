@@ -247,12 +247,14 @@ export default function NewPackPage() {
         refs.push({ path, name: file.name, size: file.size, type: file.type });
       }
 
-      // 2) Kick off generation with a tiny JSON body (only the storage refs).
-      //    Wrap the fetch so a network-level failure (Failed to fetch) is
-      //    distinguishable from the API returning a 4xx/5xx response body.
+      // 2) START a BACKGROUND job and return immediately — no HTTP connection is
+      //    held open for the whole generation. The heavy work runs in
+      //    /api/generate/worker; we poll /api/generate/status for completion.
+      //    This is the fix for "Verbindung zum Generator-Server fehlgeschlagen"
+      //    on large decks, where the synchronous request outlived the connection.
       let res;
       try {
-        res = await fetch("/api/generate", {
+        res = await fetch("/api/generate/start", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -263,12 +265,12 @@ export default function NewPackPage() {
           }),
         });
       } catch (fetchEx) {
-        console.error("[/api/generate] network failure", fetchEx);
-        throw new Error(
-          "Verbindung zum Generator-Server fehlgeschlagen — bitte erneut versuchen.",
-        );
+        console.error("[/api/generate/start] network failure", fetchEx);
+        throw new Error("Verbindung fehlgeschlagen — bitte erneut versuchen.");
       }
-      const json = await parseJsonResponse<GenerateApiResponse>(res);
+      const json = await parseJsonResponse<
+        GenerateApiResponse & { packId?: string }
+      >(res);
       if (!res.ok) {
         if (json.reason === "quota_exceeded" && typeof json.limit === "number") {
           track("generation_quota_hit", {
@@ -286,36 +288,51 @@ export default function NewPackPage() {
         }
         throw new Error(json.error ?? `HTTP ${res.status}`);
       }
-      track("auth_generate_completed", {
-        duration_ms: Date.now() - t0,
-        cards: json.pack?.flashcards?.length,
-        quiz: json.pack?.simulator?.questions?.length,
-        exam_type: examType,
-        file_count: files.length,
-      });
-      // Unified funnel step shared with the anon path → one "Paket fertig"
-      // event to break down by $device_type.
-      track("pack_generated", {
-        anonymous: false,
-        cards: json.pack?.flashcards?.length ?? 0,
-        has_quiz: Boolean(json.pack?.simulator?.questions?.length),
-        exam_type: examType,
-      });
-      setCompleted(true);
-      if (json.saved && json.id) {
-        // Surface the truncation warning before the redirect — Sonner toast
-        // is rendered by DashboardShell, so the message survives the navigation.
-        if (json.warning) {
-          const { toast } = await import("sonner");
-          toast.warning(json.warning, { duration: 8000 });
+      const packId = json.packId;
+      if (!packId) throw new Error("Konnte die Generierung nicht starten.");
+
+      // 3) Poll status until ready/failed — short, cheap requests; nothing is
+      //    held open, so mobile/proxy idle-timeouts can't kill the generation.
+      const POLL_MS = 3000;
+      const POLL_DEADLINE = Date.now() + 18 * 60 * 1000; // hand off after 18 min
+      const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+      while (Date.now() < POLL_DEADLINE) {
+        await sleep(POLL_MS);
+        let st: { status?: string; error?: string | null } = {};
+        try {
+          const sres = await fetch(`/api/generate/status?id=${packId}`);
+          st = await parseJsonResponse(sres);
+        } catch {
+          continue; // transient blip — retry on the next tick
         }
-        // small delay so the user sees completion tick
-        setTimeout(() => router.push(`/dashboard/pack/${json.id}`), 500);
-      } else {
-        throw new Error(
-          "Pack wurde generiert, konnte aber nicht gespeichert werden.",
+        if (st.status === "ready") {
+          track("auth_generate_completed", {
+            duration_ms: Date.now() - t0,
+            exam_type: examType,
+            file_count: files.length,
+          });
+          track("pack_generated", { anonymous: false, exam_type: examType });
+          setCompleted(true);
+          setTimeout(() => router.push(`/dashboard/pack/${packId}`), 500);
+          return;
+        }
+        if (st.status === "failed") {
+          throw new Error(
+            st.error ?? "Generierung fehlgeschlagen — bitte erneut versuchen.",
+          );
+        }
+      }
+      // Still running after the ceiling — let it finish in the background and
+      // send the user to the library where it appears the moment it's ready.
+      {
+        const { toast } = await import("sonner");
+        toast.message(
+          "Dein Paket wird noch erstellt — es erscheint gleich in deiner Bibliothek.",
+          { duration: 8000 },
         );
       }
+      router.push("/dashboard");
+      return;
     } catch (e) {
       setError(e instanceof Error ? e.message : "Unbekannter Fehler");
       setBusy(false);
