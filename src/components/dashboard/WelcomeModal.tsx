@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
-import Image from "next/image";
+import LernlyLogo from "@/components/LernlyLogo";
 import { useRouter } from "next/navigation";
 import { saveWelcome } from "@/app/dashboard/actions";
 import { PROVIDER } from "@/lib/legal/provider";
@@ -142,14 +142,7 @@ export default function WelcomeModal({
         }}
       >
         <div className="relative">
-          <Image
-            src="/lernly-mark.png"
-            alt="Lernly"
-            width={40}
-            height={40}
-            priority
-            className="mb-5"
-          />
+          <LernlyLogo size={40} alt="Lernly" className="mb-5" />
 
           {!isExam ? (
             <>

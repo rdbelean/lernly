@@ -23,7 +23,7 @@ import SectionHeading from "@/components/landing/SectionHeading";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import { track } from "@/lib/analytics";
 import { EXAM_FORMATS } from "@/lib/examFormats";
-import Image from "next/image";
+import LernlyLogo from "@/components/LernlyLogo";
 import {
   Upload,
   FileText,
@@ -1764,13 +1764,7 @@ function ToolStackSection() {
           }}
         >
           <div className="flex items-start gap-3.5">
-            <span
-              aria-hidden
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl"
-              style={{ background: "rgba(110,128,242,0.16)" }}
-            >
-              <Sparkles size={22} strokeWidth={1.8} color={indigo} />
-            </span>
+            <LernlyLogo variant="icon" size={44} alt="" className="shrink-0" />
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
                 <h3
@@ -2315,14 +2309,7 @@ function ResultSection({ pack, onReset }: { pack: StudyPack; onReset: () => void
         className="flex items-center gap-3 border-b px-4 py-3 sm:px-6"
         style={{ borderColor: "rgba(255,255,255,0.06)", background: "#0C0F1C" }}
       >
-        <Image
-          src="/lernly-mark.png"
-          alt=""
-          width={24}
-          height={24}
-          aria-hidden
-          className="shrink-0"
-        />
+        <LernlyLogo size={24} alt="" className="shrink-0" />
         <span
           className="flex-1 truncate text-[13px] font-semibold tracking-[0.02em]"
           style={{ color: "rgba(255,255,255,0.55)" }}

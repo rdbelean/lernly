@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import LernlyLogo from "@/components/LernlyLogo";
 import { usePathname } from "next/navigation";
 import { Toaster } from "sonner";
 import {
@@ -152,14 +152,7 @@ function SidebarContent({
           lineHeight: 1,
         }}
       >
-        <Image
-          src="/lernly-mark.png"
-          alt="Lernly"
-          width={52}
-          height={52}
-          priority
-          className="shrink-0"
-        />
+        <LernlyLogo size={52} alt="" className="shrink-0" />
         <span>Lernly</span>
       </a>
 
@@ -349,14 +342,7 @@ export default function DashboardShell({
               color: "var(--color-text)",
             }}
           >
-            <Image
-              src="/lernly-mark.png"
-              alt="Lernly"
-              width={22}
-              height={22}
-              priority
-              className="shrink-0"
-            />
+            <LernlyLogo size={22} alt="" className="shrink-0" />
             <span>Lernly</span>
           </a>
           <ChevronRight

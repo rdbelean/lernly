@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/dal";
 import LoginForm from "./login-form";
+import LernlyLogo from "@/components/LernlyLogo";
 
 type SearchParams = Promise<{
   error?: string;
@@ -50,13 +51,7 @@ export default async function LoginPage({
             letterSpacing: "-0.6px",
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/lernly-symbol-transparent.svg"
-            alt="Lernly"
-            width={36}
-            height={36}
-          />
+          <LernlyLogo size={36} alt="" />
           <span>Lernly</span>
         </Link>
 

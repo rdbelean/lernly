@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import LernlyLogo from "@/components/LernlyLogo";
 import {
   X,
   Zap,
@@ -211,7 +211,7 @@ export function PwaInstall({ autoShow = true }: { autoShow?: boolean }) {
             className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
             style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
           >
-            <Image src="/lernly-mark.png" alt="" width={32} height={32} aria-hidden />
+            <LernlyLogo size={32} alt="" />
           </div>
           <div className="min-w-0">
             <h3

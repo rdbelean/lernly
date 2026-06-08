@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
+import LernlyLogo from "@/components/LernlyLogo";
 import {
   FileText,
   Target,
@@ -183,7 +183,7 @@ export default function GenerationProgress({
           opacity: 0.85,
         }}
       >
-        <Image src="/lernly-mark.png" alt="" width={20} height={20} aria-hidden />
+        <LernlyLogo size={20} alt="" />
         <span
           style={{
             fontSize: "12px",

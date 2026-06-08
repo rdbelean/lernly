@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/browser";
+import LernlyLogo from "@/components/LernlyLogo";
 
 type Language = "en" | "de";
 
@@ -162,13 +163,7 @@ export default function SiteNav({
             lineHeight: 1,
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/lernly-symbol-transparent.svg"
-            alt="Lernly logo"
-            width={44}
-            height={44}
-          />
+          <LernlyLogo size={44} alt="" />
           <span>Lernly</span>
         </a>
 

@@ -1,3 +1,5 @@
+import LernlyLogo from "@/components/LernlyLogo";
+
 type Language = "en" | "de";
 
 const FOOTER_COPY: Record<
@@ -39,8 +41,7 @@ export default function SiteFooter({ language = "de" }: { language?: Language })
             lineHeight: 1,
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/lernly-symbol-transparent.svg" alt="Lernly logo" width={30} height={30} />
+          <LernlyLogo size={30} alt="" />
           <span>Lernly</span>
         </div>
         <div
