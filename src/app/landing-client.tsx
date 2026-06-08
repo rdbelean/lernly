@@ -35,6 +35,12 @@ import {
   Lock,
   Download,
   Info,
+  Layers,
+  MessageCircle,
+  ListChecks,
+  BookOpen,
+  Target,
+  ChevronDown,
 } from "lucide-react";
 
 type Language = "en" | "de";
@@ -384,6 +390,7 @@ export default function Home() {
           <BentoFeatures />
           <ComparisonSection />
           {pack && <ResultSection pack={pack} onReset={clearPack} />}
+          <ToolStackSection />
           <PricingSection onActivateUpload={activateUpload} />
           <FAQSection />
           <BottomCta />
@@ -1603,6 +1610,214 @@ function ComparisonSection() {
             {isEn
               ? "Lernly gives you what's on the exam."
               : "Lernly gibt dir das, was drankommt."}
+          </span>
+        </p>
+
+        {/* CTA */}
+        <div className="ln-reveal mt-7 flex justify-center">
+          <a
+            href="#upload"
+            className="rounded-full bg-white px-6 py-3 text-[14px] font-semibold text-[#0F1535] transition hover:bg-white/90"
+          >
+            {isEn ? "Try it free →" : "Jetzt gratis testen →"}
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =========================================================================
+// ToolStackSection — value-stack right before pricing. Four muted "tool"
+// cards (the apps a student otherwise juggles, each doing one thing) collapse
+// into one highlighted Lernly card that bundles all of it + the exclusive
+// Altklausur-Relevanz topper. Category labels only (no brand names), no hype
+// numbers — DACH-credible value stacking.
+// =========================================================================
+function ToolStackSection() {
+  const isEn = useLanguage() === "en";
+  const indigo = "var(--color-primary-bright)";
+  const teal = "rgb(91, 184, 216)";
+
+  const tools = [
+    {
+      icon: Layers,
+      name: isEn ? "The flashcard app" : "Die Karteikarten-App",
+      fn: isEn ? "Build & review cards" : "Karten bauen & wiederholen",
+    },
+    {
+      icon: MessageCircle,
+      name: isEn ? "The AI tool" : "Das KI-Tool",
+      fn: isEn ? "Explains what you don't get" : "Erklärt, was du nicht checkst",
+    },
+    {
+      icon: ListChecks,
+      name: isEn ? "The quiz app" : "Die Quiz-App",
+      fn: isEn ? "Quizzes you" : "Fragt dich ab",
+    },
+    {
+      icon: BookOpen,
+      name: isEn ? "The summary tool" : "Das Zusammenfassungs-Tool",
+      fn: isEn ? "Overview of the topic" : "Überblick übers Thema",
+    },
+  ];
+
+  return (
+    <section className="px-6 py-20 md:py-28">
+      <div className="mx-auto max-w-[1200px]">
+        <SectionHeading
+          eyebrow={isEn ? "One tool instead of five" : "Ein Tool statt fünf"}
+          boldPart={isEn ? "Five tools for one exam." : "Fünf Tools für eine Klausur."}
+          italicPart={isEn ? "Or one." : "Oder eins."}
+        />
+
+        <p
+          className="ln-reveal mx-auto mt-6 max-w-[680px] text-center leading-[1.45]"
+          style={{
+            fontSize: "clamp(16px, 1.9vw, 19px)",
+            color: "rgba(255,255,255,0.72)",
+          }}
+        >
+          {isEn
+            ? "Four apps, each for one thing. Lernly does it all — from your own material."
+            : "Vier Apps, jede für eine Sache. Lernly macht alles — aus deinem eigenen Material."}
+        </p>
+
+        {/* The stack you'd otherwise juggle — muted, "cross it off" */}
+        <div className="ln-reveal mx-auto mt-12 grid max-w-[1000px] grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
+          {tools.map((t) => {
+            const Icon = t.icon;
+            return (
+              <div
+                key={t.name}
+                className="flex flex-col gap-3 p-4 sm:p-5"
+                style={{
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  borderRadius: "16px",
+                  opacity: 0.9,
+                }}
+              >
+                <span
+                  aria-hidden
+                  className="flex h-9 w-9 items-center justify-center rounded-lg"
+                  style={{ background: "rgba(255,255,255,0.06)" }}
+                >
+                  <Icon size={18} strokeWidth={1.9} color="rgba(255,255,255,0.45)" />
+                </span>
+                <div>
+                  <div
+                    className="text-[13.5px] font-semibold leading-snug"
+                    style={{
+                      color: "var(--color-ln-mute)",
+                      textDecoration: "line-through",
+                      textDecorationColor: "rgba(255,255,255,0.25)",
+                    }}
+                  >
+                    {t.name}
+                  </div>
+                  <div
+                    className="mt-1 text-[12.5px] leading-snug"
+                    style={{ color: "rgba(255,255,255,0.45)" }}
+                  >
+                    {t.fn}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Everything flows into one */}
+        <div className="ln-reveal mt-5 flex justify-center" aria-hidden>
+          <ChevronDown size={22} strokeWidth={1.9} color="rgba(255,255,255,0.3)" />
+        </div>
+
+        {/* The one that bundles it all — highlighted indigo */}
+        <div
+          className="ln-reveal mx-auto mt-5 max-w-[1000px] p-6 md:p-8"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(110,128,242,0.10), transparent 55%), #141930",
+            border: "1px solid rgba(110,128,242,0.35)",
+            borderRadius: "20px",
+            boxShadow: "0 0 40px rgba(110,128,242,0.12)",
+          }}
+        >
+          <div className="flex items-start gap-3.5">
+            <span
+              aria-hidden
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl"
+              style={{ background: "rgba(110,128,242,0.16)" }}
+            >
+              <Sparkles size={22} strokeWidth={1.8} color={indigo} />
+            </span>
+            <div className="min-w-0">
+              <h3
+                className="text-[19px] font-bold leading-tight sm:text-[22px]"
+                style={{ color: "#ffffff", fontFamily: "var(--font-display)" }}
+              >
+                {isEn
+                  ? "All in one. From your material."
+                  : "Alles in einem. Aus deinem Material."}
+              </h3>
+              <p
+                className="mt-2 text-[14px] leading-relaxed sm:text-[15px]"
+                style={{ color: "var(--color-ln-ink-soft)" }}
+              >
+                {isEn
+                  ? "Upload your slides — flashcards, quiz, explanations and overview come back ready, plus what's actually on your exam."
+                  : "Du lädst deine Folien hoch — Karteikarten, Quiz, Erklärungen und Überblick kommen fertig zurück, plus das, was in deiner Klausur drankommt."}
+              </p>
+            </div>
+          </div>
+
+          {/* Topper — exclusive Altklausur-Relevanz (teal, ties to the section above) */}
+          <div
+            className="mt-5 flex items-start gap-3 rounded-2xl p-4"
+            style={{
+              background: "rgba(91,184,216,0.08)",
+              border: "1px solid rgba(91,184,216,0.28)",
+            }}
+          >
+            <span
+              aria-hidden
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
+              style={{ background: "rgba(91,184,216,0.14)" }}
+            >
+              <Target size={18} strokeWidth={1.9} color={teal} />
+            </span>
+            <div className="min-w-0">
+              <span
+                className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.06em]"
+                style={{ background: "rgba(91,184,216,0.14)", color: teal }}
+              >
+                {isEn ? "Only in Lernly" : "Nur in Lernly"}
+              </span>
+              <p
+                className="mt-1.5 text-[13.5px] leading-snug sm:text-[14px]"
+                style={{ color: "rgba(255,255,255,0.85)" }}
+              >
+                {isEn
+                  ? "Learns from your past exam what gets tested — and asks in your real exam's style."
+                  : "Lernt aus deiner Altklausur, was drankommt — und fragt im Stil deiner echten Prüfung."}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Honest closing line — the stack's real cost vs. all-in-one */}
+        <p
+          className="ln-reveal mx-auto mt-10 max-w-[720px] text-center text-[15px] leading-relaxed sm:text-[16px]"
+          style={{ color: "rgba(255,255,255,0.6)" }}
+        >
+          {isEn
+            ? "An AI subscription runs ~€20/month, plus a learning or quiz tool. You still build the flashcards yourself. "
+            : "Ein KI-Abo kostet grob ~20 €/Monat, dazu noch ein Lern- oder Quiz-Tool. Karteikarten baust du dir trotzdem selbst. "}
+          <span style={{ color: "#ffffff", fontWeight: 600 }}>
+            {isEn
+              ? "With Lernly it's all included — starting free."
+              : "Bei Lernly ist alles drin — ab gratis."}
           </span>
         </p>
 
