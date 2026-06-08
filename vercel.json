@@ -1,6 +1,7 @@
 {
   "crons": [
     { "path": "/api/cram/worker", "schedule": "* * * * *" },
+    { "path": "/api/generate/worker", "schedule": "* * * * *" },
     { "path": "/api/cron/exam-reminders", "schedule": "0 9 * * *" }
   ]
 }
