@@ -39,6 +39,7 @@ merging to main · destructive DB changes · adding new dependencies/libraries �
 ### Language
 - User-facing **content** follows the uploaded material's language (English material → English flashcards/quiz/overview/cards). Detect deterministically; apply to every content task.
 - **App chrome** (tab labels, buttons, badges, countdowns) stays **German**.
+- **Markt-Fokus: DACH / Deutsch zuerst.** Marketing + Landing + UI sind Deutsch; die englische Landing-/UI-Variante ist aktuell **nicht priorisiert** — DE ist die Source of Truth, keine Zeit auf EN-Landing-Parität verschwenden (bestehende `isEn`-Strings dürfen „dormant" im Code bleiben). **Generierter Content** bleibt aber mehrsprachig (EN-Material → EN-Karten/Quiz/Übersicht).
 - Code + comments: **English**.
 - **Never fabricate legal text** — placeholders for lawyer review only.
 
