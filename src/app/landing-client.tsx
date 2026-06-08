@@ -1628,37 +1628,45 @@ function ComparisonSection() {
 }
 
 // =========================================================================
-// ToolStackSection — value-stack right before pricing. Four muted "tool"
-// cards (the apps a student otherwise juggles, each doing one thing) collapse
-// into one highlighted Lernly card that bundles all of it + the exclusive
-// Altklausur-Relevanz topper. Category labels only (no brand names), no hype
-// numbers — DACH-credible value stacking.
+// ToolStackSection — value-stack right before pricing. The four real tools a
+// student otherwise juggles (by name + function + real cost, muted) collapse
+// into one highlighted Lernly card that bundles all of it "ab gratis" + the
+// exclusive Altklausur-Relevanz topper. Brand names as plain text only (no
+// logos), factual prices, no bashing — DACH-credible, legally conservative.
 // =========================================================================
 function ToolStackSection() {
   const isEn = useLanguage() === "en";
   const indigo = "var(--color-primary-bright)";
   const teal = "rgb(91, 184, 216)";
 
+  // Brand names are plain text (no logos). Costs are factual — some are time/
+  // effort rather than €. No strikethrough, no bashing.
   const tools = [
     {
       icon: Layers,
-      name: isEn ? "The flashcard app" : "Die Karteikarten-App",
-      fn: isEn ? "Build & review cards" : "Karten bauen & wiederholen",
+      name: "Anki",
+      fn: isEn
+        ? "Flashcards + spaced repetition"
+        : "Karteikarten + Spaced Repetition",
+      cost: isEn ? "Free — every card by hand" : "Gratis — jede Karte selbst",
     },
     {
       icon: MessageCircle,
-      name: isEn ? "The AI tool" : "Das KI-Tool",
-      fn: isEn ? "Explains what you don't get" : "Erklärt, was du nicht checkst",
+      name: "ChatGPT / Claude",
+      fn: isEn ? "Explains what you don't get" : "Erklärt, was du nicht verstehst",
+      cost: isEn ? "~€20/month" : "~20 €/Monat",
     },
     {
       icon: ListChecks,
-      name: isEn ? "The quiz app" : "Die Quiz-App",
-      fn: isEn ? "Quizzes you" : "Fragt dich ab",
+      name: "Quizlet",
+      fn: isEn ? "Quiz yourself" : "Sich abfragen (Quiz)",
+      cost: isEn ? "Paid plan" : "Kostenpflichtiger Plan",
     },
     {
       icon: BookOpen,
-      name: isEn ? "The summary tool" : "Das Zusammenfassungs-Tool",
-      fn: isEn ? "Overview of the topic" : "Überblick übers Thema",
+      name: "Notion & Co.",
+      fn: isEn ? "Summaries · notes" : "Zusammenfassung / Notizen",
+      cost: isEn ? "You type it all yourself" : "Du tippst alles selbst",
     },
   ];
 
@@ -1666,8 +1674,8 @@ function ToolStackSection() {
     <section className="px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[1200px]">
         <SectionHeading
-          eyebrow={isEn ? "One tool instead of five" : "Ein Tool statt fünf"}
-          boldPart={isEn ? "Five tools for one exam." : "Fünf Tools für eine Klausur."}
+          eyebrow={isEn ? "One tool instead of four" : "Ein Tool statt vier"}
+          boldPart={isEn ? "Four tools for one exam." : "Vier Tools für eine Klausur."}
           italicPart={isEn ? "Or one." : "Oder eins."}
         />
 
@@ -1679,49 +1687,60 @@ function ToolStackSection() {
           }}
         >
           {isEn
-            ? "Four apps, each for one thing. Lernly does it all — from your own material."
-            : "Vier Apps, jede für eine Sache. Lernly macht alles — aus deinem eigenen Material."}
+            ? "Four apps, each for one thing. Lernly does it all — from your material."
+            : "Vier Apps, jede für eine Sache. Lernly macht alles — aus deinem Material."}
         </p>
 
-        {/* The stack you'd otherwise juggle — muted, "cross it off" */}
+        {/* The real stack you'd otherwise juggle — name + function + cost, muted */}
         <div className="ln-reveal mx-auto mt-12 grid max-w-[1000px] grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
           {tools.map((t) => {
             const Icon = t.icon;
             return (
               <div
                 key={t.name}
-                className="flex flex-col gap-3 p-4 sm:p-5"
+                className="flex flex-col p-4 sm:p-5"
                 style={{
                   background: "rgba(255,255,255,0.03)",
                   border: "1px solid rgba(255,255,255,0.06)",
                   borderRadius: "16px",
-                  opacity: 0.9,
+                  opacity: 0.92,
                 }}
               >
-                <span
-                  aria-hidden
-                  className="flex h-9 w-9 items-center justify-center rounded-lg"
-                  style={{ background: "rgba(255,255,255,0.06)" }}
-                >
-                  <Icon size={18} strokeWidth={1.9} color="rgba(255,255,255,0.45)" />
-                </span>
-                <div>
-                  <div
-                    className="text-[13.5px] font-semibold leading-snug"
+                <div className="flex items-center gap-2.5">
+                  <span
+                    aria-hidden
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
+                    style={{ background: "rgba(255,255,255,0.06)" }}
+                  >
+                    <Icon size={16} strokeWidth={1.9} color="rgba(255,255,255,0.5)" />
+                  </span>
+                  <span
+                    className="min-w-0 text-[15px] font-semibold leading-tight"
                     style={{
-                      color: "var(--color-ln-mute)",
-                      textDecoration: "line-through",
-                      textDecorationColor: "rgba(255,255,255,0.25)",
+                      color: "rgba(255,255,255,0.92)",
+                      fontFamily: "var(--font-display)",
                     }}
                   >
                     {t.name}
-                  </div>
-                  <div
-                    className="mt-1 text-[12.5px] leading-snug"
-                    style={{ color: "rgba(255,255,255,0.45)" }}
+                  </span>
+                </div>
+                <div
+                  className="mt-2.5 text-[12.5px] leading-snug"
+                  style={{ color: "rgba(255,255,255,0.5)" }}
+                >
+                  {t.fn}
+                </div>
+                <div className="mt-auto pt-3">
+                  <span
+                    className="inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium"
+                    style={{
+                      background: "rgba(255,255,255,0.05)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      color: "rgba(255,255,255,0.6)",
+                    }}
                   >
-                    {t.fn}
-                  </div>
+                    {t.cost}
+                  </span>
                 </div>
               </div>
             );
@@ -1752,15 +1771,23 @@ function ToolStackSection() {
             >
               <Sparkles size={22} strokeWidth={1.8} color={indigo} />
             </span>
-            <div className="min-w-0">
-              <h3
-                className="text-[19px] font-bold leading-tight sm:text-[22px]"
-                style={{ color: "#ffffff", fontFamily: "var(--font-display)" }}
-              >
-                {isEn
-                  ? "All in one. From your material."
-                  : "Alles in einem. Aus deinem Material."}
-              </h3>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                <h3
+                  className="text-[19px] font-bold leading-tight sm:text-[22px]"
+                  style={{ color: "#ffffff", fontFamily: "var(--font-display)" }}
+                >
+                  {isEn
+                    ? "All in one. From your material."
+                    : "Alles in einem. Aus deinem Material."}
+                </h3>
+                <span
+                  className="inline-flex items-center rounded-full px-2.5 py-1 text-[12px] font-semibold"
+                  style={{ background: "rgba(110,128,242,0.16)", color: indigo }}
+                >
+                  {isEn ? "from free" : "ab gratis"}
+                </span>
+              </div>
               <p
                 className="mt-2 text-[14px] leading-relaxed sm:text-[15px]"
                 style={{ color: "var(--color-ln-ink-soft)" }}
@@ -1806,20 +1833,32 @@ function ToolStackSection() {
           </div>
         </div>
 
-        {/* Honest closing line — the stack's real cost vs. all-in-one */}
-        <p
-          className="ln-reveal mx-auto mt-10 max-w-[720px] text-center text-[15px] leading-relaxed sm:text-[16px]"
-          style={{ color: "rgba(255,255,255,0.6)" }}
-        >
-          {isEn
-            ? "An AI subscription runs ~€20/month, plus a learning or quiz tool. You still build the flashcards yourself. "
-            : "Ein KI-Abo kostet grob ~20 €/Monat, dazu noch ein Lern- oder Quiz-Tool. Karteikarten baust du dir trotzdem selbst. "}
-          <span style={{ color: "#ffffff", fontWeight: 600 }}>
+        {/* Honest closing — the stack's real cost vs. all-in-one (punchline prominent) */}
+        <div className="ln-reveal mx-auto mt-10 max-w-[760px] text-center">
+          <p
+            className="leading-relaxed"
+            style={{
+              fontSize: "clamp(15px, 1.7vw, 16px)",
+              color: "rgba(255,255,255,0.62)",
+            }}
+          >
             {isEn
-              ? "With Lernly it's all included — starting free."
+              ? "An AI subscription ~€20/month, plus quiz and study tools — and you still build the flashcards yourself."
+              : "Ein KI-Abo ~20 €/Monat, dazu Quiz- und Lern-Tools — Karteikarten baust du trotzdem selbst."}
+          </p>
+          <p
+            className="mt-2.5 font-semibold leading-snug"
+            style={{
+              fontSize: "clamp(18px, 2.4vw, 22px)",
+              color: "#ffffff",
+              fontFamily: "var(--font-display)",
+            }}
+          >
+            {isEn
+              ? "With Lernly it's all included — from free."
               : "Bei Lernly ist alles drin — ab gratis."}
-          </span>
-        </p>
+          </p>
+        </div>
 
         {/* CTA */}
         <div className="ln-reveal mt-7 flex justify-center">
