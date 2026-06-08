@@ -1,6 +1,6 @@
 # Lernly — Claude Code Project Guide
 
-Pre-revenue MVP **with live users**. Read this every session and follow the Working Rules. Web app: Next.js (App Router) + Tailwind, Supabase (auth / DB / storage), Vercel (hosting + cron), Resend (email), Anthropic API (generation). System prompts in `src/lib/prompts.ts`, schemas in `src/lib/schema.ts`.
+Pre-revenue MVP **with live users**. Read this every session and follow the Working Rules. Web app: Next.js (App Router) + Tailwind, Supabase (auth / DB / storage), Vercel (hosting + cron), Resend (email), **Stripe (Billing, live)**, PostHog (Analytics) + Sentry (Errors), Anthropic API (generation). System prompts in `src/lib/prompts.ts`, schemas in `src/lib/schema.ts`.
 
 ---
 
@@ -52,27 +52,35 @@ merging to main · destructive DB changes · adding new dependencies/libraries �
 - **Color = meaning**, applied identically everywhere (priority / relevance / highlight / callout). Never a per-element rainbow; default to neutral surfaces.
 - Radius 12–16px, calm spacing.
 
-`» Bestätigen: Dieses Design-System gilt für die App (Dashboard, Pack-Views, Settings). Die Marketing-Landingpage (lernly-app.de Startseite) nutzte zuletzt das alte Indigo-Gradient/Glassmorphism-Design — entscheiden, ob die angeglichen wird oder bewusst anders bleibt.`
+**Landing (lernly-app.de Startseite):** nutzt bewusst ein eigenes **Glassmorphism-Design** (`.ln-glass-card`, Indigo-Gradient, Cyan/Teal-Akzent `rgb(91,184,216)`) — abweichend vom flachen App-Dashboard oben, aber mit denselben Fonts + Indigo-CTA. Alle Sektionen leben inline in `src/app/landing-client.tsx` (Reihenfolge: Hero → DemoPacks → HowItWorks → Showcase → BentoFeatures → ComparisonSection [Altklausur] → **ToolStackSection** [Value-Stack „Ein Tool statt fünf"] → Pricing → FAQ → BottomCta); Section-Heading über `src/components/landing/SectionHeading.tsx`. Bewusst (noch) nicht ans App-Design angeglichen.
 
 ---
 
 ## 📦 What Lernly is
-AI study-pack generator: student uploads course material (PDFs/slides), gets an interactive study pack in <2 min. Components: interactive **Karteikarten** (flip, 3-stage rating, shuffle, filter), **Übungsklausur** (scenario MC with per-option explanations + scoring), **Visual Map** (the big-picture overview), **Übersicht** (concepts ranked by exam relevance), **Essay-Blueprint** (locked / "bald verfügbar"). Plus a scoped **KI-Hilfe** tutor and **Klausur-Erinnerungen**.
+AI study-pack generator: student uploads course material (PDFs/slides), gets an interactive study pack in <2 min. Components: interactive **Karteikarten** (flip, 3-stage rating, shuffle, filter) mit **Spaced-Repetition-Loop** (SM-2-lite: Fällig-Queue über alle Pakete unter `/dashboard/review`, Mastery-% pro Paket, Streak), **Übungsklausur** (scenario MC with per-option explanations + scoring), **Offene Fragen**, **Visual Map** (the big-picture overview), **Übersicht** (concepts ranked by exam relevance), **Aufsatz-Plan** + **Essay-Blueprint** (beide an das noch gesperrte Essay-Format gekoppelt, `ESSAY_ENABLED=false` / "bald verfügbar"). Plus a scoped **KI-Hilfe** tutor, **Klausur-Erinnerungen** und **Cram** ("Alles reinwerfen": Bulk-Upload → Hintergrund-Jobs → mehrere Pakete).
 
 ## 👤 Persona & the 7 pain points
 **"Der überforderte Student"** — 19–27, DACH + Austauschstudenten, prokrastiniert bis kurz vor der Prüfung, oft ADHS, visueller Lerner, mobile-first, Budget 5–15€/mo, hat ChatGPT probiert (Textwände, nutzlos).
 1. Weiß nicht, wo anfangen (größter Pain). 2. Lernt passiv, nichts bleibt hängen. 3. ChatGPT = Textwand. 4. Karteikarten schreiben dauert ewig. 5. Weiß nicht, was prüfungsrelevant ist. 6. Weiß nicht, wie Essay strukturieren. 7. Austauschstudent — alles doppelt schwer.
 
 ## ✅ Current state (Stand: diese Session — bei Bedarf aktualisieren)
-Gebaut & live: Dashboard + Bibliothek, Supabase Auth, **Klausuren-Entity** (exams) mit Datum/Countdown, **Exam-Relevance-Lens** (Altklausur-Upload → Profil → Gewichtung; verifiziert echt-aber-Tiefe via Step-3-Fixes), **MC-Quiz** mit guten Distraktoren, **KI-Hilfe-Tutor** (Haiku, `tutor_usage`-Limits), **Klausur-Erinnerungen** (Resend + Vercel-Cron), **Settings** (BYOK, Abrechnung, Konto löschen/Export), **Rechtsseiten** (Impressum/Datenschutz/AGB/Widerruf — Texte vom Anwalt zu finalisieren), **Storage-Upload** (direkt zu Supabase, 50 MB), **Hintergrund-Job-Generierung**, neues Design-System, Format-Picker (MC / Offene Fragen / Essay gesperrt).
+Gebaut & live: Dashboard + Bibliothek (nach Klausuren gruppiert, `last_opened_at`/„Weiterlernen"), Supabase Auth (Magic-Link), **Klausuren-Entity** (exams) mit Datum/Countdown, **Exam-Relevance-Lens** (Altklausur-Upload → `exam_references` + `exam_profile` JSONB → Gewichtung/`relevanceTag`; Fidelity strict/likely/broad), **MC-Quiz** (gute Distraktoren + Re-Practice) und **Offene Fragen**, **Visual Map** + **Übersicht**, **Spaced Repetition** (SM-2-lite: `card_reviews`, Fällig-Queue `/dashboard/review`, Mastery-%, Streak — neu 2026-06-08), **KI-Hilfe-Tutor** (Haiku, `tutor_usage`-Limits), **Cram / Bulk-Upload** (`cram_jobs` → `/api/cram/worker` Hintergrund-Generierung; `generation_slots` als globaler Anthropic-Concurrency-Gate), **Klausur-Erinnerungen** (Resend + Vercel-Cron, 7/3/1-Tage-Fenster), **Stripe vollständig verdrahtet** (Checkout + Webhook + Customer-Portal; `check_pack_quota()`), **Onboarding-Walkthrough** (`has_seen_welcome`) + Activation-Funnel-Analytics (PostHog) + **anonymer Trial** (Landing ohne Login, Turnstile + IP-Quota), **Admin-/Ops-Dashboard** (`/admin`, Founder-only), **Settings** (Abrechnung/Portal, BYOK pausiert, Reminder-Toggle, Konto löschen/Export), **Rechtsseiten** (Impressum/Datenschutz/AGB/Widerruf — Texte vom Anwalt zu finalisieren), **Storage-Upload** (Supabase, 50 MB), neues App-Design-System, Format-Picker (MC / Offene Fragen / Essay gesperrt via `ESSAY_ENABLED`), **Value-Stack-Section** auf der Landing.
 `» Veraltet aus alter CLAUDE.md entfernt: "alles in page.tsx 2000 Zeilen", "Supabase nicht verdrahtet", "Auth/Dashboard fehlt" — stimmt nicht mehr.`
 
 ## 💶 Pricing
-`» Bestätigen / aktuell halten:` in der App zuletzt sichtbar: Gratis · **Cram (Alles reinwerfen) €6,99** · **Pro €14,99/mo** · **Team €24,99/mo**. BYOK (eigener Anthropic-Key) als Rabatt-/Unlimited-Modifier, kein eigener Tier. (Die alten Zahlen Pro 6,99/Team 14,99 in der vorherigen CLAUDE.md waren veraltet.)
+Aktuell live (**Pricing v3**, Stand 2026-06, Quelle: `PRICING_TIERS_DE` in `landing-client.tsx` + `check_pack_quota()`):
+- **Gratis** €0 — 2 Pakete/Monat, volle Qualität (nichts gesperrt).
+- **Einzelklausur €4,99 einmalig** — 5 Pakete in 14 Tagen, kein Abo, Cram inkl.
+- **Monatlich €8,99/Monat** — 50 Pakete, monatlich kündbar, Cram inkl.
+- **Semester €29,99/6 Monate** — 60 Pakete/Monat, „BESTE WAHL" (hervorgehoben).
+
+**Gründerpreise** gelten solange < 1.000 zahlende Studis (`FOUNDER_PRICING_LIMIT`) — Preis bleibt für Early-Adopter gelockt. **Cram** ("Alles reinwerfen") ist ein **Feature** in allen Paid-Plänen, **kein eigener Tier**. **BYOK** (eigener Anthropic-Key) aktuell **pausiert** („bald verfügbar"); geplant als Rabatt-/Unlimited-Modifier, kein eigener Tier. Abgelaufene Pläne (`plan_expires_at < now`) fallen auf Free zurück.
+`» Veraltet: die alten CLAUDE.md-Zahlen „Cram 6,99 / Pro 14,99 / Team 24,99" stimmen NICHT — Pro/Team/Cram-als-Tier gibt es nicht mehr.`
 
 ## 🔭 Roadmap (kurz, aktuell halten)
 - Distribution: TikTok/IG (Hooks + Skripte fertig) — der eigentliche nächste Hebel.
-- Offen/optional: Essay-Format scharfschalten (`ESSAY_ENABLED`), Two-Stage-Lens falls nötig, Quiz-Breakdown + adaptive Fragen, Übersicht→Mindmap-Konsolidierung, Stripe vollständig verdrahten, Reminder-Email-Versand live testen.
+- Offen/optional: Essay-Format scharfschalten (`ESSAY_ENABLED` → Aufsatz-Plan + Essay-Blueprint), Two-Stage-Lens falls nötig, Quiz-Breakdown + adaptive Fragen, Übersicht→Mindmap-Konsolidierung, Reminder-Email-Versand live verifizieren, **SRS-V2** (Push „X Karten fällig" über die Klausur-Erinnerung), BYOK wieder scharfschalten.
+- Erledigt (raus aus Roadmap): Stripe verdrahtet (Checkout/Webhook/Portal live — offen höchstens Refund/Dunning-Feinschliff), Spaced-Repetition-Loop live.
 
 ---
 
