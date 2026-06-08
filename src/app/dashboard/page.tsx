@@ -7,6 +7,7 @@ import { LAYOUT } from "@/lib/layout";
 import { PLAN_LABEL, PLAN_LIMITS, effectivePlan } from "@/lib/quota";
 import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
 import { dashboardGreeting } from "@/lib/greeting";
+import { Layers, Flame } from "lucide-react";
 
 type PackSummary = {
   id: string;
@@ -98,18 +99,27 @@ export default async function DashboardPage({
   const params = await searchParams;
   const supabase = await createClient();
 
-  const [packsRes, examsRes, userRowRes, creditsRes] = await Promise.all([
-    supabase.rpc("list_pack_summaries"),
-    supabase
-      .from("exams")
-      .select("id, title, exam_date, color, created_at")
-      .order("exam_date", { ascending: true, nullsFirst: false }),
-    supabase
-      .from("users")
-      .select("plan, plan_expires_at, packs_used_this_month, name")
-      .single(),
-    supabase.rpc("available_pack_credits"),
-  ]);
+  const [packsRes, examsRes, userRowRes, creditsRes, dueRes] =
+    await Promise.all([
+      supabase.rpc("list_pack_summaries"),
+      supabase
+        .from("exams")
+        .select("id, title, exam_date, color, created_at")
+        .order("exam_date", { ascending: true, nullsFirst: false }),
+      supabase
+        .from("users")
+        .select(
+          "plan, plan_expires_at, packs_used_this_month, name, srs_streak, srs_last_review_date",
+        )
+        .single(),
+      supabase.rpc("available_pack_credits"),
+      // Global "Fällig"-Queue count — cards whose next review is due now. RLS
+      // scopes to the current user; head:true makes it a count-only query.
+      supabase
+        .from("card_reviews")
+        .select("*", { count: "exact", head: true })
+        .lte("due_at", new Date().toISOString()),
+    ]);
 
   const credits = typeof creditsRes.data === "number" ? creditsRes.data : 0;
 
@@ -126,6 +136,20 @@ export default async function DashboardPage({
   const greeting = dashboardGreeting(profile?.name as string | null | undefined);
   const quotaReached = used >= planLimit;
   const quotaPercent = planLimit > 0 ? Math.min(100, (used / planLimit) * 100) : 0;
+
+  const dueCount = dueRes.count ?? 0;
+  // Streak is "alive" only when the last rating was today or yesterday (Berlin);
+  // otherwise it's effectively broken and shows as nothing.
+  const nowMs = new Date().getTime();
+  const berlinDay = (ms: number) =>
+    new Date(ms).toLocaleDateString("en-CA", { timeZone: "Europe/Berlin" });
+  const lastReview = profile?.srs_last_review_date as string | null | undefined;
+  const streakAlive =
+    lastReview === berlinDay(nowMs) ||
+    lastReview === berlinDay(nowMs - 86_400_000);
+  const streak = streakAlive
+    ? ((profile?.srs_streak as number | null) ?? 0)
+    : 0;
 
   if (error) {
     return (
@@ -174,12 +198,26 @@ export default async function DashboardPage({
 
         <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p
-              className="mb-1 text-[15px] font-medium"
-              style={{ color: "var(--color-text)" }}
-            >
-              {greeting}
-            </p>
+            <div className="mb-1 flex flex-wrap items-center gap-2.5">
+              <p
+                className="text-[15px] font-medium"
+                style={{ color: "var(--color-text)" }}
+              >
+                {greeting}
+              </p>
+              {streak >= 2 && (
+                <span
+                  className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[12px] font-semibold"
+                  style={{
+                    background: "rgba(242, 163, 60, 0.14)",
+                    color: "var(--color-amber)",
+                  }}
+                >
+                  <Flame size={12} strokeWidth={2.2} aria-hidden />
+                  {streak} Tage Streak
+                </span>
+              )}
+            </div>
             <p
               className="mb-2 text-[11px] uppercase tracking-[0.22em]"
               style={{ color: "var(--color-text-faint)" }}
@@ -276,6 +314,55 @@ export default async function DashboardPage({
             />
           </div>
         </div>
+
+        {dueCount > 0 && (
+          <div
+            className="mb-10 flex flex-wrap items-center justify-between gap-3 px-5 py-4"
+            style={{
+              background: "#141930",
+              border: "1px solid rgba(255,255,255,0.06)",
+              borderRadius: "16px",
+            }}
+          >
+            <div className="flex items-center gap-3">
+              <span
+                aria-hidden
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
+                style={{ background: "rgba(79, 209, 165, 0.14)" }}
+              >
+                <Layers
+                  size={16}
+                  strokeWidth={1.9}
+                  color="var(--color-cat-teal)"
+                />
+              </span>
+              <div>
+                <div
+                  className="text-[10.5px] font-semibold uppercase tracking-[0.14em]"
+                  style={{ color: "var(--color-text-faint)" }}
+                >
+                  Wiederholung
+                </div>
+                <div
+                  className="mt-0.5 text-[17px] font-semibold leading-tight sm:text-[19px]"
+                  style={{
+                    color: "var(--color-text)",
+                    fontFamily: "var(--font-display)",
+                  }}
+                >
+                  {dueCount} {dueCount === 1 ? "Karte" : "Karten"} fällig
+                </div>
+              </div>
+            </div>
+            <PrimaryCTALink
+              size="sm"
+              href="/dashboard/review"
+              trailingIconName="arrow-right"
+            >
+              Jetzt wiederholen
+            </PrimaryCTALink>
+          </div>
+        )}
 
         <CramJobsPanel />
 

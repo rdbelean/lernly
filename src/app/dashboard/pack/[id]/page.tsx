@@ -7,6 +7,7 @@ import PackHeader, {
 import type { LatestAttempt } from "@/components/pack/PackHub";
 import { createClient } from "@/lib/supabase/server";
 import { StudyPackSchema } from "@/lib/schema";
+import { MASTERY_INTERVAL_DAYS } from "@/lib/srs";
 import { LAYOUT } from "@/lib/layout";
 import { DEMO_VISUAL_MAP_V2 } from "@/lib/fixtures/visualMapDemo";
 
@@ -114,6 +115,19 @@ export default async function PackDetailPage({
 
   const pack = parsed.data;
 
+  // Mastery — how many of this pack's cards have crossed the spacing threshold
+  // (interval_days >= MASTERY_INTERVAL_DAYS). RLS scopes the count to the owner;
+  // count-only (head:true) keeps it cheap. total comes from the pack itself.
+  const { count: masteredCount } = await supabase
+    .from("card_reviews")
+    .select("*", { count: "exact", head: true })
+    .eq("pack_id", data.id)
+    .gte("interval_days", MASTERY_INTERVAL_DAYS);
+  const mastery = {
+    mastered: masteredCount ?? 0,
+    total: pack.flashcards.length,
+  };
+
   const isDemo = demo === "visualmap-v2";
   if (isDemo) {
     pack.visualMap = DEMO_VISUAL_MAP_V2;
@@ -176,6 +190,7 @@ export default async function PackDetailPage({
             packId={data.id}
             exam={exam}
             latestAttempt={latestAttempt}
+            mastery={mastery}
           />
         </div>
       </div>

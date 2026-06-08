@@ -12,6 +12,7 @@ import {
   BookOpen,
   Clock,
   FileText,
+  GraduationCap,
   Layers,
   PenLine,
   Pin,
@@ -265,12 +266,14 @@ export default function PackHub({
   latestAttempt,
   language = "de",
   onEnterMode,
+  mastery = null,
 }: {
   pack: StudyPack;
   exam: PackExamSummary | null;
   latestAttempt: LatestAttempt | null;
   language?: Language;
   onEnterMode: (tab: ModeTab) => void;
+  mastery?: { mastered: number; total: number } | null;
 }) {
   const isEn = language === "en";
   const modes = availableModes(pack);
@@ -287,7 +290,7 @@ export default function PackHub({
     <div className="space-y-8">
       {/* Situation — countdown + last quiz + content counts. Tinted icon
           chips replace the previous emoji marks. */}
-      {(exam || latestAttempt) && (
+      {(exam || latestAttempt || (mastery && mastery.total > 0)) && (
         <section
           className="rounded-2xl border p-4 sm:p-5"
           style={{
@@ -301,7 +304,7 @@ export default function PackHub({
           >
             {isEn ? "Your situation" : "Deine Situation"}
           </div>
-          <div className="grid gap-3 sm:grid-cols-[1fr_1fr_1fr]">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {exam && countdown && (
               <SituationStat
                 icon={Clock}
@@ -353,6 +356,21 @@ export default function PackHub({
                 ? `${pack.overview.topics.reduce((n, t) => n + t.concepts.length, 0)} concepts`
                 : `${pack.overview.topics.reduce((n, t) => n + t.concepts.length, 0)} Konzepte`}
             />
+            {mastery && mastery.total > 0 && (
+              <SituationStat
+                icon={GraduationCap}
+                chipBg="rgba(79, 209, 165, 0.14)"
+                chipFg="var(--color-cat-teal)"
+                label={isEn ? "Mastery" : "Beherrscht"}
+                value={`${Math.round((mastery.mastered / mastery.total) * 100)}%`}
+                valueColor="var(--color-cat-teal)"
+                sub={
+                  isEn
+                    ? `${mastery.mastered} of ${mastery.total} mastered`
+                    : `${mastery.mastered} von ${mastery.total} beherrscht`
+                }
+              />
+            )}
           </div>
         </section>
       )}

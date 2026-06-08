@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import confetti from "canvas-confetti";
 import type { Flashcard } from "@/lib/schema";
+import { recordCardReview } from "@/app/dashboard/review/actions";
 import { track } from "@/lib/analytics";
 import { renderRichText } from "@/lib/richText";
 import TutorChat from "./TutorChat";
@@ -13,6 +14,13 @@ import { Check, Minus, RotateCcw, Sparkles, type LucideIcon } from "lucide-react
 type Language = "en" | "de";
 type CardStatus = "new" | "again" | "almost" | "known";
 type Tone = "rose" | "amber" | "sage";
+
+// A card's identity for THIS deck. Card ids are unique only within a pack, so
+// the global "Fällig"-Queue (cross-pack review) namespaces by packId to avoid
+// collisions; single-pack decks (no packId) fall back to the bare id, so their
+// behavior is unchanged.
+const deckKey = (c: Flashcard & { packId?: string }) =>
+  c.packId ? `${c.packId}:${c.id}` : c.id;
 
 const TONE_GLOW: Record<Tone, string> = {
   rose: "0 0 0 3px rgba(244,114,98,0.55), 0 20px 60px -10px rgba(244,114,98,0.5)",
@@ -42,14 +50,16 @@ function burstConfetti(big = false) {
 export default function FlashcardDeck({
   cards,
   language = "de",
+  packId,
 }: {
-  cards: Flashcard[];
+  cards: (Flashcard & { packId?: string })[];
   language?: Language;
+  packId?: string;
 }) {
   const isEn = language === "en";
   const [statuses, setStatuses] = useState<Record<string, CardStatus>>(() => {
     const init: Record<string, CardStatus> = {};
-    for (const c of cards) init[c.id] = "new";
+    for (const c of cards) init[deckKey(c)] = "new";
     return init;
   });
   const [index, setIndex] = useState(0);
@@ -65,7 +75,8 @@ export default function FlashcardDeck({
   const queue = useMemo(() => {
     if (mode === "wrong") {
       return cards.filter(
-        (c) => statuses[c.id] === "again" || statuses[c.id] === "almost",
+        (c) =>
+          statuses[deckKey(c)] === "again" || statuses[deckKey(c)] === "almost",
       );
     }
     return cards;
@@ -129,7 +140,18 @@ export default function FlashcardDeck({
       track("flashcard_rated", { rating: status, total_cards: cards.length });
     }
     setExitTone(tone);
-    setStatuses((prev) => ({ ...prev, [card.id]: status }));
+    setStatuses((prev) => ({ ...prev, [deckKey(card)]: status }));
+
+    // Persist the rating into the SRS schedule — only for authenticated real
+    // packs (anonymous landing/demo decks pass no packId). Fire-and-forget so
+    // it never blocks the 320ms advance animation; a failed write can't break
+    // the session. Uses the card's real id (not deckKey) as the DB card_id.
+    const resolvedPackId = card.packId ?? packId;
+    if (resolvedPackId && status !== "new") {
+      void recordCardReview(resolvedPackId, card.id, status).catch((e) =>
+        console.error("[FlashcardDeck] recordCardReview threw", e),
+      );
+    }
 
     const newStreak = status === "known" ? streak + 1 : 0;
     setStreak(newStreak);
@@ -262,7 +284,7 @@ export default function FlashcardDeck({
             const depth = ghosts.length - i; // 1 or 2
             return (
               <div
-                key={`ghost-${g.id}`}
+                key={`ghost-${deckKey(g)}`}
                 aria-hidden
                 className="absolute inset-0 rounded-2xl border border-white/10 bg-black/15"
                 style={{
@@ -277,7 +299,7 @@ export default function FlashcardDeck({
         {/* Active card with flip + exit animation */}
         <AnimatePresence mode="popLayout">
           <motion.button
-            key={card.id}
+            key={deckKey(card)}
             type="button"
             initial={{ opacity: 0, y: 40, scale: 0.92 }}
             animate={{

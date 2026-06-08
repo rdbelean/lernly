@@ -55,12 +55,14 @@ export default function PackView({
   packId,
   exam = null,
   latestAttempt = null,
+  mastery = null,
 }: {
   pack: StudyPack;
   language?: Language;
   packId?: string;
   exam?: PackExamSummary | null;
   latestAttempt?: LatestAttempt | null;
+  mastery?: { mastered: number; total: number } | null;
 }) {
   const tabs = useMemo<TabDef[]>(() => {
     const has: Record<Tab, boolean> = {
@@ -154,6 +156,7 @@ export default function PackView({
             latestAttempt={latestAttempt}
             language={language}
             onEnterMode={onEnterMode}
+            mastery={mastery}
           />
         )}
         {tab === "visualMap" && pack.visualMap && (
@@ -173,7 +176,11 @@ export default function PackView({
           <ExamSimulator questions={pack.simulator.questions} language={language} />
         )}
         {tab === "flashcards" && (
-          <FlashcardDeck cards={pack.flashcards} language={language} />
+          <FlashcardDeck
+            cards={pack.flashcards}
+            language={language}
+            packId={packId}
+          />
         )}
         {tab === "blueprint" && pack.essayBlueprint && (
           <EssayBlueprintView blueprint={pack.essayBlueprint} language={language} />
