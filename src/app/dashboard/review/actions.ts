@@ -2,6 +2,7 @@
 
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { computeNextReview, type Rating } from "@/lib/srs";
+import { markStudyDay } from "@/lib/studyDay";
 
 // =========================================================================
 // recordCardReview — persists one flashcard rating into the SRS schedule.
@@ -74,6 +75,9 @@ export async function recordCardReview(
   }
 
   await bumpStreak(user.id, now);
+  // Log today as a study day (heatmap + current/longest streak). Runs on every
+  // rating; bump_study_day's ON CONFLICT collapses to one row/day (+intensity).
+  await markStudyDay(createServiceClient(), user.id, now);
 }
 
 // Streak = consecutive Berlin-days with at least one rating. Only the first

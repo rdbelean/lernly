@@ -1,7 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
+import { markStudyDay } from "@/lib/studyDay";
 
 export async function deletePack(id: string) {
   const supabase = await createClient();
@@ -69,4 +70,7 @@ export async function saveQuizAttempt(input: SaveQuizAttemptInput): Promise<void
     // Don't throw — failing to log an attempt mustn't break the user's flow.
     console.error("[saveQuizAttempt] failed to persist", error);
   }
+
+  // Log today as a study day so quiz-only days count toward the heatmap/streak.
+  await markStudyDay(createServiceClient(), data.user.id, new Date());
 }
