@@ -9,12 +9,17 @@ import QuotaHitModal, {
 } from "@/components/dashboard/QuotaHitModal";
 import { track } from "@/lib/analytics";
 import { STUDY_UPLOADS_BUCKET, buildUploadPath } from "@/lib/uploads";
-import { MAX_FILE_BYTES, MAX_FILE_MB } from "@/lib/uploadConfig";
+import {
+  MAX_FILE_BYTES,
+  MAX_FILE_MB,
+  MAX_PAST_EXAM_FILES,
+} from "@/lib/uploadConfig";
 import { parseJsonResponse } from "@/lib/safeJson";
 import { type ExamType } from "@/lib/schema";
-import { Lock } from "lucide-react";
+import { Loader2, Lock } from "lucide-react";
 import { EXAM_FORMATS, ESSAY_ENABLED } from "@/lib/examFormats";
 import NewExamForm from "@/components/dashboard/NewExamForm";
+import { attachPastExamsToExam } from "@/app/dashboard/actions";
 
 type GenerateApiResponse = {
   error?: string;
@@ -64,6 +69,14 @@ export default function NewPackPage() {
     { id: string; title: string }[]
   >([]);
   const [examId, setExamId] = useState<string | null>(null);
+  // Altklausuren attached to the selected exam at submit time (0-n files).
+  const [pastExamFiles, setPastExamFiles] = useState<File[]>([]);
+  // True while the pre-generation Altklausur upload+analysis runs — drives
+  // the interstitial busy view before GenerationProgress takes over.
+  const [analyzingPastExams, setAnalyzingPastExams] = useState(false);
+  // How many past-exam references the selected exam already has — keeps the
+  // "neue kommen dazu" hint truthful.
+  const [existingRefsCount, setExistingRefsCount] = useState(0);
   // Funnel: upload_started fires once when an authed user first adds a file.
   const uploadStartedRef = useRef(false);
   // When the user picks "+ Neue Klausur anlegen…", we reveal the full
@@ -154,6 +167,57 @@ export default function NewPackPage() {
     disabled: busy,
   });
 
+  // Second dropzone for Altklausuren — only rendered when an exam is
+  // selected, but hooked unconditionally.
+  const onDropPastExams = useCallback((accepted: File[]) => {
+    setPastExamFiles((prev) => {
+      const next = [...prev];
+      for (const f of accepted) {
+        if (next.length >= MAX_PAST_EXAM_FILES) break;
+        if (!next.some((x) => x.name === f.name && x.size === f.size)) {
+          next.push(f);
+        }
+      }
+      return next;
+    });
+  }, []);
+  const pastExamZone = useDropzone({
+    onDrop: onDropPastExams,
+    accept: ACCEPTED_MIME,
+    maxSize: MAX_FILE_BYTES,
+    maxFiles: MAX_PAST_EXAM_FILES,
+    disabled: busy,
+  });
+
+  // Count existing past-exam references of the selected exam (RLS-scoped,
+  // head-count only) so the section can say "n bereits hinterlegt".
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (!examId) {
+        if (!cancelled) setExistingRefsCount(0);
+        return;
+      }
+      try {
+        const { createClient } = await import("@/lib/supabase/browser");
+        const supabase = createClient();
+        const { count } = await supabase
+          .from("exam_references")
+          .select("id", { count: "exact", head: true })
+          .eq("exam_id", examId)
+          .eq("kind", "past_exam");
+        if (!cancelled && typeof count === "number") {
+          setExistingRefsCount(count);
+        }
+      } catch {
+        /* badge just stays hidden */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [examId]);
+
   const removeFile = (name: string) =>
     setFiles((prev) => prev.filter((f) => f.name !== name));
 
@@ -198,6 +262,59 @@ export default function NewPackPage() {
       // Klausur was already created (and possibly Altklausur-analysed) by the
       // embedded NewExamForm before this submit ran — examId is set or null.
       const resolvedExamId: string | null = examId;
+
+      // 0) Altklausuren first: upload + attach + analyze, AWAITED, so the
+      //    merged profile is persisted before /api/generate reads it for
+      //    the lens. Failures degrade to lens-less generation with a toast —
+      //    never block the pack.
+      if (resolvedExamId && pastExamFiles.length > 0) {
+        setAnalyzingPastExams(true);
+        try {
+          const uploaded: { storagePath: string; filename: string }[] = [];
+          for (const f of pastExamFiles) {
+            const path = buildUploadPath(user.id, f.name);
+            const { error: upErr } = await supabase.storage
+              .from(STUDY_UPLOADS_BUCKET)
+              .upload(path, f, {
+                contentType: f.type || "application/octet-stream",
+                upsert: false,
+              });
+            if (upErr) {
+              throw new Error(
+                `Upload fehlgeschlagen: ${f.name} — ${upErr.message}`,
+              );
+            }
+            uploaded.push({ storagePath: path, filename: f.name });
+          }
+          const attach = await attachPastExamsToExam({
+            examId: resolvedExamId,
+            files: uploaded,
+          });
+          const { toast } = await import("sonner");
+          if (attach.skipped && attach.skipped.length > 0) {
+            toast.warning(
+              `Kein Text lesbar (vermutlich gescannt) — übersprungen: ${attach.skipped.join(", ")}.`,
+              { duration: 10000 },
+            );
+          }
+          if (!attach.ok) {
+            toast.warning(
+              `Altklausur-Analyse fehlgeschlagen (${attach.reason ?? "unbekannt"}) — Paket wird ohne Altklausur-Profil generiert.`,
+              { duration: 8000 },
+            );
+          }
+        } catch (attachErr) {
+          const { toast } = await import("sonner");
+          toast.warning(
+            attachErr instanceof Error
+              ? attachErr.message
+              : "Altklausur-Upload fehlgeschlagen — Paket wird ohne Altklausur-Profil generiert.",
+            { duration: 8000 },
+          );
+        } finally {
+          setAnalyzingPastExams(false);
+        }
+      }
 
       // 1) Upload each file straight to Storage — bypasses Vercel's ~4.5 MB
       //    request-body cap so large lecture PDFs go through. Per-file
@@ -412,12 +529,35 @@ export default function NewPackPage() {
               backdropFilter: "blur(24px)",
             }}
           >
-            <GenerationProgress
-              completed={completed}
-              language="de"
-              totalBytes={files.reduce((sum, f) => sum + f.size, 0)}
-              hasExam={Boolean(examId)}
-            />
+            {analyzingPastExams ? (
+              <div style={{ padding: "32px 0", textAlign: "center" }}>
+                <Loader2
+                  size={22}
+                  strokeWidth={2}
+                  className="mx-auto animate-spin"
+                  color="var(--color-ln-cyan)"
+                  aria-hidden
+                />
+                <p className="mt-4 text-[15px] font-medium text-white">
+                  Analysiere Altklausuren…
+                </p>
+                <p
+                  className="mt-2 text-[12.5px]"
+                  style={{ color: "rgba(255,255,255,0.5)" }}
+                >
+                  {pastExamFiles.length} Datei
+                  {pastExamFiles.length === 1 ? "" : "en"} — dauert etwa eine
+                  Minute. Danach startet die Generierung.
+                </p>
+              </div>
+            ) : (
+              <GenerationProgress
+                completed={completed}
+                language="de"
+                totalBytes={files.reduce((sum, f) => sum + f.size, 0)}
+                hasExam={Boolean(examId)}
+              />
+            )}
           </div>
         </div>
       </main>
@@ -613,16 +753,126 @@ export default function NewPackPage() {
               </p>
               <NewExamForm
                 embedded
-                onCreated={({ id, title }) => {
+                onCreated={({ id, title, hasPastExam }) => {
                   setExamChoices((prev) => [...prev, { id, title }]);
                   setExamId(id);
                   setCreatingNewExam(false);
+                  // The embedded form just attached Altklausuren — reflect
+                  // them immediately (the refs-count effect would race the
+                  // server action's revalidation otherwise).
+                  if (hasPastExam) setExistingRefsCount((n) => n + 1);
                 }}
                 onCancel={() => {
                   setCreatingNewExam(false);
                   setExamId(null);
                 }}
               />
+            </div>
+          )}
+        </section>
+
+        <section className="mt-6">
+          <h2
+            className="mb-3 text-[12px] uppercase tracking-[0.22em]"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
+            Altklausuren <span className="lowercase">(optional)</span>
+          </h2>
+          {examId ? (
+            <>
+              <div
+                {...pastExamZone.getRootProps()}
+                className="cursor-pointer rounded-2xl px-4 py-8 text-center transition"
+                style={{
+                  border: `1px dashed ${
+                    pastExamZone.isDragActive
+                      ? "rgba(79,209,165,0.7)"
+                      : "rgba(255,255,255,0.22)"
+                  }`,
+                  background: pastExamZone.isDragActive
+                    ? "rgba(79,209,165,0.06)"
+                    : "transparent",
+                }}
+              >
+                <input {...pastExamZone.getInputProps()} />
+                <p className="text-[14px] font-medium text-white">
+                  Altklausuren hier rein (PDF) – je mehr, desto realistischer
+                  wird deine Probeklausur.
+                </p>
+                <p
+                  className="mt-1 text-[12px]"
+                  style={{ color: "rgba(255,255,255,0.5)" }}
+                >
+                  oder klicken zum Auswählen · max. {MAX_PAST_EXAM_FILES}{" "}
+                  Dateien
+                </p>
+              </div>
+              {existingRefsCount > 0 && (
+                <p
+                  className="mt-2 text-[12px]"
+                  style={{ color: "rgba(255,255,255,0.55)" }}
+                >
+                  {existingRefsCount} Altklausur
+                  {existingRefsCount === 1 ? "" : "en"} bereits hinterlegt —
+                  neue kommen dazu.
+                </p>
+              )}
+              {pastExamFiles.length > 0 && (
+                <ul className="mt-3 space-y-2">
+                  {pastExamFiles.map((f) => (
+                    <li
+                      key={f.name}
+                      className="flex items-center justify-between rounded-xl px-4 py-3 text-[13px]"
+                      style={{
+                        background: "rgba(255,255,255,0.04)",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                      }}
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate text-white">{f.name}</div>
+                        <div
+                          className="text-[11px]"
+                          style={{ color: "rgba(255,255,255,0.5)" }}
+                        >
+                          {bytes(f.size)}
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setPastExamFiles((prev) =>
+                            prev.filter((x) => x.name !== f.name),
+                          )
+                        }
+                        className="ml-3 text-white/50 transition hover:text-white"
+                        aria-label={`${f.name} entfernen`}
+                      >
+                        ✕
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          ) : (
+            <div
+              className="rounded-2xl px-4 py-4"
+              style={{
+                background: "rgba(20, 22, 28, 0.45)",
+                border: "1px solid rgba(255,255,255,0.12)",
+              }}
+            >
+              <p className="text-[13px] leading-relaxed text-white">
+                Ohne Altklausuren schätze ich, was drankommt. Mit ihnen weiß
+                ich es.
+              </p>
+              <p
+                className="mt-1 text-[12px]"
+                style={{ color: "rgba(255,255,255,0.55)" }}
+              >
+                Wähl oben eine Klausur aus oder leg eine neue an, um
+                Altklausuren hochzuladen.
+              </p>
             </div>
           )}
         </section>
