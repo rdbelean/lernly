@@ -62,6 +62,7 @@ REGELN
 - 3-4 Optionen pro Frage, GENAU EINE richtig
 - Distraktoren müssen plausibel sein — keine offensichtlichen Füller-Antworten. Idealerweise verwechselt der Student häufig genau diese Konzepte.
 - Mische ein paar True/False-Fragen ein (~20% der Fragen) für Begriffsabgrenzung. Bei T/F nimm 2 Optionen ("True", "False") und prüfe eine konkrete Aussage.
+- PUNKTE (optional): NUR wenn das Altklausur-Profil im System-Prompt eine Punktevergabe erkennen lässt, setze pro Frage "points" (positive Ganzzahl) nach der Logik der Altklausur — zentrale/schwere Fragen bekommen mehr Punkte. Ohne Altklausur-Lens oder ohne Punkte-Evidenz: Feld komplett weglassen.
 
 ERKLÄRUNG (das ist das WICHTIGSTE Feld)
 Schreibe in der explanation:
@@ -84,7 +85,8 @@ JSON-SCHEMA (genau diese Struktur):
         "options": ["string"],
         "correctIndex": number,
         "explanation": "string (HTML <strong>/<em> erlaubt, mit allen 4 Punkten oben)",
-        "category": "string (das Hauptthema dieser Frage)"
+        "category": "string (das Hauptthema dieser Frage)",
+        "points": number (OPTIONAL — nur mit Punkte-Evidenz aus dem Altklausur-Profil, sonst weglassen)
       }
     ]
   }
@@ -464,16 +466,46 @@ export function buildRelevanceBrief(input: {
   const fidelityName = input.fidelity;
   const fidelityGuide = FIDELITY_GUIDANCE[input.fidelity];
 
+  // Typed peek into the profile for the frequency / example-question /
+  // point-logic framing. The raw profile JSON is dumped verbatim above;
+  // these blocks add INTERPRETATION rules and only render with a profile.
+  const p = hasProfile ? (input.profile as Partial<ExamProfile>) : null;
+  const examCount = p?.exam_count ?? 1;
+  const exampleQs = (p?.example_questions ?? []).slice(0, 5);
+
+  const frequencyBlock = p
+    ? `
+
+ALTKLAUSUR-FREQUENZ (BELEGT, nicht geschätzt):
+Das Profil oben wurde aus ${examCount} Altklausur${examCount === 1 ? "" : "en"} aggregiert. Topics mit "appearances" = x bei ${examCount} Altklausuren sind BELEGT drangekommen — das ist Evidenz, keine Schätzung. Priorisiere belegte Topics (höchste appearances zuerst) IMMER vor deiner eigenen Relevanz-Schätzung; "sources" nennt die Klausuren (1-basiert), in denen das Topic vorkam. Themen ohne Beleg ergänzt du nur gemäß der FIDELITY-Regel.`
+    : "";
+
+  const examplesBlock =
+    exampleQs.length > 0
+      ? `
+
+ORIGINAL-FRAGEN AUS DEN ALTKLAUSUREN (Stil-Vorlage):
+${exampleQs.map((q) => `- "${q}"`).join("\n")}
+Imitiere Ton, Satzbau, Länge und Aufgabentyp dieser Original-Fragen — neue Inhalte, gleicher Stil.`
+      : "";
+
+  const pointsBlock = p
+    ? `
+
+PUNKTE-LOGIK:
+Wenn 'structure' oder 'formats' im Profil eine Punktevergabe erkennen lassen (z. B. "4 Aufgaben à 25 Punkte"), übernimm diese Logik: hochgewichtete Topics bekommen die punktreichsten Aufgaben. Im Simulator setzt du dann pro Frage das Feld "points" (positive Ganzzahl im Stil der Altklausur). Ohne Punkte-Evidenz: "points" weglassen.`
+    : "";
+
   return `=== ALTKLAUSUR-LENS (gewichte den Stoff danach) ===
 
-SO SIEHT DIE ECHTE PRÜFUNG AUS (aus der Altklausur des Nutzers abgeleitet):
+SO SIEHT DIE ECHTE PRÜFUNG AUS (aus ${examCount > 1 ? `${examCount} Altklausuren` : "der Altklausur"} des Nutzers abgeleitet):
 ${profileBlock}
 
 ZUSÄTZLICHE HINWEISE DES NUTZERS / PROFS:
 ${hintsBlock}
 
 FIDELITY: ${fidelityName}
-${fidelityGuide}
+${fidelityGuide}${frequencyBlock}${examplesBlock}${pointsBlock}
 
 GEWICHTE DEN LERNSTOFF ENTSPRECHEND:
 - Priorisiere Themen mit hohem 'weight' im Profil. Generiere dort MEHR und TIEFERE Übungen, Karten und Konzepte.
@@ -608,7 +640,7 @@ function allocateSlots(
   profile: ExamProfile,
   totalBudget: number,
   fidelity: FidelityLevel,
-): { name: string; weight: number; slots: number }[] {
+): { name: string; weight: number; slots: number; appearances?: number }[] {
   const topics = profile.topics ?? [];
   if (topics.length === 0) return [];
 
@@ -624,7 +656,12 @@ function allocateSlots(
   if (sumWeights === 0) {
     const even = Math.max(1, Math.floor(totalBudget / effective.length));
     return effective
-      .map((t) => ({ name: t.name, weight: t.weight, slots: even }))
+      .map((t) => ({
+        name: t.name,
+        weight: t.weight,
+        slots: even,
+        appearances: t.appearances ?? t.sources?.length,
+      }))
       .sort((a, b) => b.weight - a.weight);
   }
 
@@ -632,6 +669,7 @@ function allocateSlots(
   const allocated = effective.map((t) => ({
     name: t.name,
     weight: t.weight,
+    appearances: t.appearances ?? t.sources?.length,
     slots: Math.max(
       minPerTopic,
       Math.round((t.weight / sumWeights) * totalBudget),
@@ -641,14 +679,23 @@ function allocateSlots(
 }
 
 function formatAllocationTable(
-  allocations: { name: string; weight: number; slots: number }[],
+  allocations: {
+    name: string;
+    weight: number;
+    slots: number;
+    appearances?: number;
+  }[],
   unitLabel: string,
+  examCount?: number,
 ): string {
   return allocations
-    .map(
-      (a) =>
-        `- ${a.name} (Profil-Gewicht ${a.weight.toFixed(2)}) → ${a.slots} ${unitLabel}`,
-    )
+    .map((a) => {
+      const freq =
+        examCount && a.appearances
+          ? ` — kam in ${a.appearances} von ${examCount} Altklausuren`
+          : "";
+      return `- ${a.name} (Profil-Gewicht ${a.weight.toFixed(2)}${freq}) → ${a.slots} ${unitLabel}`;
+    })
     .join("\n");
 }
 
@@ -686,10 +733,16 @@ function buildLensSectionForTask(
       ? `\nWiederkehrende Muster (einbauen): ${profile.recurring_patterns.join("; ")}`
       : "";
   const fidLine = fidelityPolicyLine(fidelity);
+  const examCount = profile.exam_count ?? 1;
+  const exampleQs = (profile.example_questions ?? []).slice(0, 4);
+  const examples =
+    exampleQs.length > 0
+      ? `\nORIGINAL-FRAGEN AUS DEN ALTKLAUSUREN (Stil 1:1 imitieren — neue Inhalte, gleicher Ton/Satzbau/Aufgabentyp):\n${exampleQs.map((q) => `- "${q}"`).join("\n")}`
+      : "";
 
   if (key === "meta") {
     const alloc = allocateSlots(profile, TASK_BUDGET.meta, fidelity);
-    const table = formatAllocationTable(alloc, "Konzepte");
+    const table = formatAllocationTable(alloc, "Konzepte", examCount);
     return `=== LENS-ADDENDUM FÜR ÜBERSICHT (jetzt anwenden, überschreibt die 6×6-Grenze) ===
 
 KONZEPT-SLOT-ALLOKATION nach Altklausur-Profil:
@@ -697,6 +750,7 @@ ${table}
 
 REGELN
 - TOPIC-REIHENFOLGE: Sortiere "topics" im Output ABSTEIGEND nach dem Profil-Gewicht. Erstes Topic = höchstes weight. NICHT nach Kapitel-Reihenfolge sortieren.
+- Verwende als topics[].name EXAKT die Topic-Namen aus der Tabelle oben (zeichengenau) — das UI ordnet darüber Altklausur-Badges zu.
 - Folge der Allokation oben statt der "max 6×6=28"-Regel aus der Haupt-Anweisung.
 - importance="high" NUR auf Konzepten der 2-3 höchstgewichteten Topics.
 - relevanceTag setzen wie in der Haupt-Anweisung beschrieben.
@@ -705,7 +759,7 @@ ${fidLine}${phrasing}${patterns}`;
 
   if (key === "cards") {
     const alloc = allocateSlots(profile, TASK_BUDGET.cards, fidelity);
-    const table = formatAllocationTable(alloc, "Karten");
+    const table = formatAllocationTable(alloc, "Karten", examCount);
     return `=== LENS-ADDENDUM FÜR KARTEIKARTEN (jetzt anwenden) ===
 
 KARTEN-ALLOKATION nach Altklausur-Profil:
@@ -719,7 +773,7 @@ ${fidLine}${phrasing}${patterns}`;
 
   if (key === "quiz") {
     const alloc = allocateSlots(profile, TASK_BUDGET.quiz, fidelity);
-    const table = formatAllocationTable(alloc, "Fragen");
+    const table = formatAllocationTable(alloc, "Fragen", examCount);
     return `=== LENS-ADDENDUM FÜR QUIZ (jetzt anwenden) ===
 
 ÜBERSCHREIBE die Regel "Verteile die Fragen breit über den Stoff" aus der Haupt-Anweisung. Stattdessen:
@@ -728,14 +782,15 @@ FRAGEN-ALLOKATION nach Altklausur-Profil:
 ${table}
 
 REGELN
-- Setze "category" pro Frage auf den exakten Topic-Namen aus der Tabelle, damit man die Verteilung im UI prüfen kann.
+- Setze "category" pro Frage auf den exakten Topic-Namen aus der Tabelle (zeichengenau — das UI ordnet darüber Altklausur-Badges zu).
+- Topics, die in mehreren Altklausuren vorkamen (siehe Tabelle), sind BELEGT — gib ihnen die anspruchsvollsten, klausurnächsten Fragen.
 - Stems sollen die Phrasierung der Altklausur imitieren (Fallbeispiele statt nur Definitionsfragen, wenn die Altklausur so ist).
-${fidLine}${phrasing}${patterns}`;
+${fidLine}${phrasing}${patterns}${examples}`;
   }
 
   if (key === "simulator") {
     const alloc = allocateSlots(profile, TASK_BUDGET.simulator, fidelity);
-    const table = formatAllocationTable(alloc, "Fragen");
+    const table = formatAllocationTable(alloc, "Fragen", examCount);
     return `=== LENS-ADDENDUM FÜR SIMULATOR (jetzt anwenden) ===
 
 ÜBERSCHREIBE die Regel "möglichst breit über das Kursmaterial verteilt" aus der Haupt-Anweisung. Stattdessen:
@@ -744,9 +799,11 @@ FRAGEN-ALLOKATION nach Altklausur-Profil:
 ${table}
 
 REGELN
-- Setze "category" pro Frage auf den exakten Topic-Namen aus der Tabelle.
+- Setze "category" pro Frage auf den exakten Topic-Namen aus der Tabelle (zeichengenau — das UI ordnet darüber Altklausur-Badges zu).
+- Topics, die in mehreren Altklausuren vorkamen (siehe Tabelle), sind BELEGT — gib ihnen die anspruchsvollsten, klausurnächsten Fragen.
 - Stems imitieren den Phrasing-Style der Altklausur.
-${fidLine}${phrasing}${patterns}`;
+- PUNKTE: Wenn das Profil eine Punktevergabe zeigt ('structure'/'formats', z. B. "à 25 Punkte"), setze pro Frage "points" (positive Ganzzahl) nach der Logik der Altklausur — zentrale/schwere Fragen mehr Punkte. Ohne Punkte-Evidenz: "points" weglassen.
+${fidLine}${phrasing}${patterns}${examples}`;
   }
 
   if (key === "visualMap") {
