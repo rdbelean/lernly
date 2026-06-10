@@ -302,6 +302,14 @@ export default function NewPackPage() {
               `Altklausur-Analyse fehlgeschlagen (${attach.reason ?? "unbekannt"}) — Paket wird ohne Altklausur-Profil generiert.`,
               { duration: 8000 },
             );
+          } else {
+            // These files are persisted references now — clear them so a
+            // failure in a LATER step (material upload, generation) doesn't
+            // re-upload and re-attach the same Altklausuren on resubmit.
+            setPastExamFiles([]);
+            if (typeof attach.analyzed === "number") {
+              setExistingRefsCount(attach.analyzed);
+            }
           }
         } catch (attachErr) {
           const { toast } = await import("sonner");
