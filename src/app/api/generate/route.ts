@@ -604,6 +604,24 @@ export async function POST(request: Request) {
       }
     }
 
+    // Deterministic Altklausur-provenance snapshot: copied from the VALIDATED
+    // profile (lensContext), never LLM-echoed. Legacy single-exam profiles
+    // without exam_count/sources map to 1/1 so old exams still get badges.
+    if (lensContext) {
+      const p = lensContext.profile;
+      const examCount = p.exam_count ?? 1;
+      pack.examLens = {
+        examCount,
+        topics: p.topics.map((t) => ({
+          name: t.name,
+          appearances: Math.min(
+            Math.max(t.appearances ?? t.sources?.length ?? 1, 1),
+            examCount,
+          ),
+        })),
+      };
+    }
+
     const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
     console.log(
       `[/api/generate] done in ${elapsed}s — ${pack.flashcards.length} cards, ${pack.simulator?.questions.length ?? 0} sim-q, ${pack.quiz?.questions.length ?? 0} mc-q, ${pack.openQuestions?.questions.length ?? 0} open-q`,
