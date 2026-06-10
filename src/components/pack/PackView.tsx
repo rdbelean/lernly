@@ -164,6 +164,7 @@ export default function PackView({
             map={pack.visualMap}
             overview={pack.overview}
             language={language}
+            examLens={pack.examLens ?? null}
           />
         )}
         {tab === "essayPredictions" && pack.essayPredictions && (
@@ -173,7 +174,11 @@ export default function PackView({
           />
         )}
         {tab === "simulator" && pack.simulator && (
-          <ExamSimulator questions={pack.simulator.questions} language={language} />
+          <ExamSimulator
+            questions={pack.simulator.questions}
+            language={language}
+            examLens={pack.examLens ?? null}
+          />
         )}
         {tab === "flashcards" && (
           <FlashcardDeck
@@ -191,6 +196,7 @@ export default function PackView({
             overview={pack.overview}
             language={language}
             packId={packId}
+            examLens={pack.examLens ?? null}
           />
         ) : null}
         {tab === "openQuestions" &&
@@ -199,6 +205,7 @@ export default function PackView({
             <OpenQuestionsView
               questions={pack.openQuestions.questions}
               language={language}
+              examLens={pack.examLens ?? null}
             />
           )}
       </div>

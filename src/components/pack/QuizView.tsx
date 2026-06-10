@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { QuizQuestion, StudyPack } from "@/lib/schema";
+import type { ExamLens, QuizQuestion, StudyPack } from "@/lib/schema";
+import { examLensBadgeText, findTopicAppearances } from "@/lib/examLens";
 import { renderRichText } from "@/lib/richText";
 import { track } from "@/lib/analytics";
 import { saveQuizAttempt } from "@/app/dashboard/pack/[id]/actions";
@@ -123,11 +124,13 @@ export default function QuizView({
   overview,
   language = "de",
   packId,
+  examLens = null,
 }: {
   questions: QuizQuestion[];
   overview: StudyPack["overview"];
   language?: Language;
   packId?: string;
+  examLens?: ExamLens | null;
 }) {
   const isEn = language === "en";
   const labels = T(isEn);
@@ -591,6 +594,8 @@ export default function QuizView({
             ? conceptIndex.get(q.conceptRef.toLowerCase())
             : undefined;
           const theoryOpen = !!openTheory[q.id];
+          // Altklausur provenance via the question's category — null = no badge.
+          const appearances = findTopicAppearances(examLens, q.category ?? null);
 
           return (
             <li
@@ -621,6 +626,19 @@ export default function QuizView({
                     }}
                   >
                     {q.category}
+                  </span>
+                )}
+                {examLens && appearances !== null && (
+                  <span
+                    className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold normal-case tracking-[0.08em]"
+                    style={{
+                      background: "rgba(79,209,165,0.10)",
+                      borderColor: "#4FD1A5",
+                      color: "#4FD1A5",
+                    }}
+                  >
+                    <Sparkles size={9} strokeWidth={2.2} aria-hidden />
+                    {examLensBadgeText(appearances, examLens.examCount)}
                   </span>
                 )}
               </div>
