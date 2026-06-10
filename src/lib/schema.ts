@@ -37,6 +37,9 @@ export const SimulatorQuestionSchema = z.object({
   correctIndex: z.number().int(),
   explanation: z.string(),
   category: z.string().optional(),
+  // Point value mirroring the Altklausur's point logic. Only emitted when
+  // the exam profile shows point evidence; old packs parse without it.
+  points: z.number().int().positive().optional(),
 });
 
 export const SimulatorSchema = z.object({
@@ -282,6 +285,20 @@ export const EssayPredictionsSchema = z.object({
   predictions: z.array(EssayPredictionSchema),
 });
 
+// Deterministic Altklausur-provenance snapshot, copied from the validated
+// exam profile at generation time (never LLM-echoed). Drives the
+// "Kam in {x} von {y} Altklausuren dran" badges and the frequency re-rank.
+export const ExamLensSchema = z.object({
+  examCount: z.number().int().positive(),
+  topics: z.array(
+    z.object({
+      name: z.string(),
+      appearances: z.number().int().positive(),
+    }),
+  ),
+});
+export type ExamLens = z.infer<typeof ExamLensSchema>;
+
 export const StudyPackSchema = z.object({
   courseTitle: z.string(),
   examType: z.enum(["essay", "multiple_choice", "oral", "open_book", "open_questions"]),
@@ -302,6 +319,9 @@ export const StudyPackSchema = z.object({
   // Detected material language at generation time. Persisted so re-practice
   // / regeneration features can drive the LANGUAGE LOCK without re-detecting.
   materialLanguage: z.enum(["de", "en"]).optional(),
+  // Altklausur-provenance snapshot — absent on packs generated without a
+  // profile (old packs keep parsing; UI degrades to the honest hint).
+  examLens: ExamLensSchema.optional(),
 });
 
 // =========================================================================
@@ -328,6 +348,13 @@ export const ExamProfileSchema = z.object({
       name: z.string(),
       weight: z.number().min(0).max(1),
       evidence: z.string().optional().default(""),
+      // 1-based indices of the Altklausuren this topic appeared in, as
+      // numbered in the merge call. Absent on legacy single-exam profiles.
+      sources: z.array(z.number().int().positive()).optional(),
+      // Count of distinct Altklausuren the topic appeared in. Derived in
+      // code from `sources` (clamped to [1, exam_count]) — never trusted
+      // raw from the model.
+      appearances: z.number().int().positive().optional(),
     }),
   ),
   depth: z.enum(["recall", "apply", "analyze"]).optional().default("apply"),
@@ -335,6 +362,19 @@ export const ExamProfileSchema = z.object({
   phrasing_style: z.string().optional().default(""),
   structure: z.string().optional().default(""),
   notes: z.string().optional().default(""),
+  // ---- multi-Altklausur additions (all optional: legacy profiles parse) ----
+  // Number of Altklausuren aggregated into this profile.
+  exam_count: z.number().int().positive().optional(),
+  // One entry per analyzed Altklausur, in the same 1-based order `sources`
+  // refers to. `year` is model-detected ("2023", "WS 2022/23"), best-effort.
+  per_exam: z
+    .array(z.object({ filename: z.string(), year: z.string().optional() }))
+    .optional(),
+  // Verbatim question excerpts (each ≤300 chars) — style templates for the
+  // generator. On single-exam profiles this comes straight from the analyzer.
+  example_questions: z.array(z.string()).optional(),
+  // Detected year of THIS exam — only set on per-exam (pre-merge) profiles.
+  year: z.string().optional(),
 });
 export type ExamProfile = z.infer<typeof ExamProfileSchema>;
 
