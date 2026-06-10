@@ -21,3 +21,7 @@
 
 export const MAX_FILE_BYTES = 50 * 1024 * 1024; // 50 MB — Free-tier safe.
 export const MAX_FILE_MB = Math.round(MAX_FILE_BYTES / 1024 / 1024);
+
+// Cap on Altklausur (past exam) files per Klausur. Shared by the client
+// dropzones (maxFiles) and the server action (slice + reference query limit).
+export const MAX_PAST_EXAM_FILES = 5;
