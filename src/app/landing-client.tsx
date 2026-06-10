@@ -3597,39 +3597,63 @@ function PipelineCta({ onActivateUpload }: { onActivateUpload: () => void }) {
 
 const FAQ_ITEMS_DE: { q: string; a: string }[] = [
   {
-    q: "Was passiert mit meinen Dateien?",
-    a: "Nichts. Deine Folien werden nur für die Generierung verarbeitet und danach gelöscht. Nichts wird dauerhaft gespeichert.",
+    q: "Trifft das wirklich, was in meiner Klausur drankommt?",
+    a: "Genau dafür ist Lernly gebaut. Lad deine Altklausur dazu — Lernly erkennt die Schwerpunkte und baut Karten & Fragen im Stil deiner echten Prüfung. Schwerpunkt, keine Garantie — aber näher dran als jede generische Zusammenfassung.",
   },
   {
-    q: "Welche Dateiformate funktionieren?",
-    a: "PDF, TXT und MD. PowerPoint kannst du als PDF exportieren — geht in 10 Sekunden.",
+    q: "Ist das wirklich kostenlos?",
+    a: "Ja — du kannst ohne Account ein Paket erstellen und 2 Pakete pro Monat gratis nutzen. Brauchst du mehr: Einzelklausur ab 4,99 € oder Semester für 29,99 €.",
+  },
+  {
+    q: "Funktioniert das für mein Fach?",
+    a: "Jedes Fach — BWL, Jura, Medizin, Technik, was auch immer. Lernly lernt aus deinem eigenen Material, nicht aus einer Vorlage.",
+  },
+  {
+    q: "Was ist der Unterschied zu ChatGPT & Co.?",
+    a: "Die meisten KI-Tools geben dir Fließtext. Lernly gibt dir ein aktives Lernsystem — Karteikarten, Prüfungssimulator und Essay-Blueprint, aus deinem Material.",
   },
   {
     q: "Wie gut sind die Karteikarten?",
-    a: "Konkret: jede Karte mit Quelle und Prüfungsrelevanz. Template-Sätze die du direkt im Essay verwenden kannst. Plus: in 2 Minuten fertig statt 45.",
+    a: "Jede Karte mit Quelle und Prüfungsrelevanz, Template-Sätze fürs Essay. In 2 Minuten fertig statt 45.",
   },
   {
-    q: "Was ist der Unterschied zu anderen KI-Tools?",
-    a: "Die meisten KI-Tools geben dir Fließtext. Lernly gibt dir ein interaktives Lernsystem — Karteikarten zum Flippen, einen Prüfungssimulator mit Feedback und einen Essay-Blueprint mit fertigen Formulierungen.",
+    q: "Was passiert mit meinen Dateien?",
+    a: "Nichts bleibt. Deine Folien werden nur für die Generierung verarbeitet und danach gelöscht.",
+  },
+  {
+    q: "Kann ich der KI vertrauen?",
+    a: "Lernly arbeitet aus deinem eigenen Material mit Quellenbezug — und du übst aktiv (abfragen statt blind lesen), so merkst du selbst, was sitzt.",
   },
 ];
 
 const FAQ_ITEMS_EN: { q: string; a: string }[] = [
   {
-    q: "What happens to my files?",
-    a: "Nothing permanent. Your slides are processed only to generate the pack and are deleted afterwards. Nothing is stored long term.",
+    q: "Will this actually match what's on my exam?",
+    a: "That's exactly what Lernly is built for. Add your past exam — Lernly spots the focus areas and builds cards & questions in the style of your real exam. A focus, not a guarantee — but closer than any generic summary.",
   },
   {
-    q: "Which file formats work?",
-    a: "PDF, TXT, and MD. Export your PowerPoint as PDF — takes 10 seconds.",
+    q: "Is it really free?",
+    a: "Yes — you can create a pack without an account and use 2 packs per month for free. Need more: single exam from €4.99 or semester for €29.99.",
+  },
+  {
+    q: "Does it work for my subject?",
+    a: "Any subject — business, law, medicine, engineering, whatever. Lernly learns from your own material, not from a template.",
+  },
+  {
+    q: "How is this different from ChatGPT & co.?",
+    a: "Most AI tools give you long-form prose. Lernly gives you an active study system — flashcards, exam simulator and essay blueprint, from your material.",
   },
   {
     q: "How good are the flashcards?",
-    a: "Concretely: every card has its source and exam relevance. Template sentences you can drop straight into your essay. Plus: 2 minutes instead of 45.",
+    a: "Every card with its source and exam relevance, template sentences for your essay. Done in 2 minutes instead of 45.",
   },
   {
-    q: "How is this different from other AI tools?",
-    a: "Most AI tools give you long-form prose. Lernly gives you an interactive study system — flashcards to flip, an exam simulator with feedback, and an essay blueprint with ready phrasing.",
+    q: "What happens to my files?",
+    a: "Nothing stays. Your slides are processed only to generate the pack and deleted afterwards.",
+  },
+  {
+    q: "Can I trust the AI?",
+    a: "Lernly works from your own material with source references — and you practice actively (recall instead of passive reading), so you see for yourself what sticks.",
   },
 ];
 
