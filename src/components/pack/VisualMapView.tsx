@@ -26,6 +26,7 @@ import type {
   CalloutFrameworkSchema,
   ComparisonFrameworkSchema,
   ConceptGridFrameworkSchema,
+  ExamLens,
   FlowFrameworkSchema,
   FormulaFrameworkSchema,
   LinkNoteFrameworkSchema,
@@ -36,6 +37,7 @@ import type {
   VisualBlockPrioritySchema,
 } from "@/lib/schema";
 import type { z } from "zod";
+import { examLensBadgeText, findTopicAppearances } from "@/lib/examLens";
 import { renderRichText } from "@/lib/richText";
 
 type Priority = z.infer<typeof VisualBlockPrioritySchema>;
@@ -965,16 +967,28 @@ function SectionHeader({ block }: { block: VisualBlock }) {
 function ConceptChipStrip({
   concepts,
   language,
+  topicName,
+  examLens = null,
 }: {
   concepts: Concept[];
   language: Language;
+  topicName?: string;
+  examLens?: ExamLens | null;
 }) {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   if (!concepts || concepts.length === 0) return null;
   const isEn = language === "en";
 
+  // Per-concept Altklausur appearances: try the concept term itself (a
+  // profile topic may be concept-grained), fall back to the parent
+  // overview-topic name. null = no badge.
+  const topicAppearances = findTopicAppearances(examLens, topicName);
+  const appearancesFor = (c: Concept) =>
+    findTopicAppearances(examLens, c.term) ?? topicAppearances;
+
   const sorted = [...concepts].sort((a, b) => {
     const rank = (c: Concept) =>
+      (appearancesFor(c) ?? 0) * 1000 +
       (c.importance === "high" ? 100 : c.importance === "medium" ? 50 : 10) +
       (c.relevanceTag ? 50 : 0);
     return rank(b) - rank(a);
@@ -1055,19 +1069,64 @@ function ConceptChipStrip({
                       {isEn ? "High" : "Wichtig"}
                     </span>
                   )}
-                  {c.relevanceTag && (
-                    <span
-                      className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.08em]"
-                      style={{
-                        background: TEAL_TINT,
-                        borderColor: TEAL,
-                        color: TEAL,
-                      }}
-                    >
-                      <Sparkles size={9} strokeWidth={2.2} aria-hidden />
-                      {stripEmoji(c.relevanceTag)}
-                    </span>
-                  )}
+                  {(() => {
+                    const ap = appearancesFor(c);
+                    const showFrequency = Boolean(examLens) && ap !== null;
+                    // The frequency badge replaces the generic "kam dran"
+                    // chip text; an instructor-hint component survives as
+                    // its own chip. Unmatched concepts keep the legacy chip.
+                    const showProfHint =
+                      showFrequency &&
+                      (c.relevanceTag === "Prof-Hinweis" ||
+                        c.relevanceTag === "beides");
+                    const showLegacyTag =
+                      !showFrequency && Boolean(c.relevanceTag);
+                    return (
+                      <>
+                        {showFrequency && examLens && (
+                          <span
+                            className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.08em]"
+                            style={{
+                              background: TEAL_TINT,
+                              borderColor: TEAL,
+                              color: TEAL,
+                            }}
+                          >
+                            <Sparkles size={9} strokeWidth={2.2} aria-hidden />
+                            {examLensBadgeText(
+                              ap as number,
+                              examLens.examCount,
+                            )}
+                          </span>
+                        )}
+                        {showProfHint && (
+                          <span
+                            className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.08em]"
+                            style={{
+                              background: TEAL_TINT,
+                              borderColor: TEAL,
+                              color: TEAL,
+                            }}
+                          >
+                            Prof-Hinweis
+                          </span>
+                        )}
+                        {showLegacyTag && c.relevanceTag && (
+                          <span
+                            className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.08em]"
+                            style={{
+                              background: TEAL_TINT,
+                              borderColor: TEAL,
+                              color: TEAL,
+                            }}
+                          >
+                            <Sparkles size={9} strokeWidth={2.2} aria-hidden />
+                            {stripEmoji(c.relevanceTag)}
+                          </span>
+                        )}
+                      </>
+                    );
+                  })()}
                 </div>
                 {isOpen && (
                   <div
@@ -1134,10 +1193,12 @@ export default function VisualMapView({
   map,
   overview,
   language = "de",
+  examLens = null,
 }: {
   map: VisualMap;
   overview?: Overview;
   language?: Language;
+  examLens?: ExamLens | null;
 }) {
   const sortedBlocks = useMemo(() => {
     return [...map.blocks].sort((a, b) => {
@@ -1182,6 +1243,8 @@ export default function VisualMapView({
                 <ConceptChipStrip
                   concepts={topic.concepts}
                   language={language}
+                  topicName={topic.name}
+                  examLens={examLens}
                 />
               )}
               {block.frameworks.map((fw, fi) => (

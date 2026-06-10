@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import type { OpenQuestion } from "@/lib/schema";
+import { Sparkles } from "lucide-react";
+import type { ExamLens, OpenQuestion } from "@/lib/schema";
+import { examLensBadgeText, findTopicAppearances } from "@/lib/examLens";
 import { renderRichText } from "@/lib/richText";
 
 type Language = "en" | "de";
@@ -10,9 +12,11 @@ type Language = "en" | "de";
 export default function OpenQuestionsView({
   questions,
   language = "de",
+  examLens = null,
 }: {
   questions: OpenQuestion[];
   language?: Language;
+  examLens?: ExamLens | null;
 }) {
   const isEn = language === "en";
   const [index, setIndex] = useState(0);
@@ -27,6 +31,8 @@ export default function OpenQuestionsView({
   }
 
   const q = questions[Math.min(index, questions.length - 1)];
+  // Altklausur provenance via the question's category — null = no badge.
+  const appearances = findTopicAppearances(examLens, q.category ?? null);
 
   const go = (delta: number) => {
     setRevealed(false);
@@ -36,13 +42,28 @@ export default function OpenQuestionsView({
   return (
     <div>
       <div
-        className="mb-4 flex items-center justify-between text-[12px]"
+        className="mb-4 flex items-center justify-between gap-2 text-[12px]"
         style={{ color: "var(--color-ln-mute)" }}
       >
         <span>
           {isEn ? "Question" : "Frage"} {index + 1} / {questions.length}
         </span>
-        {q.category && <span>{q.category}</span>}
+        <span className="flex flex-wrap items-center justify-end gap-1.5">
+          {q.category && <span>{q.category}</span>}
+          {examLens && appearances !== null && (
+            <span
+              className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.08em]"
+              style={{
+                background: "rgba(79,209,165,0.10)",
+                borderColor: "#4FD1A5",
+                color: "#4FD1A5",
+              }}
+            >
+              <Sparkles size={9} strokeWidth={2.2} aria-hidden />
+              {examLensBadgeText(appearances, examLens.examCount)}
+            </span>
+          )}
+        </span>
       </div>
 
       <AnimatePresence mode="wait">

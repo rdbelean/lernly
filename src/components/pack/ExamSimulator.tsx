@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import confetti from "canvas-confetti";
-import type { SimulatorQuestion } from "@/lib/schema";
+import { Sparkles } from "lucide-react";
+import type { ExamLens, SimulatorQuestion } from "@/lib/schema";
+import { examLensBadgeText, findTopicAppearances } from "@/lib/examLens";
 import { renderRichText } from "@/lib/richText";
 import { track } from "@/lib/analytics";
 
@@ -25,9 +27,11 @@ function burst(big = false) {
 export default function ExamSimulator({
   questions,
   language = "de",
+  examLens = null,
 }: {
   questions: SimulatorQuestion[];
   language?: Language;
+  examLens?: ExamLens | null;
 }) {
   const isEn = language === "en";
   const [index, setIndex] = useState(0);
@@ -131,8 +135,20 @@ export default function ExamSimulator({
     setIndex((i) => i + 1);
   };
 
+  // Altklausur provenance for the current question — matched via its
+  // category against the lens snapshot. null = no badge (fail silent).
+  const appearances = findTopicAppearances(examLens, q.category ?? null);
+
   return (
     <div>
+      {!examLens && (
+        <p
+          className="mb-3 text-[12px] leading-relaxed"
+          style={{ color: "rgba(255,255,255,0.45)" }}
+        >
+          Ohne Altklausuren schätze ich, was drankommt. Mit ihnen weiß ich es.
+        </p>
+      )}
       {/* Header: progress + score + streak */}
       <div
         className="flex items-center justify-between gap-3 text-[12px]"
@@ -196,6 +212,36 @@ export default function ExamSimulator({
           exit={{ opacity: 0, y: -16 }}
           transition={{ type: "spring", stiffness: 260, damping: 24 }}
         >
+          {(appearances !== null || typeof q.points === "number") && (
+            <div className="mt-5 flex flex-wrap items-center gap-1.5">
+              {examLens && appearances !== null && (
+                <span
+                  className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.08em]"
+                  style={{
+                    background: "rgba(79,209,165,0.10)",
+                    borderColor: "#4FD1A5",
+                    color: "#4FD1A5",
+                  }}
+                >
+                  <Sparkles size={9} strokeWidth={2.2} aria-hidden />
+                  {examLensBadgeText(appearances, examLens.examCount)}
+                </span>
+              )}
+              {typeof q.points === "number" && (
+                <span
+                  className="inline-flex items-center rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.08em]"
+                  style={{
+                    background: "rgba(255,255,255,0.06)",
+                    borderColor: "rgba(255,255,255,0.14)",
+                    color: "rgba(255,255,255,0.75)",
+                  }}
+                >
+                  {q.points} {q.points === 1 ? "Punkt" : "Punkte"}
+                </span>
+              )}
+            </div>
+          )}
+
           {q.scenario && (
             <div
               className="mt-5 rounded-2xl border border-white/10 bg-black/20 px-5 py-4 text-[13px] leading-relaxed"
