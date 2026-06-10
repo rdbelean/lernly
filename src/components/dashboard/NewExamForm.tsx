@@ -1,18 +1,26 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useCallback, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useDropzone } from "react-dropzone";
 import {
-  attachPastExamToExam,
+  attachPastExamsToExam,
   createExam,
 } from "@/app/dashboard/actions";
 import { EXAM_COLORS, examRgba } from "@/lib/exams";
 import { STUDY_UPLOADS_BUCKET, buildUploadPath } from "@/lib/uploads";
-import { Plus, Target } from "lucide-react";
+import { MAX_FILE_BYTES, MAX_PAST_EXAM_FILES } from "@/lib/uploadConfig";
+import { Plus, Target, X } from "lucide-react";
 import { PrimaryCTAButton } from "@/components/ui/PrimaryCTA";
 
 type StudyPath = "A" | "B" | "C";
 type Fidelity = "strict" | "likely" | "broad";
+
+const ACCEPTED_MIME = {
+  "application/pdf": [".pdf"],
+  "text/plain": [".txt"],
+  "text/markdown": [".md", ".markdown"],
+};
 
 const FIDELITY_OPTIONS: { value: Fidelity; label: string; sub: string }[] = [
   {
@@ -49,7 +57,7 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
   const [examDate, setExamDate] = useState("");
   const [color, setColor] = useState<string>("cyan");
   const [path, setPath] = useState<StudyPath>("B");
-  const [pastExamFile, setPastExamFile] = useState<File | null>(null);
+  const [pastExamFiles, setPastExamFiles] = useState<File[]>([]);
   const [hints, setHints] = useState("");
   const [fidelity, setFidelity] = useState<Fidelity>("likely");
   const [topicsList, setTopicsList] = useState("");
@@ -62,7 +70,7 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
     setExamDate("");
     setColor("cyan");
     setPath("B");
-    setPastExamFile(null);
+    setPastExamFiles([]);
     setHints("");
     setFidelity("likely");
     setTopicsList("");
@@ -78,6 +86,29 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
       setOpen(false);
     }
   };
+
+  // Multi-Altklausur dropzone. Hooked unconditionally (Path A is only
+  // conditionally RENDERED); dedupe by name+size, hard cap at
+  // MAX_PAST_EXAM_FILES.
+  const onDropPastExams = useCallback((accepted: File[]) => {
+    setPastExamFiles((prev) => {
+      const next = [...prev];
+      for (const f of accepted) {
+        if (next.length >= MAX_PAST_EXAM_FILES) break;
+        if (!next.some((x) => x.name === f.name && x.size === f.size)) {
+          next.push(f);
+        }
+      }
+      return next;
+    });
+  }, []);
+  const pastExamZone = useDropzone({
+    onDrop: onDropPastExams,
+    accept: ACCEPTED_MIME,
+    maxSize: MAX_FILE_BYTES,
+    maxFiles: MAX_PAST_EXAM_FILES,
+    disabled: pending,
+  });
 
   const onSubmit = () => {
     if (!title.trim()) {
@@ -107,53 +138,67 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
           fidelity: path === "A" ? fidelity : "likely",
         });
 
-        // 2) Path A with a file: upload Altklausur to Storage, then run the
-        //    server action that extracts + analyses + persists the profile.
-        if (path === "A" && pastExamFile) {
-          setBusyLabel("Lade Altklausur hoch…");
+        // 2) Path A with files: upload each Altklausur to Storage, then run
+        //    ONE server action that extracts + analyses all of them in
+        //    parallel and persists the merged profile.
+        if (path === "A" && pastExamFiles.length > 0) {
+          setBusyLabel(
+            pastExamFiles.length === 1
+              ? "Lade Altklausur hoch…"
+              : "Lade Altklausuren hoch…",
+          );
           const { createClient } = await import("@/lib/supabase/browser");
           const supabase = createClient();
           const {
             data: { user },
           } = await supabase.auth.getUser();
           if (!user) throw new Error("Nicht angemeldet.");
-          const storagePath = buildUploadPath(user.id, pastExamFile.name);
-          const { error: upErr } = await supabase.storage
-            .from(STUDY_UPLOADS_BUCKET)
-            .upload(storagePath, pastExamFile, {
-              contentType: pastExamFile.type || "application/octet-stream",
-              upsert: false,
-            });
-          if (upErr) {
-            throw new Error(`Upload fehlgeschlagen: ${upErr.message}`);
+          const uploaded: { storagePath: string; filename: string }[] = [];
+          for (const f of pastExamFiles) {
+            const storagePath = buildUploadPath(user.id, f.name);
+            const { error: upErr } = await supabase.storage
+              .from(STUDY_UPLOADS_BUCKET)
+              .upload(storagePath, f, {
+                contentType: f.type || "application/octet-stream",
+                upsert: false,
+              });
+            if (upErr) {
+              throw new Error(`Upload fehlgeschlagen: ${f.name} — ${upErr.message}`);
+            }
+            uploaded.push({ storagePath, filename: f.name });
           }
 
-          setBusyLabel("Analysiere Altklausur (~30s)…");
-          const result = await attachPastExamToExam({
+          setBusyLabel("Analysiere Altklausuren (~1 Min)…");
+          const result = await attachPastExamsToExam({
             examId: id,
-            storagePath,
-            filename: pastExamFile.name,
+            files: uploaded,
           });
+          const { toast } = await import("sonner");
+          if (result.skipped && result.skipped.length > 0) {
+            toast.warning(
+              `Kein Text lesbar (vermutlich gescannt) — übersprungen: ${result.skipped.join(", ")}. Lade die Originaldateien mit echtem Text hoch.`,
+              { duration: 10000 },
+            );
+          }
           if (!result.ok) {
-            // Analysis failed but exam + reference saved. Surface a soft
-            // warning via toast that names the reason and points at a
-            // realistic retry path — re-upload a clearer/text-rich Altklausur
-            // by recreating the Klausur. (A retry button on the exam card
-            // would be nicer; tracked for V2.)
-            const { toast } = await import("sonner");
+            // Analysis failed but exam + references saved. Surface a soft
+            // warning via toast — packs still generate, just without the lens.
             const reason = result.reason ?? "unbekannt";
             toast.warning(
-              `Analyse der Altklausur fehlgeschlagen (${reason}) — Klausur gespeichert, aber Pakete laufen ohne Lens-Brief. Tipp: Klausur in der Bibliothek löschen und mit einer text-reichen, gut lesbaren PDF erneut anlegen.`,
+              `Analyse der Altklausuren fehlgeschlagen (${reason}) — Klausur gespeichert, aber Pakete laufen ohne Altklausur-Profil.`,
               { duration: 10000 },
             );
           } else {
-            const { toast } = await import("sonner");
-            toast.success("Altklausur analysiert ✓", { duration: 4000 });
+            const n = result.analyzed ?? pastExamFiles.length;
+            toast.success(
+              `${n} Altklausur${n === 1 ? "" : "en"} analysiert ✓`,
+              { duration: 4000 },
+            );
           }
         }
 
         const createdTitle = title.trim();
-        const attachedPastExam = path === "A" && Boolean(pastExamFile);
+        const attachedPastExam = path === "A" && pastExamFiles.length > 0;
         reset();
         if (embedded) {
           onCreated?.({ id, title: createdTitle, hasPastExam: attachedPastExam });
@@ -186,11 +231,6 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
       </button>
     );
   }
-
-  const onFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0] ?? null;
-    setPastExamFile(f);
-  };
 
   return (
     <div
@@ -314,25 +354,61 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
               className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.12em]"
               style={{ color: "rgba(255,255,255,0.5)" }}
             >
-              Altklausur (PDF / TXT / MD)
+              Altklausuren (optional)
             </label>
-            <input
-              type="file"
-              accept=".pdf,.txt,.md,.markdown"
-              onChange={onFile}
-              className="block w-full rounded-xl border px-3 py-2 text-[12.5px] text-white/80 outline-none file:mr-3 file:rounded-md file:border-0 file:bg-white/10 file:px-2 file:py-1 file:text-[12px] file:font-semibold file:text-white hover:file:bg-white/15"
+            <div
+              {...pastExamZone.getRootProps()}
+              className="cursor-pointer rounded-xl border border-dashed px-3 py-5 text-center transition"
               style={{
-                background: "rgba(255,255,255,0.04)",
-                borderColor: "rgba(255,255,255,0.14)",
+                borderColor: pastExamZone.isDragActive
+                  ? "rgba(79,209,165,0.7)"
+                  : "rgba(255,255,255,0.18)",
+                background: pastExamZone.isDragActive
+                  ? "rgba(79,209,165,0.06)"
+                  : "rgba(255,255,255,0.03)",
               }}
-            />
-            {pastExamFile && (
-              <p
-                className="mt-1 text-[11.5px]"
-                style={{ color: "rgba(255,255,255,0.55)" }}
-              >
-                {pastExamFile.name} · {(pastExamFile.size / 1024).toFixed(0)} KB
+            >
+              <input {...pastExamZone.getInputProps()} />
+              <p className="text-[12.5px] leading-snug text-white/85">
+                Altklausuren hier rein (PDF) – je mehr, desto realistischer
+                wird deine Probeklausur.
               </p>
+              <p
+                className="mt-1 text-[11px]"
+                style={{ color: "rgba(255,255,255,0.45)" }}
+              >
+                max. {MAX_PAST_EXAM_FILES} Dateien · PDF, TXT, MD
+              </p>
+            </div>
+            {pastExamFiles.length > 0 && (
+              <ul className="mt-2 space-y-1">
+                {pastExamFiles.map((f) => (
+                  <li
+                    key={f.name}
+                    className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-[11.5px]"
+                    style={{
+                      background: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                    }}
+                  >
+                    <span className="min-w-0 flex-1 truncate text-white/85">
+                      {f.name} · {(f.size / 1024).toFixed(0)} KB
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setPastExamFiles((prev) =>
+                          prev.filter((x) => x.name !== f.name),
+                        )
+                      }
+                      aria-label={`${f.name} entfernen`}
+                      className="ml-2 shrink-0 text-white/50 transition hover:text-white"
+                    >
+                      <X size={12} strokeWidth={2.2} aria-hidden />
+                    </button>
+                  </li>
+                ))}
+              </ul>
             )}
           </div>
           <div>

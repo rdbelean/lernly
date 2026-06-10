@@ -5,7 +5,13 @@ import { revalidatePath } from "next/cache";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { STUDY_UPLOADS_BUCKET } from "@/lib/uploads";
 import { extractTextFromUpload } from "@/lib/textExtract";
-import { analyzePastExam } from "@/lib/examAnalysis";
+import {
+  analyzePastExam,
+  finalizeProfile,
+  mergeExamProfiles,
+  type PerExamInput,
+} from "@/lib/examAnalysis";
+import { MAX_PAST_EXAM_FILES } from "@/lib/uploadConfig";
 import { FidelitySchema, type Fidelity } from "@/lib/schema";
 
 const ALLOWED_COLORS = new Set([
@@ -123,72 +129,166 @@ export async function deleteExam(id: string) {
   revalidatePath("/dashboard");
 }
 
-// Phase-1 brief §7-step-3: when Path A has a past exam, download from Storage,
-// extract text, run analyzePastExam, persist the reference + the analysis.
-// Graceful degradation — if analysis fails (timeout, schema invalid, model
-// error), the reference row still gets stored and exam_profile stays null
-// so the user can retry later (or proceed without the lens).
-export async function attachPastExamToExam(input: {
+// Multi-Altklausur intake: download + extract each file (skipping unreadable
+// scanned PDFs and reporting them by name), insert exam_references rows,
+// then re-analyze ALL past-exam references of this exam (existing + new,
+// newest first, cap MAX_PAST_EXAM_FILES) in parallel and merge into ONE
+// course-level profile. Graceful degradation at every step — references
+// survive analysis failures so the user can retry later (or proceed
+// without the lens). BYOK isn't applied to analysis in V1 (small calls,
+// run on Lernly's bill — same as the previous single-file version).
+export async function attachPastExamsToExam(input: {
   examId: string;
-  storagePath: string;
-  filename: string;
-}): Promise<{ ok: boolean; reason?: string }> {
+  files: { storagePath: string; filename: string }[];
+}): Promise<{
+  ok: boolean;
+  reason?: string;
+  analyzed?: number;
+  examCount?: number;
+  skipped?: string[];
+}> {
   const { userId } = await authedClient();
+  const files = input.files.slice(0, MAX_PAST_EXAM_FILES);
+  if (files.length === 0) return { ok: false, reason: "no_files" };
   // Ownership guard: service-role downloads bypass RLS, so enforce that the
-  // path is in the requesting user's folder before touching it.
-  if (!input.storagePath.startsWith(`${userId}/`)) {
-    throw new Error("Ungültiger Datei-Verweis.");
+  // paths are in the requesting user's folder before touching them.
+  for (const f of files) {
+    if (!f.storagePath.startsWith(`${userId}/`)) {
+      throw new Error("Ungültiger Datei-Verweis.");
+    }
   }
+
   const service = createServiceClient();
-  const dl = await service.storage
-    .from(STUDY_UPLOADS_BUCKET)
-    .download(input.storagePath);
-  if (dl.error || !dl.data) {
-    throw new Error(`Konnte Datei nicht laden: ${dl.error?.message ?? "leer"}`);
-  }
-  const buffer = Buffer.from(await dl.data.arrayBuffer());
-  const extracted = await extractTextFromUpload(buffer, input.filename);
-  if (!extracted.text.trim()) {
-    throw new Error(
-      "Aus dieser Datei konnte kein Text gelesen werden (vermutlich gescannt). Lade die Originaldatei mit echtem Text hoch.",
-    );
-  }
-
-  // Insert the reference first — that survives even if analysis fails.
-  // Use the user-scoped client so RLS applies.
+  // Use the user-scoped client for inserts/updates so RLS applies.
   const supabase = await createClient();
-  const { error: insErr } = await supabase.from("exam_references").insert({
-    exam_id: input.examId,
-    user_id: userId,
-    filename: input.filename,
-    extracted_text: extracted.text,
-    kind: "past_exam",
-  });
-  if (insErr) throw new Error(insErr.message);
+  const skipped: string[] = [];
 
-  // Now run analysis. The default Anthropic client uses ANTHROPIC_API_KEY
-  // from env — same as the generation pipeline. BYOK isn't applied to
-  // analysis in V1 (small call, run on Lernly's bill).
+  // 1) Per-file download + extract. Bad files (scanned, download error) are
+  //    skipped and named — never fail the whole batch on one bad file.
+  for (const f of files) {
+    const dl = await service.storage
+      .from(STUDY_UPLOADS_BUCKET)
+      .download(f.storagePath);
+    if (dl.error || !dl.data) {
+      skipped.push(f.filename);
+      continue;
+    }
+    const buffer = Buffer.from(await dl.data.arrayBuffer());
+    let extracted;
+    try {
+      extracted = await extractTextFromUpload(buffer, f.filename);
+    } catch {
+      skipped.push(f.filename);
+      continue;
+    }
+    if (!extracted.text.trim()) {
+      skipped.push(f.filename);
+      continue;
+    }
+    const { error: insErr } = await supabase.from("exam_references").insert({
+      exam_id: input.examId,
+      user_id: userId,
+      filename: f.filename,
+      extracted_text: extracted.text,
+      kind: "past_exam",
+    });
+    if (insErr) throw new Error(insErr.message);
+  }
+
+  // 2) Re-load ALL past-exam references (existing + just-added) so adding
+  //    files to an exam that already has Altklausuren re-covers the full set.
+  const { data: refs, error: refErr } = await supabase
+    .from("exam_references")
+    .select("filename, extracted_text")
+    .eq("exam_id", input.examId)
+    .eq("kind", "past_exam")
+    .order("created_at", { ascending: false })
+    .limit(MAX_PAST_EXAM_FILES);
+  if (refErr) throw new Error(refErr.message);
+  const usable = (refs ?? []).filter((r) =>
+    ((r.extracted_text as string | null) ?? "").trim(),
+  );
+  if (usable.length === 0) {
+    return { ok: false, reason: "no_readable_text", skipped };
+  }
+
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    // Reference is saved, profile stays null. Caller can retry later.
-    return { ok: false, reason: "no_api_key" };
+    // References are saved, profile stays as-is. Caller can retry later.
+    return { ok: false, reason: "no_api_key", skipped };
   }
   const client = new Anthropic({ apiKey });
-  const result = await analyzePastExam(client, extracted.text);
-  if (!result.ok) {
-    return { ok: false, reason: result.reason };
+
+  // 3) Per-exam analysis IN PARALLEL — wall time ≈ one analysis. Failures
+  //    drop out individually; partial evidence beats none.
+  const results = await Promise.all(
+    usable.map((r) => analyzePastExam(client, r.extracted_text as string)),
+  );
+  const perExamInputs: PerExamInput[] = [];
+  results.forEach((res, i) => {
+    if (res.ok) {
+      perExamInputs.push({
+        filename:
+          (usable[i].filename as string | null) ?? `Altklausur ${i + 1}`,
+        year: res.profile.year,
+        profile: res.profile,
+      });
+    }
+  });
+  if (perExamInputs.length === 0) {
+    const firstFail = results.find((r) => !r.ok);
+    return {
+      ok: false,
+      reason: firstFail && !firstFail.ok ? firstFail.reason : "unknown",
+      skipped,
+    };
   }
+
+  const perExamMeta = perExamInputs.map((x) => ({
+    filename: x.filename,
+    ...(x.year ? { year: x.year } : {}),
+  }));
+
+  // 4) Merge (multi-exam) or map directly (single exam). Merge failure
+  //    falls back to the newest single-exam profile at counts 1/1 —
+  //    honest, never a fabricated frequency.
+  let finalProfile;
+  if (perExamInputs.length === 1) {
+    finalProfile = finalizeProfile(perExamInputs[0].profile, 1, perExamMeta);
+  } else {
+    const merged = await mergeExamProfiles(client, perExamInputs);
+    if (merged.ok) {
+      finalProfile = finalizeProfile(
+        merged.profile,
+        perExamInputs.length,
+        perExamMeta,
+      );
+    } else {
+      console.warn(
+        "[attachPastExamsToExam] merge failed, falling back to newest single profile",
+        merged.reason,
+      );
+      finalProfile = finalizeProfile(perExamInputs[0].profile, 1, [
+        perExamMeta[0],
+      ]);
+    }
+  }
+
   const { error: upErr } = await supabase
     .from("exams")
-    .update({ exam_profile: result.profile })
+    .update({ exam_profile: finalProfile })
     .eq("id", input.examId);
   if (upErr) {
-    console.error("[attachPastExamToExam] persist profile failed", upErr);
-    return { ok: false, reason: "persist_failed" };
+    console.error("[attachPastExamsToExam] persist profile failed", upErr);
+    return { ok: false, reason: "persist_failed", skipped };
   }
   revalidatePath("/dashboard");
-  return { ok: true };
+  return {
+    ok: true,
+    analyzed: perExamInputs.length,
+    examCount: finalProfile.exam_count,
+    skipped,
+  };
 }
 
 export async function assignPackToExam(input: {
