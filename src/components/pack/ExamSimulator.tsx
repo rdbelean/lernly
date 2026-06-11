@@ -3,11 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import confetti from "canvas-confetti";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Trophy, CheckCircle2, Target, AlertCircle } from "lucide-react";
 import type { ExamLens, SimulatorQuestion } from "@/lib/schema";
 import { examLensBadgeText, findTopicAppearances } from "@/lib/examLens";
 import { renderRichText } from "@/lib/richText";
 import { track } from "@/lib/analytics";
+import TopicBreakdown from "./TopicBreakdown";
+import { simulatorTopicRows } from "@/lib/pack/studyAnalysis";
 
 type Language = "en" | "de";
 
@@ -69,16 +71,26 @@ export default function ExamSimulator({
       (a, i) => a === questions[i]?.correctIndex,
     ).length;
     const pct = Math.round((correct / questions.length) * 100);
-    const grade = pct >= 90 ? "🏆" : pct >= 70 ? "🎉" : pct >= 50 ? "👍" : "💪";
+    const tier =
+      pct >= 90
+        ? { Icon: Trophy, color: "#4FD1A5" }
+        : pct >= 70
+          ? { Icon: CheckCircle2, color: "#4FD1A5" }
+          : pct >= 50
+            ? { Icon: Target, color: "#F2A33C" }
+            : { Icon: AlertCircle, color: "#F2845C" };
+    const TierIcon = tier.Icon;
+    const topicRows = simulatorTopicRows(questions, answers);
     return (
       <div className="flex flex-col items-center gap-5 py-12 text-center">
         <motion.div
-          initial={{ scale: 0, rotate: -180 }}
+          initial={{ scale: 0, rotate: -90 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: "spring", stiffness: 220, damping: 14 }}
-          className="text-[64px]"
+          className="flex h-16 w-16 items-center justify-center rounded-2xl"
+          style={{ background: `${tier.color}26` }}
         >
-          {grade}
+          <TierIcon size={30} strokeWidth={2} color={tier.color} />
         </motion.div>
         <div>
           <h3 className="text-[28px] font-bold tracking-[-0.6px] text-white">
@@ -90,6 +102,7 @@ export default function ExamSimulator({
               : `${correct} von ${questions.length} richtig — ${pct}%`}
           </p>
         </div>
+        <TopicBreakdown rows={topicRows} language={language} />
         <button
           onClick={() => {
             setIndex(0);

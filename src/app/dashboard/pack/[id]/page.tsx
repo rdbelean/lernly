@@ -178,7 +178,7 @@ export default async function PackDetailPage({
         )}
 
         <PackHeader
-          courseTitle={pack.courseTitle}
+          courseTitle={data.title}
           packId={data.id}
           meta={meta}
           exam={exam}

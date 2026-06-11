@@ -2,6 +2,7 @@ import DeletePackButton from "@/app/dashboard/pack/[id]/delete-button";
 import { countdownInfo, examRgba } from "@/lib/exams";
 import { ChevronRight, Clock } from "lucide-react";
 import FeedbackLink from "@/components/FeedbackLink";
+import PackTitle from "./PackTitle";
 
 // =========================================================================
 // PackHeader — the persistent "where am I" context bar at the top of every
@@ -56,16 +57,7 @@ export default function PackHeader({
 
       <div className="mt-3 flex flex-wrap items-start justify-between gap-3 sm:mt-4 sm:flex-nowrap">
         <div className="min-w-0 flex-1">
-          <h1
-            className="font-semibold leading-tight tracking-[-0.4px]"
-            style={{
-              fontSize: "clamp(20px, 3vw, 30px)",
-              color: "var(--color-text)",
-              fontFamily: "var(--font-display)",
-            }}
-          >
-            {courseTitle}
-          </h1>
+          <PackTitle packId={packId} initialTitle={courseTitle} />
           {meta.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-2">
               {meta.map((m, i) => (

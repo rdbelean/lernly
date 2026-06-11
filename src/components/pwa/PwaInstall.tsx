@@ -292,7 +292,7 @@ export function PwaInstall({ autoShow = true }: { autoShow?: boolean }) {
  * user install later after dismissing the auto-prompt. Hidden when already
  * installed (standalone).
  */
-export function PwaInstallEntry() {
+export function PwaInstallEntry({ className }: { className?: string }) {
   const [show, setShow] = useState(false);
   useEffect(() => {
     setShow(!isStandalone());
@@ -302,7 +302,10 @@ export function PwaInstallEntry() {
     <button
       type="button"
       onClick={() => window.dispatchEvent(new Event(PWA_OPEN_EVENT))}
-      className="inline-flex items-center gap-1.5 text-[12px] transition hover:text-white"
+      className={
+        "inline-flex items-center gap-1.5 text-[12px] transition hover:text-white " +
+        (className ?? "")
+      }
       style={{ color: "var(--color-text-faint)" }}
     >
       <Download size={13} strokeWidth={1.75} aria-hidden />

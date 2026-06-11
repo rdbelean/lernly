@@ -74,3 +74,26 @@ export async function saveQuizAttempt(input: SaveQuizAttemptInput): Promise<void
   // Log today as a study day so quiz-only days count toward the heatmap/streak.
   await markStudyDay(createServiceClient(), data.user.id, new Date());
 }
+
+// Rename a study pack. Updates study_packs.title (the column shown in the
+// library + breadcrumb + header). RLS (study_packs_update_own) scopes it to the
+// owner; the auth gate is defense in depth.
+export async function renamePack(input: {
+  id: string;
+  title: string;
+}): Promise<void> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Nicht angemeldet.");
+  const title = input.title.trim().slice(0, 120);
+  if (!title) throw new Error("Titel darf nicht leer sein.");
+  const { error } = await supabase
+    .from("study_packs")
+    .update({ title })
+    .eq("id", input.id);
+  if (error) throw new Error(error.message);
+  revalidatePath(`/dashboard/pack/${input.id}`);
+  revalidatePath("/dashboard");
+}

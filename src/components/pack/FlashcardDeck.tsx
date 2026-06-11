@@ -9,7 +9,19 @@ import { track } from "@/lib/analytics";
 import { renderRichText } from "@/lib/richText";
 import TutorChat from "./TutorChat";
 import type { TutorScope } from "@/lib/tutorPrompt";
-import { Check, Minus, RotateCcw, Sparkles, type LucideIcon } from "lucide-react";
+import {
+  Check,
+  Minus,
+  RotateCcw,
+  Sparkles,
+  Trophy,
+  CheckCircle2,
+  Target,
+  AlertCircle,
+  type LucideIcon,
+} from "lucide-react";
+import TopicBreakdown from "./TopicBreakdown";
+import { flashcardTopicRows, splitMnemonic } from "@/lib/pack/studyAnalysis";
 
 type Language = "en" | "de";
 type CardStatus = "new" | "again" | "almost" | "known";
@@ -180,15 +192,28 @@ export default function FlashcardDeck({
       (s) => s === "again" || s === "almost",
     ).length;
     const mastery = Math.round((knownCount / cards.length) * 100);
+    const tier =
+      mastery === 100
+        ? { Icon: Trophy, color: "#4FD1A5" }
+        : mastery >= 70
+          ? { Icon: CheckCircle2, color: "#4FD1A5" }
+          : mastery >= 50
+            ? { Icon: Target, color: "#F2A33C" }
+            : { Icon: AlertCircle, color: "#F2845C" };
+    const TierIcon = tier.Icon;
+    const topicRows = flashcardTopicRows(
+      cards.map((c) => ({ category: c.category, status: statuses[deckKey(c)] })),
+    );
     return (
       <div className="flex flex-col items-center gap-5 py-12 text-center">
         <motion.div
-          initial={{ scale: 0, rotate: -180 }}
+          initial={{ scale: 0, rotate: -90 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: "spring", stiffness: 220, damping: 14 }}
-          className="text-[64px]"
+          className="flex h-16 w-16 items-center justify-center rounded-2xl"
+          style={{ background: `${tier.color}26` }}
         >
-          {mastery === 100 ? "🏆" : mastery >= 70 ? "🎉" : "💪"}
+          <TierIcon size={30} strokeWidth={2} color={tier.color} />
         </motion.div>
         <div>
           <h3 className="text-[28px] font-bold tracking-[-0.6px] text-white">
@@ -200,6 +225,7 @@ export default function FlashcardDeck({
               : `${knownCount} von ${cards.length} Karten — ${mastery}% Mastery`}
           </p>
         </div>
+        <TopicBreakdown rows={topicRows} language={language} />
         <div className="flex flex-wrap justify-center gap-2">
           {wrong > 0 && (
             <button
@@ -223,6 +249,17 @@ export default function FlashcardDeck({
   if (!card) return null;
 
   const ghosts = queue.slice(index + 1, index + 3);
+
+  // Split the answer into its body (direct answer + explanation, kept as
+  // separate spaced paragraphs) and the trailing mnemonic, so the card reads
+  // with clear separation instead of one cramped block.
+  const { body: answerBody, mnemonic: answerMnemonic } = splitMnemonic(
+    card.answer,
+  );
+  const answerBodyParts = answerBody
+    .split(/<br\s*\/?>/i)
+    .map((s) => s.trim())
+    .filter(Boolean);
 
   return (
     <div>
@@ -334,7 +371,7 @@ export default function FlashcardDeck({
             >
               {/* Question face */}
               <div
-                className="flex flex-col justify-between rounded-2xl border border-white/15 p-6 sm:p-7"
+                className="flex flex-col justify-between rounded-2xl border border-white/8 p-6 sm:p-7"
                 style={{
                   gridArea: "1 / 1",
                   backfaceVisibility: "hidden",
@@ -364,7 +401,7 @@ export default function FlashcardDeck({
 
               {/* Answer face (rotated 180deg) */}
               <div
-                className="flex flex-col justify-between rounded-2xl border border-white/15 p-6 sm:p-7"
+                className="flex flex-col justify-between rounded-2xl border border-white/8 p-6 sm:p-7"
                 style={{
                   gridArea: "1 / 1",
                   backfaceVisibility: "hidden",
@@ -380,12 +417,34 @@ export default function FlashcardDeck({
                   >
                     {isEn ? "Answer" : "Antwort"}
                   </div>
-                  <div
-                    className="mt-3 break-words text-[16px] leading-relaxed text-white"
-                    dangerouslySetInnerHTML={{
-                      __html: renderRichText(card.answer),
-                    }}
-                  />
+                  <div className="mt-3 space-y-2.5 break-words text-[16px] leading-relaxed text-white">
+                    {answerBodyParts.map((p, i) => (
+                      <p
+                        key={i}
+                        dangerouslySetInnerHTML={{ __html: renderRichText(p) }}
+                      />
+                    ))}
+                  </div>
+                  {answerMnemonic && (
+                    <div
+                      className="mt-4 border-t pt-4"
+                      style={{ borderColor: "rgba(255,255,255,0.08)" }}
+                    >
+                      <div
+                        className="text-[10.5px] font-semibold uppercase tracking-[0.16em]"
+                        style={{ color: "var(--color-cat-teal)" }}
+                      >
+                        {isEn ? "Memory hook" : "Merkhilfe"}
+                      </div>
+                      <div
+                        className="mt-1.5 break-words text-[14.5px] leading-relaxed"
+                        style={{ color: "rgba(255,255,255,0.82)" }}
+                        dangerouslySetInnerHTML={{
+                          __html: renderRichText(answerMnemonic),
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>

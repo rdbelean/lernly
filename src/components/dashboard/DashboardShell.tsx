@@ -11,11 +11,17 @@ import {
   LogOut,
   Menu,
   ChevronRight,
+  Mail,
 } from "lucide-react";
 import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
 import WelcomeModal from "@/components/dashboard/WelcomeModal";
 import FeedbackLink from "@/components/FeedbackLink";
 import { PwaInstall, PwaInstallEntry } from "@/components/pwa/PwaInstall";
+
+// Shared footer-row affordance: full-width, padded, subtle hover background so
+// every clickable footer item clearly reads as clickable (matches NavLink).
+const FOOTER_ROW =
+  "w-full rounded-lg px-3 py-2 transition hover:bg-white/[0.04]";
 
 type RecentPack = {
   id: string;
@@ -57,9 +63,9 @@ function NavLink({
     <a
       href={href}
       onClick={onClick}
-      className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition"
+      className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition ${active ? "" : "hover:bg-white/[0.04] hover:text-white"}`}
       style={{
-        background: active ? "var(--color-surface-2)" : "transparent",
+        background: active ? "var(--color-surface-2)" : undefined,
         color: active ? "var(--color-text)" : "var(--color-text-dim)",
       }}
     >
@@ -204,26 +210,27 @@ function SidebarContent({
           icon={Settings}
           label="Einstellungen"
         />
-        <div className="mt-2 flex flex-col gap-2 px-3">
-          <FeedbackLink />
-          <PwaInstallEntry />
+        <div className="mt-0.5 flex flex-col gap-0.5">
+          <FeedbackLink className={FOOTER_ROW} />
+          <PwaInstallEntry className={FOOTER_ROW} />
+          <form action="/auth/signout" method="post">
+            <button
+              type="submit"
+              className={`inline-flex items-center gap-1.5 text-[12px] transition hover:text-white ${FOOTER_ROW}`}
+              style={{ color: "var(--color-text-faint)" }}
+            >
+              <LogOut size={13} strokeWidth={1.75} aria-hidden />
+              Abmelden
+            </button>
+          </form>
         </div>
         <div
-          className="mt-3 truncate px-3 text-[11px]"
+          className="mt-2 flex items-center gap-2 px-3 text-[11.5px]"
           style={{ color: "var(--color-text-faint)" }}
         >
-          {email}
+          <Mail size={12} strokeWidth={1.75} aria-hidden className="shrink-0 opacity-70" />
+          <span className="truncate">{email}</span>
         </div>
-        <form action="/auth/signout" method="post" className="mt-2 px-3">
-          <button
-            type="submit"
-            className="inline-flex items-center gap-1.5 text-[12px] transition hover:text-white"
-            style={{ color: "var(--color-text-faint)" }}
-          >
-            <LogOut size={13} strokeWidth={1.75} aria-hidden />
-            Abmelden
-          </button>
-        </form>
       </div>
     </div>
   );
