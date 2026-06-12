@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Sora } from "next/font/google";
+import { Geist, Geist_Mono, Inter, Sora } from "next/font/google";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import "./globals.css";
 
@@ -18,6 +18,20 @@ const sora = Sora({
   variable: "--font-sora",
   display: "swap",
   weight: ["400", "500", "600", "700"],
+});
+
+// Geist Sans / Mono — used by the feature-grid section ("Was Lernly anders
+// macht"), scoped via --font-geist / --font-geist-mono on the html element.
+const geistSans = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist",
+  display: "swap",
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -95,7 +109,7 @@ export default function RootLayout({
   return (
     <html
       lang="de"
-      className={`h-full antialiased ${inter.variable} ${sora.variable}`}
+      className={`h-full antialiased ${inter.variable} ${sora.variable} ${geistSans.variable} ${geistMono.variable}`}
     >
       <body className="ln-page-bg min-h-full flex flex-col text-[color:var(--color-ln-ink)]">
         <script
