@@ -10,6 +10,8 @@ import { renderRichText } from "@/lib/richText";
 import { track } from "@/lib/analytics";
 import TopicBreakdown from "./TopicBreakdown";
 import { simulatorTopicRows } from "@/lib/pack/studyAnalysis";
+import TutorChat from "./TutorChat";
+import type { TutorScope } from "@/lib/tutorPrompt";
 
 type Language = "en" | "de";
 
@@ -42,6 +44,7 @@ export default function ExamSimulator({
   );
   const [revealed, setRevealed] = useState(false);
   const [streak, setStreak] = useState(0);
+  const [tutorOpen, setTutorOpen] = useState(false);
 
   const q = questions[index];
   const answer = answers[index];
@@ -145,6 +148,7 @@ export default function ExamSimulator({
 
   const goNext = () => {
     setRevealed(false);
+    setTutorOpen(false);
     setIndex((i) => i + 1);
   };
 
@@ -382,22 +386,53 @@ export default function ExamSimulator({
                     __html: renderRichText(q.explanation),
                   }}
                 />
-                <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.15 }}
-                  onClick={goNext}
-                  whileHover={{ x: 2 }}
-                  whileTap={{ scale: 0.96 }}
-                  className="mt-4 rounded-full bg-white px-5 py-2 text-[13px] font-semibold text-[#0F1535] transition hover:bg-white/90"
-                >
-                  {isEn ? "Next →" : "Weiter →"}
-                </motion.button>
+                <div className="mt-4 flex flex-wrap items-center gap-2.5">
+                  <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.15 }}
+                    onClick={goNext}
+                    whileHover={{ x: 2 }}
+                    whileTap={{ scale: 0.96 }}
+                    className="rounded-full bg-white px-5 py-2 text-[13px] font-semibold text-[#0F1535] transition hover:bg-white/90"
+                  >
+                    {isEn ? "Next →" : "Weiter →"}
+                  </motion.button>
+                  <button
+                    type="button"
+                    onClick={() => setTutorOpen(true)}
+                    className="inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[12.5px] font-semibold transition"
+                    style={{
+                      background: "rgba(91,184,216,0.06)",
+                      borderColor: "rgba(91,184,216,0.3)",
+                      color: "var(--color-ln-cyan)",
+                    }}
+                  >
+                    <Sparkles size={13} strokeWidth={1.9} aria-hidden />
+                    {isEn ? "Explain it" : "Erklär's mir"}
+                  </button>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
         </motion.div>
       </AnimatePresence>
+
+      {q && (
+        <TutorChat
+          open={tutorOpen}
+          onClose={() => setTutorOpen(false)}
+          scope={
+            {
+              kind: "flashcard",
+              question: q.question,
+              answer: q.explanation,
+              category: q.category,
+            } satisfies TutorScope
+          }
+          language={language}
+        />
+      )}
     </div>
   );
 }

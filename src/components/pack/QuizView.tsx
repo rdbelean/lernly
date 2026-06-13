@@ -6,6 +6,8 @@ import { examLensBadgeText, findTopicAppearances } from "@/lib/examLens";
 import { renderRichText } from "@/lib/richText";
 import { track } from "@/lib/analytics";
 import { saveQuizAttempt } from "@/app/dashboard/pack/[id]/actions";
+import TutorChat from "./TutorChat";
+import type { TutorScope } from "@/lib/tutorPrompt";
 import {
   BookOpen,
   RefreshCw,
@@ -150,6 +152,8 @@ export default function QuizView({
   const [repracticeError, setRepracticeError] = useState<string | null>(null);
   const resultsRef = useRef<HTMLDivElement | null>(null);
   const firstAnswerFired = useRef(false);
+  // qid of the question whose KI-Hilfe tutor is open (null = closed).
+  const [tutorQ, setTutorQ] = useState<string | null>(null);
 
   // If the parent ever swaps questions (different pack opened), full reset.
   useEffect(() => {
@@ -161,6 +165,7 @@ export default function QuizView({
     setSeenStems([]);
     setIsRePractice(false);
     setRepracticeError(null);
+    setTutorQ(null);
   }, [questions]);
 
   if (deck.length === 0) {
@@ -282,6 +287,7 @@ export default function QuizView({
     setSeenStems([]);
     setIsRePractice(false);
     setRepracticeError(null);
+    setTutorQ(null);
   };
 
   // Load a fresh re-practice deck scoped to current weak topics. Server route
@@ -318,6 +324,7 @@ export default function QuizView({
       setFilter("all");
       setOpenTheory({});
       setIsRePractice(true);
+      setTutorQ(null);
       requestAnimationFrame(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
@@ -808,6 +815,19 @@ export default function QuizView({
                       __html: renderRichText(q.explanation),
                     }}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setTutorQ(q.id)}
+                    className="mt-2.5 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11.5px] font-semibold transition"
+                    style={{
+                      background: "rgba(91,184,216,0.06)",
+                      borderColor: "rgba(91,184,216,0.3)",
+                      color: "var(--color-ln-cyan)",
+                    }}
+                  >
+                    <Sparkles size={12} strokeWidth={1.9} aria-hidden />
+                    {isEn ? "Explain it" : "Erklär's mir"}
+                  </button>
                 </div>
               )}
             </li>
@@ -852,6 +872,26 @@ export default function QuizView({
           </button>
         </div>
       )}
+
+      {(() => {
+        const tq = tutorQ ? deck.find((d) => d.id === tutorQ) : null;
+        if (!tq) return null;
+        return (
+          <TutorChat
+            open
+            onClose={() => setTutorQ(null)}
+            scope={
+              {
+                kind: "flashcard",
+                question: tq.stem,
+                answer: tq.explanation,
+                category: tq.category,
+              } satisfies TutorScope
+            }
+            language={language}
+          />
+        );
+      })()}
     </div>
   );
 }

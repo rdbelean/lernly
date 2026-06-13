@@ -6,6 +6,8 @@ import { Sparkles } from "lucide-react";
 import type { ExamLens, OpenQuestion } from "@/lib/schema";
 import { examLensBadgeText, findTopicAppearances } from "@/lib/examLens";
 import { renderRichText } from "@/lib/richText";
+import TutorChat from "./TutorChat";
+import type { TutorScope } from "@/lib/tutorPrompt";
 
 type Language = "en" | "de";
 
@@ -21,6 +23,7 @@ export default function OpenQuestionsView({
   const isEn = language === "en";
   const [index, setIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
+  const [tutorOpen, setTutorOpen] = useState(false);
 
   if (questions.length === 0) {
     return (
@@ -36,6 +39,7 @@ export default function OpenQuestionsView({
 
   const go = (delta: number) => {
     setRevealed(false);
+    setTutorOpen(false);
     setIndex((i) => Math.max(0, Math.min(questions.length - 1, i + delta)));
   };
 
@@ -139,6 +143,21 @@ export default function OpenQuestionsView({
                     </ul>
                   </div>
                 )}
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setTutorOpen(true)}
+                    className="inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[12.5px] font-semibold transition"
+                    style={{
+                      background: "rgba(91,184,216,0.06)",
+                      borderColor: "rgba(91,184,216,0.3)",
+                      color: "var(--color-ln-cyan)",
+                    }}
+                  >
+                    <Sparkles size={13} strokeWidth={1.9} aria-hidden />
+                    {isEn ? "Explain it" : "Erklär's mir"}
+                  </button>
+                </div>
               </motion.div>
             )}
           </div>
@@ -161,6 +180,20 @@ export default function OpenQuestionsView({
           {isEn ? "Next" : "Weiter"} →
         </button>
       </div>
+
+      <TutorChat
+        open={tutorOpen}
+        onClose={() => setTutorOpen(false)}
+        scope={
+          {
+            kind: "flashcard",
+            question: q.question,
+            answer: q.modelAnswer,
+            category: q.category,
+          } satisfies TutorScope
+        }
+        language={language}
+      />
     </div>
   );
 }

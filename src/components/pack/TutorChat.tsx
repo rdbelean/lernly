@@ -2,7 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { Lock } from "lucide-react";
 import { renderRichText } from "@/lib/richText";
+import { markdownLightToHtml } from "@/lib/markdownLight";
+import LernlyLogo from "@/components/LernlyLogo";
 import type { TutorScope } from "@/lib/tutorPrompt";
 
 type Language = "en" | "de";
@@ -145,7 +148,7 @@ export default function TutorChat({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
             onClick={onClose}
-            className="fixed inset-0 z-[80]"
+            className="fixed inset-0 z-[80] sm:hidden"
             style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)" }}
           />
           {/* Sheet (mobile: bottom; desktop: centered modal) */}
@@ -157,7 +160,7 @@ export default function TutorChat({
             transition={{ duration: 0.22, ease: "easeOut" }}
             role="dialog"
             aria-modal="true"
-            className="fixed inset-x-0 bottom-0 z-[81] mx-auto flex max-h-[88vh] w-full flex-col rounded-t-2xl border border-white/10 bg-[#0F1535] sm:inset-x-0 sm:bottom-auto sm:top-1/2 sm:max-w-[520px] sm:-translate-y-1/2 sm:rounded-2xl"
+            className="fixed inset-x-0 bottom-0 z-[81] mx-auto flex max-h-[88vh] w-full flex-col rounded-t-2xl border border-white/10 bg-[#0F1535] sm:inset-y-0 sm:right-0 sm:left-auto sm:mx-0 sm:h-full sm:max-h-none sm:w-[380px] sm:max-w-none sm:rounded-none sm:rounded-l-2xl"
             style={{
               background:
                 "linear-gradient(180deg, rgba(20,22,28,0.96), rgba(15,21,53,0.96))",
@@ -173,7 +176,7 @@ export default function TutorChat({
             <div className="flex items-center justify-between gap-3 border-b border-white/8 px-4 py-3 sm:py-4">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-[18px]">✨</span>
+                  <LernlyLogo variant="symbol" size={18} alt="" />
                   <h2 className="text-[15px] font-bold text-white sm:text-[16px]">
                     {labels.title}
                   </h2>
@@ -262,7 +265,7 @@ export default function TutorChat({
                       {m.role === "assistant" ? (
                         <div
                           dangerouslySetInnerHTML={{
-                            __html: renderRichText(m.content),
+                            __html: renderRichText(markdownLightToHtml(m.content)),
                           }}
                         />
                       ) : (
@@ -312,8 +315,9 @@ export default function TutorChat({
                     color: "rgba(255,224,160,0.95)",
                   }}
                 >
-                  <div className="text-[13px] font-bold text-white">
-                    🔒 {labels.quotaExhaustedTitle}
+                  <div className="flex items-center gap-1.5 text-[13px] font-bold text-white">
+                    <Lock size={13} strokeWidth={2.2} aria-hidden />
+                    {labels.quotaExhaustedTitle}
                   </div>
                   <p className="mt-1">
                     {isEn
