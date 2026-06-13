@@ -170,35 +170,63 @@ export default async function DashboardPage({
           </PrimaryCTALink>
         </div>
 
+        {/* Slim quota strip — one row: plan · usage · inline mini-bar · CTA.
+            Calm single-tone bar; coral only when fully consumed (signal). */}
         <div
-          className="mb-10 overflow-hidden"
+          className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-2.5 px-4 py-2.5"
           style={{
             background: "#141930",
             border: "1px solid rgba(255,255,255,0.06)",
-            borderRadius: "16px",
+            borderRadius: "14px",
           }}
         >
-          <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
+          <div
+            className="flex items-center gap-2 text-[12.5px]"
+            style={{ color: "var(--color-text-dim)" }}
+          >
+            <span style={{ color: "var(--color-text)", fontWeight: 600 }}>
+              {planLabel}
+            </span>
+            <span className="opacity-40">·</span>
+            <span className="tabular-nums">
+              <span style={{ color: "var(--color-text)", fontWeight: 600 }}>
+                {used}
+              </span>
+              /{planLimit} Pakete
+            </span>
+            {credits > 0 && (
+              <span
+                className="rounded-full px-1.5 py-0.5 text-[11px] font-semibold"
+                style={{
+                  color: "var(--color-primary-bright)",
+                  background: "rgba(110,128,242,0.12)",
+                }}
+              >
+                +{credits} Extra
+              </span>
+            )}
+          </div>
+
+          {/* Inline mini-bar — fills the middle on desktop, wraps full-width on mobile */}
+          <div className="order-last w-full sm:order-none sm:w-auto sm:min-w-[80px] sm:max-w-[240px] sm:flex-1">
             <div
-              className="text-[13px]"
-              style={{ color: "var(--color-text-dim)" }}
+              aria-hidden
+              className="h-1.5 w-full overflow-hidden rounded-full"
+              style={{ background: "rgba(255,255,255,0.06)" }}
             >
-              <span style={{ color: "var(--color-text)", fontWeight: 500 }}>
-                {planLabel}-Plan
-              </span>
-              <span className="mx-2 opacity-50">·</span>
-              <span>
-                {used} / {planLimit} Pakete diesen Monat
-              </span>
-              {credits > 0 && (
-                <span
-                  className="ml-2"
-                  style={{ color: "var(--color-primary-bright)" }}
-                >
-                  · +{credits} Extra-Paket{credits === 1 ? "" : "e"} verfügbar
-                </span>
-              )}
+              <div
+                className="h-full rounded-full transition-all"
+                style={{
+                  width: `${quotaPercent}%`,
+                  background: quotaReached
+                    ? "var(--color-cat-coral)"
+                    : "var(--color-primary-bright)",
+                }}
+              />
             </div>
+          </div>
+
+          <div className="ml-auto">
             {quotaReached && credits === 0 ? (
               <PrimaryCTALink
                 size="sm"
@@ -211,30 +239,13 @@ export default async function DashboardPage({
               plan === "free" && (
                 <a
                   href="/dashboard/settings"
-                  className="text-[13px] underline-offset-2 hover:underline"
-                  style={{ color: "var(--color-text-dim)" }}
+                  className="text-[12.5px] font-medium underline-offset-2 hover:underline"
+                  style={{ color: "var(--color-primary-bright)" }}
                 >
-                  Upgrade auf Pro
+                  Upgrade
                 </a>
               )
             )}
-          </div>
-          {/* Calm single-tone progress bar — no rainbow gradient. Red only
-              when quota is fully consumed (signal, not decoration). */}
-          <div
-            aria-hidden
-            className="h-[3px] w-full"
-            style={{ background: "rgba(255,255,255,0.04)" }}
-          >
-            <div
-              className="h-full transition-all"
-              style={{
-                width: `${quotaPercent}%`,
-                background: quotaReached
-                  ? "var(--color-cat-coral)"
-                  : "var(--color-primary-bright)",
-              }}
-            />
           </div>
         </div>
 

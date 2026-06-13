@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import {
   Activity,
   Bell,
+  Clock,
   CreditCard,
   Key,
   Mail,
@@ -144,6 +145,10 @@ export default async function SettingsPage() {
   const provider =
     (user.app_metadata?.provider as string | undefined) ?? null;
 
+  // BYOK is paused — the API routes stay live but the form is hidden behind a
+  // "Bald verfügbar" teaser until BYOK_ENABLED=true (set in all Vercel scopes).
+  const byokEnabled = process.env.BYOK_ENABLED === "true";
+
   return (
     <main className="px-6 py-12 sm:py-16">
       <div className="mx-auto max-w-[720px]">
@@ -211,24 +216,40 @@ export default async function SettingsPage() {
               Lernly bei jeder Generierung deinen Key — du zahlst direkt
               an Anthropic, dafür keine Monats-Limits.
             </p>
-            <p
-              className="mb-5 text-[12px]"
-              style={{ color: "var(--color-text-faint)" }}
-            >
-              Key wird mit AES-256-GCM verschlüsselt gespeichert. Du
-              kannst ihn jederzeit löschen. Erstellen unter{" "}
-              <a
-                href="https://console.anthropic.com/settings/keys"
-                target="_blank"
-                rel="noreferrer"
-                className="underline hover:text-white"
-                style={{ color: "var(--color-text-dim)" }}
+            {byokEnabled ? (
+              <>
+                <p
+                  className="mb-5 text-[12px]"
+                  style={{ color: "var(--color-text-faint)" }}
+                >
+                  Key wird mit AES-256-GCM verschlüsselt gespeichert. Du
+                  kannst ihn jederzeit löschen. Erstellen unter{" "}
+                  <a
+                    href="https://console.anthropic.com/settings/keys"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline hover:text-white"
+                    style={{ color: "var(--color-text-dim)" }}
+                  >
+                    console.anthropic.com
+                  </a>
+                  .
+                </p>
+                <BYOKForm keySetAt={keySetAt} />
+              </>
+            ) : (
+              <span
+                className="inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[12.5px] font-semibold"
+                style={{
+                  borderColor: "rgba(255,255,255,0.12)",
+                  background: "rgba(255,255,255,0.03)",
+                  color: "var(--color-text-dim)",
+                }}
               >
-                console.anthropic.com
-              </a>
-              .
-            </p>
-            <BYOKForm keySetAt={keySetAt} />
+                <Clock size={14} strokeWidth={2} aria-hidden />
+                Bald verfügbar
+              </span>
+            )}
           </SectionCard>
 
           <SectionCard icon={Bell} title="Benachrichtigungen">
