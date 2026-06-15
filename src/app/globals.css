@@ -2115,3 +2115,104 @@
     flex: 1 1 0 !important;
   }
 }
+
+/* ========== FEATURE BENTO (cinematic, Flighty-style) ========== */
+
+.ln-fb-section {
+  background-color: #0f1322;
+}
+
+/* Subtle film grain on card surfaces (~3.5% over) */
+.ln-fb-noise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.ln-fb-stage {
+  position: relative;
+}
+
+/* Localized radial light that reads as screen emission */
+.ln-fb-glow {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 115%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  filter: blur(64px);
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0;
+}
+.ln-fb-glow--hero {
+  opacity: 0.8;
+  filter: blur(76px);
+}
+
+/* 3D-tilted device. Eases toward flat on hover for life. */
+.ln-fb-device {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.ln-fb-tilt-l {
+  transform: perspective(1000px) rotateY(-17deg) rotateX(6deg) scale(1.02);
+}
+.ln-fb-tilt-r {
+  transform: perspective(1000px) rotateY(17deg) rotateX(6deg) scale(1.02);
+}
+.ln-fb-tilt-phone {
+  transform: perspective(1000px) rotateY(-14deg) rotateX(5deg);
+}
+.group:hover .ln-fb-tilt-l {
+  transform: perspective(1000px) rotateY(-11deg) rotateX(3deg) scale(1.04) translateY(-6px);
+}
+.group:hover .ln-fb-tilt-r {
+  transform: perspective(1000px) rotateY(11deg) rotateX(3deg) scale(1.04) translateY(-6px);
+}
+.group:hover .ln-fb-tilt-phone {
+  transform: perspective(1000px) rotateY(-9deg) rotateX(3deg) translateY(-8px);
+}
+
+/* Real-screenshot slot once PNGs exist */
+.ln-fb-shot {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 34px 64px -28px rgba(0, 0, 0, 0.8),
+    0 10px 30px -14px rgba(43, 52, 153, 0.55);
+}
+
+/* Mobile: straighten tilts, shrink glow, keep visuals contained */
+@media (max-width: 767px) {
+  .ln-fb-tilt-l,
+  .ln-fb-tilt-r,
+  .ln-fb-tilt-phone,
+  .group:hover .ln-fb-tilt-l,
+  .group:hover .ln-fb-tilt-r,
+  .group:hover .ln-fb-tilt-phone {
+    transform: perspective(1200px) rotateY(0deg) rotateX(0deg);
+  }
+  .ln-fb-glow {
+    opacity: 0.38;
+    filter: blur(46px);
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ln-fb-device {
+    transition: none;
+  }
+}
