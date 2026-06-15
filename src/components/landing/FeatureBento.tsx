@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, FileText, Signal, Wifi } from "lucide-react";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 /* ------------------------------------------------------------------ *
  * Cinematic feature grid — Flighty-style.
@@ -52,7 +52,7 @@ export default function FeatureBento() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-[6%] bottom-0 h-[460px] w-[460px] rounded-full opacity-[0.14] blur-[150px]"
+        className="pointer-events-none absolute -left-[6%] bottom-0 hidden h-[460px] w-[460px] rounded-full opacity-[0.14] blur-[150px] md:block"
         style={{ background: `radial-gradient(circle, ${INDIGO}, transparent 70%)` }}
       />
 
@@ -63,6 +63,8 @@ export default function FeatureBento() {
           {/* Card 1 — Upload (left, indigo, bleeds bottom-right) */}
           <Card
             glow={GLOW.upload}
+            glowX="60%"
+            glowY="60%"
             eyebrow="PDF rein, Lernset raus"
             title="Dein Skript. In 2 Minuten abfragbar."
             body="Hochladen, Kaffee holen, loslegen. Karteikarten, Probeklausur, Blueprint — ohne eine Karte selbst zu tippen."
@@ -82,6 +84,8 @@ export default function FeatureBento() {
           <Card
             hero
             glow={GLOW.quiz}
+            glowX="54%"
+            glowY="54%"
             eyebrow="Keine Quiz-Fragen von der Stange"
             title="Probeklausur im Stil deiner Prüfung."
             body="Lernly liest deine Altklausuren mit und fragt dich so, wie dein Prof fragt."
@@ -100,11 +104,13 @@ export default function FeatureBento() {
           {/* Card 3 — Offline phone (left, cool indigo, bleeds off bottom) */}
           <Card
             glow={GLOW.phone}
+            glowX="46%"
+            glowY="62%"
             eyebrow="Immer dabei"
             title="Läuft im Browser. Auch ohne WLAN."
             body="Einmal laden, als Lern-Set gespeichert. Bib, Zug, unterwegs — kein App-Download, kein Login-Stress."
             tilt="phone"
-            stageClass="md:left-0 md:right-0 md:bottom-[-48px]"
+            stageClass="md:left-0 md:right-0 md:bottom-[-64px]"
             deviceClass=""
           >
             {/* TODO: replace with real screenshot render (SHOTS.phone) */}
@@ -118,6 +124,8 @@ export default function FeatureBento() {
           {/* Card 4 — Dashboard (right, teal-indigo, bleeds bottom-right) */}
           <Card
             glow={GLOW.dashboard}
+            glowX="60%"
+            glowY="60%"
             eyebrow="Dein Fortschritt auf einen Blick"
             title="Blueprint für die Bestnote."
             body="Gemeisterte Karten, Quiz-Score und Prüfungsrelevanz — du siehst sofort, wie bereit du bist."
@@ -166,6 +174,8 @@ function Header() {
 
 function Card({
   glow,
+  glowX = "50%",
+  glowY = "56%",
   hero = false,
   eyebrow,
   title,
@@ -176,6 +186,8 @@ function Card({
   children,
 }: {
   glow: string;
+  glowX?: string;
+  glowY?: string;
   hero?: boolean;
   eyebrow: string;
   title: string;
@@ -211,7 +223,13 @@ function Card({
       >
         <div
           className={`ln-fb-glow ${hero ? "ln-fb-glow--hero" : ""}`}
-          style={{ background: `radial-gradient(circle, ${glow} 0%, transparent 70%)` }}
+          style={
+            {
+              background: `radial-gradient(circle, ${glow} 0%, transparent 70%)`,
+              "--fb-gx": glowX,
+              "--fb-gy": glowY,
+            } as CSSProperties
+          }
           aria-hidden
         />
         <div className={`ln-fb-device ln-fb-tilt-${tilt} ${deviceClass}`}>{children}</div>
@@ -233,13 +251,17 @@ function Shot({
   children: ReactNode;
 }) {
   if (MOCKUPS_READY) {
+    // width/height = the recommended export pixel size, so the box is reserved
+    // before the lazy image decodes (no layout shift). Render size is CSS-driven.
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={src}
         alt={alt}
         loading="lazy"
-        className={phone ? "ln-fb-shot mx-auto w-[268px] max-w-full" : "ln-fb-shot"}
+        width={phone ? 560 : 1100}
+        height={phone ? 1180 : 760}
+        className={phone ? "ln-fb-shot mx-auto w-[268px] max-w-full md:w-[312px]" : "ln-fb-shot"}
       />
     );
   }
@@ -251,10 +273,12 @@ function Shot({
 /* ------------------------------------------------------------------ */
 
 function Eyebrow({ children }: { children: ReactNode }) {
+  // Slightly tinted/brighter than the in-screenshot chrome greys (#6B7290) so
+  // the card kicker reads as a layer above the device's own UI labels.
   return (
     <p
       className="font-sans text-[11px] font-medium uppercase tracking-[0.22em]"
-      style={{ color: "#6B7290" }}
+      style={{ color: "#8A93C8" }}
     >
       {children}
     </p>
@@ -325,7 +349,7 @@ function BrowserChrome({
 function PhoneChrome({ children }: { children: ReactNode }) {
   return (
     <div
-      className="mx-auto w-[268px] rounded-[34px] border p-2.5"
+      className="mx-auto w-[268px] rounded-[36px] border p-2.5 md:w-[312px]"
       style={{
         background: "#0A0D1A",
         borderColor: "rgba(255,255,255,0.12)",

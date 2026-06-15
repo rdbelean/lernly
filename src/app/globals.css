@@ -2122,13 +2122,14 @@
   background-color: #0f1322;
 }
 
-/* Subtle film grain on card surfaces (~3.5% over) */
+/* Subtle film grain on card surfaces. soft-light stays visible on the
+   near-black surfaces where `overlay` would crush it to nothing. */
 .ln-fb-noise {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.04;
-  mix-blend-mode: overlay;
+  opacity: 0.07;
+  mix-blend-mode: soft-light;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -2136,31 +2137,36 @@
   position: relative;
 }
 
-/* Localized radial light that reads as screen emission */
+/* Localized radial light that reads as screen emission. Position is tied to
+   each device via --fb-gx/--fb-gy so the light originates from the (offset,
+   tilted) screen — not the geometric card centre. */
 .ln-fb-glow {
   position: absolute;
-  left: 50%;
-  top: 42%;
-  width: 115%;
+  left: var(--fb-gx, 50%);
+  top: var(--fb-gy, 56%);
+  width: 108%;
   aspect-ratio: 1 / 1;
   transform: translate(-50%, -50%);
   border-radius: 9999px;
-  filter: blur(64px);
-  opacity: 0.5;
+  filter: blur(62px);
+  opacity: 0.55;
   pointer-events: none;
   z-index: 0;
 }
 .ln-fb-glow--hero {
-  opacity: 0.8;
-  filter: blur(76px);
+  opacity: 0.72;
+  filter: blur(74px);
 }
 
-/* 3D-tilted device. Eases toward flat on hover for life. */
+/* 3D-tilted device. will-change is promoted only on hover-intent (leaving it
+   on permanently would pin 4 GPU layers for the page's whole life). */
 .ln-fb-device {
   position: relative;
   z-index: 1;
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   transform-style: preserve-3d;
+}
+.group:hover .ln-fb-device {
   will-change: transform;
 }
 .ln-fb-tilt-l {
@@ -2182,16 +2188,17 @@
   transform: perspective(1000px) rotateY(-9deg) rotateX(3deg) translateY(-8px);
 }
 
-/* Real-screenshot slot once PNGs exist */
+/* Real-screenshot slot. The PNGs ship WITH their own device chrome (browser /
+   phone frame) on a transparent background, exported front-facing — the
+   .ln-fb-device tilt and .ln-fb-glow supply the angle and light. So this adds a
+   grounding shadow only: no extra border / radius (that would double-frame the
+   chrome), and drop-shadow follows the PNG's tilted alpha instead of a box. */
 .ln-fb-shot {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow:
-    0 34px 64px -28px rgba(0, 0, 0, 0.8),
-    0 10px 30px -14px rgba(43, 52, 153, 0.55);
+  filter: drop-shadow(0 34px 58px rgba(0, 0, 0, 0.7))
+    drop-shadow(0 10px 26px rgba(43, 52, 153, 0.5));
 }
 
 /* Mobile: straighten tilts, shrink glow, keep visuals contained */
@@ -2209,10 +2216,24 @@
     filter: blur(46px);
     width: 100%;
   }
+  /* Skip the blend-mode layer on mobile — pure paint cost, no hover payoff. */
+  .ln-fb-noise {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .ln-fb-device {
     transition: none;
+  }
+  /* Hover must not jump the device for reduced-motion users: hold the base tilt. */
+  .group:hover .ln-fb-tilt-l {
+    transform: perspective(1000px) rotateY(-17deg) rotateX(6deg) scale(1.02);
+  }
+  .group:hover .ln-fb-tilt-r {
+    transform: perspective(1000px) rotateY(17deg) rotateX(6deg) scale(1.02);
+  }
+  .group:hover .ln-fb-tilt-phone {
+    transform: perspective(1000px) rotateY(-14deg) rotateX(5deg);
   }
 }
