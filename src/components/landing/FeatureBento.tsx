@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import ProductShot from "@/components/landing/ProductShot";
+import FlashcardMockup from "@/components/landing/mockups/FlashcardMockup";
 
 /* ------------------------------------------------------------------ *
  * Cinematic feature grid — real Lernly app screenshots in tilted,
@@ -99,23 +100,13 @@ export default function FeatureBento() {
             />
           </Card>
 
-          {/* Card 4 — Blueprint / flashcard */}
+          {/* Card 4 — real Karteikarte component (razor-sharp, not a screenshot) */}
           <Card
-            eyebrow="Dein Fortschritt auf einen Blick"
-            title="Blueprint für die Bestnote."
-            body="Gemeisterte Karten, Quiz-Score und Prüfungsrelevanz — du siehst sofort, wie bereit du bist."
+            eyebrow="Aktiv abgefragt, nicht berieselt"
+            title="Karteikarten, die dich rankriegen."
+            body="Frage, umdrehen, bewerten — nur was sitzt, verschwindet. Genau wie in der App."
           >
-            <ProductShot
-              src="/mockups/card-karteikarte.png"
-              alt="Lernly: Karteikarte mit Antwort und Bewertung"
-              width={1297}
-              height={585}
-              sizes="(min-width: 768px) 520px, 90vw"
-              glow={INDIGO}
-              glowY="58%"
-              tilt="r"
-              className="w-full"
-            />
+            <FlashcardMockup />
           </Card>
         </div>
 

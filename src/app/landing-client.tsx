@@ -21,6 +21,7 @@ import PackView from "@/components/pack/PackView";
 import DemoPacksSection from "@/components/landing/DemoPacksSection";
 import FeatureBento from "@/components/landing/FeatureBento";
 import ProductShot from "@/components/landing/ProductShot";
+import PackHubMockup from "@/components/landing/mockups/PackHubMockup";
 import SectionHeading from "@/components/landing/SectionHeading";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import { track } from "@/lib/analytics";
@@ -544,34 +545,25 @@ function Hero(props: HeroProps) {
           }
         >
           {mode === "demo" ? (
-            <button
-              type="button"
+            <div
+              role="button"
+              tabIndex={0}
               onClick={onActivateUpload}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onActivateUpload();
+                }
+              }}
               aria-label={
                 isEn
                   ? "Start — upload your material"
                   : "Loslegen — Material hochladen"
               }
-              className="group block w-full cursor-pointer rounded-[16px] border-0 bg-transparent p-0 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4B57D6] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F1322]"
+              className="group block w-full cursor-pointer rounded-[16px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4B57D6] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F1322]"
             >
-              <ProductShot
-                src="/mockups/hero-hub.png"
-                alt={
-                  isEn
-                    ? "Lernly study pack hub: countdown, flashcards, progress and study modes"
-                    : "Lernly Paket-Übersicht: Countdown, Karteikarten, Fortschritt und Lernmodi"
-                }
-                width={1314}
-                height={824}
-                sizes="(min-width: 768px) 980px, 92vw"
-                priority
-                glow="#4B57D6"
-                glowStrong
-                glowY="52%"
-                tilt="l"
-                className="w-full"
-              />
-            </button>
+              <PackHubMockup />
+            </div>
           ) : (
             <UploadDemo {...props} />
           )}
