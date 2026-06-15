@@ -2,7 +2,10 @@
 
 import type { ReactNode } from "react";
 import dynamic from "next/dynamic";
-import ProductShot from "@/components/landing/ProductShot";
+import UploadMaskMockup from "@/components/landing/mockups/UploadMaskMockup";
+import QuizResultMockup from "@/components/landing/mockups/QuizResultMockup";
+import PhoneHubMockup from "@/components/landing/mockups/PhoneHubMockup";
+import TopicConceptMockup from "@/components/landing/mockups/TopicConceptMockup";
 
 // Lazy + client-only: the real FlashcardDeck pulls framer-motion + confetti.
 // Card 4 is below the fold, so keep that weight out of the SSR/initial bundle.
@@ -12,14 +15,9 @@ const FlashcardMockup = dynamic(
 );
 
 /* ------------------------------------------------------------------ *
- * Cinematic feature grid — real Lernly app screenshots in tilted,
- * glowing frames (see ProductShot for the shared frame rules).
- *
- * Screenshots live in /public/mockups. Mapping:
- *   card-upload.png      → "Dein Skript. In 2 Minuten abfragbar."
- *   card-quiz.png        → "Probeklausur im Stil deiner Prüfung." (HERO)
- *   card-mobile.png      → "Läuft im Browser. Auch ohne WLAN."     (phone)
- *   card-karteikarte.png → "Blueprint für die Bestnote."
+ * Feature grid — every visual is a rendered, inert demo of the real app
+ * (razor-sharp DOM, no bitmaps). Upload / Quiz-result / Phone-hub / Flashcard
+ * + a multilingual proof row.
  * ------------------------------------------------------------------ */
 
 const INDIGO = "#2B3499";
@@ -31,7 +29,7 @@ export default function FeatureBento() {
     <section
       id="features"
       aria-labelledby="features-heading"
-      className="ln-fb-section relative w-full overflow-hidden px-5 py-20 md:py-28"
+      className="ln-fb-section relative w-full overflow-hidden px-5 py-14 md:py-20"
     >
       <div
         aria-hidden
@@ -54,17 +52,7 @@ export default function FeatureBento() {
             title="Dein Skript. In 2 Minuten abfragbar."
             body="Hochladen, Kaffee holen, loslegen. Karteikarten, Probeklausur, Blueprint — ohne eine Karte selbst zu tippen."
           >
-            <ProductShot
-              src="/mockups/card-upload.png"
-              alt="Lernly: Material hochladen"
-              width={777}
-              height={1151}
-              sizes="(min-width: 768px) 320px, 64vw"
-              glow={INDIGO}
-              glowY="46%"
-              tilt="l"
-              className="mx-auto w-[64%] max-w-[320px]"
-            />
+            <UploadMaskMockup />
           </Card>
 
           {/* Card 2 — Quiz (HERO) */}
@@ -74,18 +62,7 @@ export default function FeatureBento() {
             title="Probeklausur im Stil deiner Prüfung."
             body="Lernly liest deine Altklausuren mit und fragt dich so, wie dein Prof fragt."
           >
-            <ProductShot
-              src="/mockups/card-quiz.png"
-              alt="Lernly: Probeklausur-Ergebnis mit Feedback pro Thema"
-              width={1277}
-              height={1137}
-              sizes="(min-width: 768px) 520px, 90vw"
-              glow={INDIGO_LIGHT}
-              glowStrong
-              glowY="50%"
-              tilt="r"
-              className="w-full"
-            />
+            <QuizResultMockup />
           </Card>
 
           {/* Card 3 — Offline phone */}
@@ -94,17 +71,7 @@ export default function FeatureBento() {
             title="Läuft im Browser. Auch ohne WLAN."
             body="Einmal laden, als Lern-Set gespeichert. Bib, Zug, unterwegs — kein App-Download, kein Login-Stress."
           >
-            <ProductShot
-              src="/mockups/card-mobile.png"
-              alt="Lernly auf dem Handy: Karteikarte im Browser"
-              width={1290}
-              height={2796}
-              sizes="252px"
-              glow={INDIGO}
-              glowY="40%"
-              tilt="phone"
-              phone
-            />
+            <PhoneHubMockup />
           </Card>
 
           {/* Card 4 — real Karteikarte component (razor-sharp, not a screenshot) */}
@@ -115,6 +82,28 @@ export default function FeatureBento() {
           >
             <FlashcardMockup />
           </Card>
+        </div>
+
+        {/* Multilingual proof — English material is an advantage, not a break */}
+        <div className="mt-16 grid grid-cols-1 items-center gap-8 md:mt-20 md:grid-cols-2 md:gap-12">
+          <div>
+            <p
+              className="font-sans text-[11px] font-medium uppercase tracking-[0.22em]"
+              style={{ color: "#8A93C8" }}
+            >
+              Jedes Fach, jede Sprache
+            </p>
+            <h3 className="mt-3 font-display text-2xl font-semibold leading-snug text-white md:text-[2rem]">
+              Folien auf Deutsch oder Englisch?
+            </h3>
+            <p
+              className="mt-3 max-w-[44ch] font-sans text-[16px] leading-relaxed"
+              style={{ color: "#A9B0C4" }}
+            >
+              Egal — Lernly versteht beides. Dein Paket kommt in der Sprache deines Stoffs.
+            </p>
+          </div>
+          <TopicConceptMockup />
         </div>
 
         <PriceBand />
@@ -129,7 +118,7 @@ export default function FeatureBento() {
 
 function Header() {
   return (
-    <header className="mb-12 text-center md:mb-16">
+    <header className="mb-8 text-center md:mb-12">
       <Eyebrow>Was Lernly anders macht</Eyebrow>
       <h2
         id="features-heading"
@@ -162,9 +151,7 @@ function Card({
 }) {
   return (
     <article
-      className={`group relative flex flex-col overflow-hidden rounded-[22px] border p-7 md:p-8 ${
-        hero ? "md:min-h-[470px]" : "md:min-h-[440px]"
-      }`}
+      className="group relative flex flex-col overflow-hidden rounded-[22px] border p-7 md:p-8"
       style={{
         backgroundColor: hero ? "#171C30" : "#141930",
         borderColor: hero ? "rgba(75,87,214,0.45)" : "rgba(255,255,255,0.07)",
@@ -181,10 +168,8 @@ function Card({
         <CardBody>{body}</CardBody>
       </div>
 
-      {/* Screenshot zone — bottom-only bleed (clipped by the card). */}
-      <div className="relative z-[1] mt-8 md:mt-auto md:-mb-10 md:pt-6">
-        {children}
-      </div>
+      {/* Rendered mockup — fully visible (no bleed; must stay readable). */}
+      <div className="relative z-[1] mt-7">{children}</div>
     </article>
   );
 }

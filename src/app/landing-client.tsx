@@ -20,8 +20,8 @@ import ClaudeLogo from "@/components/ClaudeLogo";
 import PackView from "@/components/pack/PackView";
 import DemoPacksSection from "@/components/landing/DemoPacksSection";
 import FeatureBento from "@/components/landing/FeatureBento";
-import ProductShot from "@/components/landing/ProductShot";
 import PackHubMockup from "@/components/landing/mockups/PackHubMockup";
+import AltklausurMaskMockup from "@/components/landing/mockups/AltklausurMaskMockup";
 import SectionHeading from "@/components/landing/SectionHeading";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import { track } from "@/lib/analytics";
@@ -42,7 +42,6 @@ import {
   MessageCircle,
   ListChecks,
   BookOpen,
-  Target,
   ChevronDown,
 } from "lucide-react";
 
@@ -388,10 +387,8 @@ export default function Home() {
             onTurnstileError={() => setTurnstileToken(null)}
           />
           <DemoPacksSection language={language} onTryYourOwn={activateUpload} />
-          <HowItWorks />
-          <ShowcaseSection />
-          <FeatureBento />
           <ComparisonSection />
+          <FeatureBento />
           {pack && <ResultSection pack={pack} onReset={clearPack} />}
           <ToolStackSection />
           <PricingSection onActivateUpload={activateUpload} />
@@ -441,7 +438,7 @@ function Hero(props: HeroProps) {
   const language = useLanguage();
   const isEn = language === "en";
   return (
-    <section className="relative overflow-hidden px-6 pt-24 pb-28 md:pt-32 md:pb-36">
+    <section className="relative overflow-hidden px-6 pt-20 pb-14 md:pt-28 md:pb-20">
       <div
         aria-hidden
         className="ln-glow pointer-events-none absolute left-1/2 top-[42%] h-[560px] w-[680px] -translate-x-1/2 rounded-full blur-3xl"
@@ -852,377 +849,6 @@ function UploadDemo({
   );
 }
 
-/* ========== SHOWCASE: input stack → output pack ========== */
-// Replaces the previous "BWL / MED / JURA" mock-demo cards. The page already
-// has DemoPacksSection showing real (BWL) packs; what was missing was an
-// answer to "passt das zu meinem konkreten Stapel?". This section makes that
-// promise visually: drop in your collected mess (PDFs, slides, notes) →
-// out comes a structured study pack.
-
-type IoTile = {
-  label: string;
-  sub: string;
-  icon: React.ReactNode;
-};
-
-function FileIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="9" y1="13" x2="15" y2="13" />
-      <line x1="9" y1="17" x2="15" y2="17" />
-    </svg>
-  );
-}
-
-function SlidesIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <rect x="3" y="4" width="18" height="13" rx="2" />
-      <line x1="8" y1="20" x2="16" y2="20" />
-      <line x1="12" y1="17" x2="12" y2="20" />
-    </svg>
-  );
-}
-
-function NotesIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M3 6h18M3 12h18M3 18h12" />
-    </svg>
-  );
-}
-
-function CardsIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <rect x="3" y="5" width="14" height="14" rx="2" />
-      <path d="M7 9h10" />
-      <path d="M21 19V7a2 2 0 0 0-2-2" />
-    </svg>
-  );
-}
-
-function QuizIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <polyline points="9 11 12 14 22 4" />
-      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-    </svg>
-  );
-}
-
-function BlueprintIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M12 20h9" />
-      <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
-    </svg>
-  );
-}
-
-function VisualMapIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <rect x="3" y="3" width="7" height="7" rx="1" />
-      <rect x="14" y="3" width="7" height="7" rx="1" />
-      <rect x="3" y="14" width="7" height="7" rx="1" />
-      <rect x="14" y="14" width="7" height="7" rx="1" />
-    </svg>
-  );
-}
-
-function ShowcaseSection() {
-  const isEn = useLanguage() === "en";
-
-  const inputs: IoTile[] = [
-    {
-      label: isEn ? "Lecture slides" : "Vorlesungsfolien",
-      sub: isEn ? "200+ slides, all in" : "200+ Slides, alles rein",
-      icon: <FileIcon />,
-    },
-    {
-      label: isEn ? "Slides" : "Folien",
-      sub: isEn ? "Exported PowerPoint" : "PowerPoint als PDF",
-      icon: <SlidesIcon />,
-    },
-    {
-      label: isEn ? "Notes" : "Notizen",
-      sub: ".txt · .md",
-      icon: <NotesIcon />,
-    },
-  ];
-
-  const outputs: IoTile[] = [
-    {
-      label: isEn ? "Flashcards" : "Karteikarten",
-      sub: isEn ? "Mnemonics included" : "Mit Eselsbrücken",
-      icon: <CardsIcon />,
-    },
-    {
-      label: isEn ? "Exam trainer" : "Übungsklausur",
-      sub: isEn ? "Real-firm scenarios" : "Szenarien mit echten Firmen",
-      icon: <QuizIcon />,
-    },
-    {
-      label: "Blueprint",
-      sub: isEn ? "Template sentences" : "Template-Sätze",
-      icon: <BlueprintIcon />,
-    },
-    {
-      label: "Visual Map",
-      sub: isEn ? "2×2 matrices, flows" : "2×2-Matrizen, Flows",
-      icon: <VisualMapIcon />,
-    },
-  ];
-
-  return (
-    <section className="px-6 py-20 md:py-28 overflow-hidden">
-      <div className="mx-auto max-w-[1200px]">
-        <SectionHeading
-          eyebrow={isEn ? "Drop it all in" : "Wirf alles rein"}
-          boldPart={
-            isEn ? "Drop in your whole stack." : "Wirf deinen Stapel rein."
-          }
-          italicPart={
-            isEn ? "Lernly does the rest." : "Lernly macht den Rest."
-          }
-          sub={
-            isEn
-              ? "Whatever piled up this semester — slides, notes, scripts. Up to 8 files, in one shot."
-              : "Egal was sich angesammelt hat — Folien, Notizen, Skripte. Bis zu 8 Dateien auf einmal."
-          }
-        />
-
-        <div className="ln-reveal mt-14 grid grid-cols-1 items-stretch gap-6 lg:grid-cols-[1fr_auto_1.2fr] lg:gap-8">
-          <IoColumn
-            kind="input"
-            heading={isEn ? "Stack in" : "Stapel rein"}
-            footerNote={
-              isEn
-                ? "PDF · TXT · MD · up to 8 files"
-                : "PDF · TXT · MD · bis zu 8 Dateien"
-            }
-            tiles={inputs}
-          />
-          <FlowConnector />
-          <IoColumn
-            kind="output"
-            heading={isEn ? "Study pack out" : "Lernpaket raus"}
-            footerNote={isEn ? "Ready in ~2 minutes" : "In ~2 Minuten fertig"}
-            tiles={outputs}
-          />
-        </div>
-
-        {/* Multilingual proof — English material is an advantage, not a break */}
-        <div className="ln-reveal mt-16 grid grid-cols-1 items-center gap-8 md:mt-24 md:grid-cols-2 md:gap-14">
-          <div>
-            <p
-              className="font-sans text-[11px] font-medium uppercase tracking-[0.22em]"
-              style={{ color: "#8A93C8" }}
-            >
-              {isEn ? "Any subject, any language" : "Jedes Fach, jede Sprache"}
-            </p>
-            <h3 className="mt-3 font-display text-2xl font-semibold leading-snug text-white md:text-[2rem]">
-              {isEn
-                ? "German or English slides?"
-                : "Folien auf Deutsch oder Englisch?"}
-            </h3>
-            <p
-              className="mt-3 max-w-[44ch] font-sans text-[16px] leading-relaxed"
-              style={{ color: "rgba(255,255,255,0.72)" }}
-            >
-              {isEn
-                ? "Doesn't matter — Lernly understands both, and builds your pack in the language of your material."
-                : "Egal — Lernly versteht beides. Dein Paket kommt in der Sprache deines Stoffs."}
-            </p>
-          </div>
-          <ProductShot
-            src="/mockups/topic-multilingual.png"
-            alt={
-              isEn
-                ? "Lernly topic overview from English course material"
-                : "Lernly Themen-Übersicht aus englischem Stoff"
-            }
-            width={1270}
-            height={668}
-            sizes="(min-width: 768px) 520px, 92vw"
-            glow="#4B57D6"
-            glowY="54%"
-            tilt="r"
-            className="w-full"
-          />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function IoColumn({
-  kind,
-  heading,
-  footerNote,
-  tiles,
-}: {
-  kind: "input" | "output";
-  heading: string;
-  footerNote: string;
-  tiles: IoTile[];
-}) {
-  const isInput = kind === "input";
-  return (
-    <div
-      className="ln-glass-card flex h-full flex-col p-6 md:p-7"
-      style={{
-        background: isInput
-          ? "linear-gradient(160deg, rgba(20,22,28,0.7), rgba(251,113,133,0.04))"
-          : "linear-gradient(160deg, rgba(20,22,28,0.7), rgba(124,196,160,0.06))",
-        borderColor: isInput
-          ? "rgba(251,113,133,0.18)"
-          : "rgba(124,196,160,0.2)",
-      }}
-    >
-      <div
-        className="mb-5 flex items-center justify-between gap-2 text-[11px] font-semibold uppercase tracking-[0.18em]"
-        style={{
-          color: isInput ? "rgb(252,165,165)" : "rgb(134,239,172)",
-        }}
-      >
-        <span className="flex items-center gap-2">
-          <span className="ln-pulse-dot-green" aria-hidden />
-          {heading}
-        </span>
-        <span style={{ color: "rgba(255,255,255,0.4)" }}>
-          {tiles.length}
-        </span>
-      </div>
-
-      <div className="flex flex-col gap-2.5">
-        {tiles.map((t, i) => (
-          <IoTileCard
-            key={t.label}
-            tile={t}
-            tone={kind}
-            rotate={isInput ? (i % 2 === 0 ? -0.6 : 0.8) : 0}
-          />
-        ))}
-      </div>
-
-      <div
-        className="mt-auto pt-5 font-mono text-[11px]"
-        style={{ color: "rgba(255,255,255,0.45)" }}
-      >
-        {footerNote}
-      </div>
-    </div>
-  );
-}
-
-function IoTileCard({
-  tile,
-  tone,
-  rotate,
-}: {
-  tile: IoTile;
-  tone: "input" | "output";
-  rotate: number;
-}) {
-  const isInput = tone === "input";
-  return (
-    <div
-      className="flex items-center gap-3 rounded-xl border px-4 py-3 transition"
-      style={{
-        background: "rgba(20, 22, 28, 0.55)",
-        borderColor: "rgba(255,255,255,0.1)",
-        transform: rotate ? `rotate(${rotate}deg)` : undefined,
-      }}
-    >
-      <span
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
-        style={{
-          background: isInput
-            ? "rgba(251,113,133,0.1)"
-            : "rgba(124,196,160,0.12)",
-          color: isInput ? "rgb(252,165,165)" : "rgb(134,239,172)",
-        }}
-      >
-        {tile.icon}
-      </span>
-      <div className="min-w-0 flex-1">
-        <div className="text-[14px] font-semibold text-white">{tile.label}</div>
-        <div
-          className="mt-0.5 text-[12px]"
-          style={{ color: "rgba(255,255,255,0.55)" }}
-        >
-          {tile.sub}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function FlowConnector() {
-  return (
-    <div
-      className="flex items-center justify-center lg:px-2"
-      aria-hidden
-    >
-      {/* Horizontal arrow on lg+, vertical on mobile/tablet */}
-      <svg
-        className="hidden lg:block"
-        width="64"
-        height="40"
-        viewBox="0 0 64 40"
-        fill="none"
-      >
-        <line
-          x1="4"
-          y1="20"
-          x2="56"
-          y2="20"
-          stroke="rgba(255,255,255,0.25)"
-          strokeWidth="1.6"
-          strokeDasharray="3 4"
-        />
-        <polyline
-          points="48 12 60 20 48 28"
-          fill="none"
-          stroke="rgba(124,196,160,0.85)"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-      <svg
-        className="lg:hidden"
-        width="40"
-        height="48"
-        viewBox="0 0 40 48"
-        fill="none"
-      >
-        <line
-          x1="20"
-          y1="4"
-          x2="20"
-          y2="40"
-          stroke="rgba(255,255,255,0.25)"
-          strokeWidth="1.6"
-          strokeDasharray="3 4"
-        />
-        <polyline
-          points="12 32 20 44 28 32"
-          fill="none"
-          stroke="rgba(124,196,160,0.85)"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </div>
-  );
-}
-
 /* ========== ALTKLAUSUR-RELEVANZ (Lernlys biggest differentiator) ========== */
 // Replaces the old "active recall / retention curve" comparison. Shows the one
 // thing no other tool does: read the user's past exam, rank topics by exam
@@ -1233,7 +859,7 @@ function ComparisonSection() {
   const isEn = useLanguage() === "en";
 
   return (
-    <section className="px-6 py-20 md:py-28 overflow-hidden">
+    <section className="px-6 py-14 md:py-20 overflow-hidden">
       <div className="mx-auto max-w-[1200px]">
         <SectionHeading
           eyebrow={isEn ? "No other tool can do this" : "Das kann kein anderes Tool"}
@@ -1255,24 +881,9 @@ function ComparisonSection() {
             : "Leg deine Altklausur dazu. Lernly erkennt, welche Themen wirklich geprüft werden — und baut Karten & Quiz genau darauf, im Stil deiner echten Prüfung."}
         </p>
 
-        {/* Altklausur-Lens setup — the real differentiator, on stage */}
-        <div className="relative mx-auto mt-12 max-w-[900px]">
-          <ProductShot
-            src="/mockups/altklausur-setup.png"
-            alt={
-              isEn
-                ? "Lernly past-exam lens setup — best results from your own exam style"
-                : "Lernly Altklausur-Lens: \u201aIch hab eine Altklausur\u2018 \u2014 beste Ergebnisse aus deinem echten Pr\u00fcfungsstil"
-            }
-            width={1273}
-            height={960}
-            sizes="(min-width: 768px) 880px, 92vw"
-            glow="#4B57D6"
-            glowStrong
-            glowY="52%"
-            tilt="r"
-            className="w-full"
-          />
+        {/* Altklausur-Lens setup — the real differentiator, rendered razor-sharp */}
+        <div className="relative mx-auto mt-10 max-w-[460px]">
+          <AltklausurMaskMockup />
         </div>
 
         {/* Caption */}
@@ -1313,7 +924,6 @@ function ComparisonSection() {
 function ToolStackSection() {
   const isEn = useLanguage() === "en";
   const indigo = "var(--color-primary-bright)";
-  const teal = "rgb(91, 184, 216)";
 
   // Brand names are plain text (no logos). Costs are factual — some are time/
   // effort rather than €. No strikethrough, no bashing.
@@ -1347,7 +957,7 @@ function ToolStackSection() {
   ];
 
   return (
-    <section className="px-6 py-20 md:py-28">
+    <section className="px-6 py-14 md:py-20">
       <div className="mx-auto max-w-[1200px]">
         <SectionHeading
           eyebrow={isEn ? "One tool instead of four" : "Ein Tool statt vier"}
@@ -1469,38 +1079,6 @@ function ToolStackSection() {
             </div>
           </div>
 
-          {/* Topper — exclusive Altklausur-Relevanz (teal, ties to the section above) */}
-          <div
-            className="mt-5 flex items-start gap-3 rounded-2xl p-4"
-            style={{
-              background: "rgba(91,184,216,0.08)",
-              border: "1px solid rgba(91,184,216,0.28)",
-            }}
-          >
-            <span
-              aria-hidden
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
-              style={{ background: "rgba(91,184,216,0.14)" }}
-            >
-              <Target size={18} strokeWidth={1.9} color={teal} />
-            </span>
-            <div className="min-w-0">
-              <span
-                className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.06em]"
-                style={{ background: "rgba(91,184,216,0.14)", color: teal }}
-              >
-                {isEn ? "Only in Lernly" : "Nur in Lernly"}
-              </span>
-              <p
-                className="mt-1.5 text-[13.5px] leading-snug sm:text-[14px]"
-                style={{ color: "rgba(255,255,255,0.85)" }}
-              >
-                {isEn
-                  ? "Learns from your past exam what gets tested — and asks in your real exam's style."
-                  : "Lernt aus deiner Altklausur, was drankommt — und fragt im Stil deiner echten Prüfung."}
-              </p>
-            </div>
-          </div>
         </div>
 
         {/* Honest closing — the stack's real cost vs. all-in-one (punchline prominent) */}
@@ -1566,83 +1144,6 @@ function Waveform({ seed }: { seed: number }) {
         />
       ))}
     </div>
-  );
-}
-
-/* ========== HOW IT WORKS (pipeline) ========== */
-
-function HowItWorks() {
-  const isEn = useLanguage() === "en";
-  const steps = isEn
-    ? [
-        {
-          label: "Step 1",
-          title: "Drop it in",
-          desc: "8 lectures open? Drop them all in — slides, scripts, notes. Lernly reads everything, you do not have to sort it first.",
-        },
-        {
-          label: "Step 2",
-          title: "Lernly sorts",
-          desc: "Flashcards to flip, quiz with explanations, essay blueprint with templates. All built straight from your own material.",
-        },
-        {
-          label: "Step 3",
-          title: "Drill",
-          desc: "Flip, test, repeat — until it sticks. Then you walk into the exam knowing you studied the right things.",
-        },
-      ]
-    : [
-        {
-          label: "Schritt 1",
-          title: "Reinwerfen",
-          desc: "8 Vorlesungen offen? Wirf sie alle rein — Folien, Skripte, Mitschriften. Lernly liest alles, du musst nichts sortieren.",
-        },
-        {
-          label: "Schritt 2",
-          title: "Lernly sortiert",
-          desc: "Karteikarten zum Flippen, Quiz mit Erklärung, Essay-Blueprint mit Vorlagen. Alles direkt aus deinem Material.",
-        },
-        {
-          label: "Schritt 3",
-          title: "Üben",
-          desc: "Flippen, testen, wiederholen — bis es sitzt. Dann gehst du in die Klausur und weißt: du hast das Richtige gelernt.",
-        },
-      ];
-
-  return (
-    <section id="how" className="scroll-mt-24 px-6 py-20 md:py-28">
-      <div className="mx-auto max-w-[1200px]">
-        <SectionHeading
-          eyebrow={isEn ? "From chaos to exam-ready" : "Vom Chaos zur Prüfung"}
-          boldPart={
-            <span className="sm:whitespace-nowrap">
-              {isEn
-                ? "Flashcards in three steps."
-                : "Karteikarten in drei Schritten."}
-            </span>
-          }
-          italicPart={
-            isEn ? "Doable even at 2 a.m." : "Auch um 2 Uhr nachts."
-          }
-        />
-
-        <div className="ln-pipeline ln-reveal mt-14">
-          {steps.map((s) => (
-            <div key={s.label} className="ln-pipe-step">
-              <span className="ln-pipe-step-label">{s.label}</span>
-              <strong className="ln-pipe-step-title">{s.title}</strong>
-              <p className="ln-pipe-step-desc">{s.desc}</p>
-            </div>
-          ))}
-        </div>
-
-        <p className="ln-reveal ln-pipeline-caption">
-          {isEn
-            ? "From your slides, not from Wikipedia. Built exactly for your exam."
-            : "Aus deinen Folien, nicht aus Wikipedia. Genau für deine Klausur."}
-        </p>
-      </div>
-    </section>
   );
 }
 
@@ -2221,15 +1722,14 @@ function PricingSection({
   };
   const tiers = isEn ? PRICING_TIERS_EN : PRICING_TIERS_DE;
   return (
-    <section id="pricing" className="scroll-mt-24 px-6 py-20 md:py-28">
+    <section id="pricing" className="scroll-mt-24 px-6 py-14 md:py-20">
       <div className="mx-auto max-w-[1200px]">
         <SectionHeading
           eyebrow={isEn ? "What do you need?" : "Was brauchst du?"}
-          boldPart={isEn ? "Try it for free." : "Probier's gratis."}
-          italicPart={
+          boldPart={
             isEn
-              ? "Upgrade only when it sticks."
-              : "Upgrade nur wenn's sitzt."
+              ? "Start free — upgrade only when it sticks."
+              : "Gratis starten — Upgrade nur, wenn's sitzt."
           }
         />
 
@@ -2255,64 +1755,10 @@ function PricingSection({
             />
           ))}
         </div>
-
-        <BYOKBanner />
       </div>
     </section>
   );
 }
-
-/* ========== BYOK BANNER (under the pricing cards) ========== */
-
-// BYOK is intentionally NOT promoted yet — we ship the core experience first.
-// Kept visible but clearly marked "coming soon": no active connect flow, no
-// price push. (Re-add an onOpenConnect prop here when we re-activate it.)
-function BYOKBanner() {
-  const isEn = useLanguage() === "en";
-
-  return (
-    <div
-      id="connect"
-      className="ln-reveal byok-banner scroll-mt-24 mt-8"
-      style={{ opacity: 0.6 }}
-      aria-label={isEn ? "Bring your own key — coming soon" : "Eigener API-Key — bald verfügbar"}
-    >
-      <div className="byok-left">
-        <div className="byok-icon">
-          <ClaudeLogo size={22} />
-        </div>
-        <div>
-          <span className="byok-bonus-eyebrow">
-            {isEn ? "Planned for power users" : "Geplant für Power-User"}
-          </span>
-          <h4>
-            {isEn
-              ? "Bring your own API key"
-              : "Bald: eigener API-Key"}
-          </h4>
-          <p>
-            {isEn
-              ? "Later you'll be able to connect your own key for unlimited packs. First we make sure the core runs perfectly."
-              : "Bald kannst du deinen eigenen Key verbinden — für unbegrenzte Pakete. Erst sorgen wir dafür, dass das Normale perfekt läuft."}
-          </p>
-        </div>
-      </div>
-      <div className="byok-right">
-        <span
-          className="rounded-full px-4 py-2 text-[13px] font-semibold"
-          style={{
-            background: "rgba(255,255,255,0.06)",
-            border: "1px solid rgba(255,255,255,0.14)",
-            color: "rgba(255,255,255,0.7)",
-          }}
-        >
-          {isEn ? "Coming soon" : "Bald verfügbar"}
-        </span>
-      </div>
-    </div>
-  );
-}
-
 
 /* ========== CONNECT MODAL (Claude API key) ========== */
 
@@ -2748,7 +2194,7 @@ function SocialProof() {
 function ResultPreview() {
   const isEn = useLanguage() === "en";
   return (
-    <section className="px-6 py-20 md:py-28">
+    <section className="px-6 py-14 md:py-20">
       <div className="mx-auto max-w-[1200px]">
         <div className="ln-reveal">
           <span className="ln-section-label">
@@ -3045,7 +2491,7 @@ function FAQSection() {
   const isEn = useLanguage() === "en";
   const items = isEn ? FAQ_ITEMS_EN : FAQ_ITEMS_DE;
   return (
-    <section id="faq" className="scroll-mt-24 px-6 py-20 md:py-28">
+    <section id="faq" className="scroll-mt-24 px-6 py-14 md:py-20">
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger

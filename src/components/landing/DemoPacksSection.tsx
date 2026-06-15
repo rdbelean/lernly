@@ -754,8 +754,8 @@ export default function DemoPacksSection({ language, onTryYourOwn }: Props) {
               italicPart={isEn ? "Click one." : "Klick rein."}
               sub={
                 isEn
-                  ? "From real exams. Cards, quiz, blueprint — all live. No upload, no account, no fluff."
-                  : "Aus echten Klausuren. Karteikarten, Quiz und Blueprint laufen live — kein Upload, kein Account, kein Bullshit."
+                  ? "From real exams. Cards, quiz, blueprint — all live, no account. These demos are CS — Lernly does every subject: business, law, medicine, engineering."
+                  : "Aus echten Klausuren. Karteikarten, Quiz und Blueprint laufen live — kein Account. Diese Beispiele sind Informatik — Lernly macht jedes Fach: BWL, Jura, Medizin, Technik."
               }
             />
           </div>
