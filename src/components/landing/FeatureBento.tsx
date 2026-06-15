@@ -88,11 +88,11 @@ export default function FeatureBento() {
           >
             <ProductShot
               src="/mockups/card-mobile.png"
-              alt="Lernly: Karteikarte auf dem Handy"
+              alt="Lernly auf dem Handy: Karteikarte im Browser"
               width={1290}
               height={2796}
-              sizes="(min-width: 768px) 252px, 60vw"
-              glow="#3A4BD8"
+              sizes="252px"
+              glow={INDIGO}
               glowY="40%"
               tilt="phone"
               phone
@@ -111,7 +111,7 @@ export default function FeatureBento() {
               width={1297}
               height={585}
               sizes="(min-width: 768px) 520px, 90vw"
-              glow="#2E5BBF"
+              glow={INDIGO}
               glowY="58%"
               tilt="r"
               className="w-full"
@@ -165,7 +165,7 @@ function Card({
   return (
     <article
       className={`group relative flex flex-col overflow-hidden rounded-[22px] border p-7 md:p-8 ${
-        hero ? "md:min-h-[500px]" : "md:min-h-[480px]"
+        hero ? "md:min-h-[470px]" : "md:min-h-[440px]"
       }`}
       style={{
         backgroundColor: hero ? "#171C30" : "#141930",

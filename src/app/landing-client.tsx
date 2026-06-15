@@ -552,7 +552,7 @@ function Hero(props: HeroProps) {
                   ? "Start — upload your material"
                   : "Loslegen — Material hochladen"
               }
-              className="group block w-full cursor-pointer border-0 bg-transparent p-0 text-left"
+              className="group block w-full cursor-pointer rounded-[16px] border-0 bg-transparent p-0 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4B57D6] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F1322]"
             >
               <ProductShot
                 src="/mockups/hero-hub.png"
@@ -994,7 +994,7 @@ function ShowcaseSection() {
   ];
 
   return (
-    <section className="px-6 py-20 md:py-28">
+    <section className="px-6 py-20 md:py-28 overflow-hidden">
       <div className="mx-auto max-w-[1200px]">
         <SectionHeading
           eyebrow={isEn ? "Drop it all in" : "Wirf alles rein"}
@@ -1249,7 +1249,7 @@ function ComparisonSection() {
   const isEn = useLanguage() === "en";
 
   return (
-    <section className="px-6 py-20 md:py-28">
+    <section className="px-6 py-20 md:py-28 overflow-hidden">
       <div className="mx-auto max-w-[1200px]">
         <SectionHeading
           eyebrow={isEn ? "No other tool can do this" : "Das kann kein anderes Tool"}
