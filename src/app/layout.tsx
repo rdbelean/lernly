@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Inter, Sora } from "next/font/google";
+import { Inter, Sora } from "next/font/google";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import "./globals.css";
 
@@ -18,18 +18,6 @@ const sora = Sora({
   variable: "--font-sora",
   display: "swap",
   weight: ["400", "500", "600", "700"],
-});
-
-const geistSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist",
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
-  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -107,7 +95,7 @@ export default function RootLayout({
   return (
     <html
       lang="de"
-      className={`h-full antialiased ${inter.variable} ${sora.variable} ${geistSans.variable} ${geistMono.variable}`}
+      className={`h-full antialiased ${inter.variable} ${sora.variable}`}
     >
       <body className="ln-page-bg min-h-full flex flex-col text-[color:var(--color-ln-ink)]">
         <script
