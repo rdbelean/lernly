@@ -31,7 +31,7 @@ export default function BrowserSetMockup() {
         <div
           inert
           aria-hidden
-          className="pointer-events-none select-none overflow-hidden rounded-[16px] border"
+          className="pointer-events-none select-none overflow-hidden rounded-[18px] border"
           style={{
             borderColor: "rgba(255,255,255,0.10)",
             boxShadow:
@@ -90,7 +90,7 @@ export default function BrowserSetMockup() {
               {RATINGS.map((r) => (
                 <div
                   key={r}
-                  className="flex items-center justify-center rounded-lg border px-2 py-2 text-center text-[11px] text-white/70"
+                  className="flex items-center justify-center whitespace-nowrap rounded-lg border px-1.5 py-2 text-center text-[10.5px] text-white/70"
                   style={{ background: "#171C30", borderColor: "rgba(255,255,255,0.06)" }}
                 >
                   {r}

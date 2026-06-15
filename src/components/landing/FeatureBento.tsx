@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { Languages } from "lucide-react";
+import SectionHeading from "@/components/landing/SectionHeading";
 import UploadMaskMockup from "@/components/landing/mockups/UploadMaskMockup";
 import QuizResultMockup from "@/components/landing/mockups/QuizResultMockup";
 import BrowserSetMockup from "@/components/landing/mockups/BrowserSetMockup";
@@ -28,8 +29,7 @@ export default function FeatureBento() {
   return (
     <section
       id="features"
-      aria-labelledby="features-heading"
-      className="ln-fb-section relative w-full overflow-hidden px-5 py-14 md:py-20"
+      className="ln-fb-section relative w-full overflow-hidden px-6 py-14 md:py-20"
     >
       <div
         aria-hidden
@@ -42,8 +42,13 @@ export default function FeatureBento() {
         style={{ background: `radial-gradient(circle, ${INDIGO}, transparent 70%)` }}
       />
 
-      <div className="relative z-10 mx-auto max-w-[1140px]">
-        <Header />
+      <div className="relative z-10 mx-auto max-w-[1200px]">
+        <div className="mb-8 md:mb-12">
+          <SectionHeading
+            eyebrow="Was Lernly anders macht"
+            boldPart="Vom Skript zur Bestnote."
+          />
+        </div>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-12">
           {/* Quiz — HERO, larger */}
@@ -97,7 +102,7 @@ export default function FeatureBento() {
             }}
           >
             <div className="ln-fb-noise" aria-hidden />
-            <div className="relative z-10 grid grid-cols-1 items-center gap-7 md:grid-cols-[1fr_minmax(0,420px)] md:gap-10">
+            <div className="relative z-10 grid grid-cols-1 items-center gap-7 lg:grid-cols-[1fr_minmax(0,420px)] lg:gap-12">
               <div>
                 <span
                   className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-sans text-[11px] font-semibold"
@@ -106,7 +111,7 @@ export default function FeatureBento() {
                   <Languages size={13} strokeWidth={2} aria-hidden />
                   DE / EN
                 </span>
-                <h3 className="mt-3 font-display text-xl font-semibold leading-snug text-white md:text-2xl">
+                <h3 className="mt-3 text-balance font-display text-xl font-semibold leading-snug text-white md:text-2xl">
                   Folien auf Deutsch oder Englisch? Egal.
                 </h3>
                 <p className="mt-2 max-w-[46ch] font-sans text-[15px] leading-relaxed" style={{ color: "#A9B0C4" }}>
@@ -123,25 +128,7 @@ export default function FeatureBento() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Header                                                              */
-/* ------------------------------------------------------------------ */
-
-function Header() {
-  return (
-    <header className="mb-8 text-center md:mb-12">
-      <Eyebrow>Was Lernly anders macht</Eyebrow>
-      <h2
-        id="features-heading"
-        className="mx-auto mt-4 max-w-[18ch] text-balance font-display text-[2.5rem] font-bold leading-[1.05] tracking-tight text-white md:text-[3.5rem]"
-      >
-        Vom Skript zur Bestnote.
-      </h2>
-    </header>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* Card shell — text on top, screenshot bleeding off the bottom        */
+/* Card shell — text on top, rendered mockup below                     */
 /* ------------------------------------------------------------------ */
 
 function Card({
@@ -174,7 +161,7 @@ function Card({
 
       <div className="relative z-20">
         <Eyebrow>{eyebrow}</Eyebrow>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle large={hero}>{title}</CardTitle>
         <CardBody>{body}</CardBody>
       </div>
 
@@ -199,9 +186,13 @@ function Eyebrow({ children }: { children: ReactNode }) {
   );
 }
 
-function CardTitle({ children }: { children: ReactNode }) {
+function CardTitle({ children, large = false }: { children: ReactNode; large?: boolean }) {
   return (
-    <h3 className="mt-3 text-pretty font-display text-xl font-semibold leading-snug text-white md:text-[1.45rem]">
+    <h3
+      className={`mt-3 text-pretty font-display font-semibold leading-snug text-white ${
+        large ? "text-[1.45rem] md:text-[1.85rem]" : "text-xl md:text-[1.45rem]"
+      }`}
+    >
       {children}
     </h3>
   );

@@ -872,7 +872,7 @@ function ComparisonSection() {
 
   return (
     <section className="overflow-hidden px-6 py-16 md:py-24">
-      <div className="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-10 lg:grid-cols-[1fr_minmax(0,540px)] lg:gap-16">
+      <div className="mx-auto grid max-w-[1200px] grid-cols-1 items-start gap-10 md:grid-cols-[1fr_minmax(0,460px)] md:gap-12 lg:grid-cols-[1fr_minmax(0,540px)] lg:gap-16">
         {/* Left — the message */}
         <div className="ln-reveal">
           <p className="text-[12px] font-semibold uppercase tracking-[0.18em]" style={{ color: teal }}>
