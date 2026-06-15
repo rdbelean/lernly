@@ -1,8 +1,15 @@
 "use client";
 
 import type { ReactNode } from "react";
+import dynamic from "next/dynamic";
 import ProductShot from "@/components/landing/ProductShot";
-import FlashcardMockup from "@/components/landing/mockups/FlashcardMockup";
+
+// Lazy + client-only: the real FlashcardDeck pulls framer-motion + confetti.
+// Card 4 is below the fold, so keep that weight out of the SSR/initial bundle.
+const FlashcardMockup = dynamic(
+  () => import("@/components/landing/mockups/FlashcardMockup"),
+  { ssr: false, loading: () => <div className="min-h-[260px]" /> },
+);
 
 /* ------------------------------------------------------------------ *
  * Cinematic feature grid — real Lernly app screenshots in tilted,

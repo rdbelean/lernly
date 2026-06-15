@@ -39,9 +39,12 @@ const REAL_CARDS: StudyPack["flashcards"] = [
   },
 ];
 
-// Pad to a realistic deck size — only .length is read in the hub; FlashcardDeck
-// shows the first (real) card. Filler entries stay valid Flashcards.
-const FILLER: StudyPack["flashcards"] = Array.from({ length: 30 }, (_, i) => ({
+// The first three real cards drive the flashcard mockup (1 / 3 + a real stacked
+// deck behind the active card).
+export const DEMO_CARDS = REAL_CARDS.slice(0, 3);
+
+// Pad the deck to a realistic size — only .length is read in the hub.
+const FILLER_CARDS: StudyPack["flashcards"] = Array.from({ length: 30 }, (_, i) => ({
   id: `fc-x${i}`,
   category: "Strategie",
   question: `Konzept ${i + 5} im Überblick?`,
@@ -49,10 +52,31 @@ const FILLER: StudyPack["flashcards"] = Array.from({ length: 30 }, (_, i) => ({
   difficulty: "medium" as const,
 }));
 
+// Extra Übersicht concepts so "34 Karten / N Konzepte" reads believable.
+const FILLER_CONCEPTS = (topic: string, terms: string[]): StudyPack["overview"]["topics"][number]["concepts"] =>
+  terms.map((term) => ({
+    term,
+    definition: `${term} — Kernbegriff aus ${topic}.`,
+    author: "Skript",
+    importance: "medium" as const,
+  }));
+
+// Pad the exam quiz so the "Übungsklausur" mode count and the "Letztes Quiz"
+// attempt size agree (~14 questions). Only .length is shown in the hub.
+const FILLER_QUESTIONS = Array.from({ length: 12 }, (_, i) => ({
+  id: `q-x${i}`,
+  stem: `Beispielfrage ${i + 3} im Klausur-Stil?`,
+  options: ["Option A", "Option B", "Option C", "Option D"],
+  correctIndex: (i % 4) as 0 | 1 | 2 | 3,
+  explanation: "Begründung aus deinem Material.",
+  type: "apply" as const,
+  category: "Strategie",
+}));
+
 export const DEMO_PACK: StudyPack = {
   courseTitle: "Strategisches Management",
   examType: "multiple_choice",
-  flashcards: [...REAL_CARDS, ...FILLER],
+  flashcards: [...REAL_CARDS, ...FILLER_CARDS],
   overview: {
     topics: [
       {
@@ -78,6 +102,11 @@ export const DEMO_PACK: StudyPack = {
             author: "Henderson",
             importance: "medium",
           },
+          ...FILLER_CONCEPTS("Wettbewerbsstrategie", [
+            "Differenzierung",
+            "Kostenführerschaft",
+            "Nischenstrategie",
+          ]),
         ],
       },
       {
@@ -95,7 +124,17 @@ export const DEMO_PACK: StudyPack = {
             author: "Smith",
             importance: "medium",
           },
+          ...FILLER_CONCEPTS("Marktdynamik", ["Marktwachstum", "Substitution"]),
         ],
+      },
+      {
+        name: "Marketing & Organisation",
+        concepts: FILLER_CONCEPTS("Marketing & Organisation", [
+          "Marketing-Mix",
+          "Markenführung",
+          "Wertschöpfungskette",
+          "Skaleneffekte",
+        ]),
       },
     ],
   },
@@ -140,6 +179,7 @@ export const DEMO_PACK: StudyPack = {
         type: "apply",
         category: "Strategie",
       },
+      ...FILLER_QUESTIONS,
     ],
   },
   visualMap: {
@@ -147,6 +187,9 @@ export const DEMO_PACK: StudyPack = {
       { title: "Wettbewerbskräfte", subtitle: "Porter", color: "violet", priority: "highest", frameworks: [] },
       { title: "Strategiearten", subtitle: "Kosten vs. Differenzierung", color: "cyan", frameworks: [] },
       { title: "Marktdynamik", color: "blue", frameworks: [] },
+      { title: "Marketing-Mix", subtitle: "Die vier P", color: "amber", frameworks: [] },
+      { title: "Portfolio-Analyse", subtitle: "BCG", color: "green", frameworks: [] },
+      { title: "Wertschöpfung", color: "rose", frameworks: [] },
     ],
   },
   materialLanguage: "de",
@@ -159,13 +202,13 @@ export const DEMO_EXAM: PackExamSummary = {
 };
 
 export const DEMO_ATTEMPT: LatestAttempt = {
-  total_questions: 20,
-  correct_count: 16,
-  wrong_count: 4,
+  total_questions: 14,
+  correct_count: 11,
+  wrong_count: 3,
   per_topic: {
-    Wettbewerb: { correct: 6, wrong: 1, skipped: 0 },
-    Strategie: { correct: 6, wrong: 1, skipped: 0 },
-    Marketing: { correct: 4, wrong: 2, skipped: 0 },
+    Wettbewerb: { correct: 4, wrong: 1, skipped: 0 },
+    Strategie: { correct: 4, wrong: 1, skipped: 0 },
+    Marketing: { correct: 3, wrong: 1, skipped: 0 },
   },
   created_at: "", // set client-side to a fresh relative time
 };

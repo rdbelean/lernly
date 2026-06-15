@@ -66,7 +66,8 @@ export default function PackHubMockup() {
               language="de"
             />
           ) : (
-            <div className="min-h-[440px]" />
+            // Approximate mounted-hub height to limit the post-hydration jump.
+            <div className="min-h-[560px]" />
           )}
         </div>
       </div>

@@ -545,22 +545,14 @@ function Hero(props: HeroProps) {
           }
         >
           {mode === "demo" ? (
+            // Decorative product preview. Mouse-click is a convenience that
+            // mirrors the real "Jetzt gratis testen" CTA above; it's aria-hidden
+            // and not in the tab order, so keyboard/SR users use that CTA (no
+            // duplicate control / tab stop).
             <div
-              role="button"
-              tabIndex={0}
               onClick={onActivateUpload}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  onActivateUpload();
-                }
-              }}
-              aria-label={
-                isEn
-                  ? "Start — upload your material"
-                  : "Loslegen — Material hochladen"
-              }
-              className="group block w-full cursor-pointer rounded-[16px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4B57D6] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F1322]"
+              aria-hidden
+              className="group block w-full cursor-pointer rounded-[16px]"
             >
               <PackHubMockup />
             </div>
