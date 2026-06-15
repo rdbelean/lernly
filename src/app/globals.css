@@ -2115,3 +2115,141 @@
     flex: 1 1 0 !important;
   }
 }
+
+/* ========== FEATURE BENTO (cinematic, Flighty-style) ========== */
+
+.ln-fb-section {
+  background-color: #0f1322;
+}
+
+/* Subtle film grain on card surfaces. soft-light stays visible on the
+   near-black surfaces where `overlay` would crush it to nothing. */
+.ln-fb-noise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.ln-fb-stage {
+  position: relative;
+}
+
+/* Localized radial light that reads as screen emission. Position is tied to
+   each device via --fb-gx/--fb-gy so the light originates from the (offset,
+   tilted) screen — not the geometric card centre. */
+.ln-fb-glow {
+  position: absolute;
+  left: var(--fb-gx, 50%);
+  top: var(--fb-gy, 56%);
+  width: 108%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  filter: blur(62px);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 0;
+}
+.ln-fb-glow--hero {
+  opacity: 0.72;
+  filter: blur(74px);
+}
+
+/* 3D-tilted device. will-change is promoted only on hover-intent (leaving it
+   on permanently would pin 4 GPU layers for the page's whole life). */
+.ln-fb-device {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-style: preserve-3d;
+}
+.group:hover .ln-fb-device {
+  will-change: transform;
+}
+/* Subtle ≤6° tilt — rotateX only (no rotateY) so horizontal content never
+   foreshortens or clips. The bottom edge comes slightly forward; any bleed is
+   bottom-only via the parent. */
+.ln-fb-tilt-l,
+.ln-fb-tilt-r {
+  transform: perspective(1600px) rotateX(5deg);
+}
+.ln-fb-tilt-phone {
+  transform: perspective(1600px) rotateX(4deg);
+}
+.group:hover .ln-fb-tilt-l,
+.group:hover .ln-fb-tilt-r {
+  transform: perspective(1600px) rotateX(3deg) translateY(-6px);
+}
+.group:hover .ln-fb-tilt-phone {
+  transform: perspective(1600px) rotateX(2deg) translateY(-6px);
+}
+
+/* Real-screenshot slot. These PNGs are raw app captures (no device chrome), so
+   the frame supplies rounded corners + a hair border + grounding shadow. */
+.ln-fb-shot {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 34px 60px -28px rgba(0, 0, 0, 0.72),
+    0 10px 28px -16px rgba(43, 52, 153, 0.5);
+}
+
+/* Phone bezel for the portrait phone screenshot (card-mobile). */
+.ln-ps-phone {
+  width: 270px;
+  max-width: 100%;
+  padding: 9px;
+  border-radius: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #0a0d1a;
+  box-shadow:
+    0 44px 74px -30px rgba(0, 0, 0, 0.85),
+    0 14px 34px -16px rgba(58, 75, 216, 0.45);
+}
+.ln-ps-phone-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 30px;
+}
+
+/* Mobile: straighten tilts, shrink glow, keep visuals contained */
+@media (max-width: 767px) {
+  .ln-fb-tilt-l,
+  .ln-fb-tilt-r,
+  .ln-fb-tilt-phone,
+  .group:hover .ln-fb-tilt-l,
+  .group:hover .ln-fb-tilt-r,
+  .group:hover .ln-fb-tilt-phone {
+    transform: perspective(1200px) rotateY(0deg) rotateX(0deg);
+  }
+  .ln-fb-glow {
+    opacity: 0.38;
+    filter: blur(46px);
+    width: 100%;
+  }
+  /* Skip the blend-mode layer on mobile — pure paint cost, no hover payoff. */
+  .ln-fb-noise {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ln-fb-device {
+    transition: none;
+  }
+  /* Hover must not jump the device for reduced-motion users: hold the base tilt. */
+  .group:hover .ln-fb-tilt-l,
+  .group:hover .ln-fb-tilt-r {
+    transform: perspective(1600px) rotateX(5deg);
+  }
+  .group:hover .ln-fb-tilt-phone {
+    transform: perspective(1600px) rotateX(4deg);
+  }
+}

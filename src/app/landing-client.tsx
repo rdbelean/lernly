@@ -19,6 +19,9 @@ import SiteFooter from "@/components/SiteFooter";
 import ClaudeLogo from "@/components/ClaudeLogo";
 import PackView from "@/components/pack/PackView";
 import DemoPacksSection from "@/components/landing/DemoPacksSection";
+import FeatureBento from "@/components/landing/FeatureBento";
+import ProductShot from "@/components/landing/ProductShot";
+import PackHubMockup from "@/components/landing/mockups/PackHubMockup";
 import SectionHeading from "@/components/landing/SectionHeading";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import { track } from "@/lib/analytics";
@@ -387,7 +390,7 @@ export default function Home() {
           <DemoPacksSection language={language} onTryYourOwn={activateUpload} />
           <HowItWorks />
           <ShowcaseSection />
-          <BentoFeatures />
+          <FeatureBento />
           <ComparisonSection />
           {pack && <ResultSection pack={pack} onReset={clearPack} />}
           <ToolStackSection />
@@ -542,7 +545,17 @@ function Hero(props: HeroProps) {
           }
         >
           {mode === "demo" ? (
-            <StudyPackCockpitMockup onActivate={onActivateUpload} />
+            // Decorative product preview. Mouse-click is a convenience that
+            // mirrors the real "Jetzt gratis testen" CTA above; it's aria-hidden
+            // and not in the tab order, so keyboard/SR users use that CTA (no
+            // duplicate control / tab stop).
+            <div
+              onClick={onActivateUpload}
+              aria-hidden
+              className="group block w-full cursor-pointer rounded-[16px]"
+            >
+              <PackHubMockup />
+            </div>
           ) : (
             <UploadDemo {...props} />
           )}
@@ -564,181 +577,6 @@ function Hero(props: HeroProps) {
         </div>
       </div>
     </section>
-  );
-}
-
-/* ========== HERO STUDY PACK COCKPIT ========== */
-
-function StudyPackCockpitMockup({ onActivate }: { onActivate: () => void }) {
-  const isEn = useLanguage() === "en";
-  return (
-    <div className="ln-hero-card ln-cockpit">
-      <div className="ln-cockpit-top">
-        <div>
-          <div className="ln-card-top-status">
-            <span className="ln-pulse-dot-green" aria-hidden />
-            <span>{isEn ? "Ready" : "Fertig"}</span>
-          </div>
-          <div className="ln-cockpit-title">
-            {isEn
-              ? "Strategic Management · Essay exam"
-              : "Strategic Management · Essay-Klausur"}
-          </div>
-        </div>
-        <div className="ln-cockpit-pack-tags">
-          <span>{isEn ? "35 cards" : "35 Karten"}</span>
-          <span>{isEn ? "12 quiz qs" : "12 Quiz-Fragen"}</span>
-          <span>Blueprint</span>
-        </div>
-      </div>
-
-      <div className="ln-cockpit-body">
-        <aside
-          className="ln-cockpit-rail"
-          aria-label={isEn ? "Study pack modules" : "Lernpaket Module"}
-        >
-          <div className="ln-cockpit-rail-item is-active">
-            <span>01</span>
-            <strong>Blueprint</strong>
-          </div>
-          <div className="ln-cockpit-rail-item">
-            <span>02</span>
-            <strong>{isEn ? "Flashcards" : "Karteikarten"}</strong>
-          </div>
-          <div className="ln-cockpit-rail-item">
-            <span>03</span>
-            <strong>{isEn ? "Quiz" : "Übungsklausur"}</strong>
-          </div>
-        </aside>
-
-        <section
-          className="ln-cockpit-main"
-          aria-label={isEn ? "Essay blueprint preview" : "Essay Blueprint Vorschau"}
-        >
-          <div className="ln-cockpit-panel-head">
-            <span className="ln-section-label">Essay Blueprint</span>
-            <span className="ln-cockpit-mini-pill">
-              {isEn ? "~1500 words · 3h" : "~1500 Wörter · 3h"}
-            </span>
-          </div>
-
-          <div className="ln-timebar" aria-hidden>
-            <div className="ln-timebar-segment is-scenario" style={{ flex: 3.5 }}>
-              <strong>{isEn ? "Scenario" : "Szenario"}</strong>
-              <span>~350 W.</span>
-            </div>
-            <div className="ln-timebar-segment is-theory" style={{ flex: 3.5 }}>
-              <strong>{isEn ? "Theory" : "Theorie"}</strong>
-              <span>~350 W.</span>
-            </div>
-            <div className="ln-timebar-segment is-analysis" style={{ flex: 6 }}>
-              <strong>{isEn ? "Analysis" : "Analyse"}</strong>
-              <span>~650 W.</span>
-            </div>
-            <div className="ln-timebar-segment is-polish" style={{ flex: 1.8 }}>
-              <strong>Polish</strong>
-              <span>30 min</span>
-            </div>
-          </div>
-
-          <div className="ln-blueprint-stack">
-            <div className="ln-blueprint-row is-scenario">
-              <span>1</span>
-              <div>
-                <strong>{isEn ? "Scenario" : "Szenario"}</strong>
-                <p>
-                  {isEn
-                    ? "Describe the industry context. No theory, no references."
-                    : "Branche beschreiben. Keine Theorie, keine Quellen."}
-                </p>
-              </div>
-              <em>40 min</em>
-            </div>
-            <div className="ln-blueprint-row is-theory">
-              <span>2</span>
-              <div>
-                <strong>{isEn ? "Theory" : "Theorie"}</strong>
-                <p>Porter, Barney, Anderson & Tushman.</p>
-              </div>
-              <em>40 min</em>
-            </div>
-            <div className="ln-blueprint-row is-analysis">
-              <span>3</span>
-              <div>
-                <strong>
-                  {isEn ? "Analysis + conclusion" : "Analyse + Schluss"}
-                </strong>
-                <p>
-                  {isEn
-                    ? "Defend or challenge. Take a position, not a summary."
-                    : "Stützen oder angreifen. Position beziehen, keine Zusammenfassung."}
-                </p>
-              </div>
-              <em>80 min</em>
-            </div>
-          </div>
-        </section>
-
-        <aside
-          className="ln-cockpit-drill"
-          aria-label={isEn ? "Flashcards preview" : "Karteikarten Vorschau"}
-        >
-          <div className="ln-cockpit-panel-head">
-            <span className="ln-section-label">
-              {isEn ? "Flashcards" : "Karteikarten"}
-            </span>
-            <span className="ln-cockpit-mini-pill">12 / 35</span>
-          </div>
-          <div className="ln-drill-progress">
-            <span style={{ width: "34%" }} />
-          </div>
-          <div className="ln-drill-card">
-            <div className="ln-drill-card-top">
-              <span>Porter</span>
-              <em>Five Forces</em>
-            </div>
-            <strong>
-              {isEn
-                ? "Which 5 forces shape industry structure?"
-                : "Welche 5 Kräfte bestimmen die Branchenstruktur?"}
-            </strong>
-            <p>
-              {isEn
-                ? "Supplier power, buyer power, rivalry, new entrants, substitutes. Streaming = intense rivalry (Netflix/Disney+/Amazon)."
-                : "Lieferantenmacht, Käufermacht, Rivalität, neue Anbieter, Substitute. Streaming = hohe Rivalität (Netflix/Disney+/Amazon)."}
-            </p>
-          </div>
-          <div className="ln-drill-actions" aria-hidden>
-            <span className="is-again">{isEn ? "Again" : "Nochmal"}</span>
-            <span className="is-kinda">{isEn ? "Almost" : "Fast"}</span>
-            <span className="is-got">{isEn ? "Got it" : "Kann ich"}</span>
-          </div>
-        </aside>
-      </div>
-
-      <div className="ln-cockpit-bottom">
-        <div className="ln-example-chip">
-          <span>{isEn ? "Vertical Integration" : "Vertikale Integration"}</span>
-          <strong>Make-or-Buy</strong>
-        </div>
-        <div className="ln-example-chip">
-          <span>{isEn ? "Global Strategy" : "Globale Strategie"}</span>
-          <strong>CAGE · I-R Framework</strong>
-        </div>
-        <div className="ln-example-chip">
-          <span>{isEn ? "Diversification" : "Diversifikation"}</span>
-          <strong>Porter's 3 Tests</strong>
-        </div>
-        <button type="button" onClick={onActivate} className="ln-cockpit-cta">
-          <span>✦</span>
-          <span>
-            {isEn
-              ? "Try it with my slides"
-              : "Jetzt mit meinen Folien testen"}
-          </span>
-        </button>
-      </div>
-    </div>
   );
 }
 
@@ -1140,7 +978,7 @@ function ShowcaseSection() {
   ];
 
   return (
-    <section className="px-6 py-20 md:py-28">
+    <section className="px-6 py-20 md:py-28 overflow-hidden">
       <div className="mx-auto max-w-[1200px]">
         <SectionHeading
           eyebrow={isEn ? "Drop it all in" : "Wirf alles rein"}
@@ -1174,6 +1012,46 @@ function ShowcaseSection() {
             heading={isEn ? "Study pack out" : "Lernpaket raus"}
             footerNote={isEn ? "Ready in ~2 minutes" : "In ~2 Minuten fertig"}
             tiles={outputs}
+          />
+        </div>
+
+        {/* Multilingual proof — English material is an advantage, not a break */}
+        <div className="ln-reveal mt-16 grid grid-cols-1 items-center gap-8 md:mt-24 md:grid-cols-2 md:gap-14">
+          <div>
+            <p
+              className="font-sans text-[11px] font-medium uppercase tracking-[0.22em]"
+              style={{ color: "#8A93C8" }}
+            >
+              {isEn ? "Any subject, any language" : "Jedes Fach, jede Sprache"}
+            </p>
+            <h3 className="mt-3 font-display text-2xl font-semibold leading-snug text-white md:text-[2rem]">
+              {isEn
+                ? "German or English slides?"
+                : "Folien auf Deutsch oder Englisch?"}
+            </h3>
+            <p
+              className="mt-3 max-w-[44ch] font-sans text-[16px] leading-relaxed"
+              style={{ color: "rgba(255,255,255,0.72)" }}
+            >
+              {isEn
+                ? "Doesn't matter — Lernly understands both, and builds your pack in the language of your material."
+                : "Egal — Lernly versteht beides. Dein Paket kommt in der Sprache deines Stoffs."}
+            </p>
+          </div>
+          <ProductShot
+            src="/mockups/topic-multilingual.png"
+            alt={
+              isEn
+                ? "Lernly topic overview from English course material"
+                : "Lernly Themen-Übersicht aus englischem Stoff"
+            }
+            width={1270}
+            height={668}
+            sizes="(min-width: 768px) 520px, 92vw"
+            glow="#4B57D6"
+            glowY="54%"
+            tilt="r"
+            className="w-full"
           />
         </div>
       </div>
@@ -1353,42 +1231,9 @@ function FlowConnector() {
 
 function ComparisonSection() {
   const isEn = useLanguage() === "en";
-  const teal = "rgb(91, 184, 216)";
-
-  const topics = [
-    {
-      name: isEn ? "Competitive dynamics (Chen)" : "Wettbewerbsdynamik (Chen)",
-      pct: 34,
-      hit: true,
-    },
-    { name: isEn ? "BCG matrix" : "BCG-Matrix", pct: 22, hit: true },
-    { name: "Five Forces", pct: 15, hit: false },
-    { name: isEn ? "Market dynamics" : "Marktdynamik", pct: 11, hit: false },
-  ];
-
-  const options = [
-    { key: "A", text: "Five Forces", correct: false },
-    { key: "B", text: isEn ? "BCG matrix" : "BCG-Matrix", correct: false },
-    {
-      key: "C",
-      text: isEn ? "Competitive dynamics" : "Wettbewerbsdynamik",
-      correct: true,
-    },
-    {
-      key: "D",
-      text: isEn ? "Market segmentation" : "Marktsegmentierung",
-      correct: false,
-    },
-  ];
-
-  const cardStyle = {
-    background: "#141930",
-    border: "1px solid rgba(255,255,255,0.06)",
-    borderRadius: "16px",
-  } as const;
 
   return (
-    <section className="px-6 py-20 md:py-28">
+    <section className="px-6 py-20 md:py-28 overflow-hidden">
       <div className="mx-auto max-w-[1200px]">
         <SectionHeading
           eyebrow={isEn ? "No other tool can do this" : "Das kann kein anderes Tool"}
@@ -1410,193 +1255,24 @@ function ComparisonSection() {
             : "Leg deine Altklausur dazu. Lernly erkennt, welche Themen wirklich geprüft werden — und baut Karten & Quiz genau darauf, im Stil deiner echten Prüfung."}
         </p>
 
-        {/* Two-part visual, styled like the real app (solid #141930 surfaces) */}
-        <div className="mx-auto mt-12 grid max-w-[1000px] grid-cols-1 gap-4 md:grid-cols-2">
-          {/* A) Topic ranking by exam probability */}
-          <div className="ln-reveal p-6" style={cardStyle}>
-            <div className="mb-5 flex items-center gap-3">
-              <span
-                className="flex h-9 w-9 items-center justify-center rounded-lg"
-                style={{ background: "rgba(91,184,216,0.12)" }}
-              >
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke={teal}
-                  strokeWidth="1.9"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden
-                >
-                  <line x1="12" y1="20" x2="12" y2="10" />
-                  <line x1="18" y1="20" x2="18" y2="4" />
-                  <line x1="6" y1="20" x2="6" y2="16" />
-                </svg>
-              </span>
-              <div
-                className="text-[14px] font-semibold"
-                style={{ color: "#EAEDF7", fontFamily: "var(--font-display)" }}
-              >
-                {isEn
-                  ? "Topics by exam probability"
-                  : "Themen nach Klausur-Wahrscheinlichkeit"}
-              </div>
-            </div>
-
-            <div className="space-y-3.5">
-              {topics.map((t) => (
-                <div key={t.name}>
-                  <div className="mb-1.5 flex items-start gap-2">
-                    <span
-                      className="min-w-0 text-[13.5px] leading-snug"
-                      style={{ color: "rgba(255,255,255,0.88)" }}
-                    >
-                      {t.name}
-                      {t.hit && (
-                        <span
-                          className="ml-1.5 inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 align-middle text-[11px] font-semibold"
-                          style={{ background: "rgba(91,184,216,0.12)", color: teal }}
-                        >
-                          <span aria-hidden>✦</span>
-                          {isEn ? "was tested" : "kam dran"}
-                        </span>
-                      )}
-                    </span>
-                    <span
-                      className="ml-auto shrink-0 pt-0.5 text-[13px] font-semibold tabular-nums"
-                      style={{ color: "rgba(255,255,255,0.7)" }}
-                    >
-                      {t.pct}%
-                    </span>
-                  </div>
-                  <div
-                    className="h-2 overflow-hidden rounded-full"
-                    style={{ background: "rgba(255,255,255,0.06)" }}
-                  >
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${Math.round((t.pct / 34) * 100)}%`,
-                        background: t.hit ? teal : "rgba(255,255,255,0.22)",
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <p
-              className="mt-5 text-[11.5px] leading-snug"
-              style={{ color: "rgba(255,255,255,0.4)" }}
-            >
-              {isEn
-                ? "Focus from your past exam — example, no guarantee."
-                : "Schwerpunkt aus deiner Altklausur — Beispiel, keine Garantie."}
-            </p>
-          </div>
-
-          {/* B) Example question in the exam's style */}
-          <div className="ln-reveal p-6" style={cardStyle}>
-            <div
-              className="mb-4 inline-flex items-center gap-1.5 text-[12px] font-semibold"
-              style={{ color: teal }}
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke={teal}
-                strokeWidth="1.9"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden
-              >
-                <polyline points="15 10 20 15 15 20" />
-                <path d="M4 4v7a4 4 0 0 0 4 4h12" />
-              </svg>
-              {isEn
-                ? "Question in your past-exam style"
-                : "Frage im Stil deiner Altklausur"}
-            </div>
-
-            <div
-              className="rounded-xl p-3.5 text-[13px] leading-relaxed"
-              style={{
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.05)",
-                color: "rgba(255,255,255,0.7)",
-              }}
-            >
-              {isEn
-                ? "Sony launches the PS5; months later Microsoft counters with the Xbox Series X at the same price."
-                : "Sony bringt die PS5, Microsoft kontert Monate später mit der Xbox Series X zum gleichen Preis."}
-            </div>
-
-            <p
-              className="mt-3.5 text-[14px] font-semibold leading-snug"
-              style={{ color: "#EAEDF7" }}
-            >
-              {isEn
-                ? "Which concept by Chen (1996) describes this best?"
-                : "Welches Konzept von Chen (1996) beschreibt das am besten?"}
-            </p>
-
-            <div className="mt-3 space-y-2">
-              {options.map((o) => (
-                <div
-                  key={o.key}
-                  className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[13px]"
-                  style={
-                    o.correct
-                      ? {
-                          background: "rgba(91,184,216,0.1)",
-                          border: "1px solid rgba(91,184,216,0.45)",
-                          color: "#EAEDF7",
-                        }
-                      : {
-                          background: "rgba(255,255,255,0.02)",
-                          border: "1px solid rgba(255,255,255,0.06)",
-                          color: "rgba(255,255,255,0.75)",
-                        }
-                  }
-                >
-                  <span
-                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold"
-                    style={
-                      o.correct
-                        ? { background: teal, color: "#0F1322" }
-                        : {
-                            background: "rgba(255,255,255,0.08)",
-                            color: "rgba(255,255,255,0.6)",
-                          }
-                    }
-                  >
-                    {o.correct ? (
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#0F1322"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden
-                      >
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    ) : (
-                      o.key
-                    )}
-                  </span>
-                  <span>{o.text}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+        {/* Altklausur-Lens setup — the real differentiator, on stage */}
+        <div className="relative mx-auto mt-12 max-w-[900px]">
+          <ProductShot
+            src="/mockups/altklausur-setup.png"
+            alt={
+              isEn
+                ? "Lernly past-exam lens setup — best results from your own exam style"
+                : "Lernly Altklausur-Lens: \u201aIch hab eine Altklausur\u2018 \u2014 beste Ergebnisse aus deinem echten Pr\u00fcfungsstil"
+            }
+            width={1273}
+            height={960}
+            sizes="(min-width: 768px) 880px, 92vw"
+            glow="#4B57D6"
+            glowStrong
+            glowY="52%"
+            tilt="r"
+            className="w-full"
+          />
         </div>
 
         {/* Caption */}
@@ -1889,299 +1565,6 @@ function Waveform({ seed }: { seed: number }) {
           }}
         />
       ))}
-    </div>
-  );
-}
-
-/* ========== BENTO FEATURES ========== */
-
-function BentoFeatures() {
-  const isEn = useLanguage() === "en";
-  return (
-    <section id="features" className="scroll-mt-24 px-6 py-20 md:py-28">
-      <div className="mx-auto max-w-[1200px]">
-        <SectionHeading
-          eyebrow={
-            isEn ? "What makes Lernly different" : "Was Lernly anders macht"
-          }
-          boldPart={
-            isEn ? "Exam in 7 days?" : "Klausur in 7 Tagen?"
-          }
-          italicPart={
-            isEn ? "Enough time." : "Reicht."
-          }
-        />
-
-        <div className="ln-stagger mt-14 grid grid-cols-1 gap-4 md:grid-cols-6">
-          {/* Card 1 — span 3 */}
-          <div className="ln-reveal ln-glass-card p-8 md:col-span-3 md:p-9">
-            <CardEyebrow>
-              {isEn ? "Reading ≠ Learning" : "Lesen ≠ Lernen"}
-            </CardEyebrow>
-            <CardTitle>
-              {isEn
-                ? "Actively quizzed, not passively skimmed."
-                : "Du wirst abgefragt. Nicht berieselt."}
-            </CardTitle>
-            <CardDesc>
-              {isEn
-                ? "Every card tests you. Every quiz explains why each option is right or wrong. So the stuff actually sticks."
-                : "Jede Karte testet dich. Jedes Quiz erklärt, warum jede Option richtig oder falsch ist. Damit's wirklich hängen bleibt."}
-            </CardDesc>
-            <div className="mt-6 flex flex-wrap gap-2">
-              <span className="ln-mono-tag ln-mono-tag-pill ln-mono-tag-accent">
-                {isEn ? "Active recall" : "Active Recall"}
-              </span>
-              <span className="ln-mono-tag ln-mono-tag-pill">
-                {isEn ? "Feedback per answer" : "Feedback pro Antwort"}
-              </span>
-              <span className="ln-mono-tag ln-mono-tag-pill">
-                {isEn ? "Repeat only what slipped" : "Nur falsche wiederholen"}
-              </span>
-            </div>
-          </div>
-
-          {/* Card 2 — span 3 (big stat) */}
-          <div className="ln-reveal ln-glass-card relative overflow-hidden p-8 md:col-span-3 md:p-9">
-            <CardEyebrow>
-              {isEn ? "Stop writing cards by hand" : "Schluss mit Karten schreiben"}
-            </CardEyebrow>
-            <div className="mt-8 flex items-end gap-3">
-              <div
-                className="ln-stat-gradient-blue font-bold leading-none"
-                style={{
-                  fontSize: "clamp(56px, 8vw, 72px)",
-                  letterSpacing: "-2.56px",
-                }}
-              >
-                ~120
-              </div>
-              <div
-                className="pb-2 text-[14px]"
-                style={{ color: "var(--color-ln-mute)" }}
-              >
-                {isEn ? "sec / subject" : "Sek / Fach"}
-              </div>
-            </div>
-            <CardTitle className="mt-6">
-              {isEn
-                ? "30 cards in the time it takes to make coffee."
-                : "30 Karten in der Zeit eines Kaffees."}
-            </CardTitle>
-            <CardDesc>
-              {isEn
-                ? "What usually costs you an evening, Lernly does before your coffee gets cold. Flashcards, blueprint, quiz — done."
-                : "Was dich sonst einen Abend kostet, macht Lernly bevor dein Kaffee kalt ist. Karteikarten, Blueprint, Quiz — fertig."}
-            </CardDesc>
-            <WaveBars className="mt-6" />
-          </div>
-
-          {/* Card 3 — span 2 */}
-          <div className="ln-reveal ln-glass-card p-8 md:col-span-2">
-            <div
-              className="flex h-12 w-12 items-center justify-center"
-              style={{ color: "rgba(255,255,255,0.5)" }}
-              aria-hidden
-            >
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M1 1l22 22" />
-                <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55" />
-                <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39" />
-                <path d="M10.71 5.05A16 16 0 0 1 22.56 9" />
-                <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88" />
-                <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
-                <path d="M12 20h.01" />
-              </svg>
-            </div>
-            <CardEyebrow>
-              {isEn ? "Even when Wi-Fi gives up" : "Auch wenn's WLAN streikt"}
-            </CardEyebrow>
-            <CardTitle className="mt-3">
-              {isEn ? "Runs without WiFi." : "Läuft auch ohne WLAN."}
-            </CardTitle>
-            <CardDesc>
-              {isEn
-                ? "Download as HTML. Runs on the train, in the library, wherever you end up studying — even without Wi-Fi."
-                : "Download als HTML. Läuft im Zug, in der Bib, auf dem Klo — selbst wenn das WLAN streikt."}
-            </CardDesc>
-          </div>
-
-          {/* Card 4 — span 2 (mono stats) */}
-          <div className="ln-reveal ln-glass-card p-8 md:col-span-2">
-            <CardEyebrow>
-              {isEn ? "Not everything, just what matters" : "Nicht alles, nur das Richtige"}
-            </CardEyebrow>
-            <CardTitle className="mt-3">
-              {isEn ? "What actually gets tested." : "Was wirklich geprüft wird."}
-            </CardTitle>
-            <div className="mt-5">
-              <PrivacyRow label={isEn ? "Your material" : "Dein Skript"} value={isEn ? "400 slides" : "400 Folien"} />
-              <PrivacyRow label={isEn ? "Exam-relevant" : "Prüfungsrelevant"} value="~40" />
-              <PrivacyRow label={isEn ? "Lernly shows" : "Lernly zeigt"} value={isEn ? "which" : "welche"} />
-              <PrivacyRow label={isEn ? "Time saved" : "Zeit gespart"} value={isEn ? "hours" : "Stunden"} />
-            </div>
-          </div>
-
-          {/* Card 5 — span 2 (preview) */}
-          <div className="ln-reveal ln-glass-card p-8 md:col-span-2">
-            <CardEyebrow>
-              {isEn ? "Slides in English? No problem." : "Folien auf Englisch? Egal."}
-            </CardEyebrow>
-            <CardTitle className="mt-3">
-              {isEn ? "Any subject. Any language." : "Jedes Fach. Jede Sprache."}
-            </CardTitle>
-            <CardDesc>
-              {isEn
-                ? "Slides in English, notes in German? Doesn't matter. Lernly reads it all and builds your pack — business, medicine, law, whatever you study."
-                : "Folien auf Englisch, Mitschrift auf Deutsch? Egal. Lernly liest alles und baut dein Paket — BWL, Medizin, Jura, was auch immer."}
-            </CardDesc>
-            <div className="mt-5 flex flex-wrap gap-1.5">
-              <span className="ln-mono-tag">{isEn ? "Business" : "BWL"}</span>
-              <span className="ln-mono-tag">{isEn ? "Medicine" : "Medizin"}</span>
-              <span className="ln-mono-tag">{isEn ? "Law" : "Jura"}</span>
-              <span className="ln-mono-tag">DE/EN</span>
-              <span className="ln-mono-tag">{isEn ? "+all" : "+alle"}</span>
-            </div>
-          </div>
-
-          {/* Card 6 — span 6 (wide): big "0€" on the left, copy on the right */}
-          <div
-            className="ln-reveal ln-glass-card md:col-span-6"
-            style={{ padding: "44px 40px" }}
-          >
-            <div className="flex flex-col items-center gap-8 md:flex-row md:items-center md:gap-10">
-              <div
-                className="ln-stat-gradient-violet shrink-0 leading-none"
-                style={{
-                  fontSize: "clamp(96px, 13vw, 120px)",
-                  fontWeight: 800,
-                  letterSpacing: "-4.8px",
-                }}
-              >
-                0€
-              </div>
-              <div>
-                <h3
-                  className="text-white"
-                  style={{
-                    fontSize: "clamp(22px, 3.5vw, 32px)",
-                    fontWeight: 600,
-                    lineHeight: 1.2,
-                    margin: 0,
-                  }}
-                >
-                  {isEn
-                    ? "2 free packs. Every month."
-                    : "2 Pakete gratis. Jeden Monat."}
-                </h3>
-                <p
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: 400,
-                    color: "rgb(228, 231, 239)",
-                    lineHeight: 1.5,
-                    margin: "6px 0 0",
-                  }}
-                >
-                  {isEn
-                    ? "Free Lernly resets every month. No credit card, no commitment."
-                    : "Free-Tier resettet jeden Monat. Keine Kreditkarte, keine Verpflichtung."}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function CardEyebrow({ children }: { children: ReactNode }) {
-  return (
-    <div className="ln-section-label" style={{ fontSize: 11, letterSpacing: "2.2px" }}>
-      {children}
-    </div>
-  );
-}
-
-function CardTitle({
-  children,
-  className = "mt-3",
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
-  return (
-    <h3
-      className={
-        "text-[22px] font-semibold leading-snug tracking-[-0.3px] text-white " +
-        className
-      }
-    >
-      {children}
-    </h3>
-  );
-}
-
-function CardDesc({ children }: { children: ReactNode }) {
-  return (
-    <p
-      className="mt-2 text-[15px] leading-[1.55]"
-      style={{ color: "var(--color-ln-mute)" }}
-    >
-      {children}
-    </p>
-  );
-}
-
-function PrivacyRow({
-  label,
-  value,
-  note,
-}: {
-  label: string;
-  value: string;
-  note?: string;
-}) {
-  return (
-    <div className="ln-privacy-row">
-      <span className="ln-privacy-label">{label}</span>
-      <span className="flex items-baseline gap-1.5">
-        <span className="ln-privacy-value">{value}</span>
-        {note && (
-          <span className="text-[10px] ln-privacy-label">{note}</span>
-        )}
-      </span>
-    </div>
-  );
-}
-
-function WaveBars({ className = "" }: { className?: string }) {
-  // Defer to client mount to sidestep SSR/browser float-serialization differences
-  // that otherwise trigger a hydration mismatch on the inline style attribute.
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
-  if (!mounted) {
-    return <div className={"h-[34px] " + className} aria-hidden />;
-  }
-
-  return (
-    <div className={"flex items-end gap-1 " + className} aria-hidden>
-      {Array.from({ length: 28 }).map((_, i) => {
-        const h = 6 + Math.abs(Math.sin(i * 0.5 + i * 0.1)) * 28;
-        const alpha = 0.25 + (i % 6) * 0.08;
-        return (
-          <span
-            key={i}
-            className="block w-[4px] rounded-full"
-            style={{
-              height: `${h.toFixed(1)}px`,
-              backgroundColor: `rgba(91,184,216,${alpha.toFixed(2)})`,
-            }}
-          />
-        );
-      })}
     </div>
   );
 }
