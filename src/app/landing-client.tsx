@@ -857,57 +857,97 @@ function UploadDemo({
 
 function ComparisonSection() {
   const isEn = useLanguage() === "en";
+  const teal = "var(--color-cat-teal)";
+  const points = isEn
+    ? [
+        "Lernly spots the focus topics in your past exam",
+        "Builds questions in the style of your real exam",
+        "You practise exactly what gets tested",
+      ]
+    : [
+        "Lernly erkennt die Schwerpunkte deiner Altklausur",
+        "Baut Fragen im Stil deiner echten Prüfung",
+        "Du übst genau das, was drankommt",
+      ];
 
   return (
-    <section className="px-6 py-14 md:py-20 overflow-hidden">
-      <div className="mx-auto max-w-[1200px]">
-        <SectionHeading
-          eyebrow={isEn ? "No other tool can do this" : "Das kann kein anderes Tool"}
-          boldPart={isEn ? "Stop guessing" : "Hör auf zu raten,"}
-          boldColor="var(--color-ln-ink-soft)"
-          italicPart={isEn ? "what's on the exam." : "was drankommt."}
-          italicColor="#ffffff"
-        />
+    <section className="overflow-hidden px-6 py-16 md:py-24">
+      <div className="mx-auto grid max-w-[1200px] grid-cols-1 items-start gap-10 md:grid-cols-[1fr_minmax(0,460px)] md:gap-12 lg:grid-cols-[1fr_minmax(0,540px)] lg:gap-16">
+        {/* Left — the message */}
+        <div className="ln-reveal">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.18em]" style={{ color: teal }}>
+            {isEn ? "No other tool can do this" : "Das kann kein anderes Tool"}
+          </p>
+          <h2
+            className="mt-3 font-display text-[2.5rem] font-bold leading-[1.04] tracking-tight md:text-[3.5rem]"
+            style={{ color: "var(--color-ln-ink-soft)" }}
+          >
+            {isEn ? "Stop guessing " : "Hör auf zu raten, "}
+            <span className="font-semibold italic text-white">
+              {isEn ? "what's on the exam." : "was drankommt."}
+            </span>
+          </h2>
 
-        <p
-          className="ln-reveal mx-auto mt-6 max-w-[760px] text-center leading-[1.45]"
-          style={{
-            fontSize: "clamp(16px, 1.9vw, 19px)",
-            color: "rgba(255,255,255,0.72)",
-          }}
-        >
-          {isEn
-            ? "Add your past exam. Lernly spots which topics actually get tested — and builds cards & quizzes right on those, in the style of your real exam."
-            : "Leg deine Altklausur dazu. Lernly erkennt, welche Themen wirklich geprüft werden — und baut Karten & Quiz genau darauf, im Stil deiner echten Prüfung."}
-        </p>
+          <ul className="mt-7 space-y-3.5">
+            {points.map((p) => (
+              <li key={p} className="flex items-start gap-3">
+                <span
+                  aria-hidden
+                  className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
+                  style={{ background: "rgba(79,209,165,0.14)", border: "1px solid rgba(79,209,165,0.3)" }}
+                >
+                  <Check size={13} strokeWidth={2.6} style={{ color: teal }} />
+                </span>
+                <span className="text-[15.5px] leading-snug text-white/85">{p}</span>
+              </li>
+            ))}
+          </ul>
 
-        {/* Altklausur-Lens setup — the real differentiator, rendered razor-sharp */}
-        <div className="relative mx-auto mt-10 max-w-[460px]">
-          <AltklausurMaskMockup />
+          {/* Before / after — makes the wedge visceral */}
+          <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div
+              className="rounded-2xl border px-4 py-3.5"
+              style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.08)" }}
+            >
+              <div className="flex items-center gap-2">
+                <X size={14} strokeWidth={2.4} className="text-white/40" />
+                <span className="text-[12px] font-semibold uppercase tracking-[0.1em]" style={{ color: "rgba(255,255,255,0.45)" }}>
+                  {isEn ? "Without past exam" : "Ohne Altklausur"}
+                </span>
+              </div>
+              <p className="mt-1 text-[14px] text-white/55">
+                {isEn ? "You guess what's coming." : "Du rätst, was drankommt."}
+              </p>
+            </div>
+            <div
+              className="rounded-2xl border px-4 py-3.5"
+              style={{ background: "rgba(79,209,165,0.07)", borderColor: "rgba(79,209,165,0.3)" }}
+            >
+              <div className="flex items-center gap-2">
+                <Check size={14} strokeWidth={2.4} style={{ color: teal }} />
+                <span className="text-[12px] font-semibold uppercase tracking-[0.1em]" style={{ color: teal }}>
+                  {isEn ? "With past exam" : "Mit Altklausur"}
+                </span>
+              </div>
+              <p className="mt-1 text-[14px] text-white/85">
+                {isEn ? "Focus topics, spotted." : "Schwerpunkte erkannt."}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <a
+              href="#upload"
+              className="inline-flex rounded-full bg-white px-6 py-3 text-[14px] font-semibold text-[#0F1535] transition hover:bg-white/90"
+            >
+              {isEn ? "Try it free →" : "Jetzt gratis testen →"}
+            </a>
+          </div>
         </div>
 
-        {/* Caption */}
-        <p className="ln-reveal mx-auto mt-10 max-w-[720px] text-center text-[17px] font-semibold leading-snug md:text-[19px]">
-          <span style={{ color: "rgba(255,255,255,0.55)" }}>
-            {isEn
-              ? "Other tools give you everything. "
-              : "Andere Tools geben dir alles. "}
-          </span>
-          <span style={{ color: "#ffffff" }}>
-            {isEn
-              ? "Lernly gives you what's on the exam."
-              : "Lernly gibt dir das, was drankommt."}
-          </span>
-        </p>
-
-        {/* CTA */}
-        <div className="ln-reveal mt-7 flex justify-center">
-          <a
-            href="#upload"
-            className="rounded-full bg-white px-6 py-3 text-[14px] font-semibold text-[#0F1535] transition hover:bg-white/90"
-          >
-            {isEn ? "Try it free →" : "Jetzt gratis testen →"}
-          </a>
+        {/* Right — the rendered Altklausur mask, prominent */}
+        <div className="ln-reveal mx-auto w-full max-w-[460px] lg:mx-0 lg:max-w-none">
+          <AltklausurMaskMockup />
         </div>
       </div>
     </section>
@@ -961,8 +1001,11 @@ function ToolStackSection() {
       <div className="mx-auto max-w-[1200px]">
         <SectionHeading
           eyebrow={isEn ? "One tool instead of four" : "Ein Tool statt vier"}
-          boldPart={isEn ? "Four tools for one exam." : "Vier Tools für eine Klausur."}
-          italicPart={isEn ? "Or one." : "Oder eins."}
+          boldPart={
+            isEn
+              ? "Four tools for one exam — or just Lernly."
+              : "Vier Tools für eine Klausur — oder einfach Lernly."
+          }
         />
 
         <p

@@ -2169,19 +2169,23 @@
 .group:hover .ln-fb-device {
   will-change: transform;
 }
-/* Subtle ≤6° tilt — rotateX only (no rotateY) so horizontal content never
-   foreshortens or clips. The bottom edge comes slightly forward; any bleed is
-   bottom-only via the parent. */
-.ln-fb-tilt-l,
+/* Subtle ≤6° tilt — small mirrored rotateY so paired bento cards genuinely lean
+   toward each other (no "lined-up tiles" read); the angle stays tiny enough that
+   horizontal content never foreshortens or clips inside the padded card. */
+.ln-fb-tilt-l {
+  transform: perspective(1600px) rotateX(5deg) rotateY(4deg);
+}
 .ln-fb-tilt-r {
-  transform: perspective(1600px) rotateX(5deg);
+  transform: perspective(1600px) rotateX(5deg) rotateY(-4deg);
 }
 .ln-fb-tilt-phone {
   transform: perspective(1600px) rotateX(4deg);
 }
-.group:hover .ln-fb-tilt-l,
+.group:hover .ln-fb-tilt-l {
+  transform: perspective(1600px) rotateX(3deg) rotateY(2deg) translateY(-6px);
+}
 .group:hover .ln-fb-tilt-r {
-  transform: perspective(1600px) rotateX(3deg) translateY(-6px);
+  transform: perspective(1600px) rotateX(3deg) rotateY(-2deg) translateY(-6px);
 }
 .group:hover .ln-fb-tilt-phone {
   transform: perspective(1600px) rotateX(2deg) translateY(-6px);
@@ -2245,9 +2249,11 @@
     transition: none;
   }
   /* Hover must not jump the device for reduced-motion users: hold the base tilt. */
-  .group:hover .ln-fb-tilt-l,
+  .group:hover .ln-fb-tilt-l {
+    transform: perspective(1600px) rotateX(5deg) rotateY(4deg);
+  }
   .group:hover .ln-fb-tilt-r {
-    transform: perspective(1600px) rotateX(5deg);
+    transform: perspective(1600px) rotateX(5deg) rotateY(-4deg);
   }
   .group:hover .ln-fb-tilt-phone {
     transform: perspective(1600px) rotateX(4deg);
