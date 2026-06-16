@@ -5,7 +5,7 @@ import PackHub from "@/components/pack/PackHub";
 import { DEMO_PACK, DEMO_EXAM, DEMO_ATTEMPT } from "./demoPack";
 
 /**
- * PackHubMockup — the REAL PackHub component rendered with static demo data as
+ * PackHubMockup - the REAL PackHub component rendered with static demo data as
  * the hero visual (razor-sharp DOM, not a screenshot). Inert: pointer-events
  * off, aria-hidden, no real callbacks.
  *

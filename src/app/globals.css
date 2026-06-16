@@ -2169,26 +2169,17 @@
 .group:hover .ln-fb-device {
   will-change: transform;
 }
-/* Subtle ≤6° tilt — small mirrored rotateY so paired bento cards genuinely lean
-   toward each other (no "lined-up tiles" read); the angle stays tiny enough that
-   horizontal content never foreshortens or clips inside the padded card. */
-.ln-fb-tilt-l {
-  transform: perspective(1600px) rotateX(5deg) rotateY(4deg);
-}
-.ln-fb-tilt-r {
-  transform: perspective(1600px) rotateX(5deg) rotateY(-4deg);
-}
+/* Mockups sit flat (no 3D tilt) — calmer, more premium on desktop. Glow +
+   shadow stay; only a subtle vertical lift on hover, no rotation. */
+.ln-fb-tilt-l,
+.ln-fb-tilt-r,
 .ln-fb-tilt-phone {
-  transform: perspective(1600px) rotateX(4deg);
+  transform: none;
 }
-.group:hover .ln-fb-tilt-l {
-  transform: perspective(1600px) rotateX(3deg) rotateY(2deg) translateY(-6px);
-}
-.group:hover .ln-fb-tilt-r {
-  transform: perspective(1600px) rotateX(3deg) rotateY(-2deg) translateY(-6px);
-}
+.group:hover .ln-fb-tilt-l,
+.group:hover .ln-fb-tilt-r,
 .group:hover .ln-fb-tilt-phone {
-  transform: perspective(1600px) rotateX(2deg) translateY(-6px);
+  transform: translateY(-6px);
 }
 
 /* Real-screenshot slot. These PNGs are raw app captures (no device chrome), so
@@ -2223,16 +2214,8 @@
   border-radius: 30px;
 }
 
-/* Mobile: straighten tilts, shrink glow, keep visuals contained */
+/* Mobile: shrink glow, keep visuals contained (mockups are already flat) */
 @media (max-width: 767px) {
-  .ln-fb-tilt-l,
-  .ln-fb-tilt-r,
-  .ln-fb-tilt-phone,
-  .group:hover .ln-fb-tilt-l,
-  .group:hover .ln-fb-tilt-r,
-  .group:hover .ln-fb-tilt-phone {
-    transform: perspective(1200px) rotateY(0deg) rotateX(0deg);
-  }
   .ln-fb-glow {
     opacity: 0.38;
     filter: blur(46px);
@@ -2248,14 +2231,10 @@
   .ln-fb-device {
     transition: none;
   }
-  /* Hover must not jump the device for reduced-motion users: hold the base tilt. */
-  .group:hover .ln-fb-tilt-l {
-    transform: perspective(1600px) rotateX(5deg) rotateY(4deg);
-  }
-  .group:hover .ln-fb-tilt-r {
-    transform: perspective(1600px) rotateX(5deg) rotateY(-4deg);
-  }
+  /* No hover movement for reduced-motion users. */
+  .group:hover .ln-fb-tilt-l,
+  .group:hover .ln-fb-tilt-r,
   .group:hover .ln-fb-tilt-phone {
-    transform: perspective(1600px) rotateX(4deg);
+    transform: none;
   }
 }

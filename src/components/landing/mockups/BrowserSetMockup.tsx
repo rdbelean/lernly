@@ -4,7 +4,7 @@ import { type CSSProperties } from "react";
 import { Check, Lock, WifiOff } from "lucide-react";
 
 /**
- * Card 3 visual — a browser window showing a saved study set with a clear
+ * Card 3 visual - a browser window showing a saved study set with a clear
  * "Offline verfügbar" indicator. Communicates "runs in the browser, works
  * offline" far better than a phone/watch widget. Inert, razor-sharp DOM.
  */
@@ -59,7 +59,7 @@ export default function BrowserSetMockup() {
             </div>
           </div>
 
-          {/* Content — a saved set, available offline */}
+          {/* Content - a saved set, available offline */}
           <div className="p-4" style={{ background: "var(--color-bg)" }}>
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ color: "rgba(255,255,255,0.45)" }}>
@@ -100,7 +100,7 @@ export default function BrowserSetMockup() {
 
             <div className="mt-3 flex items-center gap-1.5 text-[11px]" style={{ color: "rgba(255,255,255,0.5)" }}>
               <Check size={12} strokeWidth={2.4} style={{ color: TEAL }} />
-              Einmal geladen — funktioniert ohne WLAN weiter.
+              Einmal geladen, funktioniert ohne WLAN weiter.
             </div>
           </div>
         </div>

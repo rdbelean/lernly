@@ -5,7 +5,7 @@ import MockupShell from "./MockupShell";
 
 /**
  * Static copy of the "Material hochladen" screen (the real /dashboard/new page
- * is an interactive dropzone + auth-gated form — not statically renderable).
+ * is an interactive dropzone + auth-gated form - not statically renderable).
  * Focused: dropzone + attached files + format picker.
  */
 const PRIMARY = "var(--color-primary-bright)";

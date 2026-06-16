@@ -66,7 +66,7 @@ function AgbContent() {
             className="mt-3 text-[14px]"
             style={{ color: "rgba(255,255,255,0.55)" }}
           >
-            Allgemeine Geschäftsbedingungen — Stand:{" "}
+            Allgemeine Geschäftsbedingungen - Stand:{" "}
             {new Date().toLocaleDateString("de-DE", {
               day: "2-digit",
               month: "long",
@@ -75,29 +75,6 @@ function AgbContent() {
           </p>
 
           <div className="mt-10">
-            <section
-              style={{
-                ...sectionStyle,
-                padding: "20px",
-                borderRadius: "16px",
-                background: "rgba(255,200,120,0.06)",
-                border: "1px solid rgba(255,200,120,0.25)",
-              }}
-            >
-              <p
-                style={{
-                  ...bodyStyle,
-                  color: "rgba(255,220,170,0.9)",
-                  fontSize: "13px",
-                }}
-              >
-                ⚠️ Diese AGB sind ein Entwurf und müssen vor dem ersten
-                Zahlungsvorgang von einem Anwalt für IT-Recht geprüft und
-                finalisiert werden. Aktuell sind keine kostenpflichtigen Pläne
-                live.
-              </p>
-            </section>
-
             <section style={sectionStyle}>
               <h2 style={headingStyle}>1. Geltungsbereich</h2>
               <p style={bodyStyle}>
@@ -114,7 +91,7 @@ function AgbContent() {
               <p style={bodyStyle}>
                 Lernly bietet eine browserbasierte Software, die hochgeladene
                 Lerninhalte (PDF, TXT, Markdown) automatisiert in
-                interaktive Lernpakete umwandelt — bestehend aus
+                interaktive Lernpakete umwandelt - bestehend aus
                 Karteikarten, Klausur-Simulator, Essay-Blueprint und
                 Themen-Übersicht. Die Erstellung erfolgt über die Anthropic
                 Claude API.
@@ -149,7 +126,7 @@ function AgbContent() {
                 Der Gratis-Tarif erlaubt die Erstellung von zwei Lernpaketen
                 pro Monat. Einzelklausur ist ein einmaliger Kauf mit 14 Tagen
                 Zugang; Semester und Monatlich sind kostenpflichtige Abos mit
-                erweiterten Kontingenten. Alle Preise sind Endpreise — gemäß
+                erweiterten Kontingenten. Alle Preise sind Endpreise - gemäß
                 § 19 UStG wird keine Umsatzsteuer berechnet
                 (Kleinunternehmerregelung). Die Bezahlung erfolgt über Stripe;
                 Abos verlängern sich automatisch zum Ende der laufenden Periode
@@ -226,7 +203,7 @@ function AgbContent() {
                 Vertragspflichten und im Übrigen bei Vorsatz und grober
                 Fahrlässigkeit. Die durch Lernly generierten Inhalte sind
                 Lernhilfen und keine geprüften wissenschaftlichen
-                Ausarbeitungen — die inhaltliche Verantwortung für deine
+                Ausarbeitungen - die inhaltliche Verantwortung für deine
                 Klausur, Hausarbeit oder Prüfung liegt bei dir.
               </p>
             </section>

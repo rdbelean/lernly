@@ -3,7 +3,7 @@
 import type { CSSProperties, ReactNode } from "react";
 
 /**
- * MockupShell — shared inert "app window" frame for the landing's static-copy
+ * MockupShell - shared inert "app window" frame for the landing's static-copy
  * mockups (razor-sharp DOM, not bitmaps). Glow + ≤6° tilt + app-surface chrome.
  * Inert (inert attr + pointer-events-none + aria-hidden) so the demo UI is
  * purely visual. Bottom-only bleed is handled by the call-site wrapper.

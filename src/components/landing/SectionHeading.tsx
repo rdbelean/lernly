@@ -20,8 +20,8 @@ type Props = {
  * has one typographic rhythm:
  *
  *   EYEBROW  (mono uppercase, muted, tracking 0.22em)
- *   Big bold line.                  (clamp 32–64px, font-display)
- *   Italic accent line.             (same size, ln-ink-soft, italic — block, below)
+ *   Big bold line.                  (clamp 32-64px, font-display)
+ *   Italic accent line.             (same size, ln-ink-soft, italic - block, below)
  *   Optional sub paragraph.         (16px, max-w-[600px], muted)
  *
  * All centered. max-w-[820px] container so longer lines still fit on
