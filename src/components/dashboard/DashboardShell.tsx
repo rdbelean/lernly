@@ -9,20 +9,18 @@ import {
   Library,
   Plus,
   Settings,
-  LogOut,
   Menu,
-  ChevronRight,
-  Mail,
+  ChevronsLeft,
+  ChevronsRight,
+  ChevronDown,
 } from "lucide-react";
 import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
 import WelcomeModal from "@/components/dashboard/WelcomeModal";
-import FeedbackLink from "@/components/FeedbackLink";
-import { PwaInstall, PwaInstallEntry } from "@/components/pwa/PwaInstall";
+import ProfileMenu from "@/components/dashboard/ProfileMenu";
+import { PwaInstall } from "@/components/pwa/PwaInstall";
 
-// Shared footer-row affordance: full-width, padded, subtle hover background so
-// every clickable footer item clearly reads as clickable (matches NavLink).
-const FOOTER_ROW =
-  "w-full rounded-lg px-3 py-2 transition hover:bg-white/[0.04]";
+const COLLAPSE_KEY = "lernly:sidebar-collapsed";
+const RECENT_PREVIEW = 3; // Zuletzt entries shown before "Mehr anzeigen".
 
 type RecentPack = {
   id: string;
@@ -41,10 +39,9 @@ type Props = {
 // =========================================================================
 // DashboardShell — persistent app shell (desktop sidebar / mobile drawer)
 // =========================================================================
-// UI #3 pass: lucide-react icons, --color-bg-deep sidebar surface,
-// --color-surface-2 active-nav background, --color-primary filled CTA for
-// "Neues Paket", status dots for recent packs (kills the per-exam emoji),
-// SVG logo mark in /public.
+// Minimal-nav pass: collapsible icon rail (persisted), a bottom ProfileMenu
+// that folds away the secondary footer items + e-mail, and a trimmed "Zuletzt"
+// list. lucide icons, --color-bg-deep surface, real <LernlyLogo>, no emojis.
 // =========================================================================
 
 function NavLink({
@@ -52,19 +49,23 @@ function NavLink({
   active,
   icon: Icon,
   label,
+  collapsed,
   onClick,
 }: {
   href: string;
   active: boolean;
   icon: typeof Library;
   label: string;
+  collapsed?: boolean;
   onClick?: () => void;
 }) {
   return (
     <Link
       href={href}
       onClick={onClick}
-      className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition ${active ? "" : "hover:bg-white/[0.04] hover:text-white"}`}
+      title={collapsed ? label : undefined}
+      aria-label={collapsed ? label : undefined}
+      className={`group flex items-center gap-3 rounded-xl py-2.5 text-[14px] font-medium transition ${collapsed ? "justify-center px-0" : "px-3"} ${active ? "" : "hover:bg-white/[0.04] hover:text-white"}`}
       style={{
         background: active ? "var(--color-surface-2)" : undefined,
         color: active ? "var(--color-text)" : "var(--color-text-dim)",
@@ -73,60 +74,72 @@ function NavLink({
       <Icon
         size={18}
         strokeWidth={1.75}
-        color={
-          active ? "var(--color-primary-bright)" : "var(--color-text-faint)"
-        }
+        color={active ? "var(--color-primary-bright)" : "var(--color-text-faint)"}
         aria-hidden
+        className="shrink-0"
       />
-      <span className="flex-1">{label}</span>
+      {!collapsed && <span className="flex-1">{label}</span>}
     </Link>
   );
 }
 
-function StatusDot({
-  tone,
+function RecentList({
+  recentPacks,
+  pathname,
+  onClose,
 }: {
-  tone: "done" | "in_progress" | "fresh";
+  recentPacks: RecentPack[];
+  pathname: string;
+  onClose?: () => void;
 }) {
-  const color =
-    tone === "done"
-      ? "var(--color-cat-teal)"
-      : tone === "in_progress"
-        ? "var(--color-amber)"
-        : "var(--color-text-faint)";
-  return (
-    <span
-      aria-hidden
-      className="inline-block h-2 w-2 shrink-0 rounded-full"
-      style={{ background: color }}
-    />
-  );
-}
+  const [showAll, setShowAll] = useState(false);
+  const visible = showAll ? recentPacks : recentPacks.slice(0, RECENT_PREVIEW);
+  const hidden = recentPacks.length - visible.length;
 
-function RecentItem({
-  pack,
-  active,
-  onClick,
-}: {
-  pack: RecentPack;
-  active: boolean;
-  onClick?: () => void;
-}) {
-  // V1 status heuristic: "fresh" if recent, can be enriched later via
-  // quiz_attempts join. For now the dot reads as a neutral marker.
   return (
-    <Link
-      href={`/dashboard/pack/${pack.id}`}
-      onClick={onClick}
-      className="group flex items-center gap-2.5 rounded-lg px-3 py-2 transition"
-      style={{
-        background: active ? "var(--color-surface-2)" : "transparent",
-        color: active ? "var(--color-text)" : "var(--color-text-dim)",
-      }}
-    >
-      <StatusDot tone="fresh" />
-      <span className="flex-1 truncate text-[13px]">{pack.title}</span>
-    </Link>
+    <div className="mt-7">
+      <p
+        className="mb-2 px-3 text-[11px] uppercase tracking-[0.18em]"
+        style={{ color: "var(--color-text-faint)" }}
+      >
+        Zuletzt
+      </p>
+      <div className="flex flex-col">
+        {visible.map((p) => {
+          const active = pathname === `/dashboard/pack/${p.id}`;
+          return (
+            <Link
+              key={p.id}
+              href={`/dashboard/pack/${p.id}`}
+              onClick={onClose}
+              className="group flex items-center gap-2.5 rounded-lg px-3 py-2 transition"
+              style={{
+                background: active ? "var(--color-surface-2)" : "transparent",
+                color: active ? "var(--color-text)" : "var(--color-text-dim)",
+              }}
+            >
+              <span
+                aria-hidden
+                className="inline-block h-2 w-2 shrink-0 rounded-full"
+                style={{ background: "var(--color-text-faint)" }}
+              />
+              <span className="flex-1 truncate text-[13px]">{p.title}</span>
+            </Link>
+          );
+        })}
+      </div>
+      {hidden > 0 && (
+        <button
+          type="button"
+          onClick={() => setShowAll(true)}
+          className="mt-1 flex items-center gap-1 px-3 py-1.5 text-[12px] transition hover:text-white"
+          style={{ color: "var(--color-text-faint)" }}
+        >
+          <ChevronDown size={13} strokeWidth={2} aria-hidden />
+          Mehr anzeigen ({hidden})
+        </button>
+      )}
+    </div>
   );
 }
 
@@ -134,104 +147,117 @@ function SidebarContent({
   email,
   recentPacks,
   pathname,
+  name,
+  collapsed = false,
+  collapsible = false,
+  onToggleCollapse,
   onClose,
 }: {
   email: string;
   recentPacks: RecentPack[];
   pathname: string;
+  name: string | null;
+  collapsed?: boolean;
+  collapsible?: boolean;
+  onToggleCollapse?: () => void;
   onClose?: () => void;
 }) {
   const isLibrary = pathname === "/dashboard";
   const isSettings = pathname.startsWith("/dashboard/settings");
 
   return (
-    <div className="flex h-full flex-col px-4 py-5">
-      <Link
-        href="/dashboard"
-        onClick={onClose}
-        className="mb-7 flex items-center gap-2 px-3"
-        style={{
-          fontFamily: "var(--font-display)",
-          fontSize: "24px",
-          fontWeight: 600,
-          color: "var(--color-text)",
-          letterSpacing: "-0.5px",
-          lineHeight: 1,
-        }}
-      >
-        <LernlyLogo size={52} alt="" className="shrink-0" />
-        <span>Lernly</span>
-      </Link>
+    <div className={`flex h-full flex-col py-5 ${collapsed ? "px-2" : "px-4"}`}>
+      {/* Header: logo + collapse toggle */}
+      <div className={`mb-7 flex items-center ${collapsed ? "flex-col gap-3" : "gap-2 px-3"}`}>
+        <Link
+          href="/dashboard"
+          onClick={onClose}
+          aria-label="Lernly"
+          className="flex items-center gap-2"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "24px",
+            fontWeight: 600,
+            color: "var(--color-text)",
+            letterSpacing: "-0.5px",
+            lineHeight: 1,
+          }}
+        >
+          <LernlyLogo size={collapsed ? 40 : 52} alt="" className="shrink-0" />
+          {!collapsed && <span>Lernly</span>}
+        </Link>
+        {collapsible && (
+          <button
+            type="button"
+            onClick={onToggleCollapse}
+            aria-label={collapsed ? "Sidebar ausklappen" : "Sidebar einklappen"}
+            title={collapsed ? "Ausklappen" : "Einklappen"}
+            className={`flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-white/[0.06] ${collapsed ? "" : "ml-auto"}`}
+            style={{ color: "var(--color-text-faint)" }}
+          >
+            {collapsed ? (
+              <ChevronsRight size={16} strokeWidth={2} aria-hidden />
+            ) : (
+              <ChevronsLeft size={16} strokeWidth={2} aria-hidden />
+            )}
+          </button>
+        )}
+      </div>
 
       <nav className="flex flex-col gap-1.5">
         <NavLink
           href="/dashboard"
           active={isLibrary}
+          collapsed={collapsed}
           onClick={onClose}
           icon={Library}
           label="Bibliothek"
         />
-        <PrimaryCTALink
-          size="sm"
-          href="/dashboard/new"
-          onClick={onClose}
-          leadingIcon={Plus}
-          fullWidth
-        >
-          Neues Paket
-        </PrimaryCTALink>
-      </nav>
-
-      {recentPacks.length > 0 && (
-        <div className="mt-7">
-          <p
-            className="mb-2 px-3 text-[11px] uppercase tracking-[0.18em]"
-            style={{ color: "var(--color-text-faint)" }}
+        {collapsed ? (
+          <Link
+            href="/dashboard/new"
+            onClick={onClose}
+            title="Neues Paket"
+            aria-label="Neues Paket"
+            className="flex h-10 items-center justify-center rounded-xl text-white transition hover:opacity-90"
+            style={{ background: "var(--color-primary)" }}
           >
-            Zuletzt
-          </p>
-          <div className="flex flex-col">
-            {recentPacks.map((p) => (
-              <RecentItem
-                key={p.id}
-                pack={p}
-                active={pathname === `/dashboard/pack/${p.id}`}
-                onClick={onClose}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="mt-auto pt-6">
+            <Plus size={18} strokeWidth={2.2} aria-hidden />
+          </Link>
+        ) : (
+          <PrimaryCTALink
+            size="sm"
+            href="/dashboard/new"
+            onClick={onClose}
+            leadingIcon={Plus}
+            fullWidth
+          >
+            Neues Paket
+          </PrimaryCTALink>
+        )}
         <NavLink
           href="/dashboard/settings"
           active={isSettings}
+          collapsed={collapsed}
           onClick={onClose}
           icon={Settings}
           label="Einstellungen"
         />
-        <div className="mt-0.5 flex flex-col gap-0.5">
-          <FeedbackLink className={FOOTER_ROW} />
-          <PwaInstallEntry className={FOOTER_ROW} />
-          <form action="/auth/signout" method="post">
-            <button
-              type="submit"
-              className={`inline-flex items-center gap-1.5 text-[12px] transition hover:text-white ${FOOTER_ROW}`}
-              style={{ color: "var(--color-text-faint)" }}
-            >
-              <LogOut size={13} strokeWidth={1.75} aria-hidden />
-              Abmelden
-            </button>
-          </form>
-        </div>
-        <div
-          className="mt-2 flex items-center gap-2 px-3 text-[11.5px]"
-          style={{ color: "var(--color-text-faint)" }}
-        >
-          <Mail size={12} strokeWidth={1.75} aria-hidden className="shrink-0 opacity-70" />
-          <span className="truncate">{email}</span>
-        </div>
+      </nav>
+
+      {/* Zuletzt — hidden in the icon rail; trimmed to a short preview otherwise */}
+      {!collapsed && recentPacks.length > 0 && (
+        <RecentList recentPacks={recentPacks} pathname={pathname} onClose={onClose} />
+      )}
+
+      {/* Bottom: account popover (folds away settings/feedback/install/logout/email) */}
+      <div className="mt-auto pt-6">
+        <ProfileMenu
+          email={email}
+          name={name}
+          collapsed={collapsed}
+          onNavigate={onClose}
+        />
       </div>
     </div>
   );
@@ -246,6 +272,28 @@ export default function DashboardShell({
 }: Props) {
   const pathname = usePathname() ?? "/dashboard";
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+
+  // Restore persisted collapse state (client-only to avoid a hydration mismatch).
+  useEffect(() => {
+    try {
+      setCollapsed(localStorage.getItem(COLLAPSE_KEY) === "1");
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  const toggleCollapse = () => {
+    setCollapsed((c) => {
+      const next = !c;
+      try {
+        localStorage.setItem(COLLAPSE_KEY, next ? "1" : "0");
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  };
 
   // Close the drawer whenever the user navigates.
   useEffect(() => {
@@ -266,8 +314,10 @@ export default function DashboardShell({
     <div className="flex min-h-screen">
       {/* Desktop sidebar */}
       <aside
-        className="hidden md:flex md:w-[260px] md:shrink-0 md:flex-col md:border-r"
+        className="hidden md:flex md:shrink-0 md:flex-col md:border-r"
         style={{
+          width: collapsed ? "76px" : "260px",
+          transition: "width 0.2s ease",
           background: "var(--color-bg-deep)",
           borderColor: "var(--color-border, rgba(255,255,255,0.06))",
           position: "sticky",
@@ -279,6 +329,10 @@ export default function DashboardShell({
           email={email}
           recentPacks={recentPacks}
           pathname={pathname}
+          name={name}
+          collapsed={collapsed}
+          collapsible
+          onToggleCollapse={toggleCollapse}
         />
       </aside>
 
@@ -314,6 +368,7 @@ export default function DashboardShell({
             email={email}
             recentPacks={recentPacks}
             pathname={pathname}
+            name={name}
             onClose={() => setDrawerOpen(false)}
           />
         </aside>
@@ -353,13 +408,6 @@ export default function DashboardShell({
             <LernlyLogo size={22} alt="" className="shrink-0" />
             <span>Lernly</span>
           </Link>
-          <ChevronRight
-            size={14}
-            strokeWidth={1.75}
-            color="var(--color-text-faint)"
-            aria-hidden
-            className="hidden"
-          />
         </header>
         <main className="min-w-0 flex-1">{children}</main>
       </div>
