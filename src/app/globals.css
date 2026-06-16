@@ -382,6 +382,7 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 .ln-demo-exam-pill[data-exam="open_book"] {
   background: rgba(124, 196, 160, 0.14);
@@ -415,6 +416,7 @@
   background: rgba(251, 191, 36, 0.1);
   color: var(--color-ln-amber);
   border: 1px solid rgba(251, 191, 36, 0.25);
+  white-space: nowrap;
 }
 
 /* Section-wide subtle sage glow behind the demo cards. */
