@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import CramJobsPanel from "@/components/dashboard/CramJobsPanel";
 import NewExamForm from "@/components/dashboard/NewExamForm";
@@ -237,13 +238,13 @@ export default async function DashboardPage({
               </PrimaryCTALink>
             ) : (
               plan === "free" && (
-                <a
+                <Link
                   href="/dashboard/settings"
                   className="text-[12.5px] font-medium underline-offset-2 hover:underline"
                   style={{ color: "var(--color-primary-bright)" }}
                 >
                   Upgrade
-                </a>
+                </Link>
               )
             )}
           </div>

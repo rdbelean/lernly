@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { parseJsonResponse } from "@/lib/safeJson";
 
 type Chunk = { id: string; label: string | null; status: string };
@@ -110,9 +111,9 @@ export default function CramJobsPanel() {
                 <li key={c.id} className="flex items-center justify-between gap-3 px-5 py-2.5 text-[13.5px]">
                   <span className="min-w-0 truncate text-white/85">{c.label ?? "Paket"}</span>
                   {c.status === "ready" ? (
-                    <a href={`/dashboard/pack/${c.id}`} className="shrink-0 font-semibold text-white underline-offset-2 hover:underline">
+                    <Link href={`/dashboard/pack/${c.id}`} className="shrink-0 font-semibold text-white underline-offset-2 hover:underline">
                       Öffnen →
-                    </a>
+                    </Link>
                   ) : c.status === "failed" ? (
                     <button
                       type="button"

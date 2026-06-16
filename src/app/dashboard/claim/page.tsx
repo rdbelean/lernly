@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Loader2, Sparkles, AlertTriangle } from "lucide-react";
 
@@ -100,13 +101,13 @@ export default function ClaimPage() {
                 Wir haben kein offenes Paket zum Speichern gefunden — geh ins
                 Dashboard und erstelle ein neues.
               </p>
-              <a
+              <Link
                 href="/dashboard"
                 className="mt-5 inline-block rounded-xl px-5 py-2.5 text-[14px] font-semibold text-white transition hover:opacity-90"
                 style={{ background: "#2B3499" }}
               >
                 Zum Dashboard
-              </a>
+              </Link>
             </>
           )}
 
@@ -127,13 +128,13 @@ export default function ClaimPage() {
               >
                 {errorMsg ?? "Unbekannter Fehler"}
               </p>
-              <a
+              <Link
                 href="/dashboard"
                 className="mt-5 inline-block rounded-xl border px-5 py-2.5 text-[14px] font-medium text-white transition hover:bg-white/5"
                 style={{ borderColor: "rgba(255,255,255,0.14)" }}
               >
                 Zum Dashboard
-              </a>
+              </Link>
             </>
           )}
         </div>

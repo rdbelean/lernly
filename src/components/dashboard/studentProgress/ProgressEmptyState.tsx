@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Plus } from "lucide-react";
 import LernlyLogo from "@/components/LernlyLogo";
 import NewExamForm from "@/components/dashboard/NewExamForm";
@@ -43,13 +44,13 @@ export default function ProgressEmptyState() {
         </div>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <NewExamForm />
-          <a
+          <Link
             href="/dashboard/new"
             className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-5 py-2.5 text-[14px] font-semibold text-white/80 transition hover:border-white/30 hover:text-white"
           >
             <Plus size={15} strokeWidth={2} aria-hidden />
             Paket erstellen
-          </a>
+          </Link>
         </div>
       </div>
     </div>

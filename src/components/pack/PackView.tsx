@@ -1,17 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { StudyPack } from "@/lib/schema";
-import FlashcardDeck from "./FlashcardDeck";
-import EssayBlueprintView from "./EssayBlueprintView";
-import ExamSimulator from "./ExamSimulator";
-import VisualMapView from "./VisualMapView";
-import { track } from "@/lib/analytics";
-import OpenQuestionsView from "./OpenQuestionsView";
-import QuizView from "./QuizView";
-import EssayPredictionsView from "./EssayPredictionsView";
-import PackHub, { type LatestAttempt } from "./PackHub";
-import type { PackExamSummary } from "./PackHeader";
+import dynamic from "next/dynamic";
 import {
   Brain,
   FileText,
@@ -22,6 +12,61 @@ import {
   Target,
   type LucideIcon,
 } from "lucide-react";
+import type { StudyPack } from "@/lib/schema";
+import { track } from "@/lib/analytics";
+import PackHub, { type LatestAttempt } from "./PackHub";
+import type { PackExamSummary } from "./PackHeader";
+
+// The Hub is the default landing tab, so it stays statically imported and
+// paints instantly. Every other mode is lazy: its chunk — and the heavy
+// interactive libs it pulls (motion/confetti/katex, the in-mode tutor) — is
+// fetched only when the user first activates that tab. This keeps the initial
+// pack-open bundle small (Hub + tab bar) instead of shipping all seven views
+// and ~400 KB of motion/katex/confetti up front. ssr:false because these are
+// client-only interactive views that never render on the server (the Hub is
+// always the initial tab) — it also avoids confetti/motion touching SSR.
+function ModeSkeleton() {
+  return (
+    <div
+      className="relative h-[340px] overflow-hidden rounded-2xl"
+      style={{
+        background: "rgba(20, 22, 28, 0.6)",
+        border: "1px solid rgba(255,255,255,0.1)",
+      }}
+    >
+      <div className="ln-skeleton-shimmer absolute inset-0" />
+    </div>
+  );
+}
+
+const FlashcardDeck = dynamic(() => import("./FlashcardDeck"), {
+  ssr: false,
+  loading: ModeSkeleton,
+});
+const EssayBlueprintView = dynamic(() => import("./EssayBlueprintView"), {
+  ssr: false,
+  loading: ModeSkeleton,
+});
+const ExamSimulator = dynamic(() => import("./ExamSimulator"), {
+  ssr: false,
+  loading: ModeSkeleton,
+});
+const VisualMapView = dynamic(() => import("./VisualMapView"), {
+  ssr: false,
+  loading: ModeSkeleton,
+});
+const OpenQuestionsView = dynamic(() => import("./OpenQuestionsView"), {
+  ssr: false,
+  loading: ModeSkeleton,
+});
+const QuizView = dynamic(() => import("./QuizView"), {
+  ssr: false,
+  loading: ModeSkeleton,
+});
+const EssayPredictionsView = dynamic(() => import("./EssayPredictionsView"), {
+  ssr: false,
+  loading: ModeSkeleton,
+});
 
 type Language = "en" | "de";
 // The pack now opens to a Hub (situation + Weiterlernen + mode launcher
@@ -148,7 +193,9 @@ export default function PackView({
         })}
       </div>
 
-      <div className="py-6 sm:py-7 md:py-9">
+      {/* key={tab} retriggers the CSS fade on every switch — pure CSS so no
+          animation lib lands in the pack bundle; honours prefers-reduced-motion. */}
+      <div key={tab} className="ln-view-fade py-6 sm:py-7 md:py-9">
         {tab === "hub" && (
           <PackHub
             pack={pack}

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import PackView from "@/components/pack/PackView";
 import PackHeader, {
@@ -41,38 +42,52 @@ export default async function PackDetailPage({
     .eq("id", id)
     .then(() => {});
 
-  // Load the exam (if assigned) so PackHeader can show the exam pill +
-  // countdown. RLS-scoped, second query so a missing/deleted exam row
-  // (FK is ON DELETE SET NULL) degrades silently to "no exam pill".
+  // The three follow-up reads (exam pill, latest quiz attempt, mastery count)
+  // each depend ONLY on the row we just loaded and are independent of each
+  // other — fire them in parallel instead of serially so a pack opens in 2
+  // round-trips (row → parallel trio) rather than 4. RLS scopes them all.
+  //   • exam  — PackHeader pill + countdown; FK is ON DELETE SET NULL so a
+  //             missing/deleted exam degrades silently to "no pill".
+  //   • attempt — Hub "Situation" panel + smart Weiterlernen CTA (weak topics).
+  //   • mastery — how many cards crossed the spacing threshold
+  //             (interval_days >= MASTERY_INTERVAL_DAYS); count-only (head)
+  //             keeps it cheap.
+  const examQuery = data.exam_id
+    ? supabase
+        .from("exams")
+        .select("title, exam_date, color")
+        .eq("id", data.exam_id)
+        .maybeSingle()
+    : Promise.resolve({ data: null });
+  const [{ data: examRow }, { data: attemptRow }, { count: masteredCount }] =
+    await Promise.all([
+      examQuery,
+      supabase
+        .from("quiz_attempts")
+        .select(
+          "total_questions, correct_count, wrong_count, per_topic, created_at",
+        )
+        .eq("pack_id", data.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      supabase
+        .from("card_reviews")
+        .select("*", { count: "exact", head: true })
+        .eq("pack_id", data.id)
+        .gte("interval_days", MASTERY_INTERVAL_DAYS),
+    ]);
+
   let exam: PackExamSummary | null = null;
-  if (data.exam_id) {
-    const { data: examRow } = await supabase
-      .from("exams")
-      .select("title, exam_date, color")
-      .eq("id", data.exam_id)
-      .maybeSingle();
-    if (examRow) {
-      exam = {
-        title: examRow.title as string,
-        exam_date: (examRow.exam_date as string | null) ?? null,
-        color: (examRow.color as string | null) ?? null,
-      };
-    }
+  if (examRow) {
+    exam = {
+      title: examRow.title as string,
+      exam_date: (examRow.exam_date as string | null) ?? null,
+      color: (examRow.color as string | null) ?? null,
+    };
   }
 
-  // Latest quiz attempt feeds the Hub's "Situation" panel + the smart
-  // Weiterlernen CTA (weak topics → "Schwächen üben"). RLS-scoped. null
-  // when no attempts yet — hub gracefully degrades.
   let latestAttempt: LatestAttempt | null = null;
-  const { data: attemptRow } = await supabase
-    .from("quiz_attempts")
-    .select(
-      "total_questions, correct_count, wrong_count, per_topic, created_at",
-    )
-    .eq("pack_id", data.id)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
   if (attemptRow) {
     latestAttempt = {
       total_questions: attemptRow.total_questions as number,
@@ -94,9 +109,9 @@ export default async function PackDetailPage({
             className="flex items-center gap-2 text-[12px]"
             style={{ color: "rgba(255,255,255,0.45)" }}
           >
-            <a href="/dashboard" className="transition hover:text-white">
+            <Link href="/dashboard" className="transition hover:text-white">
               Bibliothek
-            </a>
+            </Link>
             <span aria-hidden>›</span>
             <span style={{ color: "rgba(255,255,255,0.7)" }}>{data.title}</span>
           </nav>
@@ -115,14 +130,8 @@ export default async function PackDetailPage({
 
   const pack = parsed.data;
 
-  // Mastery — how many of this pack's cards have crossed the spacing threshold
-  // (interval_days >= MASTERY_INTERVAL_DAYS). RLS scopes the count to the owner;
-  // count-only (head:true) keeps it cheap. total comes from the pack itself.
-  const { count: masteredCount } = await supabase
-    .from("card_reviews")
-    .select("*", { count: "exact", head: true })
-    .eq("pack_id", data.id)
-    .gte("interval_days", MASTERY_INTERVAL_DAYS);
+  // mastery.total comes from the pack itself; masteredCount was fetched above
+  // in the parallel trio.
   const mastery = {
     mastered: masteredCount ?? 0,
     total: pack.flashcards.length,

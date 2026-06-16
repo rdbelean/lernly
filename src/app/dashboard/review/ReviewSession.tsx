@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Flashcard } from "@/lib/schema";
 import FlashcardDeck from "@/components/pack/FlashcardDeck";
 import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
@@ -67,14 +68,14 @@ export default function ReviewSession({ cards }: { cards: DueCard[] }) {
 
   return (
     <div className="mx-auto max-w-[640px]">
-      <a
+      <Link
         href="/dashboard"
         className="inline-flex items-center gap-1.5 text-[12.5px] font-medium transition hover:text-white"
         style={{ color: "var(--color-text-faint)" }}
       >
         <ArrowLeft size={14} strokeWidth={2} aria-hidden />
         Bibliothek
-      </a>
+      </Link>
       <h1
         className="mt-3 text-[26px] font-semibold sm:text-[30px]"
         style={{
