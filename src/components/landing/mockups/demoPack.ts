@@ -1,5 +1,5 @@
 // Static demo data for the landing mockups (real app components, fed hardcoded
-// values). Realistic populated state — never empty/test. Fully satisfies the
+// values). Realistic populated state - never empty/test. Fully satisfies the
 // Zod-derived StudyPack type so the real PackHub/FlashcardDeck render verbatim.
 import type { StudyPack } from "@/lib/schema";
 import type { PackExamSummary } from "@/components/pack/PackHeader";
@@ -11,7 +11,7 @@ const REAL_CARDS: StudyPack["flashcards"] = [
     category: "Wettbewerb",
     question: "Was beschreibt die Preiselastizität der Nachfrage?",
     answer:
-      "Wie stark die nachgefragte Menge auf eine Preisänderung reagiert — elastisch (> 1) vs. unelastisch (< 1).",
+      "Wie stark die nachgefragte Menge auf eine Preisänderung reagiert - elastisch (> 1) vs. unelastisch (< 1).",
     difficulty: "medium",
   },
   {
@@ -26,7 +26,7 @@ const REAL_CARDS: StudyPack["flashcards"] = [
     id: "fc-3",
     category: "Marketing",
     question: "Welche Faktoren bilden den Marketing-Mix?",
-    answer: "Product, Price, Place, Promotion — die vier P.",
+    answer: "Product, Price, Place, Promotion - die vier P.",
     difficulty: "easy",
   },
   {
@@ -43,7 +43,7 @@ const REAL_CARDS: StudyPack["flashcards"] = [
 // deck behind the active card).
 export const DEMO_CARDS = REAL_CARDS.slice(0, 3);
 
-// Pad the deck to a realistic size — only .length is read in the hub.
+// Pad the deck to a realistic size - only .length is read in the hub.
 const FILLER_CARDS: StudyPack["flashcards"] = Array.from({ length: 30 }, (_, i) => ({
   id: `fc-x${i}`,
   category: "Strategie",
@@ -56,7 +56,7 @@ const FILLER_CARDS: StudyPack["flashcards"] = Array.from({ length: 30 }, (_, i) 
 const FILLER_CONCEPTS = (topic: string, terms: string[]): StudyPack["overview"]["topics"][number]["concepts"] =>
   terms.map((term) => ({
     term,
-    definition: `${term} — Kernbegriff aus ${topic}.`,
+    definition: `${term} - Kernbegriff aus ${topic}.`,
     author: "Skript",
     importance: "medium" as const,
   }));

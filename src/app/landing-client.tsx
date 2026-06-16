@@ -55,14 +55,14 @@ function useLanguage() {
 }
 
 // The exam-format picker is now driven by the shared single-source-of-truth
-// config (src/lib/examFormats.ts) — same three formats as the in-app
+// config (src/lib/examFormats.ts) - same three formats as the in-app
 // /dashboard/new picker, with lucide icons. (The old bespoke SVG icons and the
 // 5-format local list lived here and caused the landing/app drift.)
 
 const MAX_FILES = 3;
 const MAX_SIZE = 10 * 1024 * 1024;
 
-// Founder pricing — cohort-based: as long as Lernly has fewer than
+// Founder pricing - cohort-based: as long as Lernly has fewer than
 // FOUNDER_PRICING_LIMIT paying students, the listed prices are locked in for
 // early adopters and won't creep up later. Honesty is the whole point.
 const FOUNDER_PRICING_LIMIT = 1000;
@@ -117,7 +117,7 @@ const GENERATE_TIMEOUT_MS = 5 * 60 * 1000;
 
 const API_KEY_STORAGE = "lernly-claude-api-key";
 
-// Landing variant — "anonymous" (default) lets visitors generate without
+// Landing variant - "anonymous" (default) lets visitors generate without
 // signing up; "signup_wall" routes every upload CTA to /login first. Switched
 // at build time via Vercel env var; later wired to PostHog feature flag for
 // per-user A/B testing.
@@ -138,15 +138,15 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [apiKey, setApiKey] = useState<string | null>(null);
   const [isConnectOpen, setConnectOpen] = useState(false);
-  // EN temporarily disabled — pinned to German. Re-add setLanguage + the
+  // EN temporarily disabled - pinned to German. Re-add setLanguage + the
   // SiteNav onLanguageChange wiring below to bring the language toggle back.
   const [language] = useState<Language>("de");
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   // Funnel: fire upload_started once when the visitor first adds a file. These
-  // are anonymous (no account) — the TikTok/landing top-of-funnel.
+  // are anonymous (no account) - the TikTok/landing top-of-funnel.
   const uploadStartedRef = useRef(false);
 
-  // BYOK is paused ("bald verfügbar") — nothing opens the ConnectModal right
+  // BYOK is paused ("bald verfügbar") - nothing opens the ConnectModal right
   // now. Kept wired (closeConnect + the modal render below) so re-activating is
   // a one-line change: call openConnect from the BYOK banner again.
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -185,7 +185,7 @@ export default function Home() {
     }
     const savedKey = localStorage.getItem(API_KEY_STORAGE);
     if (savedKey) setApiKey(savedKey);
-    // EN temporarily disabled — site is German-only for now.
+    // EN temporarily disabled - site is German-only for now.
     // Language is no longer restored from localStorage to avoid flipping to "en".
   }, []);
 
@@ -227,7 +227,7 @@ export default function Home() {
     if (files.length === 0 || isGenerating) return;
 
     // Anonymous trial: a logged-out visitor generates a real pack on the
-    // landing page BEFORE being asked to sign up — value first, account
+    // landing page BEFORE being asked to sign up - value first, account
     // after. The result (ResultSection below) becomes the signup CTA. The
     // backend handles the anonymous path (Turnstile + 1-pack/day/IP via
     // check_anonymous_quota); we just POST multipart here.
@@ -238,14 +238,14 @@ export default function Home() {
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
-        // Authed user somehow on the marketing page — bounce to the real
+        // Authed user somehow on the marketing page - bounce to the real
         // dashboard flow (saves + counts against their quota). The root page
         // already redirects authed users; this is a defensive fallback.
         window.location.href = "/dashboard/new";
         return;
       }
     } catch (e) {
-      // Auth probe failed (offline, Supabase hiccup) — treat as anonymous and
+      // Auth probe failed (offline, Supabase hiccup) - treat as anonymous and
       // let the trial flow proceed rather than blocking the user.
       console.error("[landing] auth check failed, continuing as anonymous", e);
     }
@@ -280,7 +280,7 @@ export default function Home() {
         res = await fetch("/api/generate", { method: "POST", body: form });
       } catch {
         throw new Error(
-          "Verbindung zum Generator fehlgeschlagen — bitte erneut versuchen.",
+          "Verbindung zum Generator fehlgeschlagen - bitte erneut versuchen.",
         );
       }
 
@@ -296,7 +296,7 @@ export default function Home() {
         });
         throw new Error(
           json.error ??
-            "Generierung fehlgeschlagen — bitte erneut versuchen.",
+            "Generierung fehlgeschlagen - bitte erneut versuchen.",
         );
       }
 
@@ -350,7 +350,7 @@ export default function Home() {
               "Lade deine Vorlesungsfolien hoch und bekomme in 2 Minuten interaktive Karteikarten, einen Klausur-Simulator und einen Essay-Blueprint.",
             offers: [
               { "@type": "Offer", name: "Gratis", price: "0", priceCurrency: "EUR", description: "2 Pakete pro Monat" },
-              { "@type": "Offer", name: "Einzelklausur", price: "4.99", priceCurrency: "EUR", description: "Einmalig — 5 Pakete, 14 Tage Zugang" },
+              { "@type": "Offer", name: "Einzelklausur", price: "4.99", priceCurrency: "EUR", description: "Einmalig: 5 Pakete, 14 Tage Zugang" },
               { "@type": "Offer", name: "Semester", price: "29.99", priceCurrency: "EUR", description: "60 Pakete pro Monat, 6 Monate Zugang" },
               { "@type": "Offer", name: "Monatlich", price: "8.99", priceCurrency: "EUR", description: "50 Pakete pro Monat" },
             ],
@@ -449,7 +449,7 @@ function Hero(props: HeroProps) {
       />
 
       <div className="relative mx-auto max-w-[1080px]">
-        {/* Honest "freshly launched" signal — small, on-brand, links to feedback. */}
+        {/* Honest "freshly launched" signal - small, on-brand, links to feedback. */}
         <div className="ln-reveal mb-5 flex justify-center">
           <a
             href="mailto:info@lernly-app.de?subject=Lernly%20Feedback"
@@ -485,7 +485,7 @@ function Hero(props: HeroProps) {
             // Each sentence is its own block → exactly TWO lines on every width.
             // sm:whitespace-nowrap forbids a sentence from wrapping on desktop,
             // so the H1 can NEVER become 3 lines (a too-long line would overflow
-            // rather than wrap — the 6.2vw term keeps the longest line, "Geh
+            // rather than wrap - the 6.2vw term keeps the longest line, "Geh
             // vorbereitet in die Klausur." (31 chars), inside the viewport up to
             // the 80px cap). Mobile keeps wrapping (no nowrap below sm).
             fontSize: "clamp(30px, 6.2vw, 80px)",
@@ -509,8 +509,8 @@ function Hero(props: HeroProps) {
           style={{ fontSize: "clamp(17px, 2vw, 20px)" }}
         >
           {isEn
-            ? "Add your past exam — and practice flashcards & quizzes in the style of your real test. Done in 2 minutes, from your own material."
-            : "Leg deine Altklausur dazu — und übe Karteikarten & Quiz im Stil deiner echten Prüfung. Fertig in 2 Minuten, aus deinem eigenen Stoff."}
+            ? "Add your past exam and practice flashcards & quizzes in the style of your real test. Done in 2 minutes, from your own material."
+            : "Leg deine Altklausur dazu und übe Karteikarten & Quiz im Stil deiner echten Prüfung. Fertig in 2 Minuten, aus deinem eigenen Stoff."}
         </p>
 
         <div className="ln-hero-actions ln-reveal mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -595,7 +595,7 @@ function UploadDemo({
 }: HeroProps) {
   const language = useLanguage();
   const isEn = language === "en";
-  // Shared format config — identical to the in-app /dashboard/new picker.
+  // Shared format config - identical to the in-app /dashboard/new picker.
   const examOptions = EXAM_FORMATS;
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -852,7 +852,7 @@ function UploadDemo({
 /* ========== ALTKLAUSUR-RELEVANZ (Lernlys biggest differentiator) ========== */
 // Replaces the old "active recall / retention curve" comparison. Shows the one
 // thing no other tool does: read the user's past exam, rank topics by exam
-// probability, and mirror the exam's question style. Example data only —
+// probability, and mirror the exam's question style. Example data only -
 // framed as illustrative, no guarantee, no named competitor. teal = "kam dran".
 
 function ComparisonSection() {
@@ -873,7 +873,7 @@ function ComparisonSection() {
   return (
     <section className="overflow-hidden px-6 py-16 md:py-24">
       <div className="mx-auto grid max-w-[1200px] grid-cols-1 items-start gap-10 md:grid-cols-[1fr_minmax(0,460px)] md:gap-12 lg:grid-cols-[1fr_minmax(0,540px)] lg:gap-16">
-        {/* Left — the message */}
+        {/* Left - the message */}
         <div className="ln-reveal">
           <p className="text-[12px] font-semibold uppercase tracking-[0.18em]" style={{ color: teal }}>
             {isEn ? "No other tool can do this" : "Das kann kein anderes Tool"}
@@ -903,7 +903,7 @@ function ComparisonSection() {
             ))}
           </ul>
 
-          {/* Before / after — makes the wedge visceral */}
+          {/* Before / after - makes the wedge visceral */}
           <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div
               className="rounded-2xl border px-4 py-3.5"
@@ -945,7 +945,7 @@ function ComparisonSection() {
           </div>
         </div>
 
-        {/* Right — the rendered Altklausur mask, prominent */}
+        {/* Right - the rendered Altklausur mask, prominent */}
         <div className="ln-reveal mx-auto w-full max-w-[460px] lg:mx-0 lg:max-w-none">
           <AltklausurMaskMockup />
         </div>
@@ -955,17 +955,17 @@ function ComparisonSection() {
 }
 
 // =========================================================================
-// ToolStackSection — value-stack right before pricing. The four real tools a
+// ToolStackSection - value-stack right before pricing. The four real tools a
 // student otherwise juggles (by name + function + real cost, muted) collapse
 // into one highlighted Lernly card that bundles all of it "ab gratis" + the
 // exclusive Altklausur-Relevanz topper. Brand names as plain text only (no
-// logos), factual prices, no bashing — DACH-credible, legally conservative.
+// logos), factual prices, no bashing - DACH-credible, legally conservative.
 // =========================================================================
 function ToolStackSection() {
   const isEn = useLanguage() === "en";
   const indigo = "var(--color-primary-bright)";
 
-  // Brand names are plain text (no logos). Costs are factual — some are time/
+  // Brand names are plain text (no logos). Costs are factual - some are time/
   // effort rather than €. No strikethrough, no bashing.
   const tools = [
     {
@@ -974,7 +974,7 @@ function ToolStackSection() {
       fn: isEn
         ? "Flashcards + spaced repetition"
         : "Karteikarten + Spaced Repetition",
-      cost: isEn ? "Free — every card by hand" : "Gratis — jede Karte selbst",
+      cost: isEn ? "Free, every card by hand" : "Gratis, jede Karte selbst",
     },
     {
       icon: MessageCircle,
@@ -1003,8 +1003,8 @@ function ToolStackSection() {
           eyebrow={isEn ? "One tool instead of four" : "Ein Tool statt vier"}
           boldPart={
             isEn
-              ? "Four tools for one exam — or just Lernly."
-              : "Vier Tools für eine Klausur — oder einfach Lernly."
+              ? "Four tools for one exam. Or just Lernly."
+              : "Vier Tools für eine Klausur. Oder einfach Lernly."
           }
         />
 
@@ -1016,11 +1016,11 @@ function ToolStackSection() {
           }}
         >
           {isEn
-            ? "Four apps, each for one thing. Lernly does it all — from your material."
-            : "Vier Apps, jede für eine Sache. Lernly macht alles — aus deinem Material."}
+            ? "Four apps, each for one thing. Lernly does it all - from your material."
+            : "Vier Apps, jede für eine Sache. Lernly macht alles - aus deinem Material."}
         </p>
 
-        {/* The real stack you'd otherwise juggle — name + function + cost, muted */}
+        {/* The real stack you'd otherwise juggle - name + function + cost, muted */}
         <div className="ln-reveal mx-auto mt-12 grid max-w-[1000px] grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
           {tools.map((t) => {
             const Icon = t.icon;
@@ -1081,7 +1081,7 @@ function ToolStackSection() {
           <ChevronDown size={22} strokeWidth={1.9} color="rgba(255,255,255,0.3)" />
         </div>
 
-        {/* The one that bundles it all — highlighted indigo */}
+        {/* The one that bundles it all - highlighted indigo */}
         <div
           className="ln-reveal mx-auto mt-5 max-w-[1000px] p-6 md:p-8"
           style={{
@@ -1116,15 +1116,15 @@ function ToolStackSection() {
                 style={{ color: "var(--color-ln-ink-soft)" }}
               >
                 {isEn
-                  ? "Upload your slides — flashcards, quiz, explanations and overview come back ready, plus what's actually on your exam."
-                  : "Du lädst deine Folien hoch — Karteikarten, Quiz, Erklärungen und Überblick kommen fertig zurück, plus das, was in deiner Klausur drankommt."}
+                  ? "Du lädst deine Folien hoch: Karteikarten, Quiz, Erklärungen und Überblick kommen fertig zurück, plus what's actually on your exam."
+                  : "Du lädst deine Folien hoch: Karteikarten, Quiz, Erklärungen und Überblick kommen fertig zurück, plus das, was in deiner Klausur drankommt."}
               </p>
             </div>
           </div>
 
         </div>
 
-        {/* Honest closing — the stack's real cost vs. all-in-one (punchline prominent) */}
+        {/* Honest closing - the stack's real cost vs. all-in-one (punchline prominent) */}
         <div className="ln-reveal mx-auto mt-10 max-w-[760px] text-center">
           <p
             className="leading-relaxed"
@@ -1134,8 +1134,8 @@ function ToolStackSection() {
             }}
           >
             {isEn
-              ? "An AI subscription ~€20/month, plus quiz and study tools — and you still build the flashcards yourself."
-              : "Ein KI-Abo ~20 €/Monat, dazu Quiz- und Lern-Tools — Karteikarten baust du trotzdem selbst."}
+              ? "An AI subscription ~€20/month, plus quiz and study tools, and you still build the flashcards yourself."
+              : "Ein KI-Abo ~20 €/Monat, dazu Quiz- und Lern-Tools, und Karteikarten baust du trotzdem selbst."}
           </p>
           <p
             className="mt-2.5 font-semibold leading-snug"
@@ -1146,8 +1146,8 @@ function ToolStackSection() {
             }}
           >
             {isEn
-              ? "With Lernly it's all included — from free."
-              : "Bei Lernly ist alles drin — ab gratis."}
+              ? "With Lernly it's all included - from free."
+              : "Bei Lernly ist alles drin. Ab gratis."}
           </p>
         </div>
 
@@ -1166,7 +1166,7 @@ function ToolStackSection() {
 }
 
 function Waveform({ seed }: { seed: number }) {
-  // Deterministic, integer-percentage heights — safe for SSR.
+  // Deterministic, integer-percentage heights - safe for SSR.
   // Shift the heights per card so each waveform looks distinct.
   const base = [40, 70, 100, 50, 80, 30, 60, 45, 90, 55];
   const rotated = [...base.slice(seed * 2), ...base.slice(0, seed * 2)];
@@ -1192,7 +1192,7 @@ function Waveform({ seed }: { seed: number }) {
 
 /* ========== RESULT SECTION ========== */
 
-// Fullscreen result overlay — once an anonymous visitor's pack is generated, a
+// Fullscreen result overlay - once an anonymous visitor's pack is generated, a
 // clean full-screen surface with its OWN slim app chrome (NOT the marketing
 // navbar) slides over the landing, so it feels like "I'm in the product now".
 // Renders the REAL PackView; closing returns to the landing. The persistent
@@ -1231,7 +1231,7 @@ function ResultSection({ pack, onReset }: { pack: StudyPack; onReset: () => void
       className="fixed inset-0 z-[120] flex flex-col"
       style={{ background: "#0F1322" }}
     >
-      {/* Slim app chrome — deliberately NOT the marketing SiteNav. */}
+      {/* Slim app chrome - deliberately NOT the marketing SiteNav. */}
       <header
         className="flex items-center gap-3 border-b px-4 py-3 sm:px-6"
         style={{ borderColor: "rgba(255,255,255,0.06)", background: "#0C0F1C" }}
@@ -1268,7 +1268,7 @@ function ResultSection({ pack, onReset }: { pack: StudyPack; onReset: () => void
         </button>
       </header>
 
-      {/* Scrollable product surface — the real PackView. */}
+      {/* Scrollable product surface - the real PackView. */}
       <div className="flex-1 overflow-y-auto">
         <div className="mx-auto w-full max-w-[1000px] px-4 py-6 sm:px-6 sm:py-8">
           {!hintDismissed && (
@@ -1288,8 +1288,8 @@ function ResultSection({ pack, onReset }: { pack: StudyPack; onReset: () => void
               />
               <div className="min-w-0 flex-1 text-[13px] leading-relaxed text-white/80">
                 {isEn
-                  ? "This is your pack — Hub for the overview, Flashcards to flip, Exam Trainer to test yourself. Tap a mode below to start."
-                  : "Das ist dein Paket — Hub für den Überblick, Karteikarten zum Flippen, Übungsklausur zum Selbsttesten. Tipp unten auf einen Modus."}
+                  ? "This is your pack - Hub for the overview, Flashcards to flip, Exam Trainer to test yourself. Tap a mode below to start."
+                  : "Das ist dein Paket: Hub für den Überblick, Karteikarten zum Flippen, Übungsklausur zum Selbsttesten. Tipp unten auf einen Modus."}
               </div>
               <button
                 onClick={() => setHintDismissed(true)}
@@ -1313,8 +1313,8 @@ function ResultSection({ pack, onReset }: { pack: StudyPack; onReset: () => void
 /* ========== SAVE MODAL (signup-to-save, "sanft") ========== */
 
 // Clean signup modal in the app design system (Indigo CTA, #141930 surface,
-// lucide-Lock — no emojis). Opens only on an explicit Save/Download click
-// (persistent CTA in the overlay chrome) — value first, then the gate. On
+// lucide-Lock - no emojis). Opens only on an explicit Save/Download click
+// (persistent CTA in the overlay chrome) - value first, then the gate. On
 // signup the anonymous pack is carried over to the new account via
 // /dashboard/claim (lernly:pendingPack → /api/packs/save).
 function SaveModal({ pack, onClose }: { pack: StudyPack; onClose: () => void }) {
@@ -1400,13 +1400,13 @@ function SaveModal({ pack, onClose }: { pack: StudyPack; onClose: () => void }) 
               style={{ fontFamily: "var(--font-display)", letterSpacing: "-0.4px" }}
             >
               {isEn
-                ? "Save your pack — free account in 10 seconds"
-                : "Speichere dein Paket — kostenloser Account in 10 Sekunden"}
+                ? "Save your pack: free account in 10 seconds"
+                : "Speichere dein Paket: kostenloser Account in 10 Sekunden"}
             </h3>
             <p className="mt-2 text-[14px]" style={{ color: "var(--color-text-dim, #9098B6)" }}>
               {isEn
-                ? "Keep this pack in your dashboard, study it from any device, and create more — free."
-                : "Behalte dieses Paket im Dashboard, lerne von jedem Gerät und erstelle weitere — gratis."}
+                ? "Keep this pack in your dashboard, study it from any device, and create more - free."
+                : "Behalte dieses Paket im Dashboard, lerne von jedem Gerät und erstelle weitere, gratis."}
             </p>
             <ul className="mt-4 space-y-2 text-[13px]" style={{ color: "rgba(255,255,255,0.7)" }}>
               {[
@@ -1573,7 +1573,7 @@ const PRICING_TIERS_DE: PricingTier[] = [
     subtitle: "für immer",
     bullets: [
       { text: "2 Pakete pro Monat" },
-      { text: "Volle Qualität — kein Feature-Lock" },
+      { text: "Volle Qualität - kein Feature-Lock" },
       { text: "Visual Maps + Übungsklausur inklusive" },
       { text: "Kein Login zum Reinschnuppern" },
     ],
@@ -1608,10 +1608,10 @@ const PRICING_TIERS_DE: PricingTier[] = [
     subtitle: "/ Semester",
     badge: "BESTE WAHL",
     bullets: [
-      { text: "60 Pakete pro Monat — quasi unbegrenzt" },
-      { text: "6× Einzelklausur = 30 € — Semester = ein Preis, 5 Monate" },
+      { text: "60 Pakete pro Monat, quasi unbegrenzt" },
+      { text: "6× Einzelklausur = 30 €. Semester = ein Preis, 5 Monate" },
       { text: "Voller KI-Tutor + Visual Maps + Essay-Blueprint" },
-      { text: "29,99 € alle 6 Monate — günstigster Weg pro Klausur" },
+      { text: "29,99 € alle 6 Monate, günstigster Weg pro Klausur" },
     ],
     ctaLabel: "Semester holen",
     ctaFilled: true,
@@ -1628,7 +1628,7 @@ const PRICING_TIERS_DE: PricingTier[] = [
     bullets: [
       { text: "50 Pakete pro Monat" },
       { text: "Voller KI-Tutor + Visual Maps + Klausur-Trainer" },
-      { text: "Monatlich kündbar — keine lange Bindung" },
+      { text: "Monatlich kündbar - keine lange Bindung" },
       { text: "Alles reinwerfen (Cram) inklusive" },
     ],
     ctaLabel: "Monatlich holen",
@@ -1647,7 +1647,7 @@ const PRICING_TIERS_EN: PricingTier[] = [
     subtitle: "forever",
     bullets: [
       { text: "2 packs per month" },
-      { text: "Full quality — no feature lock" },
+      { text: "Full quality - no feature lock" },
       { text: "Visual Maps + Exam Trainer included" },
       { text: "No login to try" },
     ],
@@ -1682,10 +1682,10 @@ const PRICING_TIERS_EN: PricingTier[] = [
     subtitle: "/ semester",
     badge: "BEST VALUE",
     bullets: [
-      { text: "60 packs per month — basically unlimited" },
-      { text: "6× Single Exam = €30 — Semester = one price, 5 months" },
+      { text: "60 packs per month - basically unlimited" },
+      { text: "6× Single Exam = €30 - Semester = one price, 5 months" },
       { text: "Full AI tutor + Visual Maps + essay blueprint" },
-      { text: "€29.99 every 6 months — cheapest per exam" },
+      { text: "€29.99 every 6 months - cheapest per exam" },
     ],
     ctaLabel: "Get Semester",
     ctaFilled: true,
@@ -1702,7 +1702,7 @@ const PRICING_TIERS_EN: PricingTier[] = [
     bullets: [
       { text: "50 packs per month" },
       { text: "Full AI tutor + Visual Maps + exam trainer" },
-      { text: "Cancel monthly — no long commitment" },
+      { text: "Cancel monthly - no long commitment" },
       { text: "Bulk upload (Cram) included" },
     ],
     ctaLabel: "Get Monthly",
@@ -1771,8 +1771,8 @@ function PricingSection({
           eyebrow={isEn ? "What do you need?" : "Was brauchst du?"}
           boldPart={
             isEn
-              ? "Start free — upgrade only when it sticks."
-              : "Gratis starten — Upgrade nur, wenn's sitzt."
+              ? "Start free. Upgrade only when it sticks."
+              : "Gratis starten. Upgrade nur, wenn's sitzt."
           }
         />
 
@@ -1782,10 +1782,10 @@ function PricingSection({
           </span>
           <span className="ln-founder-text">
             <strong>{isEn ? "Founder pricing" : "Gründerpreis"}</strong>
-            {" — "}
+            {" - "}
             {isEn
-              ? `Founder prices while we're still under the first ${FOUNDER_PRICING_LIMIT.toLocaleString()} paying students. Lock in your rate — it stays, it won't creep up later.`
-              : `Solange wir unter den ersten ${FOUNDER_PRICING_LIMIT.toLocaleString("de-DE")} zahlenden Studis sind, gelten Gründerpreise. Dein Preis bleibt — er steigt später nicht.`}
+              ? `Founder prices while we're still under the first ${FOUNDER_PRICING_LIMIT.toLocaleString()} paying students. Lock in your rate - it stays, it won't creep up later.`
+              : `Solange wir unter den ersten ${FOUNDER_PRICING_LIMIT.toLocaleString("de-DE")} zahlenden Studis sind, gelten Gründerpreise. Dein Preis bleibt - er steigt später nicht.`}
           </span>
         </div>
 
@@ -1891,8 +1891,8 @@ function ConnectModal({
         <h3>{isEn ? "Connect Claude API key" : "Claude API Key verbinden"}</h3>
         <p>
           {isEn
-            ? "Connect your own Anthropic API key. No limits, no monthly cost from us — you only pay Anthropic for what you use."
-            : "Verbinde deinen eigenen Anthropic API Key. Keine Limits, keine monatlichen Kosten bei uns — du zahlst nur was du nutzt, direkt an Anthropic."}
+            ? "Connect your own Anthropic API key. No limits, no monthly cost from us - you only pay Anthropic for what you use."
+            : "Verbinde deinen eigenen Anthropic API Key. Keine Limits, keine monatlichen Kosten bei uns - du zahlst nur was du nutzt, direkt an Anthropic."}
         </p>
 
         {showForm ? (
@@ -2089,7 +2089,7 @@ function PricingCard({
         </div>
       )}
 
-      {/* Price block — anchor sits ABOVE the main price so the line never wraps. */}
+      {/* Price block - anchor sits ABOVE the main price so the line never wraps. */}
       <div className="mt-auto pt-5">
         {anchorPrice && (
           <div className="ln-anchor-price-line">
@@ -2225,8 +2225,8 @@ function SocialProof() {
         }}
       >
         {isEn
-          ? "Born from a real exam at Uppsala University — built by a student for students."
-          : "Entstanden während einer Klausur an der Uppsala Universität — von einem Studi für Studis gebaut."}
+          ? "Born from a real exam at Uppsala University - built by a student for students."
+          : "Entstanden während einer Klausur an der Uppsala Universität, von einem Studi für Studis gebaut."}
       </span>
     </div>
   );
@@ -2435,8 +2435,8 @@ function ExampleEssaysArtifactMockup() {
         </span>
         <p>
           {isEn
-            ? "Porter's 3 Tests show: most M&As fail the Better-Off Test — synergies were promised but never materialized."
-            : "Porters 3 Tests zeigen: die meisten M&As scheitern am Better-Off-Test — versprochene Synergien blieben aus."}
+            ? "Porter's 3 Tests show: most M&As fail the Better-Off Test - synergies were promised but never materialized."
+            : "Porters 3 Tests zeigen: die meisten M&As scheitern am Better-Off-Test - versprochene Synergien blieben aus."}
         </p>
       </div>
       <div className="ln-artifact-tags">
@@ -2470,19 +2470,19 @@ function PipelineCta({ onActivateUpload }: { onActivateUpload: () => void }) {
 const FAQ_ITEMS_DE: { q: string; a: string }[] = [
   {
     q: "Trifft das wirklich, was in meiner Klausur drankommt?",
-    a: "Genau dafür ist Lernly gebaut. Lad deine Altklausur dazu — Lernly erkennt die Schwerpunkte und baut Karten & Fragen im Stil deiner echten Prüfung. Schwerpunkt, keine Garantie — aber näher dran als jede generische Zusammenfassung.",
+    a: "Genau dafür ist Lernly gebaut. Lad deine Altklausur dazu: Lernly erkennt die Schwerpunkte und baut Karten & Fragen im Stil deiner echten Prüfung. Schwerpunkt, keine Garantie, aber näher dran als jede generische Zusammenfassung.",
   },
   {
     q: "Ist das wirklich kostenlos?",
-    a: "Ja — du kannst ohne Account ein Paket erstellen und 2 Pakete pro Monat gratis nutzen. Brauchst du mehr: Einzelklausur ab 4,99 € oder Semester für 29,99 €.",
+    a: "Ja, du kannst ohne Account ein Paket erstellen und 2 Pakete pro Monat gratis nutzen. Brauchst du mehr: Einzelklausur ab 4,99 € oder Semester für 29,99 €.",
   },
   {
     q: "Funktioniert das für mein Fach?",
-    a: "Jedes Fach — BWL, Jura, Medizin, Technik, was auch immer. Lernly lernt aus deinem eigenen Material, nicht aus einer Vorlage.",
+    a: "Jedes Fach - BWL, Jura, Medizin, Technik, was auch immer. Lernly lernt aus deinem eigenen Material, nicht aus einer Vorlage.",
   },
   {
     q: "Was ist der Unterschied zu ChatGPT & Co.?",
-    a: "Die meisten KI-Tools geben dir Fließtext. Lernly gibt dir ein aktives Lernsystem — Karteikarten, Prüfungssimulator und Essay-Blueprint, aus deinem Material.",
+    a: "Die meisten KI-Tools geben dir Fließtext. Lernly gibt dir ein aktives Lernsystem: Karteikarten, Prüfungssimulator und Essay-Blueprint, aus deinem Material.",
   },
   {
     q: "Wie gut sind die Karteikarten?",
@@ -2494,26 +2494,26 @@ const FAQ_ITEMS_DE: { q: string; a: string }[] = [
   },
   {
     q: "Kann ich der KI vertrauen?",
-    a: "Lernly arbeitet aus deinem eigenen Material mit Quellenbezug — und du übst aktiv (abfragen statt blind lesen), so merkst du selbst, was sitzt.",
+    a: "Lernly arbeitet aus deinem eigenen Material mit Quellenbezug - und du übst aktiv (abfragen statt blind lesen), so merkst du selbst, was sitzt.",
   },
 ];
 
 const FAQ_ITEMS_EN: { q: string; a: string }[] = [
   {
     q: "Will this actually match what's on my exam?",
-    a: "That's exactly what Lernly is built for. Add your past exam — Lernly spots the focus areas and builds cards & questions in the style of your real exam. A focus, not a guarantee — but closer than any generic summary.",
+    a: "That's exactly what Lernly is built for. Add your past exam - Lernly spots the focus areas and builds cards & questions in the style of your real exam. A focus, not a guarantee - but closer than any generic summary.",
   },
   {
     q: "Is it really free?",
-    a: "Yes — you can create a pack without an account and use 2 packs per month for free. Need more: single exam from €4.99 or semester for €29.99.",
+    a: "Yes - you can create a pack without an account and use 2 packs per month for free. Need more: single exam from €4.99 or semester for €29.99.",
   },
   {
     q: "Does it work for my subject?",
-    a: "Any subject — business, law, medicine, engineering, whatever. Lernly learns from your own material, not from a template.",
+    a: "Any subject - business, law, medicine, engineering, whatever. Lernly learns from your own material, not from a template.",
   },
   {
     q: "How is this different from ChatGPT & co.?",
-    a: "Most AI tools give you long-form prose. Lernly gives you an active study system — flashcards, exam simulator and essay blueprint, from your material.",
+    a: "Most AI tools give you long-form prose. Lernly gives you an active study system - flashcards, exam simulator and essay blueprint, from your material.",
   },
   {
     q: "How good are the flashcards?",
@@ -2525,7 +2525,7 @@ const FAQ_ITEMS_EN: { q: string; a: string }[] = [
   },
   {
     q: "Can I trust the AI?",
-    a: "Lernly works from your own material with source references — and you practice actively (recall instead of passive reading), so you see for yourself what sticks.",
+    a: "Lernly works from your own material with source references - and you practice actively (recall instead of passive reading), so you see for yourself what sticks.",
   },
 ];
 
@@ -2636,7 +2636,7 @@ function renderPackAsHtml(pack: StudyPack, language: Language): string {
           .join(""),
     )
     .join("");
-  return `<!doctype html><html lang="${language}"><head><meta charset="utf-8"><title>Lernly — ${esc(pack.courseTitle)}</title>
+  return `<!doctype html><html lang="${language}"><head><meta charset="utf-8"><title>Lernly - ${esc(pack.courseTitle)}</title>
 <style>
   body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:760px;margin:40px auto;padding:0 20px;color:#111827;line-height:1.55}
   h1{font-weight:600;letter-spacing:-1px;font-size:32px}

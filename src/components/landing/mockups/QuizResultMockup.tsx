@@ -5,7 +5,7 @@ import MockupShell from "./MockupShell";
 /**
  * Focused excerpt of the quiz-result view (the real QuizView is a stateful quiz
  * machine and the full result screen is too dense to read small). Shows the
- * score + per-topic breakdown only — the part that sells "weißt sofort, wo du
+ * score + per-topic breakdown only - the part that sells "weißt sofort, wo du
  * stehst".
  */
 const TEAL = "var(--color-cat-teal)";
@@ -20,18 +20,18 @@ const TOPICS = [
 export default function QuizResultMockup() {
   return (
     <MockupShell glow="#4B57D6" glowStrong glowX="50%" glowY="50%" tilt="r">
-      <div className="text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.5)" }}>
+      <div className="text-center text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.5)" }}>
         Dein Ergebnis
       </div>
 
-      <div className="mt-2 flex items-end gap-3">
+      <div className="mt-2 flex items-end justify-center gap-3">
         <div
           className="font-bold leading-none"
           style={{ fontFamily: "var(--font-display)", fontSize: "56px", letterSpacing: "-2px", color: TEAL }}
         >
           88%
         </div>
-        <div className="pb-1.5">
+        <div className="pb-1.5 text-left">
           <div className="text-[14px] font-semibold text-white" style={{ fontFamily: "var(--font-display)" }}>
             Bestanden
           </div>
@@ -61,7 +61,7 @@ export default function QuizResultMockup() {
       </div>
 
       <p className="mt-3.5 text-[12px]" style={{ color: "rgba(255,255,255,0.5)" }}>
-        Marketing-Mix ist deine Schwachstelle — gleich nochmal üben.
+        Marketing-Mix ist deine Schwachstelle. Gleich nochmal üben.
       </p>
     </MockupShell>
   );

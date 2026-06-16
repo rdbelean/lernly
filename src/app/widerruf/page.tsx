@@ -51,7 +51,7 @@ const anbieterBlockStyle = {
 } as const;
 
 // =========================================================================
-// /widerruf — Widerrufsbelehrung
+// /widerruf - Widerrufsbelehrung
 // =========================================================================
 // Wording follows the statutory Muster (Anlage 1 & 2 zu Art. 246a § 1
 // Abs. 2 EGBGB). Anbieter-Daten flow from src/lib/legal/provider.ts so
@@ -191,28 +191,6 @@ export default function WiderrufPage() {
                 verlieren (§ 356 Abs. 5 BGB).
               </li>
             </ol>
-            {/* PRODUCT NOTE — keep visible to whoever maintains checkout.
-                Diese Zustimmung + Bestätigung muss beim Checkout aktiv
-                eingeholt werden (z. B. Pflicht-Checkbox), sonst greift
-                das Erlöschen nicht. Mit Anwalt abstimmen. */}
-            <p
-              style={{
-                marginTop: "16px",
-                padding: "12px 14px",
-                background: "rgba(242,163,60,0.08)",
-                border: "1px solid rgba(242,163,60,0.25)",
-                borderRadius: "10px",
-                color: "rgba(255,220,170,0.92)",
-                fontSize: "13px",
-                lineHeight: 1.55,
-                fontStyle: "italic",
-              }}
-            >
-              » Hinweis (Produkt): Diese Zustimmung + Bestätigung muss
-              beim Checkout aktiv eingeholt werden (z. B.
-              Pflicht-Checkbox), sonst greift das Erlöschen nicht. Mit
-              Anwalt abstimmen.
-            </p>
           </section>
 
           <section style={sectionStyle}>
@@ -236,16 +214,16 @@ export default function WiderrufPage() {
                 listStyleType: "none",
               }}
             >
-              <li style={{ marginBottom: "6px" }}>— Bestellt am (*)</li>
+              <li style={{ marginBottom: "6px" }}>- Bestellt am (*)</li>
               <li style={{ marginBottom: "6px" }}>
-                — Name des/der Verbraucher(s)
+                - Name des/der Verbraucher(s)
               </li>
               <li style={{ marginBottom: "6px" }}>
-                — Anschrift des/der Verbraucher(s)
+                - Anschrift des/der Verbraucher(s)
               </li>
-              <li style={{ marginBottom: "6px" }}>— Datum</li>
+              <li style={{ marginBottom: "6px" }}>- Datum</li>
               <li>
-                — Unterschrift des/der Verbraucher(s) (nur bei Mitteilung
+                - Unterschrift des/der Verbraucher(s) (nur bei Mitteilung
                 auf Papier)
               </li>
             </ul>

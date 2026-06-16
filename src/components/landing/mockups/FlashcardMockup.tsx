@@ -5,7 +5,7 @@ import FlashcardDeck from "@/components/pack/FlashcardDeck";
 import { DEMO_CARDS } from "./demoPack";
 
 /**
- * FlashcardMockup — the REAL FlashcardDeck rendered with one static demo card
+ * FlashcardMockup - the REAL FlashcardDeck rendered with one static demo card
  * (razor-sharp DOM). Inert: pointer-events off, aria-hidden. Renders the
  * question side (the component's deterministic default); no packId so the
  * fire-and-forget review action never runs.

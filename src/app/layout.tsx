@@ -11,7 +11,7 @@ const inter = Inter({
   display: "swap",
 });
 
-// Display / heading typeface. Sora — geometric humanist, calmer than the
+// Display / heading typeface. Sora - geometric humanist, calmer than the
 // system-stack we had. Weight 600 is the primary heading weight per spec.
 const sora = Sora({
   subsets: ["latin"],
@@ -45,14 +45,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Karteikarten aus PDF in 2 Min | Lernly",
     description:
-      "8 PDFs, 3 Tage, kein Plan? Lernly macht aus deinem Skript ein komplettes Lernpaket — Karteikarten, Klausur-Simulator, Essay-Blueprint. Gratis testen.",
+      "8 PDFs, 3 Tage, kein Plan? Lernly macht aus deinem Skript ein komplettes Lernpaket - Karteikarten, Klausur-Simulator, Essay-Blueprint. Gratis testen.",
     locale: "de_DE",
     images: [
       {
         url: "/lernly-og.png",
         width: 1200,
         height: 630,
-        alt: "Lernly — Karteikarten aus PDF in 2 Minuten",
+        alt: "Lernly - Karteikarten aus PDF in 2 Minuten",
       },
     ],
     type: "website",
@@ -84,7 +84,7 @@ const organizationJsonLd = {
   logo: "https://lernly-app.de/icon.png",
   email: "info@lernly-app.de",
   description:
-    "Lernly verwandelt Vorlesungs-PDFs in interaktive Karteikarten, Klausur-Simulatoren und Essay-Blueprints — in unter 2 Minuten.",
+    "Lernly verwandelt Vorlesungs-PDFs in interaktive Karteikarten, Klausur-Simulatoren und Essay-Blueprints - in unter 2 Minuten.",
 };
 
 export default function RootLayout({

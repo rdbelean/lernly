@@ -121,10 +121,10 @@ function DatenschutzContent() {
               <h2 style={headingStyle}>3. Datenerfassung auf dieser Website</h2>
               <h3 style={subHeadingStyle}>Wie erfassen wir deine Daten?</h3>
               <p style={bodyStyle}>
-                Manche Daten erheben wir, weil du sie uns mitteilst — zum
+                Manche Daten erheben wir, weil du sie uns mitteilst - zum
                 Beispiel deine E-Mail-Adresse bei der Registrierung oder die
                 Inhalte, die du hochlädst. Andere Daten werden automatisch
-                erfasst, wenn du die Website besuchst — etwa Browsertyp,
+                erfasst, wenn du die Website besuchst - etwa Browsertyp,
                 Betriebssystem und Zugriffszeitpunkt.
               </p>
               <h3 style={subHeadingStyle}>Wofür nutzen wir deine Daten?</h3>
@@ -209,7 +209,7 @@ function DatenschutzContent() {
               </p>
 
               <h3 style={subHeadingStyle}>
-                BYOK — eigener Anthropic-API-Key
+                BYOK - eigener Anthropic-API-Key
               </h3>
               <p style={bodyStyle}>
                 Wenn du BYOK aktivierst und deinen eigenen Anthropic-API-Key

@@ -17,7 +17,7 @@ const FlashcardMockup = dynamic(
 );
 
 /* ------------------------------------------------------------------ *
- * Feature bento — rendered, inert demos of the real app (razor-sharp DOM).
+ * Feature bento - rendered, inert demos of the real app (razor-sharp DOM).
  * Asymmetric 12-col bento: Quiz hero (7) + Upload (5) / Browser-offline (5) +
  * Flashcard (7), then a compact DE/EN strip.
  * ------------------------------------------------------------------ */
@@ -51,13 +51,13 @@ export default function FeatureBento() {
         </div>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-12">
-          {/* Quiz — HERO, larger */}
+          {/* Quiz - HERO, larger */}
           <Card
             hero
             className="md:col-span-7"
             eyebrow="Keine Quiz-Fragen von der Stange"
             title="Probeklausur im Stil deiner Prüfung."
-            body="Lernly liest deine Altklausuren mit und fragt dich so, wie dein Prof fragt — und zeigt dir sofort, wo du stehst."
+            body="Lernly liest deine Altklausuren mit und fragt dich so, wie dein Prof fragt, und zeigt dir sofort, wo du stehst."
           >
             <QuizResultMockup />
           </Card>
@@ -67,7 +67,7 @@ export default function FeatureBento() {
             className="md:col-span-5"
             eyebrow="PDF rein, Lernset raus"
             title="Dein Skript. In 2 Minuten abfragbar."
-            body="Hochladen, Kaffee holen, loslegen — ohne eine Karte selbst zu tippen."
+            body="Hochladen, Kaffee holen, loslegen. Ohne eine Karte selbst zu tippen."
           >
             <UploadMaskMockup />
           </Card>
@@ -77,22 +77,22 @@ export default function FeatureBento() {
             className="md:col-span-5"
             eyebrow="Immer dabei"
             title="Läuft im Browser. Auch ohne WLAN."
-            body="Einmal geladen, läuft im Browser weiter — Bib, Zug, unterwegs. Kein App-Download, kein Login-Stress."
+            body="Einmal geladen, läuft im Browser weiter: Bib, Zug, unterwegs. Kein App-Download, kein Login-Stress."
           >
             <BrowserSetMockup />
           </Card>
 
-          {/* Flashcard — larger */}
+          {/* Flashcard - larger */}
           <Card
             className="md:col-span-7"
             eyebrow="Aktiv abgefragt, nicht berieselt"
             title="Karteikarten, die dich rankriegen."
-            body="Frage, umdrehen, bewerten — nur was sitzt, verschwindet. Genau wie in der App."
+            body="Frage, umdrehen, bewerten. Nur was sitzt, verschwindet. Genau wie in der App."
           >
             <FlashcardMockup />
           </Card>
 
-          {/* DE/EN — compact full-width strip (folded multilingual proof) */}
+          {/* DE/EN - compact full-width strip (folded multilingual proof) */}
           <article
             className="group relative overflow-hidden rounded-[22px] border p-7 md:col-span-12 md:p-8"
             style={{
@@ -115,7 +115,7 @@ export default function FeatureBento() {
                   Folien auf Deutsch oder Englisch? Egal.
                 </h3>
                 <p className="mt-2 max-w-[46ch] font-sans text-[15px] leading-relaxed" style={{ color: "#A9B0C4" }}>
-                  Lernly versteht beides und baut dein Paket in der Sprache deines Stoffs — BWL, Jura, Medizin, Technik.
+                  Lernly versteht beides und baut dein Paket in der Sprache deines Stoffs: BWL, Jura, Medizin, Technik.
                 </p>
               </div>
               <TopicConceptMockup />
@@ -128,7 +128,7 @@ export default function FeatureBento() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Card shell — text on top, rendered mockup below                     */
+/* Card shell - text on top, rendered mockup below                     */
 /* ------------------------------------------------------------------ */
 
 function Card({
@@ -165,7 +165,7 @@ function Card({
         <CardBody>{body}</CardBody>
       </div>
 
-      {/* Rendered mockup — fully visible (no bleed; must stay readable). */}
+      {/* Rendered mockup - fully visible (no bleed; must stay readable). */}
       <div className="relative z-[1] mt-7">{children}</div>
     </article>
   );

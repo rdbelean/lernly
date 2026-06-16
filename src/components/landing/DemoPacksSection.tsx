@@ -44,8 +44,8 @@ const DEMOS: DemoEntry[] = [
         kind: "flashcard",
         eyebrow: { de: "Grundlagen · DBS", en: "Basics · DBS" },
         title: {
-          de: "Was ist ein DBS — und warum reicht ein Dateisystem nicht?",
-          en: "What is a DBMS — and why isn't a file system enough?",
+          de: "Was ist ein DBS, und warum reicht ein Dateisystem nicht?",
+          en: "What is a DBMS, and why isn't a file system enough?",
         },
         body: {
           de: "Ausfallsicherheit & Skalierbarkeit out-of-the-box. Beispiel: Amazon.",
@@ -56,8 +56,8 @@ const DEMOS: DemoEntry[] = [
         kind: "quiz",
         eyebrow: { de: "Quiz · DBS vs. Dateisystem", en: "Quiz · DBS vs. file system" },
         title: {
-          de: "Dieselben Daten dreimal, dreimal anders — welches Problem?",
-          en: "Same data three times, three ways — which problem?",
+          de: "Dieselben Daten dreimal, dreimal anders: welches Problem?",
+          en: "Same data three times, three ways: which problem?",
         },
         body: {
           de: "Skalierbarkeit · Sicherheit · Redundanz & Inkonsistenz · Effizienz",
@@ -80,8 +80,8 @@ const DEMOS: DemoEntry[] = [
         kind: "flashcard",
         eyebrow: { de: "ER · Entwurfsphasen", en: "ER · design phases" },
         title: {
-          de: "Die 4 Phasen des Datenbankentwurfs — in welcher Reihenfolge?",
-          en: "The 4 phases of database design — in what order?",
+          de: "Die 4 Phasen des Datenbankentwurfs: in welcher Reihenfolge?",
+          en: "The 4 phases of database design: in what order?",
         },
         body: {
           de: "Anforderungsanalyse → Konzeptuell → Implementation → Physisch.",
@@ -431,7 +431,7 @@ function DemoCard({
         </div>
       </div>
 
-      {/* Stats strip — the "what's actually inside" hook */}
+      {/* Stats strip - the "what's actually inside" hook */}
       <div className="mt-4 flex flex-wrap items-center gap-1.5">
         <span className="ln-mono-tag ln-mono-tag-accent">
           {entry.stats.cards} {isEn ? "cards" : "Karten"}
@@ -455,7 +455,7 @@ function DemoCard({
         )}
       </div>
 
-      {/* Preview snippet(s) — "there's more inside" content. Featured card
+      {/* Preview snippet(s) - "there's more inside" content. Featured card
           lays them out side-by-side on wider viewports so the full-width
           card doesn't accumulate dead vertical space. */}
       <div
@@ -471,7 +471,7 @@ function DemoCard({
         ))}
       </div>
 
-      {/* CTA line — mt-auto pushes it to the bottom whenever the card
+      {/* CTA line - mt-auto pushes it to the bottom whenever the card
           stretches beyond its natural content height. */}
       <div
         className="mt-auto pt-5 flex items-center gap-1.5 text-[13px] font-semibold transition group-hover:translate-x-0.5"
@@ -655,7 +655,7 @@ function PostDemoBar({
           style={{ color: "rgba(255,255,255,0.65)" }}
         >
           {isEn
-            ? "Now make it better — with your own slides."
+            ? "Now make it better, with your own slides."
             : "Jetzt wird's noch besser: das aus deinen Folien."}
         </div>
       </div>
@@ -754,8 +754,8 @@ export default function DemoPacksSection({ language, onTryYourOwn }: Props) {
               italicPart={isEn ? "Click one." : "Klick rein."}
               sub={
                 isEn
-                  ? "From real exams. Cards, quiz, blueprint — all live, no account. These demos are CS — Lernly does every subject: business, law, medicine, engineering."
-                  : "Aus echten Klausuren. Karteikarten, Quiz und Blueprint laufen live — kein Account. Diese Beispiele sind Informatik — Lernly macht jedes Fach: BWL, Jura, Medizin, Technik."
+                  ? "From real exams. Cards, quiz, blueprint, all live, no account. These demos are CS, but Lernly does every subject: business, law, medicine, engineering."
+                  : "Aus echten Klausuren. Karteikarten, Quiz und Blueprint laufen live, ohne Account. Diese Beispiele sind Informatik, Lernly macht jedes Fach: BWL, Jura, Medizin, Technik."
               }
             />
           </div>

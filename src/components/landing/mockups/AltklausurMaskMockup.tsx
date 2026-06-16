@@ -6,7 +6,7 @@ import MockupShell from "./MockupShell";
 /**
  * Static copy of NewExamForm's "Altklausur" setup mask (Path A). The real form
  * is interactive (dropzone, useRouter, server actions, auth) so it can't render
- * statically — this is a faithful, inert visual replica with hardcoded state:
+ * statically - this is a faithful, inert visual replica with hardcoded state:
  * Path A selected + one Altklausur attached + fidelity "likely".
  */
 const PRIMARY = "var(--color-primary-bright)";
@@ -15,7 +15,7 @@ const TEAL = "var(--color-cat-teal)";
 const FIDELITY = [
   { label: "Nah an meiner Altklausur", sub: "Eng am Profil & den Hinweisen.", sel: false },
   { label: "Was wahrscheinlich drankommt", sub: "Profil + angrenzende Themen. Sicherer Mittelweg.", sel: true },
-  { label: "Sicher ist sicher — breiter", sub: "Breite Abdeckung, Profil als leichte Priorisierung.", sel: false },
+  { label: "Sicher ist sicher - breiter", sub: "Breite Abdeckung, Profil als leichte Priorisierung.", sel: false },
 ];
 
 export default function AltklausurMaskMockup() {
@@ -28,7 +28,7 @@ export default function AltklausurMaskMockup() {
         Wie lernst du für diese Klausur?
       </div>
 
-      {/* Path A — selected, "Beste Ergebnisse" */}
+      {/* Path A - selected, "Beste Ergebnisse" */}
       <div className="mt-2.5 space-y-2">
         <div
           className="rounded-xl border px-3 py-2.5"
@@ -40,7 +40,7 @@ export default function AltklausurMaskMockup() {
                 Ich hab eine Altklausur oder weiß, was drankommt
               </div>
               <div className="mt-0.5 text-[11.5px] leading-snug" style={{ color: "rgba(255,255,255,0.6)" }}>
-                Lade die Altklausur hoch, gib Prof-Hinweise — der Lens macht den Rest.
+                Lade die Altklausur hoch, gib Prof-Hinweise, der Lens macht den Rest.
               </div>
             </div>
             <span
@@ -110,7 +110,7 @@ export default function AltklausurMaskMockup() {
           ))}
         </div>
         <p className="mt-2 text-[11px] italic" style={{ color: "rgba(255,255,255,0.45)" }}>
-          Schwerpunkt, keine Garantie — wir können nicht wissen, was genau drankommt.
+          Schwerpunkt, keine Garantie: wir können nicht wissen, was genau drankommt.
         </p>
       </div>
     </MockupShell>
