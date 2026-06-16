@@ -75,6 +75,79 @@ export async function saveQuizAttempt(input: SaveQuizAttemptInput): Promise<void
   await markStudyDay(createServiceClient(), data.user.id, new Date());
 }
 
+// =========================================================================
+// Flashcard list-view actions — favorite + delete
+// =========================================================================
+
+// Toggle the per-card favorite star. Upserts into card_reviews (the per-user
+// per-card row); on conflict only `favorite` + `updated_at` change, so an
+// existing SRS schedule (ease/interval/reps) is preserved.
+export async function setCardFavorite(input: {
+  packId: string;
+  cardId: string;
+  favorite: boolean;
+}): Promise<void> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Nicht angemeldet.");
+  const { error } = await supabase.from("card_reviews").upsert(
+    {
+      user_id: user.id,
+      pack_id: input.packId,
+      card_id: input.cardId,
+      favorite: input.favorite,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "user_id,pack_id,card_id" },
+  );
+  if (error) throw new Error(error.message);
+  revalidatePath(`/dashboard/pack/${input.packId}`);
+}
+
+// Delete a single flashcard from a pack. Removes it from pack_data.flashcards
+// (RLS-scoped update) and clears its SRS row. The pack is otherwise untouched.
+export async function deleteCard(input: {
+  packId: string;
+  cardId: string;
+}): Promise<void> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Nicht angemeldet.");
+
+  const { data: row, error: loadErr } = await supabase
+    .from("study_packs")
+    .select("pack_data")
+    .eq("id", input.packId)
+    .maybeSingle();
+  if (loadErr) throw new Error(loadErr.message);
+  if (!row) throw new Error("Paket nicht gefunden.");
+
+  const pack = row.pack_data as { flashcards?: { id: string }[] } | null;
+  const flashcards = Array.isArray(pack?.flashcards) ? pack!.flashcards : [];
+  const next = flashcards.filter((c) => c.id !== input.cardId);
+  if (next.length === flashcards.length) return; // nothing removed
+  if (next.length === 0) throw new Error("Das letzte Karte kann nicht gelöscht werden.");
+
+  const { error: saveErr } = await supabase
+    .from("study_packs")
+    .update({ pack_data: { ...pack, flashcards: next } })
+    .eq("id", input.packId);
+  if (saveErr) throw new Error(saveErr.message);
+
+  // Best-effort cleanup of the SRS row; failure mustn't block the delete.
+  await supabase
+    .from("card_reviews")
+    .delete()
+    .eq("pack_id", input.packId)
+    .eq("card_id", input.cardId);
+
+  revalidatePath(`/dashboard/pack/${input.packId}`);
+}
+
 // Rename a study pack. Updates study_packs.title (the column shown in the
 // library + breadcrumb + header). RLS (study_packs_update_own) scopes it to the
 // owner; the auth gate is defense in depth.

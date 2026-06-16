@@ -263,14 +263,14 @@ export default function ExamSimulator({
             <div
               className="mt-5 rounded-2xl border border-white/10 bg-black/20 px-5 py-4 text-[13px] leading-relaxed"
               style={{ color: "var(--color-ln-ink-soft)" }}
-            >
-              {q.scenario}
-            </div>
+              dangerouslySetInnerHTML={{ __html: renderRichText(q.scenario) }}
+            />
           )}
 
-          <h3 className="mt-5 text-[20px] font-semibold leading-snug text-white">
-            {q.question}
-          </h3>
+          <h3
+            className="mt-5 text-[20px] font-semibold leading-snug text-white"
+            dangerouslySetInnerHTML={{ __html: renderRichText(q.question) }}
+          />
 
           <div className="mt-5 space-y-2.5">
             {q.options.map((opt, i) => {
@@ -335,7 +335,10 @@ export default function ExamSimulator({
                   >
                     {isCorrect ? "✓" : isWrong ? "✕" : String.fromCharCode(65 + i)}
                   </span>
-                  <span className="flex-1">{opt}</span>
+                  <span
+                    className="flex-1"
+                    dangerouslySetInnerHTML={{ __html: renderRichText(opt) }}
+                  />
                 </motion.button>
               );
             })}

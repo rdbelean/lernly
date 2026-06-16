@@ -26,6 +26,7 @@ import {
 } from "@/lib/generatePack";
 import { buildRelevanceBrief, type FidelityLevel, type LensContext } from "@/lib/prompts";
 import { ExamProfileSchema } from "@/lib/schema";
+import { clampCardCount } from "@/lib/quota";
 
 export const runtime = "nodejs";
 // 800s is the Vercel Fluid Compute max — needed because large image-heavy PDFs
@@ -130,6 +131,8 @@ type GenerateJsonBody = {
   extraInfo?: string;
   userApiKey?: string;
   examId?: string | null;
+  cardCount?: number;
+  cardInstructions?: string;
   files?: { path: string; name?: string; size?: number; type?: string }[];
 };
 
@@ -157,6 +160,9 @@ export async function POST(request: Request) {
     let turnstileToken: string | null = null;
     let files: SourceFile[] = [];
     let examId: string | null = null;
+    // Requested flashcard count + focus (clamped to the plan cap below).
+    let cardCount: number | undefined;
+    let cardInstructions = "";
 
     if (contentType.includes("application/json")) {
       // Storage-backed path: the browser uploaded the raw files straight to
@@ -183,6 +189,8 @@ export async function POST(request: Request) {
       if (typeof body.examId === "string" && UUID_RE.test(body.examId)) {
         examId = body.examId;
       }
+      if (typeof body.cardCount === "number") cardCount = body.cardCount;
+      cardInstructions = (body.cardInstructions ?? "").slice(0, 500).trim();
       const refs = Array.isArray(body.files) ? body.files : [];
       const service = createServiceClient();
       for (const ref of refs) {
@@ -572,6 +580,18 @@ export async function POST(request: Request) {
       slotHeld = acquired === true;
     }
 
+    // Clamp the requested card count to the plan cap. Anonymous → free cap;
+    // BYOK users bill their own Anthropic, so they get the paid cap. Only
+    // applied when a count was actually requested (otherwise undefined →
+    // generatePack keeps its default prompt range).
+    const planForCaps = isAnonymous
+      ? "free"
+      : (userPlan ?? (usesByok ? "monthly" : "free"));
+    const effectiveCardCount =
+      typeof cardCount === "number"
+        ? clampCardCount(cardCount, planForCaps)
+        : undefined;
+
     let pack: StudyPack;
     try {
       pack = await generatePack({
@@ -584,6 +604,8 @@ export async function POST(request: Request) {
         lensContext,
         extraInfo,
         materialLanguage: material.materialLanguage,
+        cardCount: effectiveCardCount,
+        cardInstructions: cardInstructions || undefined,
       });
     } catch (e) {
       const msg = e instanceof Error ? e.message : "";

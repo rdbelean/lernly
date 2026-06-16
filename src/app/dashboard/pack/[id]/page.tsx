@@ -49,9 +49,9 @@ export default async function PackDetailPage({
   //   • exam  — PackHeader pill + countdown; FK is ON DELETE SET NULL so a
   //             missing/deleted exam degrades silently to "no pill".
   //   • attempt — Hub "Situation" panel + smart Weiterlernen CTA (weak topics).
-  //   • mastery — how many cards crossed the spacing threshold
-  //             (interval_days >= MASTERY_INTERVAL_DAYS); count-only (head)
-  //             keeps it cheap.
+  //   • reviews — per-card SRS rows (interval + favorite) for this pack; drive
+  //             the New/Learning/Mastered counters, the list-view stars, and
+  //             the hub mastery count. ≤ one row per card, so cheap.
   const examQuery = data.exam_id
     ? supabase
         .from("exams")
@@ -59,7 +59,7 @@ export default async function PackDetailPage({
         .eq("id", data.exam_id)
         .maybeSingle()
     : Promise.resolve({ data: null });
-  const [{ data: examRow }, { data: attemptRow }, { count: masteredCount }] =
+  const [{ data: examRow }, { data: attemptRow }, { data: reviewRows }] =
     await Promise.all([
       examQuery,
       supabase
@@ -73,9 +73,8 @@ export default async function PackDetailPage({
         .maybeSingle(),
       supabase
         .from("card_reviews")
-        .select("*", { count: "exact", head: true })
-        .eq("pack_id", data.id)
-        .gte("interval_days", MASTERY_INTERVAL_DAYS),
+        .select("card_id, interval_days, favorite")
+        .eq("pack_id", data.id),
     ]);
 
   let exam: PackExamSummary | null = null;
@@ -130,11 +129,31 @@ export default async function PackDetailPage({
 
   const pack = parsed.data;
 
-  // mastery.total comes from the pack itself; masteredCount was fetched above
-  // in the parallel trio.
+  // Derive card states + favorites from the SRS rows fetched above.
+  //   New      = card with no review row yet
+  //   Learning = reviewed but interval < MASTERY_INTERVAL_DAYS
+  //   Mastered = interval >= MASTERY_INTERVAL_DAYS (same threshold as the hub)
+  const reviews = (reviewRows ?? []) as {
+    card_id: string;
+    interval_days: number;
+    favorite: boolean;
+  }[];
+  const total = pack.flashcards.length;
+  const masteredCount = reviews.filter(
+    (r) => r.interval_days >= MASTERY_INTERVAL_DAYS,
+  ).length;
+  const reviewedCount = reviews.length;
+  const cardStates = {
+    new: Math.max(0, total - reviewedCount),
+    learning: Math.max(0, reviewedCount - masteredCount),
+    mastered: masteredCount,
+  };
+  const favoriteIds = reviews.filter((r) => r.favorite).map((r) => r.card_id);
+
+  // mastery.total comes from the pack itself.
   const mastery = {
-    mastered: masteredCount ?? 0,
-    total: pack.flashcards.length,
+    mastered: masteredCount,
+    total,
   };
 
   const isDemo = demo === "visualmap-v2";
@@ -200,6 +219,8 @@ export default async function PackDetailPage({
             exam={exam}
             latestAttempt={latestAttempt}
             mastery={mastery}
+            cardStates={cardStates}
+            favoriteIds={favoriteIds}
           />
         </div>
       </div>
