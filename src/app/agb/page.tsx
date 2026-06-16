@@ -123,27 +123,28 @@ function AgbContent() {
             <section style={sectionStyle}>
               <h2 style={headingStyle}>5. Preise und Bezahlung</h2>
               <p style={bodyStyle}>
-                Der Gratis-Tarif erlaubt die Erstellung von zwei Lernpaketen
-                pro Monat. Einzelklausur ist ein einmaliger Kauf mit 14 Tagen
-                Zugang; Semester und Monatlich sind kostenpflichtige Abos mit
-                erweiterten Kontingenten. Alle Preise sind Endpreise - gemäß
-                § 19 UStG wird keine Umsatzsteuer berechnet
-                (Kleinunternehmerregelung). Die Bezahlung erfolgt über Stripe;
-                Abos verlängern sich automatisch zum Ende der laufenden Periode
-                (Semester alle sechs Monate, Monatlich monatlich) und sind
-                jederzeit zum Periodenende kündbar.
+                Der Gratis-Tarif (0 €) erlaubt die Erstellung von zwei
+                Lernpaketen pro Monat. Einzelklausur (4,99 €, einmalig) bietet
+                5 Lernpakete mit 14 Tagen Zugang. Monatlich (8,99 €/Monat,
+                50 Lernpakete pro Monat) und Semester (29,99 € für 6 Monate,
+                60 Lernpakete pro Monat) sind kostenpflichtige Abos. Alle Preise
+                sind Endpreise - gemäß § 19 UStG wird keine Umsatzsteuer
+                berechnet (Kleinunternehmerregelung). Die Bezahlung erfolgt über
+                Stripe; Abos verlängern sich automatisch zum Ende der laufenden
+                Periode (Semester alle sechs Monate, Monatlich monatlich) und
+                sind jederzeit zum Periodenende kündbar.
               </p>
             </section>
 
             <section style={sectionStyle}>
               <h2 style={headingStyle}>6. Founder-Pricing</h2>
               <p style={bodyStyle}>
-                Solange Lernly unter 1.000 zahlende Pro-Abonnenten hat,
-                gilt für neu abgeschlossene Pro-Abos ein reduzierter Preis
-                von 6,99 €/Monat statt 9,99 €. Sobald die Grenze
-                überschritten ist, gilt der reguläre Preis nur für ab
-                diesem Zeitpunkt neu abgeschlossene Abos. Bestehende Abos
-                behalten den ursprünglich vereinbarten Preis.
+                Solange Lernly unter 1.000 zahlende Nutzer hat, gelten die
+                unter Ziffer 5 gelisteten Preise als Gründerpreise und bleiben
+                für früh abgeschlossene Abos gelockt. Übersteigt die Zahl der
+                zahlenden Nutzer diese Grenze, können für ab diesem Zeitpunkt
+                neu abgeschlossene Abos angepasste Preise gelten. Bereits
+                bestehende Abos behalten den ursprünglich vereinbarten Preis.
               </p>
             </section>
 
