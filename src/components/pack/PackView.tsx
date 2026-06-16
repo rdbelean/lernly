@@ -15,6 +15,7 @@ import {
 import type { StudyPack } from "@/lib/schema";
 import { track } from "@/lib/analytics";
 import PackHub, { type LatestAttempt } from "./PackHub";
+import FocusMode from "./FocusMode";
 import type { PackExamSummary } from "./PackHeader";
 
 // The Hub is the default landing tab, so it stays statically imported and
@@ -227,11 +228,13 @@ export default function PackView({
           />
         )}
         {tab === "simulator" && pack.simulator && (
-          <ExamSimulator
-            questions={pack.simulator.questions}
-            language={language}
-            examLens={pack.examLens ?? null}
-          />
+          <FocusMode language={language}>
+            <ExamSimulator
+              questions={pack.simulator.questions}
+              language={language}
+              examLens={pack.examLens ?? null}
+            />
+          </FocusMode>
         )}
         {tab === "flashcards" && (
           <FlashcardStudio
@@ -246,13 +249,15 @@ export default function PackView({
           <EssayBlueprintView blueprint={pack.essayBlueprint} language={language} />
         )}
         {tab === "openQuestions" && pack.quiz && pack.quiz.questions.length > 0 ? (
-          <QuizView
-            questions={pack.quiz.questions}
-            overview={pack.overview}
-            language={language}
-            packId={packId}
-            examLens={pack.examLens ?? null}
-          />
+          <FocusMode language={language}>
+            <QuizView
+              questions={pack.quiz.questions}
+              overview={pack.overview}
+              language={language}
+              packId={packId}
+              examLens={pack.examLens ?? null}
+            />
+          </FocusMode>
         ) : null}
         {tab === "openQuestions" &&
           !(pack.quiz && pack.quiz.questions.length > 0) &&

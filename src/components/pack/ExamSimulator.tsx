@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import confetti from "canvas-confetti";
-import { Sparkles, Trophy, CheckCircle2, Target, AlertCircle } from "lucide-react";
+import { Sparkles, Trophy, CheckCircle2, Target, AlertCircle, Flame } from "lucide-react";
 import type { ExamLens, SimulatorQuestion } from "@/lib/schema";
 import { examLensBadgeText, findTopicAppearances } from "@/lib/examLens";
 import { renderRichText } from "@/lib/richText";
@@ -157,7 +157,7 @@ export default function ExamSimulator({
   const appearances = findTopicAppearances(examLens, q.category ?? null);
 
   return (
-    <div>
+    <div className="mx-auto w-full max-w-[640px]">
       {!examLens && (
         <p
           className="mb-3 text-[12px] leading-relaxed"
@@ -190,7 +190,8 @@ export default function ExamSimulator({
                   border: "1px solid rgba(251,191,36,0.35)",
                 }}
               >
-                🔥 {streak}
+                <Flame size={12} strokeWidth={2.2} aria-hidden />
+                {streak}
               </motion.span>
             )}
           </AnimatePresence>
@@ -313,7 +314,7 @@ export default function ExamSimulator({
                         : { scale: 1, x: 0 }
                   }
                   transition={{ duration: 0.35 }}
-                  className="flex w-full items-start gap-3 rounded-xl border px-4 py-3.5 text-left text-[14px] text-white transition"
+                  className="flex w-full items-start gap-3 rounded-xl border px-5 py-4 text-left text-[15px] text-white transition sm:text-[16px]"
                   style={{
                     borderColor: border,
                     background: bg,
@@ -322,7 +323,7 @@ export default function ExamSimulator({
                   }}
                 >
                   <span
-                    className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold tabular-nums"
+                    className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold tabular-nums"
                     style={{
                       background: isCorrect
                         ? "rgba(74,222,128,0.25)"

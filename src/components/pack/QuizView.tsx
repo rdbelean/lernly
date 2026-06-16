@@ -341,7 +341,7 @@ export default function QuizView({
     setOpenTheory((prev) => ({ ...prev, [qid]: !prev[qid] }));
 
   return (
-    <div>
+    <div className="mx-auto w-full max-w-[680px]">
       {/* Progress / status bar */}
       <div className="mb-5 flex flex-wrap items-center gap-3">
         <div className="flex-1 min-w-[160px]">
@@ -650,7 +650,7 @@ export default function QuizView({
                 )}
               </div>
               <div
-                className="text-[15px] font-semibold leading-snug text-white sm:text-[16px]"
+                className="text-[16px] font-semibold leading-snug text-white sm:text-[18px]"
                 dangerouslySetInnerHTML={{ __html: renderRichText(q.stem) }}
               />
 
@@ -753,7 +753,7 @@ export default function QuizView({
                       onClick={() => select(q.id, oi)}
                       disabled={checked}
                       className={
-                        "flex w-full items-start gap-3 rounded-xl border px-3 py-2.5 text-left text-[13.5px] leading-snug transition disabled:cursor-default sm:px-4 sm:text-[14px] " +
+                        "flex w-full items-start gap-3 rounded-xl border px-4 py-3.5 text-left text-[15px] leading-snug transition disabled:cursor-default sm:px-5 sm:text-[16px] " +
                         (!checked ? "hover:border-white/30" : "")
                       }
                       style={{
@@ -763,7 +763,7 @@ export default function QuizView({
                       }}
                     >
                       <span
-                        className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-bold"
+                        className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[13px] font-bold"
                         style={{
                           background: selected
                             ? "rgba(91,184,216,0.18)"

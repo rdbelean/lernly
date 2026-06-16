@@ -18,6 +18,7 @@ import {
   CheckCircle2,
   Target,
   AlertCircle,
+  Flame,
   type LucideIcon,
 } from "lucide-react";
 import TopicBreakdown from "./TopicBreakdown";
@@ -262,7 +263,7 @@ export default function FlashcardDeck({
     .filter(Boolean);
 
   return (
-    <div>
+    <div className="mx-auto w-full max-w-[600px]">
       {/* Header: progress + streak + category */}
       <div className="flex items-center justify-between gap-3 text-[12px]" style={{ color: "var(--color-ln-mute)" }}>
         <span className="tabular-nums">
@@ -284,7 +285,8 @@ export default function FlashcardDeck({
                   border: "1px solid rgba(251,191,36,0.35)",
                 }}
               >
-                🔥 {streak}
+                <Flame size={12} strokeWidth={2.2} aria-hidden />
+                {streak}
               </motion.span>
             )}
           </AnimatePresence>
@@ -367,11 +369,16 @@ export default function FlashcardDeck({
               animate={{ rotateY: flipped ? 180 : 0 }}
               transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
               className="grid w-full"
-              style={{ transformStyle: "preserve-3d", minHeight: "240px" }}
+              style={{
+                transformStyle: "preserve-3d",
+                minHeight: "clamp(320px, 46vh, 460px)",
+              }}
             >
-              {/* Question face */}
+              {/* Question face — content centred on both axes so the card reads
+                  as one calm focal point, with the flip hint anchored quietly
+                  at the bottom. */}
               <div
-                className="flex flex-col justify-between rounded-2xl border border-white/8 p-6 sm:p-7"
+                className="relative flex flex-col items-center justify-center rounded-2xl border border-white/8 px-6 pt-10 pb-14 text-center sm:px-9"
                 style={{
                   gridArea: "1 / 1",
                   backfaceVisibility: "hidden",
@@ -379,19 +386,17 @@ export default function FlashcardDeck({
                   background: "rgba(20, 22, 28, 0.92)",
                 }}
               >
-                <div>
-                  <div
-                    className="text-[11px] font-medium uppercase tracking-[2px]"
-                    style={{ color: "var(--color-ln-mute)" }}
-                  >
-                    {isEn ? "Question" : "Frage"}
-                  </div>
-                  <div
-                    className="mt-3 text-[19px] leading-snug text-white"
-                    dangerouslySetInnerHTML={{ __html: renderRichText(card.question) }}
-                  />
+                <div
+                  className="text-[11px] font-medium uppercase tracking-[2px]"
+                  style={{ color: "var(--color-ln-mute)" }}
+                >
+                  {isEn ? "Question" : "Frage"}
                 </div>
-                <div className="mt-5 flex items-center gap-1.5 text-[11px]" style={{ color: "var(--color-ln-mute)" }}>
+                <div
+                  className="mt-4 break-words text-[22px] font-medium leading-snug text-white sm:text-[26px]"
+                  dangerouslySetInnerHTML={{ __html: renderRichText(card.question) }}
+                />
+                <div className="absolute inset-x-0 bottom-5 flex items-center justify-center gap-1.5 text-[11px]" style={{ color: "var(--color-ln-mute)" }}>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
                     <polyline points="21 3 21 8 16 8" />
@@ -400,9 +405,10 @@ export default function FlashcardDeck({
                 </div>
               </div>
 
-              {/* Answer face (rotated 180deg) */}
+              {/* Answer face (rotated 180deg) — block vertically centred; text
+                  stays left-aligned in a readable column. */}
               <div
-                className="flex flex-col justify-between rounded-2xl border border-white/8 p-6 sm:p-7"
+                className="flex flex-col justify-center rounded-2xl border border-white/8 px-6 py-8 sm:px-9"
                 style={{
                   gridArea: "1 / 1",
                   backfaceVisibility: "hidden",
@@ -411,14 +417,14 @@ export default function FlashcardDeck({
                   background: "rgba(20, 22, 28, 0.92)",
                 }}
               >
-                <div>
+                <div className="mx-auto w-full max-w-[460px]">
                   <div
-                    className="text-[11px] font-medium uppercase tracking-[2px]"
+                    className="text-center text-[11px] font-medium uppercase tracking-[2px]"
                     style={{ color: "var(--color-ln-mute)" }}
                   >
                     {isEn ? "Answer" : "Antwort"}
                   </div>
-                  <div className="mt-3 space-y-2.5 break-words text-[16px] leading-relaxed text-white">
+                  <div className="mt-4 space-y-2.5 break-words text-[16px] leading-relaxed text-white sm:text-[17px]">
                     {answerBodyParts.map((p, i) => (
                       <p
                         key={i}
