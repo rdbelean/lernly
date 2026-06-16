@@ -112,7 +112,9 @@ const MATERIAL_TOO_LARGE_MSG =
 type TaskKey = GenTaskKey;
 
 const TASKS: Record<TaskKey, { instruction: string; maxTokens: number }> = {
-  cards: { instruction: TASK_CARDS, maxTokens: 14000 },
+  // 16000 gives headroom for a user-chosen Deep-Dive (up to 50 cards); for the
+  // default ~20 it's just a ceiling, so smaller packs are unaffected.
+  cards: { instruction: TASK_CARDS, maxTokens: 16000 },
   simulator: { instruction: TASK_SIMULATOR, maxTokens: 12000 },
   blueprint: { instruction: TASK_BLUEPRINT, maxTokens: 4000 },
   meta: { instruction: TASK_META, maxTokens: 12000 },
@@ -120,6 +122,29 @@ const TASKS: Record<TaskKey, { instruction: string; maxTokens: number }> = {
   quiz: { instruction: TASK_QUIZ, maxTokens: 12000 },
   essayPredictions: { instruction: TASK_ESSAY_PREDICTIONS, maxTokens: 8000 },
 };
+
+// Builds the optional cards-task directive: a user-chosen card count (overrides
+// the prompt's default range) + free-text focus. Returned only when something
+// was actually requested, so default packs keep their exact prompt.
+function buildCardsDirective(
+  count?: number,
+  instructions?: string,
+): string | undefined {
+  const parts: string[] = [];
+  if (count && count > 0) {
+    parts.push(
+      `ANZAHL (überschreibt die Richtgröße oben): Erstelle GENAU ${count} Karten — ` +
+        `nicht weniger, nicht mehr. Reicht das Material für ${count} hochwertige Karten ` +
+        `nicht, erstelle so viele exzellente wie möglich, aber strecke NICHT mit Füll-Karten.`,
+    );
+  }
+  if (instructions && instructions.trim()) {
+    parts.push(
+      `FOKUS (Wunsch des Studenten — priorisiere das beim Auswählen der Karten): ${instructions.trim()}`,
+    );
+  }
+  return parts.length ? parts.join("\n\n") : undefined;
+}
 
 function stripHtml(s: string): string {
   return s.replace(/<[^>]+>/gi, "").replace(/\s+/g, " ").trim();
@@ -143,9 +168,16 @@ async function runTaskOnce(
   lensContext?: LensContext | null,
   extraInfo?: string,
   materialLanguage: MaterialLanguage = "de",
+  cardsDirective?: string,
 ): Promise<unknown> {
   const t0 = Date.now();
-  const { instruction, maxTokens } = TASKS[key];
+  const { instruction: baseTaskInstruction, maxTokens } = TASKS[key];
+  // The card-count / focus directive only steers the cards task; other tasks
+  // run with their stock instruction.
+  const instruction =
+    key === "cards" && cardsDirective
+      ? `${baseTaskInstruction}\n\n${cardsDirective}`
+      : baseTaskInstruction;
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), attemptTimeoutMs);
 
@@ -252,6 +284,7 @@ async function runTask(
   lensContext?: LensContext | null,
   extraInfo?: string,
   materialLanguage: MaterialLanguage = "de",
+  cardsDirective?: string,
 ): Promise<unknown> {
   const attempt = (extraInstruction?: string) =>
     retryWithBudget(
@@ -268,6 +301,7 @@ async function runTask(
           lensContext,
           extraInfo,
           materialLanguage,
+          cardsDirective,
         ),
       {
         classify: classifyError,
@@ -386,17 +420,18 @@ async function runGatedTasks(
   lensContext?: LensContext | null,
   extraInfo?: string,
   materialLanguage: MaterialLanguage = "de",
+  cardsDirective?: string,
 ): Promise<Partial<Record<GenTaskKey, unknown>>> {
   const active = activeTasksFor(examType);
   const runOne = (k: GenTaskKey): Promise<unknown> =>
     k === "visualMap"
-      ? runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief, lensContext, extraInfo, materialLanguage)
+      ? runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief, lensContext, extraInfo, materialLanguage, cardsDirective)
           .then((r) => (r as { visualMap?: unknown }).visualMap ?? null)
           .catch((e) => {
             console.error("[/api/generate] visualMap soft-failed", e);
             return null;
           })
-      : runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief, lensContext, extraInfo, materialLanguage);
+      : runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief, lensContext, extraInfo, materialLanguage, cardsDirective);
 
   // Anthropic prompt caching is per-model, so each model tier caches the
   // material independently — group the active tasks by model and warm each
@@ -621,6 +656,8 @@ export async function generatePack(opts: {
   lensContext?: LensContext | null;
   extraInfo?: string;
   materialLanguage?: MaterialLanguage;
+  cardCount?: number;
+  cardInstructions?: string;
 }): Promise<StudyPack> {
   const {
     client,
@@ -632,7 +669,10 @@ export async function generatePack(opts: {
     lensContext,
     extraInfo,
     materialLanguage = "de",
+    cardCount,
+    cardInstructions,
   } = opts;
+  const cardsDirective = buildCardsDirective(cardCount, cardInstructions);
   let brief = "";
   if (twoPass) {
     const analysisDeadline = Math.min(deadline, Date.now() + ANALYSIS_BUDGET_MS);
@@ -648,6 +688,7 @@ export async function generatePack(opts: {
     lensContext ?? null,
     extraInfo,
     materialLanguage,
+    cardsDirective,
   );
 
   const cards = (byKey.cards as { flashcards?: Flashcard[] } | undefined)?.flashcards ?? [];

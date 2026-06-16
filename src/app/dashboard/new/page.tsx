@@ -19,6 +19,21 @@ import { parseJsonResponse } from "@/lib/safeJson";
 import { type ExamType } from "@/lib/schema";
 import { Loader2, Lock } from "lucide-react";
 import { EXAM_FORMATS, ESSAY_ENABLED } from "@/lib/examFormats";
+import {
+  CARD_COUNT_OPTIONS,
+  DEFAULT_CARD_COUNT,
+  CARD_COUNT_MAX,
+  effectivePlan,
+} from "@/lib/quota";
+
+// Labels for the flashcard-count chooser (Turbo-style). Kept here (UI copy)
+// next to the picker that renders them.
+const CARD_COUNT_LABELS: Record<number, string> = {
+  10: "Schnell-Wiederholung",
+  20: "Standard",
+  30: "Umfassend",
+  50: "Deep Dive",
+};
 import NewExamForm from "@/components/dashboard/NewExamForm";
 import { attachPastExamsToExam } from "@/app/dashboard/actions";
 
@@ -61,6 +76,11 @@ export default function NewPackPage() {
   const [files, setFiles] = useState<File[]>([]);
   const [examType, setExamType] = useState<ExamType>("multiple_choice");
   const [extraInfo, setExtraInfo] = useState("");
+  // Flashcard-count chooser + per-pack focus. Default = Standard (20).
+  const [cardCount, setCardCount] = useState<number>(DEFAULT_CARD_COUNT);
+  const [cardInstructions, setCardInstructions] = useState("");
+  // Effective plan → caps which card-count steps are unlocked.
+  const [plan, setPlan] = useState<string>("free");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [quotaHit, setQuotaHit] = useState<QuotaHitDetails | null>(null);
@@ -94,11 +114,22 @@ export default function NewPackPage() {
       try {
         const { createClient } = await import("@/lib/supabase/browser");
         const supabase = createClient();
-        const { data } = await supabase
-          .from("exams")
-          .select("id, title")
-          .order("exam_date", { ascending: true, nullsFirst: false });
+        const [{ data }, { data: profile }] = await Promise.all([
+          supabase
+            .from("exams")
+            .select("id, title")
+            .order("exam_date", { ascending: true, nullsFirst: false }),
+          supabase.from("users").select("plan, plan_expires_at").maybeSingle(),
+        ]);
         if (cancelled) return;
+        if (profile) {
+          setPlan(
+            effectivePlan(
+              profile.plan as string | null,
+              profile.plan_expires_at as string | null,
+            ),
+          );
+        }
         const rows = (data ?? []) as { id: string; title: string }[];
         setExamChoices(rows);
         const url = new URL(window.location.href);
@@ -386,6 +417,8 @@ export default function NewPackPage() {
             extraInfo: extraInfo.trim() || undefined,
             files: refs,
             examId: resolvedExamId,
+            cardCount,
+            cardInstructions: cardInstructions.trim() || undefined,
           }),
         });
       } catch (fetchEx) {
@@ -967,6 +1000,96 @@ export default function NewPackPage() {
               );
             })}
           </div>
+        </section>
+
+        <section className="mt-6">
+          <h2
+            className="mb-3 text-[12px] uppercase tracking-[0.22em]"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
+            Anzahl Karteikarten
+          </h2>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {CARD_COUNT_OPTIONS.map((n) => {
+              const cap = CARD_COUNT_MAX[plan] ?? CARD_COUNT_MAX.free;
+              const locked = n > cap;
+              const active = cardCount === n && !locked;
+              return (
+                <button
+                  key={n}
+                  type="button"
+                  disabled={locked}
+                  aria-disabled={locked}
+                  onClick={() => {
+                    if (!locked) setCardCount(n);
+                  }}
+                  className={
+                    "relative rounded-2xl px-3 py-3 text-left transition " +
+                    (locked ? "cursor-not-allowed" : "")
+                  }
+                  style={{
+                    background: active
+                      ? "rgba(111,199,227,0.08)"
+                      : "rgba(20, 22, 28, 0.45)",
+                    border: `1px solid ${
+                      active ? "rgba(111,199,227,0.5)" : "rgba(255,255,255,0.12)"
+                    }`,
+                    opacity: locked ? 0.55 : 1,
+                  }}
+                >
+                  {locked && (
+                    <Lock
+                      size={13}
+                      strokeWidth={1.9}
+                      color="var(--color-text-faint)"
+                      aria-hidden
+                      className="absolute right-2.5 top-2.5"
+                    />
+                  )}
+                  <div className="text-[17px] font-bold tabular-nums text-white">
+                    {n}
+                  </div>
+                  <div
+                    className="mt-0.5 text-[11px] leading-snug"
+                    style={{
+                      color: active
+                        ? "var(--color-ln-cyan)"
+                        : "rgba(255,255,255,0.55)",
+                    }}
+                  >
+                    {CARD_COUNT_LABELS[n]}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+          {(CARD_COUNT_MAX[plan] ?? CARD_COUNT_MAX.free) < 50 && (
+            <p
+              className="mt-2 text-[12px]"
+              style={{ color: "rgba(255,255,255,0.5)" }}
+            >
+              Bis zu 50 Karten pro Paket mit einem{" "}
+              <Link
+                href="/dashboard/settings"
+                className="font-medium underline-offset-2 hover:underline"
+                style={{ color: "var(--color-ln-cyan)" }}
+              >
+                Upgrade
+              </Link>
+              .
+            </p>
+          )}
+          <textarea
+            value={cardInstructions}
+            onChange={(e) => setCardInstructions(e.target.value)}
+            rows={2}
+            placeholder="Worauf sollen die Karten fokussieren? (optional — z.B. Formeln, Definitionen, Fallbeispiele)"
+            className="mt-3 w-full rounded-2xl px-4 py-3 text-[14px] text-white outline-none transition focus:border-white/40"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.14)",
+            }}
+          />
         </section>
 
         <section className="mt-6">

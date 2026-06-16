@@ -386,9 +386,10 @@ export default function FlashcardDeck({
                   >
                     {isEn ? "Question" : "Frage"}
                   </div>
-                  <div className="mt-3 text-[19px] leading-snug text-white">
-                    {card.question}
-                  </div>
+                  <div
+                    className="mt-3 text-[19px] leading-snug text-white"
+                    dangerouslySetInnerHTML={{ __html: renderRichText(card.question) }}
+                  />
                 </div>
                 <div className="mt-5 flex items-center gap-1.5 text-[11px]" style={{ color: "var(--color-ln-mute)" }}>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

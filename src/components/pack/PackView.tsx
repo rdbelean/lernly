@@ -39,7 +39,7 @@ function ModeSkeleton() {
   );
 }
 
-const FlashcardDeck = dynamic(() => import("./FlashcardDeck"), {
+const FlashcardStudio = dynamic(() => import("./FlashcardStudio"), {
   ssr: false,
   loading: ModeSkeleton,
 });
@@ -94,6 +94,8 @@ const ALL_TABS: TabDef[] = [
   { id: "openQuestions", icon: PenLine, de: "Offene Fragen", en: "Open Questions" },
 ];
 
+export type CardStates = { new: number; learning: number; mastered: number };
+
 export default function PackView({
   pack,
   language = "de",
@@ -101,6 +103,8 @@ export default function PackView({
   exam = null,
   latestAttempt = null,
   mastery = null,
+  cardStates = null,
+  favoriteIds = [],
 }: {
   pack: StudyPack;
   language?: Language;
@@ -108,6 +112,8 @@ export default function PackView({
   exam?: PackExamSummary | null;
   latestAttempt?: LatestAttempt | null;
   mastery?: { mastered: number; total: number } | null;
+  cardStates?: CardStates | null;
+  favoriteIds?: string[];
 }) {
   const tabs = useMemo<TabDef[]>(() => {
     const has: Record<Tab, boolean> = {
@@ -228,10 +234,12 @@ export default function PackView({
           />
         )}
         {tab === "flashcards" && (
-          <FlashcardDeck
+          <FlashcardStudio
             cards={pack.flashcards}
             language={language}
             packId={packId}
+            cardStates={cardStates}
+            favoriteIds={favoriteIds}
           />
         )}
         {tab === "blueprint" && pack.essayBlueprint && (

@@ -82,7 +82,10 @@ export default function OpenQuestionsView({
             className="rounded-2xl border bg-black/20 p-5"
             style={{ borderColor: "rgba(255,255,255,0.12)" }}
           >
-            <p className="text-[16px] leading-relaxed text-white">{q.question}</p>
+            <p
+              className="text-[16px] leading-relaxed text-white"
+              dangerouslySetInnerHTML={{ __html: renderRichText(q.question) }}
+            />
 
             {!revealed ? (
               <button
