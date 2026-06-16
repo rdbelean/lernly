@@ -8,6 +8,7 @@ import type { Flashcard } from "@/lib/schema";
 import { parseJsonResponse } from "@/lib/safeJson";
 import FlashcardDeck from "./FlashcardDeck";
 import FlashcardList from "./FlashcardList";
+import FocusMode from "./FocusMode";
 import type { CardStates } from "./PackView";
 
 type Language = "en" | "de";
@@ -301,12 +302,14 @@ export default function FlashcardStudio({
           status map after "Mehr Karten" adds cards (router.refresh keeps the
           client tree mounted otherwise, leaving new cards without a status). */}
       {view === "learn" ? (
-        <FlashcardDeck
-          key={cards.length}
-          cards={cards}
-          language={language}
-          packId={packId}
-        />
+        <FocusMode language={language}>
+          <FlashcardDeck
+            key={cards.length}
+            cards={cards}
+            language={language}
+            packId={packId}
+          />
+        </FocusMode>
       ) : (
         <FlashcardList
           cards={cards}
