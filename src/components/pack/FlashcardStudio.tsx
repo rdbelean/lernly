@@ -297,9 +297,16 @@ export default function FlashcardStudio({
         </div>
       )}
 
-      {/* Active view */}
+      {/* Active view. key by card count so the deck re-inits its per-card
+          status map after "Mehr Karten" adds cards (router.refresh keeps the
+          client tree mounted otherwise, leaving new cards without a status). */}
       {view === "learn" ? (
-        <FlashcardDeck cards={cards} language={language} packId={packId} />
+        <FlashcardDeck
+          key={cards.length}
+          cards={cards}
+          language={language}
+          packId={packId}
+        />
       ) : (
         <FlashcardList
           cards={cards}
