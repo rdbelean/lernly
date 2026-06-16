@@ -208,16 +208,6 @@ function DatenschutzContent() {
                 </a>
               </p>
 
-              <h3 style={subHeadingStyle}>
-                BYOK - eigener Anthropic-API-Key
-              </h3>
-              <p style={bodyStyle}>
-                Wenn du BYOK aktivierst und deinen eigenen Anthropic-API-Key
-                speicherst, wird dieser vor dem Schreiben in unsere Datenbank
-                mit AES-256-GCM verschlüsselt. Nur das Lernly-Backend kann ihn
-                entschlüsseln. Du kannst den Key jederzeit in deinen
-                Einstellungen löschen.
-              </p>
             </section>
 
             <section style={sectionStyle}>
