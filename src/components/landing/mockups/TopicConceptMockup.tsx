@@ -15,12 +15,12 @@ const TEAL = "var(--color-cat-teal)";
 export default function TopicConceptMockup() {
   return (
     <MockupShell glow="#4B57D6" glowX="50%" glowY="52%" tilt="r">
-      <div className="flex items-center justify-between">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.5)" }}>
+      <div className="flex items-start justify-between gap-3">
+        <span className="min-w-0 text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.5)" }}>
           Topic · Competitive Strategy
         </span>
         <span
-          className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em]"
+          className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em]"
           style={{ background: "rgba(79,209,165,0.14)", color: TEAL, border: "1px solid rgba(79,209,165,0.35)" }}
         >
           <Target size={10} strokeWidth={2.2} aria-hidden />

@@ -387,15 +387,15 @@ function DemoCard({
       }}
     >
       {/* Top row: live dot + exam pill (+ featured "Meistgeklickt" badge) */}
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
         <div
-          className="flex items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-[0.1em]"
+          className="flex shrink-0 items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-[0.1em]"
           style={{ color: "rgba(255,255,255,0.62)" }}
         >
           <span className="ln-pulse-dot-green" aria-hidden />
           <span>{isEn ? "Live demo" : "Live-Demo"}</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           {entry.featured && (
             <span className="ln-demo-most-viewed">
               ✦ {isEn ? "Most viewed" : "Meistgeklickt"}
