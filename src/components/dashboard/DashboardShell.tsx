@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import LernlyLogo from "@/components/LernlyLogo";
 import { usePathname } from "next/navigation";
 import { Toaster } from "sonner";
@@ -60,7 +61,7 @@ function NavLink({
   onClick?: () => void;
 }) {
   return (
-    <a
+    <Link
       href={href}
       onClick={onClick}
       className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition ${active ? "" : "hover:bg-white/[0.04] hover:text-white"}`}
@@ -78,7 +79,7 @@ function NavLink({
         aria-hidden
       />
       <span className="flex-1">{label}</span>
-    </a>
+    </Link>
   );
 }
 
@@ -114,7 +115,7 @@ function RecentItem({
   // V1 status heuristic: "fresh" if recent, can be enriched later via
   // quiz_attempts join. For now the dot reads as a neutral marker.
   return (
-    <a
+    <Link
       href={`/dashboard/pack/${pack.id}`}
       onClick={onClick}
       className="group flex items-center gap-2.5 rounded-lg px-3 py-2 transition"
@@ -125,7 +126,7 @@ function RecentItem({
     >
       <StatusDot tone="fresh" />
       <span className="flex-1 truncate text-[13px]">{pack.title}</span>
-    </a>
+    </Link>
   );
 }
 
@@ -145,7 +146,7 @@ function SidebarContent({
 
   return (
     <div className="flex h-full flex-col px-4 py-5">
-      <a
+      <Link
         href="/dashboard"
         onClick={onClose}
         className="mb-7 flex items-center gap-2 px-3"
@@ -160,7 +161,7 @@ function SidebarContent({
       >
         <LernlyLogo size={52} alt="" className="shrink-0" />
         <span>Lernly</span>
-      </a>
+      </Link>
 
       <nav className="flex flex-col gap-1.5">
         <NavLink
@@ -339,7 +340,7 @@ export default function DashboardShell({
           >
             <Menu size={18} strokeWidth={1.9} aria-hidden />
           </button>
-          <a
+          <Link
             href="/dashboard"
             className="flex items-center gap-2"
             style={{
@@ -351,7 +352,7 @@ export default function DashboardShell({
           >
             <LernlyLogo size={22} alt="" className="shrink-0" />
             <span>Lernly</span>
-          </a>
+          </Link>
           <ChevronRight
             size={14}
             strokeWidth={1.75}

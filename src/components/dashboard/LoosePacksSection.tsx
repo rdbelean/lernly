@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { assignPackToExam } from "@/app/dashboard/actions";
 import { ChevronDown } from "lucide-react";
@@ -69,7 +70,7 @@ export default function LoosePacksSection({
               borderRadius: "10px",
             }}
           >
-            <a href={`/dashboard/pack/${p.id}`} className="min-w-0 flex-1">
+            <Link href={`/dashboard/pack/${p.id}`} className="min-w-0 flex-1">
               <div
                 className="truncate text-[13px] font-medium"
                 style={{ color: "var(--color-text-dim)" }}
@@ -82,7 +83,7 @@ export default function LoosePacksSection({
               >
                 {p.card_count} Karten
               </div>
-            </a>
+            </Link>
             {exams.length > 0 && (
               <select
                 defaultValue=""

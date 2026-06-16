@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { Lock } from "lucide-react";
 import { renderRichText } from "@/lib/richText";
@@ -324,12 +325,12 @@ export default function TutorChat({
                       ? "You've used your monthly tutor messages. Upgrade for more — resets next month."
                       : "Du hast deine monatlichen Tutor-Nachrichten aufgebraucht. Upgrade für mehr — setzt sich nächsten Monat zurück."}
                   </p>
-                  <a
+                  <Link
                     href="/dashboard/settings"
                     className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-[12.5px] font-bold text-[#0F1535] transition hover:bg-white/90"
                   >
                     {labels.upgrade} →
-                  </a>
+                  </Link>
                 </div>
               </div>
             ) : (

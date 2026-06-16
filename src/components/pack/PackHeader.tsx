@@ -1,3 +1,4 @@
+import Link from "next/link";
 import DeletePackButton from "@/app/dashboard/pack/[id]/delete-button";
 import { countdownInfo, examRgba } from "@/lib/exams";
 import { ChevronRight, Clock } from "lucide-react";
@@ -39,12 +40,12 @@ export default function PackHeader({
         className="flex items-center gap-1.5 text-[12px]"
         style={{ color: "var(--color-text-faint)" }}
       >
-        <a
+        <Link
           href="/dashboard"
           className="transition hover:text-white"
         >
           Bibliothek
-        </a>
+        </Link>
         <ChevronRight size={12} strokeWidth={2} aria-hidden />
         <span
           className="truncate"
@@ -82,7 +83,7 @@ function ExamPill({ exam }: { exam: PackExamSummary }) {
   const isUndated =
     countdown.tone === "undated" || countdown.tone === "past";
   return (
-    <a
+    <Link
       href="/dashboard"
       className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[12.5px] font-semibold transition hover:bg-white/5"
       style={{
@@ -110,6 +111,6 @@ function ExamPill({ exam }: { exam: PackExamSummary }) {
           {countdown.label}
         </span>
       )}
-    </a>
+    </Link>
   );
 }

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
   Activity,
@@ -152,13 +153,13 @@ export default async function SettingsPage() {
   return (
     <main className="px-6 py-12 sm:py-16">
       <div className="mx-auto max-w-[720px]">
-        <a
+        <Link
           href="/dashboard"
           className="text-[13px] transition hover:text-white"
           style={{ color: "var(--color-text-dim)" }}
         >
           ← Dashboard
-        </a>
+        </Link>
         <p
           className="mt-6 mb-3 text-[11px] uppercase tracking-[0.22em]"
           style={{ color: "var(--color-text-faint)" }}

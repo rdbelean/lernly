@@ -357,6 +357,27 @@
   animation: ln-skeleton-shimmer 1.6s ease-in-out infinite;
 }
 
+/* Pack tab/view switch — subtle fade-up so changing modes feels fluid rather
+   than a hard cut. Keyed remount (key={tab}) retriggers it on each switch. */
+@keyframes ln-view-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.ln-view-fade {
+  animation: ln-view-fade-in 160ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ln-view-fade {
+    animation: none;
+  }
+}
+
 /* ========== DEMO PACKS SECTION ========== */
 /* Featured card on the demo grid — sage-tint border + outer glow. Same
    visual recipe as PricingCard.highlighted but keyed off the exam color. */

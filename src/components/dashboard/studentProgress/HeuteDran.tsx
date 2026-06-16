@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Layers, CheckCircle2 } from "lucide-react";
 import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
 
@@ -44,13 +45,13 @@ export default function HeuteDran({ dueCount }: { dueCount: number }) {
           Weiterlernen
         </PrimaryCTALink>
       ) : (
-        <a
+        <Link
           href="/dashboard/review"
           className="text-[13px] underline-offset-2 hover:underline"
           style={{ color: "var(--color-text-dim)" }}
         >
           Trotzdem üben
-        </a>
+        </Link>
       )}
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   assignPackToExam,
@@ -295,7 +296,7 @@ export default function ExamCard({
                   key={p.id}
                   className="group flex items-center justify-between gap-2 rounded-lg border border-white/8 bg-black/15 px-3 py-2 transition hover:border-white/20"
                 >
-                  <a
+                  <Link
                     href={`/dashboard/pack/${p.id}`}
                     className="min-w-0 flex-1"
                   >
@@ -308,7 +309,7 @@ export default function ExamCard({
                     >
                       {p.card_count} Karten
                     </div>
-                  </a>
+                  </Link>
                   <button
                     type="button"
                     onClick={() => onUnassign(p.id)}
@@ -346,14 +347,14 @@ export default function ExamCard({
             </PrimaryCTALink>
           )}
           {cont && (
-            <a
+            <Link
               href={`/dashboard/new?exam=${exam.id}`}
               className="inline-flex items-center gap-1 text-[12.5px] transition"
               style={{ color: "var(--color-text-dim)" }}
             >
               <Plus size={12} strokeWidth={2} aria-hidden />
               Paket hinzufügen
-            </a>
+            </Link>
           )}
         </div>
 

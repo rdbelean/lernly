@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useDropzone, type FileRejection } from "react-dropzone";
 import GenerationProgress from "@/components/GenerationProgress";
@@ -581,13 +582,13 @@ export default function NewPackPage() {
         />
       )}
       <div className="mx-auto max-w-[720px]">
-        <a
+        <Link
           href="/dashboard"
           className="text-[13px] transition hover:text-white"
           style={{ color: "rgba(255,255,255,0.55)" }}
         >
           ← Dashboard
-        </a>
+        </Link>
 
         <p
           className="mt-6 mb-3 text-[12px] uppercase tracking-[0.22em]"

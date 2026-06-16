@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import {
   ArrowRight,
@@ -219,10 +220,12 @@ export function PrimaryCTALink({
   children,
   fullWidth,
   className,
+  href,
   ...rest
 }: LinkProps) {
   return (
-    <a
+    <Link
+      href={href ?? "#"}
       className={`${baseClass} ${className ?? ""}`}
       style={baseStyle(size, Boolean(fullWidth))}
       {...rest}
@@ -238,7 +241,7 @@ export function PrimaryCTALink({
       >
         {children}
       </CTABody>
-    </a>
+    </Link>
   );
 }
 
