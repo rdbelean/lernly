@@ -19,6 +19,7 @@ const NAV_COPY: Record<
     features: string;
     demos: string;
     pricing: string;
+    faq: string;
     create: string;
     toApp: string;
     signIn: string;
@@ -31,6 +32,7 @@ const NAV_COPY: Record<
     features: "Features",
     demos: "Demos",
     pricing: "Pricing",
+    faq: "FAQ",
     create: "Try it free →",
     toApp: "Open app →",
     signIn: "Sign in",
@@ -42,6 +44,7 @@ const NAV_COPY: Record<
     features: "Features",
     demos: "Demos",
     pricing: "Preise",
+    faq: "FAQ",
     create: "Jetzt gratis testen →",
     toApp: "Zur App →",
     signIn: "Anmelden",
@@ -186,6 +189,12 @@ export default function SiteNav({
           >
             {copy.pricing}
           </a>
+          <a
+            href={`${prefix}#faq`}
+            className="text-[14px] font-medium text-white transition hover:opacity-70"
+          >
+            {copy.faq}
+          </a>
 
           <span className="mx-1 h-5 w-px" style={{ background: "rgba(255,255,255,0.1)" }} />
 
@@ -280,6 +289,13 @@ export default function SiteNav({
               className="text-[15px] font-medium text-white"
             >
               {copy.pricing}
+            </a>
+            <a
+              href={`${prefix}#faq`}
+              onClick={() => setOpen(false)}
+              className="text-[15px] font-medium text-white"
+            >
+              {copy.faq}
             </a>
             <a
               href={`${prefix}#connect`}
