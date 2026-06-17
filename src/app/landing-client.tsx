@@ -523,7 +523,7 @@ function Hero(props: HeroProps) {
             {isEn ? "Try it free →" : "Jetzt gratis testen →"}
           </button>
           <a
-            href="#how"
+            href="#demo"
             className="rounded-full border px-7 py-[14px] text-[16px] font-medium text-white transition hover:bg-white/[0.14]"
             style={{
               background: "rgba(255, 255, 255, 0.08)",

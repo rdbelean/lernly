@@ -17,7 +17,7 @@ const NAV_COPY: Record<
   Language,
   {
     features: string;
-    how: string;
+    demos: string;
     pricing: string;
     create: string;
     toApp: string;
@@ -29,7 +29,7 @@ const NAV_COPY: Record<
 > = {
   en: {
     features: "Features",
-    how: "How it works",
+    demos: "Demos",
     pricing: "Pricing",
     create: "Try it free →",
     toApp: "Open app →",
@@ -40,7 +40,7 @@ const NAV_COPY: Record<
   },
   de: {
     features: "Features",
-    how: "So geht's",
+    demos: "Demos",
     pricing: "Preise",
     create: "Jetzt gratis testen →",
     toApp: "Zur App →",
@@ -169,16 +169,16 @@ export default function SiteNav({
 
         <div className="hidden items-center gap-7 md:flex">
           <a
+            href={`${prefix}#demo`}
+            className="text-[14px] font-medium text-white transition hover:opacity-70"
+          >
+            {copy.demos}
+          </a>
+          <a
             href={`${prefix}#features`}
             className="text-[14px] font-medium text-white transition hover:opacity-70"
           >
             {copy.features}
-          </a>
-          <a
-            href={`${prefix}#how`}
-            className="text-[14px] font-medium text-white transition hover:opacity-70"
-          >
-            {copy.how}
           </a>
           <a
             href={`${prefix}#pricing`}
@@ -261,18 +261,18 @@ export default function SiteNav({
         <div className="border-t border-white/10 px-6 py-5 md:hidden">
           <div className="flex flex-col gap-3">
             <a
+              href={`${prefix}#demo`}
+              onClick={() => setOpen(false)}
+              className="text-[15px] font-medium text-white"
+            >
+              {copy.demos}
+            </a>
+            <a
               href={`${prefix}#features`}
               onClick={() => setOpen(false)}
               className="text-[15px] font-medium text-white"
             >
               {copy.features}
-            </a>
-            <a
-              href={`${prefix}#how`}
-              onClick={() => setOpen(false)}
-              className="text-[15px] font-medium text-white"
-            >
-              {copy.how}
             </a>
             <a
               href={`${prefix}#pricing`}
