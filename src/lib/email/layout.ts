@@ -6,6 +6,10 @@ export type EmailParams = {
   bodyHtml: string; // caller-supplied safe HTML
   ctaText?: string;
   ctaUrl?: string;
+  // Optional safe HTML rendered right below the CTA button (e.g. a plain-text
+  // fallback link, validity note). Kept separate from bodyHtml so it sits after
+  // the button in the visual order.
+  afterCtaHtml?: string;
   // Optional opt-out link surfaced in the footer. User-initiated
   // transactional templates (magic link, email-change confirm) leave
   // this unset; lifecycle templates (reminders, digests) pass the
@@ -19,6 +23,7 @@ export function renderEmail({
   bodyHtml,
   ctaText,
   ctaUrl,
+  afterCtaHtml,
   unsubscribeUrl,
 }: EmailParams): string {
   const cta =
@@ -45,6 +50,7 @@ export function renderEmail({
       <h1 style="margin:0 0 12px;font-size:22px;line-height:1.3;font-weight:700;color:${BRAND.ink};">${heading}</h1>
       <div style="font-size:15px;line-height:1.6;color:${BRAND.muted};">${bodyHtml}</div>
       ${cta}
+      ${afterCtaHtml ?? ""}
     </td></tr>
     <tr><td style="background:${BRAND.footerBg};padding:20px 32px;font-family:${FONT_STACK};font-size:12px;line-height:1.6;color:${BRAND.footerInk};text-align:center;">
       Lernly — dein KI-Lernassistent<br>

@@ -1,5 +1,5 @@
 // Single source of truth for Lernly email branding.
-export const EMAIL_FROM = "Lernly <noreply@lernly-app.de>";
+export const EMAIL_FROM = "Lernly <login@lernly-app.de>";
 export const APP_URL = "https://www.lernly-app.de";
 export const LOGO_URL = `${APP_URL}/lernly-logo-2048.png`;
 export const BRAND = {

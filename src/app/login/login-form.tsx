@@ -3,42 +3,81 @@
 import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import TurnstileWidget from "@/components/TurnstileWidget";
-import { loginWithGoogle, requestMagicLink, type MagicLinkState } from "./actions";
+import {
+  loginWithGoogle,
+  requestMagicLink,
+  verifyMagicCode,
+  type MagicLinkState,
+} from "./actions";
 
-function MagicSubmit() {
-  const { pending } = useFormStatus();
+function PendingButton({
+  idle,
+  pending,
+}: {
+  idle: string;
+  pending: string;
+}) {
+  const { pending: isPending } = useFormStatus();
   return (
     <button
       type="submit"
-      disabled={pending}
+      disabled={isPending}
       className="flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[15px] font-medium text-white transition hover:bg-white/15 disabled:opacity-50"
       style={{
         background: "rgba(255,255,255,0.08)",
         border: "1px solid rgba(255,255,255,0.18)",
       }}
     >
-      {pending && (
+      {isPending && (
         <span
           className="inline-block h-4 w-4 animate-spin rounded-full"
           style={{ border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff" }}
           aria-hidden
         />
       )}
-      {pending ? "Wird gesendet…" : "Magic-Link per Mail"}
+      {isPending ? pending : idle}
     </button>
   );
 }
 
+function ErrorBox({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      className="mb-6 rounded-2xl p-4 text-[14px]"
+      style={{
+        background: "rgba(217, 119, 87, 0.12)",
+        border: "1px solid rgba(217, 119, 87, 0.35)",
+        color: "#E8A88D",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 export default function LoginForm({ next }: { next: string }) {
-  const [state, action] = useActionState<MagicLinkState, FormData>(
+  const [reqState, reqAction] = useActionState<MagicLinkState, FormData>(
     requestMagicLink,
+    { ok: false },
+  );
+  const [verifyState, verifyAction] = useActionState<MagicLinkState, FormData>(
+    verifyMagicCode,
     { ok: false },
   );
   const [turnstileToken, setTurnstileToken] = useState("");
 
-  return (
-    <>
-      {state.ok ? (
+  // Once the email is sent we move to the code-entry step. "Zurück" does a hard
+  // reload of /login (cleanest reset — new Turnstile token, clean state).
+  const onCodeStep = reqState.ok;
+  const email = reqState.sentTo ?? "";
+  const backHref =
+    next && next !== "/dashboard"
+      ? `/login?next=${encodeURIComponent(next)}`
+      : "/login";
+
+  if (onCodeStep) {
+    return (
+      <>
         <div
           className="mb-6 rounded-2xl p-4 text-[14px]"
           style={{
@@ -49,23 +88,59 @@ export default function LoginForm({ next }: { next: string }) {
         >
           <div className="font-medium">Check deine E-Mails</div>
           <div className="mt-1 opacity-80">
-            Wir haben dir einen Login-Link an {state.sentTo ?? "dich"} geschickt.
+            Wir haben dir einen 6-stelligen Code und einen Login-Link an{" "}
+            {email || "dich"} geschickt. Gib den Code hier ein — oder klick den
+            Link in der Mail.
           </div>
         </div>
-      ) : null}
 
-      {state.error ? (
-        <div
-          className="mb-6 rounded-2xl p-4 text-[14px]"
-          style={{
-            background: "rgba(217, 119, 87, 0.12)",
-            border: "1px solid rgba(217, 119, 87, 0.35)",
-            color: "#E8A88D",
-          }}
+        {verifyState.error ? <ErrorBox>{verifyState.error}</ErrorBox> : null}
+
+        <form action={verifyAction} noValidate className="flex flex-col gap-3">
+          <input type="hidden" name="next" value={next} />
+          <input type="hidden" name="email" value={email} />
+          <label
+            htmlFor="code"
+            className="text-[12px] uppercase tracking-[0.18em]"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
+            6-stelliger Code
+          </label>
+          <input
+            id="code"
+            name="code"
+            type="text"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            pattern="[0-9]*"
+            maxLength={6}
+            placeholder="123456"
+            autoFocus
+            className="rounded-2xl px-4 py-3 text-center text-[22px] font-semibold tracking-[0.5em] text-white outline-none transition focus:border-white/40"
+            style={{
+              background: "rgba(255,255,255,0.06)",
+              border: "1px solid rgba(255,255,255,0.16)",
+            }}
+          />
+          <PendingButton idle="Anmelden" pending="Wird geprüft…" />
+        </form>
+
+        <p
+          className="mt-6 text-center text-[13px]"
+          style={{ color: "rgba(255,255,255,0.45)" }}
         >
-          {state.error}
-        </div>
-      ) : null}
+          Keinen Code bekommen?{" "}
+          <a href={backHref} className="underline hover:text-white">
+            Neuen anfordern
+          </a>
+        </p>
+      </>
+    );
+  }
+
+  return (
+    <>
+      {reqState.error ? <ErrorBox>{reqState.error}</ErrorBox> : null}
 
       <form action={loginWithGoogle} className="mb-4">
         <input type="hidden" name="next" value={next} />
@@ -106,7 +181,7 @@ export default function LoginForm({ next }: { next: string }) {
         <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.12)" }} />
       </div>
 
-      <form action={action} noValidate className="flex flex-col gap-3">
+      <form action={reqAction} noValidate className="flex flex-col gap-3">
         <input type="hidden" name="next" value={next} />
         <input type="hidden" name="turnstileToken" value={turnstileToken} />
         <label
@@ -132,7 +207,7 @@ export default function LoginForm({ next }: { next: string }) {
           onVerify={setTurnstileToken}
           onError={() => setTurnstileToken("")}
         />
-        <MagicSubmit />
+        <PendingButton idle="Code & Link per Mail" pending="Wird gesendet…" />
       </form>
     </>
   );

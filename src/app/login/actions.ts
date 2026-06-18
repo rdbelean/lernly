@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email/send";
-import { renderMagicLinkEmail } from "@/lib/email/magicLink";
+import { renderMagicLinkEmail, renderMagicLinkText } from "@/lib/email/magicLink";
 import { verifyTurnstile } from "@/lib/turnstile";
 
 export type MagicLinkState = { ok: boolean; error?: string; sentTo?: string };
@@ -129,7 +129,9 @@ export async function requestMagicLink(
   const origin =
     h.get("origin") ?? getOrigin(h.get("host"), h.get("x-forwarded-proto"));
   const next = sanitizeNext(formData.get("next") as string | null);
-  const redirectTo = `${origin}/auth/callback?next=${encodeURIComponent(next)}`;
+  // redirect_to embedded in Supabase's action_link (which we don't use); our own
+  // confirm URL is built below from the returned hashed_token.
+  const redirectTo = `${origin}/auth/confirm?next=${encodeURIComponent(next)}`;
 
   const service = createServiceClient();
   try {
@@ -155,15 +157,26 @@ export async function requestMagicLink(
         options: { redirectTo },
       }));
     }
-    const actionLink = data?.properties?.action_link;
-    if (error || !actionLink) {
-      console.error("[login] generateLink failed", error);
-      return { ok: false, error: "Konnte den Login-Link nicht erstellen." };
+    // generateLink hands us BOTH a hashed_token (for a device-independent
+    // confirm link) and the raw 6-digit email_otp (for typing into the PWA).
+    const props = data?.properties;
+    const tokenHash = props?.hashed_token;
+    const code = props?.email_otp;
+    const vtype = props?.verification_type ?? "magiclink";
+    if (error || !tokenHash || !code) {
+      console.error("[login] generateLink missing token/otp", error);
+      return { ok: false, error: "Konnte den Login-Code nicht erstellen." };
     }
+    // Our own confirm link → /auth/confirm runs verifyOtp({ token_hash }),
+    // which is NOT bound to the requesting device (no PKCE) → works anywhere.
+    const confirmUrl = `${origin}/auth/confirm?token_hash=${encodeURIComponent(
+      tokenHash,
+    )}&type=${encodeURIComponent(vtype)}&next=${encodeURIComponent(next)}`;
     const sent = await sendEmail({
       to: email,
-      subject: "Dein Login-Link für Lernly",
-      html: renderMagicLinkEmail(actionLink),
+      subject: "Dein Login-Code für Lernly",
+      html: renderMagicLinkEmail({ url: confirmUrl, code }),
+      text: renderMagicLinkText({ url: confirmUrl, code }),
     });
     if (!sent.ok) {
       return { ok: false, error: "E-Mail konnte nicht gesendet werden — versuch's gleich nochmal." };
@@ -173,4 +186,86 @@ export async function requestMagicLink(
     console.error("[login] requestMagicLink threw", e);
     return { ok: false, error: "Unerwarteter Fehler — versuch's per Google." };
   }
+}
+
+// Per-email/per-IP limiter for the 6-digit code verification — defence-in-depth
+// against brute force on top of Supabase's own per-token attempt cap.
+const OTP_VERIFY_IP_MAX = 20;
+const OTP_VERIFY_EMAIL_MAX = 10;
+const OTP_VERIFY_WINDOW_SECONDS = 900; // 15 min
+
+async function otpVerifyAllowed(
+  ip: string | null,
+  email: string,
+): Promise<boolean> {
+  const service = createServiceClient();
+  try {
+    const buckets: { bucket: string; max: number }[] = [
+      { bucket: `otpverify:email:${email.toLowerCase()}`, max: OTP_VERIFY_EMAIL_MAX },
+    ];
+    if (ip) buckets.push({ bucket: `otpverify:ip:${ip}`, max: OTP_VERIFY_IP_MAX });
+    const results = await Promise.all(
+      buckets.map(async ({ bucket, max }) => {
+        const { data } = await service.rpc("check_rate_limit", {
+          p_bucket: bucket,
+          p_max: max,
+          p_window_seconds: OTP_VERIFY_WINDOW_SECONDS,
+        });
+        return data === true;
+      }),
+    );
+    return results.every(Boolean);
+  } catch (e) {
+    console.error("[login] otp-verify rate-limit threw", e);
+    return true; // fail open — same posture as the request limiter
+  }
+}
+
+// Verify the 6-digit code the user typed (the PWA-friendly path — no link
+// hopping). verifyOtp({ email, token }) sets the session cookies on THIS device,
+// so the installed app ends up logged in. useActionState-compatible: redirects
+// on success, returns an error state otherwise.
+export async function verifyMagicCode(
+  _prev: MagicLinkState,
+  formData: FormData,
+): Promise<MagicLinkState> {
+  const email = formData.get("email");
+  if (typeof email !== "string" || !email.includes("@")) {
+    return { ok: false, error: "Etwas ist schiefgelaufen — fordere einen neuen Code an." };
+  }
+  const codeRaw = formData.get("code");
+  const code = typeof codeRaw === "string" ? codeRaw.replace(/\s/g, "") : "";
+  if (!/^\d{6}$/.test(code)) {
+    return { ok: false, error: "Bitte gib den 6-stelligen Code aus der E-Mail ein." };
+  }
+
+  const h = await headers();
+  const ip = clientIpFrom(h);
+  const allowed = await otpVerifyAllowed(ip, email);
+  if (!allowed) {
+    return { ok: false, error: "Zu viele Versuche. Fordere einen neuen Code an." };
+  }
+
+  const next = sanitizeNext(formData.get("next") as string | null);
+  const supabase = await createClient();
+  let failed = false;
+  try {
+    const { error } = await supabase.auth.verifyOtp({
+      email,
+      token: code,
+      type: "magiclink",
+    });
+    if (error) failed = true;
+  } catch (e) {
+    console.error("[login] verifyOtp threw", e);
+    return { ok: false, error: "Unerwarteter Fehler — versuch's gleich nochmal." };
+  }
+  if (failed) {
+    return {
+      ok: false,
+      error: "Code ist falsch oder abgelaufen. Prüf die Zahl oder fordere einen neuen an.",
+    };
+  }
+  // Session cookies are set; leave the login page.
+  redirect(next);
 }
