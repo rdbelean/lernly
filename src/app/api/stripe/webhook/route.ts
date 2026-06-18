@@ -6,6 +6,7 @@ import {
   planFromPriceId,
 } from "@/lib/stripe";
 import { createServiceClient } from "@/lib/supabase/server";
+import { provisionUserAndSendLogin } from "@/lib/auth/provision";
 
 export const runtime = "nodejs";
 
@@ -37,6 +38,23 @@ export async function POST(request: Request) {
   }
 
   const service = createServiceClient();
+
+  // Idempotency: Stripe delivers at least once and retries on any non-2xx, so
+  // skip events we've already handled (prevents double provisioning / double
+  // plan grants). Fail-open if the ledger table isn't present yet (the window
+  // before the additive migration is applied) — provisioning is near-idempotent.
+  try {
+    const { data: seen } = await service
+      .from("processed_stripe_events")
+      .select("event_id")
+      .eq("event_id", event.id)
+      .maybeSingle();
+    if (seen) {
+      return NextResponse.json({ received: true, deduped: true });
+    }
+  } catch (e) {
+    console.error("[stripe webhook] dedup check failed (continuing)", e);
+  }
 
   // Subscriptions (Semester / Monatlich). plan_expires_at = the current period
   // end; an inactive/cancelled sub drops the user back to free.
@@ -79,21 +97,9 @@ export async function POST(request: Request) {
 
   // One-time Einzelklausur. Grants 14 days of access + a fresh 5-pack budget
   // (reset the monthly counter so a free user who already used their 2 packs
-  // gets the full Einzelklausur allowance).
-  async function grantEinzelklausur(
-    session: Stripe.Checkout.Session,
-  ): Promise<void> {
-    const userId =
-      (session.metadata?.user_id as string | undefined) ??
-      (session.client_reference_id ?? null);
-    if (!userId) {
-      console.error(
-        "[stripe webhook] einzelklausur session missing user_id",
-        { sessionId: session.id },
-      );
-      return;
-    }
-
+  // gets the full Einzelklausur allowance). Updates by user id — the caller
+  // resolves it (logged-in metadata or guest-provisioned by email).
+  async function grantEinzelklausur(userId: string): Promise<void> {
     const expiresAt = new Date(
       Date.now() + EINZELKLAUSUR_ACCESS_DAYS * 24 * 60 * 60 * 1000,
     ).toISOString();
@@ -114,9 +120,66 @@ export async function POST(request: Request) {
     }
   }
 
+  // Resolve the buyer for a completed checkout: a logged-in user (id in
+  // metadata / client_reference_id) or a GUEST we provision from the email
+  // Stripe collected. Returns null only on unrecoverable failure.
+  async function resolveUserForSession(
+    session: Stripe.Checkout.Session,
+  ): Promise<string | null> {
+    const existing =
+      (session.metadata?.user_id as string | undefined) ??
+      session.client_reference_id ??
+      null;
+    if (existing) return existing;
+
+    const email =
+      session.customer_details?.email ?? session.customer_email ?? null;
+    if (!email) {
+      console.error(
+        "[stripe webhook] completed session has no email — cannot provision",
+        { sessionId: session.id },
+      );
+      return null;
+    }
+    // Guest: create-or-find the account and email them a login code + link.
+    const { userId } = await provisionUserAndSendLogin({
+      email,
+      next: "/dashboard",
+    });
+    return userId;
+  }
+
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
+      const userId = await resolveUserForSession(session);
+      if (!userId) {
+        // Payment succeeded but we couldn't attach it to an account. Surface
+        // loudly and return 500 so Stripe retries (covers a transient Supabase
+        // failure); do NOT mark the event processed.
+        console.error(
+          "[stripe webhook] could not resolve/provision user for paid session",
+          { sessionId: session.id },
+        );
+        return NextResponse.json(
+          { error: "provisioning failed" },
+          { status: 500 },
+        );
+      }
+
+      // Link the Stripe customer so future subscription events (renewals,
+      // cancellations) resolve by stripe_customer_id.
+      const customerId =
+        typeof session.customer === "string"
+          ? session.customer
+          : (session.customer?.id ?? null);
+      if (customerId) {
+        await service
+          .from("users")
+          .update({ stripe_customer_id: customerId })
+          .eq("id", userId);
+      }
+
       if (session.mode === "subscription" && session.subscription) {
         const sub = await stripe.subscriptions.retrieve(
           session.subscription as string,
@@ -124,7 +187,7 @@ export async function POST(request: Request) {
         await applySubscriptionToUser(sub);
       } else if (session.mode === "payment") {
         // The only one-time product in v3 is Einzelklausur.
-        await grantEinzelklausur(session);
+        await grantEinzelklausur(userId);
       }
       break;
     }
@@ -136,6 +199,22 @@ export async function POST(request: Request) {
     }
     default:
       break;
+  }
+
+  // Record as processed (idempotency ledger). Fail-open if the table isn't
+  // applied yet; ignore duplicates from a racing concurrent delivery.
+  try {
+    await service
+      .from("processed_stripe_events")
+      .upsert(
+        { event_id: event.id, type: event.type },
+        { onConflict: "event_id", ignoreDuplicates: true },
+      );
+  } catch (e) {
+    console.error(
+      "[stripe webhook] failed to record processed event (continuing)",
+      e,
+    );
   }
 
   return NextResponse.json({ received: true });

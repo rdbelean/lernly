@@ -1742,13 +1742,10 @@ function PricingSection({
       onActivateUpload();
       return;
     }
-    // Paid tiers all go through Stripe checkout. Unauth → login then settings
-    // (where they can complete the purchase); authed → fire checkout directly.
-    if (!authed) {
-      window.location.href = paidUpgradeHref;
-      return;
-    }
-    track("checkout_started", { plan, source: "pricing_section" });
+    // Paid tiers all go through Stripe checkout — for guests too. The checkout
+    // route no longer requires login; Stripe collects the email and the account
+    // is provisioned after payment. Fallback to login only if checkout errors.
+    track("checkout_started", { plan, source: "pricing_section", guest: !authed });
     fetch("/api/stripe/checkout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
