@@ -88,7 +88,7 @@ export default function LoginForm({ next }: { next: string }) {
         >
           <div className="font-medium">Check deine E-Mails</div>
           <div className="mt-1 opacity-80">
-            Wir haben dir einen 6-stelligen Code und einen Login-Link an{" "}
+            Wir haben dir einen Login-Code und einen Login-Link an{" "}
             {email || "dich"} geschickt. Gib den Code hier ein — oder klick den
             Link in der Mail.
           </div>
@@ -104,7 +104,7 @@ export default function LoginForm({ next }: { next: string }) {
             className="text-[12px] uppercase tracking-[0.18em]"
             style={{ color: "rgba(255,255,255,0.55)" }}
           >
-            6-stelliger Code
+            Login-Code
           </label>
           <input
             id="code"
@@ -113,10 +113,9 @@ export default function LoginForm({ next }: { next: string }) {
             inputMode="numeric"
             autoComplete="one-time-code"
             pattern="[0-9]*"
-            maxLength={6}
-            placeholder="123456"
+            maxLength={10}
             autoFocus
-            className="rounded-2xl px-4 py-3 text-center text-[22px] font-semibold tracking-[0.5em] text-white outline-none transition focus:border-white/40"
+            className="rounded-2xl px-4 py-3 text-center text-[20px] font-semibold tracking-[0.3em] text-white outline-none transition focus:border-white/40"
             style={{
               background: "rgba(255,255,255,0.06)",
               border: "1px solid rgba(255,255,255,0.16)",

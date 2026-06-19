@@ -59,7 +59,7 @@ export default function SuccessLogin({ email }: { email: string }) {
           className="text-[12px] uppercase tracking-[0.18em]"
           style={{ color: "rgba(255,255,255,0.55)" }}
         >
-          6-stelliger Code
+          Login-Code
         </label>
         <input
           id="code"
@@ -68,10 +68,9 @@ export default function SuccessLogin({ email }: { email: string }) {
           inputMode="numeric"
           autoComplete="one-time-code"
           pattern="[0-9]*"
-          maxLength={6}
-          placeholder="123456"
+          maxLength={10}
           autoFocus
-          className="rounded-2xl px-4 py-3 text-center text-[22px] font-semibold tracking-[0.5em] text-white outline-none transition focus:border-white/40"
+          className="rounded-2xl px-4 py-3 text-center text-[20px] font-semibold tracking-[0.3em] text-white outline-none transition focus:border-white/40"
           style={{
             background: "rgba(255,255,255,0.06)",
             border: "1px solid rgba(255,255,255,0.16)",

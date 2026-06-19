@@ -234,9 +234,11 @@ export async function verifyMagicCode(
     return { ok: false, error: "Etwas ist schiefgelaufen — fordere einen neuen Code an." };
   }
   const codeRaw = formData.get("code");
-  const code = typeof codeRaw === "string" ? codeRaw.replace(/\s/g, "") : "";
-  if (!/^\d{6}$/.test(code)) {
-    return { ok: false, error: "Bitte gib den 6-stelligen Code aus der E-Mail ein." };
+  // OTP length follows the Supabase project setting (6 OR 8 digits) — never
+  // hardcode 6. Strip non-digits and let verifyOtp be the source of truth.
+  const code = typeof codeRaw === "string" ? codeRaw.replace(/\D/g, "") : "";
+  if (code.length < 4 || code.length > 12) {
+    return { ok: false, error: "Bitte gib den Code aus der E-Mail ein." };
   }
 
   const h = await headers();

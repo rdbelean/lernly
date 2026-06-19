@@ -90,9 +90,9 @@ export default async function CheckoutSuccessPage({
               className="mb-7 text-[15px]"
               style={{ color: "rgba(255,255,255,0.65)" }}
             >
-              Dein Konto ist eingerichtet. Wir haben dir einen 6-stelligen
-              Login-Code{email ? ` an ${email}` : ""} geschickt — gib ihn hier
-              ein. Die Mail kann 1–2 Minuten dauern.
+              Dein Konto ist eingerichtet. Wir haben dir einen Login-Code
+              {email ? ` an ${email}` : ""} geschickt — gib ihn hier ein. Die
+              Mail kann 1–2 Minuten dauern.
             </p>
 
             <SuccessLogin email={email ?? ""} />

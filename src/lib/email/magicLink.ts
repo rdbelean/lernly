@@ -17,7 +17,7 @@ export function renderMagicLinkEmail({ url, code }: MagicLinkArgs): string {
     <p style="margin:0 0 18px;">So meldest du dich an — wähl, was für dich einfacher ist:</p>
     <p style="margin:0 0 6px;font-weight:600;color:${BRAND.ink};">1) Code eingeben (am besten direkt in der App):</p>
     ${codeBlock}
-    <p style="margin:0 0 20px;font-size:13px;color:${BRAND.footerInk};">Gib diesen 6-stelligen Code auf der Anmelden-Seite ein.</p>
+    <p style="margin:0 0 20px;font-size:13px;color:${BRAND.footerInk};">Gib diesen Code auf der Anmelden-Seite ein.</p>
     <p style="margin:0;font-weight:600;color:${BRAND.ink};">2) Oder klick den Button:</p>`;
 
   return renderEmail({
@@ -39,7 +39,7 @@ export function renderMagicLinkText({ url, code }: MagicLinkArgs): string {
   return [
     "Anmelden bei Lernly",
     "",
-    `Dein 6-stelliger Login-Code: ${code}`,
+    `Dein Login-Code: ${code}`,
     "Gib ihn auf der Anmelden-Seite ein (am besten direkt in der App).",
     "",
     "Oder öffne diesen Link, um dich anzumelden:",
