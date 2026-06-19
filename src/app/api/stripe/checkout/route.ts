@@ -96,6 +96,23 @@ export async function POST(request: Request) {
     : `${origin}/?checkout=cancelled`;
   const plan = body.plan as string;
 
+  // Trust + sales copy on the hosted Checkout (the product NAME/IMAGE/DESCRIPTION
+  // shown left are set on the Stripe Product in the Dashboard — we only enrich
+  // the session here). The 30-day money-back guarantee is AGB §7, worded "nach
+  // Abo-Abschluss", so ONLY subscriptions advertise it; the one-time Einzelklausur
+  // gets an access-only line. We deliberately do NOT claim a 14-day Widerruf next
+  // to instant access — it lapses on instant digital delivery (§356 V BGB).
+  const submitMessage = isSubscription
+    ? "30 Tage Geld-zurück-Garantie · Sofort-Zugang nach der Zahlung."
+    : "Sofort-Zugang nach der Zahlung · 14 Tage voller Zugriff.";
+  const afterSubmitMessage = user
+    ? "Dein Zugang wird sofort freigeschaltet."
+    : "Wir richten dein Konto ein und schicken dir den Login per E-Mail.";
+  const customText = {
+    submit: { message: submitMessage },
+    after_submit: { message: afterSubmitMessage },
+  };
+
   // Subscriptions stay in subscription mode; Einzelklausur uses payment mode
   // and never auto-renews. For guests we omit customer/client_reference_id so
   // Stripe creates the customer and collects the email itself.
@@ -103,6 +120,8 @@ export async function POST(request: Request) {
     isSubscription
       ? {
           mode: "subscription",
+          locale: "de",
+          custom_text: customText,
           ...(customerId ? { customer: customerId } : {}),
           line_items: [{ price: priceId, quantity: 1 }],
           success_url: successUrl,
@@ -116,6 +135,8 @@ export async function POST(request: Request) {
         }
       : {
           mode: "payment",
+          locale: "de",
+          custom_text: customText,
           ...(customerId
             ? { customer: customerId }
             : { customer_creation: "always" }),
