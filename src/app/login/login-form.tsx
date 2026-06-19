@@ -1,7 +1,8 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
+import { Inbox } from "lucide-react";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import {
   loginWithGoogle,
@@ -75,11 +76,60 @@ export default function LoginForm({ next }: { next: string }) {
       ? `/login?next=${encodeURIComponent(next)}`
       : "/login";
 
+  // Resend state. A re-keyed Turnstile widget (interaction-only → usually
+  // invisible) mints a fresh token for each resend; a 30s cooldown gates it.
+  const turnstileConfigured = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const [resendToken, setResendToken] = useState("");
+  const [resendNonce, setResendNonce] = useState(0);
+  const [resending, setResending] = useState(false);
+  const [resendNote, setResendNote] = useState<string | null>(null);
+
+  // 30s resend cooldown — counts down once mounted, reset to 30 after each
+  // resend. setState lives in the timeout callback (not synchronous in the
+  // effect body), so it's lint-clean.
+  const [cooldown, setCooldown] = useState(30);
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const id = setTimeout(() => setCooldown((c) => Math.max(0, c - 1)), 1000);
+    return () => clearTimeout(id);
+  }, [cooldown]);
+
+  // Resend the magic-link mail to the same address. Calls the server action
+  // imperatively (no extra form) with a fresh Turnstile token.
+  const resend = async () => {
+    if (cooldown > 0 || resending || (turnstileConfigured && !resendToken)) {
+      return;
+    }
+    setResending(true);
+    setResendNote(null);
+    const fd = new FormData();
+    fd.set("email", email);
+    fd.set("next", next);
+    fd.set("turnstileToken", resendToken);
+    try {
+      const res = await requestMagicLink({ ok: false }, fd);
+      if (res.ok) {
+        setResendNote(
+          "Neue Mail ist unterwegs — nimm den Code aus der neuesten Mail.",
+        );
+        setCooldown(30);
+        setResendToken("");
+        setResendNonce((n) => n + 1); // re-key Turnstile → fresh token next time
+      } else {
+        setResendNote(res.error ?? "Erneutes Senden hat nicht geklappt.");
+      }
+    } catch {
+      setResendNote("Erneutes Senden hat nicht geklappt.");
+    } finally {
+      setResending(false);
+    }
+  };
+
   if (onCodeStep) {
     return (
       <>
         <div
-          className="mb-6 rounded-2xl p-4 text-[14px]"
+          className="mb-4 rounded-2xl p-4 text-[14px]"
           style={{
             background: "rgba(111, 199, 227, 0.12)",
             border: "1px solid rgba(111, 199, 227, 0.35)",
@@ -88,10 +138,34 @@ export default function LoginForm({ next }: { next: string }) {
         >
           <div className="font-medium">Check deine E-Mails</div>
           <div className="mt-1 opacity-80">
-            Wir haben dir einen Login-Code und einen Login-Link an{" "}
-            {email || "dich"} geschickt. Gib den Code hier ein — oder klick den
-            Link in der Mail.
+            Wir haben dir eine Mail an {email || "dich"} geschickt — mit
+            Login-Code und Link.
           </div>
+        </div>
+
+        {/* Calm spam-folder nudge — Outlook/Apple Mail sometimes junk new senders. */}
+        <div
+          className="mb-5 flex gap-2.5 rounded-2xl p-3.5 text-[13px] leading-snug"
+          style={{
+            background: "rgba(255,255,255,0.04)",
+            border: "1px solid rgba(255,255,255,0.10)",
+            color: "rgba(255,255,255,0.7)",
+          }}
+        >
+          <Inbox
+            size={16}
+            strokeWidth={1.9}
+            aria-hidden
+            style={{ marginTop: 2, flexShrink: 0, color: "rgba(255,255,255,0.5)" }}
+          />
+          <span>
+            Nichts im Posteingang? Schau im{" "}
+            <strong style={{ color: "#fff", fontWeight: 600 }}>
+              Spam-/Junk-Ordner
+            </strong>{" "}
+            nach und markier die Mail als „Kein Spam“ — dann landet die nächste
+            sicher im Posteingang.
+          </span>
         </div>
 
         {verifyState.error ? <ErrorBox>{verifyState.error}</ErrorBox> : null}
@@ -104,7 +178,7 @@ export default function LoginForm({ next }: { next: string }) {
             className="text-[12px] uppercase tracking-[0.18em]"
             style={{ color: "rgba(255,255,255,0.55)" }}
           >
-            Login-Code
+            Oder gib den Code aus der Mail ein
           </label>
           <input
             id="code"
@@ -124,15 +198,51 @@ export default function LoginForm({ next }: { next: string }) {
           <PendingButton idle="Anmelden" pending="Wird geprüft…" />
         </form>
 
-        <p
-          className="mt-6 text-center text-[13px]"
-          style={{ color: "rgba(255,255,255,0.45)" }}
-        >
-          Keinen Code bekommen?{" "}
-          <a href={backHref} className="underline hover:text-white">
-            Neuen anfordern
+        {resendNote ? (
+          <p
+            className="mt-3 text-center text-[12.5px]"
+            style={{ color: "rgba(255,255,255,0.6)" }}
+          >
+            {resendNote}
+          </p>
+        ) : null}
+
+        <div className="mt-5 flex flex-col items-center gap-2 text-[13px]">
+          <button
+            type="button"
+            onClick={resend}
+            disabled={
+              cooldown > 0 || resending || (turnstileConfigured && !resendToken)
+            }
+            className="underline-offset-2 transition hover:text-white disabled:cursor-not-allowed disabled:no-underline disabled:opacity-50"
+            style={{ color: "rgba(255,255,255,0.6)" }}
+          >
+            {cooldown > 0
+              ? `Mail erneut senden (${cooldown}s)`
+              : resending
+                ? "Wird gesendet…"
+                : "Mail erneut senden"}
+          </button>
+          <a
+            href={backHref}
+            className="underline-offset-2 hover:text-white"
+            style={{ color: "rgba(255,255,255,0.45)" }}
+          >
+            Andere Adresse verwenden
           </a>
-        </p>
+        </div>
+
+        {/* Invisible (interaction-only) Turnstile that mints a fresh token for
+            resend; re-keyed after each send so the next resend gets a new one. */}
+        {turnstileConfigured ? (
+          <div className="mt-2">
+            <TurnstileWidget
+              key={resendNonce}
+              onVerify={setResendToken}
+              onError={() => setResendToken("")}
+            />
+          </div>
+        ) : null}
       </>
     );
   }

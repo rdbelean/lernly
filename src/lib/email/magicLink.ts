@@ -28,7 +28,7 @@ export function renderMagicLinkEmail({ url, code }: MagicLinkArgs): string {
     ctaUrl: url,
     // After the CTA we repeat the raw link as plain text so the mail is fully
     // usable even if the button (table/bgcolor) is stripped by a client.
-    afterCtaHtml: `<p style="margin:14px 0 0;font-size:12px;line-height:1.5;color:${BRAND.footerInk};">Falls der Button nicht geht, öffne diesen Link:<br><a href="${url}" style="color:${BRAND.cta};word-break:break-all;">${url}</a></p><p style="margin:14px 0 0;font-size:12px;color:${BRAND.footerInk};">Code und Link sind 1 Stunde gültig. Falls du das nicht warst, ignorier diese E-Mail.</p>`,
+    afterCtaHtml: `<p style="margin:14px 0 0;font-size:12px;line-height:1.5;color:${BRAND.footerInk};">Falls der Button nicht geht, öffne diesen Link:<br><a href="${url}" style="color:${BRAND.cta};word-break:break-all;">${url}</a></p><p style="margin:14px 0 0;font-size:12px;color:${BRAND.footerInk};">Code und Link sind 1 Stunde gültig. Falls du das nicht warst, ignorier diese E-Mail.</p><p style="margin:14px 0 0;font-size:12px;color:${BRAND.footerInk};">Diese Mail im Spam gelandet? Markier sie als „Kein Spam", dann erreichen wir dich künftig sicher im Posteingang.</p>`,
   });
 }
 
@@ -47,6 +47,8 @@ export function renderMagicLinkText({ url, code }: MagicLinkArgs): string {
     "",
     "Code und Link sind 1 Stunde gültig.",
     "Falls du das nicht angefordert hast, kannst du diese E-Mail ignorieren.",
+    "",
+    "Diese Mail im Spam gelandet? Markier sie als ‚Kein Spam', dann erreichen wir dich künftig sicher.",
     "",
     "— Lernly",
   ].join("\n");
