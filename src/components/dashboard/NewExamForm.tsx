@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useDropzone } from "react-dropzone";
 import {
@@ -54,6 +54,7 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
+  const titleRef = useRef<HTMLInputElement>(null);
   const [examDate, setExamDate] = useState("");
   const [color, setColor] = useState<string>("cyan");
   const [path, setPath] = useState<StudyPath>("B");
@@ -112,7 +113,8 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
 
   const onSubmit = () => {
     if (!title.trim()) {
-      setError("Titel darf nicht leer sein.");
+      setError("Bitte gib der Klausur einen Titel.");
+      titleRef.current?.focus();
       return;
     }
     if (path === "C" && !topicsList.trim()) {
@@ -249,10 +251,11 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
             className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.12em]"
             style={{ color: "rgba(255,255,255,0.5)" }}
           >
-            Titel
+            Titel <span style={{ color: "var(--color-cat-coral)" }}>*</span>
           </label>
           <input
             autoFocus
+            ref={titleRef}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="z. B. Global Strategic Management"
@@ -526,7 +529,7 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
         <PrimaryCTAButton
           size="sm"
           onClick={onSubmit}
-          disabled={pending || !title.trim()}
+          disabled={pending}
         >
           {pending ? (busyLabel ?? "Speichere…") : "Anlegen"}
         </PrimaryCTAButton>
