@@ -229,10 +229,13 @@ export async function verifyMagicCode(
   _prev: MagicLinkState,
   formData: FormData,
 ): Promise<MagicLinkState> {
-  const email = formData.get("email");
-  if (typeof email !== "string" || !email.includes("@")) {
+  const rawEmail = formData.get("email");
+  if (typeof rawEmail !== "string" || !rawEmail.includes("@")) {
     return { ok: false, error: "Etwas ist schiefgelaufen — fordere einen neuen Code an." };
   }
+  // Normalize — Supabase stores emails lowercased, but this field can arrive
+  // mixed-case (e.g. from the Stripe checkout session on /checkout/success).
+  const email = rawEmail.trim().toLowerCase();
   const codeRaw = formData.get("code");
   // OTP length follows the Supabase project setting (6 OR 8 digits) — never
   // hardcode 6. Strip non-digits and let verifyOtp be the source of truth.

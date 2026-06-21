@@ -102,12 +102,17 @@ export default function WelcomeModal({
   };
 
   // Exam created → hand off to material upload, pre-linked to the new Klausur.
+  // Close the modal FIRST: it lives in the dashboard layout, so it survives the
+  // client navigation to /dashboard/new (its `visible` is local state, not synced
+  // to the `open` prop). Without this the walkthrough stays on screen and every
+  // "Anlegen" click silently creates another exam — looks like nothing happens.
   const onExamCreated = (exam: { id: string; hasPastExam?: boolean }) => {
     track("walkthrough_step_completed", { step: "exam" });
     if (exam.hasPastExam) {
       track("walkthrough_step_completed", { step: "altklausur" });
     }
     track("walkthrough_completed", {});
+    setVisible(false);
     router.push(`/dashboard/new?exam=${exam.id}`);
   };
 
