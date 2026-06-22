@@ -27,11 +27,19 @@ export default async function DashboardLayout({
   }
 
   const supabase = await createClient();
-  const [{ data: recentRaw }, { data: profile }] = await Promise.all([
-    supabase.rpc("list_pack_summaries"),
-    supabase.from("users").select("name, has_seen_welcome").maybeSingle(),
-  ]);
+  const [{ data: recentRaw }, { data: profile }, { count: dueRaw }] =
+    await Promise.all([
+      supabase.rpc("list_pack_summaries"),
+      supabase.from("users").select("name, has_seen_welcome").maybeSingle(),
+      // Global SRS due-queue count for the "Wiederholen" nav badge. RLS scopes
+      // to the current user; head:true makes it a count-only query.
+      supabase
+        .from("card_reviews")
+        .select("*", { count: "exact", head: true })
+        .lte("due_at", new Date().toISOString()),
+    ]);
   const recent: RecentPack[] = ((recentRaw ?? []) as RecentPack[]).slice(0, 5);
+  const dueCount = dueRaw ?? 0;
 
   // Default has_seen_welcome to TRUE on a missing/failed read so we never
   // flash the welcome modal at an established user because of a transient
@@ -52,6 +60,7 @@ export default async function DashboardLayout({
         recentPacks={recent}
         name={name}
         hasSeenWelcome={hasSeenWelcome}
+        dueCount={dueCount}
       >
         {children}
       </DashboardShell>
