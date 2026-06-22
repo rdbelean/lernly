@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { Inbox } from "lucide-react";
 import TurnstileWidget from "@/components/TurnstileWidget";
@@ -72,6 +72,10 @@ export default function LoginForm({
     { ok: false },
   );
   const [turnstileToken, setTurnstileToken] = useState("");
+  // Email magic-link is collapsed by default so Google is the obvious action.
+  // Turnstile lives inside the email form, so it only mounts once expanded.
+  const [showEmail, setShowEmail] = useState(false);
+  const emailInputRef = useRef<HTMLInputElement>(null);
 
   // Once the email is sent we move to the code-entry step. "Zurück" does a hard
   // reload of /login (cleanest reset — new Turnstile token, clean state).
@@ -285,48 +289,59 @@ export default function LoginForm({
         </button>
       </form>
 
-      <div className="my-6 flex items-center gap-3">
-        <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.12)" }} />
-        <span
-          className="text-[12px] uppercase tracking-[0.18em]"
-          style={{ color: "rgba(255,255,255,0.45)" }}
-        >
-          oder
-        </span>
-        <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.12)" }} />
-      </div>
-
-      <form action={reqAction} noValidate className="flex flex-col gap-3">
-        <input type="hidden" name="next" value={next} />
-        <input type="hidden" name="turnstileToken" value={turnstileToken} />
-        <label
-          htmlFor="email"
-          className="text-[12px] uppercase tracking-[0.18em]"
-          style={{ color: "rgba(255,255,255,0.55)" }}
-        >
-          E-Mail
-        </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          autoComplete="email"
-          placeholder="du@uni.de"
-          className="rounded-2xl px-4 py-3 text-[15px] text-white outline-none transition focus:border-white/40"
-          style={{
-            background: "rgba(255,255,255,0.06)",
-            border: "1px solid rgba(255,255,255,0.16)",
+      {!showEmail ? (
+        <button
+          type="button"
+          aria-expanded={false}
+          onClick={() => {
+            setShowEmail(true);
+            // Focus the field after it mounts.
+            setTimeout(() => emailInputRef.current?.focus(), 0);
           }}
-        />
-        <TurnstileWidget
-          onVerify={setTurnstileToken}
-          onError={() => setTurnstileToken("")}
-        />
-        <PendingButton
-          idle={register ? "Kostenlos registrieren" : "Code & Link per Mail"}
-          pending="Wird gesendet…"
-        />
-      </form>
+          className="mt-6 w-full text-center text-[13px] transition hover:text-white"
+          style={{ color: "rgba(255,255,255,0.5)" }}
+        >
+          {register ? "oder mit E-Mail registrieren" : "oder mit E-Mail anmelden"}
+        </button>
+      ) : (
+        <form
+          id="email-login-form"
+          action={reqAction}
+          noValidate
+          className="mt-6 flex flex-col gap-3"
+        >
+          <input type="hidden" name="next" value={next} />
+          <input type="hidden" name="turnstileToken" value={turnstileToken} />
+          <label
+            htmlFor="email"
+            className="text-[12px] uppercase tracking-[0.18em]"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
+            E-Mail
+          </label>
+          <input
+            ref={emailInputRef}
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            placeholder="du@uni.de"
+            className="rounded-2xl px-4 py-3 text-[15px] text-white outline-none transition focus:border-white/40"
+            style={{
+              background: "rgba(255,255,255,0.06)",
+              border: "1px solid rgba(255,255,255,0.16)",
+            }}
+          />
+          <TurnstileWidget
+            onVerify={setTurnstileToken}
+            onError={() => setTurnstileToken("")}
+          />
+          <PendingButton
+            idle={register ? "Kostenlos registrieren" : "Code & Link per Mail"}
+            pending="Wird gesendet…"
+          />
+        </form>
+      )}
 
       <p
         className="mt-6 text-center text-[13px]"
