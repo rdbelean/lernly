@@ -8,6 +8,7 @@ import StudentDashboard from "@/components/dashboard/studentProgress/StudentDash
 import ProgressEmptyState from "@/components/dashboard/studentProgress/ProgressEmptyState";
 import { getStudentProgress } from "@/lib/dashboard/studentProgress";
 import { LAYOUT } from "@/lib/layout";
+import { CRAM_ENABLED } from "@/lib/features";
 import { PLAN_LABEL, PLAN_LIMITS, effectivePlan } from "@/lib/quota";
 import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
 import { dashboardGreeting } from "@/lib/greeting";
@@ -252,7 +253,7 @@ export default async function DashboardPage({
 
         {progress && <StudentDashboard progress={progress} />}
 
-        <CramJobsPanel />
+        {CRAM_ENABLED && <CramJobsPanel />}
 
         {isEmpty ? (
           <ProgressEmptyState />

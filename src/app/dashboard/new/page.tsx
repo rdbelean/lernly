@@ -19,6 +19,7 @@ import { parseJsonResponse } from "@/lib/safeJson";
 import { type ExamType } from "@/lib/schema";
 import { Loader2, Lock } from "lucide-react";
 import { EXAM_FORMATS, ESSAY_ENABLED } from "@/lib/examFormats";
+import { CRAM_ENABLED } from "@/lib/features";
 import {
   CARD_COUNT_OPTIONS,
   DEFAULT_CARD_COUNT,
@@ -665,10 +666,18 @@ export default function NewPackPage() {
           </button>
           <button
             type="button"
-            onClick={() => setMode("cram")}
-            className={`rounded-lg px-4 py-2 text-[14px] font-semibold ${mode === "cram" ? "bg-white text-[color:var(--color-ln-bg-bot)]" : "border border-white/15 text-white"}`}
+            onClick={CRAM_ENABLED ? () => setMode("cram") : undefined}
+            disabled={!CRAM_ENABLED}
+            title={!CRAM_ENABLED ? "Bald verfügbar" : undefined}
+            className={`rounded-lg px-4 py-2 text-[14px] font-semibold ${
+              !CRAM_ENABLED
+                ? "cursor-not-allowed border border-white/10 text-white/40"
+                : mode === "cram"
+                  ? "bg-white text-[color:var(--color-ln-bg-bot)]"
+                  : "border border-white/15 text-white"
+            }`}
           >
-            Alles reinwerfen (Cram)
+            Alles reinwerfen (Cram){!CRAM_ENABLED && " · bald verfügbar"}
           </button>
         </div>
         {mode === "cram" && (
