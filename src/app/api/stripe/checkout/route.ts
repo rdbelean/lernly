@@ -86,11 +86,12 @@ export async function POST(request: Request) {
 
   const url = new URL(request.url);
   const origin = `${url.protocol}//${url.host}`;
-  // Logged-in users land back in the dashboard; guests go to a success page that
-  // confirms payment and hands them a login code (no account beforehand).
+  // Logged-in users land back in the dashboard; guests go to the auto-login
+  // route, which logs them straight in from the paid session (no code typing)
+  // and falls back to /checkout/success (code entry) only if that can't complete.
   const successUrl = user
     ? `${origin}/dashboard?upgraded=1`
-    : `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`;
+    : `${origin}/auth/checkout?session_id={CHECKOUT_SESSION_ID}`;
   const cancelUrl = user
     ? `${origin}/dashboard/settings?cancelled=1`
     : `${origin}/?checkout=cancelled`;

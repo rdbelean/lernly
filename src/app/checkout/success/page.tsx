@@ -87,13 +87,33 @@ export default async function CheckoutSuccessPage({
               Zahlung erfolgreich
             </h1>
             <p
-              className="mb-7 text-[15px]"
+              className="mb-6 text-[15px]"
               style={{ color: "rgba(255,255,255,0.65)" }}
             >
-              Dein Konto ist eingerichtet. Wir haben dir einen Login-Code
-              {email ? ` an ${email}` : ""} geschickt — gib ihn hier ein. Die
-              Mail kann 1–2 Minuten dauern.
+              Dein Konto ist eingerichtet. Logg dich direkt ein — kein Code
+              nötig:
             </p>
+
+            {session_id ? (
+              <a
+                href={`/auth/checkout?session_id=${encodeURIComponent(session_id)}`}
+                className="mb-6 flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[15px] font-semibold text-white transition hover:brightness-110"
+                style={{ background: "var(--color-primary)" }}
+              >
+                Direkt einloggen →
+              </a>
+            ) : null}
+
+            <div className="mb-5 flex items-center gap-3">
+              <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.12)" }} />
+              <span
+                className="text-[11px] uppercase tracking-[0.16em]"
+                style={{ color: "rgba(255,255,255,0.4)" }}
+              >
+                oder mit Code aus der Mail
+              </span>
+              <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.12)" }} />
+            </div>
 
             <SuccessLogin email={email ?? ""} />
 
@@ -101,7 +121,8 @@ export default async function CheckoutSuccessPage({
               className="mt-6 text-center text-[13px]"
               style={{ color: "rgba(255,255,255,0.45)" }}
             >
-              Oder klick einfach den Login-Link in der E-Mail.
+              Oder klick einfach den Login-Link in der E-Mail
+              {email ? ` an ${email}` : ""}.
             </p>
           </>
         ) : (

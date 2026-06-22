@@ -1,8 +1,51 @@
 import "server-only";
+import type { EmailOtpType } from "@supabase/supabase-js";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email/send";
 import { renderMagicLinkEmail, renderMagicLinkText } from "@/lib/email/magicLink";
 import { APP_URL } from "@/lib/email/brand";
+
+// Ensure an auth user exists for `email` and return a one-time token_hash the
+// caller can verifyOtp() to establish a session. No email is sent — this powers
+// the post-checkout AUTO-LOGIN (the buyer is logging in right now), so we don't
+// depend on the emailed OTP, which any later code-generation would rotate. The
+// createUser-if-missing branch mirrors provisionUserAndSendLogin.
+export async function ensureUserAndGetLoginToken(
+  email: string,
+): Promise<{ tokenHash: string; type: EmailOtpType } | null> {
+  const service = createServiceClient();
+  const clean = email.trim();
+  const redirectTo = `${APP_URL}/auth/confirm`;
+
+  let { data, error } = await service.auth.admin.generateLink({
+    type: "magiclink",
+    email: clean,
+    options: { redirectTo },
+  });
+  if (error && /not.*found|no.*user|does not exist/i.test(error.message)) {
+    const { error: createErr } = await service.auth.admin.createUser({
+      email: clean,
+      email_confirm: true,
+    });
+    if (createErr) {
+      console.error("[provision] createUser (login token) failed", createErr);
+      return null;
+    }
+    ({ data, error } = await service.auth.admin.generateLink({
+      type: "magiclink",
+      email: clean,
+      options: { redirectTo },
+    }));
+  }
+
+  const tokenHash = data?.properties?.hashed_token;
+  const type = (data?.properties?.verification_type ?? "magiclink") as EmailOtpType;
+  if (error || !tokenHash) {
+    console.error("[provision] generateLink (login token) failed", error);
+    return null;
+  }
+  return { tokenHash, type };
+}
 
 // Ensure an auth user exists for `email`, then email them a login code + link so
 // they can reach their freshly-provisioned account. Used by the Stripe webhook
