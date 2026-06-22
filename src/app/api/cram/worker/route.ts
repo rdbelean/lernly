@@ -164,3 +164,10 @@ export async function POST(request: Request) {
 
   return NextResponse.json({ claimed: rows.length, done, failed });
 }
+
+// Vercel Cron triggers the scheduled path with a GET request (and injects the
+// `Authorization: Bearer <CRON_SECRET>` header). Without a GET handler the cron
+// hit would 405 and the worker would never run — silently stalling every Cram
+// job. Alias GET to the same authenticated handler. (exam-reminders already
+// uses GET for the same reason.)
+export const GET = POST;
