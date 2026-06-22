@@ -1,5 +1,10 @@
 import Anthropic from "@anthropic-ai/sdk";
 import * as Sentry from "@sentry/nextjs";
+import {
+  ANON_DEVICE_COOKIE,
+  parseDeviceIdFromCookie,
+  deviceCookieOptions,
+} from "@/lib/anonTrial";
 import { NextResponse } from "next/server";
 import {
   type ExamType,
@@ -66,7 +71,6 @@ const MAX_CHARS_PER_PACK = 1_000_000;
 const ANON_MAX_FILES = 1;
 const ANON_MAX_PAGES = 30;
 const ANON_MAX_CHARS = 50_000;
-const ANON_RATE_LIMIT_HOURS = 24;
 
 const ALLOWED_FILE = /\.(pdf|txt|md|markdown)$/i;
 
@@ -164,6 +168,9 @@ export async function POST(request: Request) {
   let reserved = false;
   let committed = false;
   let reservedUserId: string | null = null;
+  // Anonymous-trial device id (set on the success response so the next attempt
+  // from this device is recognised). Null for logged-in requests.
+  let anonDeviceId: string | null = null;
   try {
     const clientIp = extractClientIp(request);
     const userAgent = request.headers.get("user-agent") ?? "";
@@ -338,23 +345,36 @@ export async function POST(request: Request) {
         );
       }
 
+      const deviceId =
+        parseDeviceIdFromCookie(request.headers.get("cookie")) ??
+        crypto.randomUUID();
+      anonDeviceId = deviceId;
       try {
         const service = createServiceClient();
         const { data: anonQuota, error: anonErr } = await service.rpc(
           "check_anonymous_quota",
-          { p_ip: clientIp },
+          { p_device_id: deviceId, p_ip: clientIp },
         );
         if (anonErr) {
+          // Fails open (allows generation) — e.g. before the migration is
+          // applied. Apply the migration before deploy so this stays closed.
           console.error("[/api/generate] anon quota check failed", anonErr);
         } else if (anonQuota && anonQuota.ok === false) {
-          const hours = Math.ceil(
-            (anonQuota.retry_after_seconds ?? ANON_RATE_LIMIT_HOURS * 3600) /
-              3600,
-          );
+          if (anonQuota.reason === "anon_device_limit") {
+            return NextResponse.json(
+              {
+                error:
+                  "Dein Gratis-Paket ist verbraucht. Erstell ein kostenloses Konto für 2 Pakete pro Monat — und um deine Pakete zu speichern.",
+                reason: "anon_signup_needed",
+              },
+              { status: 429 },
+            );
+          }
           return NextResponse.json(
             {
-              error: `Du hast heute schon ein anonymes Lernpaket erstellt. Komm in ${hours}h wieder — oder logge dich ein für ${"3"} kostenlose Pakete pro Monat.`,
-              reason: "anonymous_rate_limit",
+              error:
+                "Gerade zu viele Anfragen aus deinem Netzwerk. Bitte versuch es später nochmal.",
+              reason: "anon_ip_ceiling",
               retryAfterSeconds: anonQuota.retry_after_seconds,
             },
             {
@@ -742,7 +762,11 @@ export async function POST(request: Request) {
         const service = createServiceClient();
         const { error: anonBumpErr } = await service.rpc(
           "bump_anonymous_usage",
-          { p_ip: clientIp, p_user_agent: userAgent.slice(0, 500) },
+          {
+            p_device_id: anonDeviceId,
+            p_ip: clientIp,
+            p_user_agent: userAgent.slice(0, 500),
+          },
         );
         if (anonBumpErr) {
           console.error("[/api/generate] anon usage bump failed", anonBumpErr);
@@ -752,12 +776,16 @@ export async function POST(request: Request) {
       }
     }
 
-    return NextResponse.json({
+    const res = NextResponse.json({
       id: savedId ?? crypto.randomUUID(),
       saved: Boolean(savedId),
       pack,
       ...(wasTruncated ? { warning: MATERIAL_TRUNCATED_MSG } : {}),
     });
+    if (anonDeviceId) {
+      res.cookies.set(ANON_DEVICE_COOKIE, anonDeviceId, deviceCookieOptions());
+    }
+    return res;
   } catch (err) {
     console.error("[/api/generate] error", err);
     if (!isTransientOverload(err)) Sentry.captureException(err);

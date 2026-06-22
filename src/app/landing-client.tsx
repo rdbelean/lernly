@@ -132,6 +132,7 @@ export default function Home() {
   const [elapsedSec, setElapsedSec] = useState(0);
   const [pack, setPack] = useState<StudyPack | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [signupNeeded, setSignupNeeded] = useState(false);
   const [apiKey, setApiKey] = useState<string | null>(null);
   const [isConnectOpen, setConnectOpen] = useState(false);
   // EN temporarily disabled - pinned to German. Re-add setLanguage + the
@@ -259,6 +260,7 @@ export default function Home() {
     setIsGenerating(true);
     setCompleted(false);
     setError(null);
+    setSignupNeeded(false);
     const t0 = Date.now();
     track("anon_generate_started", {
       exam_type: examType,
@@ -290,6 +292,12 @@ export default function Home() {
         track("anon_generate_failed", {
           reason: json.reason ?? `http_${res.status}`,
         });
+        if (json.reason === "anon_signup_needed") {
+          // Device used its free pack → convert the warm moment with a signup
+          // CTA instead of a dead-end error.
+          setSignupNeeded(true);
+          return;
+        }
         throw new Error(
           json.error ??
             "Generierung fehlgeschlagen - bitte erneut versuchen.",
@@ -378,6 +386,7 @@ export default function Home() {
             completed={completed}
             elapsedSec={elapsedSec}
             error={error}
+            signupNeeded={signupNeeded}
             onGenerate={handleGenerate}
             onTurnstileVerify={setTurnstileToken}
             onTurnstileError={() => setTurnstileToken(null)}
@@ -418,6 +427,7 @@ type HeroProps = {
   completed: boolean;
   elapsedSec: number;
   error: string | null;
+  signupNeeded: boolean;
   onGenerate: () => void;
   onTurnstileVerify: (token: string) => void;
   onTurnstileError: () => void;
@@ -602,6 +612,7 @@ function UploadDemo({
   completed,
   elapsedSec,
   error,
+  signupNeeded,
   onGenerate,
   onTurnstileVerify,
   onTurnstileError,
@@ -835,6 +846,48 @@ function UploadDemo({
             <RotateCcw size={14} strokeWidth={2} aria-hidden />
             {isEn ? "Try again" : "Erneut versuchen"}
           </button>
+        </div>
+      )}
+
+      {signupNeeded && (
+        <div
+          style={{
+            background: "rgba(43, 52, 153, 0.16)",
+            border: "1px solid rgba(91, 184, 216, 0.35)",
+            borderRadius: "14px",
+            padding: "16px 20px",
+            marginTop: "16px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            alignItems: "center",
+            textAlign: "center",
+          }}
+        >
+          <span style={{ fontSize: "15px", fontWeight: 600, color: "#fff" }}>
+            {isEn
+              ? "Your free pack is used up."
+              : "Dein Gratis-Paket ist verbraucht."}
+          </span>
+          <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.65)" }}>
+            {isEn
+              ? "Create a free account — 2 packs per month, all saved."
+              : "Erstell ein kostenloses Konto — 2 Pakete pro Monat, alle gespeichert."}
+          </span>
+          <a
+            href="/login?mode=register&next=/dashboard/claim"
+            className="inline-flex items-center"
+            style={{
+              padding: "10px 22px",
+              borderRadius: "999px",
+              background: "var(--color-primary, #2B3499)",
+              color: "#fff",
+              fontSize: "14px",
+              fontWeight: 600,
+            }}
+          >
+            {isEn ? "Create free account" : "Kostenloses Konto erstellen"}
+          </a>
         </div>
       )}
 
