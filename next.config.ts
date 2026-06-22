@@ -2,7 +2,32 @@ import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Baseline security response headers. Clickjacking protection (a third-party
+  // site framing the logged-in dashboard to trick a click on "Konto löschen"),
+  // MIME-sniff protection, referrer trimming, HSTS, and locking down sensor
+  // APIs we don't use. NOTE: a Content-Security-Policy is intentionally NOT set
+  // here yet — a strict CSP must allowlist PostHog/Stripe/Turnstile/Supabase/
+  // Sentry and needs careful testing before shipping.
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 // Only apply the Sentry build plugin once a DSN is configured. Until then the
