@@ -13,6 +13,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
   ChevronDown,
+  RotateCcw,
 } from "lucide-react";
 import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
 import WelcomeModal from "@/components/dashboard/WelcomeModal";
@@ -33,6 +34,7 @@ type Props = {
   recentPacks: RecentPack[];
   name: string | null;
   hasSeenWelcome: boolean;
+  dueCount: number;
   children: React.ReactNode;
 };
 
@@ -51,6 +53,7 @@ function NavLink({
   label,
   collapsed,
   onClick,
+  badge,
 }: {
   href: string;
   active: boolean;
@@ -58,14 +61,21 @@ function NavLink({
   label: string;
   collapsed?: boolean;
   onClick?: () => void;
+  badge?: number;
 }) {
+  const hasBadge = typeof badge === "number" && badge > 0;
+  const ariaLabel = hasBadge
+    ? `${label}, ${badge} fällig`
+    : collapsed
+      ? label
+      : undefined;
   return (
     <Link
       href={href}
       onClick={onClick}
       title={collapsed ? label : undefined}
-      aria-label={collapsed ? label : undefined}
-      className={`group flex items-center gap-3 rounded-xl py-2.5 text-[14px] font-medium transition ${collapsed ? "justify-center px-0" : "px-3"} ${active ? "" : "hover:bg-white/[0.04] hover:text-white"}`}
+      aria-label={ariaLabel}
+      className={`group relative flex items-center gap-3 rounded-xl py-2.5 text-[14px] font-medium transition ${collapsed ? "justify-center px-0" : "px-3"} ${active ? "" : "hover:bg-white/[0.04] hover:text-white"}`}
       style={{
         background: active ? "var(--color-surface-2)" : undefined,
         color: active ? "var(--color-text)" : "var(--color-text-dim)",
@@ -79,6 +89,26 @@ function NavLink({
         className="shrink-0"
       />
       {!collapsed && <span className="flex-1">{label}</span>}
+      {hasBadge &&
+        (collapsed ? (
+          <span
+            aria-hidden
+            className="absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full ring-2"
+            style={{
+              background: "var(--color-primary-bright)",
+              // ring matches the surface so the dot reads as a notification badge
+              ["--tw-ring-color" as string]: "var(--color-bg-deep)",
+            }}
+          />
+        ) : (
+          <span
+            aria-hidden
+            className="ml-auto min-w-[20px] rounded-full px-1.5 py-0.5 text-center text-[11px] font-semibold leading-none"
+            style={{ background: "var(--color-primary)", color: "#fff" }}
+          >
+            {badge > 99 ? "99+" : badge}
+          </span>
+        ))}
     </Link>
   );
 }
@@ -148,6 +178,7 @@ function SidebarContent({
   recentPacks,
   pathname,
   name,
+  dueCount,
   collapsed = false,
   collapsible = false,
   onToggleCollapse,
@@ -157,12 +188,14 @@ function SidebarContent({
   recentPacks: RecentPack[];
   pathname: string;
   name: string | null;
+  dueCount: number;
   collapsed?: boolean;
   collapsible?: boolean;
   onToggleCollapse?: () => void;
   onClose?: () => void;
 }) {
   const isLibrary = pathname === "/dashboard";
+  const isReview = pathname.startsWith("/dashboard/review");
   const isSettings = pathname.startsWith("/dashboard/settings");
 
   return (
@@ -236,6 +269,15 @@ function SidebarContent({
           </PrimaryCTALink>
         )}
         <NavLink
+          href="/dashboard/review"
+          active={isReview}
+          collapsed={collapsed}
+          onClick={onClose}
+          icon={RotateCcw}
+          label="Wiederholen"
+          badge={dueCount}
+        />
+        <NavLink
           href="/dashboard/settings"
           active={isSettings}
           collapsed={collapsed}
@@ -268,6 +310,7 @@ export default function DashboardShell({
   recentPacks,
   name,
   hasSeenWelcome,
+  dueCount,
   children,
 }: Props) {
   const pathname = usePathname() ?? "/dashboard";
@@ -330,6 +373,7 @@ export default function DashboardShell({
           recentPacks={recentPacks}
           pathname={pathname}
           name={name}
+          dueCount={dueCount}
           collapsed={collapsed}
           collapsible
           onToggleCollapse={toggleCollapse}
@@ -369,6 +413,7 @@ export default function DashboardShell({
             recentPacks={recentPacks}
             pathname={pathname}
             name={name}
+            dueCount={dueCount}
             onClose={() => setDrawerOpen(false)}
           />
         </aside>
@@ -386,14 +431,24 @@ export default function DashboardShell({
           <button
             type="button"
             onClick={() => setDrawerOpen(true)}
-            aria-label="Open menu"
-            className="flex h-9 w-9 items-center justify-center rounded-lg transition"
+            aria-label={dueCount > 0 ? `Menü öffnen, ${dueCount} Karten fällig` : "Open menu"}
+            className="relative flex h-9 w-9 items-center justify-center rounded-lg transition"
             style={{
               background: "var(--color-surface-2)",
               color: "var(--color-text)",
             }}
           >
             <Menu size={18} strokeWidth={1.9} aria-hidden />
+            {dueCount > 0 && (
+              <span
+                aria-hidden
+                className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full ring-2"
+                style={{
+                  background: "var(--color-primary-bright)",
+                  ["--tw-ring-color" as string]: "var(--color-bg-deep)",
+                }}
+              />
+            )}
           </button>
           <Link
             href="/dashboard"

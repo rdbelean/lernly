@@ -1,15 +1,23 @@
 import "server-only";
 
 // Server-side Cloudflare Turnstile verification. Returns ok:true when the token
-// is valid OR when TURNSTILE_SECRET_KEY isn't configured (so the app keeps
-// working in environments without Cloudflare set up — the widget also no-ops
-// client-side in that case). Mirrors the inline verifier in /api/generate.
+// is valid. When TURNSTILE_SECRET_KEY isn't configured we fail OPEN in dev/
+// preview (so the app keeps working without Cloudflare set up — the widget
+// no-ops client-side too) but fail CLOSED in production, where a missing secret
+// would silently remove the only bot gate on the cost-bearing anonymous path.
+// Mirrors the inline verifier in /api/generate.
 export async function verifyTurnstile(
   token: string | null,
   clientIp: string | null,
 ): Promise<{ ok: boolean; reason?: string }> {
   const secret = process.env.TURNSTILE_SECRET_KEY;
-  if (!secret) return { ok: true, reason: "not_configured" };
+  if (!secret) {
+    if (process.env.VERCEL_ENV === "production") {
+      console.error("[turnstile] TURNSTILE_SECRET_KEY missing in production — failing closed");
+      return { ok: false, reason: "not_configured" };
+    }
+    return { ok: true, reason: "not_configured" };
+  }
   if (!token) return { ok: false, reason: "missing_token" };
 
   try {

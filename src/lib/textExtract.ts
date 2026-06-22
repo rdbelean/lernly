@@ -2,6 +2,22 @@ import { extractText, getDocumentProxy } from "unpdf";
 
 export type ExtractedText = { text: string; pages: number };
 
+// Tidy whitespace in extracted PDF text WITHOUT destroying word boundaries.
+// (A previous version did `.replace(/ /g, "")`, which deleted every space —
+// smashing words together. That both lowered model-input quality and broke the
+// space-delimited language detector in detectLanguage.ts, mislabelling
+// umlaut-free German as English.) We only normalize: non-breaking spaces →
+// regular, collapse runs of spaces/tabs to one, trim trailing space before
+// newlines, and collapse blank-line runs.
+export function normalizeExtractedText(merged: string): string {
+  return merged
+    .replace(/ /g, " ")
+    .replace(/[ \t]+/g, " ")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
 // Pull plain text out of a PDF buffer. Used by both the pack generator
 // (lecture material) and the Altklausur-engine (past-exam references).
 export async function extractPdfText(buffer: Buffer): Promise<ExtractedText> {
@@ -12,12 +28,7 @@ export async function extractPdfText(buffer: Buffer): Promise<ExtractedText> {
   const pdf = await getDocumentProxy(uint8);
   const { totalPages, text } = await extractText(pdf, { mergePages: true });
   const merged = Array.isArray(text) ? text.join("\n\n") : text;
-  const cleaned = merged
-    .replace(/ /g, "")
-    .replace(/[ \t]+\n/g, "\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-  return { text: cleaned, pages: totalPages };
+  return { text: normalizeExtractedText(merged), pages: totalPages };
 }
 
 // Dispatcher for "I have a file buffer, give me plain text". PDFs go through

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
+import { AlertTriangle } from "lucide-react";
+import * as Sentry from "@sentry/nextjs";
 
 export default function GlobalError({
   error,
@@ -11,6 +13,9 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     console.error("[GlobalError]", error);
+    // Surface the error to Sentry (no-op until NEXT_PUBLIC_SENTRY_DSN is set),
+    // so production crashes are visible instead of dying silently in console.
+    Sentry.captureException(error);
   }, [error]);
 
   return (
@@ -23,7 +28,14 @@ export default function GlobalError({
           backdropFilter: "blur(24px)",
         }}
       >
-        <div className="text-[44px]">⚠️</div>
+        <div className="flex justify-center">
+          <span
+            className="flex h-14 w-14 items-center justify-center rounded-2xl"
+            style={{ background: "rgba(255,255,255,0.08)" }}
+          >
+            <AlertTriangle className="h-7 w-7" style={{ color: "rgb(248, 180, 90)" }} />
+          </span>
+        </div>
         <h1
           className="mt-4 text-[28px] font-bold tracking-[-0.8px]"
           style={{ fontFamily: "var(--font-display)" }}
@@ -34,7 +46,8 @@ export default function GlobalError({
           className="mt-3 text-[14px]"
           style={{ color: "rgba(255,255,255,0.6)" }}
         >
-          {error.message || "Unbekannter Fehler."}
+          Ein unerwarteter Fehler ist aufgetreten. Versuch es nochmal — wenn es
+          weiter hakt, lade die Seite neu.
         </p>
         {error.digest && (
           <p

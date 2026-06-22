@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import type Stripe from "stripe";
 import {
   EINZELKLAUSUR_ACCESS_DAYS,
@@ -92,6 +93,7 @@ export async function POST(request: Request) {
 
     if (error) {
       console.error("[stripe webhook] user update failed", error);
+      Sentry.captureException(error, { tags: { route: "stripe/webhook", op: "subscription_update" } });
     }
   }
 
@@ -117,6 +119,7 @@ export async function POST(request: Request) {
 
     if (error) {
       console.error("[stripe webhook] einzelklausur grant failed", error);
+      Sentry.captureException(error, { tags: { route: "stripe/webhook", op: "einzelklausur_grant" } });
     }
   }
 

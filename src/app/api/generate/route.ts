@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import * as Sentry from "@sentry/nextjs";
 import { NextResponse } from "next/server";
 import {
   type ExamType,
@@ -91,12 +92,18 @@ export const MATERIAL_TRUNCATED_MSG =
   `Tipp: lade pro Paket ein Kapitel/Thema hoch, dann wird's vollständig.`;
 
 function extractClientIp(request: Request): string | null {
+  // Prefer x-real-ip: on Vercel the platform sets it to the true client IP and
+  // it overrides any client value. The LEFTMOST x-forwarded-for entry is
+  // client-spoofable (Vercel appends, doesn't strip), so only use it as a
+  // fallback. (Bot abuse is primarily gated by Turnstile, not this IP quota.)
+  const realIp = request.headers.get("x-real-ip");
+  if (realIp?.trim()) return realIp.trim();
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) {
     const first = forwarded.split(",")[0]?.trim();
     if (first) return first;
   }
-  return request.headers.get("x-real-ip");
+  return null;
 }
 
 async function verifyTurnstileToken(
@@ -104,7 +111,15 @@ async function verifyTurnstileToken(
   clientIp: string | null,
 ): Promise<{ ok: boolean; reason?: string }> {
   const secret = process.env.TURNSTILE_SECRET_KEY;
-  if (!secret) return { ok: true, reason: "not_configured" };
+  if (!secret) {
+    // Fail open in dev/preview, fail closed in production (a missing secret
+    // there would drop the only bot gate on the anonymous, cost-bearing path).
+    if (process.env.VERCEL_ENV === "production") {
+      console.error("[/api/generate] TURNSTILE_SECRET_KEY missing in production — failing closed");
+      return { ok: false, reason: "not_configured" };
+    }
+    return { ok: true, reason: "not_configured" };
+  }
   if (!token) return { ok: false, reason: "missing_token" };
 
   try {
@@ -143,6 +158,12 @@ export async function POST(request: Request) {
   const t0 = Date.now();
   const deadline = t0 + GENERATION_BUDGET_MS;
   const uploadedPaths: string[] = [];
+  // Atomic pack-quota reservation bookkeeping (see reserve_pack_slot): whether
+  // we incremented the monthly counter up front, whether the run committed
+  // (saved) so the reservation should stick, and the user to refund otherwise.
+  let reserved = false;
+  let committed = false;
+  let reservedUserId: string | null = null;
   try {
     const clientIp = extractClientIp(request);
     const userAgent = request.headers.get("user-agent") ?? "";
@@ -375,7 +396,26 @@ export async function POST(request: Request) {
     let userPlan: string | null = null;
 
     if (user && !usesByok) {
-      const { data: quota, error: qErr } = await supabase.rpc("check_pack_quota");
+      // Atomic reserve closes the check-then-bump race: it increments the
+      // monthly counter under the same row lock as the limit check, so
+      // concurrent generations can't all slip past the cap. Falls back to the
+      // legacy non-atomic check_pack_quota when reserve_pack_slot isn't deployed
+      // yet, so merging this before applying the migration can't break anything.
+      const reserveRes = await supabase.rpc("reserve_pack_slot");
+      let quota = reserveRes.data;
+      let qErr = reserveRes.error;
+      if (reserveRes.error) {
+        console.error(
+          "[/api/generate] reserve_pack_slot unavailable; falling back to check_pack_quota",
+          reserveRes.error,
+        );
+        const checkRes = await supabase.rpc("check_pack_quota");
+        quota = checkRes.data;
+        qErr = checkRes.error;
+      } else if (quota?.ok) {
+        reserved = true;
+        reservedUserId = user.id;
+      }
       if (quota?.plan) userPlan = quota.plan as string;
       if (qErr) {
         console.error("[/api/generate] quota check failed", qErr);
@@ -674,6 +714,8 @@ export async function POST(request: Request) {
         // credit if this run used one, otherwise count it against the monthly
         // quota. A failed/unsaved generation reaches neither — never costs anything.
         if (savedId) {
+          // The run succeeded and saved → keep any up-front reservation.
+          committed = true;
           if (willUseCredit) {
             const { data: consumed, error: consumeErr } = await supabase.rpc(
               "consume_pack_credit",
@@ -683,7 +725,9 @@ export async function POST(request: Request) {
             } else {
               console.log("[/api/generate] consumed pack credit on success", consumed);
             }
-          } else if (!usesByok) {
+          } else if (!usesByok && !reserved) {
+            // Legacy fallback path only (reserve_pack_slot already incremented
+            // when reserved=true; bumping again would double-charge).
             const { error: bumpErr } = await supabase.rpc("bump_pack_usage");
             if (bumpErr) {
               console.error("[/api/generate] usage bump failed", bumpErr);
@@ -716,6 +760,7 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("[/api/generate] error", err);
+    if (!isTransientOverload(err)) Sentry.captureException(err);
     // Transient overload (Anthropic 429/529/5xx, exhausted internal retries):
     // give a warm German message + retryable flag instead of a raw English
     // error / 500. The client can simply re-submit.
@@ -741,6 +786,19 @@ export async function POST(request: Request) {
     }
     return NextResponse.json({ error: message }, { status });
   } finally {
+    // Refund an atomic reservation if the run didn't commit (BUSY slot, failed
+    // or unsaved generation, any throw). Preserves the existing guarantee that
+    // a failed generation never costs a pack. Runs via the service role with
+    // the verified session user id. No-op on the legacy fallback (reserved=false).
+    if (reserved && !committed && reservedUserId) {
+      try {
+        await createServiceClient().rpc("refund_pack_slot", {
+          p_user_id: reservedUserId,
+        });
+      } catch (refundErr) {
+        console.error("[/api/generate] refund_pack_slot threw", refundErr);
+      }
+    }
     // Best-effort cleanup: by this point the buffers are already in memory /
     // sent to Claude, so the raw uploads are no longer needed.
     if (uploadedPaths.length > 0) {
