@@ -26,6 +26,7 @@ import SectionHeading from "@/components/landing/SectionHeading";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import { track } from "@/lib/analytics";
 import { EXAM_FORMATS } from "@/lib/examFormats";
+import { CRAM_ENABLED } from "@/lib/features";
 import LernlyLogo from "@/components/LernlyLogo";
 import {
   Upload,
@@ -1603,7 +1604,7 @@ const PRICING_TIERS_DE: PricingTier[] = [
     badge: "OHNE ABO",
     bullets: [
       { text: "5 Pakete in 14 Tagen" },
-      { text: "Alles reinwerfen (Cram) inklusive" },
+      ...(CRAM_ENABLED ? [{ text: "Alles reinwerfen (Cram) inklusive" }] : []),
       { text: "Kein Abo, kein Vergessen-zu-Kündigen" },
       { text: "Voller KI-Tutor + Visual Maps + Klausur-Trainer" },
     ],
@@ -1641,7 +1642,7 @@ const PRICING_TIERS_DE: PricingTier[] = [
       { text: "50 Pakete pro Monat" },
       { text: "Voller KI-Tutor + Visual Maps + Klausur-Trainer" },
       { text: "Monatlich kündbar - keine lange Bindung" },
-      { text: "Alles reinwerfen (Cram) inklusive" },
+      ...(CRAM_ENABLED ? [{ text: "Alles reinwerfen (Cram) inklusive" }] : []),
     ],
     ctaLabel: "Monatlich holen",
     ctaFilled: false,

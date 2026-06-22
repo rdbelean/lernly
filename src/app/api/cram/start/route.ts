@@ -14,6 +14,7 @@ import {
   type CramFileMeta,
 } from "@/lib/cramPlan";
 import type { ExamType } from "@/lib/schema";
+import { CRAM_ENABLED } from "@/lib/features";
 
 export const runtime = "nodejs";
 export const maxDuration = 60; // counting pages only — no LLM work here
@@ -25,6 +26,11 @@ type StartBody = {
 };
 
 export async function POST(request: Request) {
+  // Cram is hidden for launch (see CRAM_ENABLED). Reject directly so a stale
+  // client or a direct API call can't create jobs while the UI is gated.
+  if (!CRAM_ENABLED) {
+    return NextResponse.json({ error: "Cram ist aktuell nicht verfügbar." }, { status: 403 });
+  }
   const supabase = await createSupabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
