@@ -62,11 +62,6 @@ function useLanguage() {
 const MAX_FILES = 3;
 const MAX_SIZE = 10 * 1024 * 1024;
 
-// Founder pricing - cohort-based: as long as Lernly has fewer than
-// FOUNDER_PRICING_LIMIT paying students, the listed prices are locked in for
-// early adopters and won't creep up later. Honesty is the whole point.
-const FOUNDER_PRICING_LIMIT = 1000;
-
 function useScrollReveal() {
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -1796,19 +1791,6 @@ function PricingSection({
               : "Gratis starten. Upgrade nur, wenn's sitzt."
           }
         />
-
-        <div className="ln-reveal ln-founder-eyebrow mt-8">
-          <span className="ln-founder-rocket" aria-hidden>
-            🚀
-          </span>
-          <span className="ln-founder-text">
-            <strong>{isEn ? "Founder pricing" : "Gründerpreis"}</strong>
-            {" - "}
-            {isEn
-              ? `Founder prices while we're still under the first ${FOUNDER_PRICING_LIMIT.toLocaleString()} paying students. Lock in your rate - it stays, it won't creep up later.`
-              : `Solange wir unter den ersten ${FOUNDER_PRICING_LIMIT.toLocaleString("de-DE")} zahlenden Studis sind, gelten Gründerpreise. Dein Preis bleibt - er steigt später nicht.`}
-          </span>
-        </div>
 
         <div className="ln-stagger mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {tiers.map((tier) => (

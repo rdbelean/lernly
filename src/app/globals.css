@@ -1698,44 +1698,7 @@
   color: #fff;
 }
 
-/* ========== PRICING — VALUE STACK, ANCHOR, FOUNDER, GUARANTEE ========== */
-
-.ln-founder-eyebrow {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding: 14px 20px;
-  border: 1px solid rgba(251, 191, 36, 0.22);
-  border-radius: 14px;
-  background: rgba(251, 191, 36, 0.06);
-}
-
-.ln-founder-rocket {
-  font-size: 18px;
-  line-height: 1;
-}
-
-.ln-founder-text {
-  flex: 1;
-  min-width: 240px;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.72);
-  line-height: 1.4;
-}
-
-.ln-founder-text strong {
-  color: rgb(251, 191, 36);
-  font-weight: 600;
-}
-
-.ln-founder-counter {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: rgba(251, 191, 36, 0.85);
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-}
+/* ========== PRICING — VALUE STACK, ANCHOR, GUARANTEE ========== */
 
 .ln-guarantee-badge {
   display: flex;
@@ -2083,16 +2046,6 @@
   }
   .byok-btn {
     width: 100%;
-  }
-
-  .ln-founder-eyebrow {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 14px 18px;
-  }
-  .ln-founder-counter {
-    align-self: flex-start;
   }
 
   .ln-guarantee-badge {
