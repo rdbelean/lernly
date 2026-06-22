@@ -32,7 +32,8 @@ export default async function CheckoutSuccessPage({
     try {
       const session = await stripe.checkout.sessions.retrieve(session_id);
       paid =
-        session.payment_status === "paid" || session.status === "complete";
+        session.payment_status === "paid" ||
+        session.payment_status === "no_payment_required";
       email =
         session.customer_details?.email ?? session.customer_email ?? null;
     } catch (e) {

@@ -97,6 +97,13 @@ export async function POST(request: Request) {
     : `${origin}/?checkout=cancelled`;
   const plan = body.plan as string;
 
+  // Guest auto-login binding (anti login-CSRF / session-fixation): a one-time
+  // nonce is stored BOTH in a SameSite=Lax cookie (set on the response below)
+  // AND in the Checkout Session metadata. /auth/checkout only logs the buyer in
+  // when the two match — so a foreign/attacker session_id can't silently fixate
+  // a victim's browser onto someone else's account.
+  const loginNonce = user ? null : crypto.randomUUID();
+
   // Trust + sales copy on the hosted Checkout (the product NAME/IMAGE/DESCRIPTION
   // shown left are set on the Stripe Product in the Dashboard — we only enrich
   // the session here). The 30-day money-back guarantee is AGB §7, worded "nach
@@ -132,6 +139,7 @@ export async function POST(request: Request) {
           metadata: {
             plan,
             ...(user ? { user_id: user.id } : {}),
+            ...(loginNonce ? { login_nonce: loginNonce } : {}),
           },
         }
       : {
@@ -149,6 +157,7 @@ export async function POST(request: Request) {
             product: "einzelklausur",
             plan: "einzelklausur",
             ...(user ? { user_id: user.id } : {}),
+            ...(loginNonce ? { login_nonce: loginNonce } : {}),
           },
         },
   );
@@ -160,5 +169,18 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json({ url: session.url });
+  const res = NextResponse.json({ url: session.url });
+  if (loginNonce) {
+    // SameSite=Lax so the cookie survives the top-level return navigation from
+    // Stripe; HttpOnly so JS can't read it. The matching nonce lives in the
+    // session metadata; /auth/checkout requires both to agree before login.
+    res.cookies.set("lernly_co_nonce", loginNonce, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60,
+    });
+  }
+  return res;
 }

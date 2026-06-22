@@ -27,7 +27,10 @@ export async function ensureUserAndGetLoginToken(
       email: clean,
       email_confirm: true,
     });
-    if (createErr) {
+    // Tolerate a racing creator (e.g. the webhook created this user a moment
+    // ago): "already registered" means the user now exists → fall through and
+    // the second generateLink succeeds. Only bail on a genuine create failure.
+    if (createErr && !/already|registered|exists|duplicate|taken/i.test(createErr.message)) {
       console.error("[provision] createUser (login token) failed", createErr);
       return null;
     }
@@ -83,7 +86,9 @@ export async function provisionUserAndSendLogin(opts: {
       email,
       email_confirm: true,
     });
-    if (createErr) {
+    // Tolerate a racing creator (the auto-login route may have just created
+    // this user): "already registered" → fall through, generateLink succeeds.
+    if (createErr && !/already|registered|exists|duplicate|taken/i.test(createErr.message)) {
       console.error("[provision] createUser failed", createErr);
       return { userId: null };
     }
