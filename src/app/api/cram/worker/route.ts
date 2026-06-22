@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import Anthropic from "@anthropic-ai/sdk";
 import { createServiceClient } from "@/lib/supabase/server";
 import { STUDY_UPLOADS_BUCKET } from "@/lib/uploads";
@@ -82,6 +83,7 @@ export async function POST(request: Request) {
   });
   if (claimErr) {
     console.error("[cram/worker] claim failed", claimErr);
+    Sentry.captureException(claimErr, { tags: { route: "cram/worker", phase: "claim" } });
     return NextResponse.json({ error: "claim_failed" }, { status: 500 });
   }
   const rows = (claimed ?? []) as QueuedPack[];
@@ -141,6 +143,7 @@ export async function POST(request: Request) {
       done++;
     } catch (e) {
       console.error(`[cram/worker] chunk ${row.id} failed (attempt ${row.attempts})`, e);
+      Sentry.captureException(e, { tags: { route: "cram/worker", chunk: row.id } });
       if (row.attempts >= MAX_ATTEMPTS) {
         await service.from("study_packs").update({ status: "failed" }).eq("id", row.id);
         await service.rpc("complete_cram_chunk", { p_pack_id: row.id, p_ok: false });

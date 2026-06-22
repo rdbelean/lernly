@@ -722,8 +722,37 @@ export async function generatePack(opts: {
     materialLanguage,
   };
   const parsed = StudyPackSchema.safeParse(merged);
-  if (!parsed.success) throw new Error("schema_validation_failed");
-  if (parsed.data.flashcards.length === 0) throw new Error("zero_flashcards");
-  return parsed.data;
+  if (parsed.success) {
+    if (parsed.data.flashcards.length === 0) throw new Error("zero_flashcards");
+    return parsed.data;
+  }
+
+  // Graceful degradation: a single malformed OPTIONAL sub-object (e.g. the
+  // model slipping on one quiz question) would otherwise throw away the whole
+  // pack — wasted spend + a hard error for what could be a perfectly usable
+  // cards+overview pack. Drop only the optional fields that fail their OWN
+  // schema, then re-parse. The required core (flashcards/overview/etc.) still
+  // fails hard, as it should.
+  const OPTIONAL_KEYS = [
+    "essayBlueprint",
+    "simulator",
+    "visualMap",
+    "openQuestions",
+    "quiz",
+    "essayPredictions",
+    "examLens",
+  ] as const;
+  const degraded: Record<string, unknown> = { ...merged };
+  for (const key of OPTIONAL_KEYS) {
+    if (degraded[key] === undefined) continue;
+    if (!StudyPackSchema.shape[key].safeParse(degraded[key]).success) {
+      delete degraded[key];
+      console.warn(`[generatePack] dropped invalid optional field "${key}" to salvage the pack`);
+    }
+  }
+  const reparsed = StudyPackSchema.safeParse(degraded);
+  if (!reparsed.success) throw new Error("schema_validation_failed");
+  if (reparsed.data.flashcards.length === 0) throw new Error("zero_flashcards");
+  return reparsed.data;
 }
 

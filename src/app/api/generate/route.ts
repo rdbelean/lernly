@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import * as Sentry from "@sentry/nextjs";
 import { NextResponse } from "next/server";
 import {
   type ExamType,
@@ -91,12 +92,18 @@ export const MATERIAL_TRUNCATED_MSG =
   `Tipp: lade pro Paket ein Kapitel/Thema hoch, dann wird's vollständig.`;
 
 function extractClientIp(request: Request): string | null {
+  // Prefer x-real-ip: on Vercel the platform sets it to the true client IP and
+  // it overrides any client value. The LEFTMOST x-forwarded-for entry is
+  // client-spoofable (Vercel appends, doesn't strip), so only use it as a
+  // fallback. (Bot abuse is primarily gated by Turnstile, not this IP quota.)
+  const realIp = request.headers.get("x-real-ip");
+  if (realIp?.trim()) return realIp.trim();
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) {
     const first = forwarded.split(",")[0]?.trim();
     if (first) return first;
   }
-  return request.headers.get("x-real-ip");
+  return null;
 }
 
 async function verifyTurnstileToken(
@@ -104,7 +111,15 @@ async function verifyTurnstileToken(
   clientIp: string | null,
 ): Promise<{ ok: boolean; reason?: string }> {
   const secret = process.env.TURNSTILE_SECRET_KEY;
-  if (!secret) return { ok: true, reason: "not_configured" };
+  if (!secret) {
+    // Fail open in dev/preview, fail closed in production (a missing secret
+    // there would drop the only bot gate on the anonymous, cost-bearing path).
+    if (process.env.VERCEL_ENV === "production") {
+      console.error("[/api/generate] TURNSTILE_SECRET_KEY missing in production — failing closed");
+      return { ok: false, reason: "not_configured" };
+    }
+    return { ok: true, reason: "not_configured" };
+  }
   if (!token) return { ok: false, reason: "missing_token" };
 
   try {
@@ -716,6 +731,7 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("[/api/generate] error", err);
+    if (!isTransientOverload(err)) Sentry.captureException(err);
     // Transient overload (Anthropic 429/529/5xx, exhausted internal retries):
     // give a warm German message + retryable flag instead of a raw English
     // error / 500. The client can simply re-submit.

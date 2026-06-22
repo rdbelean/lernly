@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import * as Sentry from "@sentry/nextjs";
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { effectivePlan } from "@/lib/quota";
@@ -211,6 +212,7 @@ export async function POST(request: Request): Promise<Response> {
       );
     }
     console.error("[/api/tutor/ask] anthropic call failed", e);
+    Sentry.captureException(e, { tags: { route: "tutor/ask" } });
     const msg = e instanceof Error ? e.message : "Unbekannter Fehler";
     return NextResponse.json({ error: msg }, { status: 502 });
   } finally {
