@@ -56,7 +56,13 @@ function ErrorBox({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function LoginForm({ next }: { next: string }) {
+export default function LoginForm({
+  next,
+  register = false,
+}: {
+  next: string;
+  register?: boolean;
+}) {
   const [reqState, reqAction] = useActionState<MagicLinkState, FormData>(
     requestMagicLink,
     { ok: false },
@@ -316,8 +322,38 @@ export default function LoginForm({ next }: { next: string }) {
           onVerify={setTurnstileToken}
           onError={() => setTurnstileToken("")}
         />
-        <PendingButton idle="Code & Link per Mail" pending="Wird gesendet…" />
+        <PendingButton
+          idle={register ? "Kostenlos registrieren" : "Code & Link per Mail"}
+          pending="Wird gesendet…"
+        />
       </form>
+
+      <p
+        className="mt-6 text-center text-[13px]"
+        style={{ color: "rgba(255,255,255,0.5)" }}
+      >
+        {register ? (
+          <>
+            Schon ein Konto?{" "}
+            <a
+              href={`/login?next=${encodeURIComponent(next)}`}
+              className="underline underline-offset-2 hover:text-white"
+            >
+              Anmelden
+            </a>
+          </>
+        ) : (
+          <>
+            Neu hier?{" "}
+            <a
+              href={`/login?mode=register&next=${encodeURIComponent(next)}`}
+              className="underline underline-offset-2 hover:text-white"
+            >
+              Kostenlos registrieren
+            </a>
+          </>
+        )}
+      </p>
     </>
   );
 }

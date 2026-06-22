@@ -23,6 +23,7 @@ const NAV_COPY: Record<
     create: string;
     toApp: string;
     signIn: string;
+    register: string;
     apiKey: string;
     menu: string;
     languageLabel: string;
@@ -36,6 +37,7 @@ const NAV_COPY: Record<
     create: "Try it free →",
     toApp: "Open app →",
     signIn: "Sign in",
+    register: "Sign up",
     apiKey: "Own key (soon)",
     menu: "Menu",
     languageLabel: "Language",
@@ -48,11 +50,16 @@ const NAV_COPY: Record<
     create: "Jetzt gratis testen →",
     toApp: "Zur App →",
     signIn: "Anmelden",
+    register: "Registrieren",
     apiKey: "Eigener Key (bald)",
     menu: "Menü",
     languageLabel: "Sprache",
   },
 };
+
+// Register = same passwordless login flow, just framed as sign-up; lands on the
+// (uploadless) dashboard after the free account is auto-created.
+const REGISTER_HREF = "/login?mode=register&next=/dashboard";
 
 export default function SiteNav({
   onActivateUpload,
@@ -202,12 +209,20 @@ export default function SiteNav({
           {authLoaded && renderUserPill()}
 
           {authLoaded && !user && (
-            <a
-              href="/login"
-              className="text-[14px] font-medium text-white transition hover:opacity-70"
-            >
-              {copy.signIn}
-            </a>
+            <>
+              <a
+                href={REGISTER_HREF}
+                className="text-[14px] font-medium text-white transition hover:opacity-70"
+              >
+                {copy.register}
+              </a>
+              <a
+                href="/login"
+                className="text-[14px] font-medium text-white transition hover:opacity-70"
+              >
+                {copy.signIn}
+              </a>
+            </>
           )}
 
           {ctaButton ? (
@@ -322,14 +337,24 @@ export default function SiteNav({
                   {user.email}
                 </a>
               ) : (
-                <a
-                  href="/login"
-                  onClick={() => setOpen(false)}
-                  className="text-[14px] font-medium"
-                  style={{ color: "rgba(255,255,255,0.75)" }}
-                >
-                  {copy.signIn}
-                </a>
+                <>
+                  <a
+                    href={REGISTER_HREF}
+                    onClick={() => setOpen(false)}
+                    className="text-[14px] font-semibold"
+                    style={{ color: "rgba(255,255,255,0.9)" }}
+                  >
+                    {copy.register}
+                  </a>
+                  <a
+                    href="/login"
+                    onClick={() => setOpen(false)}
+                    className="text-[14px] font-medium"
+                    style={{ color: "rgba(255,255,255,0.75)" }}
+                  >
+                    {copy.signIn}
+                  </a>
+                </>
               ))}
 
             {onLanguageChange && (

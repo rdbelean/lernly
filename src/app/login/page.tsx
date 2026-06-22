@@ -7,6 +7,7 @@ import LernlyLogo from "@/components/LernlyLogo";
 type SearchParams = Promise<{
   error?: string;
   next?: string;
+  mode?: string;
 }>;
 
 function safeNext(raw: string | undefined): string {
@@ -22,6 +23,9 @@ export default async function LoginPage({
 }) {
   const params = await searchParams;
   const next = safeNext(params.next);
+  // Register = same passwordless flow, just framed as sign-up. Reached from the
+  // landing "Registrieren" CTAs (?mode=register), lands on the uploadless dashboard.
+  const isRegister = params.mode === "register";
 
   const user = await getUser();
   if (user) {
@@ -65,10 +69,12 @@ export default async function LoginPage({
             lineHeight: 1.1,
           }}
         >
-          Anmelden
+          {isRegister ? "Kostenlos registrieren" : "Anmelden"}
         </h1>
         <p className="mb-8 text-[15px]" style={{ color: "rgba(255,255,255,0.6)" }}>
-          Speichere deine Lernpakete und greife von überall darauf zu.
+          {isRegister
+            ? "Gib deine E-Mail ein — wir legen dein kostenloses Konto an. Kein Upload nötig."
+            : "Speichere deine Lernpakete und greife von überall darauf zu."}
         </p>
 
         {errorMessage ? (
@@ -84,7 +90,7 @@ export default async function LoginPage({
           </div>
         ) : null}
 
-        <LoginForm next={next} />
+        <LoginForm next={next} register={isRegister} />
 
         <p
           className="mt-8 text-center text-[13px]"

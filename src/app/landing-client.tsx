@@ -534,6 +534,23 @@ function Hero(props: HeroProps) {
           </a>
         </div>
 
+        {/* No upload right now? Just create a free account. */}
+        <p
+          className="ln-reveal mt-4 text-center text-[14px]"
+          style={{ color: "rgba(255,255,255,0.6)" }}
+        >
+          {isEn
+            ? "Prefer to create a free account first? "
+            : "Lieber erst ein kostenloses Konto anlegen? "}
+          <a
+            href="/login?mode=register&next=/dashboard"
+            className="underline underline-offset-2 transition hover:text-white"
+            style={{ color: "rgba(255,255,255,0.88)" }}
+          >
+            {isEn ? "Sign up" : "Registrieren"}
+          </a>
+        </p>
+
         <div
           id="upload"
           className={
@@ -1739,7 +1756,14 @@ function PricingSection({
     plan: "free" | "einzelklausur" | "semester" | "monthly",
   ) => {
     if (plan === "free") {
-      onActivateUpload();
+      // Free tier = create a free account (no upload required). Guests register;
+      // already-authed users jump into pack creation.
+      if (authed) {
+        window.location.assign("/dashboard/new");
+      } else {
+        track("signup_started", { plan: "free", source: "pricing_free" });
+        window.location.assign("/login?mode=register&next=/dashboard");
+      }
       return;
     }
     // Paid tiers all go through Stripe checkout — for guests too. The checkout
