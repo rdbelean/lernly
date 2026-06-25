@@ -9,6 +9,7 @@ const FOOTER_COPY: Record<
     privacy: string;
     terms: string;
     contact: string;
+    madeBy: string;
   }
 > = {
   en: {
@@ -16,12 +17,14 @@ const FOOTER_COPY: Record<
     privacy: "Privacy",
     terms: "Terms",
     contact: "Contact",
+    madeBy: "A tool by",
   },
   de: {
     legalNotice: "Impressum",
     privacy: "Datenschutz",
     terms: "AGB",
     contact: "Kontakt",
+    madeBy: "Ein Tool von",
   },
 };
 
@@ -106,6 +109,23 @@ export default function SiteFooter({ language = "de" }: { language?: Language })
           <div className="text-[12px]" style={{ color: "var(--color-ln-mute)" }}>
             © {new Date().getFullYear()} Lernly
           </div>
+        </div>
+
+        {/* Maker credit — Lernly is a product of the Belerate studio (distinct brand). */}
+        <div
+          className="mt-7 text-center text-[12px]"
+          style={{ color: "var(--color-ln-mute)" }}
+        >
+          {copy.madeBy}{" "}
+          <a
+            href="https://belerate.de"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium underline-offset-2 transition hover:text-white hover:underline"
+            style={{ color: "rgba(255,255,255,0.75)" }}
+          >
+            Belerate
+          </a>
         </div>
       </div>
     </footer>
