@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Sora } from "next/font/google";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
+import ErrorReporter from "@/components/ErrorReporter";
 import "./globals.css";
 
 // Body / UI typeface. Inter at the standard set of weights we use across
@@ -104,6 +105,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
         <AnalyticsProvider />
+        <ErrorReporter />
         {children}
       </body>
     </html>

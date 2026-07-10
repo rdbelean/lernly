@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { AlertTriangle } from "lucide-react";
 import * as Sentry from "@sentry/nextjs";
+import { reportClientError } from "@/lib/reportClientError";
 
 export default function GlobalError({
   error,
@@ -16,6 +17,11 @@ export default function GlobalError({
     // Surface the error to Sentry (no-op until NEXT_PUBLIC_SENTRY_DSN is set),
     // so production crashes are visible instead of dying silently in console.
     Sentry.captureException(error);
+    // Also file it as a Bug in the Notion feedback inbox (deduped, no PII).
+    reportClientError(
+      error.message + (error.digest ? ` (digest: ${error.digest})` : ""),
+      error.stack,
+    );
   }, [error]);
 
   return (
