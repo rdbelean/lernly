@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Settings, LogOut, ChevronUp } from "lucide-react";
-import FeedbackLink from "@/components/FeedbackLink";
+import { Settings, LogOut, ChevronUp, LifeBuoy } from "lucide-react";
+import FeedbackModal from "@/components/FeedbackModal";
 import { PwaInstallEntry } from "@/components/pwa/PwaInstall";
 
 // ProfileMenu — bottom-of-sidebar account control. Replaces the old open stack
@@ -36,6 +36,7 @@ export default function ProfileMenu({
   onNavigate?: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -92,7 +93,20 @@ export default function ProfileMenu({
             <Settings size={15} strokeWidth={1.85} aria-hidden />
             Konto
           </Link>
-          <FeedbackLink className={ROW} />
+          {/* Modal state lives on ProfileMenu (not inside the popover), so
+              closing the popover doesn't unmount an open feedback modal. */}
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              setFeedbackOpen(true);
+            }}
+            className={ROW}
+            style={{ color: "var(--color-text-dim)" }}
+          >
+            <LifeBuoy size={15} strokeWidth={1.85} aria-hidden />
+            Feedback / Problem melden
+          </button>
           <PwaInstallEntry className={ROW} />
           <form action="/auth/signout" method="post">
             <button type="submit" className={ROW} style={{ color: "var(--color-text-dim)" }}>
@@ -143,6 +157,8 @@ export default function ProfileMenu({
           </>
         )}
       </button>
+
+      <FeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </div>
   );
 }
