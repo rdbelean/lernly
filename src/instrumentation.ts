@@ -12,4 +12,24 @@ export async function register() {
   }
 }
 
-export const onRequestError = Sentry.captureRequestError;
+export const onRequestError: typeof Sentry.captureRequestError = async (
+  error,
+  request,
+  context,
+) => {
+  Sentry.captureRequestError(error, request, context);
+  // Also file server errors as Bug entries in the Notion feedback inbox
+  // (deduped by message+route, no-op until NOTION_TOKEN is set). Dynamic
+  // import keeps the edge bundle lean; nodejs-only to avoid double-reports.
+  if (process.env.NEXT_RUNTIME === "nodejs") {
+    try {
+      const { reportServerError } = await import("@/lib/feedback");
+      await reportServerError(
+        `${request.method} ${request.path}`,
+        error,
+      );
+    } catch {
+      // Never let error reporting break error handling.
+    }
+  }
+};

@@ -9,6 +9,7 @@ const FOOTER_COPY: Record<
     privacy: string;
     terms: string;
     contact: string;
+    feedback: string;
     madeBy: string;
   }
 > = {
@@ -17,6 +18,7 @@ const FOOTER_COPY: Record<
     privacy: "Privacy",
     terms: "Terms",
     contact: "Contact",
+    feedback: "Give feedback",
     madeBy: "A tool by",
   },
   de: {
@@ -24,9 +26,13 @@ const FOOTER_COPY: Record<
     privacy: "Datenschutz",
     terms: "AGB",
     contact: "Kontakt",
+    feedback: "Feedback geben",
     madeBy: "Ein Tool von",
   },
 };
+
+// Published Notion feedback form — link only renders once the URL is set.
+const FEEDBACK_FORM_URL = process.env.NEXT_PUBLIC_FEEDBACK_FORM_URL;
 
 export default function SiteFooter({ language = "de" }: { language?: Language }) {
   const copy = FOOTER_COPY[language];
@@ -105,6 +111,16 @@ export default function SiteFooter({ language = "de" }: { language?: Language })
             >
               {copy.contact}
             </a>
+            {FEEDBACK_FORM_URL && (
+              <a
+                href={FEEDBACK_FORM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition hover:text-white"
+              >
+                {copy.feedback}
+              </a>
+            )}
           </div>
           <div className="text-[12px]" style={{ color: "var(--color-ln-mute)" }}>
             © {new Date().getFullYear()} Lernly
