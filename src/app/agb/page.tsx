@@ -12,12 +12,12 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Lernly", item: "https://lernly-app.de" },
+    { "@type": "ListItem", position: 1, name: "Lernly", item: "https://www.lernly-app.de" },
     {
       "@type": "ListItem",
       position: 2,
       name: "AGB",
-      item: "https://lernly-app.de/agb",
+      item: "https://www.lernly-app.de/agb",
     },
   ],
 };

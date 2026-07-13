@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Sora } from "next/font/google";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import ErrorReporter from "@/components/ErrorReporter";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 // Body / UI typeface. Inter at the standard set of weights we use across
@@ -22,7 +23,7 @@ const sora = Sora({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://lernly-app.de"),
+  metadataBase: new URL(SITE_URL),
   applicationName: "Lernly",
   title: {
     default: "Karteikarten aus PDF in 2 Min | Lernly",
@@ -81,8 +82,8 @@ const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Lernly",
-  url: "https://lernly-app.de",
-  logo: "https://lernly-app.de/icon.png",
+  url: SITE_URL,
+  logo: `${SITE_URL}/icon.png`,
   email: "info@lernly-app.de",
   description:
     "Lernly verwandelt Vorlesungs-PDFs in interaktive Karteikarten, Klausur-Simulatoren und Essay-Blueprints - in unter 2 Minuten.",

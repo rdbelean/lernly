@@ -17,13 +17,13 @@ const breadcrumbJsonLd = {
       "@type": "ListItem",
       position: 1,
       name: "Lernly",
-      item: "https://lernly-app.de",
+      item: "https://www.lernly-app.de",
     },
     {
       "@type": "ListItem",
       position: 2,
       name: "Widerrufsbelehrung",
-      item: "https://lernly-app.de/widerruf",
+      item: "https://www.lernly-app.de/widerruf",
     },
   ],
 };

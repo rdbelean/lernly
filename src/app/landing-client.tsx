@@ -349,7 +349,7 @@ export default function Home() {
             name: "Lernly",
             applicationCategory: "EducationalApplication",
             operatingSystem: "Web",
-            url: "https://lernly-app.de",
+            url: "https://www.lernly-app.de",
             description:
               "Lade deine Vorlesungsfolien hoch und bekomme in 2 Minuten interaktive Karteikarten, einen Klausur-Simulator und einen Essay-Blueprint.",
             offers: [
