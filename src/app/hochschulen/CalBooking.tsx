@@ -112,8 +112,12 @@ export default function CalBooking({
       >
         <div
           ref={containerRef}
-          className="min-h-[520px] w-full overflow-auto rounded-xl"
-          style={maxHeight ? { maxHeight, overflowY: "auto" } : undefined}
+          className="w-full overflow-auto rounded-xl"
+          style={
+            maxHeight
+              ? { height: maxHeight, overflowY: "auto" }
+              : { minHeight: 520 }
+          }
         />
       </div>
       <p
