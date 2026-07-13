@@ -31,6 +31,7 @@ import RevealObserver from "./RevealObserver";
 import FlashcardMockupLazy from "./FlashcardMockupLazy";
 import CohortReportMockup from "./CohortReportMockup";
 import PilotTimeline from "./PilotTimeline";
+import CalBooking from "./CalBooking";
 
 // =========================================================================
 // /hochschulen — B2B page for universities (v2, research-driven rebuild).
@@ -74,11 +75,11 @@ export const metadata: Metadata = {
   },
 };
 
-// Primary CTA target: booking link (e.g. Calendly) via env var, mailto as
-// fallback. NEXT_PUBLIC_HOCHSCHULEN_CTA_URL must be set in ALL Vercel scopes.
+// Primary CTA target: the Cal.com booking page. Overridable via env var
+// (all Vercel scopes) — the hardcoded default keeps it working everywhere.
 const CTA_URL =
   process.env.NEXT_PUBLIC_HOCHSCHULEN_CTA_URL ||
-  "mailto:info@lernly-app.de?subject=Lernly%20Hochschul-Pilot";
+  "https://cal.com/lernly/hochschulen";
 const CTA_IS_EXTERNAL = CTA_URL.startsWith("http");
 
 const NAV_ANCHORS = [
@@ -205,7 +206,7 @@ const PRIVACY_ITEMS: { icon: LucideIcon; title: string; text: string }[] = [
   {
     icon: ListChecks,
     title: "Dienstleister offengelegt",
-    text: "Eingesetzte Dienste transparent: Supabase (EU), Anthropic, Vercel, Resend. Vollständige Liste mit Verarbeitungszwecken auf Anfrage.",
+    text: "Eingesetzte Dienste transparent: Supabase (EU), Anthropic, Vercel, Resend, Cal.com (Terminbuchung). Vollständige Liste mit Verarbeitungszwecken auf Anfrage.",
   },
 ];
 
@@ -393,60 +394,68 @@ export default function HochschulenPage() {
                 "radial-gradient(closest-side, rgba(91,184,216,0.16), transparent 70%)",
             }}
           />
-          <div className="relative mx-auto max-w-[900px] text-center">
-            <p
-              className="ln-reveal mb-5 text-[12px] font-semibold uppercase tracking-[0.22em]"
-              style={{ color: "var(--color-ln-cyan)" }}
-            >
-              Lernly für Hochschulen
-            </p>
-            <h1
-              className="ln-reveal font-bold leading-[1.06] tracking-[-1.6px] text-white"
-              style={{ fontSize: "clamp(32px, 5.2vw, 58px)" }}
-            >
-              Aus Ihren Kursunterlagen werden aktive, prüfungsnahe Lernpakete —{" "}
-              <span
-                className="lernly-italic"
-                style={{ color: "var(--color-ln-ink-soft)" }}
+          <div className="relative mx-auto grid max-w-[1200px] items-start gap-12 lg:grid-cols-[minmax(0,1fr)_420px]">
+            <div className="text-center lg:text-left">
+              <p
+                className="ln-reveal mb-5 text-[12px] font-semibold uppercase tracking-[0.22em]"
+                style={{ color: "var(--color-ln-cyan)" }}
               >
-                für ganze Kohorten.
-              </span>
-            </h1>
-            <p
-              className="ln-reveal mx-auto mt-6 max-w-[660px] text-[16px] leading-relaxed md:text-[17px]"
-              style={{ color: "rgba(255,255,255,0.66)" }}
-            >
-              Lernly verwandelt die offiziellen Unterlagen eines Moduls in
-              Karteikarten, Quiz und Prüfungssimulationen. Freigegeben von
-              Ihren Lehrenden, genutzt von Ihren Studierenden, messbar für Sie.
-            </p>
-            <div className="ln-reveal mt-6 flex flex-wrap items-center justify-center gap-2">
-              {HERO_FACTS.map((f) => (
+                Lernly für Hochschulen
+              </p>
+              <h1
+                className="ln-reveal font-bold leading-[1.08] tracking-[-1.4px] text-white"
+                style={{ fontSize: "clamp(32px, 3.9vw, 48px)" }}
+              >
+                Aus Ihren Kursunterlagen werden aktive, prüfungsnahe Lernpakete —{" "}
                 <span
-                  key={f}
-                  className="rounded-full border px-3.5 py-1.5 text-[12.5px] font-medium"
+                  className="lernly-italic"
+                  style={{ color: "var(--color-ln-ink-soft)" }}
+                >
+                  für ganze Kohorten.
+                </span>
+              </h1>
+              <p
+                className="ln-reveal mx-auto mt-6 max-w-[660px] text-[16px] leading-relaxed md:text-[17px] lg:mx-0"
+                style={{ color: "rgba(255,255,255,0.66)" }}
+              >
+                Lernly verwandelt die offiziellen Unterlagen eines Moduls in
+                Karteikarten, Quiz und Prüfungssimulationen. Freigegeben von
+                Ihren Lehrenden, genutzt von Ihren Studierenden, messbar für
+                Sie.
+              </p>
+              <div className="ln-reveal mt-6 flex flex-wrap items-center justify-center gap-2 lg:justify-start">
+                {HERO_FACTS.map((f) => (
+                  <span
+                    key={f}
+                    className="rounded-full border px-3.5 py-1.5 text-[12.5px] font-medium"
+                    style={{
+                      borderColor: "rgba(255,255,255,0.12)",
+                      background: "rgba(255,255,255,0.04)",
+                      color: "rgba(255,255,255,0.75)",
+                    }}
+                  >
+                    {f}
+                  </span>
+                ))}
+              </div>
+              <div className="ln-reveal mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
+                <PrimaryCta className="w-full sm:w-auto" />
+                <Link
+                  href="/#demo"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl border px-6 py-3 text-[15px] font-semibold text-white transition hover:bg-white/[0.08] sm:w-auto"
                   style={{
-                    borderColor: "rgba(255,255,255,0.12)",
+                    borderColor: "rgba(255,255,255,0.16)",
                     background: "rgba(255,255,255,0.04)",
-                    color: "rgba(255,255,255,0.75)",
                   }}
                 >
-                  {f}
-                </span>
-              ))}
+                  Echtes Lernpaket ansehen
+                </Link>
+              </div>
             </div>
-            <div className="ln-reveal mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <PrimaryCta className="w-full sm:w-auto" />
-              <Link
-                href="/#demo"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl border px-6 py-3 text-[15px] font-semibold text-white transition hover:bg-white/[0.08] sm:w-auto"
-                style={{
-                  borderColor: "rgba(255,255,255,0.16)",
-                  background: "rgba(255,255,255,0.04)",
-                }}
-              >
-                Echtes Lernpaket ansehen
-              </Link>
+            {/* Booking widget beside the title — desktop only; mobile books
+                via the CTA or the embed at the end of the page. */}
+            <div className="ln-reveal hidden lg:block">
+              <CalBooking namespace="hero" maxHeight={620} />
             </div>
           </div>
 
@@ -1015,18 +1024,18 @@ export default function HochschulenPage() {
               eyebrow="Kontakt"
               boldPart="Passt Lernly zu"
               italicPart="einem Ihrer Module?"
-              sub="Buchen Sie ein unverbindliches 15-Minuten-Gespräch — wir schauen gemeinsam auf ein konkretes Modul."
+              sub="Buchen Sie direkt ein unverbindliches 15-Minuten-Gespräch — wir schauen gemeinsam auf ein konkretes Modul."
             />
-            <div className="ln-reveal mt-8 flex justify-center">
-              <PrimaryCta />
+            <div className="ln-reveal relative mx-auto mt-10 max-w-[900px]">
+              <CalBooking namespace="kontakt" maxHeight={640} />
             </div>
             <div
-              className="ln-reveal mx-auto mt-10 flex max-w-[560px] items-center gap-4"
+              className="ln-reveal mx-auto mt-12 flex max-w-[560px] items-center gap-4"
               aria-hidden
             >
               <span className="h-px flex-1" style={{ background: "rgba(255,255,255,0.1)" }} />
               <span className="text-[12px] uppercase tracking-[0.16em]" style={{ color: "rgba(255,255,255,0.4)" }}>
-                oder direkt anfragen
+                oder schreiben Sie uns
               </span>
               <span className="h-px flex-1" style={{ background: "rgba(255,255,255,0.1)" }} />
             </div>
