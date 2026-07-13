@@ -10,6 +10,7 @@ const FOOTER_COPY: Record<
     terms: string;
     contact: string;
     feedback: string;
+    forUniversities: string;
     madeBy: string;
   }
 > = {
@@ -19,6 +20,7 @@ const FOOTER_COPY: Record<
     terms: "Terms",
     contact: "Contact",
     feedback: "Give feedback",
+    forUniversities: "For universities",
     madeBy: "A tool by",
   },
   de: {
@@ -27,6 +29,7 @@ const FOOTER_COPY: Record<
     terms: "AGB",
     contact: "Kontakt",
     feedback: "Feedback geben",
+    forUniversities: "Für Hochschulen",
     madeBy: "Ein Tool von",
   },
 };
@@ -110,6 +113,9 @@ export default function SiteFooter({ language = "de" }: { language?: Language })
               className="transition hover:text-white"
             >
               {copy.contact}
+            </a>
+            <a href="/hochschulen" className="transition hover:text-white">
+              {copy.forUniversities}
             </a>
             {FEEDBACK_FORM_URL && (
               <a
