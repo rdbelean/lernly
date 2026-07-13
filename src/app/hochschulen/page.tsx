@@ -455,7 +455,7 @@ export default function HochschulenPage() {
             {/* Booking widget beside the title — desktop only; mobile books
                 via the CTA or the embed at the end of the page. */}
             <div className="ln-reveal hidden lg:block">
-              <CalBooking namespace="hero" maxHeight={420} />
+              <CalBooking namespace="hero" maxHeight={491} compact />
             </div>
           </div>
 

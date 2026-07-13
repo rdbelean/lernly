@@ -72,6 +72,7 @@ export default function CalBooking({
   namespace,
   className,
   maxHeight,
+  compact,
 }: {
   /** Unique per page instance (e.g. "hero", "kontakt"). */
   namespace: string;
@@ -79,6 +80,9 @@ export default function CalBooking({
   /** Cap the embed height (px); content scrolls inside. Used in the hero
       column, where the unconstrained iframe would grow very tall. */
   maxHeight?: number;
+  /** Compact mode: hide the event-type header (title/duration/location) so
+      only the calendar + slot picker show, and drop the notice caption. */
+  compact?: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
@@ -99,10 +103,10 @@ export default function CalBooking({
       cssVarsPerTheme: {
         dark: { "cal-brand": "#6E80F2" },
       },
-      hideEventTypeDetails: false,
+      hideEventTypeDetails: compact,
       layout: "month_view",
     });
-  }, [namespace]);
+  }, [namespace, compact]);
 
   return (
     <div className={className}>
@@ -120,13 +124,15 @@ export default function CalBooking({
           }
         />
       </div>
-      <p
-        className="mt-3 text-center text-[11.5px]"
-        style={{ color: "rgba(255,255,255,0.4)" }}
-      >
-        Terminbuchung über Cal.com — beim Laden des Kalenders werden Daten an
-        Cal.com übertragen.
-      </p>
+      {!compact && (
+        <p
+          className="mt-3 text-center text-[11.5px]"
+          style={{ color: "rgba(255,255,255,0.4)" }}
+        >
+          Terminbuchung über Cal.com — beim Laden des Kalenders werden Daten an
+          Cal.com übertragen.
+        </p>
+      )}
     </div>
   );
 }
