@@ -7,11 +7,11 @@ const FALLBACK_MAILTO =
   "mailto:info@lernly-app.de?subject=Lernly%20Hochschul-Pilot";
 
 const inputClass =
-  "w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 " +
-  "text-[15px] text-white placeholder-white/35 outline-none transition " +
-  "focus:border-[rgba(124,120,216,0.65)] focus:bg-white/[0.06]";
+  "w-full rounded-xl border border-[#E6E8EC] bg-white px-4 py-3 " +
+  "text-[15px] text-[#0E1116] placeholder-[#9AA1AC] outline-none transition " +
+  "focus:border-[#2B3499] focus:ring-2 focus:ring-[rgba(43,52,153,0.12)]";
 
-const labelClass = "mb-1.5 block text-[13px] font-medium text-white/70";
+const labelClass = "mb-1.5 block text-[13px] font-medium text-[#374151]";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -67,19 +67,19 @@ export default function LeadForm() {
       <div className="flex flex-col items-center gap-3 px-6 py-10 text-center">
         <span
           className="flex h-12 w-12 items-center justify-center rounded-xl"
-          style={{ background: "rgba(124,196,160,0.14)" }}
+          style={{ background: "rgba(22,142,84,0.1)" }}
         >
           <CheckCircle
             size={24}
             strokeWidth={2}
             aria-hidden
-            style={{ color: "var(--color-ln-sage)" }}
+            style={{ color: "#168E54" }}
           />
         </span>
-        <p className="text-[17px] font-semibold text-white">
+        <p className="text-[17px] font-semibold" style={{ color: "var(--hs-ink)" }}>
           Danke — wir melden uns.
         </p>
-        <p className="max-w-[380px] text-[14px] leading-relaxed text-white/60">
+        <p className="max-w-[380px] text-[14px] leading-relaxed" style={{ color: "var(--hs-mute)" }}>
           Ihre Anfrage ist eingegangen. Sie hören in der Regel innerhalb von
           zwei Werktagen von uns.
         </p>
@@ -151,13 +151,12 @@ export default function LeadForm() {
             value={rolle}
             onChange={(e) => setRolle(e.target.value)}
             className={inputClass + " appearance-none"}
-            style={{ colorScheme: "dark" }}
           >
             <option value="" disabled>
               Bitte wählen
             </option>
             {ROLES.map((r) => (
-              <option key={r} value={r} style={{ background: "#141930" }}>
+              <option key={r} value={r}>
                 {r}
               </option>
             ))}
@@ -202,14 +201,14 @@ export default function LeadForm() {
         <p
           className="rounded-xl border px-4 py-3 text-[13px] leading-relaxed"
           style={{
-            borderColor: "rgba(251,113,133,0.35)",
-            background: "rgba(251,113,133,0.08)",
-            color: "rgba(255,255,255,0.8)",
+            borderColor: "rgba(190,40,60,0.3)",
+            background: "rgba(190,40,60,0.05)",
+            color: "#8C1D2E",
           }}
         >
           Das hat leider nicht geklappt. Bitte versuchen Sie es erneut oder
           schreiben Sie uns direkt an{" "}
-          <a href={FALLBACK_MAILTO} className="font-medium text-white underline underline-offset-2">
+          <a href={FALLBACK_MAILTO} className="font-medium underline underline-offset-2" style={{ color: "#8C1D2E" }}>
             info@lernly-app.de
           </a>
           .

@@ -1,0 +1,91 @@
+/* =========================================================================
+   /hochschulen — route-local "Academic Editorial" light theme.
+   Imported by src/app/hochschulen/page.tsx. Next bundles route CSS
+   globally, so EVERY rule here is scoped under .hs-root to avoid leaking
+   into the dark B2C app.
+   ========================================================================= */
+
+.hs-root {
+  --hs-ink: #0e1116;
+  --hs-mute: #5b6472;
+  --hs-line: #e6e8ec;
+  --hs-soft: #f7f8fa;
+  --hs-accent: #2b3499;
+  --hs-accent-deep: #1421c5;
+  --hs-accent-soft: rgba(43, 52, 153, 0.06);
+
+  background: #ffffff;
+  color: var(--hs-ink);
+}
+
+/* --- Cards & hairlines ------------------------------------------------- */
+.hs-card {
+  background: #ffffff;
+  border: 1px solid var(--hs-line);
+  border-radius: 16px;
+  box-shadow:
+    0 1px 2px rgba(14, 17, 22, 0.04),
+    0 12px 32px -18px rgba(14, 17, 22, 0.08);
+}
+.hs-soft-bg {
+  background: var(--hs-soft);
+}
+
+/* --- Typography helpers ------------------------------------------------- */
+.hs-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hs-accent);
+}
+/* Serif accent for research pull-quotes (system stack, no font download). */
+.hs-serif {
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+/* --- Scroll reveal (subtle, editorial) ---------------------------------- */
+.hs-reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.28s ease,
+    transform 0.28s ease;
+}
+.hs-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hs-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* --- Dark product mockups on the white canvas ---------------------------
+   The mockups render the real (dark) app UI inside MockupShell, whose
+   shadow/border are inline styles tuned for the dark landing. Soften them
+   here; !important is required to beat the inline declarations. */
+.hs-root .ln-fb-glow {
+  opacity: 0.25;
+}
+.hs-root .ln-fb-device > div {
+  border-color: var(--hs-line) !important;
+  box-shadow:
+    0 2px 8px rgba(14, 17, 22, 0.06),
+    0 28px 56px -28px rgba(14, 17, 22, 0.25) !important;
+}
+
+/* Links inside body copy */
+.hs-root a.hs-link {
+  color: var(--hs-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(43, 52, 153, 0.3);
+  transition: text-decoration-color 0.15s ease;
+}
+.hs-root a.hs-link:hover {
+  text-decoration-color: var(--hs-accent);
+}

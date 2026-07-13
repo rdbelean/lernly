@@ -174,7 +174,7 @@ export default function CohortReportMockup() {
       </MockupShell>
       <p
         className="mt-4 text-center text-[12px]"
-        style={{ color: "rgba(255,255,255,0.45)" }}
+        style={{ color: "var(--hs-mute)" }}
       >
         Beispieldarstellung — so ist der Abschlussreport Ihres Piloten aufgebaut.
       </p>

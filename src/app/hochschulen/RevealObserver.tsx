@@ -37,7 +37,9 @@ export default function RevealObserver() {
     };
 
     const scan = () => {
-      document.querySelectorAll(".ln-reveal").forEach(trackElement);
+      document
+        .querySelectorAll(".ln-reveal, .hs-reveal")
+        .forEach(trackElement);
     };
     scan();
 

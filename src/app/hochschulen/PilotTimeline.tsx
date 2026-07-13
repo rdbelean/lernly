@@ -46,19 +46,19 @@ export default function PilotTimeline() {
             <span
               aria-hidden
               className="absolute left-[21px] top-12 h-[calc(100%-24px)] w-px lg:hidden"
-              style={{ background: "rgba(255,255,255,0.1)" }}
+              style={{ background: "var(--hs-line)" }}
             />
           )}
           <span
             className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl lg:mb-4"
-            style={{ background: "rgba(91,184,216,0.12)" }}
+            style={{ background: "var(--hs-accent-soft)" }}
           >
-            <p.icon size={19} strokeWidth={2} aria-hidden style={{ color: "var(--color-ln-cyan)" }} />
+            <p.icon size={19} strokeWidth={2} aria-hidden style={{ color: "var(--hs-accent)" }} />
           </span>
           <div className="pb-6 lg:pb-0">
             <p
               className="text-[11px] font-semibold uppercase tracking-[0.14em]"
-              style={{ color: "rgba(255,255,255,0.4)" }}
+              style={{ color: "var(--hs-mute)" }}
             >
               {p.week}
             </p>
@@ -68,7 +68,7 @@ export default function PilotTimeline() {
             >
               {p.title}
             </h3>
-            <p className="mt-1.5 text-[13.5px] leading-[1.6]" style={{ color: "rgba(255,255,255,0.6)" }}>
+            <p className="mt-1.5 text-[13.5px] leading-[1.6]" style={{ color: "var(--hs-mute)" }}>
               {p.text}
             </p>
           </div>

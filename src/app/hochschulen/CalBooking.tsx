@@ -3,11 +3,12 @@
 import { useEffect, useRef } from "react";
 
 // =========================================================================
-// CalBooking — inline Cal.com embed (cal.com/lernly/hochschulen) styled to
-// the Lernly system: dark theme, indigo brand. Uses the official embed
-// snippet (script loads from app.cal.com at runtime — no npm dependency,
-// same pattern as the Turnstile widget). Two instances live on the page
-// (hero + contact), so each gets its own Cal namespace.
+// CalBooking — inline Cal.com embed (cal.com/lernly/hochschulen), light
+// "Academic Editorial" styling to match the /hochschulen route. Uses the
+// official embed snippet (script loads from app.cal.com at runtime — no
+// npm dependency). Two instances live on the page (hero + contact), so
+// each gets its own Cal namespace. The contact instance mounts lazily
+// (IntersectionObserver) so the second iframe doesn't cost initial load.
 // =========================================================================
 
 const CAL_LINK = "lernly/hochschulen";
@@ -73,6 +74,7 @@ export default function CalBooking({
   className,
   maxHeight,
   compact,
+  lazy,
 }: {
   /** Unique per page instance (e.g. "hero", "kontakt"). */
   namespace: string;
@@ -83,37 +85,56 @@ export default function CalBooking({
   /** Compact mode: hide the event-type header (title/duration/location) so
       only the calendar + slot picker show, and drop the notice caption. */
   compact?: boolean;
+  /** Defer Cal init until the container approaches the viewport. */
+  lazy?: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
 
   useEffect(() => {
-    if (!containerRef.current || initialized.current) return;
-    initialized.current = true;
+    const el = containerRef.current;
+    if (!el) return;
 
-    const Cal = getCal();
-    Cal("init", namespace, { origin: CAL_ORIGIN });
-    Cal.ns![namespace]("inline", {
-      elementOrSelector: containerRef.current,
-      config: { layout: "month_view", theme: "dark" },
-      calLink: CAL_LINK,
-    });
-    Cal.ns![namespace]("ui", {
-      theme: "dark",
-      cssVarsPerTheme: {
-        dark: { "cal-brand": "#6E80F2" },
+    const init = () => {
+      if (initialized.current) return;
+      initialized.current = true;
+      const Cal = getCal();
+      Cal("init", namespace, { origin: CAL_ORIGIN });
+      Cal.ns![namespace]("inline", {
+        elementOrSelector: el,
+        config: { layout: "month_view", theme: "light" },
+        calLink: CAL_LINK,
+      });
+      Cal.ns![namespace]("ui", {
+        theme: "light",
+        cssVarsPerTheme: {
+          light: { "cal-brand": "#2B3499" },
+        },
+        hideEventTypeDetails: compact,
+        layout: "month_view",
+      });
+    };
+
+    if (!lazy) {
+      init();
+      return;
+    }
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          init();
+          obs.disconnect();
+        }
       },
-      hideEventTypeDetails: compact,
-      layout: "month_view",
-    });
-  }, [namespace, compact]);
+      { rootMargin: "600px 0px" },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [namespace, compact, lazy]);
 
   return (
     <div className={className}>
-      <div
-        className="ln-glass-card overflow-hidden p-2 md:p-3"
-        style={{ background: "rgba(255,255,255,0.02)" }}
-      >
+      <div className="hs-card overflow-hidden p-2 md:p-3">
         <div
           ref={containerRef}
           className="w-full overflow-auto rounded-xl"
@@ -127,7 +148,7 @@ export default function CalBooking({
       {!compact && (
         <p
           className="mt-3 text-center text-[11.5px]"
-          style={{ color: "rgba(255,255,255,0.4)" }}
+          style={{ color: "var(--hs-mute)" }}
         >
           Terminbuchung über Cal.com — beim Laden des Kalenders werden Daten an
           Cal.com übertragen.
