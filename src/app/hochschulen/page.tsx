@@ -1,34 +1,51 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  Upload,
-  CheckCircle,
-  Smartphone,
-  BarChart3,
-  Landmark,
-  Presentation,
-  GraduationCap,
-  Check,
   ShieldCheck,
+  Server,
+  BrainCircuit,
+  UserCheck,
+  Sparkles,
+  SearchCheck,
+  CheckCircle,
+  Check,
+  FileText,
+  Lock,
+  Trash2,
+  ListChecks,
+  FlaskConical,
+  Repeat,
+  Mail,
   ChevronDown,
   type LucideIcon,
 } from "lucide-react";
 import LernlyLogo from "@/components/LernlyLogo";
 import SiteFooter from "@/components/SiteFooter";
 import SectionHeading from "@/components/landing/SectionHeading";
+import PackHubMockup from "@/components/landing/mockups/PackHubMockup";
+import UploadMaskMockup from "@/components/landing/mockups/UploadMaskMockup";
+import QuizResultMockup from "@/components/landing/mockups/QuizResultMockup";
+import TopicConceptMockup from "@/components/landing/mockups/TopicConceptMockup";
 import LeadForm from "./LeadForm";
 import RevealObserver from "./RevealObserver";
+import FlashcardMockupLazy from "./FlashcardMockupLazy";
+import CohortReportMockup from "./CohortReportMockup";
+import PilotTimeline from "./PilotTimeline";
 
 // =========================================================================
-// /hochschulen — B2B landing page for universities (program directors,
-// digital-learning staff). Outreach + LinkedIn point here; the B2C landing
-// at "/" stays untouched. Server Component; only LeadForm is client-side.
+// /hochschulen — B2B page for universities (v2, research-driven rebuild).
+// Audience: a single teaching champion (Professor:in, Studiengangsleitung)
+// who must defend the pilot internally against three gatekeepers: data
+// protection officer, IT, and exam-law concerns. The page therefore shows
+// the real product (mockups), cites real numbers with sources, and answers
+// the compliance checklist prominently. Tone: Sie-Form, sober, no hype.
+// The B2C landing at "/" stays untouched.
 // =========================================================================
 
 const PAGE_TITLE =
   "Lernly für Hochschulen — prüfungsnahe Lernpakete für ganze Kohorten";
 const PAGE_DESCRIPTION =
-  "Lernly verwandelt die offiziellen Unterlagen eines Moduls in Karteikarten, Quiz und Prüfungssimulationen — freigegeben von Lehrenden, genutzt von Studierenden, messbar für Ihre Hochschule. Betreuter Pilot ab 1.500 €.";
+  "Lernly verwandelt die offiziellen Unterlagen eines Moduls in Karteikarten, Quiz und Prüfungssimulationen — freigegeben von Lehrenden, genutzt von Studierenden, messbar für Ihre Hochschule. Begleiteter Pilot: 1 Modul, bis 100 Studierende, ab 1.500 €.";
 
 export const metadata: Metadata = {
   title: { absolute: PAGE_TITLE },
@@ -64,47 +81,66 @@ const CTA_URL =
   "mailto:info@lernly-app.de?subject=Lernly%20Hochschul-Pilot";
 const CTA_IS_EXTERNAL = CTA_URL.startsWith("http");
 
-const CTA_PRIMARY_LABEL = "15-Min-Gespräch buchen";
+const NAV_ANCHORS = [
+  { href: "#produkt", label: "Produkt" },
+  { href: "#ablauf", label: "Ablauf" },
+  { href: "#pilot", label: "Pilot" },
+  { href: "#datenschutz", label: "Datenschutz" },
+  { href: "#faq", label: "FAQ" },
+];
 
-const STEPS: { icon: LucideIcon; title: string; text: string }[] = [
+const HERO_FACTS = [
+  "Begleiteter Pilot",
+  "1 Modul · bis 100 Studierende",
+  "6–8 Wochen",
+  "ab 1.500 € · Direktauftrag",
+];
+
+// Trust bar: verifiable facts instead of a logo wall. Supabase project runs
+// in West EU (Ireland); Anthropic's commercial API does not use inputs for
+// model training by default.
+const TRUST_CHIPS: { icon: LucideIcon; text: string }[] = [
+  { icon: ShieldCheck, text: "DSGVO-konform · AVV auf Anfrage" },
+  { icon: Server, text: "Datenhaltung in der EU (Irland)" },
+  { icon: BrainCircuit, text: "Kein KI-Training mit Ihren Inhalten" },
+  { icon: UserCheck, text: "Freigabe durch Ihre Lehrenden" },
+];
+
+// Problem section: real, citable numbers — the page must work as a
+// forwardable internal decision document, so every stat carries its source.
+const PROBLEM_STATS = [
   {
-    icon: Upload,
-    title: "Upload",
-    text: "Lehrende laden die offiziellen Modulunterlagen hoch.",
+    value: "92 %",
+    text: "der Studierenden nutzen KI-Tools im Studium",
+    source: "h_da-Längsschnittstudie 2025, n = 4.910",
+    href: "https://h-da.de/meldung-einzelansicht/bundesweite-studie-mehr-als-90-der-studierenden-nutzen-ki-basierte-tools-wie-chatgpt-fuers-studium",
   },
   {
-    icon: CheckCircle,
-    title: "Freigabe",
-    text: "Das erzeugte Lernpaket wird von Lehrenden geprüft und freigegeben — die Qualitätskontrolle bleibt bei Ihnen.",
+    value: "37 %",
+    text: "kennen KI-Regeln ihrer Hochschule — mehr nicht",
+    source: "Bitkom 2024",
+    href: "https://www.bitkom.org/Presse/Presseinformation/So-digital-sind-Deutschlands-Hochschulen",
   },
   {
-    icon: Smartphone,
-    title: "Aktives Lernen",
-    text: "Die Kohorte lernt mobil mit Karteikarten, Quiz und einer Simulation im Stil der echten Klausur.",
+    value: "28 %",
+    text: "brechen das Bachelorstudium ab, in MINT-Fächern über 40 %",
+    source: "DZHW Brief 05/2022",
+    href: "https://www.dzhw.eu/pdf/pub_brief/dzhw_brief_05_2022_anhang.pdf",
   },
   {
-    icon: BarChart3,
-    title: "Auswertung",
-    text: "Sie sehen Aktivierung und Nutzung — anonymisiert und aggregiert.",
+    value: "1 : 58",
+    text: "Betreuungsrelation — Studierende je Professur",
+    source: "DHV-Barometer 2024",
+    href: "https://www.forschung-und-lehre.de/lehre/bundesweite-betreuungsrelation-verbessert-sich-auf-158-7467",
   },
 ];
 
-const AUDIENCES: { icon: LucideIcon; title: string; text: string }[] = [
-  {
-    icon: Landmark,
-    title: "Für die Hochschule",
-    text: "Bessere Prüfungsvorbereitung ohne Mehraufwand fürs Lehrpersonal — plus Sichtbarkeit, wie Studierende lernen.",
-  },
-  {
-    icon: Presentation,
-    title: "Für Lehrende",
-    text: "Aus vorhandenen Folien wird aktives Lernmaterial. Kein Zusatzaufwand, volle Kontrolle per Freigabe.",
-  },
-  {
-    icon: GraduationCap,
-    title: "Für Studierende",
-    text: "In zwei Minuten vom Folienberg zu „ich weiß, wo ich anfange“ — mobil und aktiv.",
-  },
+const EXTRA_FEATURES = [
+  "Visual Map — das große Ganze eines Moduls",
+  "Übersicht nach Prüfungsrelevanz",
+  "Offene Fragen mit Musterlösungen",
+  "KI-Tutor, begrenzt auf Ihr Material",
+  "Klausur-Countdown & Lern-Erinnerungen",
 ];
 
 const PILOT_ITEMS = [
@@ -115,26 +151,108 @@ const PILOT_ITEMS = [
   "Definierter Support während der Laufzeit",
 ];
 
-const FAQ_ITEMS: { q: string; a: string }[] = [
+// Learning-science evidence with real citations — replaces testimonials.
+const EVIDENCE: { icon: LucideIcon; method: string; citation: string; text: string; feature: string }[] = [
   {
-    q: "Wie steht es um den Datenschutz?",
-    a: "Verarbeitung nach DSGVO, Auftragsverarbeitungsvertrag (AVV), transparente Unterauftragsverarbeiter und ein klares Löschkonzept. Details klären wir vor dem Piloten mit Ihrer IT/Ihrem Datenschutz.",
+    icon: FlaskConical,
+    method: "Testing-Effekt (Abrufübung)",
+    citation: "Roediger & Karpicke (2006), Psychological Science",
+    text: "Aktives Abrufen aus dem Gedächtnis führt zu deutlich besserem Langzeitbehalten als wiederholtes Lesen.",
+    feature: "In Lernly: Karteikarten mit Selbstbewertung statt passivem Folien-Lesen.",
   },
   {
-    q: "Wie viel Aufwand haben unsere Lehrenden?",
-    a: "Minimal: Unterlagen hochladen und das Lernpaket freigeben. Den Rest übernimmt Lernly.",
+    icon: ListChecks,
+    method: "Practice Testing",
+    citation: "Dunlosky et al. (2013), Psychological Science in the Public Interest",
+    text: "In der großen Vergleichsstudie zu zehn Lerntechniken erhält Selbsttesten die höchste Wirksamkeitsbewertung.",
+    feature: "In Lernly: Übungsklausur im Stil der echten Prüfung, mit Erklärungen je Antwort.",
   },
   {
-    q: "Müssen wir etwas integrieren?",
-    a: "Für den Piloten nicht. SSO oder eine Moodle-/LTI-Anbindung sind später möglich.",
-  },
-  {
-    q: "Wem gehören die Inhalte?",
-    a: "Ihr Material bleibt Ihres. Sie behalten die Rechte an Unterlagen und freigegebenen Lernpaketen.",
+    icon: Repeat,
+    method: "Verteiltes Lernen (Spaced Repetition)",
+    citation: "Cepeda et al. (2006), Psychological Bulletin",
+    text: "Meta-Analyse über 254 Studien: Zeitlich verteiltes Wiederholen schlägt massiertes Lernen zuverlässig.",
+    feature: "In Lernly: Spaced-Repetition-Loop mit Fällig-Warteschlange über alle Themen.",
   },
 ];
 
-function PrimaryCta({ className }: { className?: string }) {
+const PRIVACY_ITEMS: { icon: LucideIcon; title: string; text: string }[] = [
+  {
+    icon: FileText,
+    title: "AVV & technische Maßnahmen",
+    text: "Auftragsverarbeitungsvertrag nach Art. 28 DSGVO auf Anfrage — vor dem Piloten klären wir Details direkt mit Ihrem Datenschutzbeauftragten.",
+  },
+  {
+    icon: Server,
+    title: "Datenhaltung in der EU",
+    text: "Datenbank, Authentifizierung und Datei-Speicher laufen in der EU (Irland). Analytics in der EU-Cloud.",
+  },
+  {
+    icon: BrainCircuit,
+    title: "KI-Verarbeitung transparent",
+    text: "Generierung über die Anthropic-API (Claude). Ihre Inhalte werden standardmäßig nicht zum Training von KI-Modellen verwendet — weder von Anthropic noch von Lernly.",
+  },
+  {
+    icon: Lock,
+    title: "Geschlossener Kohortenzugang",
+    text: "Lernpakete sind nur für die eingeschriebene Kohorte zugänglich — keine Veröffentlichung, vereinbar mit § 60a UrhG. Die Materialhoheit bleibt bei Ihren Lehrenden.",
+  },
+  {
+    icon: Trash2,
+    title: "Löschung & Export",
+    text: "Nach Pilotende werden hochgeladene Unterlagen und Kohortendaten vollständig gelöscht. Export Ihrer Daten jederzeit möglich.",
+  },
+  {
+    icon: ListChecks,
+    title: "Dienstleister offengelegt",
+    text: "Eingesetzte Dienste transparent: Supabase (EU), Anthropic, Vercel, Resend. Vollständige Liste mit Verarbeitungszwecken auf Anfrage.",
+  },
+];
+
+const FAQ_ITEMS: { q: string; a: string }[] = [
+  {
+    q: "Wie steht es um den Datenschutz?",
+    a: "Verarbeitung nach DSGVO mit Auftragsverarbeitungsvertrag (AVV) auf Anfrage, Datenhaltung in der EU (Irland), transparente Dienstleisterliste und ein klares Löschkonzept. Details klären wir vor dem Piloten direkt mit Ihrer IT und Ihrem Datenschutzbeauftragten.",
+  },
+  {
+    q: "Was passiert mit unseren Unterlagen — Stichwort Urheberrecht?",
+    a: "Ihr Material bleibt Ihres. Lernpakete sind nur für die eingeschriebene Kohorte zugänglich (kein öffentlicher Zugriff, vereinbar mit § 60a UrhG), werden nicht veröffentlicht und nach Pilotende vollständig gelöscht. Sie behalten die Rechte an Unterlagen und freigegebenen Lernpaketen.",
+  },
+  {
+    q: "Werden unsere Daten zum Training von KI-Modellen verwendet?",
+    a: "Nein. Die Generierung läuft über die Anthropic-API, die Eingaben standardmäßig nicht zum Modelltraining verwendet. Lernly trainiert keine eigenen Modelle mit Ihren Inhalten.",
+  },
+  {
+    q: "Kann die KI Fehler machen — Stichwort Halluzination?",
+    a: "KI-generierte Inhalte können prinzipbedingt Fehler enthalten. Deshalb generiert Lernly ausschließlich aus Ihren hochgeladenen Unterlagen — und jedes Lernpaket wird vor dem Kohortenzugang von Ihren Lehrenden geprüft und freigegeben. Korrekturen arbeiten wir im Piloten direkt ein.",
+  },
+  {
+    q: "Wie viel Aufwand haben unsere Lehrenden?",
+    a: "Unter zwei Stunden über die gesamte Laufzeit: Unterlagen hochladen, Lernpaket prüfen und freigeben, zwei kurze Termine (Kickoff und Abschluss). Den Rest übernimmt Lernly.",
+  },
+  {
+    q: "Brauchen Studierende eigene Konten?",
+    a: "Nur eine E-Mail-Adresse (Anmeldung per Magic-Link). Keine Matrikelnummern, keine Installation — Lernly läuft mobil im Browser.",
+  },
+  {
+    q: "Müssen wir etwas integrieren (Moodle, LTI, SSO)?",
+    a: "Für den Piloten nicht — er läuft bewusst ohne Eingriff in Ihre IT. Eine Moodle-/LTI-Anbindung und SSO stehen für den Regelbetrieb auf der Roadmap.",
+  },
+  {
+    q: "Wie läuft die Beschaffung?",
+    a: "Per Rechnung als Direktauftrag: Der Pilotpreis liegt unterhalb der Direktvergabe-Wertgrenzen aller DACH-Länder — ein Vergabeverfahren ist nicht erforderlich. Pilotvertrag und AVV liefern wir.",
+  },
+  {
+    q: "Was passiert nach dem Piloten?",
+    a: "Gemeinsame Auswertung gegen die zu Beginn definierten Erfolgskriterien. Danach entscheiden Sie über Verlängerung oder Ausweitung — es gibt keine automatische Verlängerung und keine Bindung.",
+  },
+  {
+    q: "Bewertet Lernly Studierende oder Prüfungsleistungen?",
+    a: "Nein. Lernly vergibt keine Noten, trifft keine Prüfungsentscheidungen und überwacht keine einzelnen Studierenden oder Lehrenden. Es ist ein unterstützendes, formatives Lernwerkzeug — auch im Sinne des EU AI Act bewusst so gestaltet.",
+  },
+];
+
+function PrimaryCta({ className, label }: { className?: string; label?: string }) {
   return (
     <a
       href={CTA_URL}
@@ -147,8 +265,50 @@ function PrimaryCta({ className }: { className?: string }) {
       }
       style={{ background: "#2B3499" }}
     >
-      {CTA_PRIMARY_LABEL}
+      {label ?? "15-Min-Gespräch buchen"}
     </a>
+  );
+}
+
+// Alternating text+mockup module (Particify pattern). Server-renderable;
+// mockups are client components and hydrate on their own.
+function ProductModule({
+  kicker,
+  title,
+  children,
+  mockup,
+  reverse = false,
+}: {
+  kicker: string;
+  title: string;
+  children: React.ReactNode;
+  mockup: React.ReactNode;
+  reverse?: boolean;
+}) {
+  return (
+    <div className="ln-reveal grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+      <div className={reverse ? "lg:order-2" : undefined}>
+        <p
+          className="text-[12px] font-semibold uppercase tracking-[0.18em]"
+          style={{ color: "var(--color-ln-cyan)" }}
+        >
+          {kicker}
+        </p>
+        <h3
+          className="mt-3 text-[24px] font-bold leading-[1.15] tracking-[-0.6px] text-white md:text-[28px]"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          {title}
+        </h3>
+        <div
+          className="mt-4 flex flex-col gap-3 text-[15px] leading-[1.65]"
+          style={{ color: "rgba(255,255,255,0.65)" }}
+        >
+          {children}
+        </div>
+      </div>
+      <div className={reverse ? "lg:order-1" : undefined}>{mockup}</div>
+    </div>
   );
 }
 
@@ -157,8 +317,7 @@ export default function HochschulenPage() {
     <>
       <RevealObserver />
 
-      {/* Slim B2B header — deliberately not the student SiteNav (no signup
-          CTAs, no product anchors); one job: logo home + booking CTA. */}
+      {/* Slim B2B header — logo home, section anchors, one booking CTA. */}
       <nav
         className="sticky top-0 z-40 w-full"
         style={{
@@ -193,13 +352,22 @@ export default function HochschulenPage() {
               Für Hochschulen
             </span>
           </Link>
-          <div className="flex shrink-0 items-center gap-3 sm:gap-5">
-            <Link
-              href="/"
-              className="hidden text-[14px] font-medium text-white transition hover:opacity-70 md:inline"
-            >
-              Für Studierende
-            </Link>
+          <div className="flex shrink-0 items-center gap-3 lg:gap-6">
+            <div className="hidden items-center gap-6 lg:flex">
+              {NAV_ANCHORS.map((a) => (
+                <a
+                  key={a.href}
+                  href={a.href}
+                  className="text-[14px] font-medium text-white transition hover:opacity-70"
+                >
+                  {a.label}
+                </a>
+              ))}
+            </div>
+            <span
+              className="hidden h-5 w-px lg:block"
+              style={{ background: "rgba(255,255,255,0.1)" }}
+            />
             <a
               href={CTA_URL}
               {...(CTA_IS_EXTERNAL
@@ -216,7 +384,7 @@ export default function HochschulenPage() {
 
       <main className="flex-1">
         {/* ===== Hero ===== */}
-        <section className="relative overflow-hidden px-6 pb-16 pt-16 md:pb-24 md:pt-24">
+        <section className="relative overflow-hidden px-6 pb-14 pt-14 md:pb-20 md:pt-20">
           <div
             aria-hidden
             className="pointer-events-none absolute left-1/2 top-0 h-[460px] w-[640px] -translate-x-1/2 -translate-y-1/3 rounded-full blur-3xl"
@@ -252,124 +420,338 @@ export default function HochschulenPage() {
               Karteikarten, Quiz und Prüfungssimulationen. Freigegeben von
               Ihren Lehrenden, genutzt von Ihren Studierenden, messbar für Sie.
             </p>
+            <div className="ln-reveal mt-6 flex flex-wrap items-center justify-center gap-2">
+              {HERO_FACTS.map((f) => (
+                <span
+                  key={f}
+                  className="rounded-full border px-3.5 py-1.5 text-[12.5px] font-medium"
+                  style={{
+                    borderColor: "rgba(255,255,255,0.12)",
+                    background: "rgba(255,255,255,0.04)",
+                    color: "rgba(255,255,255,0.75)",
+                  }}
+                >
+                  {f}
+                </span>
+              ))}
+            </div>
             <div className="ln-reveal mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <PrimaryCta className="w-full sm:w-auto" />
               <Link
-                href="/"
+                href="/#demo"
                 className="inline-flex w-full items-center justify-center gap-2 rounded-xl border px-6 py-3 text-[15px] font-semibold text-white transition hover:bg-white/[0.08] sm:w-auto"
                 style={{
                   borderColor: "rgba(255,255,255,0.16)",
                   background: "rgba(255,255,255,0.04)",
                 }}
               >
-                2-Minuten-Demo ansehen
+                Echtes Lernpaket ansehen
               </Link>
             </div>
-            <p
-              className="ln-reveal mt-5 text-[13px]"
-              style={{ color: "var(--color-ln-mute)" }}
-            >
-              Auf Basis des Lernly-Produkts, mit dem Studierende bereits lernen.
-            </p>
+          </div>
+
+          {/* The product itself, immediately — the real PackHub with demo data. */}
+          <div className="relative mx-auto mt-14 max-w-[860px]">
+            <PackHubMockup />
+          </div>
+        </section>
+
+        {/* ===== Trust bar (facts instead of logos) ===== */}
+        <section className="px-6 pb-4 pt-2">
+          <div className="ln-stagger mx-auto grid max-w-[1100px] grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {TRUST_CHIPS.map((c) => (
+              <div
+                key={c.text}
+                className="ln-reveal flex items-center gap-3 rounded-xl border px-4 py-3"
+                style={{
+                  borderColor: "rgba(255,255,255,0.08)",
+                  background: "rgba(255,255,255,0.03)",
+                }}
+              >
+                <c.icon
+                  size={17}
+                  strokeWidth={2}
+                  aria-hidden
+                  className="shrink-0"
+                  style={{ color: "var(--color-ln-sage)" }}
+                />
+                <span className="text-[13px] font-medium" style={{ color: "rgba(255,255,255,0.75)" }}>
+                  {c.text}
+                </span>
+              </div>
+            ))}
           </div>
         </section>
 
         {/* ===== Problem ===== */}
-        <section className="px-6 py-14 md:py-20">
+        <section className="scroll-mt-24 px-6 py-16 md:py-24">
           <SectionHeading
-            eyebrow="Das Problem"
+            eyebrow="Die Ausgangslage"
             boldPart="Studierende scheitern nicht am Material —"
             italicPart="an der Menge."
-            sub="Hunderte Folien, kein Einstieg, passives Lesen kurz vor der Klausur. Die Folge: schwächere Ergebnisse, mehr Betreuungsaufwand, unzufriedene Kohorten. Generische KI wie ChatGPT nutzen Ihre Studierenden längst — nur außerhalb Ihrer Kontrolle und ohne Bezug zu Ihrem offiziellen Material."
           />
+          <div className="ln-stagger mx-auto mt-12 grid max-w-[1100px] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {PROBLEM_STATS.map((s) => (
+              <div key={s.value} className="ln-reveal ln-glass-card flex flex-col p-6">
+                <p
+                  className="text-[34px] font-bold leading-none text-white"
+                  style={{ fontFamily: "var(--font-display)" }}
+                >
+                  {s.value}
+                </p>
+                <p
+                  className="mt-3 flex-1 text-[14px] leading-[1.55]"
+                  style={{ color: "rgba(255,255,255,0.7)" }}
+                >
+                  {s.text}
+                </p>
+                <a
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 text-[11.5px] underline-offset-2 transition hover:text-white hover:underline"
+                  style={{ color: "rgba(255,255,255,0.4)" }}
+                >
+                  Quelle: {s.source}
+                </a>
+              </div>
+            ))}
+          </div>
+          <div className="ln-reveal mx-auto mt-10 max-w-[760px] text-center">
+            <p className="text-[16px] leading-[1.7] md:text-[17px]" style={{ color: "rgba(255,255,255,0.7)" }}>
+              Die KI-Nutzung Ihrer Studierenden findet längst statt — nur
+              außerhalb Ihrer Kontrolle, ohne Bezug zu Ihren offiziellen
+              Materialien und ohne didaktische Qualitätssicherung.{" "}
+              <span className="font-semibold text-white">
+                Lernly macht daraus einen kontrollierten Prozess: Ihre
+                Unterlagen, die Freigabe Ihrer Lehrenden, messbare Nutzung.
+              </span>
+            </p>
+          </div>
         </section>
 
-        {/* ===== How it works (4 steps) ===== */}
-        <section className="px-6 py-14 md:py-20">
+        {/* ===== Product detail modules ===== */}
+        <section id="produkt" className="scroll-mt-24 overflow-hidden px-6 py-16 md:py-24">
+          <SectionHeading
+            eyebrow="Das Produkt"
+            boldPart="Sehen Sie, was Ihre"
+            italicPart="Studierenden bekommen."
+            sub="Kein Konzept, keine Illustration — das ist die Software, mit der Studierende bereits lernen."
+          />
+
+          <div className="mx-auto mt-16 flex max-w-[1200px] flex-col gap-20 md:gap-28">
+            {/* A — Upload */}
+            <ProductModule
+              kicker="Schritt 1 · Ihre Unterlagen"
+              title="Aus den offiziellen Unterlagen Ihres Moduls"
+              mockup={<UploadMaskMockup />}
+            >
+              <p>
+                Lehrende laden Skripte, Folien oder Reader als PDF hoch — mehr
+                Vorbereitung braucht es nicht. In unter zwei Minuten entsteht
+                daraus ein vollständiges, interaktives Lernpaket.
+              </p>
+              <p>
+                Optional werten wir eine Altklausur aus: Sie gewichtet die
+                Inhalte nach Prüfungsrelevanz, damit die Kohorte dort übt, wo
+                es zählt.
+              </p>
+            </ProductModule>
+
+            {/* B — Approval as PROCESS (no fake UI: this is the pilot workflow) */}
+            <ProductModule
+              kicker="Schritt 2 · Qualitätssicherung"
+              title="Die Qualitätskontrolle bleibt bei Ihren Lehrenden"
+              reverse
+              mockup={
+                <div className="ln-glass-card flex flex-col gap-1 p-6">
+                  {[
+                    {
+                      icon: Sparkles,
+                      title: "Lernly generiert",
+                      text: "Karteikarten, Quiz und Übersicht — ausschließlich aus Ihren Unterlagen.",
+                    },
+                    {
+                      icon: SearchCheck,
+                      title: "Lehrende prüfen",
+                      text: "Fachliche Kontrolle jedes Inhalts. Korrekturen werden eingearbeitet.",
+                    },
+                    {
+                      icon: CheckCircle,
+                      title: "Kohorte erhält Zugang",
+                      text: "Erst nach Freigabe — kein Inhalt erreicht Studierende ungeprüft.",
+                    },
+                  ].map((s, i, arr) => (
+                    <div key={s.title} className="relative flex gap-4 pb-5 last:pb-0">
+                      {i < arr.length - 1 && (
+                        <span
+                          aria-hidden
+                          className="absolute left-[21px] top-12 h-[calc(100%-28px)] w-px"
+                          style={{ background: "rgba(255,255,255,0.1)" }}
+                        />
+                      )}
+                      <span
+                        className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl"
+                        style={{ background: "rgba(124,196,160,0.12)" }}
+                      >
+                        <s.icon size={19} strokeWidth={2} aria-hidden style={{ color: "var(--color-ln-sage)" }} />
+                      </span>
+                      <div>
+                        <p className="text-[15px] font-semibold text-white" style={{ fontFamily: "var(--font-display)" }}>
+                          {s.title}
+                        </p>
+                        <p className="mt-1 text-[13.5px] leading-[1.55]" style={{ color: "rgba(255,255,255,0.6)" }}>
+                          {s.text}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              }
+            >
+              <p>
+                Das unterscheidet Lernly von der wilden ChatGPT-Nutzung: Kein
+                Inhalt erreicht Ihre Studierenden, den Ihre Lehrenden nicht
+                gesehen haben. KI-generierte Inhalte sind als solche
+                gekennzeichnet.
+              </p>
+              <p>
+                Der Freigabe-Workflow ist fester Bestandteil des begleiteten
+                Piloten — Ihre Lehrenden behalten die didaktische und
+                fachliche Hoheit.
+              </p>
+            </ProductModule>
+
+            {/* C — Active learning / flashcards */}
+            <ProductModule
+              kicker="Schritt 3 · Aktives Lernen"
+              title="Aktives Abrufen statt passivem Lesen — mobil"
+              mockup={<FlashcardMockupLazy />}
+            >
+              <p>
+                Karteikarten mit dreistufiger Selbstbewertung setzen den
+                Testing-Effekt um. Ein Spaced-Repetition-Loop legt jede Karte
+                zum richtigen Zeitpunkt wieder vor — über alle Themen des
+                Moduls hinweg.
+              </p>
+              <p>
+                Alles läuft im Browser, ohne Installation — dort, wo Ihre
+                Studierenden ohnehin lernen: auf dem Smartphone.
+              </p>
+            </ProductModule>
+
+            {/* D — Exam practice */}
+            <ProductModule
+              kicker="Schritt 4 · Prüfungsnähe"
+              title="Üben im Stil der echten Klausur"
+              reverse
+              mockup={<QuizResultMockup />}
+            >
+              <p>
+                Szenariobasierte Multiple-Choice-Fragen mit Erklärungen zu
+                jeder Antwortoption, dazu offene Fragen mit Musterlösungen.
+                Das Ergebnis zeigt Stärken und Lücken nach Themen aufgeschlüsselt.
+              </p>
+              <p>
+                Studierende wissen dadurch nicht nur, was sie falsch hatten —
+                sondern warum, und was sie als Nächstes wiederholen sollten.
+              </p>
+            </ProductModule>
+
+            {/* E — Cohort report (labeled example rendering) */}
+            <ProductModule
+              kicker="Schritt 5 · Sichtbarkeit"
+              title="Eine Auswertung, die Ihre Gremien verwenden können"
+              mockup={<CohortReportMockup />}
+            >
+              <p>
+                Sie sehen Aktivierung, Nutzung und Themen-Schwächen der
+                Kohorte — aggregiert und anonymisiert, ohne Auswertung
+                einzelner Studierender.
+              </p>
+              <p>
+                Der Abschlussreport des Piloten ist als dokumentierte Maßnahme
+                zur Qualität der Lehre direkt anschlussfähig an QM- und
+                Akkreditierungsberichte.
+              </p>
+            </ProductModule>
+
+            {/* F — English programs strip */}
+            <ProductModule
+              kicker="Internationale Studiengänge"
+              title="Auch auf Englisch — automatisch"
+              reverse
+              mockup={<TopicConceptMockup />}
+            >
+              <p>
+                Englischsprachiges Material ergibt ein englischsprachiges
+                Lernpaket — ohne Konfiguration. Auch für internationale
+                Kohorten und Austauschstudierende geeignet.
+              </p>
+            </ProductModule>
+          </div>
+
+          {/* Additional real features, compact */}
+          <div className="ln-reveal mx-auto mt-20 max-w-[1000px]">
+            <p
+              className="mb-4 text-center text-[12px] font-semibold uppercase tracking-[0.18em]"
+              style={{ color: "rgba(255,255,255,0.45)" }}
+            >
+              Außerdem in jedem Lernpaket
+            </p>
+            <div className="flex flex-wrap justify-center gap-2.5">
+              {EXTRA_FEATURES.map((f) => (
+                <span
+                  key={f}
+                  className="rounded-full border px-4 py-2 text-[13px]"
+                  style={{
+                    borderColor: "rgba(255,255,255,0.1)",
+                    background: "rgba(255,255,255,0.03)",
+                    color: "rgba(255,255,255,0.7)",
+                  }}
+                >
+                  {f}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ===== Pilot timeline ===== */}
+        <section id="ablauf" className="scroll-mt-24 px-6 py-16 md:py-24">
           <SectionHeading
             eyebrow="Der Ablauf"
-            boldPart="So funktioniert Lernly"
-            italicPart="für Ihre Programme"
+            boldPart="Acht Wochen,"
+            italicPart="klar strukturiert."
+            sub="Ein begleiteter Pilot mit definierten Schritten — und einem Gesamtaufwand von unter zwei Stunden für Ihre Lehrenden."
           />
-          <div className="ln-stagger mx-auto mt-12 grid max-w-[1200px] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {STEPS.map((step, i) => (
-              <div key={step.title} className="ln-reveal ln-glass-card p-6">
-                <div className="flex items-center justify-between">
-                  <span
-                    className="flex h-11 w-11 items-center justify-center rounded-xl"
-                    style={{ background: "rgba(91,184,216,0.12)" }}
-                  >
-                    <step.icon
-                      size={20}
-                      strokeWidth={2}
-                      aria-hidden
-                      style={{ color: "var(--color-ln-cyan)" }}
-                    />
-                  </span>
-                  <span
-                    className="text-[12px] font-semibold tracking-[0.14em]"
-                    style={{ color: "rgba(255,255,255,0.35)" }}
-                  >
-                    0{i + 1}
-                  </span>
-                </div>
-                <h3
-                  className="mt-4 text-[17px] font-semibold text-white"
-                  style={{ fontFamily: "var(--font-display)" }}
-                >
-                  {step.title}
-                </h3>
-                <p
-                  className="mt-2 text-[14px] leading-[1.6]"
-                  style={{ color: "rgba(255,255,255,0.6)" }}
-                >
-                  {step.text}
-                </p>
-              </div>
+          <div className="mt-14">
+            <PilotTimeline />
+          </div>
+          <div className="ln-reveal mx-auto mt-12 flex max-w-[900px] flex-wrap justify-center gap-2.5">
+            {[
+              "Gesamtaufwand Lehrende: unter 2 Stunden",
+              "Erfolgskriterien definieren wir gemeinsam",
+              "Direktauftrag — kein Vergabeverfahren nötig",
+            ].map((t) => (
+              <span
+                key={t}
+                className="flex items-center gap-2 rounded-full border px-4 py-2 text-[13px]"
+                style={{
+                  borderColor: "rgba(124,196,160,0.25)",
+                  background: "rgba(124,196,160,0.06)",
+                  color: "rgba(255,255,255,0.75)",
+                }}
+              >
+                <Check size={13} strokeWidth={2.5} aria-hidden style={{ color: "var(--color-ln-sage)" }} />
+                {t}
+              </span>
             ))}
           </div>
         </section>
 
-        {/* ===== Audiences (3 cards) ===== */}
-        <section className="px-6 py-14 md:py-20">
-          <SectionHeading
-            eyebrow="Für alle Beteiligten"
-            boldPart="Ein Werkzeug,"
-            italicPart="drei Perspektiven."
-          />
-          <div className="ln-stagger mx-auto mt-12 grid max-w-[1100px] grid-cols-1 gap-4 md:grid-cols-3">
-            {AUDIENCES.map((card) => (
-              <div key={card.title} className="ln-reveal ln-glass-card p-6">
-                <span
-                  className="flex h-11 w-11 items-center justify-center rounded-xl"
-                  style={{ background: "rgba(91,184,216,0.12)" }}
-                >
-                  <card.icon
-                    size={20}
-                    strokeWidth={2}
-                    aria-hidden
-                    style={{ color: "var(--color-ln-cyan)" }}
-                  />
-                </span>
-                <h3
-                  className="mt-4 text-[17px] font-semibold text-white"
-                  style={{ fontFamily: "var(--font-display)" }}
-                >
-                  {card.title}
-                </h3>
-                <p
-                  className="mt-2 text-[14px] leading-[1.6]"
-                  style={{ color: "rgba(255,255,255,0.6)" }}
-                >
-                  {card.text}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ===== Pilot ===== */}
-        <section className="px-6 py-14 md:py-20">
+        {/* ===== Pilot offer ===== */}
+        <section id="pilot" className="scroll-mt-24 px-6 py-16 md:py-24">
           <SectionHeading
             eyebrow="Der Lernly-Pilot"
             boldPart="Ein betreuter Pilot —"
@@ -412,12 +794,85 @@ export default function HochschulenPage() {
               <PrimaryCta className="w-full shrink-0 sm:w-auto" />
             </div>
           </div>
+          <p
+            className="ln-reveal mx-auto mt-6 max-w-[640px] text-center text-[14px] leading-[1.6]"
+            style={{ color: "rgba(255,255,255,0.5)" }}
+          >
+            Lernly wird von Studierenden bereits im Klausuralltag genutzt — für
+            Hochschulen öffnen wir jetzt die ersten Pilotplätze.
+          </p>
         </section>
 
-        {/* ===== What Lernly is not ===== */}
-        <section className="px-6 py-10 md:py-14">
+        {/* ===== Learning science ===== */}
+        <section className="scroll-mt-24 px-6 py-16 md:py-24">
+          <SectionHeading
+            eyebrow="Didaktische Fundierung"
+            boldPart="Keine KI-Spielerei —"
+            italicPart="belegte Lernmethoden."
+            sub="Lernly setzt um, was die Lernforschung seit Jahrzehnten zeigt: kursbezogen und ohne Zusatzaufwand für Lehrende."
+          />
+          <div className="ln-stagger mx-auto mt-12 grid max-w-[1100px] grid-cols-1 gap-4 md:grid-cols-3">
+            {EVIDENCE.map((e) => (
+              <div key={e.method} className="ln-reveal ln-glass-card flex flex-col p-6">
+                <span
+                  className="flex h-11 w-11 items-center justify-center rounded-xl"
+                  style={{ background: "rgba(91,184,216,0.12)" }}
+                >
+                  <e.icon size={20} strokeWidth={2} aria-hidden style={{ color: "var(--color-ln-cyan)" }} />
+                </span>
+                <h3
+                  className="mt-4 text-[17px] font-semibold text-white"
+                  style={{ fontFamily: "var(--font-display)" }}
+                >
+                  {e.method}
+                </h3>
+                <p className="mt-2 flex-1 text-[14px] leading-[1.6]" style={{ color: "rgba(255,255,255,0.6)" }}>
+                  {e.text}
+                </p>
+                <p className="mt-3 text-[13px] leading-[1.55]" style={{ color: "rgba(255,255,255,0.75)" }}>
+                  {e.feature}
+                </p>
+                <p className="mt-3 text-[11.5px] italic" style={{ color: "rgba(255,255,255,0.4)" }}>
+                  {e.citation}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ===== Privacy & security ===== */}
+        <section id="datenschutz" className="scroll-mt-24 px-6 py-16 md:py-24">
+          <SectionHeading
+            eyebrow="Datenschutz & Sicherheit"
+            boldPart="Die Antworten, die Ihr"
+            italicPart="Datenschutzbeauftragter braucht."
+            sub="Leiten Sie diese Sektion gern direkt an Ihre IT oder Ihren Datenschutzbeauftragten weiter — Details klären wir vor dem Piloten gemeinsam."
+          />
+          <div className="ln-stagger mx-auto mt-12 grid max-w-[1100px] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {PRIVACY_ITEMS.map((p) => (
+              <div key={p.title} className="ln-reveal ln-glass-card p-6">
+                <span
+                  className="flex h-10 w-10 items-center justify-center rounded-xl"
+                  style={{ background: "rgba(124,196,160,0.12)" }}
+                >
+                  <p.icon size={18} strokeWidth={2} aria-hidden style={{ color: "var(--color-ln-sage)" }} />
+                </span>
+                <h3
+                  className="mt-4 text-[15.5px] font-semibold text-white"
+                  style={{ fontFamily: "var(--font-display)" }}
+                >
+                  {p.title}
+                </h3>
+                <p className="mt-2 text-[13.5px] leading-[1.6]" style={{ color: "rgba(255,255,255,0.6)" }}>
+                  {p.text}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* What Lernly does NOT do — exam law / AI Act positioning. */}
           <div
-            className="ln-reveal mx-auto flex max-w-[820px] items-start gap-4 rounded-2xl border p-6"
+            className="ln-reveal mx-auto mt-8 flex max-w-[1100px] items-start gap-4 rounded-2xl border p-6"
             style={{
               borderColor: "rgba(255,255,255,0.1)",
               background: "rgba(255,255,255,0.03)",
@@ -439,22 +894,56 @@ export default function HochschulenPage() {
                 className="text-[11px] font-semibold uppercase tracking-[0.18em]"
                 style={{ color: "rgba(255,255,255,0.45)" }}
               >
-                Was Lernly nicht ist
+                Was Lernly nicht tut
               </p>
               <p
                 className="mt-2 text-[14px] leading-[1.65]"
                 style={{ color: "rgba(255,255,255,0.65)" }}
               >
-                Kein Ersatz-LMS. Keine Benotung. Keine Prüfungsentscheidung.
+                Keine Benotung. Keine Prüfungsentscheidungen. Kein Proctoring.
+                Keine Überwachung einzelner Studierender oder Lehrender.
                 Lernly ist ein unterstützendes, formatives Lernwerkzeug —
-                ergänzend zu Ihren bestehenden Systemen.
+                ergänzend zu Ihren bestehenden Systemen und auch im Sinne des
+                EU AI Act bewusst so gestaltet.
               </p>
             </div>
           </div>
         </section>
 
+        {/* ===== Founder ===== */}
+        <section className="px-6 py-16 md:py-24">
+          <div className="mx-auto max-w-[820px]">
+            <SectionHeading
+              eyebrow="Über Lernly"
+              boldPart="Wer hinter Lernly steht."
+            />
+            <div className="ln-reveal ln-glass-card mt-10 p-7 md:p-9">
+              <p className="text-[15px] leading-[1.75]" style={{ color: "rgba(255,255,255,0.7)" }}>
+                Lernly ist während einer echten Klausurphase an der Universität
+                Uppsala entstanden — aus dem Folienberg eines einzigen Moduls
+                und der Frage, warum Prüfungsvorbereitung immer noch passives
+                Lesen bedeutet. Heute wird Lernly von Studierenden im
+                Klausuralltag genutzt und vom Studio Belerate
+                weiterentwickelt.
+              </p>
+              <p className="mt-4 text-[15px] leading-[1.75]" style={{ color: "rgba(255,255,255,0.7)" }}>
+                Im Pilotprojekt sprechen Sie direkt mit dem Gründer — kein
+                Vertrieb, keine Warteschleife, kurze Wege bei Fragen Ihrer IT
+                oder Ihres Datenschutzbeauftragten.
+              </p>
+              <a
+                href="mailto:info@lernly-app.de"
+                className="mt-6 inline-flex items-center gap-2 text-[14px] font-medium text-white underline-offset-4 transition hover:underline"
+              >
+                <Mail size={15} strokeWidth={2} aria-hidden style={{ color: "var(--color-ln-cyan)" }} />
+                info@lernly-app.de
+              </a>
+            </div>
+          </div>
+        </section>
+
         {/* ===== FAQ ===== */}
-        <section className="px-6 py-14 md:py-20">
+        <section id="faq" className="scroll-mt-24 px-6 py-16 md:py-24">
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
@@ -470,7 +959,11 @@ export default function HochschulenPage() {
             }}
           />
           <div className="mx-auto max-w-[820px]">
-            <SectionHeading eyebrow="Fragen?" boldPart="Kurz beantwortet." />
+            <SectionHeading
+              eyebrow="FAQ"
+              boldPart="Die harten Fragen —"
+              italicPart="offen beantwortet."
+            />
             <div className="ln-reveal ln-glass-card mt-10 overflow-hidden">
               {FAQ_ITEMS.map((item, i) => (
                 <details
@@ -507,8 +1000,8 @@ export default function HochschulenPage() {
           </div>
         </section>
 
-        {/* ===== Bottom CTA + lead form ===== */}
-        <section id="kontakt" className="relative overflow-hidden px-6 py-16 md:py-24">
+        {/* ===== Contact + lead form ===== */}
+        <section id="kontakt" className="relative scroll-mt-24 overflow-hidden px-6 py-16 md:py-24">
           <div
             aria-hidden
             className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"

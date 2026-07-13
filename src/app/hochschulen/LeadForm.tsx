@@ -15,12 +15,23 @@ const labelClass = "mb-1.5 block text-[13px] font-medium text-white/70";
 
 type Status = "idle" | "sending" | "success" | "error";
 
+// Qualification field (Wooclap pattern) — routed into the message body so
+// the /api/feedback contract stays unchanged.
+const ROLES = [
+  "Lehrende:r / Professor:in",
+  "Studiengangsleitung / Dekanat",
+  "Hochschuldidaktik / E-Learning",
+  "IT / Verwaltung",
+  "Sonstiges",
+] as const;
+
 // B2B lead form for /hochschulen. Reuses the existing POST /api/feedback
 // route (Notion Feedback DB) so inquiries land next to in-app feedback.
 export default function LeadForm() {
   const [name, setName] = useState("");
   const [hochschule, setHochschule] = useState("");
   const [email, setEmail] = useState("");
+  const [rolle, setRolle] = useState("");
   const [nachricht, setNachricht] = useState("");
   // Honeypot — hidden from real users; bots that fill it are dropped server-side.
   const [website, setWebsite] = useState("");
@@ -36,7 +47,7 @@ export default function LeadForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           betreff: `Hochschul-Anfrage: ${hochschule}`,
-          nachricht,
+          nachricht: rolle ? `Rolle: ${rolle}\n\n${nachricht}` : nachricht,
           typ: "Frage",
           quelle: "Hochschul-Landing",
           email,
@@ -113,21 +124,45 @@ export default function LeadForm() {
         </div>
       </div>
 
-      <div>
-        <label htmlFor="lead-email" className={labelClass}>
-          E-Mail
-        </label>
-        <input
-          id="lead-email"
-          type="email"
-          required
-          maxLength={200}
-          autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="name@hochschule.de"
-          className={inputClass}
-        />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label htmlFor="lead-email" className={labelClass}>
+            E-Mail
+          </label>
+          <input
+            id="lead-email"
+            type="email"
+            required
+            maxLength={200}
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="name@hochschule.de"
+            className={inputClass}
+          />
+        </div>
+        <div>
+          <label htmlFor="lead-rolle" className={labelClass}>
+            Ihre Rolle
+          </label>
+          <select
+            id="lead-rolle"
+            required
+            value={rolle}
+            onChange={(e) => setRolle(e.target.value)}
+            className={inputClass + " appearance-none"}
+            style={{ colorScheme: "dark" }}
+          >
+            <option value="" disabled>
+              Bitte wählen
+            </option>
+            {ROLES.map((r) => (
+              <option key={r} value={r} style={{ background: "#141930" }}>
+                {r}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div>
