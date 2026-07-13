@@ -29,7 +29,11 @@ export function SegmentProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const param = new URLSearchParams(window.location.search).get("segment");
-    if (param === "akademie") setSegment("akademie");
+    if (param !== "akademie") return;
+    // Deferred past the effect pass (lint: no sync setState in effects);
+    // also avoids a hydration mismatch with the SSR default variant.
+    const id = window.setTimeout(() => setSegment("akademie"), 0);
+    return () => window.clearTimeout(id);
   }, []);
 
   return (

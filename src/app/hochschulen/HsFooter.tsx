@@ -1,3 +1,4 @@
+import Link from "next/link";
 import LernlyLogo from "@/components/LernlyLogo";
 
 // Light footer for the B2B route. Deliberately NOT the shared SiteFooter:
@@ -60,9 +61,9 @@ export default function HsFooter() {
             >
               Kontakt
             </a>
-            <a href="/" className="transition hover:text-[color:var(--hs-ink)]">
+            <Link href="/" className="transition hover:text-[color:var(--hs-ink)]">
               Für Studierende
-            </a>
+            </Link>
           </div>
           <div className="text-[12px]" style={{ color: "var(--hs-mute)" }}>
             © {new Date().getFullYear()} Lernly · Ein Tool von{" "}
