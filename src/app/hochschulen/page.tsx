@@ -519,36 +519,84 @@ export default function HochschulenPage() {
           </section>
 
           {/* ===== ROI / business case band ===== */}
-          <section className="hs-soft-bg border-y px-6 py-12 md:py-14" style={{ borderColor: "var(--hs-line)" }}>
+          <section className="hs-soft-bg border-y px-6 py-14 md:py-16" style={{ borderColor: "var(--hs-line)" }}>
             <div className="hs-reveal mx-auto max-w-[860px] text-center">
               <p className="hs-eyebrow mb-4">Der Business-Case</p>
-              <p
-                className="text-[19px] font-medium leading-[1.6] md:text-[21px]"
-                style={{ color: "var(--hs-ink)" }}
+              <h2
+                className="font-bold leading-[1.15] tracking-[-0.7px]"
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(26px, 3vw, 34px)",
+                  color: "var(--hs-ink)",
+                }}
               >
+                <Seg
+                  h="Was ein Pilot Ihnen zurückbringt."
+                  a="Ihre Bestehensquote ist Ihr Marketing."
+                />
+              </h2>
+              <p
+                className="mx-auto mt-4 max-w-[760px] text-[16px] leading-[1.7] md:text-[17px]"
+                style={{ color: "var(--hs-mute)" }}
+              >
+                <Seg
+                  h="Ein Studienabbrecher bedeutet fünfstellige entgangene Studiengebühren über die Programmdauer. Bei bundesweit 28 % Abbruch — in MINT über 40 % — ist Prüfungsvorbereitung kein Nice-to-have, sondern ein direkter Hebel auf Retention und Ruf. Lernly zielt genau darauf, und der Pilot macht die Wirkung messbar, nicht behauptet."
+                  a="Bei Prüfungsvorbereitung entscheidet die Erfolgsquote über Weiterempfehlung, Auslastung und Preis. Ein Tool, das aktives Abrufen und prüfungsnahes Üben in Ihre Kohorte bringt, arbeitet direkt auf die eine Kennzahl, mit der Sie werben. Der Pilot kostet weniger als der Deckungsbeitrag eines einzigen zusätzlichen zahlenden Teilnehmers."
+                />
+              </p>
+              <div className="mt-7 flex flex-wrap justify-center gap-2.5">
                 <Seg
                   h={
                     <>
-                      Ein Studienabbrecher bedeutet fünfstellige entgangene
-                      Studiengebühren. Eine höhere Bestehensquote ist Ihr
-                      Argument für die nächste Kohorte.{" "}
-                      <span style={{ color: "var(--hs-accent)" }}>
-                        Lernly zielt genau darauf — und der Pilot macht es
-                        messbar.
-                      </span>
+                      {[
+                        ["€10.000–19.000", "entgangene Gebühren je Abbrecher (Fernstudium)"],
+                        ["28 % Abbruch", "Ihr Ansatzpunkt für messbare Verbesserung"],
+                        ["ab 1.500 €", "Pilot, unter jeder Direktvergabe-Grenze"],
+                      ].map(([value, label]) => (
+                        <span
+                          key={value}
+                          className="rounded-full border bg-white px-4 py-2 text-[13.5px]"
+                          style={{ borderColor: "var(--hs-line)", color: "var(--hs-mute)" }}
+                        >
+                          <strong className="font-semibold" style={{ color: "var(--hs-accent)" }}>
+                            {value}
+                          </strong>{" "}
+                          — {label}
+                        </span>
+                      ))}
                     </>
                   }
                   a={
                     <>
-                      Ihre Bestehensquote ist Ihr Marketing.{" "}
-                      <span style={{ color: "var(--hs-accent)" }}>
-                        Wir heben sie — für weniger als den Deckungsbeitrag
-                        eines einzigen zusätzlichen Teilnehmers.
-                      </span>
+                      {[
+                        "Erfolgsquote = Ihr stärkstes Verkaufsargument",
+                        "Prüfungsnahes Üben + Spaced Repetition, kursbezogen",
+                        "ab 1.500 € — betreuter Pilot, Direktauftrag",
+                      ].map((t) => (
+                        <span
+                          key={t}
+                          className="rounded-full border bg-white px-4 py-2 text-[13.5px] font-medium"
+                          style={{ borderColor: "var(--hs-line)", color: "var(--hs-ink)" }}
+                        >
+                          {t}
+                        </span>
+                      ))}
                     </>
                   }
                 />
-              </p>
+              </div>
+              <Seg
+                h={
+                  <p
+                    className="mx-auto mt-6 max-w-[640px] text-[15px] font-medium leading-[1.6]"
+                    style={{ color: "var(--hs-ink)" }}
+                  >
+                    Bleibt durch den Piloten auch nur ein einziger Studierender
+                    dabei, hat er sich mehrfach getragen.
+                  </p>
+                }
+                a={null}
+              />
             </div>
           </section>
         </SegmentProvider>
@@ -821,67 +869,8 @@ export default function HochschulenPage() {
           <CtaRow text="Sehen wir uns Ihr Modul gemeinsam an?" />
         </section>
 
-        {/* ===== Academy / continuing-education segment ===== */}
-        <section className="px-6 py-16 md:py-20">
-          <div className="mx-auto grid max-w-[1100px] items-center gap-10 lg:grid-cols-[1fr_1fr]">
-            <div className="hs-reveal">
-              <p className="hs-eyebrow">Weiterbildung & Prüfungsvorbereitung</p>
-              <h2
-                className="mt-3 font-bold leading-[1.15] tracking-[-0.7px]"
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(26px, 3vw, 34px)",
-                  color: "var(--hs-ink)",
-                }}
-              >
-                Auch für Akademien, Repetitorien und
-                Prüfungsvorbereitungs-Anbieter.
-              </h2>
-              <p className="mt-4 text-[15.5px] leading-[1.7]" style={{ color: "var(--hs-mute)" }}>
-                Derselbe Ablauf, Ihre Sprache: Aus Ihren Kursunterlagen werden
-                Lernpakete für Ihre Teilnehmer — freigegeben von Ihren
-                Dozenten. Der Report zeigt nicht Akkreditierungs-Kennzahlen,
-                sondern das, was Ihr Geschäft trägt: Vorbereitung und
-                Bestehensquote.
-              </p>
-              <p
-                className="hs-serif mt-5 border-l-2 pl-4 text-[17px] italic leading-[1.6]"
-                style={{ borderColor: "var(--hs-accent)", color: "var(--hs-ink)" }}
-              >
-                Ihre Bestehensquote ist Ihr Marketing. Wir heben sie — für
-                weniger als den Deckungsbeitrag eines einzigen zusätzlichen
-                Teilnehmers.
-              </p>
-            </div>
-            <div className="hs-reveal flex flex-col gap-3">
-              {[
-                "IHK- & Kammer-Prüfungsvorbereitung",
-                "Repetitorien & Examenskurse",
-                "Akademien, Bildungsträger & Fernlehrgänge",
-              ].map((t) => (
-                <div
-                  key={t}
-                  className="hs-card flex items-center gap-3 px-5 py-4"
-                >
-                  <Check size={16} strokeWidth={2.5} aria-hidden style={{ color: "var(--hs-accent)" }} />
-                  <span className="text-[15px] font-medium" style={{ color: "var(--hs-ink)" }}>
-                    {t}
-                  </span>
-                </div>
-              ))}
-              <a
-                href={CTA_URL}
-                {...(CTA_IS_EXTERNAL ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                className="hs-link mt-2 text-[14.5px] font-medium"
-              >
-                Gespräch für Ihren Kurs buchen →
-              </a>
-            </div>
-          </div>
-        </section>
-
         {/* ===== Pilot timeline ===== */}
-        <section id="ablauf" className="hs-soft-bg scroll-mt-20 border-y px-6 py-16 md:py-24" style={{ borderColor: "var(--hs-line)" }}>
+        <section id="ablauf" className="scroll-mt-20 px-6 py-16 md:py-24">
           <HsSectionHeading
             eyebrow="Der Ablauf"
             title="Acht Wochen, klar strukturiert."
@@ -978,8 +967,55 @@ export default function HochschulenPage() {
           </div>
         </section>
 
-        {/* ===== Learning science ===== */}
+        {/* ===== Academies & exam-prep providers ===== */}
         <section className="hs-soft-bg border-y px-6 py-16 md:py-24" style={{ borderColor: "var(--hs-line)" }}>
+          <HsSectionHeading
+            eyebrow="Für Akademien & Prüfungsvorbereitung"
+            title="Wenn die Bestehensquote Ihr Produkt ist."
+            sub="Steuer- und WP-Vorbereitung, Fachwirt- und Meisterkurse, Bootcamps, Zertifikatslehrgänge: Ihre Teilnehmer zahlen für ein Ergebnis — bestehen. Lernly macht aus Ihren Kursunterlagen aktive, prüfungsnahe Lernpakete für die ganze Kohorte, damit mehr Teilnehmer sicher durch die Prüfung kommen."
+          />
+          <div className="ln-stagger mx-auto mt-12 grid max-w-[1100px] grid-cols-1 gap-4 md:grid-cols-3">
+            {[
+              {
+                icon: SearchCheck,
+                title: "Prüfungsnah, nicht generisch",
+                text: "Aus Ihrem Material entstehen Karteikarten, Quiz und eine Simulation im Stil der echten Prüfung. Optional nach Altklausuren gewichtet, damit dort geübt wird, wo es zählt.",
+              },
+              {
+                icon: Repeat,
+                title: "Aktives Abrufen statt Skript-Lesen",
+                text: "Testing-Effekt und Spaced Repetition, die Methoden mit der höchsten belegten Wirksamkeit — kursbezogen und mobil, ohne Mehraufwand für Ihre Dozenten.",
+              },
+              {
+                icon: ListChecks,
+                title: "Sichtbar, wo die Kohorte schwächelt",
+                text: "Sie sehen aggregiert, welche Themen sitzen und welche nicht, und steuern vor der Prüfung gezielt nach.",
+              },
+            ].map((v) => (
+              <div key={v.title} className="hs-reveal hs-card flex flex-col p-6">
+                <span
+                  className="flex h-11 w-11 items-center justify-center rounded-xl"
+                  style={{ background: "var(--hs-accent-soft)" }}
+                >
+                  <v.icon size={20} strokeWidth={2} aria-hidden style={{ color: "var(--hs-accent)" }} />
+                </span>
+                <h3
+                  className="mt-4 text-[17px] font-semibold"
+                  style={{ fontFamily: "var(--font-display)", color: "var(--hs-ink)" }}
+                >
+                  {v.title}
+                </h3>
+                <p className="mt-2 text-[14px] leading-[1.65]" style={{ color: "var(--hs-mute)" }}>
+                  {v.text}
+                </p>
+              </div>
+            ))}
+          </div>
+          <CtaRow text="Gleicher betreuter Pilot, gleiche Freigabe durch Ihre Dozenten — nur auf Ihre Teilnehmer und Ihre Prüfung zugeschnitten." />
+        </section>
+
+        {/* ===== Learning science ===== */}
+        <section className="px-6 py-16 md:py-24">
           <HsSectionHeading
             eyebrow="Didaktische Fundierung"
             title="Keine KI-Spielerei — belegte Lernmethoden."
