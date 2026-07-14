@@ -18,6 +18,7 @@ import {
   Mail,
   ChevronDown,
   ExternalLink,
+  ArrowRight,
   type LucideIcon,
 } from "lucide-react";
 import LernlyLogo from "@/components/LernlyLogo";
@@ -274,13 +275,10 @@ function PrimaryCta({ className, label }: { className?: string; label?: string }
       {...(CTA_IS_EXTERNAL
         ? { target: "_blank", rel: "noopener noreferrer" }
         : {})}
-      className={
-        "inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-[15px] font-semibold text-white transition hover:opacity-90 " +
-        (className ?? "")
-      }
-      style={{ background: "var(--hs-accent)" }}
+      className={"hs-btn-primary " + (className ?? "")}
     >
       {label ?? "15-Min-Gespräch buchen"}
+      <ArrowRight size={16} strokeWidth={2.2} aria-hidden />
     </a>
   );
 }
@@ -319,8 +317,8 @@ function ProductModule({
       <div className={reverse ? "lg:order-2" : undefined}>
         <p className="hs-eyebrow">{kicker}</p>
         <h3
-          className="mt-3 text-[24px] font-bold leading-[1.18] tracking-[-0.5px] md:text-[27px]"
-          style={{ fontFamily: "var(--font-display)", color: "var(--hs-ink)" }}
+          className="mt-3 text-[24px] font-bold leading-[1.15] md:text-[27px]"
+          style={{ fontFamily: "var(--font-display)", letterSpacing: "-0.02em", color: "var(--hs-ink)" }}
         >
           {title}
         </h3>
@@ -431,8 +429,8 @@ export default function HochschulenPage() {
               {...(CTA_IS_EXTERNAL
                 ? { target: "_blank", rel: "noopener noreferrer" }
                 : {})}
-              className="rounded-lg px-4 py-2 text-[13.5px] font-semibold text-white transition hover:opacity-90"
-              style={{ background: "var(--hs-accent)" }}
+              className="rounded-full px-4.5 py-2 text-[13.5px] font-semibold text-white transition hover:opacity-90"
+              style={{ background: "var(--hs-accent)", paddingLeft: 18, paddingRight: 18 }}
             >
               Gespräch buchen
             </a>
@@ -443,17 +441,19 @@ export default function HochschulenPage() {
       <main className="flex-1">
         <SegmentProvider>
           {/* ===== Hero ===== */}
-          <section className="px-6 pb-16 pt-12 md:pb-20 md:pt-16">
+          <section className="hs-hero-bg overflow-hidden px-6 pb-16 pt-12 md:pb-20 md:pt-16">
             <div className="mx-auto grid max-w-[1160px] items-start gap-12 lg:grid-cols-[minmax(0,1fr)_420px]">
               <div className="text-center lg:text-left">
                 <div className="mb-6 flex justify-center lg:justify-start">
                   <SegmentTabs />
                 </div>
                 <h1
-                  className="font-bold leading-[1.1] tracking-[-1.2px]"
+                  className="font-bold"
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontSize: "clamp(31px, 3.7vw, 46px)",
+                    fontSize: "clamp(2.4rem, 4.2vw, 3.4rem)",
+                    letterSpacing: "-0.025em",
+                    lineHeight: 1.05,
                     color: "var(--hs-ink)",
                   }}
                 >
@@ -461,19 +461,25 @@ export default function HochschulenPage() {
                     h={
                       <>
                         Aus Ihren Kursunterlagen werden aktive, prüfungsnahe
-                        Lernpakete — für ganze Kohorten.
+                        Lernpakete —{" "}
+                        <span className="hs-gradient-text">
+                          für ganze Kohorten.
+                        </span>
                       </>
                     }
                     a={
                       <>
                         Aus Ihren Kursunterlagen werden aktive, prüfungsnahe
-                        Lernpakete — für alle Ihre Teilnehmer.
+                        Lernpakete —{" "}
+                        <span className="hs-gradient-text">
+                          für alle Ihre Teilnehmer.
+                        </span>
                       </>
                     }
                   />
                 </h1>
                 <p
-                  className="mx-auto mt-5 max-w-[620px] text-[16.5px] leading-[1.7] lg:mx-0"
+                  className="mx-auto mt-5 max-w-[620px] text-[17px] leading-[1.65] md:text-[18px] lg:mx-0"
                   style={{ color: "var(--hs-mute)" }}
                 >
                   <Seg
@@ -498,12 +504,7 @@ export default function HochschulenPage() {
                     href="/#demo"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl border px-6 py-3 text-[15px] font-semibold transition hover:border-[color:var(--hs-accent)] sm:w-auto"
-                    style={{
-                      borderColor: "var(--hs-line)",
-                      color: "var(--hs-ink)",
-                      background: "#fff",
-                    }}
+                    className="hs-btn-secondary w-full sm:w-auto"
                   >
                     Studierenden-Ansicht öffnen
                     <ExternalLink size={15} strokeWidth={2} aria-hidden style={{ color: "var(--hs-mute)" }} />

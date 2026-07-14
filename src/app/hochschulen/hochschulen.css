@@ -1,37 +1,49 @@
 /* =========================================================================
    /hochschulen — route-local "Academic Editorial" light theme.
+   Structure/layout/component treatment per the GradBlueprint reference;
+   colors, logo and fonts are Lernly (indigo #1421C5 accent, Sora/Inter).
    Imported by src/app/hochschulen/page.tsx. Next bundles route CSS
    globally, so EVERY rule here is scoped under .hs-root to avoid leaking
    into the dark B2C app.
    ========================================================================= */
 
 .hs-root {
-  --hs-ink: #0e1116;
-  --hs-mute: #5b6472;
-  --hs-line: #e6e8ec;
-  --hs-soft: #f7f8fa;
-  --hs-accent: #2b3499;
-  --hs-accent-deep: #1421c5;
-  --hs-accent-soft: rgba(43, 52, 153, 0.06);
+  /* Cool near-white canvas (oklch(0.985 0.005 250)) */
+  --hs-bg: #fafbfd;
+  --hs-soft: #f4f6f9;
+  /* Ink (oklch(0.2 0.04 258)) / muted (oklch(0.5 0.02 258)) */
+  --hs-ink: #1a2130;
+  --hs-mute: #6b7280;
+  /* Hairline (oklch(0.92 0.01 250)) */
+  --hs-line: #e5e8ee;
+  /* Single accent: Lernly logo indigo (+ darker companion tone) */
+  --hs-accent: #1421c5;
+  --hs-accent-dark: #2b3499;
+  --hs-accent-soft: rgba(20, 33, 197, 0.06);
+  /* Layered card shadow (oklch(0.2 0.04 258 / .08|.18)) */
+  --hs-shadow:
+    0 4px 12px -4px rgba(26, 33, 48, 0.08),
+    0 20px 40px -20px rgba(26, 33, 48, 0.18);
 
-  background: #ffffff;
+  background: var(--hs-bg);
   color: var(--hs-ink);
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 /* --- Cards & hairlines ------------------------------------------------- */
 .hs-card {
   background: #ffffff;
   border: 1px solid var(--hs-line);
-  border-radius: 16px;
-  box-shadow:
-    0 1px 2px rgba(14, 17, 22, 0.04),
-    0 12px 32px -18px rgba(14, 17, 22, 0.08);
+  border-radius: 20px;
+  box-shadow: var(--hs-shadow);
 }
 .hs-soft-bg {
   background: var(--hs-soft);
 }
 
 /* --- Typography helpers ------------------------------------------------- */
+/* Plain small-caps eyebrow (module kickers). */
 .hs-eyebrow {
   font-size: 12px;
   font-weight: 600;
@@ -39,9 +51,134 @@
   text-transform: uppercase;
   color: var(--hs-accent);
 }
+/* Signature eyebrow pill: white, hairline, small accent dot, muted text. */
+.hs-eyebrow-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--hs-line);
+  border-radius: 9999px;
+  background: #ffffff;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--hs-mute);
+}
+.hs-eyebrow-pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--hs-accent);
+  flex-shrink: 0;
+}
+/* Gradient headline treatment for the H1 key phrase (blue family only). */
+.hs-gradient-text {
+  background: linear-gradient(135deg, #1421c5, #3d5cf5);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 /* Serif accent for research pull-quotes (system stack, no font download). */
 .hs-serif {
   font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+/* --- Hero background: near-white + subtle radial glow + fine dot grid --- */
+.hs-hero-bg {
+  position: relative;
+}
+.hs-hero-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, var(--hs-line) 1px, transparent 1px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 60% at 50% 0%,
+    rgba(0, 0, 0, 0.55),
+    transparent 75%
+  );
+  mask-image: radial-gradient(
+    ellipse 70% 60% at 50% 0%,
+    rgba(0, 0, 0, 0.55),
+    transparent 75%
+  );
+}
+.hs-hero-bg::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -180px;
+  width: 780px;
+  height: 520px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background: radial-gradient(
+    closest-side,
+    rgba(125, 110, 255, 0.1),
+    transparent 70%
+  );
+}
+.hs-hero-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Buttons ------------------------------------------------------------ */
+/* Primary CTA: solid indigo pill (arrow icon added in markup). */
+.hs-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 9999px;
+  background: var(--hs-accent);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 12px 26px;
+  transition: background 0.15s ease;
+}
+.hs-btn-primary:hover {
+  background: var(--hs-accent-dark);
+}
+/* Secondary CTA: white pill with hairline border. */
+.hs-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 1px solid var(--hs-line);
+  color: var(--hs-ink);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 12px 26px;
+  transition: border-color 0.15s ease;
+}
+.hs-btn-secondary:hover {
+  border-color: var(--hs-accent);
+}
+
+/* --- Soft-tinted status chips (report / analytics card) ------------------ */
+.hs-chip-blue {
+  background: rgba(20, 33, 197, 0.08);
+  color: #1421c5;
+}
+.hs-chip-violet {
+  background: rgba(124, 58, 237, 0.09);
+  color: #6d28d9;
+}
+.hs-chip-amber {
+  background: rgba(217, 119, 6, 0.1);
+  color: #b45309;
+}
+.hs-chip-green {
+  background: rgba(5, 150, 105, 0.09);
+  color: #047857;
 }
 
 /* --- Scroll reveal (subtle, editorial) ---------------------------------- */
@@ -64,7 +201,7 @@
   }
 }
 
-/* --- Dark product mockups on the white canvas ---------------------------
+/* --- Dark product mockups on the light canvas ---------------------------
    The mockups render the real (dark) app UI inside MockupShell, whose
    shadow/border are inline styles tuned for the dark landing. Soften them
    here; !important is required to beat the inline declarations. */
@@ -73,9 +210,8 @@
 }
 .hs-root .ln-fb-device > div {
   border-color: var(--hs-line) !important;
-  box-shadow:
-    0 2px 8px rgba(14, 17, 22, 0.06),
-    0 28px 56px -28px rgba(14, 17, 22, 0.25) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--hs-shadow) !important;
 }
 
 /* Links inside body copy */
@@ -83,7 +219,7 @@
   color: var(--hs-accent);
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: rgba(43, 52, 153, 0.3);
+  text-decoration-color: rgba(20, 33, 197, 0.3);
   transition: text-decoration-color 0.15s ease;
 }
 .hs-root a.hs-link:hover {

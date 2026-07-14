@@ -9,7 +9,7 @@ const FALLBACK_MAILTO =
 const inputClass =
   "w-full rounded-xl border border-[#E6E8EC] bg-white px-4 py-3 " +
   "text-[15px] text-[#0E1116] placeholder-[#9AA1AC] outline-none transition " +
-  "focus:border-[#2B3499] focus:ring-2 focus:ring-[rgba(43,52,153,0.12)]";
+  "focus:border-[#1421C5] focus:ring-2 focus:ring-[rgba(20,33,197,0.12)]";
 
 const labelClass = "mb-1.5 block text-[13px] font-medium text-[#374151]";
 
@@ -218,8 +218,8 @@ export default function LeadForm() {
       <button
         type="submit"
         disabled={status === "sending"}
-        className="mt-1 inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-[15px] font-semibold text-white transition hover:opacity-90 disabled:opacity-60"
-        style={{ background: "#2B3499" }}
+        className="mt-1 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-[15px] font-semibold text-white transition hover:opacity-90 disabled:opacity-60"
+        style={{ background: "#1421C5" }}
       >
         {status === "sending" && (
           <Loader2 size={16} strokeWidth={2} aria-hidden className="animate-spin" />

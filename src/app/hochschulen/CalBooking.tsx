@@ -108,7 +108,7 @@ export default function CalBooking({
       Cal.ns![namespace]("ui", {
         theme: "light",
         cssVarsPerTheme: {
-          light: { "cal-brand": "#2B3499" },
+          light: { "cal-brand": "#1421C5" },
         },
         hideEventTypeDetails: compact,
         layout: "month_view",

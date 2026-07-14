@@ -2,7 +2,8 @@ import { type ReactNode } from "react";
 
 // Light "Academic Editorial" section heading for /hochschulen. The shared
 // SectionHeading hardcodes white text for the dark landing, so this route
-// gets its own: eyebrow in the indigo accent, near-black heading, muted sub.
+// gets its own. GradBlueprint treatment: eyebrow as white pill with accent
+// dot, big tight Sora heading (700, -0.025em, lh ~1.05), muted sub.
 export default function HsSectionHeading({
   eyebrow,
   title,
@@ -20,16 +21,22 @@ export default function HsSectionHeading({
   return (
     <div
       className={
-        `hs-reveal max-w-[760px] ${centered ? "mx-auto text-center" : "text-left"} ` +
+        `hs-reveal max-w-[820px] ${centered ? "mx-auto text-center" : "text-left"} ` +
         (className ?? "")
       }
     >
-      {eyebrow && <p className="hs-eyebrow mb-4">{eyebrow}</p>}
+      {eyebrow && (
+        <p className="mb-5">
+          <span className="hs-eyebrow-pill">{eyebrow}</span>
+        </p>
+      )}
       <h2
-        className="font-bold leading-[1.12] tracking-[-0.9px]"
+        className="font-bold"
         style={{
           fontFamily: "var(--font-display)",
-          fontSize: "clamp(28px, 3.6vw, 40px)",
+          fontSize: "clamp(2rem, 4vw, 3rem)",
+          letterSpacing: "-0.025em",
+          lineHeight: 1.05,
           color: "var(--hs-ink)",
         }}
       >
@@ -37,7 +44,7 @@ export default function HsSectionHeading({
       </h2>
       {sub && (
         <p
-          className={`mt-4 max-w-[620px] text-[16px] leading-[1.7] ${centered ? "mx-auto" : ""}`}
+          className={`mt-5 max-w-[640px] text-[16px] leading-[1.65] md:text-[17px] ${centered ? "mx-auto" : ""}`}
           style={{ color: "var(--hs-mute)" }}
         >
           {sub}
