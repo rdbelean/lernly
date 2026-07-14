@@ -163,22 +163,39 @@
   border-color: var(--hs-accent);
 }
 
-/* --- Soft-tinted status chips (report / analytics card) ------------------ */
+/* --- Functional status chips (soft ~12% tint + strong text, pill) --------
+   Indigo = neutral/primary · green = strong/passed · amber = medium ·
+   orange = weaker · red = gap. Functional status colors, not brand hues. */
+.hs-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 9999px;
+  padding: 2px 9px;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
 .hs-chip-blue {
-  background: rgba(20, 33, 197, 0.08);
+  background: rgba(20, 33, 197, 0.1);
   color: #1421c5;
 }
-.hs-chip-violet {
-  background: rgba(124, 58, 237, 0.09);
-  color: #6d28d9;
+.hs-chip-green {
+  background: rgba(22, 163, 74, 0.12);
+  color: #15803d;
 }
 .hs-chip-amber {
-  background: rgba(217, 119, 6, 0.1);
+  background: rgba(217, 119, 6, 0.12);
   color: #b45309;
 }
-.hs-chip-green {
-  background: rgba(5, 150, 105, 0.09);
-  color: #047857;
+.hs-chip-orange {
+  background: rgba(234, 88, 12, 0.12);
+  color: #c2410c;
+}
+.hs-chip-red {
+  background: rgba(220, 38, 38, 0.1);
+  color: #b91c1c;
 }
 
 /* --- Scroll reveal (subtle, editorial) ---------------------------------- */

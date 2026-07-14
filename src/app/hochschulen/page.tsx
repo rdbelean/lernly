@@ -22,9 +22,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import LernlyLogo from "@/components/LernlyLogo";
-import UploadMaskMockup from "@/components/landing/mockups/UploadMaskMockup";
-import QuizResultMockup from "@/components/landing/mockups/QuizResultMockup";
-import TopicConceptMockup from "@/components/landing/mockups/TopicConceptMockup";
 import { SITE_URL } from "@/lib/site";
 import LeadForm from "./LeadForm";
 import RevealObserver from "./RevealObserver";
@@ -34,6 +31,8 @@ import PilotTimeline from "./PilotTimeline";
 import CalBooking from "./CalBooking";
 import HsSectionHeading from "./HsSectionHeading";
 import HsFooter from "./HsFooter";
+import HeroReportCard from "./HeroReportCard";
+import { HsUploadCard, HsQuizResultCard, HsTopicConceptCard } from "./HsProductCards";
 import { SegmentProvider, SegmentTabs, Seg } from "./segment";
 import "./hochschulen.css";
 
@@ -511,10 +510,10 @@ export default function HochschulenPage() {
                   </a>
                 </div>
               </div>
-              {/* Booking widget beside the title — desktop only; mobile books
-                  via the CTA or the embed at the end of the page. */}
-              <div className="hidden lg:block">
-                <CalBooking namespace="hero" maxHeight={491} compact lazy />
+              {/* Floating signature product card (GradBlueprint treatment) —
+                  booking happens via the CTAs and the embed at the page end. */}
+              <div className="hs-reveal mx-auto w-full max-w-[440px] lg:mx-0 lg:mt-2">
+                <HeroReportCard />
               </div>
             </div>
           </section>
@@ -703,7 +702,7 @@ export default function HochschulenPage() {
             <ProductModule
               kicker="Schritt 1 · Ihre Unterlagen"
               title="Aus den offiziellen Unterlagen Ihres Moduls"
-              mockup={<UploadMaskMockup />}
+              mockup={<HsUploadCard />}
               mockupLabel="Lernly-Oberfläche: Upload-Maske mit PDF-Dateien und Prüfungsformat-Auswahl"
             >
               <p>
@@ -800,7 +799,7 @@ export default function HochschulenPage() {
               kicker="Schritt 4 · Prüfungsnähe"
               title="Üben im Stil der echten Klausur"
               reverse
-              mockup={<QuizResultMockup />}
+              mockup={<HsQuizResultCard />}
               mockupLabel="Lernly-Oberfläche: Quiz-Ergebnis mit Punktzahl und Auswertung nach Themen"
             >
               <p>
@@ -835,7 +834,7 @@ export default function HochschulenPage() {
               kicker="Internationale Studiengänge"
               title="Auch auf Englisch — automatisch"
               reverse
-              mockup={<TopicConceptMockup />}
+              mockup={<HsTopicConceptCard />}
               mockupLabel="Lernly-Oberfläche: englischsprachige Konzeptkarte zu Porter's Five Forces"
             >
               <p>

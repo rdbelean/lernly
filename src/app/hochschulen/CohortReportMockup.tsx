@@ -10,16 +10,17 @@
 const STATS: { value: string; label: string; chip: string }[] = [
   { value: "78 %", label: "Aktivierte Studierende", chip: "hs-chip-blue" },
   { value: "12.400", label: "Gelernte Karten", chip: "hs-chip-green" },
-  { value: "71 %", label: "Ø Quiz-Ergebnis", chip: "hs-chip-violet" },
-  { value: "4,1", label: "Lerntage / Woche", chip: "hs-chip-amber" },
+  { value: "71 %", label: "Ø Quiz-Ergebnis", chip: "hs-chip-amber" },
+  { value: "4,1", label: "Lerntage / Woche", chip: "hs-chip-blue" },
 ];
 
-// Per-topic mastery — the "where the cohort struggles" view.
+// Per-topic mastery — the "where the cohort struggles" view. Status colors
+// follow the functional chip system (green/amber/orange/red).
 const TOPICS = [
-  { name: "Deskriptive Statistik", pct: 82, color: "#047857" },
-  { name: "Wahrscheinlichkeit", pct: 64, color: "#1421C5" },
-  { name: "Hypothesentests", pct: 51, color: "#B45309" },
-  { name: "Regression", pct: 43, color: "#B45309" },
+  { name: "Deskriptive Statistik", pct: 82, chip: "hs-chip-green", bar: "#16A34A" },
+  { name: "Wahrscheinlichkeit", pct: 64, chip: "hs-chip-amber", bar: "#D97706" },
+  { name: "Hypothesentests", pct: 51, chip: "hs-chip-orange", bar: "#EA580C" },
+  { name: "Regression", pct: 43, chip: "hs-chip-red", bar: "#DC2626" },
 ];
 
 // Weekly engagement across the 8 pilot weeks (relative heights).
@@ -63,7 +64,7 @@ export default function CohortReportMockup() {
               style={{ borderColor: "var(--hs-line)" }}
             >
               <span
-                className={`${s.chip} inline-block rounded-full px-2 py-0.5 text-[13px] font-bold`}
+                className={`hs-chip ${s.chip} text-[13px] font-bold`}
                 style={{ fontFamily: "var(--font-display)" }}
               >
                 {s.value}
@@ -98,15 +99,10 @@ export default function CohortReportMockup() {
                 >
                   <span
                     className="block h-full rounded-full"
-                    style={{ width: `${t.pct}%`, background: t.color, opacity: 0.85 }}
+                    style={{ width: `${t.pct}%`, background: t.bar, opacity: 0.8 }}
                   />
                 </span>
-                <span
-                  className="w-8 text-right text-[10.5px] font-semibold"
-                  style={{ color: "var(--hs-mute)" }}
-                >
-                  {t.pct} %
-                </span>
+                <span className={`hs-chip ${t.chip}`}>{t.pct} %</span>
               </div>
             ))}
           </div>
