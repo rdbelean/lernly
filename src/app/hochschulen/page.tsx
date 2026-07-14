@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     url: "/hochschulen",
     images: [
       {
-        url: "/lernly-og.png",
+        url: "/lernly-hochschulen-og.png",
         width: 1200,
         height: 630,
         alt: "Lernly für Hochschulen — prüfungsnahe Lernpakete für ganze Kohorten",
@@ -78,7 +78,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,
-    images: ["/lernly-og.png"],
+    images: ["/lernly-hochschulen-og.png"],
   },
 };
 
