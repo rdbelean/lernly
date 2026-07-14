@@ -92,7 +92,7 @@ const CTA_IS_EXTERNAL = CTA_URL.startsWith("http");
 // Founder block — Daniel fills these in; photo/LinkedIn render only when set.
 const FOUNDER_NAME = "Daniel Belean";
 const FOUNDER_PHOTO: string | null = "/daniel.jpg";
-const FOUNDER_LINKEDIN: string | null = null; // personal LinkedIn profile URL
+const FOUNDER_LINKEDIN: string | null = "https://www.linkedin.com/in/rdbelean/";
 
 const NAV_ANCHORS = [
   { href: "#produkt", label: "Produkt" },
