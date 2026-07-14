@@ -1,4 +1,11 @@
-import { UploadCloud, FileText } from "lucide-react";
+import {
+  UploadCloud,
+  FileText,
+  RotateCcw,
+  RefreshCw,
+  Minus,
+  Check,
+} from "lucide-react";
 
 // =========================================================================
 // Light product cards for /hochschulen (GradBlueprint treatment: white
@@ -152,6 +159,80 @@ export function HsQuizResultCard() {
         Jede Antwortoption mit Erklärung — Studierende sehen, was sie als
         Nächstes wiederholen sollten.
       </p>
+    </div>
+  );
+}
+
+/** Flashcard view — question side with the three-step self-rating. The
+    rating actions map onto the functional status colors (red/amber/green). */
+export function HsFlashcardCard() {
+  return (
+    <div className="hs-card p-5 md:p-6">
+      {/* Header: progress + category chip */}
+      <div className="flex items-center justify-between gap-2">
+        <p
+          className="text-[15px] font-semibold"
+          style={{ fontFamily: "var(--font-display)", color: "var(--hs-ink)" }}
+        >
+          Karteikarten
+          <span className="ml-2 text-[12px] font-medium" style={{ color: "var(--hs-mute)" }}>
+            1 / 3
+          </span>
+        </p>
+        <span className="hs-chip hs-chip-blue">Wettbewerb</span>
+      </div>
+      <div
+        className="mt-3 h-1.5 overflow-hidden rounded-full"
+        style={{ background: "var(--hs-soft)" }}
+      >
+        <span
+          className="block h-full rounded-full"
+          style={{ width: "33%", background: "var(--hs-accent)" }}
+        />
+      </div>
+
+      {/* Question face */}
+      <div
+        className="mt-4 flex flex-col items-center justify-center rounded-2xl border px-5 py-10 text-center"
+        style={{ borderColor: "var(--hs-line)", background: "var(--hs-soft)" }}
+      >
+        <p
+          className="text-[10px] font-semibold uppercase tracking-[0.16em]"
+          style={{ color: "var(--hs-mute)" }}
+        >
+          Frage
+        </p>
+        <p
+          className="mt-2 max-w-[320px] text-[17px] font-semibold leading-snug"
+          style={{ fontFamily: "var(--font-display)", color: "var(--hs-ink)" }}
+        >
+          Was beschreibt die Preiselastizität der Nachfrage?
+        </p>
+        <p
+          className="mt-6 inline-flex items-center gap-1.5 text-[11.5px]"
+          style={{ color: "var(--hs-mute)" }}
+        >
+          <RefreshCw size={12} strokeWidth={2} aria-hidden />
+          Klicken zum Umdrehen
+        </p>
+      </div>
+
+      {/* Self-rating actions in status colors */}
+      <div className="mt-3 grid grid-cols-3 gap-2">
+        {[
+          { label: "Nochmal", icon: RotateCcw, chip: "hs-chip-red" },
+          { label: "Fast", icon: Minus, chip: "hs-chip-amber" },
+          { label: "Kann ich", icon: Check, chip: "hs-chip-green" },
+        ].map((a) => (
+          <span
+            key={a.label}
+            className={`${a.chip} flex flex-col items-center gap-1 rounded-xl px-2 py-2.5 text-[12px] font-semibold`}
+          >
+            <a.icon size={15} strokeWidth={2.2} aria-hidden />
+            {a.label}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }

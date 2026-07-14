@@ -25,14 +25,18 @@ import LernlyLogo from "@/components/LernlyLogo";
 import { SITE_URL } from "@/lib/site";
 import LeadForm from "./LeadForm";
 import RevealObserver from "./RevealObserver";
-import FlashcardMockupLazy from "./FlashcardMockupLazy";
 import CohortReportMockup from "./CohortReportMockup";
 import PilotTimeline from "./PilotTimeline";
 import CalBooking from "./CalBooking";
 import HsSectionHeading from "./HsSectionHeading";
 import HsFooter from "./HsFooter";
 import HeroReportCard from "./HeroReportCard";
-import { HsUploadCard, HsQuizResultCard, HsTopicConceptCard } from "./HsProductCards";
+import {
+  HsUploadCard,
+  HsQuizResultCard,
+  HsFlashcardCard,
+  HsTopicConceptCard,
+} from "./HsProductCards";
 import { SegmentProvider, SegmentTabs, Seg } from "./segment";
 import "./hochschulen.css";
 
@@ -781,7 +785,7 @@ export default function HochschulenPage() {
             <ProductModule
               kicker="Schritt 3 · Aktives Lernen"
               title="Aktives Abrufen statt passivem Lesen — mobil"
-              mockup={<FlashcardMockupLazy />}
+              mockup={<HsFlashcardCard />}
               mockupLabel="Lernly-Oberfläche: Karteikarten-Ansicht mit Frage und Selbstbewertung"
             >
               <p>
