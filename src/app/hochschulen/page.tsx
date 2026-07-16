@@ -51,9 +51,9 @@ import "./hochschulen.css";
 // =========================================================================
 
 const PAGE_TITLE =
-  "Lernly für Hochschulen — prüfungsnahe Lernpakete für ganze Kohorten";
+  "Lernly für Hochschulen: prüfungsnahe Lernpakete für ganze Kohorten";
 const PAGE_DESCRIPTION =
-  "Lernly verwandelt die offiziellen Unterlagen eines Moduls in Karteikarten, Quiz und Prüfungssimulationen — freigegeben von Lehrenden, genutzt von Studierenden, messbar für Ihre Hochschule. Begleiteter Pilot: 1 Modul, bis 100 Studierende, ab 1.500 €.";
+  "Lernly verwandelt die offiziellen Unterlagen eines Moduls in Karteikarten, Quiz und Prüfungssimulationen. Freigegeben von Lehrenden, genutzt von Studierenden, messbar für Ihre Hochschule. Begleiteter Pilot: 1 Modul, bis 100 Studierende, ab 1.500 €.";
 
 export const metadata: Metadata = {
   title: { absolute: PAGE_TITLE },
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
         url: "/lernly-hochschulen-og.png",
         width: 1200,
         height: 630,
-        alt: "Lernly für Hochschulen — prüfungsnahe Lernpakete für ganze Kohorten",
+        alt: "Lernly für Hochschulen: prüfungsnahe Lernpakete für ganze Kohorten",
       },
     ],
   },
@@ -131,14 +131,14 @@ const PROBLEM_STATS = [
   },
   {
     value: "37 %",
-    text: "kennen KI-Regeln ihrer Hochschule — mehr nicht",
+    text: "kennen KI-Regeln ihrer Hochschule, mehr nicht",
     source: "Bitkom 2024",
     href: "https://www.bitkom.org/Presse/Presseinformation/So-digital-sind-Deutschlands-Hochschulen",
     highlight: false,
   },
   {
     value: "1 : 58",
-    text: "Betreuungsrelation — Studierende je Professur",
+    text: "Betreuungsrelation: Studierende je Professur",
     source: "DHV-Barometer 2024",
     href: "https://www.forschung-und-lehre.de/lehre/bundesweite-betreuungsrelation-verbessert-sich-auf-158-7467",
     highlight: false,
@@ -146,7 +146,7 @@ const PROBLEM_STATS = [
 ];
 
 const EXTRA_FEATURES = [
-  "Visual Map — das große Ganze eines Moduls",
+  "Visual Map: das große Ganze eines Moduls",
   "Übersicht nach Prüfungsrelevanz",
   "Offene Fragen mit Musterlösungen",
   "KI-Tutor, begrenzt auf Ihr Material",
@@ -163,7 +163,7 @@ const PILOT_ITEMS = [
 
 const EARLY_PARTNER = [
   "Vorzugskonditionen als einer der ersten Pilotpartner",
-  "Direkte Betreuung durch den Gründer — keine Warteschleife",
+  "Direkte Betreuung durch den Gründer, keine Warteschleife",
   "Mitgestaltung der Roadmap (z. B. LMS-Anbindung, Report-Inhalte)",
   "Auf Wunsch spätere Sichtbarkeit als Referenzpartner",
 ];
@@ -198,7 +198,7 @@ const PRIVACY_ITEMS: { icon: LucideIcon; title: string; text: string }[] = [
   {
     icon: FileText,
     title: "AVV & technische Maßnahmen",
-    text: "Auftragsverarbeitungsvertrag nach Art. 28 DSGVO auf Anfrage — vor dem Piloten klären wir Details direkt mit Ihrem Datenschutzbeauftragten.",
+    text: "Auftragsverarbeitungsvertrag nach Art. 28 DSGVO auf Anfrage. Vor dem Piloten klären wir Details direkt mit Ihrem Datenschutzbeauftragten.",
   },
   {
     icon: Server,
@@ -208,12 +208,12 @@ const PRIVACY_ITEMS: { icon: LucideIcon; title: string; text: string }[] = [
   {
     icon: BrainCircuit,
     title: "KI-Verarbeitung transparent",
-    text: "Generierung über die Anthropic-API (Claude). Ihre Inhalte werden standardmäßig nicht zum Training von KI-Modellen verwendet — weder von Anthropic noch von Lernly.",
+    text: "Generierung über die Anthropic-API (Claude). Ihre Inhalte werden standardmäßig nicht zum Training von KI-Modellen verwendet, weder von Anthropic noch von Lernly.",
   },
   {
     icon: Lock,
     title: "Geschlossener Kohortenzugang",
-    text: "Lernpakete sind nur für die eingeschriebene Kohorte zugänglich — keine Veröffentlichung, vereinbar mit § 60a UrhG. Die Materialhoheit bleibt bei Ihren Lehrenden.",
+    text: "Lernpakete sind nur für die eingeschriebene Kohorte zugänglich. Keine Veröffentlichung, vereinbar mit § 60a UrhG. Die Materialhoheit bleibt bei Ihren Lehrenden.",
   },
   {
     icon: Trash2,
@@ -234,7 +234,7 @@ const FAQ_ITEMS: { q: string; a: string }[] = [
     a: "Verarbeitung nach DSGVO mit Auftragsverarbeitungsvertrag (AVV) auf Anfrage, Datenhaltung in der EU (Irland), transparente Dienstleisterliste und ein klares Löschkonzept. Details klären wir vor dem Piloten direkt mit Ihrer IT und Ihrem Datenschutzbeauftragten.",
   },
   {
-    q: "Was passiert mit unseren Unterlagen — Stichwort Urheberrecht?",
+    q: "Was passiert mit unseren Unterlagen, Stichwort Urheberrecht?",
     a: "Ihr Material bleibt Ihres. Lernpakete sind nur für die eingeschriebene Kohorte zugänglich (kein öffentlicher Zugriff, vereinbar mit § 60a UrhG), werden nicht veröffentlicht und nach Pilotende vollständig gelöscht. Sie behalten die Rechte an Unterlagen und freigegebenen Lernpaketen.",
   },
   {
@@ -242,8 +242,8 @@ const FAQ_ITEMS: { q: string; a: string }[] = [
     a: "Nein. Die Generierung läuft über die Anthropic-API, die Eingaben standardmäßig nicht zum Modelltraining verwendet. Lernly trainiert keine eigenen Modelle mit Ihren Inhalten.",
   },
   {
-    q: "Kann die KI Fehler machen — Stichwort Halluzination?",
-    a: "KI-generierte Inhalte können prinzipbedingt Fehler enthalten. Deshalb generiert Lernly ausschließlich aus Ihren hochgeladenen Unterlagen — und jedes Lernpaket wird vor dem Kohortenzugang von Ihren Lehrenden geprüft und freigegeben. Korrekturen arbeiten wir im Piloten direkt ein.",
+    q: "Kann die KI Fehler machen, Stichwort Halluzination?",
+    a: "KI-generierte Inhalte können prinzipbedingt Fehler enthalten. Deshalb generiert Lernly ausschließlich aus Ihren hochgeladenen Unterlagen. Jedes Lernpaket wird vor dem Kohortenzugang von Ihren Lehrenden geprüft und freigegeben. Korrekturen arbeiten wir im Piloten direkt ein.",
   },
   {
     q: "Wie viel Aufwand haben unsere Lehrenden?",
@@ -251,23 +251,23 @@ const FAQ_ITEMS: { q: string; a: string }[] = [
   },
   {
     q: "Brauchen Studierende eigene Konten?",
-    a: "Nur eine E-Mail-Adresse (Anmeldung per Magic-Link). Keine Matrikelnummern, keine Installation — Lernly läuft mobil im Browser.",
+    a: "Nur eine E-Mail-Adresse (Anmeldung per Magic-Link). Keine Matrikelnummern, keine Installation. Lernly läuft mobil im Browser.",
   },
   {
     q: "Müssen wir etwas integrieren (Moodle, LTI, SSO)?",
-    a: "Für den Piloten nicht — er läuft bewusst ohne Eingriff in Ihre IT. Eine Moodle-/LTI-Anbindung und SSO stehen für den Regelbetrieb auf der Roadmap.",
+    a: "Für den Piloten nicht: Er läuft bewusst ohne Eingriff in Ihre IT. Eine Moodle-/LTI-Anbindung und SSO stehen für den Regelbetrieb auf der Roadmap.",
   },
   {
     q: "Wie läuft die Beschaffung?",
-    a: "Per Rechnung als Direktauftrag: Der Pilotpreis liegt unterhalb der Direktvergabe-Wertgrenzen aller DACH-Länder — ein Vergabeverfahren ist nicht erforderlich. Pilotvertrag und AVV liefern wir.",
+    a: "Per Rechnung als Direktauftrag: Der Pilotpreis liegt unterhalb der Direktvergabe-Wertgrenzen aller DACH-Länder. Ein Vergabeverfahren ist nicht erforderlich. Pilotvertrag und AVV liefern wir.",
   },
   {
     q: "Was passiert nach dem Piloten?",
-    a: "Gemeinsame Auswertung gegen die zu Beginn definierten Erfolgskriterien. Danach entscheiden Sie über Verlängerung oder Ausweitung — es gibt keine automatische Verlängerung und keine Bindung.",
+    a: "Gemeinsame Auswertung gegen die zu Beginn definierten Erfolgskriterien. Danach entscheiden Sie über Verlängerung oder Ausweitung. Es gibt keine automatische Verlängerung und keine Bindung.",
   },
   {
     q: "Bewertet Lernly Studierende oder Prüfungsleistungen?",
-    a: "Nein. Lernly vergibt keine Noten, trifft keine Prüfungsentscheidungen und überwacht keine einzelnen Studierenden oder Lehrenden. Es ist ein unterstützendes, formatives Lernwerkzeug — auch im Sinne des EU AI Act bewusst so gestaltet.",
+    a: "Nein. Lernly vergibt keine Noten, trifft keine Prüfungsentscheidungen und überwacht keine einzelnen Studierenden oder Lehrenden. Es ist ein unterstützendes, formatives Lernwerkzeug, auch im Sinne des EU AI Act bewusst so gestaltet.",
   },
 ];
 
@@ -347,7 +347,7 @@ export default function HochschulenPage() {
   const serviceJsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: "Lernly für Hochschulen — Pilotprogramm",
+    name: "Lernly für Hochschulen: Pilotprogramm",
     serviceType:
       "Digitales Lernwerkzeug für prüfungsnahe Lernpakete und Prüfungsvorbereitung",
     provider: {
@@ -362,7 +362,7 @@ export default function HochschulenPage() {
       price: "1500",
       priceCurrency: "EUR",
       description:
-        "Begleiteter Pilot: 1 Modul, bis 100 Studierende, 6–8 Wochen — inkl. Lernpaket, Lehrenden-Freigabe, Auswertung und Abschlussreport.",
+        "Begleiteter Pilot: 1 Modul, bis 100 Studierende, 6–8 Wochen, inkl. Lernpaket, Lehrenden-Freigabe, Auswertung und Abschlussreport.",
     },
   };
 
@@ -464,7 +464,7 @@ export default function HochschulenPage() {
                     h={
                       <>
                         Aus Ihren Kursunterlagen werden aktive, prüfungsnahe
-                        Lernpakete —{" "}
+                        Lernpakete{" "}
                         <span className="hs-gradient-text">
                           für ganze Kohorten.
                         </span>
@@ -473,7 +473,7 @@ export default function HochschulenPage() {
                     a={
                       <>
                         Aus Ihren Kursunterlagen werden aktive, prüfungsnahe
-                        Lernpakete —{" "}
+                        Lernpakete{" "}
                         <span className="hs-gradient-text">
                           für alle Ihre Teilnehmer.
                         </span>
@@ -497,8 +497,8 @@ export default function HochschulenPage() {
                 >
                   <span className="font-semibold">Begleiteter Pilot:</span>{" "}
                   <Seg
-                    h="1 Modul, bis 100 Studierende, 6–8 Wochen, ab 1.500 € — per Direktauftrag, ohne Vergabeverfahren."
-                    a="1 Kurs, bis 100 Teilnehmer, 6–8 Wochen, ab 1.500 € — eine einfache Rechnung, kein Beschaffungsprozess."
+                    h="1 Modul, bis 100 Studierende, 6–8 Wochen, ab 1.500 €. Per Direktauftrag, ohne Vergabeverfahren."
+                    a="1 Kurs, bis 100 Teilnehmer, 6–8 Wochen, ab 1.500 €. Eine einfache Rechnung, kein Beschaffungsprozess."
                   />
                 </p>
                 <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
@@ -544,7 +544,7 @@ export default function HochschulenPage() {
                 style={{ color: "var(--hs-mute)" }}
               >
                 <Seg
-                  h="Ein Studienabbrecher bedeutet fünfstellige entgangene Studiengebühren über die Programmdauer. Bei bundesweit 28 % Abbruch — in MINT über 40 % — ist Prüfungsvorbereitung kein Nice-to-have, sondern ein direkter Hebel auf Retention und Ruf. Lernly zielt genau darauf, und der Pilot macht die Wirkung messbar, nicht behauptet."
+                  h="Ein Studienabbrecher bedeutet fünfstellige entgangene Studiengebühren über die Programmdauer. Bei bundesweit 28 % Abbruch (in MINT über 40 %) ist Prüfungsvorbereitung kein Nice-to-have, sondern ein direkter Hebel auf Retention und Ruf. Lernly zielt genau darauf, und der Pilot macht die Wirkung messbar, nicht behauptet."
                   a="Bei Prüfungsvorbereitung entscheidet die Erfolgsquote über Weiterempfehlung, Auslastung und Preis. Ein Tool, das aktives Abrufen und prüfungsnahes Üben in Ihre Kohorte bringt, arbeitet direkt auf die eine Kennzahl, mit der Sie werben. Der Pilot kostet weniger als der Deckungsbeitrag eines einzigen zusätzlichen zahlenden Teilnehmers."
                 />
               </p>
@@ -564,8 +564,7 @@ export default function HochschulenPage() {
                         >
                           <strong className="font-semibold" style={{ color: "var(--hs-accent)" }}>
                             {value}
-                          </strong>{" "}
-                          — {label}
+                          </strong>, {label}
                         </span>
                       ))}
                     </>
@@ -575,7 +574,7 @@ export default function HochschulenPage() {
                       {[
                         "Erfolgsquote = Ihr stärkstes Verkaufsargument",
                         "Prüfungsnahes Üben + Spaced Repetition, kursbezogen",
-                        "ab 1.500 € — betreuter Pilot, Direktauftrag",
+                        "ab 1.500 €, betreuter Pilot, Direktauftrag",
                       ].map((t) => (
                         <span
                           key={t}
@@ -635,7 +634,7 @@ export default function HochschulenPage() {
             eyebrow="Die Ausgangslage"
             title={
               <>
-                Studierende scheitern nicht am Material —{" "}
+                Studierende scheitern nicht am Material, sondern{" "}
                 <span style={{ color: "var(--hs-mute)" }}>an der Menge.</span>
               </>
             }
@@ -684,7 +683,7 @@ export default function HochschulenPage() {
           </div>
           <div className="hs-reveal mx-auto mt-10 max-w-[720px] text-center">
             <p className="text-[16px] leading-[1.7] md:text-[17px]" style={{ color: "var(--hs-mute)" }}>
-              Die KI-Nutzung Ihrer Studierenden findet längst statt — nur
+              Die KI-Nutzung Ihrer Studierenden findet längst statt, nur
               außerhalb Ihrer Kontrolle und ohne Bezug zu Ihren Materialien.{" "}
               <span className="font-semibold" style={{ color: "var(--hs-ink)" }}>
                 Lernly macht daraus einen kontrollierten Prozess: Ihre
@@ -699,7 +698,7 @@ export default function HochschulenPage() {
           <HsSectionHeading
             eyebrow="Das Produkt"
             title="Sehen Sie, was Ihre Studierenden bekommen."
-            sub="Kein Konzept, keine Illustration — das ist die Software, mit der Studierende bereits lernen."
+            sub="Kein Konzept, keine Illustration: Das ist die Software, mit der Studierende bereits lernen."
           />
 
           <div className="mx-auto mt-16 flex max-w-[1160px] flex-col gap-20 md:gap-24">
@@ -716,7 +715,7 @@ export default function HochschulenPage() {
               </p>
               <p>
                 Optional gewichtet eine Altklausur die Inhalte nach
-                Prüfungsrelevanz — die Kohorte übt dort, wo es zählt.
+                Prüfungsrelevanz. Die Kohorte übt dort, wo es zählt.
               </p>
             </ProductModule>
 
@@ -731,7 +730,7 @@ export default function HochschulenPage() {
                     {
                       icon: Sparkles,
                       title: "Lernly generiert",
-                      text: "Karteikarten, Quiz und Übersicht — ausschließlich aus Ihren Unterlagen.",
+                      text: "Karteikarten, Quiz und Übersicht. Ausschließlich aus Ihren Unterlagen.",
                     },
                     {
                       icon: SearchCheck,
@@ -741,7 +740,7 @@ export default function HochschulenPage() {
                     {
                       icon: CheckCircle,
                       title: "Kohorte erhält Zugang",
-                      text: "Erst nach Freigabe — kein Inhalt erreicht Studierende ungeprüft.",
+                      text: "Erst nach Freigabe: Kein Inhalt erreicht Studierende ungeprüft.",
                     },
                   ].map((s, i, arr) => (
                     <div key={s.title} className="relative flex gap-4 pb-5 last:pb-0">
@@ -778,13 +777,13 @@ export default function HochschulenPage() {
               </p>
               <p>
                 Der Freigabe-Workflow ist fester Bestandteil des begleiteten
-                Piloten — die fachliche Hoheit bleibt bei Ihren Lehrenden.
+                Piloten. Die fachliche Hoheit bleibt bei Ihren Lehrenden.
               </p>
             </ProductModule>
 
             <ProductModule
               kicker="Schritt 3 · Aktives Lernen"
-              title="Aktives Abrufen statt passivem Lesen — mobil"
+              title="Aktives Abrufen statt passivem Lesen, mobil"
               mockup={<HsFlashcardCard />}
               mockupLabel="Lernly-Oberfläche: Karteikarten-Ansicht mit Frage und Selbstbewertung"
             >
@@ -794,7 +793,7 @@ export default function HochschulenPage() {
                 Zeitpunkt wieder vor.
               </p>
               <p>
-                Alles läuft im Browser, ohne Installation — dort, wo Ihre
+                Alles läuft im Browser, ohne Installation. Genau dort, wo Ihre
                 Studierenden ohnehin lernen: auf dem Smartphone.
               </p>
             </ProductModule>
@@ -811,7 +810,7 @@ export default function HochschulenPage() {
                 jeder Antwortoption, dazu offene Fragen mit Musterlösungen.
               </p>
               <p>
-                Das Ergebnis zeigt Stärken und Lücken nach Themen — Studierende
+                Das Ergebnis zeigt Stärken und Lücken nach Themen. Studierende
                 wissen, was sie als Nächstes wiederholen sollten.
               </p>
             </ProductModule>
@@ -823,7 +822,7 @@ export default function HochschulenPage() {
               mockupLabel="Beispieldarstellung des Pilot-Abschlussreports: Aktivierung, Themen-Beherrschung und Wochenaktivität der Kohorte"
             >
               <p>
-                Aktivierung, Nutzung und Themen-Schwächen der Kohorte —
+                Aktivierung, Nutzung und Themen-Schwächen der Kohorte,
                 aggregiert und anonymisiert, ohne Auswertung einzelner
                 Studierender.
               </p>
@@ -836,14 +835,14 @@ export default function HochschulenPage() {
 
             <ProductModule
               kicker="Internationale Studiengänge"
-              title="Auch auf Englisch — automatisch"
+              title="Auch auf Englisch, automatisch"
               reverse
               mockup={<HsTopicConceptCard />}
               mockupLabel="Lernly-Oberfläche: englischsprachige Konzeptkarte zu Porter's Five Forces"
             >
               <p>
                 Englischsprachiges Material ergibt ein englischsprachiges
-                Lernpaket — ohne Konfiguration. Geeignet für internationale
+                Lernpaket, ohne Konfiguration. Geeignet für internationale
                 Kohorten und Austauschstudierende.
               </p>
             </ProductModule>
@@ -878,7 +877,7 @@ export default function HochschulenPage() {
           <HsSectionHeading
             eyebrow="Der Ablauf"
             title="Acht Wochen, klar strukturiert."
-            sub="Ein begleiteter Pilot mit definierten Schritten — und einem Gesamtaufwand von unter zwei Stunden für Ihre Lehrenden."
+            sub="Ein begleiteter Pilot mit definierten Schritten und einem Gesamtaufwand von unter zwei Stunden für Ihre Lehrenden."
           />
           <div className="mt-14">
             <PilotTimeline />
@@ -887,7 +886,7 @@ export default function HochschulenPage() {
             {[
               "Gesamtaufwand Lehrende: unter 2 Stunden",
               "Erfolgskriterien definieren wir gemeinsam",
-              "Direktauftrag — kein Vergabeverfahren nötig",
+              "Direktauftrag, kein Vergabeverfahren nötig",
             ].map((t) => (
               <span
                 key={t}
@@ -903,14 +902,14 @@ export default function HochschulenPage() {
               </span>
             ))}
           </div>
-          <CtaRow text="Kickoff in einer Woche möglich — 15 Minuten reichen für den Start." />
+          <CtaRow text="Kickoff in einer Woche möglich. 15 Minuten reichen für den Start." />
         </section>
 
         {/* ===== Pilot offer + early partner ===== */}
         <section id="pilot" className="scroll-mt-20 px-6 py-16 md:py-24">
           <HsSectionHeading
             eyebrow="Der Lernly-Pilot"
-            title="Ein betreuter Pilot — klein anfangen, Wirkung sehen."
+            title="Ein betreuter Pilot: klein anfangen, Wirkung sehen."
           />
           <div className="hs-reveal hs-card mx-auto mt-10 max-w-[720px] overflow-hidden">
             <ul className="flex flex-col px-6 py-2 md:px-8">
@@ -945,7 +944,7 @@ export default function HochschulenPage() {
                 <span className="font-semibold" style={{ color: "var(--hs-ink)" }}>
                   Pilot ab 1.500 €.
                 </span>{" "}
-                Bezahlt — damit es ein echtes gemeinsames Projekt ist.
+                Bezahlt, damit es ein echtes gemeinsames Projekt ist.
               </p>
               <PrimaryCta className="w-full shrink-0 sm:w-auto" />
             </div>
@@ -965,8 +964,8 @@ export default function HochschulenPage() {
               ))}
             </div>
             <p className="mx-auto mt-6 max-w-[640px] text-center text-[14px] leading-[1.6]" style={{ color: "var(--hs-mute)" }}>
-              Lernly wird von Studierenden bereits im Klausuralltag genutzt —
-              für Hochschulen öffnen wir jetzt die ersten Pilotplätze.
+              Lernly wird von Studierenden bereits im Klausuralltag genutzt.
+              Für Hochschulen öffnen wir jetzt die ersten Pilotplätze.
             </p>
           </div>
         </section>
@@ -976,7 +975,7 @@ export default function HochschulenPage() {
           <HsSectionHeading
             eyebrow="Für Akademien & Prüfungsvorbereitung"
             title="Wenn die Bestehensquote Ihr Produkt ist."
-            sub="Steuer- und WP-Vorbereitung, Fachwirt- und Meisterkurse, Bootcamps, Zertifikatslehrgänge: Ihre Teilnehmer zahlen für ein Ergebnis — bestehen. Lernly macht aus Ihren Kursunterlagen aktive, prüfungsnahe Lernpakete für die ganze Kohorte, damit mehr Teilnehmer sicher durch die Prüfung kommen."
+            sub="Steuer- und WP-Vorbereitung, Fachwirt- und Meisterkurse, Bootcamps, Zertifikatslehrgänge: Ihre Teilnehmer zahlen für ein Ergebnis. Bestehen. Lernly macht aus Ihren Kursunterlagen aktive, prüfungsnahe Lernpakete für die ganze Kohorte, damit mehr Teilnehmer sicher durch die Prüfung kommen."
           />
           <div className="ln-stagger mx-auto mt-12 grid max-w-[1100px] grid-cols-1 gap-4 md:grid-cols-3">
             {[
@@ -988,7 +987,7 @@ export default function HochschulenPage() {
               {
                 icon: Repeat,
                 title: "Aktives Abrufen statt Skript-Lesen",
-                text: "Testing-Effekt und Spaced Repetition, die Methoden mit der höchsten belegten Wirksamkeit — kursbezogen und mobil, ohne Mehraufwand für Ihre Dozenten.",
+                text: "Testing-Effekt und Spaced Repetition, die Methoden mit der höchsten belegten Wirksamkeit, kursbezogen und mobil, ohne Mehraufwand für Ihre Dozenten.",
               },
               {
                 icon: ListChecks,
@@ -1015,14 +1014,14 @@ export default function HochschulenPage() {
               </div>
             ))}
           </div>
-          <CtaRow text="Gleicher betreuter Pilot, gleiche Freigabe durch Ihre Dozenten — nur auf Ihre Teilnehmer und Ihre Prüfung zugeschnitten." />
+          <CtaRow text="Gleicher betreuter Pilot, gleiche Freigabe durch Ihre Dozenten, nur auf Ihre Teilnehmer und Ihre Prüfung zugeschnitten." />
         </section>
 
         {/* ===== Learning science ===== */}
         <section className="px-6 py-16 md:py-24">
           <HsSectionHeading
             eyebrow="Didaktische Fundierung"
-            title="Keine KI-Spielerei — belegte Lernmethoden."
+            title="Keine KI-Spielerei, sondern belegte Lernmethoden."
             sub="Lernly setzt um, was die Lernforschung seit Jahrzehnten zeigt: kursbezogen und ohne Zusatzaufwand für Lehrende."
           />
           <div className="ln-stagger mx-auto mt-12 grid max-w-[1100px] grid-cols-1 gap-4 md:grid-cols-3">
@@ -1059,7 +1058,7 @@ export default function HochschulenPage() {
           <HsSectionHeading
             eyebrow="Datenschutz & Sicherheit"
             title="Die Antworten, die Ihr Datenschutzbeauftragter braucht."
-            sub="Leiten Sie diese Sektion gern direkt an Ihre IT oder Ihren Datenschutzbeauftragten weiter — Details klären wir vor dem Piloten gemeinsam."
+            sub="Leiten Sie diese Sektion gern direkt an Ihre IT oder Ihren Datenschutzbeauftragten weiter. Details klären wir vor dem Piloten gemeinsam."
           />
           <div className="hs-reveal hs-card mx-auto mt-12 max-w-[900px] overflow-hidden">
             {PRIVACY_ITEMS.map((p, i) => (
@@ -1106,7 +1105,7 @@ export default function HochschulenPage() {
               <p className="text-[14px] leading-[1.65]" style={{ color: "var(--hs-mute)" }}>
                 Keine Benotung. Keine Prüfungsentscheidungen. Kein Proctoring.
                 Keine Überwachung einzelner Studierender oder Lehrender.
-                Lernly ist ein unterstützendes, formatives Lernwerkzeug —
+                Lernly ist ein unterstützendes, formatives Lernwerkzeug,
                 ergänzend zu Ihren bestehenden Systemen und auch im Sinne des
                 EU AI Act bewusst so gestaltet.
               </p>
@@ -1140,13 +1139,13 @@ export default function HochschulenPage() {
                 </p>
                 <p className="mt-3 text-[15px] leading-[1.75]" style={{ color: "var(--hs-mute)" }}>
                   Lernly ist während einer echten Klausurphase an der
-                  Universität Uppsala entstanden — aus dem Folienberg eines
+                  Universität Uppsala entstanden, aus dem Folienberg eines
                   einzigen Moduls. Heute wird es von Studierenden im
                   Klausuralltag genutzt und vom Studio Belerate
                   weiterentwickelt.
                 </p>
                 <p className="mt-3 text-[15px] leading-[1.75]" style={{ color: "var(--hs-mute)" }}>
-                  Im Pilotprojekt sprechen Sie direkt mit dem Gründer — kein
+                  Im Pilotprojekt sprechen Sie direkt mit dem Gründer: kein
                   Vertrieb, kurze Wege bei Fragen Ihrer IT oder Ihres
                   Datenschutzbeauftragten.
                 </p>
@@ -1196,7 +1195,7 @@ export default function HochschulenPage() {
             }}
           />
           <div className="mx-auto max-w-[820px]">
-            <HsSectionHeading eyebrow="FAQ" title="Die harten Fragen — offen beantwortet." />
+            <HsSectionHeading eyebrow="FAQ" title="Die harten Fragen, offen beantwortet." />
             <div className="hs-reveal hs-card mt-10 overflow-hidden">
               {FAQ_ITEMS.map((item, i) => (
                 <details
@@ -1235,7 +1234,7 @@ export default function HochschulenPage() {
           <HsSectionHeading
             eyebrow="Kontakt"
             title="Passt Lernly zu einem Ihrer Module?"
-            sub="Buchen Sie direkt ein unverbindliches 15-Minuten-Gespräch — wir schauen gemeinsam auf ein konkretes Modul."
+            sub="Buchen Sie direkt ein unverbindliches 15-Minuten-Gespräch. Wir schauen gemeinsam auf ein konkretes Modul."
           />
           <div className="hs-reveal relative mx-auto mt-10 max-w-[900px]">
             <CalBooking namespace="kontakt" maxHeight={640} lazy />

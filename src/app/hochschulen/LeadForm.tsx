@@ -77,7 +77,7 @@ export default function LeadForm() {
           />
         </span>
         <p className="text-[17px] font-semibold" style={{ color: "var(--hs-ink)" }}>
-          Danke — wir melden uns.
+          Danke, wir melden uns.
         </p>
         <p className="max-w-[380px] text-[14px] leading-relaxed" style={{ color: "var(--hs-mute)" }}>
           Ihre Anfrage ist eingegangen. Sie hören in der Regel innerhalb von

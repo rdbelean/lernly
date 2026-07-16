@@ -138,14 +138,14 @@ export default function CohortReportMockup() {
         </div>
 
         <p className="mt-3 text-[9.5px]" style={{ color: "var(--hs-mute)" }}>
-          Aggregiert und anonymisiert — keine Auswertung einzelner Studierender.
+          Aggregiert und anonymisiert, keine Auswertung einzelner Studierender.
         </p>
       </div>
       <p
         className="mt-4 text-center text-[12px]"
         style={{ color: "var(--hs-mute)" }}
       >
-        Beispieldarstellung — so ist der Abschlussreport Ihres Piloten aufgebaut.
+        Beispieldarstellung: So ist der Abschlussreport Ihres Piloten aufgebaut.
       </p>
     </div>
   );

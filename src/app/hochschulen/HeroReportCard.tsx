@@ -94,7 +94,7 @@ export default function HeroReportCard() {
       </div>
 
       <p className="mt-4 text-[10px]" style={{ color: "var(--hs-mute)" }}>
-        Aggregiert &amp; anonymisiert — Beispieldarstellung.
+        Aggregiert &amp; anonymisiert, Beispieldarstellung.
       </p>
     </div>
   );

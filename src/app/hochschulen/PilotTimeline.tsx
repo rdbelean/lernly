@@ -31,7 +31,7 @@ const PHASES: {
   {
     week: "Woche 1",
     title: "Upload & Generierung",
-    text: "Lehrende laden die offiziellen Modulunterlagen hoch — optional mit Altklausur zur Gewichtung.",
+    text: "Lehrende laden die offiziellen Modulunterlagen hoch, optional mit Altklausur zur Gewichtung.",
     icon: Upload,
   },
   {
@@ -43,7 +43,7 @@ const PHASES: {
   {
     week: "Woche 2–7",
     title: "Die Kohorte lernt",
-    text: "Zugang per Link, mobil im Browser — Karteikarten, Quiz und Wiederholung nach Spaced-Repetition.",
+    text: "Zugang per Link, mobil im Browser: Karteikarten, Quiz und Wiederholung nach Spaced-Repetition.",
     icon: Smartphone,
   },
   {

@@ -150,7 +150,7 @@ export default function CalBooking({
           className="mt-3 text-center text-[11.5px]"
           style={{ color: "var(--hs-mute)" }}
         >
-          Terminbuchung über Cal.com — beim Laden des Kalenders werden Daten an
+          Terminbuchung über Cal.com. Beim Laden des Kalenders werden Daten an
           Cal.com übertragen.
         </p>
       )}

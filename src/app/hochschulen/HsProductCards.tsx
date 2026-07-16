@@ -156,7 +156,7 @@ export function HsQuizResultCard() {
       </div>
 
       <p className="mt-4 text-[11.5px] leading-relaxed" style={{ color: "var(--hs-mute)" }}>
-        Jede Antwortoption mit Erklärung — Studierende sehen, was sie als
+        Jede Antwortoption mit Erklärung. Studierende sehen, was sie als
         Nächstes wiederholen sollten.
       </p>
     </div>
