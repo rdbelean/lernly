@@ -148,6 +148,47 @@ export const FormulaFrameworkSchema = z.object({
   title: z.string().optional(),
   formula: z.string(),
   sub: z.string().optional(),
+  // Study-guide formula pattern: every formula ships a variable-explanation
+  // table (Y = …, a = …, b = …) + a memory hook. Optional so legacy packs
+  // (formula + sub only) keep parsing.
+  variables: z
+    .array(z.object({ symbol: z.string(), meaning: z.string() }))
+    .optional(),
+  hook: z.string().optional(),
+});
+
+// Hierarchy / taxonomy master-map ("ALLE DATEN → Quantitativ → Diskret…").
+// Deliberately a FIXED 3-level shape (root → children → leaf children) rather
+// than a recursive schema: keeps model output bounded and rendering simple.
+export const TreeLeafSchema = z.object({
+  label: z.string(),
+  sub: z.string().optional(),
+});
+
+export const TreeChildSchema = z.object({
+  label: z.string(),
+  sub: z.string().optional(),
+  children: z.array(TreeLeafSchema).optional(),
+});
+
+export const TreeFrameworkSchema = z.object({
+  kind: z.literal("tree"),
+  title: z.string(),
+  root: z.object({ label: z.string(), sub: z.string().optional() }),
+  children: z.array(TreeChildSchema).min(2),
+  explanation: z.string().optional(),
+});
+
+// Ordered step list — Prüfungsschema steps, diagnostics checklists, remedy
+// lists. style "numbered" (1,2,3 — default) or "lettered" (A,B,C).
+export const ChecklistFrameworkSchema = z.object({
+  kind: z.literal("checklist"),
+  title: z.string().optional(),
+  style: z.enum(["numbered", "lettered"]).optional(),
+  items: z
+    .array(z.object({ text: z.string(), detail: z.string().optional() }))
+    .min(2),
+  explanation: z.string().optional(),
 });
 
 export const MnemonicFrameworkSchema = z.object({
@@ -213,6 +254,8 @@ export const VisualFrameworkSchema = z.discriminatedUnion("kind", [
   CalloutFrameworkSchema,
   TableFrameworkSchema,
   ConceptGridFrameworkSchema,
+  TreeFrameworkSchema,
+  ChecklistFrameworkSchema,
 ]);
 
 export const VisualBlockPrioritySchema = z.enum([

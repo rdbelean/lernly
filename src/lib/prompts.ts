@@ -128,9 +128,11 @@ WÄHLE FÜR JEDEN INHALT DEN FRAMEWORK-TYP, DESSEN FORM ZU IHM PASST.
 - 2-4 verwandte gleichrangige Konzepte (Geschwister) → **concept_grid**
 - Eine 2x2-Logik (zwei Achsen) → **matrix2x2**
 - Eine Liste mit Akronym/Eselsbrücke → **mnemonic**
-- Eine Kernformel oder zentrale Bedingung → **formula**
+- Eine Kernformel oder zentrale Bedingung → **formula** (IMMER mit variables + hook)
 - Cross-Reference zwischen zwei Themen → **link_note**
-NIEMALS alles als concept_grid abladen. Niemals Fließtext in einem callout, wenn es eine Tabelle sein sollte. Die VISUAL FORM ist der eigentliche Lerneffekt.
+- Eine Taxonomie / Ober-Unter-Begriffe / "Master Map" → **tree**
+- Ein Prüfungsschema / eine Schritt-für-Schritt-Checkliste / Abhilfen-Liste → **checklist**
+NIEMALS alles als concept_grid abladen. Niemals Fließtext in einem callout, wenn es eine Tabelle sein sollte. Ein Prüfungsschema ("1. Anwendbarkeit, 2. Schuldverhältnis, …") gehört in checklist, nicht in Fließtext. Die VISUAL FORM ist der eigentliche Lerneffekt.
 
 WAS DU BAUST
 Eine Liste von "blocks" (Themen-Sektionen). Jeder Block ist EIN Hauptthema und enthält 2-5 Frameworks. Innerhalb eines Blocks: variiere die Typen — eine reine Wand aus dem gleichen Typ ist genauso schlecht wie Fließtext.
@@ -139,7 +141,7 @@ PRÜFUNGS-PRIORITÄT (entscheidend für UI-Hierarchie)
 Setze pro Block:
 - "priority": "highest" | "high" | "moderate" | "quick_win"  — wie wichtig dieses Thema für die Prüfung ist
 - "timeMinutes": geschätzte Lernzeit in Minuten (10-60)
-- "subtitle": KURZER Tag-Text in der Form "Topic N — Foundation" / "Topic N — HIGHEST EXAM PRIORITY" / "Topic N — Quick Win". Wird als uppercase Tag angezeigt.
+- "subtitle": WEGLASSEN — das UI erzeugt das Themen-Label selbst (sprachkonsistent).
 
 Priorität bedeutet WIRKLICH Prüfungsrelevanz, nicht Kapitelreihenfolge: das Kern-Modell aus dem Material ist "highest"; die Randnotiz ist "quick_win". Sei mutig — wenn alles "high" ist, ist nichts "high".
 
@@ -152,7 +154,7 @@ CONTENT-DIÄT (ruthless)
 - KONKRETE, fachpassende Beispiele in den Erklärungen (echte Firmen/Systeme/Studien) — keine generischen "Firma X".
 - Pro Block max 5 Frameworks. Lieber 3 dichte als 6 lockere.
 
-DIE 9 FRAMEWORK-TYPEN
+DIE 11 FRAMEWORK-TYPEN
 
 1. **callout** — Definition, "know this cold", zentrale Aussage
    tone: "definition" (blau) | "insight" (violett) | "warning" (rot) | "neutral"
@@ -180,13 +182,25 @@ DIE 9 FRAMEWORK-TYPEN
    Felder: kind, title, acronym, expansion[] (je { letter, meaning }), hook? (Analogie/Merksatz)
 
 8. **formula** — Kernformel oder zentrale Bedingung
-   Felder: kind, title?, formula, sub?
+   Felder: kind, title?, formula, sub?, variables (PFLICHT bei jeder Formel: jede Variable als { symbol, meaning } erklärt), hook? (Merksatz: was die Formel INTUITIV bedeutet)
+   Mathe-Notation als LaTeX in \\( … \\) für inline bzw. \\[ … \\] für display — z.B. "\\(Y = a + bX\\)". Wird im UI gerendert.
 
 9. **link_note** — Cross-Reference zwischen Themen
    Felder: kind, fromTopic, toTopic, explanation
 
+10. **tree** — Taxonomie / "Master Map" (Ober-/Unterbegriffe, max 3 Ebenen)
+   Felder: kind, title, root { label, sub? }, children[] (je { label, sub?, children?: [{ label, sub? }] }), explanation?
+   Für "Welche Arten von X gibt es?"-Wissen — die visuelle Landkarte der Begriffs-Hierarchie.
+
+11. **checklist** — Prüfungsschema, Schritt-Liste, Abhilfen-Katalog
+   Felder: kind, title?, style? ("numbered" Standard | "lettered" für A/B/C-Alternativen), items[] (je { text: der Schritt fett auf den Punkt, detail?: 1 Satz Präzisierung/Norm/Beispiel }), explanation?
+   Max 9 Items. Jura-Prüfungsschemata, Diagnose-Checklisten, "5 Schritte zu X".
+
 ANTI-PATTERN (mach das NICHT)
 - Alles in concept_grid stopfen — das ist die "Wall of Cards"-Falle. Eine Tabelle gehört in table, ein Prozess in flow, eine Definition in callout.
+- Formula OHNE variables — eine unerklärte Formel ist wertlos. Jede Variable bekommt ihre Zeile.
+- Tree mit mehr als 3 Ebenen oder als Ersatz für flow (Prozess ≠ Taxonomie).
+- Checklist mit mehr als 9 Items oder für ungeordnete Aufzählungen (dafür concept_grid/table).
 - Block ohne priority/timeMinutes — die Roadmap fällt sonst aus.
 - Comparison ohne tone, table ohne headers (wenn die Spalten Bedeutung haben), callout ohne tone.
 - Concept-Cards mit Roman-Body — body sollte 1-3 prägnante Sätze sein.
@@ -199,7 +213,6 @@ JSON-SCHEMA (genau diese Struktur):
     "blocks": [
       {
         "title": "string (KEIN Emoji)",
-        "subtitle": "string (z.B. 'Topic 4 — HIGHEST EXAM PRIORITY', KEIN Emoji)",
         "color": "blue (Pflichtfeld, Wert wird vom UI ignoriert — setze immer 'blue')",
         "icon": "" (leerer String — UI zeichnet ein Vektor-Icon),
         "priority": "highest" | "high" | "moderate" | "quick_win",
@@ -212,13 +225,43 @@ JSON-SCHEMA (genau diese Struktur):
           { "kind": "concept_grid", "title": "string", "cards": [{"title": "string", "body": "string"}], "accentEdge": "top|left" },
           { "kind": "matrix2x2", "title": "string", "xAxis": {"label": "string", "low": "string", "high": "string"}, "yAxis": {"label": "string", "low": "string", "high": "string"}, "cells": [{"x": "low|high", "y": "low|high", "title": "string", "sub": "string", "highlight": true|false}], "explanation": "string" },
           { "kind": "mnemonic", "title": "string", "acronym": "string", "expansion": [{"letter": "C", "meaning": "Costs lower"}], "hook": "string" },
-          { "kind": "formula", "title": "string", "formula": "string", "sub": "string" },
-          { "kind": "link_note", "fromTopic": "string", "toTopic": "string", "explanation": "string" }
+          { "kind": "formula", "title": "string", "formula": "\\\\(Y = a + bX\\\\)", "sub": "string", "variables": [{"symbol": "Y", "meaning": "string"}, {"symbol": "b", "meaning": "string"}], "hook": "string (Merksatz)" },
+          { "kind": "link_note", "fromTopic": "string", "toTopic": "string", "explanation": "string" },
+          { "kind": "tree", "title": "string", "root": {"label": "string"}, "children": [{"label": "string", "sub": "string", "children": [{"label": "string", "sub": "string"}]}], "explanation": "string" },
+          { "kind": "checklist", "title": "string", "style": "numbered|lettered", "items": [{"text": "string", "detail": "string"}], "explanation": "string" }
         ]
       }
     ]
   }
 }`;
+
+// =========================================================================
+// Two-stage visual guide (large material) — extra directives layered on top
+// of TASK_VISUAL_MAP via runTaskOnce's extraInstruction slot, so retry/
+// timeout/prompt-cache/language-lock plumbing is reused unchanged.
+// =========================================================================
+
+// Stage A: outline only — the block list (title/priority/time + 1-line scope),
+// no frameworks. Cheap, fast, gives the fan-out plan for stage B.
+export const TASK_VISUAL_OUTLINE_DIRECTIVE = `ZWEISTUFIGER MODUS — STUFE A (NUR GLIEDERUNG):
+Erzeuge JETZT NUR die Block-Gliederung, KEINE frameworks.
+Jeder Block: title, color:"blue", icon:"", priority, timeMinutes, "frameworks": [] (leer!) und zusätzlich "scope": 1 Satz, welche Konzepte/Materialabschnitte dieser Block abdecken soll.
+Maximal 8 Blöcke. Gleiche JSON-Hülle: { "visualMap": { "blocks": [ ... ] } }.`;
+
+// Stage B: deepen exactly one block. Other topics are handled by parallel
+// sibling calls — forbid overlap explicitly.
+export function buildVisualDeepenDirective(
+  title: string,
+  scope: string | undefined,
+  index: number,
+  total: number,
+): string {
+  return `ZWEISTUFIGER MODUS — STUFE B (VERTIEFUNG, Block ${index + 1}/${total}):
+Erzeuge NUR EINEN Block mit title "${title}".${scope ? `\nScope: ${scope}` : ""}
+2-5 Frameworks für GENAU dieses Thema — Typen variieren, dichteste Prüfungsrelevanz, konkrete Beispiele/Zahlen aus dem Material.
+Alle anderen Themen IGNORIEREN (sie werden von parallelen Aufrufen vertieft — keine Wiederholungen, kein Überlappen).
+Gleiche JSON-Hülle mit GENAU EINEM Block: { "visualMap": { "blocks": [ { ... } ] } }.`;
+}
 
 export const TASK_META = `AUFGABE: Erstelle Konzept-Übersicht, Autoren-Cheat-Sheet, Lernplan und Kurs-Titel.
 
@@ -911,7 +954,7 @@ export function buildLanguageDirective(
   if (lang === "en") {
     return {
       pre: `=== OUTPUT LANGUAGE LOCK: ENGLISH ===
-Write EVERY piece of generated content in English: flashcard questions and answers, concept terms / essences / definitions / examRelevance text, course title, topic names, author theory and useInExam, schedule labels and tasks, quiz stems / options / explanations, visual map block titles / subtitles / callout body text / table cells / comparison items / mnemonic acronyms and their meanings, essay-plan questions / theses / structure / paragraph cues / examples, blueprint instructions and template sentences.
+Write EVERY piece of generated content in English: flashcard questions and answers, concept terms / essences / definitions / examRelevance text, course title, topic names, author theory and useInExam, schedule labels and tasks, quiz stems / options / explanations, visual map block titles / subtitles / callout body text / table cells / comparison items / mnemonic acronyms and their meanings / formula subs, variable meanings and hooks / tree node labels and subs / checklist step texts and details, essay-plan questions / theses / structure / paragraph cues / examples, blueprint instructions and template sentences.
 The TASK rules below are written in German for you as the model — they describe the FORMAT and the rules. Do NOT mirror their language in the output. Source material is English; output is English.
 Exceptions (NEVER translate): enum tokens (importance values "high"/"medium"/"low", relevanceTag values "kam dran"/"Prof-Hinweis"/"beides", framework "kind" values, color names like "blue"/"cyan"/"sage"), proper nouns, brand names, author names, technical terms in their conventional English form.
 === END OF LANGUAGE LOCK ===`,
