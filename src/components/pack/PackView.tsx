@@ -87,7 +87,7 @@ type TabDef = { id: Tab; icon: LucideIcon; de: string; en: string };
 
 const ALL_TABS: TabDef[] = [
   { id: "hub", icon: Home, de: "Hub", en: "Hub" },
-  { id: "visualMap", icon: Brain, de: "Visual Map", en: "Visual Map" },
+  { id: "visualMap", icon: Brain, de: "Study Guide", en: "Study Guide" },
   { id: "essayPredictions", icon: Pin, de: "Aufsatz-Plan", en: "Essay Plan" },
   { id: "simulator", icon: Target, de: "Übungsklausur", en: "Exam Trainer" },
   { id: "flashcards", icon: Layers, de: "Karteikarten", en: "Flashcards" },
