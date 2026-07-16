@@ -87,7 +87,14 @@ const ANALYSIS_BUDGET_MS = 200_000;
 const ANALYSIS_HEADER =
   "=== ANALYSE — WAS IST PRÜFUNGSRELEVANT (nutze dies zum Priorisieren) ===\n";
 
-const PER_ATTEMPT_TIMEOUT_MS = 180_000;
+// Per-attempt cap for a single sub-task. The heaviest trainer (simulator, up to
+// 12k verbose output tokens on Sonnet) can legitimately need >180s to stream its
+// output for large/dense material — that was discarding whole packs. Input is
+// already budget-capped (~120k tokens) and output is max_tokens-capped, so a
+// COMPLETE task fits comfortably in 300s, and the overall 780s budget / parallel
+// task execution leaves ample room. retryWithBudget still clamps each attempt to
+// the remaining budget, so this can't overrun maxDuration.
+const PER_ATTEMPT_TIMEOUT_MS = 300_000;
 const MAX_ATTEMPTS = 3;
 const MIN_ATTEMPT_MS = 20_000;
 const SAFETY_MS = 2_000;
