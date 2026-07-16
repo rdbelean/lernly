@@ -1,6 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { ExamProfileSchema, StudyPackSchema } from "./schema";
+import {
+  ExamProfileSchema,
+  StudyPackSchema,
+  VisualMapSchema,
+} from "./schema";
+import { DEMO_VISUAL_MAP_V2 } from "./fixtures/visualMapDemo";
 
 const base = {
   courseTitle: "T",
@@ -92,6 +97,109 @@ test("accepts a legacy single-exam profile without multi-exam fields", () => {
     formats: [{ type: "mc", share: 1 }],
     topics: [{ name: "T", weight: 0.5 }],
   });
+  assert.equal(r.success, true);
+});
+
+// ---------------------------------------------------------------------------
+// Study-guide visual frameworks (tree / checklist / formula variables)
+// ---------------------------------------------------------------------------
+
+const guideBlock = (frameworks: unknown[]) => ({
+  blocks: [
+    {
+      title: "T",
+      color: "blue",
+      frameworks,
+    },
+  ],
+});
+
+test("formula framework carries variables + hook (study-guide pattern)", () => {
+  const r = VisualMapSchema.safeParse(
+    guideBlock([
+      {
+        kind: "formula",
+        title: "Lineare Regression",
+        formula: "\\(Y = a + bX\\)",
+        variables: [
+          { symbol: "Y", meaning: "Vorhergesagter Wert" },
+          { symbol: "b", meaning: "Steigung — Änderungsrate" },
+        ],
+        hook: "Eine Einheit mehr X → b Einheiten mehr Y.",
+      },
+    ]),
+  );
+  assert.equal(r.success, true);
+  if (r.success) {
+    const fw = r.data.blocks[0].frameworks[0];
+    assert.equal(fw.kind, "formula");
+    if (fw.kind === "formula") {
+      assert.equal(fw.variables?.length, 2);
+      assert.equal(fw.variables?.[1].symbol, "b");
+      assert.equal(typeof fw.hook, "string");
+    }
+  }
+});
+
+test("legacy formula without variables/hook still parses", () => {
+  const r = VisualMapSchema.safeParse(
+    guideBlock([{ kind: "formula", formula: "E = mc^2" }]),
+  );
+  assert.equal(r.success, true);
+});
+
+test("tree framework parses with 3 explicit levels", () => {
+  const r = VisualMapSchema.safeParse(
+    guideBlock([
+      {
+        kind: "tree",
+        title: "Datentypen — Master Map",
+        root: { label: "ALLE DATEN" },
+        children: [
+          {
+            label: "Quantitativ",
+            sub: "Zahlen",
+            children: [
+              { label: "Diskret", sub: "zählbar" },
+              { label: "Stetig", sub: "messbar" },
+            ],
+          },
+          { label: "Qualitativ", sub: "Kategorien" },
+        ],
+      },
+    ]),
+  );
+  assert.equal(r.success, true);
+});
+
+test("checklist framework parses (numbered default + lettered)", () => {
+  const numbered = VisualMapSchema.safeParse(
+    guideBlock([
+      {
+        kind: "checklist",
+        title: "Prüfungsschema c.i.c.",
+        items: [
+          { text: "Anwendbarkeit", detail: "Kein Vorrang des Kaufrechts" },
+          { text: "Schuldverhältnis", detail: "§ 311 Abs. 2 Nr. 1 BGB" },
+        ],
+      },
+    ]),
+  );
+  assert.equal(numbered.success, true);
+  const lettered = VisualMapSchema.safeParse(
+    guideBlock([
+      {
+        kind: "checklist",
+        style: "lettered",
+        items: [{ text: "A" }, { text: "B" }],
+      },
+    ]),
+  );
+  assert.equal(lettered.success, true);
+});
+
+test("existing demo fixture still parses (backward compat)", () => {
+  const r = VisualMapSchema.safeParse(DEMO_VISUAL_MAP_V2);
   assert.equal(r.success, true);
 });
 
