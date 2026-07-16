@@ -14,14 +14,19 @@ import {
   TASK_QUIZ,
   TASK_ESSAY_PREDICTIONS,
   TASK_ANALYSIS,
+  TASK_VISUAL_OUTLINE_DIRECTIVE,
+  buildVisualDeepenDirective,
   buildFormatDirective,
   buildTaskUserAddendum,
   buildLanguageDirective,
   type LensContext,
 } from "@/lib/prompts";
 import { activeTasksFor, isRequiredTask, type GenTaskKey } from "@/lib/examTasks";
+import { z } from "zod";
 import {
   StudyPackSchema,
+  VisualBlockSchema,
+  VisualBlockPrioritySchema,
   type ExamType,
   type Flashcard,
   type StudyPack,
@@ -292,6 +297,9 @@ async function runTask(
   extraInfo?: string,
   materialLanguage: MaterialLanguage = "de",
   cardsDirective?: string,
+  // Persistent per-call directive (two-stage visual guide: outline / deepen).
+  // Combined with the transient shrink directive on retry.
+  extraDirective?: string,
 ): Promise<unknown> {
   const attempt = (extraInstruction?: string) =>
     retryWithBudget(
@@ -303,7 +311,8 @@ async function runTask(
           attemptTimeoutMs,
           examType,
           brief,
-          extraInstruction,
+          [extraDirective, extraInstruction].filter(Boolean).join("\n\n") ||
+            undefined,
           relevanceBrief,
           lensContext,
           extraInfo,
@@ -417,6 +426,134 @@ async function runAnalysisPass(
   );
 }
 
+// =========================================================================
+// Two-stage visual guide (large material)
+// =========================================================================
+// One 16k-token call can't carry a deep study guide for big courses — on
+// large material the map was the first thing to shrink or soft-fail. Above
+// the threshold we split: Stage A asks for the block OUTLINE only (titles,
+// priority, time, 1-line scope), Stage B deepens every block in PARALLEL
+// (one call per block, prompt-cached material, per-block soft-fail). Small
+// material keeps the proven single-call path.
+
+const GUIDE_TWO_STAGE_THRESHOLD_CHARS = 60_000;
+const GUIDE_MAX_TOPICS = 8;
+
+const GuideOutlineSchema = z.object({
+  visualMap: z.object({
+    blocks: z
+      .array(
+        z.object({
+          title: z.string(),
+          priority: VisualBlockPrioritySchema.optional(),
+          timeMinutes: z.number().int().positive().optional(),
+          scope: z.string().optional(),
+        }),
+      )
+      .min(1),
+  }),
+});
+
+function materialTextChars(
+  blocks: Anthropic.Messages.ContentBlockParam[],
+): number {
+  return blocks.reduce(
+    (n, b) => n + (b.type === "text" ? b.text.length : 0),
+    0,
+  );
+}
+
+async function runVisualGuide(
+  client: Anthropic,
+  materialBlocks: Anthropic.Messages.ContentBlockParam[],
+  deadlineMs: number,
+  examType: ExamType,
+  brief?: string,
+  relevanceBrief?: string | null,
+  lensContext?: LensContext | null,
+  extraInfo?: string,
+  materialLanguage: MaterialLanguage = "de",
+  cardsDirective?: string,
+): Promise<unknown> {
+  const run = (extraDirective?: string) =>
+    runTask(
+      client,
+      "visualMap",
+      materialBlocks,
+      deadlineMs,
+      examType,
+      brief,
+      relevanceBrief,
+      lensContext,
+      extraInfo,
+      materialLanguage,
+      cardsDirective,
+      extraDirective,
+    );
+  const single = () =>
+    run().then((r) => (r as { visualMap?: unknown }).visualMap ?? null);
+
+  const chars = materialTextChars(materialBlocks);
+  if (chars < GUIDE_TWO_STAGE_THRESHOLD_CHARS) return single();
+
+  // Stage A — outline. Any failure falls back to the proven single call.
+  let outline: z.infer<typeof GuideOutlineSchema>["visualMap"]["blocks"];
+  try {
+    const raw = await run(TASK_VISUAL_OUTLINE_DIRECTIVE);
+    const parsed = GuideOutlineSchema.safeParse(raw);
+    if (!parsed.success) throw new Error("guide_outline_invalid");
+    outline = parsed.data.visualMap.blocks.slice(0, GUIDE_MAX_TOPICS);
+  } catch (e) {
+    console.warn(
+      "[/api/generate] guide outline failed — falling back to single-call visual map",
+      e,
+    );
+    return single();
+  }
+
+  // Stage B — deepen every block in parallel; a failed block is dropped
+  // (partial guide beats none). The outline owns title/priority/time so the
+  // roadmap stays coherent even if a deepen call reworded the topic.
+  const total = outline.length;
+  const deepened = await Promise.all(
+    outline.map((o, i) =>
+      run(buildVisualDeepenDirective(o.title, o.scope, i, total))
+        .then((r) => {
+          const b = (r as { visualMap?: { blocks?: unknown[] } }).visualMap
+            ?.blocks?.[0];
+          if (!b || typeof b !== "object") return null;
+          const parsed = VisualBlockSchema.safeParse({
+            color: "blue",
+            ...(b as object),
+          });
+          if (!parsed.success || parsed.data.frameworks.length === 0)
+            return null;
+          return {
+            ...parsed.data,
+            title: o.title,
+            priority: o.priority ?? parsed.data.priority,
+            timeMinutes: o.timeMinutes ?? parsed.data.timeMinutes,
+          };
+        })
+        .catch((e) => {
+          console.error(
+            `[/api/generate] guide block "${o.title}" soft-failed`,
+            e,
+          );
+          return null;
+        }),
+    ),
+  );
+  const blocks = deepened.filter(
+    (b): b is NonNullable<(typeof deepened)[number]> => b !== null,
+  );
+  if (blocks.length === 0) throw new Error("guide_all_blocks_failed");
+  console.log(
+    `[/api/generate] guide two-stage: ${blocks.length}/${total} blocks deepened (material ~${Math.round(chars / 1000)}k chars)`,
+  );
+  return { blocks };
+}
+
 async function runGatedTasks(
   client: Anthropic,
   materialBlocks: Anthropic.Messages.ContentBlockParam[],
@@ -431,12 +568,12 @@ async function runGatedTasks(
 ): Promise<Partial<Record<GenTaskKey, unknown>>> {
   const active = activeTasksFor(examType);
   const runOne = (k: GenTaskKey): Promise<unknown> => {
-    const raw = runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief, lensContext, extraInfo, materialLanguage, cardsDirective);
-    // visualMap returns a wrapper object — unwrap its inner field.
+    // visualMap routes through the (possibly two-stage) guide runner, which
+    // returns the unwrapped map object; other tasks return their wrapper.
     const result =
       k === "visualMap"
-        ? raw.then((r) => (r as { visualMap?: unknown }).visualMap ?? null)
-        : raw;
+        ? runVisualGuide(client, materialBlocks, deadlineMs, examType, brief, relevanceBrief, lensContext, extraInfo, materialLanguage, cardsDirective)
+        : runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief, lensContext, extraInfo, materialLanguage, cardsDirective);
     // Required tasks (cards, meta) are fatal; every optional sub-task (the
     // format trainer + visualMap) soft-fails so one slow or broken task — e.g.
     // a simulator that blows the 180s per-attempt timeout on large material —
