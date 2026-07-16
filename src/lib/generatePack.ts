@@ -19,7 +19,7 @@ import {
   buildLanguageDirective,
   type LensContext,
 } from "@/lib/prompts";
-import { activeTasksFor, type GenTaskKey } from "@/lib/examTasks";
+import { activeTasksFor, isRequiredTask, type GenTaskKey } from "@/lib/examTasks";
 import {
   StudyPackSchema,
   type ExamType,
@@ -423,15 +423,24 @@ async function runGatedTasks(
   cardsDirective?: string,
 ): Promise<Partial<Record<GenTaskKey, unknown>>> {
   const active = activeTasksFor(examType);
-  const runOne = (k: GenTaskKey): Promise<unknown> =>
-    k === "visualMap"
-      ? runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief, lensContext, extraInfo, materialLanguage, cardsDirective)
-          .then((r) => (r as { visualMap?: unknown }).visualMap ?? null)
-          .catch((e) => {
-            console.error("[/api/generate] visualMap soft-failed", e);
-            return null;
-          })
-      : runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief, lensContext, extraInfo, materialLanguage, cardsDirective);
+  const runOne = (k: GenTaskKey): Promise<unknown> => {
+    const raw = runTask(client, k, materialBlocks, deadlineMs, examType, brief, relevanceBrief, lensContext, extraInfo, materialLanguage, cardsDirective);
+    // visualMap returns a wrapper object — unwrap its inner field.
+    const result =
+      k === "visualMap"
+        ? raw.then((r) => (r as { visualMap?: unknown }).visualMap ?? null)
+        : raw;
+    // Required tasks (cards, meta) are fatal; every optional sub-task (the
+    // format trainer + visualMap) soft-fails so one slow or broken task — e.g.
+    // a simulator that blows the 180s per-attempt timeout on large material —
+    // can't discard the whole (paid) pack. The merge omits any null result.
+    return isRequiredTask(k)
+      ? result
+      : result.catch((e) => {
+          console.error(`[/api/generate] optional task ${k} soft-failed`, e);
+          return null;
+        });
+  };
 
   // Anthropic prompt caching is per-model, so each model tier caches the
   // material independently — group the active tasks by model and warm each
