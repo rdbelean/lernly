@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createHash } from "node:crypto";
 import {
   getEinzelklausurPriceId,
   getStripe,
@@ -9,10 +10,21 @@ import {
   createClient as createSupabaseServer,
   createServiceClient,
 } from "@/lib/supabase/server";
+import { BETA_CHECKOUT_LOCKED, BETA_CHECKOUT_BODY } from "@/lib/betaGate";
 
 export const runtime = "nodejs";
 
 const SUBSCRIPTION_PLANS: SubscriptionPlan[] = ["semester", "monthly"];
+
+// Beta curtain: while BETA_CHECKOUT_LOCKED, checkout only proceeds with the
+// founder password (validated here so the plaintext never ships to the client).
+const BETA_PW_SHA256 =
+  "f7c8e198931985b6eae4a7fe1b1f76169240ddbba766e3e003f64374ffc8dc33";
+
+function betaPasswordOk(input: unknown): boolean {
+  if (typeof input !== "string" || input.length === 0) return false;
+  return createHash("sha256").update(input).digest("hex") === BETA_PW_SHA256;
+}
 
 export async function POST(request: Request) {
   const stripe = getStripe();
@@ -23,11 +35,20 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: { plan?: string };
+  let body: { plan?: string; betaPassword?: string };
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  // Beta curtain — the real gate. Blocks every purchase (any surface, incl.
+  // direct API calls) unless the founder password is supplied.
+  if (BETA_CHECKOUT_LOCKED && !betaPasswordOk(body.betaPassword)) {
+    return NextResponse.json(
+      { error: BETA_CHECKOUT_BODY, reason: "beta_locked" },
+      { status: 403 },
+    );
   }
 
   // Exactly one of three products: einzelklausur (one-time) or a subscription

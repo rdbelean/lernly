@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { track } from "@/lib/analytics";
+import { BETA_CHECKOUT_LOCKED, openBetaCheckout } from "@/lib/betaGate";
 
 export type QuotaHitDetails = {
   used: number;
@@ -33,6 +34,10 @@ export default function QuotaHitModal({ details, onClose }: Props) {
 
   const launch = (plan: "einzelklausur" | "semester" | "monthly") => {
     if (pending) return;
+    if (BETA_CHECKOUT_LOCKED) {
+      openBetaCheckout(plan);
+      return;
+    }
     setPending(plan);
     track("checkout_started", { plan, source: "quota_hit_modal" });
     startCheckout(plan).catch((e) => {

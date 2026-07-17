@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { track } from "@/lib/analytics";
 import { PrimaryCTAButton } from "@/components/ui/PrimaryCTA";
+import { BETA_CHECKOUT_LOCKED, openBetaCheckout } from "@/lib/betaGate";
 
 type CheckoutPlan = "einzelklausur" | "semester" | "monthly";
 
@@ -36,6 +37,10 @@ export default function BillingSection({
   const isSubscription = plan === "semester" || plan === "monthly";
 
   const startCheckout = (target: CheckoutPlan) => {
+    if (BETA_CHECKOUT_LOCKED) {
+      openBetaCheckout(target);
+      return;
+    }
     setError(null);
     track("checkout_started", { plan: target, source: "settings_billing" });
     startTransition(async () => {
