@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Sora } from "next/font/google";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
+import BetaCheckoutHost from "@/components/beta/BetaCheckoutHost";
 import ErrorReporter from "@/components/ErrorReporter";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
@@ -108,6 +109,7 @@ export default function RootLayout({
         <AnalyticsProvider />
         <ErrorReporter />
         {children}
+        <BetaCheckoutHost />
       </body>
     </html>
   );

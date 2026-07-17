@@ -27,6 +27,7 @@ import TurnstileWidget from "@/components/TurnstileWidget";
 import { track } from "@/lib/analytics";
 import { EXAM_FORMATS } from "@/lib/examFormats";
 import { CRAM_ENABLED } from "@/lib/features";
+import { BETA_CHECKOUT_LOCKED, openBetaCheckout } from "@/lib/betaGate";
 import LernlyLogo from "@/components/LernlyLogo";
 import {
   Upload,
@@ -1813,6 +1814,11 @@ function PricingSection({
         track("signup_started", { plan: "free", source: "pricing_free" });
         window.location.assign("/login?mode=register&next=/dashboard");
       }
+      return;
+    }
+    // Beta curtain: paid buys open the "in beta" screen instead of checkout.
+    if (BETA_CHECKOUT_LOCKED) {
+      openBetaCheckout(plan);
       return;
     }
     // Paid tiers all go through Stripe checkout — for guests too. The checkout
