@@ -1,414 +1,343 @@
-# Lernly × Claude: Architekturplan (Claude-Code-Fassung)
+# Lernly als Claude-Plugin: Architekturplan (Claude-Code-Fassung, Version 2)
 
-Stand: 13.11.2026. Grundlage: Codebase auf `main` (bd54ba2), dein Artefakt [CF Study OS](https://claude.ai/artifact/EbKXQ41UYHRo5aZPAzZEDF) (Quellcode gelesen, nicht nur die Oberfläche) und aktuelle Primärquellen (Liste am Ende). Nichts davon ist gebaut. Alle Kostenangaben sind Schätzungen mit offengelegten Annahmen.
+Stand: 13.11.2026. Ersetzt Version 1 dieser Datei, die Lernly noch als App mit Claude als Zulieferer geplant hat. Grundlage: dein [CF Study OS](https://claude.ai/artifact/EbKXQ41UYHRo5aZPAzZEDF) (Quellcode gelesen), dein Skill `corporate-finance-tutor` mit vorbereitetem Kursordner, die Lernly-Codebase und Anthropics Doku zu Plugins, Connectors und MCP Apps (Quellen am Ende). Nichts davon ist gebaut. Token- und Kostenzahlen sind Schätzungen.
 
 ---
 
-## 0. Kurzfassung
+## 0. Was du willst und mein Urteil
 
-**Entscheidung:** Claude baut den Trainer, Lernly speichert ihn, spielt ihn ab und merkt sich den Lernstand. Der Student arbeitet mit seinem eigenen Claude (seine Dateien, sein Abo). Lernly hängt als MCP-Connector dran. Gelernt wird in der Lernly-App auf dem Handy und ab Phase 2 zusätzlich direkt im Claude-Chat (MCP App).
+**Was du willst:** Lernly ist keine SaaS mehr, die selbst KI bezahlt. Lernly ist ein Paket für Claude. Alles läuft im Claude des Students. Lernly liefert die Vorarbeit: was in einen guten Klausurtrainer gehört, in welcher Reihenfolge und in welchem Format. Ergebnis: perfekte Lernmaterialien mit wenigen Prompts und wenig Tokens, für etwa 5 € im Monat.
 
-**Warum:** Der stärkste Befund kommt von dir selbst. Du lernst lieber mit Claude als mit Lernly. Das liegt nicht am Modell, sondern am Ablauf (Abschnitt 1). Diesen Ablauf kann Lernly nicht günstig nachbauen, Claude liefert ihn schon. Lernlys Wert wird damit: die **Methode** (dein Study-OS-Rezept), der **dauerhafte Lernstand** über Kurse und Geräte und die **Prüfungslogik** („Punkte, die du jetzt holen würdest").
+**Urteil: Das ist machbar, und Anthropic sieht genau dieses Modell vor.** Für ein eigenes Produkt empfiehlt die Doku zwei Einreichungen ins Claude-Verzeichnis: den eigenen Server als MCP-Connector und dazu ein Plugin, dessen Skills Claude beibringen, wie man ihn benutzt.
 
-**Reihenfolge:**
+Lernly besteht dann aus:
 
-| Phase | Dauer | Inhalt | Weiter nur wenn |
+- **Plugin** (Skills, Befehle, Skripte) = deine Vorarbeit. Kostet dich im Betrieb nichts.
+- **Connector** (MCP-Server) = die fertige Lern-Oberfläche, die in Claude läuft, dazu Kursgedächtnis, Fortschritt, Exporte und Bezahlschranke. Kostet dich nur Hosting, keine KI.
+
+Für dich ist es günstig, weil keine API-Kosten mehr anfallen. Für den Student ist es sparsam, weil Claude die Oberfläche nie selbst schreibt, sondern nur Inhalte liefert.
+
+**Zwei unbequeme Punkte vorab:**
+
+1. **Skills sind lesbarer Text.** Wer das Plugin hat, kann sie kopieren. Bezahlt wird deshalb der Connector, nicht das Wissen in den Skills (Abschnitt 11).
+2. **Dein Markt wird kleiner:** Studis mit Claude Pro. Das Plugin-Verzeichnis gibt es ab Pro, Cowork mit Ordnerzugriff auch, und die Gratis-Limits reichen nicht für 500 Folien.
+
+---
+
+## 1. Wo heute die Tokens verbrennen
+
+Dein CF-Ablauf hat schon die richtige Grundidee: ein vorbereiteter Kursordner mit `00_COURSE_OVERVIEW.md`, `00_INDEX.md` und `_Text (for Claude)`. Trotzdem gibt es fünf Lecks:
+
+| Leck | Was passiert | Größenordnung (Schätzung) | Lösung im Plugin |
 |---|---|---|---|
-| 0 | 1 Woche, kein Code | Methode als Anleitung, 6 Studis bauen ihren Trainer in Claude, TikTok mit deinem CF Study OS | ≥ 4 von 6 nutzen ihn für eine echte Klausur |
-| 1 | ca. 2 bis 3 Wochen | Inhaltsformat, Lernly-Player, MCP-Server mit 7 Tools, Anki-/Quizlet-Export | ≥ 6 von 10 Testern lernen an ≥ 3 Tagen damit |
-| 2 | ca. 1 Woche + Prüfzeit | Player als MCP App im Claude-Chat, Eintrag im Connector-Verzeichnis | Einrichtung klappt ohne deine Hilfe |
-| 3 | 1 bis 2 Wochen | App-Pfad für Studis ohne Claude: neues Format, neue Modelle, Text-Extraktion im Browser | Phase 0/1 zeigen, wie viele kein Claude haben |
+| Oberfläche jedes Mal neu | Claude schreibt CSS, Navigation, Wiederholungslogik, Timer und Dashboard selbst (in deinem CF Study OS rund 80 KB Code) | ca. 20–25k Ausgabe-Tokens pro Trainer | Die Oberfläche liegt fertig im Connector (MCP App). Claude schreibt nur Inhalte |
+| Bei Fehlern alles neu | Ein kaputter Tab bedeutet, dass das ganze Artefakt neu geschrieben wird | 80–120k Ausgabe-Tokens pro Neuversuch | Speichern Thema für Thema. Der Validator meldet Fehler, eine Korrektur betrifft ein Thema (3–8k) |
+| Folien teuer lesen | PDFs mit Grafiken kosten pro Seite ein Vielfaches von reinem Text, und meist wird alles gelesen | 500 Folien als Text ca. 200k, mit Bildern ein Vielfaches | Ein Skript zieht den Text einmal heraus. Altklausuren kommen zuerst, gründlich gelesen wird nur, was laut Bauplan Punkte bringt |
+| Jede Session von vorn | Eine neue Unterhaltung liest wieder Ordner und Übersicht | 20–100k Eingabe-Tokens pro Session | Das Kursgedächtnis im Connector liefert Bauplan, Themen und Lernstand in 5–10k Tokens |
+| Format-Ballast | HTML-Markup um jeden Absatz (`<div class="simple">…`) | ca. 30 % der Inhalts-Tokens | Kompaktes JSON mit Markdown |
 
-Das Timing passt: Wintersemester-Klausuren liegen im Januar und Februar. Phase 1 kann Mitte Dezember stehen.
-
----
-
-## 1. Warum dein Claude-Artefakt besser ist als Lernly heute
-
-| | CF Study OS (Claude) | Lernly heute (Code) |
-|---|---|---|
-| Material | Alle Folien, Altklausuren 2015 bis FT23, Musterlösungen, Addenda, Gastvortrag. Claude liest gezielt nach. | Upload bis 50 MB. Text wird ab ca. 120k Tokens gekürzt (`TOKEN_THRESHOLD_CHARS`, [generatePack.ts](../../src/lib/generatePack.ts)), Bilder-PDFs max. 100 Seiten. |
-| Prüfungsanalyse | Klausur-Slots Q1 bis Q6, Punkte je Aufgabe, Häufigkeit („5 of 5 old exams"), Entweder-oder-Paare, Open-Book vs. Closed-Book | Optionale Altklausur-Lens mit Relevanz-Tags |
-| Ablauf | Mehrere Runden, Rückfragen, Nachbessern bis es passt | Ein Durchlauf, 4 parallele Teilaufgaben mit festen Token-Grenzen (4k bis 16k), bei Überlauf „antworte halb so lang" |
-| Modell | Spitzenmodell mit Denken | Sonnet 4.6 und Haiku 4.5, `thinking: disabled` ([taskModels.ts](../../src/lib/taskModels.ts)) |
-| Inhaltsformen | Erklärung „in einfachen Worten", Beispiel, SVG-Grafik, 6-Schritte-Rezept, Formeln (LaTeX), durchgerechnete Altklausur, Musterantwort in Klausursprache mit markierten Schlüsselwörtern, typische Fehler, Merkhilfe, Folienquelle | Karteikarten, MC oder offene Fragen, Study Guide |
-| Üben | Rechen-Drills mit neuen Zahlen und Rundungstoleranz, Textaufgaben mit Punkte-Checkliste zum Selbstbewerten, 4 Probeklausuren mit Lern- und Klausurmodus (90-Minuten-Timer) | MC-Quiz mit Erklärungen, Re-Practice |
-| Steuerung | „Points you would score now: x/90", Rangliste nach erwarteten Punkten × Lücke, „Do next", „Where it is stuck" | Mastery-% pro Paket, Fällig-Queue, Streak |
-
-**Folgerung:** Ein Connector allein macht Lernly nicht besser. Besser wird es durch zwei Dinge zusammen: Claude erzeugt mit vollem Material, Denken und Iteration, und Lernly kann endlich das Format abspielen, das in deinem Artefakt funktioniert.
-
-Dein Artefakt ist technisch schon fast so gebaut, wie Lernly es braucht: eine feste **Engine** (Router, Mastery-Formel, SRS, Mock-Timer, Speicherung) und davon getrennte **Kursdaten** (`TOPICS`, `PRACTICE`, `DRILLS`, `ESSAYS`, `MEMO`, `MOCKS`, `CHEAT`). Lernly übernimmt die Engine, Claude liefert die Daten.
+**Erwartung:** pro Kurs grob 60–80 % weniger Ausgabe-Tokens und 50–70 % weniger Eingabe-Tokens als freihändig. Das ist eine Größenordnung, keine Messung. Phase 0 misst es.
 
 ---
 
-## 2. Was erlaubt ist und was nicht
+## 2. Das Produkt: drei Teile
 
-| Weg | Wer zahlt die KI | Erlaubt? | Rolle im Plan |
+| Teil | Inhalt | Läuft wo | Kostet dich |
 |---|---|---|---|
-| Student arbeitet in Claude, Claude ruft Lernly-Tools auf (MCP-Connector) | Claude-Abo des Students | Ja, offizieller Weg | **Hauptweg** |
-| Lernly-Ansicht läuft im Claude-Chat (MCP App) | Claude-Abo | Ja, seit 26.01.2026 | Phase 2 |
-| Artefakt in Claude ruft selbst Claude auf | Abo des jeweiligen Nutzers | Ja, aber Speicher und Connectoren nur in bezahlten Plänen, nur Web/Desktop | Nicht gewählt: Fortschritt bliebe im Artefakt gefangen |
-| lernly-app.de nutzt im Hintergrund das Claude-Abo des Students | – | **Nein.** Anthropic erlaubt Drittanbietern ohne Freigabe weder claude.ai-Login noch Abo-Limits für eigene Produkte | Ausgeschlossen |
-| lernly-app.de ruft die Claude-API auf | Lernly (oder eigener API-Key des Nutzers) | Ja | Bestehender App-Pfad als Rückfallebene |
+| **Lernly-Plugin** | Skills (Methode), Befehle, Referenzdateien, Skripte, Verweis auf den Connector | Chat (Web, Desktop, Mobile), Cowork, Claude Code | 0 € |
+| **Lernly-Connector** | MCP-Server: Kursgedächtnis, Inhalte speichern und prüfen, Fortschritt, Exporte, Bezahlschranke | überall, wo Connectors laufen | Hosting |
+| **Lernly-Trainer** (MCP App) | Die fertige Oberfläche aus deinem CF Study OS: im Seitenpanel oder als Vollbild (Web, Desktop), im Chat (Mobile) | Web, Desktop, Mobile | Hosting |
 
-Planverfügbarkeit (Primärquellen, Stand heute):
-
-- **Custom Connectors:** Free (max. 1), Pro, Max, Ultra, Team, Enterprise. Hinzufügen im Web oder Desktop, danach auch in der Mobile-App nutzbar.
-- **Interaktive Connectors (MCP Apps):** Web, Desktop, Mobile, alle Pläne. Neuere Extras (App-Tools, Einstiegspunkte, eingebettete Seiten) sind an Verzeichnis-Status und Organisations-Rollout gebunden.
-- **Cowork (Ordnerzugriff):** ab Pro, Mac und Windows.
-
-**Was das für die Zielgruppe heißt:** Realistisch nutzt den Claude-Weg ein Student mit Claude Pro. Ein 500-Folien-Kurs sprengt die Free-Limits, und Ordnerzugriff gibt es erst ab Pro. Wie viele BWL-Studis in DACH Claude Pro haben, weißt du nicht. Das misst Phase 0. Der App-Pfad bleibt deshalb bestehen.
+lernly-app.de bleibt bestehen für Konto, Bezahlung, Anleitung und eine Web-Ansicht desselben Trainers. Die braucht man fürs Handy außerhalb von Claude und zum Teilen mit der Lerngruppe.
 
 ---
 
-## 3. Zielarchitektur
+## 3. Ablauf für den Student
+
+**Einmalig:** Plugin „Lernly" im Claude-Verzeichnis hinzufügen, im Tab „Connectors" des Plugins mit dem Lernly-Konto anmelden. Bis das Verzeichnis freigibt, gibt es das Plugin als ZIP oder Marketplace-URL. Das ist mehr Aufwand für den Nutzer.
+
+**Pro Kurs:**
+
+1. **`/lernly:kurs-einrichten`** (in Cowork mit Ordner oder mit Dateien im Chat): Claude erfasst die Dateien, zieht per Skript den Text heraus, liest Altklausuren zuerst und erstellt das **Kursprofil**: Prüfungsform, Bauplan mit Punkten und Häufigkeit, Themenliste mit Folienbereichen, Notation des Profs. Das Profil wird im Connector gespeichert. In Cowork landet zusätzlich `00_LERNLY.md` im Ordner, wie bei deinem CF-Setup.
+2. **Eine Rückfrage:** Der Student bestätigt oder korrigiert den Bauplan.
+3. **`/lernly:trainer-bauen`:** Claude schreibt Thema für Thema im kompakten Format, der Validator prüft jedes Thema, danach öffnet sich der Trainer im Seitenpanel.
+4. **Lernen im Trainer:** Klausurplan, Themen, Rechnen, Wiederholen, Probeklausur, Spickzettel. Der Fortschritt wird bei Lernly gespeichert und ist auf allen Geräten verfügbar.
+5. **`/lernly:wo-stehe-ich`, `/lernly:abfragen`, `/lernly:erklaer-mir`:** Claude holt Lernstand und Kursprofil (wenige Tokens) und übt gezielt die schwächsten Themen. Das läuft wie dein CF-Tutor: erst selbst versuchen lassen, dann Schritt für Schritt korrigieren, Folie zitieren.
+6. **Neue Folien:** `/lernly:kurs-aktualisieren` verarbeitet nur die neuen Dateien.
+
+---
+
+## 4. Architektur
 
 ```mermaid
 flowchart LR
-  subgraph Student
-    F["Vorlesungsordner<br/>lokal oder Drive"]
-    C["Claude<br/>Chat, Cowork, Mobile"]
-    P["Lernly-App<br/>lernly-app.de (PWA)"]
+  subgraph Rechner["Rechner / Konto des Students"]
+    F["Kursordner<br/>Folien, Altklausuren"]
+    subgraph Claude["Claude (Abo des Students)"]
+      S["Lernly-Plugin<br/>Skills, Befehle, Skripte"]
+      K["Claude<br/>liest, denkt, schreibt Inhalte"]
+      T["Lernly-Trainer<br/>MCP App im Seitenpanel"]
+    end
   end
-  subgraph Lernly
+  subgraph Lernly["Lernly (dein Server, keine KI)"]
     M["MCP-Server<br/>/api/mcp"]
-    A["OAuth 2.1<br/>Supabase Auth"]
-    V["Validator<br/>Zod StudyOS v1"]
-    DB[("Supabase<br/>trainers, trainer_attempts,<br/>trainer_card_reviews, exams")]
-    G["App-Generierung<br/>bestehend, Rückfallebene"]
-    X["Exporte<br/>Anki, Quizlet"]
+    V["Validator<br/>Zod-Format"]
+    DB[("Supabase<br/>Kurse, Themen,<br/>Versuche, Karten")]
+    W["lernly-app.de<br/>Konto, Abo, Web-Ansicht"]
+    X["Exporte<br/>Anki, Quizlet, Offline-HTML"]
   end
-  F -->|liest Dateien| C
-  C -->|Tool-Aufrufe| M
-  M --> A
+  F -->|liest| K
+  S -->|Methode| K
+  K -->|Tool-Aufrufe| M
   M --> V --> DB
-  P <--> DB
-  G --> DB
-  P --> X
-  C -.->|Phase 2: MCP App| P
+  T <-->|Antworten, Bewertungen| M
+  W <--> DB
+  M --> X
 ```
 
-Grundsatz: **Lernly sieht nie die Rohdateien.** Claude liest Folien und Altklausuren, Lernly bekommt nur den fertigen Lerninhalt plus kurze Quellenangaben („Folie 51"). Das löst das Upload-Problem, spart Storage und verringert die rechtliche Angriffsfläche beim Speichern fremder Vorlesungsfolien (vom Anwalt bestätigen lassen).
+Grundsatz: **Lernly sieht nie die Rohdateien und ruft nie ein Sprachmodell auf.** Claude liest und schreibt. Lernly speichert, prüft, zeigt an und merkt sich den Lernstand.
 
 ---
 
-## 4. Nutzerfluss (Claude-Pfad)
+## 5. Plugin im Detail: die Vorarbeit
 
-1. In Lernly: „Mit Claude verbinden". Seite mit drei Schritten und kurzem Video: Connector-URL `https://lernly-app.de/api/mcp` kopieren, in Claude unter Anpassen → Connectors → „Custom Connector hinzufügen" einfügen, mit dem Lernly-Konto anmelden. Einmalig, ca. 2 Minuten.
-2. In Claude, idealerweise in Cowork mit freigegebenem Vorlesungsordner: „Bau mir mit Lernly einen Klausurtrainer für Marketing, Klausur am 12.02."
-3. Claude ruft `lernly_get_context` (vorhandene Klausuren, Lernstand) und `lernly_get_playbook` (Methode für den Fachtyp) auf.
-4. Claude liest Folien und Altklausuren und zeigt zuerst den **Klausur-Bauplan** (Aufgabenblöcke, Punkte, Häufigkeit, Hilfsmittel). Der Student bestätigt oder korrigiert.
-5. Claude schreibt Thema für Thema per `lernly_upsert_topic`. Lernly prüft jedes Thema und gibt konkrete Fehler zurück. Claude korrigiert.
-6. `lernly_publish` liefert den Link „In Lernly öffnen". Ab hier sind keine Modellaufrufe mehr nötig.
-7. Lernen in Lernly auf dem Handy: Klausurplan, Themen, Wiederholen, Probeklausur, Spickzettel. Jede Antwort wird gespeichert.
-8. Nächste Session in Claude: „Wo stehe ich?" → `lernly_get_progress` → Claude erklärt gezielt die schwächsten Themen und ergänzt Aufgaben.
+```
+lernly/
+  .claude-plugin/plugin.json
+  .mcp.json                         Verweis auf https://lernly-app.de/api/mcp
+  README.md, LICENSE                Pflicht fürs Verzeichnis
+  skills/
+    lernly-kurs-einrichten/
+      SKILL.md                      Inventar → Text → Altklausuren → Bauplan → Kursprofil
+      scripts/inventory.py          Dateien, Seitenzahl, Typ (Folie, Übung, Altklausur, Lösung)
+      scripts/extract_text.py       PDF/PPTX → Text pro Seite mit Seitennummer
+      references/kursprofil.md      Format des Kursprofils
+    lernly-trainer-bauen/
+      SKILL.md                      Methode: Stufen, Bausteine je Thema, Reihenfolge
+      references/format.md          kompaktes Inhaltsformat
+      references/fachtypen.md       Rechnen, Verstehen, Argumentieren, Gemischt
+      references/beispiel-dcf.json  ein perfektes Thema aus deinem CF Study OS
+      references/qualitaet.md       Checkliste vor dem Speichern
+    lernly-tutor/
+      SKILL.md                      Tutor-Regeln (dein CF-Tutor, verallgemeinert)
+  commands/
+    kurs-einrichten.md  trainer-bauen.md  kurs-aktualisieren.md
+    wo-stehe-ich.md  abfragen.md  probeklausur.md  export.md
+```
 
-Abbruch-sicher: Wenn Claude mitten im Bau ins Nutzungslimit läuft, liegt der Entwurf mit den fertigen Themen schon in Lernly. Die nächste Session macht dort weiter.
+Die Methode in `lernly-trainer-bauen` stammt aus deinem CF Study OS:
+
+1. **Bauplan zuerst:** aus Altklausuren Aufgabenblöcke, Punkte, Häufigkeit, Pflicht oder Wahl, Dauer und Hilfsmittel ableiten. Ohne Altklausur: Relevanz als „vermutet" markieren.
+2. **Stufen:** Stufe 1 „sicher lernen" (ca. 70 % der Punkte), Stufe 2 „wenn Zeit ist", Stufe 3 „nur wenn alles sitzt".
+3. **Pro Thema:** einfach erklärt, Beispiel, Grafik, Rezept in Schritten, Formeln, durchgerechnete Altklausuraufgabe, Standardantwort mit Schlüsselwörtern, typische Fehler, Merkhilfe, Quelle.
+4. **Üben:** Altklausuraufgaben zuerst, dann Varianten. Rechnen mit Eingabe, Toleranz und Lösungsweg. Text mit Punkte-Checkliste. MC mit Erklärung.
+5. **Auswendig nur, was man 1:1 hinschreiben muss.**
+6. **Probeklausuren** im echten Format, **Spickzettel**.
+
+Fachtypen bestimmen die Mischung: Rechnen (Mathe, Statistik, Finance) bekommt vor allem Übungsaufgaben mit Varianten, Verstehen (Marketing, Orga) vor allem Karteikarten und Modelle, Argumentieren (Strategie, Essays) vor allem Musterantworten mit Punkte-Checkliste.
+
+Technische Hinweise:
+
+- Skript-Skills brauchen im Chat aktivierte Code-Ausführung (Gratis, Pro, Max: Einstellungen → Funktionen). In Cowork laufen sie in der VM.
+- Kein `bin/`-Ordner im Plugin, sonst lehnen Chat und Cowork die Installation ab.
+- Keine Geheimnisse in Plugin-Dateien. Jeder Nutzer bekommt alle Dateien.
 
 ---
 
-## 5. Komponenten
-
-### 5.1 MCP-Server `/api/mcp`
-
-- Next.js Route Handler auf Vercel, Transport Streamable HTTP, zustandslos. Bibliothek `@modelcontextprotocol/sdk` (**neue Abhängigkeit, braucht deine Freigabe**).
-- Anmeldung: OAuth 2.1 über den OAuth-Server von Supabase Auth (Schalter im Dashboard, Dynamic Client Registration). Zu prüfen: Die MCP-Spec vom 28.07.2026 bevorzugt Client-ID-Metadata-Documents, Claude bietet dafür „Claude's published identity" an. Ob Supabase das unterstützt, testen wir im ersten Durchstich. **Berührt Auth, braucht deine Freigabe.**
-- **Server-Instructions** tragen die Kurzfassung der Methode und die Regeln (immer zuerst Bauplan, Sprache folgt dem Material, keine Emojis). Der Student muss dadurch keinen Skill installieren.
+## 6. Connector-Tools (MCP)
 
 | Tool | Zweck | Schreibt |
 |---|---|---|
-| `lernly_get_context` | Klausuren (Titel, Datum), vorhandene Trainer, Mastery je Thema | nein |
-| `lernly_get_playbook(fachtyp, sprache)` | Methode, Kurzreferenz des Formats, Qualitäts-Checkliste, ein Beispielthema (DCF aus deinem Artefakt) | nein |
-| `lernly_create_trainer(klausur, bauplan)` | Legt Entwurf an, verknüpft oder erstellt den `exams`-Eintrag | ja |
-| `lernly_upsert_topic(trainer_id, thema)` | Ein Thema mit Theorie, Aufgaben, Karten. Antwort: Validierungsfehler oder ok | ja |
-| `lernly_upsert_mock(trainer_id, mock)` | Eine Probeklausur | ja |
-| `lernly_publish(trainer_id)` | Gesamtprüfung, Status „fertig", Link | ja |
-| `lernly_get_progress(trainer_id)` | Mastery je Thema, schwächste Aufgaben, fällige Karten, Mock-Ergebnisse | nein |
+| `lernly_get_course(course_id?)` | Kursliste, oder Kursprofil plus Lernstand in kompakter Form | nein |
+| `lernly_save_course(profile)` | Kursprofil anlegen oder aktualisieren (Bauplan, Themen, Notation, Prüfungsdatum) | ja |
+| `lernly_save_topic(course_id, topic)` | Ein Thema speichern. Antwort: Fehlerliste oder ok | ja |
+| `lernly_save_mock(course_id, mock)` | Eine Probeklausur speichern | ja |
+| `lernly_open_trainer(course_id, tab?)` | Öffnet die Oberfläche (MCP App) | nein |
+| `lernly_get_progress(course_id)` | Mastery je Thema, schwächste Aufgaben, fällige Karten, Mock-Ergebnisse | nein |
+| `lernly_export(course_id, format)` | Link zu Anki-Datei, Quizlet-Text oder Offline-HTML | nein |
 
-Warum Thema für Thema: Ein Trainer wie CF Study OS umfasst mehrere hundert KB Inhalt. Kleine Aufrufe halten jeden Schritt robust, erlauben sofortiges Korrigieren und zeigen dem Student Fortschritt.
+Der Trainer selbst ruft zusätzlich zwei Tools auf, die Claude nicht braucht: Antwort speichern und Karte bewerten.
 
-Grenzen: max. ca. 60 KB pro Thema, max. 40 Themen, Schreib-Rate-Limit pro Nutzer (vorhandene `rate_limit`-Infrastruktur). Tool-Namen und Beschreibungen stabil halten: Jede Änderung löst in Claude neue Freigabe-Abfragen aus.
+**Bezahlschranke, ohne Fake:** Ohne Abo funktioniert ein Kurs komplett. Beim zweiten Kurs antwortet `lernly_save_course` mit einem klaren Hinweis und dem Abo-Link. Claude gibt das an den Student weiter.
 
-### 5.2 Die Methode („Playbook"): das eigentliche Produkt
+Tool-Namen und Beschreibungen bleiben stabil, weil jede Änderung in Claude neue Freigabe-Abfragen auslöst.
 
-Abgeleitet aus deinem CF Study OS:
+---
 
-1. **Klausur-Bauplan zuerst.** Altklausuren → Aufgabenblöcke, Punkte, Häufigkeit, Pflicht oder Wahl, Dauer, Hilfsmittel. Ohne Altklausur: Prüfungsform plus Folienschwerpunkte, Relevanz als „vermutet" markiert (die Fidelity-Stufen strict/likely/broad der bestehenden Exam-Lens wiederverwenden).
-2. **Stufen:** Stufe 1 „sicher lernen" (ca. 70 % der Punkte bei wenig Aufwand), Stufe 2 „wenn Zeit ist", Stufe 3 „nur wenn alles sitzt".
-3. **Pro Thema:** einfache Erklärung, Alltagsbeispiel, Grafik, Rezept in Schritten, Formeln, durchgerechnete Altklausuraufgabe, Standardantwort in Klausurlänge mit Schlüsselwörtern, typische Fehler, Merkhilfe, Quelle.
-4. **Üben:** echte Altklausuraufgaben zuerst, dann neue Varianten. Rechnen mit Eingabefeld, Toleranz und Lösungsweg. Text mit Punkte-Checkliste. MC mit Erklärung pro Option.
-5. **Auswendig nur, was man 1:1 hinschreiben muss:** Formeln (wenn keine Formelsammlung erlaubt ist), Listen, Gliederungen.
-6. **Probeklausuren** im echten Format, Lernmodus und Klausurmodus mit Timer.
-7. **Spickzettel** für den letzten Blick.
+## 7. Trainer-Oberfläche (MCP App)
 
-Fachtypen bestimmen die Mischung, nicht eigene Produktlinien:
+- Ein HTML/JS-Paket aus Lernly-Komponenten als `ui://lernly/trainer`. Es öffnet sich nach Möglichkeit im Seitenpanel (`preferredDisplayMode: fullscreen`) und hat einen eigenen Vollbild-Knopf. Auf dem Handy erscheint es im Chat.
+- Tabs (Deutsch): **Klausurplan · Themen · Wiederholen · Probeklausur · Spickzettel · Übersicht**.
+- Logik aus deinem CF Study OS:
+  - Mastery = 15 % Theorie gelesen + 70 % Übung + 15 % Karten.
+  - Priorität = erwartete Punkte × (1 − Mastery).
+  - Kopfzeile: „Punkte, die du jetzt holen würdest".
+- Fortschritt geht per Tool-Aufruf an Lernly, nicht in `localStorage`. Damit ist er auf jedem Gerät und in jeder neuen Unterhaltung da.
+- Die Sandbox erlaubt keine Downloads und keine Pop-ups. Exporte öffnen deshalb lernly-app.de.
+- Das Seitenpanel gibt es derzeit nur für einen Teil der Konten. Ohne Panel öffnet der Knopf Vollbild, sonst bleibt die Ansicht im Chat.
+- Dasselbe Paket läuft als Web-Ansicht unter lernly-app.de.
 
-| Fachtyp | Beispiele | Schwerpunkt |
-|---|---|---|
-| Rechnen | Mathe, Statistik, Corporate Finance, KLR | Drills mit Varianten, Lösungsweg, Formelkarten |
-| Verstehen und Wiedergeben | Marketing, Organisation, Personal | Karteikarten, Modelle als Grafik, kurze Anwendungsfälle |
-| Argumentieren | Strategie, VWL-Essays, Ethik | Standardantworten, Gliederungen, Punkte-Checklisten |
-| Gemischt | CF plus Real Estate | alles, gewichtet nach Bauplan |
+---
 
-Positionierung: BWL-Studis. Das ist dein Fach und auf TikTok glaubwürdig. Technisch bleibt alles fachneutral.
+## 8. Inhaltsformat (kompakt)
 
-### 5.3 Inhaltsformat `study_os_v1` (Zod-Schema in `src/lib/studyOs/schema.ts`)
+Ein Kurs besteht aus Kursprofil, Themen, Probeklausuren und Spickzettel. Kurzform:
 
 ```ts
-StudyOS = {
-  format: "study_os_v1",
-  title: string,
-  language: "de" | "en",            // folgt dem Material
-  exam: {
-    date?: string, durationMin?: number, totalPoints?: number,
-    aids: "closed_book" | "formula_sheet" | "open_book",
-    parts: { id, name, points, slots: { id, label, points, choiceGroup? }[] }[],
-    fidelity: "strict" | "likely" | "broad",
-  },
-  topics: {
-    id: string,                      // stabile Slug-ID, bleibt bei Updates gleich
-    title, partId, slotIds: string[],
-    expectedPoints: number, tier: 1 | 2 | 3, frequency?: string, effort?: "S" | "M" | "L",
-    pairWith?: string,               // Entweder-oder-Paar
-    theory: Block[],
-    standardAnswer?: Block[],
-    tasks: Task[],
-    cards: { id, front, back }[],    // nur Auswendig-Inhalte
-    sources: { label, ref }[],       // z. B. "Folien 46–64"
-  }[],
-  mocks: { id, name, durationMin, items: MockItem[] }[],
-  cheatSheet: { title, blocks: Block[] }[],
-}
+Kursprofil = { title, language, exam: { date, durationMin, totalPoints, aids,
+               parts: [{ id, name, points, slots: [{ id, label, points, choiceGroup? }] }],
+               fidelity: "strict" | "likely" | "broad" },
+               topics: [{ id, title, slotIds, expectedPoints, tier, sources }],
+               notation?: string }
 
-Block =
-  | { type: "simple" | "example" | "remember" | "mistakes" | "hook" | "text", md: string }
-  | { type: "steps", items: string[] }
-  | { type: "formula", tex: string[] }
-  | { type: "table", head: string[], rows: string[][] }
-  | { type: "figure", svg: string, caption?: string }
-  | { type: "model_answer", md: string }          // ==Schlüsselwort== wird markiert
+Thema = { id, theory: Block[], standardAnswer?: Block[], tasks: Task[],
+          cards: [{ id, front, back }], mistakes?: string[], hook?: string }
 
-Task =
-  | { kind: "drill", id, name, source, variants: { prompt, fields: { label, value, tol? }[],
-      choice?: { label, options, correct }, solution: Block[] }[] }
-  | { kind: "essay", id, name, source, prompt, points, checklist: { text, points }[], model: Block[] }
-  | { kind: "mc", id, name, source, questions: { q, options, correct, explain }[] }
+Block = text | simple | example | remember | steps | formula (LaTeX) | table | figure (SVG) | model_answer
+Task  = drill (3–5 durchgerechnete Varianten, Felder mit Toleranz, Lösungsweg)
+      | essay (Aufgabe, Punkte, Checkliste, Musterantwort)
+      | mc (Fragen, Optionen, richtige Antwort, Erklärung)
 ```
 
 Regeln:
 
-- Text ist Markdown-light plus LaTeX `\( \)` und `\[ \]`. KaTeX ist schon im Projekt.
-- Grafiken kommen als SVG-Text und werden nur als `<img src="data:image/svg+xml,…">` angezeigt. So kann kein Skript laufen, ohne neue Abhängigkeit.
-- Kein freies HTML oder JavaScript von Claude. Dein Artefakt erzeugt Drill-Zahlen per JS-Funktion. Version 1 nimmt stattdessen 3 bis 5 fertig durchgerechnete Varianten pro Drill. Version 2 kann Variablen plus Formel mit einem kleinen sicheren Rechner bringen.
-- Stabile IDs für Themen, Aufgaben und Karten, damit Updates keinen Fortschritt löschen.
-
-### 5.4 Lernly-Player (Web, mobile-first)
-
-- Neue Route `/dashboard/trainer/[id]`, Tabs (App-Chrome Deutsch): **Klausurplan · Themen · Wiederholen · Probeklausur · Spickzettel · Übersicht**.
-- Logik aus deinem Artefakt übernehmen:
-  - Mastery je Thema = 15 % Theorie gelesen + 70 % Übung (letzte 3 Versuche, mal Abdeckung) + 15 % Karten.
-  - Priorität = erwartete Punkte × (1 − Mastery) × Schwächefaktor. Ist ein Entweder-oder-Partner schon sicher, rutscht das Thema nach hinten.
-  - Kopfzeile: „Punkte, die du jetzt holen würdest: 54/90" plus „Als Nächstes".
-- Wiederverwenden: `computeNextReview` aus [srs.ts](../../src/lib/srs.ts), Klausuren mit Countdown und Erinnerungen aus `exams`, KaTeX, Streak, Bibliothek nach Klausuren gruppiert.
-- Design-System der App (Indigo-CTA, Sora/Inter, lucide-Icons, keine Emojis), ab 380 px nutzbar.
-
-### 5.5 MCP App im Claude-Chat (Phase 2)
-
-- Derselbe Player als UI-Ressource `ui://lernly/trainer`, inline im Chat auf Web, Desktop und Mobile.
-- Einschränkungen der Sandbox: keine Downloads, keine Pop-ups, `confirm()` liefert false. Export-Buttons öffnen deshalb lernly-app.de.
-- `ui.domain` hängt an der exakten Server-URL. URL früh festlegen und nicht mehr ändern.
-- Danach Eintrag im Connector-Verzeichnis beantragen. Ein Klick statt URL kopieren ist für die ersten 2 Minuten entscheidend.
-
-### 5.6 Bestehende App-Generierung
-
-Bleibt für Studis ohne Claude. In Phase 1 keine Arbeit daran. In Phase 3: Ausgabe im neuen Format, Modellwechsel (Abschnitt 8), Text-Extraktion im Browser (Abschnitt 9).
+- Markdown-light plus LaTeX.
+- SVG wird nur als Bild angezeigt (kein Skript möglich).
+- Kein freies HTML oder JS.
+- Stabile IDs, damit Updates keinen Fortschritt löschen.
 
 ---
 
-## 6. Datenmodell: nur neue Tabellen
+## 9. Datenmodell: nur neue Tabellen
 
-Die Datenbank ist zwischen Preview und Produktion geteilt. Deshalb rührt Phase 1 keine bestehende Tabelle an. Der Live-Code auf `main` sieht die neuen Daten nie.
+Die Datenbank ist zwischen Preview und Produktion geteilt. Deshalb kommen nur neue Tabellen dazu, die laufende App bleibt unberührt.
 
-| Tabelle | Wesentliche Felder | Zweck |
+| Tabelle | Felder | Zweck |
 |---|---|---|
-| `trainers` | `id`, `user_id`, `exam_id` (FK `exams`, optional), `title`, `language`, `format`, `source` (`claude` / `app`), `status` (`draft` / `ready` / `archived`), `content jsonb`, `content_version int`, `created_at`, `updated_at`, `last_opened_at` | Der Trainer selbst |
-| `trainer_attempts` | `id`, `user_id`, `trainer_id`, `item_id text`, `kind` (`read` / `drill` / `essay` / `mc` / `mock`), `score real` (0 bis 1), `answer jsonb`, `created_at` | Jeder Versuch, nur anhängen. Mastery wird daraus berechnet |
-| `trainer_card_reviews` | wie `card_reviews`, aber mit `trainer_id` | SRS-Stand der Karten |
+| `lernly_courses` | `id`, `user_id`, `exam_id` (optional, nutzt Countdown und Erinnerungen der bestehenden `exams`), `title`, `language`, `profile jsonb`, `status`, Zeitstempel | Kurs und Kursgedächtnis |
+| `lernly_course_items` | `course_id`, `item_type` (`topic` / `mock` / `cheatsheet`), `item_id`, `content jsonb`, `version`, `updated_at`, eindeutig je Kurs und `item_id` | Inhalte, einzeln speicherbar |
+| `lernly_attempts` | `user_id`, `course_id`, `item_id`, `kind`, `score`, `answer jsonb`, `created_at` (nur anhängen) | Lernstand |
+| `lernly_card_reviews` | wie die bestehende `card_reviews`, aber mit `course_id` | Wiederholung |
 
-- RLS: nur Eigentümer. Server-Code mit Service-Role filtert zusätzlich explizit nach `user_id` aus dem OAuth-Token.
-- Migrationsdateien mit 14-stelligem Zeitstempel, einzeln per `supabase db query --linked --file …` einspielen, erst nach deinem OK.
-- OAuth-Clients und Freigaben verwaltet Supabase selbst. Keine eigene Tabelle nötig.
-- `check_pack_quota()` bleibt unverändert. Ein Kontingent für Trainer kommt erst mit der Preisentscheidung (Abschnitt 8).
+RLS gilt nur für den Eigentümer. Migrationsdateien bekommen einen 14-stelligen Zeitstempel und werden erst nach deinem OK eingespielt. OAuth-Clients verwaltet Supabase selbst.
 
 ---
 
-## 7. Sicherheit und Datenschutz
+## 10. Kosten und Preis
 
-- Jeder Tool-Aufruf prüft den Eigentümer. Fremde Trainer sind über MCP, REST und RLS unerreichbar. Test mit zwei Konten gehört zur Abnahme.
-- Tool-Eingaben von Claude sind ungeprüfte Daten: Zod-Validierung, Größengrenzen, kein HTML/JS, SVG nur als Bild.
-- „Claude-Verbindung trennen" in den Einstellungen (Freigabe in Supabase widerrufen).
-- Datenschutzerklärung braucht einen Abschnitt zum Claude-Connector. Den Text schreibe ich nicht, das ist Sache des Anwalts. Ich liefere nur die technischen Fakten (welche Daten, wohin, wie lange).
+**Laufende Kosten:** keine KI. Fixkosten fürs Hosting (Supabase Pro und Vercel Pro) liegen laut Anbieterpreisen bei rund 40 €/Monat Basis, plus Mehrverbrauch. Ein Kurs ist ca. 100–300 KB JSON, also pro Nutzer fast nichts.
+
+| Modell | Brutto | Netto nach 19 % USt. und Stripe | KI-Kosten pro Nutzer | Abos für 10k € MRR |
+|---|---|---|---|---|
+| **Lernly Plus 4,99 €/Monat** | 4,99 € | ≈ 3,83 € | 0 € | ≈ 2.000 |
+| **Lernly Plus 29,99 €/Semester** (6 Monate) | 5,00 €/Monat | ≈ 4,05 €/Monat | 0 € | ≈ 2.000 |
+| Zum Vergleich: heute 8,99 €/Monat | 8,99 € | ≈ 7,10 € | 0,5–1 € pro Paket | ≈ 1.100 |
+
+**Empfehlung:**
+
+- **Gratis:** ein Kurs komplett (Trainer, Fortschritt, Tutor).
+- **Lernly Plus** für 4,99 €/Monat oder 29,99 €/Semester: unbegrenzte Kurse, Exporte, Web-Ansicht, Teilen mit der Lerngruppe. 29,99 € ist genau dein heutiger Semesterpreis, dafür braucht es keinen neuen Stripe-Preis.
+- **Ehrlich gerechnet:** Bei 4,99 € brauchst du für denselben Umsatz etwa doppelt so viele zahlende Nutzer wie bei 8,99 €. Dafür ist jeder Nutzer ab dem ersten Tag profitabel, und Vielnutzer können dich kein Geld mehr kosten.
+- **Der Student zahlt zusätzlich sein Claude-Abo.** Phase 0 fragt, ob das für ihn passt.
+- Neue Preise und Pläne betreffen Billing, das entscheidest du.
 
 ---
 
-## 8. Kosten und Preise
+## 11. Was kopierbar ist und was du verkaufst
 
-### Was ein Paket heute kostet (Schätzung)
+- **Skills sind Text.** Wer das Plugin hat, kann sie lesen und weitergeben. Das ist in Ordnung: Sie sind dein Marketing und machen Claude auch ohne Abo besser.
+- **Verkauft wird, was Claude allein nicht kann:** eine fertige Oberfläche ohne Token-Kosten, Lernstand über Wochen und Geräte, ein Kursgedächtnis, Exporte und das Teilen mit der Lerngruppe.
+- **Späterer echter Vorsprung: die Kurs-Bibliothek.** Wenn 40 EBS-Studis denselben CF-Kurs haben, baut der Erste den Bauplan, alle anderen starten in Sekunden und mit fast null Tokens. Vorher rechtlich prüfen lassen, denn die Inhalte sind aus Folien und Altklausuren abgeleitet.
 
-Annahmen: Material 50k Tokens (ca. 80 Folien) bzw. 120k Tokens (gekürzte Obergrenze). Typische Ausgaben: Analyse 3k, Visual Map 10k, Quiz/Simulator 8k, Karten 8k, Meta 5k Tokens. Prompt-Caching wie im Code. 1 $ ≈ 0,86 €. Ohne Retries.
+---
 
-| | 50k Tokens | 120k Tokens |
-|---|---|---|
-| Heute (Sonnet 4.6 + Haiku 4.5) | ≈ 0,57 € | ≈ 0,91 € |
-| Nach Modellwechsel (Sonnet 5.5 + Haiku 5.5) | ≈ 0,31 € | ≈ 0,48 € |
-| Claude-Pfad (Student zahlt KI über sein Abo) | ≈ 0 € | ≈ 0 € |
+## 12. Dateien und riesige Foliensätze
 
-Der Modellwechsel ist kein Knopfdruck: Sonnet 5.5 nutzt einen neuen Tokenizer (bis ca. 35 % mehr Tokens), und `thinking: disabled` wird dort abgelehnt (stattdessen `between_tools`). Er braucht einen Qualitätsvergleich auf echtem Material. Die echten Zahlen stehen schon in deinen Vercel-Logs: [generatePack.ts](../../src/lib/generatePack.ts) loggt pro Teilaufgabe `in`, `cache_read`, `cache_write` und `out`. Eine Woche Logs ersetzt meine Schätzung.
+- **Claude liest, Lernly nie.** Am besten in Cowork (ab Pro): Ordner freigeben, fertig. Im Chat: Dateien anhängen (Claudes Grenzen gelten) oder einen Drive-Connector nutzen.
+- **`extract_text.py`** zieht den Text einmal pro Seite mit Seitennummer heraus. Danach liest Claude nur noch Text. Seiten mit Diagrammen schaut es sich gezielt als Bild an.
+- **1-GB-Foliensätze:** Die Datei bleibt lokal, das Skript liest seitenweise. Für große Kurse deshalb Cowork empfehlen.
 
-### Was pro Plan übrig bleibt
+---
 
-Netto nach 19 % USt. und Stripe (1,5 % + 0,25 €, bei Abos plus 0,7 % Billing), Kosten mit 0,57 € pro Paket:
+## 13. Anki und Quizlet
 
-| Plan | Netto | Volle Nutzung heute | Claude-Pfad |
+- **Anki:** `lernly_export(format: "anki")` liefert einen Link zu einer Textdatei mit Anki-Kopfzeilen, ohne neue Abhängigkeit. `.apkg` kommt erst, wenn Nutzer danach fragen. Ein Live-Sync geht nicht: Anki ist nur lokal erreichbar, und AnkiWeb importiert keine Pakete.
+- **Quizlet:** Es gibt einen offiziellen Quizlet-Connector in Claude, der Studis Sets direkt erstellt. Dazu liefert `lernly_export(format: "quizlet")` Text zum Einfügen. Einen eigenen Sync gibt es nicht, weil Quizlet keine API anbietet.
+
+---
+
+## 14. Was mit der heutigen App passiert
+
+- Sie läuft weiter für bestehende Nutzer und Abos. Keine Löschungen, keine Änderung an Live-Tabellen.
+- Keine neuen Features. Die Landing wird in Phase 2 auf das Plugin umgestellt.
+- Später, mit deinem OK: KI-Generierung für Neukunden abschalten. Dann fallen keine API-Kosten mehr an.
+
+---
+
+## 15. Phasen
+
+| Phase | Dauer (geschätzt) | Inhalt | Weiter, wenn |
 |---|---|---|---|
-| Einzelklausur 4,99 € (5 Pakete) | 3,87 € | 3,87 − 2,85 = **+1,02 €** | ≈ +3,87 € |
-| Monatlich 8,99 € (50 Pakete) | 7,10 €/Monat | 7,10 − 28,50 = **−21,40 €** | ≈ +7,10 € |
-| Semester 29,99 € (60 Pakete/Monat) | 4,05 €/Monat | 4,05 − 34,20 = **−30,15 €** | ≈ +4,05 € |
-| Gratis (2 Pakete) | 0 € | **−1,14 €** pro aktivem Nutzer | ≈ 0 € |
+| **0: Plugin ohne Server** | 2–3 Tage Bau, 1 Woche Test | Plugin nur mit Skills, Befehlen und Skripten. Ausgabe: der Trainer als HTML-Datei aus einer mitgelieferten Vorlage (`assets/trainer.html` + `scripts/build_trainer.py`). Claude schreibt nur das JSON, das Skript setzt es in die Vorlage. 6 Studis mit Claude Pro, dazu TikTok mit deinem CF Study OS | ≥ 4 von 6 bauen in ≤ 3 Prompts einen Trainer und nutzen ihn für eine echte Klausur |
+| **1: Connector + Trainer** | 3–4 Wochen | MCP-Server mit OAuth, Kursgedächtnis, Trainer als MCP App und Web-Ansicht, Fortschritt, Bezahlschranke, Exporte | 10 Tester: ≥ 6 lernen an ≥ 3 Tagen damit, ≥ 3 zahlen |
+| **2: Verzeichnis + Launch** | ca. 1 Woche plus Prüfzeit (nicht fest) | Connector und Plugin einreichen, öffentliches GitHub-Repo fürs Plugin, README, Lizenz, Datenschutz, Landing umstellen | Listing ist live |
+| **3: Vorsprung** | offen | Kurs-Bibliothek, dieselbe App in ChatGPT (MCP Apps ist ein offener Standard) | nach Nutzerdaten |
 
-Bei normaler Nutzung (angenommen 6 Pakete im Monat) ist heute alles positiv, beim Semester-Plan aber nur knapp (ca. +0,63 €). Das Risiko sind Vielnutzer und der Gratis-Tarif.
+Phase 0 testet gleichzeitig die Methode und die Token-Ersparnis. Ob Claude die HTML-Datei im Chat direkt als Vorschau zeigt, prüfe ich im Test. Fallback: herunterladen und im Browser öffnen, der Fortschritt bleibt dann im Browser.
 
-### Empfehlung
-
-1. **Preise lassen.** Nicht senken. Der Claude-Pfad erhöht die Marge, ohne dass du mehr Kunden brauchst. Mehr Umsatz kommt nur über mehr zahlende Nutzer.
-2. **Die Einheit ändern, nicht den Preis** (Entscheidung von dir, berührt Billing): Für Claude-Trainer sind „Pakete pro Monat" sinnlos, sie kosten dich fast nichts. Vorschlag: Gratis = 1 Klausur-Trainer komplett. Bezahlt = unbegrenzt Trainer, Exporte, Probeklausuren, plus das bisherige Kontingent für App-Generierung. Ein starker Gratis-Tarif ohne Kosten hilft beim Weitererzählen.
-3. **Einzelklausur 4,99 € passt perfekt** zu „ein Trainer für eine Klausur".
-4. **Achtung Doppelabo:** Wer den Claude-Pfad nutzt, zahlt Claude und Lernly. Phase 0 fragt deshalb direkt nach Zahlungsbereitschaft.
-5. In Phase 1 ändert sich an Stripe nichts.
+Aufwand Phase 1: MCP-Server und OAuth 4–6 Tage, Trainer (Engine aus CF Study OS nach React portieren, als MCP App und Web-Ansicht) 6–9 Tage, Datenmodell und Validator 2 Tage, Bezahlschranke 1–2 Tage, Exporte 1 Tag.
 
 ---
 
-## 9. Dateien und riesige Foliensätze
-
-**Claude-Pfad (Hauptweg):** In Cowork gibt der Student einen Ordner frei. Claude liest Dateien direkt aus dem Ordner, auch große Foliensätze seitenweise. Kein Upload zu Lernly, keine 50-MB-Grenze, keine Indexierung bei Lernly. Ohne Cowork: Dateien in den Chat oder ein Claude-Projekt legen oder einen Drive-Connector nutzen.
-
-**App-Pfad (Phase 3):** Eine Webseite kann keinen Ordner im Hintergrund lesen. Lösung: Der Student wählt Dateien oder einen Ordner aus, der Browser extrahiert den Text lokal (pdf.js bzw. `unpdf` im Web Worker, `unpdf` ist schon im Projekt) und schickt nur den Text plus einzelne Seitenbilder für Diagrammseiten. Aus einem 1-GB-Foliensatz werden wenige MB Text. Ordnerauswahl geht nur in Chrome und Edge am Desktop. Auf dem iPhone bleibt die Dateiauswahl.
-
----
-
-## 10. Anki und Quizlet
-
-| | Quizlet | Anki |
-|---|---|---|
-| Offizielle Schnittstelle für uns | Keine. Neue API-Keys gibt Quizlet seit Dezember 2018 nicht mehr aus | Keine Cloud-API. AnkiWeb kann keine `.apkg` importieren |
-| Was es schon gibt | **Offizieller Quizlet-Connector in Claude** („Anthropic verified", Tools `generate-flashcards` und `get-flashcards-generation-status`). Er erzeugt Karten aus Material. Ob er eine fertige Kartenliste exakt übernimmt, ist nicht belegt | AnkiConnect (lokales Add-on, Anki-Desktop muss laufen) und mehrere Community-Anki-MCP-Server für Claude Desktop |
-| Warum kein eigener Lernly-Connector | Ohne API nicht möglich, Scraping verstößt wahrscheinlich gegen die AGB | Claude-Connectors laufen aus Anthropics Cloud und erreichen `localhost:8765` auf dem Rechner des Students nicht |
-| Was Lernly baut | Button „Für Quizlet kopieren": eine Karte pro Zeile, Tab zwischen Begriff und Definition, in Quizlets Import einfügen | Download „Für Anki": Textdatei mit Anki-Kopfzeilen (`#separator:tab`, `#html:true`, `#deck:…`), ohne neue Abhängigkeit. `.apkg` erst, wenn Nutzer danach fragen (bräuchte eine neue Bibliothek) |
-| In Claude | Student sagt einfach „mach daraus ein Quizlet-Set". Lernly muss dafür nichts tun | Power-User installieren einen lokalen Anki-MCP selbst. Wir bauen ihn nicht |
-
-Fortschritt aus Anki oder Quizlet fließt nicht zurück nach Lernly. Im Dashboard steht bei exportierten Karten ehrlich „extern gelernt".
-
----
-
-## 11. Phasen und Abnahme
-
-### Phase 0: Methode testen, ohne Code (1 Woche)
-
-1. Ich schreibe aus deinem CF Study OS das Playbook als ein Anleitungsdokument plus Beispielthema (DCF).
-2. 6 BWL-Studis mit echter Klausur in den nächsten Wochen: 2 Marketing, 2 Mathe/Statistik, 2 Finance. Sie bauen mit Playbook und eigenem Material ihren Trainer als Claude-Artefakt, wie du es machst.
-3. Parallel TikTok: Bildschirmaufnahme deines CF Study OS, „So habe ich alle Klausuren gelernt". Kommentare und DMs mit „wie?" zählen.
-4. Messen: Trainer ohne deine Hilfe gebaut? An ≥ 3 Tagen genutzt? Claude Pro vorhanden? Zahlungsbereitschaft für „das, gespeichert, auf dem Handy, mit Fortschritt"?
-
-**Weiter zu Phase 1, wenn:** ≥ 4 von 6 bauen und nutzen ihn, und ≥ 3 von 6 haben Claude Pro oder würden es holen. Haben die meisten kein Claude, zieht Phase 3 vor Phase 1.
-
-### Phase 1: Claude-Pfad (ca. 2 bis 3 Wochen)
-
-| Baustein | Aufwand (geschätzt) |
-|---|---|
-| Zod-Schema `study_os_v1`, Validator mit verständlichen Fehlermeldungen | 1 bis 2 Tage |
-| Player mit 6 Tabs, Mastery- und Prioritätslogik, mobil | 4 bis 6 Tage |
-| MCP-Server mit 7 Tools, Server-Instructions, Playbook | 2 bis 3 Tage |
-| OAuth mit Supabase, Test mit echtem Claude (Web und Mobile) | 1 bis 2 Tage |
-| 3 Migrationen (nur neue Tabellen), RLS, Zwei-Konten-Test | 1 Tag |
-| Anki-Textexport, Quizlet-Kopie, Seite „Mit Claude verbinden" | 1 Tag |
-
-**Abnahme:** Zwei getrennte Testkonten sehen nur ihre eigenen Trainer. Ein echter Kurs (dein CF-Material) läuft komplett durch Claude in Lernly, inklusive Abbruch und Fortsetzen. Der Player funktioniert bei 380 px. 10 Tester: ≥ 6 lernen an ≥ 3 Tagen damit, ≥ 3 wollen zum getesteten Preis zahlen.
-
-### Phase 2: MCP App im Chat (ca. 1 Woche plus Prüfzeit)
-
-Player als UI-Ressource, `lernly_open_trainer`, Antrag fürs Connector-Verzeichnis. Abnahme: Ein neuer Tester richtet alles ohne deine Hilfe in unter 3 Minuten ein.
-
-### Phase 3: App-Pfad (1 bis 2 Wochen)
-
-App-Generierung erzeugt `study_os_v1`, Modellwechsel mit Qualitätsvergleich, Text-Extraktion im Browser. Danach optional: dieselbe MCP-Schnittstelle als ChatGPT-App (dort sind schreibende Custom-Connectors für Privatnutzer eingeschränkt, ein öffentlicher Eintrag braucht OpenAIs Prüfung).
-
----
-
-## 12. Was ich bewusst nicht baue
-
-- **Keine lokale Lernly-Desktop-App und keine Datei-Indexierung bei Lernly.** Cowork liest Ordner bereits. Das wäre Wochen Arbeit für etwas, das Claude schon kann.
-- **Kein Anki-Sync über AnkiConnect und kein Rückkanal aus Quizlet.** Export reicht, bis Nutzer etwas anderes beweisen.
-- **Kein Versionierungs-System für Lernobjekte, keine Quellversionen, keine Sync-Cursor.** `content_version` und stabile IDs reichen für Version 1.
-- **Keine eigene Quizlet-Integration.** Quizlets Connector existiert in Claude.
-- **Keine Arbeit an den B2B-Seiten** (`/hochschulen`, `/pruefungsvorbereitung`) während dieses Umbaus.
-
----
-
-## 13. Wo ich von Astra abweiche
-
-Einig sind wir uns im Kern: Claude erstellt, Lernly ist der Ort zum Lernen. Ebenso: kein Zugriff auf das Claude-Abo aus dem Lernly-Backend, Anki-Export als Basis, Preise behalten, BWL breit statt nur Finance.
-
-| Punkt | Astra | Ich | Warum |
-|---|---|---|---|
-| Umfang | Ca. 20 logische Tabellen (Quellversionen, Objektversionen, Geräte, Sync-Cursor, Verarbeitungsjobs), 6 bis 10 Wochen plus 3 bis 5 Wochen lokale Brücke | 3 neue Tabellen, 2 bis 3 Wochen | Lernly speichert nur das Ergebnis. Dateien, Indexierung und Abdeckung erledigt Claude |
-| Reihenfolge | Bauen, dann Pilot mit 10 Nutzern | Erst 1 Woche ohne Code testen | Gate 1: Funktioniert die Methode bei anderen Studis und anderen Fächern? Das lässt sich ohne Code prüfen |
-| Quizlet | Offiziellen Connector nutzen und Set-Referenzen in Lernly speichern | Gar nicht in Lernly integrieren, nur „Für Quizlet kopieren" | Set-Referenzen bringen ohne Fortschrittsdaten keinen Nutzen |
-| Methode ausliefern | Plugin bzw. Fachanweisungen | Über Server-Instructions und `lernly_get_playbook` | Keine zusätzliche Installation, weniger Hürde in den ersten 2 Minuten |
-| Produktkern | Allgemeiner „Lerntrainer" | Konkret die Engine aus deinem Artefakt: erwartete Punkte × Lücke, „Punkte, die du jetzt holen würdest" | Das ist der Teil, den Claude allein nicht über Wochen hält |
-| Kosten | Szenariorechnung ohne konkrete Paketkosten | Paketkosten aus dem Code geschätzt, plus Modellwechsel als Hebel (ca. −45 %) | Damit siehst du, welche Pläne heute bei Vielnutzern Verlust machen |
-
----
-
-## 14. Risiken
+## 16. Risiken
 
 | Risiko | Gegenmaßnahme |
 |---|---|
-| Zu wenige Studis haben Claude Pro | Phase 0 misst es. App-Pfad bleibt. MCP ist offen, ChatGPT folgt |
-| Einrichtung eines Custom Connectors überfordert (URL, OAuth) | Seite mit Video, Phase 2 Verzeichniseintrag |
-| Anthropic ändert Regeln oder baut selbst einen Lernmodus | Lernstand und App gehören Lernly, MCP läuft auch woanders |
-| Qualität schwankt je nach Plan/Modell des Students | Validator plus Checkliste im Playbook, Pro empfehlen |
-| Zahlungsbereitschaft zusätzlich zu Claude unklar | Frage in Phase 0, Einzelklausur-Preis als Einstieg |
-| Nutzungslimit mitten im Bau | Thema-für-Thema-Speichern, Entwurf wird fortgesetzt |
+| Zu wenige Studis haben Claude Pro | Phase 0 fragt danach. ChatGPT folgt über denselben Standard |
+| Anthropic ändert Regeln oder baut selbst eine Lernfunktion | MCP ist offen. Inhalte und Fortschritt liegen bei Lernly |
+| Seitenpanel nur für einen Teil der Konten | Vollbild oder Chat-Ansicht als Rückfall |
+| Prüfzeit im Verzeichnis ist offen | Bis dahin ZIP-Upload oder Marketplace-URL mit Anleitungsvideo |
+| Gratis-Claude: Code-Ausführung muss an sein, die Limits sind klein | Pro empfehlen, Setup-Seite erklärt den Schalter |
+| Skills sind kopierbar | Der Wert liegt im Connector (Abschnitt 11) |
+| Bezahldienst hinter einem Verzeichnis-Connector | Laut Doku üblich (Anbieter darf eigenes Konto oder Abo verlangen). Software Directory Policy vor dem Einreichen lesen |
 
 ---
 
-## 15. Was ich von dir brauche
+## 17. Was ich von dir brauche
 
-- **Freigabe neue Abhängigkeiten:** `@modelcontextprotocol/sdk` (Phase 1), `@modelcontextprotocol/ext-apps` (Phase 2).
-- **Freigabe Auth-Änderung:** OAuth-Server in Supabase einschalten, Zustimmungsseite in Lernly.
-- **Freigabe Migrationen:** 3 neue Tabellen, keine Änderung an bestehenden.
-- **Env-Variablen:** In Phase 1 voraussichtlich keine neuen. Falls doch eine dazukommt, sage ich es dir, und sie muss in Production, Preview und Development gesetzt werden.
-- **Preisentscheidung** zu Abschnitt 8, Punkt 2. In Phase 1 keine Stripe-Änderung.
-- **Anwalt:** Abschnitt zum Claude-Connector in der Datenschutzerklärung.
-- **Phase 0:** 6 Studis mit echter Klausur und deinen Ordner mit dem CF-Material als Referenzkurs.
+- **Phase 0:** OK, dass ich das Plugin im Repo unter `plugin/lernly/` anlege (nur Markdown, JSON und zwei, drei Python-Skripte, keine App-Änderung). Dazu 6 Studis mit Claude Pro und echter Klausur.
+- **Phase 1:**
+  - neue Abhängigkeiten `@modelcontextprotocol/sdk` und `@modelcontextprotocol/ext-apps`
+  - Auth-Änderung: OAuth-Server in Supabase einschalten
+  - 4 neue Tabellen
+  - Preisentscheidung (4,99 €/Monat braucht einen neuen Stripe-Preis)
+  - neue Env-Variablen sage ich dir an, sie müssen in Production, Preview und Development gesetzt werden
+- **Phase 2:** öffentliches GitHub-Repo fürs Plugin, einen Datenschutz-Abschnitt vom Anwalt, Einreichung über dein Pro-Konto.
+
+---
+
+## 18. Was sich gegenüber Version 1 und Astra ändert
+
+| Punkt | Version 1 / Astra | Jetzt |
+|---|---|---|
+| Wo gelernt wird | Lernly-App ist der Lernort, Claude der Zulieferer | Claude ist der Ort. Lernly ist Plugin und Connector, die App nur noch Konto, Bezahlung und Web-Ansicht |
+| Wie die Methode zu Claude kommt | Server-Instructions (V1) bzw. Fachanweisungen (Astra) | Skills im Plugin, mit Skripten für Textextraktion. Offiziell so vorgesehen |
+| Preis | Heutige Preise behalten | 4,99 €/Monat oder 29,99 €/Semester, keine KI-Kosten |
+| Umfang | V1 drei Tabellen, Astra rund 20 | Vier neue Tabellen, keine Desktop-Brücke, keine Dateiindexierung bei Lernly |
 
 ---
 
 ## Quellen
 
-- [Anthropic: Interactive connectors and MCP Apps](https://claude.com/resources/articles/interactive-tools-in-claude) (26.01.2026)
-- [Claude Help: Custom Connectors mit Remote MCP](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp)
-- [Claude Help: Artifacts (Claude-Aufrufe, Speicher, Connectoren)](https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them)
-- [Claude Help: Cowork](https://support.claude.com/en/articles/13345190-get-started-with-cowork)
-- [Claude Help: Skills](https://support.claude.com/en/articles/12512180-use-skills)
-- [Claude Agent SDK: Hinweis zu claude.ai-Login und Abo-Limits für Drittanbieter](https://code.claude.com/docs/en/agent-sdk/overview)
+- [Claude Docs: Connectors, Skills und Plugins](https://claude.com/docs/extend/overview.md)
+- [Claude Docs: Plugins](https://claude.com/docs/plugins/overview.md) · [Plugin-Aufbau und Tests](https://claude.com/docs/plugins/build.md) · [Unterstützung je App](https://claude.com/docs/plugins/platform-support.md)
+- [Claude Docs: Ins Verzeichnis einreichen](https://claude.com/docs/directory/publish.md)
+- [Claude Docs: Connectors nutzen](https://claude.com/docs/connectors/overview.md)
+- [Claude Docs: MCP Apps im Seitenpanel und Vollbild](https://claude.com/docs/connectors/building/mcp-apps/display-modes)
+- [Anthropic: Interaktive Connectors und MCP Apps](https://claude.com/resources/articles/interactive-tools-in-claude)
+- [Claude Help: Custom Connectors](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp) · [Skills](https://support.claude.com/en/articles/12512180-use-skills) · [Cowork](https://support.claude.com/en/articles/13345190-get-started-with-cowork)
+- [Claude Agent SDK: Kein claude.ai-Login für Drittprodukte](https://code.claude.com/docs/en/agent-sdk/overview)
 - [MCP Blog: MCP Apps](https://blog.modelcontextprotocol.io/posts/2026-01-26-mcp-apps/)
-- [MCP Apps in Claude: App-Tools, Einstiegspunkte, ui.domain, Verified vs. Community](https://max.nardit.com/articles/mcp-apps-claude-app-tools-embedded-sites) (Drittquelle, 11.11.2026)
-- [Claude Marketplace: Quizlet-Connector](https://claude.com/marketplace/connectors/quizlet)
-- [Quizlet Help: Sets durch Import erstellen](https://help.quizlet.com/hc/en-us/articles/360029977151-Creating-study-sets)
-- [Quizlet-iOS-Client: Hinweis zum API-Stopp 2018](https://www.github.com/maximbilan/Quizlet-iOS)
-- [Anki-Handbuch: Packaged Decks (AnkiWeb kann keine .apkg importieren)](https://docs.ankiweb.net/manual/importing/packaged-decks)
-- [Anki MCP Server (AnkiConnect)](https://mcpservers.org/en/servers/nailuoGG/anki-mcp-server)
-- [Supabase: OAuth 2.1 Server](https://supabase.com/docs/guides/auth/oauth-server) und [MCP-Authentifizierung](https://supabase.com/docs/guides/auth/oauth-server/mcp-authentication)
-- [OpenAI Help: Developer Mode und MCP-Apps in ChatGPT](https://help.openai.com/en/articles/12584461-developer-mode-apps-and-full-mcp-connectors-in-chatgpt)
-- Modellpreise: Anthropic-Preisliste, Stand 03.11.2026 (Sonnet 4.6 3/15 $, Haiku 4.5 1/5 $, Sonnet 5.5 2/10 $, Haiku 5.5 0,10/0,50 $ je 1 Mio. Tokens)
+- [Claude Marketplace: Quizlet-Connector](https://claude.com/marketplace/connectors/quizlet) · [Quizlet-Import](https://help.quizlet.com/hc/en-us/articles/360029977151-Creating-study-sets)
+- [Anki-Handbuch: Packaged Decks](https://docs.ankiweb.net/manual/importing/packaged-decks)
+- [Supabase: OAuth 2.1 Server für MCP](https://supabase.com/docs/guides/auth/oauth-server/mcp-authentication)
