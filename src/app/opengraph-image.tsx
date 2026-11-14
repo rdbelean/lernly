@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-export const alt = "Lernly – Dein Stoff. Dein Ich-kann-das.";
+export const alt = "Lernly – Aus deinem Lernstoff wird echtes Verstehen.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -18,7 +18,7 @@ export default async function OpenGraphImage() {
         <span style={{ marginLeft: "auto", fontSize: 20, color: "#7b8090" }}>Dein Lerntrainer mit Claude</span>
       </div>
       <div style={{ display: "flex", flexDirection: "column", fontSize: 83, letterSpacing: -4, lineHeight: 1.14, marginTop: 70 }}>
-        <span>Dein Stoff.</span><span style={{ color: "#2b3499" }}>Dein Ich-kann-das.</span>
+        <span>Aus deinem Lernstoff</span><span style={{ color: "#121212" }}>wird echtes Verstehen</span>
       </div>
       <div style={{ display: "flex", marginTop: 30, fontSize: 24, color: "#7b8090" }}>Mit Claude verstehen. Mit Lernly üben. Bis es klickt.</div>
       <div style={{ display: "flex", gap: 15, marginTop: "auto" }}>
