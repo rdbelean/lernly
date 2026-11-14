@@ -1,0 +1,39 @@
+{
+  "manifest_version": "0.3",
+  "name": "lernly-beta",
+  "display_name": "Lernly Beta",
+  "version": "0.2.0",
+  "description": "Dein Kursordner, Lernanweisungen und ein persönlicher Klausurtrainer direkt in Claude Desktop.",
+  "author": { "name": "Lernly", "url": "https://lernly-app.de" },
+  "icon": "icon.png",
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.mjs",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.mjs"],
+      "env": {
+        "LERNLY_COURSE_DIR": "${user_config.course_directory}",
+        "LERNLY_PYTHON": "${user_config.python_path}",
+        "LERNLY_PROMPTS_DIR": "${user_config.prompt_directory}"
+      }
+    }
+  },
+  "tools_generated": true,
+  "prompts_generated": true,
+  "compatibility": { "platforms": ["darwin"], "runtimes": { "node": ">=20", "python": ">=3.10" } },
+  "user_config": {
+    "course_directory": {
+      "type": "directory", "title": "Kursordner", "required": true,
+      "description": "Wähle genau den Kurs, den du lernen möchtest. Rohunterlagen werden gelesen; neue Dateien entstehen ausschließlich im Unterordner _lernly."
+    },
+    "python_path": {
+      "type": "string", "title": "Python 3", "default": "python3", "required": true,
+      "description": "Python 3.10+ für Office-Dateien, Inhaltsprüfung, Rechnen und HTML-Export. Falls nötig den absoluten Pfad auswählen (z. B. /opt/homebrew/bin/python3)."
+    },
+    "prompt_directory": {
+      "type": "directory", "title": "Eigene Lernanweisungen (optional)", "required": false,
+      "description": "Zum Experimentieren den prompts-Ordner im Lernly-Code wählen. Darin müssen base.md, artifact.md und trainer.md liegen. Leer lassen für die mitgelieferten Anweisungen."
+    }
+  }
+}

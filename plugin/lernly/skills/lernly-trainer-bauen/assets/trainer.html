@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>__LERNLY_TITLE__</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js" onload="window.lernlyMath&&window.lernlyMath(document.body)"></script>
+<style>
+/* Lernly trainer template. Fixed engine; course content is injected as JSON by build_trainer.py. */
+:root{
+  --bg:#0F1322;--bg-deep:#0C0F1C;--card:#141930;--card2:#171C30;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.13);
+  --ink:#EAEDF7;--dim:#9098B6;--faint:#6F7799;--pri:#2B3499;--pri-hi:#6E80F2;--blue:#8E9AF5;
+  --ok:#4FD1A5;--ok-bg:rgba(79,209,165,.11);--bad:#FB7185;--bad-bg:rgba(251,113,133,.11);
+  --amber:#F2A33C;--amber-bg:rgba(242,163,60,.13);--violet:#A99BF0;--violet-bg:rgba(154,140,224,.13);--blue-bg:rgba(142,154,245,.11);
+  --font:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;--head:Sora,Inter,-apple-system,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--bg);color:var(--ink)}
+body{margin:0;font:16px/1.6 var(--font);padding:0 14px calc(90px + env(safe-area-inset-bottom,0px));-webkit-font-smoothing:antialiased}
+.wrap{max-width:920px;margin:0 auto}
+a{color:var(--pri-hi)}
+.ic{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px}
+.top{position:sticky;top:0;z-index:6;background:var(--bg);padding:calc(10px + env(safe-area-inset-top,0px)) 0 10px;border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ttl{flex:1 1 260px;min-width:0}
+.ttl h1{font:700 18px/1.3 var(--head);margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ttl small{display:block;color:var(--dim);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cd{font-size:13.5px;color:var(--dim);white-space:nowrap;display:inline-flex;gap:6px;align-items:center}
+.cd b{color:var(--amber);font-weight:700}
+.tabs{display:flex;gap:6px;margin-top:10px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{all:unset;cursor:pointer;padding:7px 12px;border-radius:999px;font-weight:600;font-size:14px;color:var(--dim);border:1px solid var(--line2);background:var(--card);white-space:nowrap;display:flex;gap:7px;align-items:center}
+.tabs button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.tabs kbd{font:11px var(--mono);color:var(--faint);border:1px solid var(--line2);border-radius:4px;padding:0 4px}
+.tabs button.on kbd{color:#c9cff8;border-color:rgba(255,255,255,.25)}
+.badge{display:inline-block;min-width:20px;text-align:center;font-size:12px;border-radius:999px;background:var(--amber);color:#1b1305;padding:0 6px;font-weight:700}
+button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--pri-hi);outline-offset:2px}
+main{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 18px}
+.card.hl{border-color:rgba(110,128,242,.55)}
+h2{font:700 22px/1.3 var(--head);margin:0 0 6px;text-wrap:balance}
+h3{font:600 17px/1.35 var(--head);margin:18px 0 6px;color:var(--ink)}
+h4{font-size:15px;margin:14px 0 4px}
+p{margin:8px 0}
+.card ul,.card ol{padding-left:22px;margin:8px 0}
+.card li{margin:4px 0}
+.lead{color:var(--dim)}
+.lead p:first-child{margin-top:4px}
+.small{font-size:14px;color:var(--dim)}
+.lbl{font-size:12px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;font:600 15px var(--font);border-radius:12px;padding:9px 14px;border:1px solid var(--line2);color:var(--ink);background:var(--card2);display:inline-flex;gap:8px;align-items:center;min-height:42px}
+.btn:hover{border-color:rgba(255,255,255,.25)}
+.btn.primary{background:var(--pri);border-color:var(--pri);color:#fff}
+.btn.primary:hover{background:#3440b0}
+.btn.ghost{background:transparent;color:var(--dim)}
+.btn:disabled{opacity:.45;cursor:default}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;border-radius:999px;padding:2px 10px;white-space:nowrap;background:var(--card2);color:var(--dim);border:1px solid var(--line)}
+.c-ok{background:var(--ok-bg);color:var(--ok);border-color:transparent}
+.c-md{background:var(--amber-bg);color:var(--amber);border-color:transparent}
+.c-hi{background:var(--bad-bg);color:var(--bad);border-color:transparent}
+.c-lo{background:var(--card2);color:var(--faint)}
+.c-pri{background:var(--blue-bg);color:var(--blue);border-color:transparent}
+.pts{font-weight:700;color:var(--amber);white-space:nowrap}
+mark{background:var(--amber-bg);color:#FFD9A3;border-radius:4px;padding:0 3px}
+code{font:14px var(--mono);background:var(--card2);border-radius:5px;padding:1px 5px}
+/* content blocks (color = meaning) */
+.blk-simple,.blk-remember,.blk-mist,.blk-hook{border-radius:0 12px 12px 0;padding:10px 14px;margin-top:12px;border-left:4px solid}
+.blk-simple{background:var(--blue-bg);border-color:var(--blue)}
+.blk-remember{background:var(--ok-bg);border-color:var(--ok)}
+.blk-mist{background:var(--bad-bg);border-color:var(--bad)}
+.blk-hook{background:var(--violet-bg);border-color:var(--violet)}
+.blk-ex{background:var(--card2);border-radius:12px;padding:10px 14px;margin-top:10px}
+.bh{display:flex;gap:7px;align-items:center;font-weight:700;font-size:13.5px;margin-bottom:2px}
+.blk-simple .bh{color:var(--blue)}.blk-remember .bh{color:var(--ok)}.blk-mist .bh{color:var(--bad)}.blk-hook .bh{color:var(--violet)}.blk-ex .bh{color:var(--dim)}
+.blk-simple p,.blk-remember p,.blk-mist p,.blk-hook p,.blk-ex p{margin:4px 0}
+.ms{background:rgba(110,128,242,.05);border:1.5px dashed rgba(110,128,242,.6);border-radius:12px;padding:12px 16px;margin:12px 0}
+.ms>.bh{color:var(--pri-hi)}
+.src{font-size:13px;color:var(--dim);margin-top:12px;display:flex;gap:6px;align-items:flex-start}
+.steps{counter-reset:s;list-style:none;padding:0!important}
+.steps li{counter-increment:s;position:relative;padding-left:36px;margin:10px 0}
+.steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:25px;height:25px;border-radius:50%;background:var(--pri);color:#fff;font-size:13px;font-weight:700;display:grid;place-items:center}
+.fxm{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:6px 14px;margin:10px 0;overflow-x:auto}
+.fxm .note{font-size:14px;color:var(--dim);margin:4px 0}
+.math{white-space:nowrap}
+.mathd{display:block;overflow-x:auto;overflow-y:hidden;padding:4px 0;max-width:100%}
+.katex{font-size:1.06em}
+.tw{overflow-x:auto;margin:8px 0}
+table.t{border-collapse:collapse;font-size:14.5px;font-variant-numeric:tabular-nums;min-width:60%}
+table.t th,table.t td{border:1px solid var(--line2);padding:6px 9px;text-align:left;vertical-align:top}
+table.t th{background:var(--card2);font-weight:600}
+table.t td.n{text-align:right;white-space:nowrap}
+table.t tr.sum td{font-weight:700;border-top:2px solid var(--dim)}
+.fig{margin:12px 0;background:#F4F6FB;border-radius:12px;padding:10px;overflow-x:auto}
+.fig img{display:block;width:100%;max-width:720px;height:auto;margin:0 auto}
+.figcap{font-size:13.5px;color:var(--dim);margin-top:-4px;margin-bottom:8px}
+details.more{border:1px solid var(--line2);border-radius:12px;padding:8px 14px;margin-top:12px}
+details.more>summary{cursor:pointer;font-weight:600;color:var(--pri-hi)}
+/* progress */
+.track{height:8px;background:rgba(255,255,255,.07);border-radius:5px;overflow:hidden;min-width:40px}
+.track i{display:block;height:100%;background:var(--pri-hi);border-radius:5px}
+.stack{display:flex;height:12px;border-radius:7px;overflow:hidden;background:rgba(255,255,255,.07)}
+.stack i{display:block;height:100%}
+.s-ok{background:var(--ok)}.s-learn{background:var(--amber)}.s-new{background:rgba(255,255,255,.12)}
+/* lists */
+.rk{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:28px minmax(0,1fr) minmax(70px,150px) 44px auto;gap:10px;align-items:center;width:100%;border-top:1px solid var(--line);padding:10px 4px}
+.rk:hover{background:rgba(255,255,255,.03)}
+.rk .rn{font-weight:700;color:var(--faint);text-align:center;font-variant-numeric:tabular-nums;display:grid;place-items:center}
+.rk .rl b{display:block;font-weight:600;line-height:1.35}
+.rk .rl small{display:block;color:var(--dim);font-size:13px}
+.rk .rp{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+details.tier{border-top:1px solid var(--line);padding:9px 0}
+details.tier>summary{cursor:pointer;list-style:none;display:grid;grid-template-columns:56px minmax(0,1fr) minmax(70px,140px) 44px;gap:10px;align-items:center}
+details.tier>summary::-webkit-details-marker{display:none}
+details.tier .sn{font-weight:700;color:var(--amber);font-variant-numeric:tabular-nums}
+details.tier .sl b{display:block;font-weight:600;line-height:1.35}
+details.tier .sl small{display:block;color:var(--dim);font-size:13px}
+details.tier .rp{text-align:right;font-weight:700}
+details.tier[open]>summary{margin-bottom:8px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.tile{all:unset;box-sizing:border-box;cursor:pointer;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px;display:flex;flex-direction:column;gap:5px}
+.tile:hover{border-color:rgba(110,128,242,.5)}
+.tile.solid{border-left:4px solid var(--ok)}
+.tile .tn{font-size:12px;font-weight:700;color:var(--amber);letter-spacing:.04em;text-transform:uppercase}
+.tile .tt{font-weight:600;font-size:16px;line-height:1.3}
+.tile .tm{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.back{all:unset;cursor:pointer;font-weight:600;color:var(--pri-hi);display:inline-flex;gap:6px;align-items:center}
+.stepper{display:flex;gap:6px;flex-wrap:wrap}
+.sp{all:unset;cursor:pointer;padding:7px 12px;border-radius:10px;border:1px solid var(--line2);font-weight:600;font-size:14.5px;background:var(--card2)}
+.sp small{font-weight:400;color:var(--dim);margin-left:4px}
+.sp.on{background:var(--pri);border-color:var(--pri);color:#fff}.sp.on small{color:#c9cff8}
+.grp{margin:16px 0 4px}
+/* overview */
+.hero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 22px;align-items:center}
+.big{font:700 46px/1 var(--head);font-variant-numeric:tabular-nums}
+.big small{font-size:20px;color:var(--dim);font-weight:600}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:13.5px;color:var(--dim)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:0}
+/* tasks */
+.task{background:var(--card2);border:1px solid var(--line2);border-radius:12px;padding:12px 16px}
+.inp{display:grid;grid-template-columns:minmax(0,1fr) 150px 26px;gap:10px;align-items:center;border-top:1px solid var(--line);padding:9px 0}
+.inp input,.inp select{font:16px var(--font);padding:8px 10px;border:1px solid var(--line2);border-radius:10px;width:100%;background:var(--bg-deep);color:var(--ink);font-variant-numeric:tabular-nums}
+.inp .unit{font-size:13px;color:var(--dim)}
+.inp .mk{display:grid;place-items:center}
+.inp.ok input,.inp.ok select{border-color:var(--ok);background:var(--ok-bg)}
+.inp.bad input,.inp.bad select{border-color:var(--bad);background:var(--bad-bg)}
+.inp.ok .mk{color:var(--ok)}.inp.bad .mk{color:var(--bad)}
+textarea{width:100%;min-height:140px;font:16px/1.5 var(--font);border:1px solid var(--line2);border-radius:12px;padding:10px 12px;background:var(--bg-deep);color:var(--ink);resize:vertical}
+.chk{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:8px;align-items:start;padding:7px 0;border-top:1px dashed var(--line2)}
+.chk input{width:18px;height:18px;accent-color:var(--ok);margin-top:3px}
+.chk p{margin:0}
+.mc{margin-top:12px}
+.mc>b{display:block;margin-bottom:4px}
+.mc label{display:flex;gap:10px;align-items:flex-start;padding:7px 9px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+.mc label:hover{background:rgba(255,255,255,.03)}
+.mc label.right{background:var(--ok-bg);border-color:rgba(79,209,165,.4)}
+.mc label.wrong{background:var(--bad-bg);border-color:rgba(251,113,133,.4)}
+.mc input{margin-top:5px;accent-color:var(--pri-hi)}
+.mc .ex{font-size:14.5px;color:var(--dim);margin:4px 0 0 30px}
+.score{font:700 34px/1 var(--head);font-variant-numeric:tabular-nums}
+.score small{font-size:16px;color:var(--dim);font-weight:600}
+/* flashcards */
+.fc{min-height:260px;display:flex;flex-direction:column;gap:10px}
+.fc .q{font-size:20px;font-weight:600;line-height:1.4}
+.fc .a{border-top:1px solid var(--line2);padding-top:10px}
+.rates{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:8px}
+.rb{all:unset;box-sizing:border-box;cursor:pointer;text-align:center;border-radius:12px;padding:9px 4px;font-weight:700;border:1.5px solid;font-size:15px;background:var(--card2)}
+.rb small{display:block;font-weight:500;font-size:12px;opacity:.85}
+.rb.g0{border-color:var(--bad);color:var(--bad)}.rb.g1{border-color:var(--amber);color:var(--amber)}.rb.g2{border-color:var(--ok);color:var(--ok)}.rb.g3{border-color:var(--pri-hi);color:var(--pri-hi)}
+.kbd{font-size:12.5px;color:var(--faint);text-align:center}
+.deckrow{display:grid;grid-template-columns:minmax(0,1fr) 150px auto;gap:12px;align-items:center;border-top:1px solid var(--line);padding:10px 0}
+.go{all:unset;cursor:pointer;font-size:14px;font-weight:600;color:var(--pri-hi);white-space:nowrap}
+/* mock */
+.simbar{position:sticky;top:var(--top-h,112px);z-index:5;background:var(--bg);display:flex;align-items:center;gap:12px;padding:8px 0;flex-wrap:wrap}
+.timer{font:700 24px var(--head);color:var(--amber);font-variant-numeric:tabular-nums}
+.mq .qh{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px}
+.mq .qh b{font-size:17px}
+/* cheat sheet */
+.cheat{columns:2 320px;column-gap:12px}
+.cheat .cs{break-inside:avoid;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:0 0 12px}
+.cheat .cs h4{margin:0 0 4px;color:var(--pri-hi);font-family:var(--head)}
+.cheat .fxm{padding:2px 10px}
+/* misc */
+.banner{background:var(--amber-bg);border:1px solid rgba(242,163,60,.4);border-radius:12px;padding:10px 14px;font-size:14px;margin-top:12px;display:flex;gap:8px;align-items:flex-start}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--card2);border:1px solid var(--line2);color:var(--ink);padding:9px 16px;border-radius:12px;font-weight:600;font-size:14.5px;z-index:20;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+.modal{position:fixed;inset:0;background:rgba(5,7,15,.72);z-index:30;display:grid;place-items:center;padding:16px}
+.modal .box{background:var(--card);border:1px solid var(--line2);border-radius:16px;padding:18px;max-width:640px;width:100%;max-height:90vh;overflow:auto}
+.modal textarea{min-height:220px;font:13px/1.45 var(--mono)}
+.empty{color:var(--dim);text-align:center;padding:26px 10px}
+@media (max-width:640px){
+  body{font-size:15.5px;padding:0 10px calc(90px + env(safe-area-inset-bottom,0px))}
+  .card{padding:15px 14px}
+  h2{font-size:20px}
+  .tabs kbd,.kbdhint{display:none}
+  .rk{grid-template-columns:24px minmax(0,1fr) 44px}.rk .rb2,.rk .chip{display:none}
+  details.tier>summary{grid-template-columns:48px minmax(0,1fr) 40px}details.tier .sb{display:none}
+  .inp{grid-template-columns:minmax(0,1fr) 116px 22px;gap:8px}
+  .deckrow{grid-template-columns:minmax(0,1fr) 80px auto}
+  .big{font-size:40px}
+  .hero{grid-template-columns:1fr}
+  .ttl h1{white-space:normal}
+  .fc .q{font-size:18px}
+  .rb{font-size:14px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top" id="top">
+    <div class="bar"><div class="ttl"><h1 id="ctitle"></h1><small id="csub"></small></div><span class="cd" id="cd"></span></div>
+    <nav class="tabs" id="tabs"></nav>
+  </header>
+  <div class="banner" id="banner" hidden></div>
+  <main id="main"></main>
+</div>
+<div class="toast" id="toast" hidden></div>
+<div class="modal" id="modal" hidden><div class="box" id="modalBox"></div></div>
+<script type="application/json" id="lernly-data">__LERNLY_DATA__</script>
+<script>
+"use strict";
+// ======================================================= data
+const D = JSON.parse(document.getElementById("lernly-data").textContent);
+const C = D.course || {}, EXAM = C.exam || {}, TOPICS = C.topics || [], TH = D.topics || {};
+const MOCKS = D.mocks || [], CHEAT = D.cheatsheet || null;
+const $ = s => document.querySelector(s), main = $("#main");
+const TOPIC = id => TOPICS.find(t => t.id === id);
+const EXP = {}, PAIR = {}, SLOT = {}, PART_OF_SLOT = {};
+(EXAM.parts || []).forEach(p => (p.slots || []).forEach(s => { SLOT[s.id] = s; PART_OF_SLOT[s.id] = p; }));
+TOPICS.forEach(t => { EXP[t.id] = +t.expectedPoints || 0; });
+TOPICS.forEach(t => { if (t.pairWith && TOPIC(t.pairWith)) { PAIR[t.id] = t.pairWith; if (!PAIR[t.pairWith]) PAIR[t.pairWith] = t.id; } });
+const ORDER = [...TOPICS].sort((a, b) => (a.tier || 3) - (b.tier || 3) || EXP[b.id] - EXP[a.id]);
+const tasksOf = id => (TH[id] && TH[id].tasks) || [];
+const cardsOf = id => (TH[id] && TH[id].cards) || [];
+const ALLCARDS = ORDER.flatMap(t => cardsOf(t.id).map(c => Object.assign({ d: t.id }, c)));
+const PART_COLORS = ["var(--pri-hi)", "var(--ok)", "var(--amber)", "var(--violet)"];
+const now = () => Date.now();
+
+// ======================================================= state
+const KEY = "lernly.trainer.v1." + (C.id || "kurs");
+const fresh = () => ({ v: 1, read: {}, drills: {}, essays: {}, mc: {}, cards: {}, mock: {}, examDate: EXAM.date || "", tab: "plan", lastMock: null });
+let S = fresh(), canStore = true;
+try {
+  const raw = localStorage.getItem(KEY);
+  if (raw) S = Object.assign(fresh(), JSON.parse(raw));
+  localStorage.setItem(KEY + ".probe", "1"); localStorage.removeItem(KEY + ".probe");
+} catch (e) { canStore = false; }
+function save() { if (!canStore) return; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { canStore = false; showBanner(); } }
+function showBanner() {
+  const b = $("#banner"); b.hidden = canStore;
+  b.innerHTML = ic("triangle-alert") + `<span>Hier kann der Fortschritt nicht gespeichert werden. Öffne die Datei direkt im Browser (Chrome, Safari, Firefox) oder sichere ihn über Übersicht → Lernstand kopieren.</span>`;
+}
+
+// ======================================================= helpers
+const ICONS = {"target":'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',"book-open":'<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',"layers":'<path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/>',"timer":'<line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/>',"file-text":'<path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',"gauge":'<path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/>',"calculator":'<rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/>',"pen-line":'<path d="M13 21h8"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>',"list-checks":'<path d="M13 5h8"/><path d="M13 12h8"/><path d="M13 19h8"/><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/>',"arrow-left":'<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',"arrow-right":'<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',"check":'<path d="M20 6 9 17l-5-5"/>',"x":'<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',"eye":'<path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/>',"refresh-cw":'<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',"copy":'<rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',"clipboard-paste":'<path d="M11 14h10"/><path d="M16 4h2a2 2 0 0 1 2 2v1.344"/><path d="m17 18 4-4-4-4"/><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 1.793-1.113"/><rect x="8" y="2" width="8" height="4" rx="1"/>',"calendar":'<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>',"lightbulb":'<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>',"triangle-alert":'<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',"circle-check":'<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',"info":'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',"rotate-ccw":'<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',"play":'<path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/>'};
+const ic = n => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n] || ""}</svg>`;
+const esc = s => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+let tt; const toast = t => { const e = $("#toast"); e.textContent = t; e.hidden = false; clearTimeout(tt); tt = setTimeout(() => e.hidden = true, 1600); };
+const fmt = (x, d = 0) => Number(x).toLocaleString("de-DE", { maximumFractionDigits: d });
+
+// ---- Markdown-light + LaTeX (content is escaped first; no raw HTML ever reaches the page)
+function mdInline(s) {
+  return s.replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\*\*(.+?)\*\*/g, "<b>$1</b>")
+    .replace(/==(.+?)==/g, "<mark>$1</mark>")
+    .replace(/(^|[\s(>])\*([^\s*](?:[^*]*?[^\s*])?)\*(?=[\s).,;:!?<]|$)/g, "$1<i>$2</i>");
+}
+function mdBlocks(s) {
+  const lines = s.split("\n"); let out = "", para = [], list = null;
+  const flushP = () => { if (para.length) { out += "<p>" + mdInline(para.join("<br>")) + "</p>"; para = []; } };
+  const flushL = () => { if (list) { out += `<${list.t}>` + list.items.map(x => "<li>" + mdInline(x) + "</li>").join("") + `</${list.t}>`; list = null; } };
+  for (const ln of lines) {
+    const ul = ln.match(/^\s*[-*•]\s+(.*)$/), ol = ln.match(/^\s*\d+[.)]\s+(.*)$/);
+    if (ul || ol) { flushP(); const t = ul ? "ul" : "ol"; if (!list || list.t !== t) { flushL(); list = { t, items: [] }; } list.items.push((ul || ol)[1]); continue; }
+    if (!ln.trim()) { flushP(); flushL(); continue; }
+    if (list && /^\s{2,}\S/.test(ln)) { list.items[list.items.length - 1] += "<br>" + ln.trim(); continue; }
+    flushL(); para.push(ln);
+  }
+  flushP(); flushL(); return out;
+}
+function md(src, inline) {
+  if (src == null || src === "") return "";
+  const math = [];
+  let s = String(src)
+    .replace(/\\\[([\s\S]+?)\\\]/g, (m, t) => { math.push([t, true]); return "\u0000" + (math.length - 1) + "\u0000"; })
+    .replace(/\\\(([\s\S]+?)\\\)/g, (m, t) => { math.push([t, false]); return "\u0000" + (math.length - 1) + "\u0000"; });
+  s = esc(s);
+  s = inline ? mdInline(s).replace(/\n/g, "<br>") : mdBlocks(s);
+  return s.replace(/\u0000(\d+)\u0000/g, (m, i) => texSpan(math[+i][0], math[+i][1]));
+}
+const texSpan = (t, disp) => `<span class="${disp ? "mathd" : "math"}" data-tex="${esc(t)}">${esc(disp ? "\\[" + t + "\\]" : "\\(" + t + "\\)")}</span>`;
+function renderMath(root) {
+  if (!window.katex || !root) return;
+  root.querySelectorAll("[data-tex]:not([data-done])").forEach(el => {
+    try { katex.render(el.getAttribute("data-tex"), el, { displayMode: el.classList.contains("mathd"), throwOnError: false }); el.setAttribute("data-done", "1"); } catch (e) {}
+  });
+}
+window.lernlyMath = renderMath;
+
+// ---- content blocks
+const NUMCELL = /^[−\-+]?[\d.,]+\s?(%|€|\$|m|Mio\.?|Mrd\.?|k|bn|x)?$/;
+// flat = inside an outer answer box: render model answers without their own frame
+function blocks(arr, flat) { return (arr || []).map(b => block(b, flat)).join(""); }
+function block(b, flat) {
+  switch (b.type) {
+    case "text": return md(b.md);
+    case "heading": return `<h3>${md(b.text, true)}</h3>`;
+    case "simple": return `<div class="blk-simple"><div class="bh">${ic("info")}Einfach gesagt</div>${md(b.md)}</div>`;
+    case "example": return `<div class="blk-ex"><div class="bh">Beispiel</div>${md(b.md)}</div>`;
+    case "remember": return `<div class="blk-remember"><div class="bh">${ic("circle-check")}Merke</div>${md(b.md)}</div>`;
+    case "steps": return (b.title ? `<h3>${md(b.title, true)}</h3>` : "") + `<ol class="steps">${(b.items || []).map(x => `<li>${md(x, true)}</li>`).join("")}</ol>`;
+    case "formula": { const tex = Array.isArray(b.tex) ? b.tex : [b.tex]; return `<div class="fxm">${tex.map(t => texSpan(t, true)).join("")}${b.note ? `<div class="note">${md(b.note, true)}</div>` : ""}</div>`; }
+    case "table": {
+      const sum = new Set(b.sumRows || []);
+      return `<div class="tw"><table class="t"><tr>${(b.head || []).map(h => `<th>${md(String(h), true)}</th>`).join("")}</tr>${(b.rows || []).map((r, i) => `<tr class="${sum.has(i) ? "sum" : ""}">${r.map((c, j) => `<td class="${j > 0 && NUMCELL.test(String(c).trim()) ? "n" : ""}">${md(String(c), true)}</td>`).join("")}</tr>`).join("")}</table></div>`;
+    }
+    case "figure": return `<div class="fig"><img alt="${esc(b.caption || "Grafik")}" src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(b.svg || "")}"></div>${b.caption ? `<div class="figcap">${md(b.caption, true)}</div>` : ""}`;
+    case "model_answer": if (flat) return md(b.md); return `<div class="ms"><div class="bh">${ic("pen-line")}${esc(b.title || "Musterantwort (so in der Klausur schreiben)")}</div>${md(b.md)}</div>`;
+    case "more": return `<details class="more"><summary>${md(b.title, true)}</summary>${md(b.md)}</details>`;
+    default: return "";
+  }
+}
+function topicExtras(th) {
+  let h = "";
+  if (th.hook) h += `<div class="blk-hook"><div class="bh">${ic("lightbulb")}Merkhilfe</div>${md(th.hook)}</div>`;
+  if (th.mistakes && th.mistakes.length) h += `<div class="blk-mist"><div class="bh">${ic("triangle-alert")}Typische Fehler</div><ul>${th.mistakes.map(m => `<li>${md(m, true)}</li>`).join("")}</ul></div>`;
+  if (th.source) h += `<div class="src">${ic("file-text")}<span>${md(th.source, true)}</span></div>`;
+  return h;
+}
+
+// ======================================================= scores
+function taskScore(t) {
+  if (t.kind === "drill") { const d = S.drills[t.id]; if (!d || !d.hist || !d.hist.length) return null; const h = d.hist.slice(-3); return h.reduce((a, b) => a + b, 0) / h.length; }
+  if (t.kind === "essay") { const e = S.essays[t.id]; return e && e.done ? e.score / t.points : null; }
+  if (t.kind === "mc") { const m = S.mc[t.id]; return m && m.checked ? m.score / t.questions.length : null; }
+  return null;
+}
+function memoStats(tid) {
+  const cs = tid ? cardsOf(tid) : ALLCARDS; let ok = 0, learn = 0, nw = 0;
+  for (const c of cs) { const st = S.cards[c.id]; if (!st) nw++; else if (st.ivl >= 60) ok++; else learn++; }
+  return { n: cs.length, ok, learn, nw };
+}
+function topicStat(id) {
+  if (!TH[id]) return { mastery: 0, avg: 0, done: 0, total: 0, status: "missing" };
+  const tasks = tasksOf(id), sc = tasks.map(taskScore).filter(x => x !== null);
+  for (const k in S.mock) { const r = S.mock[k]; if (r && r.topic && r.topic[id] && r.topic[id][1]) sc.push(r.topic[id][0] / r.topic[id][1]); }
+  const avg = sc.length ? sc.reduce((a, b) => a + b, 0) / sc.length : 0;
+  const done = tasks.filter(t => taskScore(t) !== null).length;
+  const cov = tasks.length ? done / tasks.length : (sc.length ? 1 : 0);
+  const practice = sc.length ? avg * (0.6 + 0.4 * cov) : 0;
+  const ms = memoStats(id), memo = ms.n ? (ms.ok + 0.4 * ms.learn) / ms.n : null, rd = S.read[id] ? 1 : 0;
+  const m = memo === null ? 0.15 * rd + 0.85 * practice : 0.15 * rd + 0.7 * practice + 0.15 * memo;
+  const mastery = Math.round(m * 100);
+  let status = "new";
+  if (rd || sc.length || (ms.n && ms.nw < ms.n)) status = "started";
+  if (sc.length && avg < 0.6) status = "weak"; else if (mastery >= 75) status = "solid";
+  return { mastery, avg, done, total: tasks.length, status };
+}
+function prioScore(id) {
+  const st = topicStat(id); let f = 1;
+  if (PAIR[id] && topicStat(PAIR[id]).mastery >= 70) f = 0.35;
+  return EXP[id] * (1 - st.mastery / 100) * f * (st.status === "weak" ? 1.2 : 1);
+}
+const STATUS = { new: ["nicht begonnen", "c-lo"], started: ["läuft", "c-md"], weak: ["hakt", "c-hi"], solid: ["sitzt", "c-ok"], missing: ["kommt noch", "c-lo"] };
+const statusColor = s => s === "solid" ? "var(--ok)" : s === "weak" ? "var(--bad)" : "var(--pri-hi)";
+const partOf = t => { const p = (t.slotIds || []).map(x => PART_OF_SLOT[x]).find(Boolean); return p ? p.id : null; };
+const slotLabel = t => (t.slotIds || []).map(x => SLOT[x] ? SLOT[x].label : "").filter(Boolean).join(" / ");
+function pointsNow() {
+  const seen = new Set(), parts = {}; let got = 0, tot = 0;
+  for (const t of TOPICS) {
+    if (seen.has(t.id)) continue;
+    let m = topicStat(t.id).mastery, e = EXP[t.id];
+    if (PAIR[t.id]) { seen.add(PAIR[t.id]); m = Math.max(m, topicStat(PAIR[t.id]).mastery); e = Math.max(e, EXP[PAIR[t.id]] || 0); }
+    seen.add(t.id); got += e * m / 100; tot += e;
+    const pid = partOf(t); if (pid) { const p = parts[pid] || (parts[pid] = { got: 0, tot: 0 }); p.got += e * m / 100; p.tot += e; }
+  }
+  return { got, tot, parts, max: EXAM.totalPoints || Math.round(tot) };
+}
+const dueCards = () => ALLCARDS.filter(c => S.cards[c.id] && S.cards[c.id].due <= now());
+function daysLeft() { if (!S.examDate) return null; const ex = new Date(S.examDate + "T" + (EXAM.time || "09:00")); return (ex - new Date()) / 864e5; }
+
+// ======================================================= router
+const TABS = [["plan", "Klausurplan", "target"], ["themen", "Themen", "book-open"], ["wdh", "Wiederholen", "layers"], ["probe", "Probeklausur", "timer"], ["spick", "Spickzettel", "file-text"], ["uebersicht", "Übersicht", "gauge"]];
+let view = { tab: TABS.some(t => t[0] === S.tab) ? S.tab : "plan", arg: "", step: "theory", task: null };
+let mt = null, sess = null, sessBox = null, cur = null;
+function go(tab, arg, step, task) { clearInterval(mt); sess = null; view = { tab, arg: arg || "", step: step || "theory", task: task || null }; S.tab = tab; save(); render(); window.scrollTo(0, 0); }
+$("#tabs").innerHTML = TABS.map((t, i) => `<button data-tab="${t[0]}">${ic(t[2])}<span>${t[1]}</span>${t[0] === "wdh" ? `<span class="badge" id="dueBadge" hidden></span>` : ""}<kbd>${i + 1}</kbd></button>`).join("");
+document.querySelectorAll("#tabs button").forEach(b => b.addEventListener("click", () => go(b.dataset.tab)));
+$("#ctitle").textContent = C.title || "Kurs";
+$("#csub").textContent = C.subtitle || "";
+function updDue() { const d = dueCards().length, bd = $("#dueBadge"); if (bd) { bd.hidden = !d; bd.textContent = d; } }
+function updCountdown() {
+  const el = $("#cd"), dl = daysLeft();
+  if (dl === null) { el.innerHTML = `<button class="go" id="setDate">${ic("calendar")} Klausurdatum setzen</button>`; $("#setDate").onclick = () => go("uebersicht"); return; }
+  const ex = new Date(S.examDate + "T" + (EXAM.time || "09:00"));
+  const ds = ex.toLocaleDateString("de-DE", { weekday: "short", day: "numeric", month: "short" });
+  const h = Math.round(dl * 24);
+  el.innerHTML = ic("calendar") + (dl < 0 ? `Klausur war am ${ds}` : `Klausur <b>${ds}</b> · ${h > 48 ? "noch " + Math.ceil(dl) + " Tage" : "noch " + Math.max(0, h) + " Std."}`);
+}
+function render() {
+  document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === view.tab));
+  updDue(); updCountdown();
+  ({ plan: renderPlan, themen: renderTopics, wdh: renderReview, probe: renderMock, spick: renderCheat, uebersicht: renderOverview })[view.tab]();
+  renderMath(main);
+  document.documentElement.style.setProperty("--top-h", $("#top").offsetHeight + "px");
+}
+
+// ======================================================= KLAUSURPLAN
+function renderPlan() {
+  const fid = { strict: ["Bauplan aus Altklausuren", "c-ok"], likely: ["Bauplan aus Hinweisen und Beispielfragen", "c-md"], broad: ["Bauplan geschätzt: keine Altklausuren", "c-hi"] }[EXAM.fidelity];
+  const facts = [EXAM.durationMin && `${EXAM.durationMin} Minuten`, EXAM.totalPoints && `${EXAM.totalPoints} Punkte`, EXAM.aids && `Hilfsmittel: ${esc(EXAM.aids)}`].filter(Boolean).join(" · ");
+  const tiers = { 1: ["Stufe 1 · sicher lernen", "Die Punkte, die du mit wenig Aufwand sicher holst"], 2: ["Stufe 2 · wenn Zeit ist", "Weitere Punkte, mehr Aufwand"], 3: ["Stufe 3 · nur wenn alles sitzt", "Wenige Punkte"] };
+  const parts = EXAM.parts || [];
+  let h = `<div class="card"><h2>Klausurplan</h2>${facts ? `<p class="small" style="margin-top:0">${facts}</p>` : ""}${fid ? `<span class="chip ${fid[1]}">${fid[0]}</span>` : ""}<div class="lead">${md(C.strategy)}</div>${EXAM.format ? `<div class="small">${md(EXAM.format)}</div>` : ""}</div>`;
+  if (parts.length) {
+    h += `<div class="card"><h3 style="margin-top:0">Aufbau der Klausur</h3>${parts.map(p => `<div class="lbl" style="margin:12px 0 2px">${esc(p.name)}${p.points ? ` · ${p.points} P` : ""}</div>${(p.slots || []).map(s => `<div class="rk" style="cursor:default;grid-template-columns:52px minmax(0,1fr) auto"><span class="rn">${esc(s.label)}</span><span class="rl"><b>${md(s.name || "", true)}</b>${s.frequency ? `<small>${esc(s.frequency)}</small>` : ""}</span><span class="pts">${s.points != null ? s.points + " P" : ""}${s.choiceGroup ? ` <span class="chip c-pri">Wahl</span>` : ""}</span></div>`).join("")}`).join("")}</div>`;
+  }
+  for (const tr of [1, 2, 3]) {
+    const list = ORDER.filter(t => (t.tier || 3) === tr); if (!list.length) continue;
+    const seen = new Set(); let sum = 0; list.forEach(t => { if (seen.has(t.id)) return; if (PAIR[t.id]) seen.add(PAIR[t.id]); sum += EXP[t.id]; });
+    h += `<div class="card"><h3 style="margin-top:0">${tiers[tr][0]}</h3><p class="small" style="margin-top:0">${tiers[tr][1]} · ≈ ${fmt(sum)} Punkte</p>${list.map(t => {
+      const st = topicStat(t.id), th = TH[t.id];
+      return `<details class="tier"><summary><span class="sn">≈${fmt(EXP[t.id], 1)} P</span><span class="sl"><b>${md(t.title, true)}</b><small>${[slotLabel(t), t.why, t.effort && "Aufwand " + t.effort, PAIR[t.id] && "entweder-oder"].filter(Boolean).map(esc).join(" · ")}</small></span><span class="sb"><span class="track"><i style="width:${st.mastery}%;background:${statusColor(st.status)}"></i></span></span><span class="rp">${st.status === "missing" ? "–" : st.mastery + "%"}</span></summary>${th && th.standardAnswer && th.standardAnswer.length ? `<div class="ms"><div class="bh">${ic("pen-line")}Standardantwort in Klausurlänge: genau das lernen</div>${blocks(th.standardAnswer, true)}</div>` : ""}${th ? `<div class="row"><button class="btn" data-go="${t.id}">Thema üben ${ic("arrow-right")}</button></div>` : `<p class="small">Inhalte kommen noch. Sag Claude: <code>/lernly:trainer-bauen</code></p>`}</details>`;
+    }).join("")}</div>`;
+  }
+  if (MOCKS.length) h += `<div class="card"><h3 style="margin-top:0">Probeklausuren</h3><p class="small" style="margin-top:0">Lernmodus: nach jeder Aufgabe die Lösung. Klausurmodus: mit Timer, Lösung am Ende. Wiederhole eine Probeklausur, bis du mindestens 70 % holst.</p><div class="tiles">${MOCKS.map(mockTile).join("")}</div></div>`;
+  main.innerHTML = h;
+  main.querySelectorAll("[data-go]").forEach(b => b.onclick = () => go("themen", b.dataset.go, S.read[b.dataset.go] ? "practice" : "theory"));
+  main.querySelectorAll("[data-m]").forEach(b => b.onclick = () => go("probe", b.dataset.m));
+}
+function mockMax(M) { if (M.totalPoints) return M.totalPoints; const g = {}; let s = 0; for (const it of M.items) { if (it.choiceGroup) g[it.choiceGroup] = Math.max(g[it.choiceGroup] || 0, it.points); else s += it.points; } return s + Object.values(g).reduce((a, b) => a + b, 0); }
+function mockTile(M) {
+  const r = S.mock[M.id], mx = mockMax(M), sc = r && (r.done || r.mode === "learn") ? r.score || 0 : null;
+  return `<button class="tile" data-m="${esc(M.id)}"><span class="tn">${esc(M.subtitle || "")}</span><span class="tt">${esc(M.name)}</span><span class="track"><i style="width:${sc === null ? 0 : sc / mx * 100}%;background:${sc !== null && sc >= 0.7 * mx ? "var(--ok)" : "var(--pri-hi)"}"></i></span><span class="small">${sc === null ? "nicht begonnen" : fmt(sc, 1) + " / " + mx}</span></button>`;
+}
+
+// ======================================================= ÜBERSICHT
+function renderOverview() {
+  const pn = pointsNow(), pids = Object.keys(pn.parts), partsDef = EXAM.parts || [];
+  const ranked = TOPICS.filter(t => TH[t.id]).sort((a, b) => prioScore(b.id) - prioScore(a.id)), next = ranked[0];
+  const allTasks = Object.keys(TH).flatMap(id => tasksOf(id).map(t => ({ t, id })));
+  const doneTasks = allTasks.filter(x => taskScore(x.t) !== null).length, solid = TOPICS.filter(t => topicStat(t.id).status === "solid").length;
+  const weak = allTasks.map(x => Object.assign({ s: taskScore(x.t) }, x)).filter(x => x.s !== null && x.s < 0.6).sort((a, b) => a.s - b.s).slice(0, 5);
+  const bar = pids.length ? pids.map((pid, i) => { const p = pn.parts[pid]; return `<i style="width:${p.got / pn.max * 100}%;background:${PART_COLORS[i % 4]}"></i><i style="width:${(p.tot - p.got) / pn.max * 100}%;background:${PART_COLORS[i % 4]};opacity:.22"></i>`; }).join("") : `<i style="width:${pn.got / pn.max * 100}%;background:var(--pri-hi)"></i>`;
+  const legend = pids.map((pid, i) => { const p = pn.parts[pid], def = partsDef.find(x => x.id === pid); return `<span><i style="background:${PART_COLORS[i % 4]}"></i>${esc(def ? def.name : pid)} ${fmt(p.got)}/${fmt(p.tot)}</span>`; }).join("");
+  const nst = next ? topicStat(next.id) : null;
+  main.innerHTML = `
+  <div class="card"><div class="hero"><div><div class="lbl">Punkte, die du jetzt holen würdest</div><div class="big">${fmt(pn.got)}<small> / ${pn.max}</small></div></div>
+    <div><div class="stack" style="height:18px;border-radius:9px">${bar}</div><div class="legend">${legend}<span>${solid}/${TOPICS.length} Themen sitzen · ${doneTasks}/${allTasks.length} Aufgaben gemacht</span></div></div></div>
+    <p class="small" style="margin-bottom:0">Schätzung = erwartete Punkte je Thema × deine Mastery (Theorie gelesen, Übungsergebnisse, Karten). Sie steigt, während du übst.</p></div>
+  ${next ? `<div class="card hl"><div class="lbl">Als Nächstes</div><h2 style="margin:4px 0">${md(next.title, true)}</h2><p class="lead" style="margin-top:0">${fmt(EXP[next.id], 1)} erwartete Punkte · du stehst bei ${nst.mastery} % · ${nst.status === "weak" ? "hier hakt es, wiederholen" : !S.read[next.id] ? "starte mit der Theorie" : "weiter mit Übungen"}</p><button class="btn primary" id="goNext">${!S.read[next.id] ? "Theorie starten" : "Weiter üben"} ${ic("arrow-right")}</button></div>` : ""}
+  <div class="card"><h2>Was dir jetzt die meisten Punkte bringt</h2><p class="lead" style="margin-top:0">Sortiert nach erwarteten Punkten × was dir noch fehlt.${Object.keys(PAIR).length ? " Bei Entweder-oder-Aufgaben rutscht der Partner nach unten, sobald einer sitzt." : ""}</p>
+    ${ranked.map((t, i) => { const s = topicStat(t.id); return `<button class="rk" data-t="${t.id}"><span class="rn">${i + 1}</span><span class="rl"><b>${md(t.title, true)}</b><small>${[slotLabel(t), "≈" + fmt(EXP[t.id], 1) + " P", PAIR[t.id] && "entweder-oder"].filter(Boolean).map(esc).join(" · ")}</small></span><span class="rb2"><span class="track"><i style="width:${s.mastery}%;background:${statusColor(s.status)}"></i></span><small class="small">${s.done}/${s.total} Aufgaben</small></span><span class="rp">${s.mastery}%</span><span class="chip ${STATUS[s.status][1]}">${STATUS[s.status][0]}</span></button>`; }).join("")}</div>
+  ${weak.length ? `<div class="card"><h2>Hier hakt es</h2><p class="lead" style="margin-top:0">Deine schwächsten Ergebnisse. Mach die zuerst nochmal.</p>${weak.map(x => `<button class="rk" data-task="${x.id}|${esc(x.t.id)}"><span class="rn" style="color:var(--bad)">${ic("rotate-ccw")}</span><span class="rl"><b>${md(x.t.name, true)}</b><small>${md(TOPIC(x.id).title, true)}</small></span><span></span><span class="rp" style="color:var(--bad)">${Math.round(x.s * 100)}%</span><span class="chip c-hi">nochmal</span></button>`).join("")}</div>` : ""}
+  <div class="card"><h3 style="margin-top:0">Einstellungen und Lernstand</h3>
+    <div class="row"><label class="small" for="examDate">Klausurdatum</label><input type="date" id="examDate" value="${esc(S.examDate)}" style="font:15px var(--font);padding:7px 10px;border:1px solid var(--line2);border-radius:10px;background:var(--bg-deep);color:var(--ink)"></div>
+    <p class="small">${canStore ? "Dein Fortschritt wird in diesem Browser gespeichert." : "Speichern ist hier nicht möglich."} Mit „Lernstand kopieren“ sagst du Claude, wo du stehst (<code>/lernly:wo-stehe-ich</code>), oder nimmst ihn auf ein anderes Gerät mit.</p>
+    <div class="row"><button class="btn" id="exp">${ic("copy")} Lernstand kopieren</button><button class="btn" id="imp">${ic("clipboard-paste")} Lernstand laden</button><button class="btn ghost" id="resetAll">${ic("rotate-ccw")} Alles zurücksetzen</button></div>
+    ${D.meta ? `<p class="small" style="margin-bottom:0">Trainer gebaut am ${esc(new Date(D.meta.builtAt).toLocaleString("de-DE"))} · ${esc(D.meta.generator)}</p>` : ""}</div>`;
+  if (next) $("#goNext").onclick = () => go("themen", next.id, S.read[next.id] ? "practice" : "theory");
+  main.querySelectorAll("[data-t]").forEach(b => b.onclick = () => go("themen", b.dataset.t, S.read[b.dataset.t] ? "practice" : "theory"));
+  main.querySelectorAll("[data-task]").forEach(b => b.onclick = () => { const [tp, id] = b.dataset.task.split("|"); go("themen", tp, "practice", id); });
+  $("#examDate").onchange = e => { S.examDate = e.target.value; save(); render(); };
+  $("#exp").onclick = openExport; $("#imp").onclick = openImport;
+  let armed = false; $("#resetAll").onclick = e => { if (!armed) { armed = true; e.currentTarget.lastChild.textContent = " Nochmal klicken zum Bestätigen"; return; } const d = S.examDate; S = fresh(); S.examDate = d; save(); toast("Fortschritt zurückgesetzt"); render(); };
+}
+
+// ---- Lernstand export / import
+function summaryText() {
+  const pn = pointsNow(), dl = daysLeft(), ms = memoStats(null);
+  const lines = [`LERNSTAND (Lernly) · ${C.title} · ${new Date().toLocaleDateString("de-DE")}`, `Kurs-ID: ${C.id}`, `Punkte jetzt: ${fmt(pn.got)} / ${pn.max}` + (dl !== null ? ` · Klausur ${dl < 0 ? "vorbei" : "in " + Math.ceil(dl) + " Tagen"}` : ""), "Themen (Mastery · Status · Aufgaben gemacht · schwache Aufgaben):"];
+  for (const t of [...TOPICS].sort((a, b) => prioScore(b.id) - prioScore(a.id))) {
+    const s = topicStat(t.id); const weak = tasksOf(t.id).filter(x => { const v = taskScore(x); return v !== null && v < 0.6; }).map(x => `${x.id} ${Math.round(taskScore(x) * 100)}%`);
+    lines.push(`- ${t.id} | ${t.title} | ${s.mastery}% | ${STATUS[s.status][0]} | ${s.done}/${s.total}${S.read[t.id] ? " | Theorie gelesen" : ""}${weak.length ? " | schwach: " + weak.join(", ") : ""}`);
+  }
+  lines.push(`Karten: ${ms.ok} sicher · ${ms.learn} am Lernen · ${ms.nw} neu · ${dueCards().length} fällig`);
+  const mk = MOCKS.filter(M => S.mock[M.id] && (S.mock[M.id].done || S.mock[M.id].mode === "learn"));
+  if (mk.length) lines.push("Probeklausuren: " + mk.map(M => `${M.name} ${fmt(S.mock[M.id].score || 0, 1)}/${mockMax(M)}${S.mock[M.id].mode === "learn" ? " (Lernmodus)" : ""}`).join(" · "));
+  return lines.join("\n");
+}
+function openModal(html) { $("#modalBox").innerHTML = html; $("#modal").hidden = false; renderMath($("#modalBox")); }
+function closeModal() { $("#modal").hidden = true; }
+$("#modal").addEventListener("click", e => { if (e.target.id === "modal") closeModal(); });
+function copyText(t) {
+  const ta = $("#modalBox textarea"); ta.value = t; ta.select();
+  (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast("Kopiert"), () => { try { document.execCommand("copy"); toast("Kopiert"); } catch (e) { toast("Bitte manuell kopieren"); } });
+}
+function openExport() {
+  const full = "LERNLY-STAND-1 " + JSON.stringify({ course: C.id, state: S });
+  openModal(`<h3 style="margin-top:0">Lernstand kopieren</h3><p class="small">Für Claude: kurz und lesbar. In Claude einfügen, z. B. mit <code>/lernly:wo-stehe-ich</code>. Für ein anderes Gerät: der komplette Stand zum Laden.</p><div class="row" style="margin-bottom:8px"><button class="btn primary" id="cpS">${ic("copy")} Für Claude</button><button class="btn" id="cpF">${ic("copy")} Komplett (anderes Gerät)</button><button class="btn ghost" id="cl">Schließen</button></div><textarea readonly></textarea>`);
+  $("#modalBox textarea").value = summaryText();
+  $("#cpS").onclick = () => copyText(summaryText()); $("#cpF").onclick = () => copyText(full); $("#cl").onclick = closeModal;
+}
+function openImport() {
+  openModal(`<h3 style="margin-top:0">Lernstand laden</h3><p class="small">Füge den kompletten Lernstand ein (beginnt mit <code>LERNLY-STAND-1</code>). Dein aktueller Stand in diesem Browser wird ersetzt.</p><textarea id="impTa" placeholder="LERNLY-STAND-1 {…}"></textarea><div class="row" style="margin-top:8px"><button class="btn primary" id="doImp">Laden</button><button class="btn ghost" id="cl">Abbrechen</button></div>`);
+  $("#cl").onclick = closeModal;
+  $("#doImp").onclick = () => {
+    const raw = $("#impTa").value.trim().replace(/^LERNLY-STAND-1\s*/, "");
+    try { const o = JSON.parse(raw); if (o.course !== C.id) throw new Error("anderer Kurs: " + o.course); S = Object.assign(fresh(), o.state); save(); closeModal(); toast("Lernstand geladen"); render(); }
+    catch (e) { toast("Konnte nicht laden: " + e.message); }
+  };
+}
+
+// ======================================================= THEMEN
+const ORIGIN = { altklausur: "Echte Altklausur-Aufgaben", probeklausur: "Probe- und Beispielklausuren", uebung: "Übungen und Tutorien", folie: "Beispiele aus den Folien", neu: "Neue Varianten" };
+const ORIGIN_ORDER = ["altklausur", "probeklausur", "uebung", "folie", "neu"];
+const KIND_ICON = { drill: "calculator", essay: "pen-line", mc: "list-checks" };
+function sortedTasks(id) { return [...tasksOf(id)].sort((a, b) => ORIGIN_ORDER.indexOf(a.origin) - ORIGIN_ORDER.indexOf(b.origin)); }
+function renderTopics() {
+  if (!view.arg) {
+    main.innerHTML = `<div class="card"><h2>Themen</h2><p class="lead" style="margin-top:0">Thema für Thema: <b>1 Theorie</b> (einfach erklärt, mit Musterantwort) → <b>2 Üben</b> (echte Altklausur-Aufgaben zuerst, dann Varianten) → <b>3 Auswendig</b> (nur, was du 1:1 hinschreiben musst). Sortiert nach Stufe und Punkten.</p></div>
+    <div class="tiles">${ORDER.map(t => { const s = topicStat(t.id); return `<button class="tile ${s.status === "solid" ? "solid" : ""}" data-t="${t.id}"><span class="tn">Stufe ${t.tier || 3}${slotLabel(t) ? " · " + esc(slotLabel(t)) : ""} · ≈${fmt(EXP[t.id], 1)} P</span><span class="tt">${md(t.title, true)}</span><span class="track"><i style="width:${s.mastery}%;background:${statusColor(s.status)}"></i></span><span class="tm"><span class="chip ${STATUS[s.status][1]}">${STATUS[s.status][0]}</span><span class="small">${s.status === "missing" ? "" : s.mastery + " % · " + s.done + "/" + s.total + " Aufgaben"}</span></span></button>`; }).join("")}</div>`;
+    main.querySelectorAll("[data-t]").forEach(b => b.onclick = () => go("themen", b.dataset.t, S.read[b.dataset.t] ? "practice" : "theory"));
+    return;
+  }
+  const t = TOPIC(view.arg), th = TH[view.arg];
+  if (!t) { go("themen"); return; }
+  const i = ORDER.indexOf(t), st = topicStat(t.id), memoN = cardsOf(t.id).length;
+  main.innerHTML = `<div class="row" style="justify-content:space-between"><button class="back" id="bk">${ic("arrow-left")} alle Themen</button><span class="small">${i + 1} / ${ORDER.length} · Mastery ${st.mastery} %</span></div>
+  <div class="card" style="padding-top:14px;padding-bottom:14px"><div class="row"><span class="chip c-pri">Stufe ${t.tier || 3}</span>${slotLabel(t) ? `<span class="pts">${esc(slotLabel(t))} · ≈${fmt(EXP[t.id], 1)} P</span>` : `<span class="pts">≈${fmt(EXP[t.id], 1)} P</span>`}${t.why ? `<span class="small">${esc(t.why)}</span>` : ""}</div><h2 style="margin:8px 0 10px">${md(t.title, true)}</h2>
+  ${th ? `<div class="stepper">${[["theory", "1 · Theorie", S.read[t.id] ? "gelesen" : ""], ["practice", "2 · Üben", `${st.done}/${st.total}`], ...(memoN ? [["memo", "3 · Auswendig", `${memoStats(t.id).ok}/${memoN}`]] : [])].map(s => `<button class="sp ${view.step === s[0] ? "on" : ""}" data-s="${s[0]}">${s[1]} <small>${s[2]}</small></button>`).join("")}</div>` : ""}</div><div id="stepBox"></div>`;
+  $("#bk").onclick = () => go("themen");
+  const box = $("#stepBox");
+  if (!th) { box.innerHTML = `<div class="card empty">Für dieses Thema gibt es noch keine Inhalte.<br>Sag Claude: <code>/lernly:trainer-bauen ${esc(t.id)}</code></div>`; return; }
+  main.querySelectorAll("[data-s]").forEach(b => b.onclick = () => { view.step = b.dataset.s; view.task = null; sess = null; render(); window.scrollTo(0, 0); });
+  if (view.step === "theory") {
+    box.innerHTML = `<div class="card">${blocks(th.theory)}${th.standardAnswer && th.standardAnswer.length ? `<div class="ms"><div class="bh">${ic("pen-line")}Standardantwort in Klausurlänge</div>${blocks(th.standardAnswer, true)}</div>` : ""}${topicExtras(th)}<div class="row" style="margin-top:16px"><button class="btn primary" id="toP">${S.read[t.id] ? "Zu den Übungen" : "Verstanden, jetzt üben"} ${ic("arrow-right")}</button></div></div>`;
+    $("#toP").onclick = () => { S.read[t.id] = true; save(); view.step = "practice"; render(); window.scrollTo(0, 0); };
+    return;
+  }
+  if (view.step === "memo") { renderMemoSession(box, [t.id]); return; }
+  const tasks = sortedTasks(t.id);
+  if (!view.task) {
+    if (!tasks.length) { box.innerHTML = `<div class="card empty">Noch keine Übungsaufgaben für dieses Thema.</div>`; return; }
+    box.innerHTML = `<div class="card"><h3 style="margin-top:0">Klausurtraining</h3><p class="lead" style="margin-top:0">Reihenfolge = Nähe zur Klausur: echte Altklausur-Aufgaben zuerst, dann Übungen, dann neue Varianten.</p>
+    ${tasks.map((x, ix) => { const s = taskScore(x); return `${ix === 0 || tasks[ix - 1].origin !== x.origin ? `<div class="lbl grp">${ORIGIN[x.origin] || ""}</div>` : ""}<button class="rk" data-k="${esc(x.id)}"><span class="rn">${ic(KIND_ICON[x.kind] || "pen-line")}</span><span class="rl"><b>${md(x.name, true)}</b><small>${[x.originLabel, x.hint, x.kind === "drill" && x.variants && x.variants.length > 1 ? x.variants.length + " Varianten" : ""].filter(Boolean).map(v => md(v, true)).join(" · ")}</small></span><span></span><span class="rp" style="color:${s === null ? "var(--faint)" : s >= 0.75 ? "var(--ok)" : s >= 0.5 ? "var(--amber)" : "var(--bad)"}">${s === null ? "–" : Math.round(s * 100) + "%"}</span><span class="chip ${s === null ? "c-lo" : s >= 0.75 ? "c-ok" : "c-md"}">${s === null ? "offen" : s >= 0.75 ? "erledigt" : "wiederholen"}</span></button>`; }).join("")}</div>`;
+    box.querySelectorAll("[data-k]").forEach(b => b.onclick = () => { view.task = b.dataset.k; cur = null; render(); window.scrollTo(0, 0); });
+    return;
+  }
+  const task = tasks.find(x => x.id === view.task); if (!task) { view.task = null; render(); return; }
+  const idx = tasks.indexOf(task), nx = tasks[idx + 1];
+  box.innerHTML = `<div class="row" style="justify-content:space-between;margin-bottom:8px"><button class="back" id="bt">${ic("arrow-left")} Aufgabenliste</button><span class="small">Aufgabe ${idx + 1} / ${tasks.length}</span></div><div id="taskBox"></div><div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn" id="nt">${nx ? "Nächste Aufgabe" : "Zurück zur Liste"} ${ic("arrow-right")}</button></div>`;
+  $("#bt").onclick = () => { view.task = null; render(); };
+  $("#nt").onclick = () => { view.task = nx ? nx.id : null; cur = null; render(); window.scrollTo(0, 0); };
+  const tb = $("#taskBox");
+  if (task.kind === "drill") renderDrill(tb, task); else if (task.kind === "essay") renderEssay(tb, task); else renderMC(tb, task);
+}
+
+// ---- drill
+function parseNum(s) {
+  s = String(s).trim().replace(/[\s€%'$]/g, "").replace(/−/g, "-"); if (!s) return NaN;
+  const c = s.lastIndexOf(","), d = s.lastIndexOf(".");
+  if (c > -1 && d > -1) s = c > d ? s.replace(/\./g, "").replace(",", ".") : s.replace(/,/g, "");
+  else if (c > -1) s = /^-?\d{1,3}(,\d{3})+$/.test(s) ? s.replace(/,/g, "") : s.replace(",", ".");
+  return parseFloat(s);
+}
+function numOk(raw, f) {
+  const v = f.answer, tol = f.tol != null ? f.tol : f.rel != null ? Math.abs(v) * f.rel : Math.max(Math.abs(v) * 0.005, 1e-9);
+  const cands = [parseNum(raw), parseFloat(String(raw).trim().replace(/[\s€%'$]/g, "").replace(/\./g, "").replace(",", "."))];
+  if (f.unit === "%") cands.push(parseNum(raw) * 100);
+  return cands.some(x => isFinite(x) && Math.abs(x - v) <= tol + 1e-12);
+}
+function renderDrill(el, D_) {
+  const V = D_.variants;
+  if (!cur || cur.id !== D_.id) { const last = (S.drills[D_.id] || {}).lastV; let vi = 0; if (V.length > 1) { do { vi = Math.floor(Math.random() * V.length); } while (vi === last && V.length > 1); } cur = { id: D_.id, vi, checked: false }; }
+  const p = V[cur.vi];
+  el.innerHTML = `<div class="card"><div class="row" style="margin-bottom:8px"><b>${md(D_.name, true)}</b>${D_.originLabel ? `<span class="small">${md(D_.originLabel, true)}</span>` : ""}${V.length > 1 ? `<span class="chip c-lo">Variante ${cur.vi + 1}/${V.length}</span>` : ""}</div><div class="task">${md(p.text)}</div>
+  <p class="small" style="margin:10px 0 0">Rechne auf Papier, trag die Ergebnisse ein (Rundungsunterschiede zählen nicht) und drück Enter.</p>
+  <div style="margin-top:4px">${p.fields.map((f, i) => `<div class="inp" id="row${i}"><label for="f${i}">${md(f.label, true)}${f.unit ? ` <span class="unit">in ${esc(f.unit)}</span>` : ""}</label><input id="f${i}" inputmode="decimal" autocomplete="off" enterkeyhint="done"><span class="mk" id="mk${i}"></span></div>`).join("")}
+  ${p.choice ? `<div class="inp" id="rowc"><label for="fc">${md(p.choice.label, true)}</label><select id="fc"><option value="">–</option>${p.choice.options.map(o => `<option>${esc(o)}</option>`).join("")}</select><span class="mk" id="mkc"></span></div>` : ""}</div>
+  <div class="row" style="margin-top:12px"><button class="btn primary" id="chk">${ic("check")} Prüfen</button><button class="btn" id="sol">${ic("eye")} Lösung zeigen</button>${V.length > 1 ? `<button class="btn ghost" id="nw">${ic("refresh-cw")} Neue Zahlen<span class="kbdhint"> (N)</span></button>` : ""}</div>
+  <div id="solBox" ${cur.checked ? "" : "hidden"} style="margin-top:12px"><h3>Lösungsweg</h3>${blocks(p.solution)}</div></div>`;
+  const check = () => {
+    let all = true, right = 0;
+    p.fields.forEach((f, i) => { const ok = numOk($("#f" + i).value, f); all = all && ok; if (ok) right++; $("#row" + i).className = "inp " + (ok ? "ok" : "bad"); $("#mk" + i).innerHTML = ic(ok ? "check" : "x"); });
+    if (p.choice) { const ok = $("#fc").value === p.choice.answer; all = all && ok; $("#rowc").className = "inp " + (ok ? "ok" : "bad"); $("#mkc").innerHTML = ic(ok ? "check" : "x"); }
+    if (!cur.checked) logDrill(all); cur.checked = true; $("#solBox").hidden = false; renderMath($("#solBox"));
+    toast(all ? "Alles richtig" : `${right}/${p.fields.length} richtig · rote Felder prüfen`);
+  };
+  $("#chk").onclick = check;
+  $("#sol").onclick = () => { $("#solBox").hidden = false; renderMath($("#solBox")); if (!cur.checked) { logDrill(false); cur.checked = true; } };
+  if ($("#nw")) $("#nw").onclick = () => { cur = null; renderDrill(el, D_); renderMath(el); };
+  el.querySelectorAll(".inp input").forEach(inp => inp.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); check(); } }));
+}
+function logDrill(ok) { const s = S.drills[cur.id] || { n: 0, ok: 0, hist: [] }; s.n++; if (ok) s.ok++; s.hist = (s.hist || []).concat(ok ? 1 : 0).slice(-6); s.lastV = cur.vi; S.drills[cur.id] = s; save(); }
+
+// ---- essay
+function renderEssay(el, E) {
+  const st = S.essays[E.id] || (S.essays[E.id] = { ans: "", tick: {}, done: false, score: 0 });
+  el.innerHTML = `<div class="card"><div class="row"><b>${md(E.name, true)}</b><span class="pts">${E.points} P</span>${E.originLabel ? `<span class="small">${md(E.originLabel, true)}</span>` : ""}</div><div class="task" style="margin-top:8px">${md(E.question)}</div>
+  <p class="small" style="margin:10px 0 4px">Schreib wie in der Klausur: kurze Absätze, Schlüsselwörter, Formeln. Faustregel: etwa eine Minute pro Punkt.</p>
+  <textarea id="ea" placeholder="Deine Antwort …">${esc(st.ans || "")}</textarea>
+  <div class="row" style="margin-top:10px">${st.done ? `<span class="score">${fmt(st.score, 1)}<small> / ${E.points} P</small></span><button class="btn ghost" id="redo">${ic("rotate-ccw")} Nochmal schreiben</button>` : `<button class="btn primary" id="rev">${ic("eye")} Musterantwort zeigen und prüfen</button>`}</div>
+  <div id="mod" ${st.done ? "" : "hidden"}><h3>Punkte-Checkliste: hak ab, was wirklich in deiner Antwort steht</h3>${E.checklist.map((c, i) => `<label class="chk"><input type="checkbox" data-i="${i}" ${st.tick[i] ? "checked" : ""}><span>${md(c.text, true)}</span><span class="pts">${c.points} P</span></label>`).join("")}
+  <div class="ms"><div class="bh">${ic("pen-line")}Musterantwort</div>${blocks(E.modelAnswer, true)}</div></div></div>`;
+  $("#ea").oninput = e => { st.ans = e.target.value; save(); };
+  if ($("#redo")) $("#redo").onclick = () => { S.essays[E.id] = { ans: "", tick: {}, done: false, score: 0 }; save(); renderEssay(el, E); renderMath(el); };
+  if ($("#rev")) $("#rev").onclick = () => { st.done = true; st.score = 0; save(); renderEssay(el, E); renderMath(el); };
+  el.querySelectorAll("[data-i]").forEach(c => c.onchange = () => { st.tick[c.dataset.i] = c.checked; st.score = E.checklist.reduce((a, x, i) => a + (st.tick[i] ? x.points : 0), 0); save(); const sc = el.querySelector(".score"); if (sc) sc.firstChild.textContent = fmt(st.score, 1); });
+}
+
+// ---- multiple choice
+function renderMC(el, T) {
+  const st = S.mc[T.id] || (S.mc[T.id] = { ans: {}, checked: false, score: 0 });
+  el.innerHTML = `<div class="card"><div class="row"><b>${md(T.name, true)}</b>${T.originLabel ? `<span class="small">${md(T.originLabel, true)}</span>` : ""}</div>
+  ${T.questions.map((m, qi) => `<div class="mc"><b>${qi + 1}. ${md(m.q, true)}</b>${m.options.map((o, oi) => { const sel = st.ans[qi] === oi, cls = st.checked ? (oi === m.answer ? "right" : sel ? "wrong" : "") : ""; return `<label class="${cls}"><input type="radio" name="mq${qi}" data-q="${qi}" value="${oi}" ${sel ? "checked" : ""} ${st.checked ? "disabled" : ""}><span>${"abcdefgh"[oi]}) ${md(o, true)}</span></label>`; }).join("")}${st.checked && m.explain ? `<div class="ex">${md(m.explain, true)}</div>` : ""}</div>`).join("")}
+  <div class="row" style="margin-top:14px">${st.checked ? `<span class="score">${st.score}<small> / ${T.questions.length}</small></span><button class="btn" id="mcr">${ic("rotate-ccw")} Nochmal</button>` : `<button class="btn primary" id="mcc">${ic("check")} Antworten prüfen</button>`}</div></div>`;
+  el.querySelectorAll("[data-q]").forEach(r => r.onchange = () => { st.ans[r.dataset.q] = +r.value; save(); });
+  if ($("#mcc")) $("#mcc").onclick = () => { st.checked = true; st.score = T.questions.filter((m, i) => st.ans[i] === m.answer).length; save(); renderMC(el, T); renderMath(el); };
+  if ($("#mcr")) $("#mcr").onclick = () => { S.mc[T.id] = { ans: {}, checked: false, score: 0 }; save(); renderMC(el, T); renderMath(el); };
+}
+
+// ======================================================= WIEDERHOLEN (spaced repetition)
+function capMin() { const dl = daysLeft(); if (dl === null || dl < 0) return 14 * 1440; return Math.round(Math.min(21, Math.max(2, dl / 3)) * 1440); }
+function ivlAfter(st, r) { const iv = st ? st.ivl : 0, cap = capMin(); if (r === 0) return 1; if (r === 1) return Math.max(5, Math.round(iv * 1.2)); if (r === 2) return iv < 20 ? 20 : Math.min(cap, Math.round(iv * 2.5)); return Math.max(1440, Math.min(cap, iv * 4)); }
+function ivlLabel(m) { return m >= 2880 ? Math.round(m / 1440) + " Tage" : m >= 1440 ? "1 Tag" : m >= 60 ? Math.round(m / 60) + " Std." : m + " Min."; }
+function buildQueue(decks, dueOnly) {
+  const cs = ALLCARDS.filter(c => decks.includes(c.d));
+  const due = cs.filter(c => S.cards[c.id] && S.cards[c.id].due <= now()).sort((a, b) => S.cards[a.id].due - S.cards[b.id].due);
+  return dueOnly ? due : [...due, ...cs.filter(c => !S.cards[c.id])];
+}
+function renderMemoSession(el, decks, dueOnly) {
+  sessBox = el;
+  if (!sess) {
+    const s = decks.length === 1 ? memoStats(decks[0]) : memoStats(null), q = buildQueue(decks, dueOnly);
+    el.innerHTML = `<div class="card"><h3 style="margin-top:0">Auswendig lernen</h3><p class="lead" style="margin-top:0">Nur, was du in der Klausur 1:1 hinschreiben musst: Formeln, Definitionen, Listen, Gliederungen. Im Kopf beantworten, umdrehen, ehrlich bewerten.</p>
+    <div class="stack" style="max-width:420px;margin:8px 0"><i class="s-ok" style="width:${s.n ? s.ok / s.n * 100 : 0}%"></i><i class="s-learn" style="width:${s.n ? s.learn / s.n * 100 : 0}%"></i><i class="s-new" style="width:${s.n ? s.nw / s.n * 100 : 0}%"></i></div><p class="small">${s.ok} sicher · ${s.learn} am Lernen · ${s.nw} neu (von ${s.n})</p>
+    <button class="btn primary" id="ms" ${q.length ? "" : "disabled"}>${ic("play")} Starten (${q.length} Karten)</button></div>`;
+    $("#ms").onclick = () => { sess = { decks, dueOnly, q, i: 0, flip: false, done: 0 }; renderCard(); };
+    return;
+  }
+  renderCard();
+}
+function renderCard() {
+  const el = sessBox, c = sess.q[sess.i];
+  if (!c) {
+    el.innerHTML = `<div class="card" style="text-align:center"><h3 style="margin-top:0">Runde geschafft</h3><p>${sess.done} Karten. Was du mit „Nochmal“ oder „Schwer“ bewertet hast, kommt in ein paar Minuten wieder.</p><button class="btn primary" id="again">Mit fälligen Karten weitermachen</button></div>`;
+    $("#again").onclick = () => { sess.q = buildQueue(sess.decks, true); sess.i = 0; renderCard(); }; return;
+  }
+  const t = TOPIC(c.d), st = S.cards[c.id];
+  el.innerHTML = `<div class="card fc"><div class="row" style="justify-content:space-between"><span class="chip c-pri">${md(t.title, true)}</span><span class="small">${sess.i + 1} / ${sess.q.length} · ${st ? "Wiederholung" : "neu"}</span></div><div class="q">${md(c.front)}</div>
+  ${sess.flip ? `<div class="a">${md(c.back)}</div><div class="rates"><button class="rb g0" data-r="0">Nochmal<small>1 Min.</small></button><button class="rb g1" data-r="1">Schwer<small>${ivlLabel(ivlAfter(st, 1))}</small></button><button class="rb g2" data-r="2">Gut<small>${ivlLabel(ivlAfter(st, 2))}</small></button><button class="rb g3" data-r="3">Leicht<small>${ivlLabel(ivlAfter(st, 3))}</small></button></div>` : `<button class="btn primary" id="flip" style="align-self:flex-start;margin-top:auto">${ic("eye")} Antwort zeigen</button>`}
+  <div class="kbd kbdhint">Leertaste = umdrehen · 1–4 = bewerten · Esc = beenden</div></div>`;
+  if (!sess.flip) $("#flip").onclick = () => { sess.flip = true; renderCard(); };
+  el.querySelectorAll("[data-r]").forEach(b => b.onclick = () => rate(+b.dataset.r));
+  renderMath(el);
+}
+function rate(r) {
+  const c = sess.q[sess.i], prev = S.cards[c.id], iv = ivlAfter(prev, r);
+  S.cards[c.id] = { ivl: iv, reps: ((prev && prev.reps) || 0) + 1, due: now() + iv * 6e4 }; save(); sess.done++;
+  if (r <= 1) { const pos = Math.min(sess.q.length, sess.i + (r === 0 ? 4 : 8)); sess.q.splice(pos, 0, c); }
+  sess.i++; sess.flip = false; renderCard(); updDue();
+}
+function renderReview() {
+  const due = dueCards().length;
+  if (!ALLCARDS.length) { main.innerHTML = `<div class="card empty">Noch keine Karteikarten in diesem Kurs.</div>`; return; }
+  main.innerHTML = `<div class="card"><h2>Wiederholen</h2><p class="lead" style="margin-top:0">Nur für das, was du aus dem Kopf hinschreiben musst. Rechnen übst du in den Themen.</p>
+  <div class="row" style="margin:6px 0 4px"><button class="btn primary" id="due" ${due ? "" : "disabled"}>${ic("layers")} Fällige Karten (${due})</button></div>
+  ${ORDER.map(t => { const s = memoStats(t.id); if (!s.n) return ""; return `<div class="deckrow"><div><b>${md(t.title, true)}</b><div class="small">${s.ok}/${s.n} sicher</div></div><div class="stack"><i class="s-ok" style="width:${s.ok / s.n * 100}%"></i><i class="s-learn" style="width:${s.learn / s.n * 100}%"></i><i class="s-new" style="width:${s.nw / s.n * 100}%"></i></div><button class="go" data-d="${t.id}">starten</button></div>`; }).join("")}</div><div id="memoBox"></div>`;
+  $("#due").onclick = () => { const decks = ORDER.map(t => t.id); sess = { decks, dueOnly: true, q: buildQueue(decks, true), i: 0, flip: false, done: 0 }; sessBox = $("#memoBox"); renderCard(); $("#memoBox").scrollIntoView({ behavior: "smooth" }); };
+  main.querySelectorAll("[data-d]").forEach(b => b.onclick = () => go("themen", b.dataset.d, "memo"));
+}
+
+// ======================================================= PROBEKLAUSUR
+function renderMock() {
+  if (!MOCKS.length) { main.innerHTML = `<div class="card empty">Noch keine Probeklausur.<br>Sag Claude: <code>/lernly:probeklausur</code></div>`; return; }
+  const M = MOCKS.find(x => x.id === view.arg) || MOCKS.find(x => x.id === S.lastMock) || MOCKS[0];
+  S.lastMock = M.id; save();
+  const mx = mockMax(M), dur = M.durationMin || EXAM.durationMin || 90;
+  const st = S.mock[M.id] || (S.mock[M.id] = { ans: {}, mc: {}, tick: {}, start: null, done: false, choice: {}, rev: {} });
+  st.rev = st.rev || {}; st.choice = st.choice || {};
+  const shown = it => st.done || (st.mode === "learn" && st.rev[it.id]);
+  clearInterval(mt);
+  main.innerHTML = `<div class="card"><h2>Probeklausur</h2><p class="lead" style="margin-top:0">${M.subtitle ? md(M.subtitle, true) + ". " : ""}<b>Lernmodus</b>: Aufgabe lösen, Lösung sofort ansehen. <b>Klausurmodus</b>: ${dur} Minuten, Lösung am Ende.</p>
+  <div class="row">${MOCKS.map(k => { const r = S.mock[k.id]; return `<button class="btn ${k.id === M.id ? "primary" : ""}" data-m="${esc(k.id)}">${esc(k.name)}${r && (r.done || r.mode === "learn") ? ` · ${fmt(r.score || 0, 1)}/${mockMax(k)}` : ""}</button>`; }).join("")}</div></div>
+  <div class="simbar" id="simbar"></div><div id="paper"></div>`;
+  main.querySelectorAll("[data-m]").forEach(b => b.onclick = () => go("probe", b.dataset.m));
+  const bar = $("#simbar"), paper = $("#paper");
+  if (!st.start && !st.done && st.mode !== "learn") {
+    bar.innerHTML = `<button class="btn primary" id="gol">${ic("book-open")} Lernmodus</button><button class="btn" id="gom">${ic("timer")} Klausurmodus · ${dur}:00</button>`;
+    $("#gol").onclick = () => { st.mode = "learn"; save(); renderMock(); renderMath(main); };
+    $("#gom").onclick = () => { st.mode = "exam"; st.start = now(); save(); renderMock(); renderMath(main); };
+    return;
+  }
+  const left = () => { const l = Math.max(0, dur * 60 - Math.floor((now() - st.start) / 1000)); return `${String(Math.floor(l / 60)).padStart(2, "0")}:${String(l % 60).padStart(2, "0")}`; };
+  const tick = () => { const el = $("#tm"); if (el) el.textContent = st.done ? "beendet" : left(); };
+  bar.innerHTML = st.mode === "learn" ? `<span class="timer">Lernmodus</span><span class="score">${fmt(st.score || 0, 1)}<small> / ${mx}</small></span><button class="btn ghost" id="rst">${ic("rotate-ccw")} Zurücksetzen</button>`
+    : `<span class="timer" id="tm"></span>${st.done ? `<span class="score">${fmt(st.score, 1)}<small> / ${mx}</small></span>` : `<button class="btn primary" id="fin">${ic("check")} Abgeben und prüfen</button>`}<button class="btn ghost" id="rst">${ic("rotate-ccw")} Zurücksetzen</button>`;
+  if (st.mode !== "learn") { tick(); if (!st.done) mt = setInterval(tick, 1000); }
+  let armed = false; $("#rst").onclick = e => { if (!armed) { armed = true; e.currentTarget.lastChild.textContent = " Nochmal klicken"; return; } S.mock[M.id] = { ans: {}, mc: {}, tick: {}, start: null, done: false, choice: {}, rev: {} }; save(); renderMock(); };
+  if ($("#fin")) $("#fin").onclick = () => { st.done = true; scoreMock(M); save(); renderMock(); renderMath(main); };
+  const chosen = g => st.choice[g] || M.items.find(x => x.choiceGroup === g).id;
+  const cardHtml = it => {
+    let h = `<div class="qh"><b>${esc(it.no || "")}</b><span class="pts">${it.points} P</span>${it.choiceGroup ? `<label class="small"><input type="radio" name="ch-${esc(it.choiceGroup)}" data-ch="${esc(it.choiceGroup)}" value="${esc(it.id)}" ${chosen(it.choiceGroup) === it.id ? "checked" : ""}> diese werten</label>` : ""}</div><div>${md(it.question)}</div>`;
+    if (it.type === "mc") {
+      h += it.questions.map((m, qi) => { const key = it.id + "-" + qi; return `<div class="mc"><b>${qi + 1}. ${md(m.q, true)}</b>${m.options.map((o, oi) => { const sel = st.mc[key] === oi, cls = shown(it) ? (oi === m.answer ? "right" : sel ? "wrong" : "") : ""; return `<label class="${cls}"><input type="radio" name="${esc(key)}" data-mc="${esc(key)}" value="${oi}" ${sel ? "checked" : ""} ${shown(it) ? "disabled" : ""}><span>${"abcdefgh"[oi]}) ${md(o, true)}</span></label>`; }).join("")}${shown(it) && m.explain ? `<div class="ex">${md(m.explain, true)}</div>` : ""}</div>`; }).join("");
+      if (st.mode === "learn" && !shown(it)) h += `<div class="row" style="margin-top:10px"><button class="btn primary" data-rev="${esc(it.id)}">${ic("check")} Antworten prüfen</button></div>`;
+    } else {
+      h += `<textarea data-a="${esc(it.id)}" placeholder="Deine Antwort (oder auf Papier)" ${shown(it) ? "readonly" : ""} style="margin-top:8px">${esc(st.ans[it.id] || "")}</textarea>`;
+      if (st.mode === "learn" && !shown(it)) h += `<div class="row" style="margin-top:10px"><button class="btn primary" data-rev="${esc(it.id)}">${ic("eye")} Lösung zeigen</button></div>`;
+      if (shown(it)) h += `<h4>Punkte-Checkliste: hak ab, was du wirklich hattest</h4>${it.checklist.map((c, ci) => `<label class="chk"><input type="checkbox" data-tk="${esc(it.id)}-${ci}" ${st.tick[it.id + "-" + ci] ? "checked" : ""}><span>${md(c.text, true)}</span><span class="pts">${c.points} P</span></label>`).join("")}<div class="ms"><div class="bh">${ic("pen-line")}Lösung</div>${blocks(it.solution, true)}</div>`;
+    }
+    return h;
+  };
+  const updScore = () => { const sce = $(".simbar .score"); if (sce) sce.firstChild.textContent = fmt(st.score, 1); if (!$("#resCard")) { const rc = document.createElement("div"); rc.className = "card"; rc.id = "resCard"; paper.appendChild(rc); } renderRes(M); };
+  const bind = root => {
+    root.querySelectorAll("textarea").forEach(t => t.oninput = () => { st.ans[t.dataset.a] = t.value; save(); });
+    root.querySelectorAll("[data-mc]").forEach(r => r.onchange = () => { st.mc[r.dataset.mc] = +r.value; save(); });
+    root.querySelectorAll("[data-ch]").forEach(r => r.onchange = () => { st.choice[r.dataset.ch] = r.value; save(); if (st.done || st.mode === "learn") { scoreMock(M); save(); updScore(); } });
+    root.querySelectorAll("[data-tk]").forEach(c => c.onchange = () => { st.tick[c.dataset.tk] = c.checked; scoreMock(M); save(); updScore(); });
+    root.querySelectorAll("[data-rev]").forEach(b => b.onclick = () => { const it = M.items.find(x => x.id === b.dataset.rev); st.rev[it.id] = true; scoreMock(M); save(); const card = document.getElementById("mq-" + it.id); card.innerHTML = cardHtml(it); bind(card); renderMath(card); updScore(); });
+  };
+  const parts = EXAM.parts || []; let lastPart = null;
+  paper.innerHTML = M.items.map(it => {
+    let h = "";
+    if (it.partId && it.partId !== lastPart) { lastPart = it.partId; const p = parts.find(x => x.id === it.partId); h += `<div class="card" style="padding:10px 18px"><h3 style="margin:0">${esc(p ? p.name : it.partId)}${p && p.points ? ` · ${p.points} P` : ""}</h3></div>`; }
+    return h + `<div class="card mq" id="mq-${esc(it.id)}">${cardHtml(it)}</div>`;
+  }).join("") + (st.done || (st.mode === "learn" && Object.keys(st.rev).length) ? `<div class="card" id="resCard"></div>` : "");
+  bind(paper);
+  if (st.done || st.mode === "learn") renderRes(M);
+}
+function scoreMock(M) {
+  const st = S.mock[M.id]; let sc = 0; const top = {};
+  for (const it of M.items) {
+    if (st.mode === "learn" && !st.done && !(st.rev || {})[it.id]) continue;
+    if (it.choiceGroup) { const sel = st.choice[it.choiceGroup] || M.items.find(x => x.choiceGroup === it.choiceGroup).id; if (sel !== it.id) continue; }
+    let got = 0;
+    if (it.type === "mc") it.questions.forEach((m, qi) => { if (st.mc[it.id + "-" + qi] === m.answer) got++; });
+    else it.checklist.forEach((c, ci) => { if (st.tick[it.id + "-" + ci]) got += c.points; });
+    sc += got; if (it.topicId) { const t = top[it.topicId] || [0, 0]; t[0] += got; t[1] += it.points; top[it.topicId] = t; }
+  }
+  st.score = sc; st.topic = top;
+}
+function renderRes(M) {
+  const st = S.mock[M.id], el = $("#resCard"); if (!el) return;
+  const rows = Object.entries(st.topic || {}).filter(([k]) => TOPIC(k)).map(([k, v]) => ({ id: k, t: TOPIC(k).title, p: v[1] ? v[0] / v[1] : 0, v })).sort((a, b) => a.p - b.p);
+  el.innerHTML = `<h3 style="margin-top:0">Ergebnis nach Thema, schwächstes zuerst</h3>${rows.length ? rows.map(r => `<button class="rk" data-t="${r.id}"><span class="rn"></span><span class="rl"><b>${md(r.t, true)}</b><small>${fmt(r.v[0], 1)} / ${r.v[1]} P</small></span><span class="rb2"><span class="track"><i style="width:${Math.round(r.p * 100)}%;background:${r.p >= .7 ? "var(--ok)" : r.p >= .5 ? "var(--pri-hi)" : "var(--bad)"}"></i></span></span><span class="rp">${Math.round(r.p * 100)}%</span><span class="chip ${r.p >= .7 ? "c-ok" : "c-hi"}">${r.p >= .7 ? "ok" : "reparieren"}</span></button>`).join("") : `<p class="small">Noch nichts bewertet.</p>`}`;
+  renderMath(el);
+  el.querySelectorAll("[data-t]").forEach(b => b.onclick = () => go("themen", b.dataset.t, "practice"));
+}
+
+// ======================================================= SPICKZETTEL
+function renderCheat() {
+  if (!CHEAT || !CHEAT.sections || !CHEAT.sections.length) { main.innerHTML = `<div class="card empty">Noch kein Spickzettel.<br>Sag Claude: <code>/lernly:trainer-bauen spickzettel</code></div>`; return; }
+  main.innerHTML = `<div class="card"><h2>Spickzettel</h2><p class="lead" style="margin-top:0">${CHEAT.intro ? md(CHEAT.intro, true) : "Der letzte Blick vor der Klausur: alles, was du aus dem Kopf können musst."}</p></div><div class="cheat">${CHEAT.sections.map(s => `<div class="cs"><h4>${md(s.title, true)}</h4>${blocks(s.blocks)}</div>`).join("")}</div>`;
+}
+
+// ======================================================= keyboard
+document.addEventListener("keydown", e => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (!$("#modal").hidden) { if (e.key === "Escape") closeModal(); return; }
+  const tag = (e.target.tagName || "").toLowerCase(); if (tag === "textarea" || tag === "input" || tag === "select") return;
+  if (sess && sessBox && document.body.contains(sessBox)) {
+    if (e.key === " ") { e.preventDefault(); if (!sess.flip && sess.q[sess.i]) { sess.flip = true; renderCard(); } return; }
+    if (sess.flip && /^[1-4]$/.test(e.key)) { rate(+e.key - 1); return; }
+    if (e.key === "Escape") { sess = null; render(); return; }
+  }
+  if ((e.key === "n" || e.key === "N") && $("#nw")) { $("#nw").click(); return; }
+  if (/^[1-6]$/.test(e.key)) go(TABS[+e.key - 1][0]);
+});
+
+showBanner();
+render();
+</script>
+</body>
+</html>

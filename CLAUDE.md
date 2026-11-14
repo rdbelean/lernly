@@ -2,6 +2,14 @@
 
 Pre-revenue MVP **with live users**. Read this every session and follow the Working Rules. Web app: Next.js (App Router) + Tailwind, Supabase (auth / DB / storage), Vercel (hosting + cron), Resend (email), **Stripe (Billing, live)**, PostHog (Analytics) + Sentry (Errors), Anthropic API (generation). System prompts in `src/lib/prompts.ts`, schemas in `src/lib/schema.ts`.
 
+<!-- BEGIN:handoff-rules -->
+## Handoff-Regeln (Claude Code und OpenAI Codex, identisch in CLAUDE.md und AGENTS.md)
+
+- **Session-Start (Pflicht):** Lies bei JEDEM neuen Chat oder Task als allerersten Schritt `STATUS.md` im Root-Verzeichnis, um Stand und nächsten Schritt zu kennen, bevor du Fragen stellst oder Code änderst.
+- **Session-Ende (Pflicht):** Aktualisiere nach JEDER abgeschlossenen Aufgabe oder größeren Code-Änderung automatisch `STATUS.md` (was erledigt wurde, welche Dateien geändert wurden, nächster Schritt), ohne dass der Nutzer dich extra auffordern muss.
+- **Arbeitsweise:** `STATUS.md` bleibt extrem präzise, aktuell und kompakt: keine langen Romane, nur harte Fakten für die schnelle Übergabe zwischen den Agenten.
+<!-- END:handoff-rules -->
+
 ---
 
 ## ⚙️ WORKING RULES — obey every session
