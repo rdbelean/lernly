@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/dal";
-import LandingClient from "./landing-client";
+import LandingClient from "@/components/landing/LernlyLanding";
 
 const META_DE = {
-  title: "Karteikarten aus PDF in 2 Min | Lernly",
+  title: "Dein persönlicher Klausurtrainer mit Claude | Lernly",
   description:
-    "Lade dein Skript hoch und bekomme in 2 Minuten interaktive Karteikarten, einen Klausur-Simulator und einen Essay-Blueprint. Kostenlos starten, kein Login.",
-  ogTitle: "Karteikarten aus PDF in 2 Min | Lernly",
+    "Verstehe deinen BWL-Stoff und übe aktiv mit Lernly für Claude. Entdecke den interaktiven Beispieltrainer für Finance, Mathe und Marketing.",
+  ogTitle: "Dein Stoff. Dein Ich-kann-das. | Lernly",
   ogDescription:
-    "8 PDFs, 3 Tage, kein Plan? Lernly macht aus deinem Skript ein komplettes Lernpaket - Karteikarten, Klausur-Simulator, Essay-Blueprint. Gratis testen.",
+    "Aus deinen BWL-Unterlagen wird dein persönlicher Klausurtrainer. Mit Claude verstehen. Mit Lernly üben. Jetzt die Vorschau ausprobieren.",
   twitterDescription:
-    "Skript hoch, Karteikarten und Klausur-Simulator runter. In 2 Minuten. Gratis.",
+    "Mit Claude verstehen. Mit Lernly üben. Dein persönlicher Klausurtrainer für dein BWL-Studium.",
   locale: "de_DE",
 } as const;
 
@@ -46,12 +46,12 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: m.locale,
       images: [
         {
-          url: "/lernly-og.png",
+          url: "/opengraph-image",
           width: 1200,
           height: 630,
           alt: isEn
             ? "Lernly - Flashcards from PDF in 2 minutes"
-            : "Lernly - Karteikarten aus PDF in 2 Minuten",
+            : "Lernly – dein persönlicher Klausurtrainer mit Claude",
         },
       ],
       type: "website",
@@ -61,7 +61,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: m.ogTitle,
       description: m.twitterDescription,
-      images: ["/lernly-og.png"],
+      images: ["/opengraph-image"],
     },
   };
 }

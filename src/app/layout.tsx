@@ -27,11 +27,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   applicationName: "Lernly",
   title: {
-    default: "Karteikarten aus PDF in 2 Min | Lernly",
+    default: "Dein persönlicher Klausurtrainer mit Claude | Lernly",
     template: "%s | Lernly",
   },
   description:
-    "Lade dein Skript hoch und bekomme in 2 Minuten interaktive Karteikarten, einen Klausur-Simulator und einen Essay-Blueprint. Kostenlos starten, kein Login.",
+    "Aus deinen BWL-Unterlagen wird dein persönlicher Klausurtrainer. Mit Claude verstehen. Mit Lernly üben. Entdecke die interaktive Vorschau.",
   manifest: "/manifest.webmanifest",
   alternates: {
     canonical: "/",
@@ -46,16 +46,16 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
-    title: "Karteikarten aus PDF in 2 Min | Lernly",
+    title: "Dein persönlicher Klausurtrainer mit Claude | Lernly",
     description:
-      "8 PDFs, 3 Tage, kein Plan? Lernly macht aus deinem Skript ein komplettes Lernpaket - Karteikarten, Klausur-Simulator, Essay-Blueprint. Gratis testen.",
+      "Dein Stoff. Dein Ich-kann-das. Entdecke Lernly für Claude und probiere den Beispieltrainer für Finance, Mathe und Marketing aus.",
     locale: "de_DE",
     images: [
       {
-        url: "/lernly-og.png",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Lernly - Karteikarten aus PDF in 2 Minuten",
+        alt: "Lernly – dein persönlicher Klausurtrainer mit Claude",
       },
     ],
     type: "website",
@@ -63,10 +63,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Karteikarten aus PDF in 2 Min | Lernly",
+    title: "Dein persönlicher Klausurtrainer mit Claude | Lernly",
     description:
-      "Skript hoch, Karteikarten und Klausur-Simulator runter. In 2 Minuten. Gratis.",
-    images: ["/lernly-og.png"],
+      "Mit Claude verstehen. Mit Lernly üben. Dein persönlicher Klausurtrainer für das BWL-Studium.",
+    images: ["/opengraph-image"],
   },
   appleWebApp: {
     capable: true,
@@ -87,7 +87,7 @@ const organizationJsonLd = {
   logo: `${SITE_URL}/icon.png`,
   email: "info@lernly-app.de",
   description:
-    "Lernly verwandelt Vorlesungs-PDFs in interaktive Karteikarten, Klausur-Simulatoren und Essay-Blueprints - in unter 2 Minuten.",
+    "Lernly entwickelt persönliche Klausurtrainer für das Lernen mit Claude: Erklärungen, aktive Übungen und Karteikarten aus eigenen Kursunterlagen.",
 };
 
 export default function RootLayout({
