@@ -1,38 +1,17 @@
-# Helle Lernly-Landingpage: Referenzanalyse und Umsetzung
+# Lernly-Landingpage: enge Übertragung der Alytics-Vorlage
 
-Referenz: https://alytics.framer.website/ — direkt im Browser untersucht am 14. November 2026.
+Stand: 14. November 2026. Referenz: https://alytics.framer.website/ sowie die drei vom Nutzer gesendeten Screenshots.
 
-**Gemessene Gestaltung der Referenz.**
+Die bisherige freie Interpretation wurde durch einen neuen Seitenaufbau ersetzt. Die vom Nutzer gewünschte blaue Farbwelt ersetzt auf dieser Landingpage den bisherigen Indigo-Akzent. Die App-Seiten behalten ihre eigenen Stile.
 
-| Element | Beobachtung am Desktop |
-|---|---|
-| Schrift | Inter, nicht Sora |
-| Hauptüberschrift | 64 px, Gewicht 500, Zeilenhöhe 76,8 px, Zeichenabstand −3,2 px |
-| Abschnittsüberschrift | 48 px, Gewicht 500, Zeilenhöhe 57,6 px, Zeichenabstand −2,4 px |
-| Kartentitel | 24 px, Gewicht 500, Zeichenabstand −0,96 px |
-| Navigation | Inter 16 px, Gewicht 500, Zeilenhöhe 22,4 px |
-| Hintergrund | RGB 252/252/252 |
-| Überschriftenfarbe | RGB 18/18/18 |
-| Hero | Zentrierte Überschrift, kurze Beschreibung, kompakter CTA, vier seitliche Logo-Kacheln |
-| Logo-Kacheln | Rund 84–104 px große, leicht gedrehte helle Quadrate, viel Abstand zum Text |
-| Produktvorschau | Große helle Dashboard-Fläche unter dem Hero mit weichem blauem Schatten |
-| Integrationen | Große helle, abgerundete Fläche, zentrale Botschaft und außen verteilte Logos |
+**Im Browser gemessene und übernommene Kerneinstellungen:** Inter, Gewicht 500, OpenType-Varianten `cv03`, `cv04`, `cv09`, `cv11`; Desktop-Hero 64 px, Zeilenhöhe 1,2 und Zeichenabstand −3,2 px; Abschnittstitel 48 px; Kartenüberschriften 24 px; Hintergrund `#fcfcfc`, Überschriften `#121212`, Hauptbuttons `#126dfb` mit heller blauer Einfassung.
 
-**Übertragung auf Lernly.**
+**Seitenfolge:** Hero mit einem Hauptbutton und kompakter Unterzeile; große leicht perspektivische Lernraum-Vorschau; Tool-Zeile; vier Funktionsgrafiken; sechs Vorteile; drei Ablaufkarten; Tool-Panel; drei Fachkarten; drei Einstiegskarten; Vergleich; FAQ; drei ausklappbare Lerntipps; Abschluss-CTA mit Briefgrafik; mehrspaltiger Footer.
 
-- Die Landingpage erhält eine eigene, lokal begrenzte helle Farbwelt. Das Dashboard und andere App-Seiten behalten ihre bisherigen Stile.
-- Inter wird über die schon vorhandene Schriftintegration verwendet. Die Display-Schrift Sora wird auf dieser Landingpage nicht mehr benutzt.
-- Lernly-Indigo bleibt die Akzentfarbe für Buttons, ausgewählte Texte und den Trainer. Das spezifische Blau der Referenz wird nicht zur neuen Lernly-Markenfarbe.
-- Vier schwebende Kacheln zeigen Claude, Quizlet, Anki und Lernly im Hero. Eine weitere Logo-Zeile erklärt die Rollen der Werkzeuge.
-- Der Lernökosystem-Bereich greift die außen platzierten Kacheln und die zentrierte Botschaft auf.
-- Die aktive Lerntrainer-Vorschau mit Finance-, Mathe- und Marketing-Beispielen bleibt erhalten. Die Referenz-Dashboardgrafiken werden nicht übernommen.
-- Keine erfundenen Kundenlogos, Nutzerzahlen, Testimonials oder Bewertungen. Werkzeuglogos sind als solche dargestellt.
-- Anki und Quizlet werden als Kartenexportziele beschrieben. Die Darstellung behauptet keine bereits vorhandene Fortschrittssynchronisierung.
-- Mobile erhält eine eigene Anordnung ohne schwebende Hero-Kacheln über dem Text. Die Marken erscheinen weiter in der Logo-Zeile und im Lernökosystem-Bereich.
-- Die dezente Logo-Bewegung respektiert die Systemeinstellung für reduzierte Animationen.
+**Neue Visuals:** Weiß auf Hellgrau, dünne Rahmen, weiche Schatten und blaue Diagramme. Dazu ein vollständiger illustrativer Lernraum, Balkendiagramme, Flächendiagramme, Kartenstapel, Aufgabenlisten, ein Tool-Orbit mit Verbindungslinien sowie eine Briefgrafik. Die Grafiken entstehen aus HTML/CSS/SVG und sind keine übernommenen Alytics-Bilder. Alle Kennzahlen gehören zu gekennzeichneten Beispielansichten.
 
-**Asset-Herkunft.** Claude stammt als SVG aus dem offiziellen Webauftritt. Quizlet und Anki stammen als 512-Pixel-App-Icons aus den jeweiligen offiziellen App-Store-Einträgen. Dateien und Quellen stehen in [public/brands/SOURCES.md](/Users/rdb/lernly/public/brands/SOURCES.md). Lernly verwendet weiterhin die vorhandenen eigenen SVG-Markenassets.
+Der frühere interaktive Beispieltrainer ist als natives Dialogfenster über „Lerntrainer ausprobieren“ erreichbar. Aufgabenprüfung, Fachwechsel und Karteikarten bleiben bedienbar. Das Fenster lässt sich schließen und respektiert Tastaturbedienung.
 
-**Betroffene Dateien.** Die Umsetzung liegt in [LernlyLanding.tsx](/Users/rdb/lernly/src/components/landing/LernlyLanding.tsx) und dem zugehörigen [CSS-Modul](/Users/rdb/lernly/src/components/landing/lernly-landing.module.css). Auch die [Social-Linkvorschau](/Users/rdb/lernly/src/app/opengraph-image.tsx) folgt der hellen Farbwelt.
+Die Karten an der Position der Referenz-Testimonials beschreiben stattdessen drei Fächer. Es werden keine Nutzerstimmen oder Nutzerzahlen erfunden. Die Einstiegskarten bieten Vorschau, Beta-Anfrage und Hochschulkontakt statt nicht festgelegter Abopreise. Die Lerntipps sind tatsächlich ausklappbar. Anki und Quizlet bleiben als Exportziele eingeordnet.
 
-**Prüfung:** Produktions-Build und TypeScript erfolgreich. Im Browser Inter und 64-Pixel-Hero bestätigt; Original-Logos geladen, Aufgabenprüfung erfolgreich, mobiles Menü geprüft. Bei 380 CSS-Pixeln kein horizontaler Überlauf. Die Browser-Konsole zeigte keine Fehler.
+Original-Logoquellen: [public/brands/SOURCES.md](/Users/rdb/lernly/public/brands/SOURCES.md). Die vier OpenType-Einstellungen waren der entscheidende Unterschied zwischen der alten Lernly-Typografie und der Referenz.
