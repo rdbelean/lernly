@@ -174,11 +174,25 @@ export class Lernly {
     if (raw.length > 1_000_000) throw new Error('Ein Thema darf höchstens 1 MB JSON enthalten.');
     const files = await this.storage.courseFiles();
     const check = await this.bridge({ op: 'validate', files: { ...files, [file]: data } });
-    if (check.errors.length) return { saved: false, ...check };
+    // Permit valid incremental repairs of old data after a validator upgrade.
+    // Errors in this file and new errors elsewhere still block the write.
+    if (check.errors.length) {
+      const baseline = await this.bridge({ op: 'validate', files });
+      const remaining = [...baseline.errors];
+      const blocking = check.errors.filter(error => {
+        if (error.startsWith(`${file}:`) || error.startsWith(`${file}.`) || error.startsWith(`${file}[`)) return true;
+        const index = remaining.indexOf(error);
+        if (index === -1) return true;
+        remaining.splice(index, 1);
+        return false;
+      });
+      if (blocking.length) return { saved: false, ...check, errors: blocking, remaining_errors: check.errors };
+    }
     if ((await this.readCourse(file)).revision !== before.revision) throw new Error('Revisionskonflikt während der Validierung.');
     if (before.revision) await this.storage.write(`_lernly/history/${digest(file)}-${before.revision}.json`, JSON.stringify(before.data, null, 2));
     await this.storage.write(`_lernly/${file}`, raw);
-    return { saved: true, file, revision: digest(raw), ...check };
+    return { saved: true, file, revision: digest(raw), ...check, errors: [], remaining_errors: check.errors,
+      note: check.errors.length ? 'Datei repariert. Andere bestehende Fehler noch korrigieren; Trainerbau bleibt bis dahin gesperrt.' : 'Datei gespeichert; gesamter Kurs ohne Validierungsfehler.' };
   }
 
   async build() {

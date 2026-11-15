@@ -177,6 +177,33 @@ test('generated trainer output refuses existing symlink targets', async t => {
   assert.equal(await fs.readFile(outside, 'utf8'), 'untouched');
 });
 
+test('repairs legacy errors in two files incrementally without accepting new errors', async t => {
+  const { course, call } = await context(t);
+  await fs.cp(fixture, path.join(course, '_lernly'), { recursive: true });
+  const topicPath = path.join(course, '_lernly/themen/dcf.json');
+  const mockPath = path.join(course, '_lernly/probeklausuren/a.json');
+  const topic = JSON.parse(await fs.readFile(topicPath, 'utf8'));
+  const mock = JSON.parse(await fs.readFile(mockPath, 'utf8'));
+  const badTopic = structuredClone(topic), badMock = structuredClone(mock);
+  badTopic.theory.push({ type: 'formula', tex: ['\\'.repeat(4) + 'frac{1}{2}'] });
+  badMock.items[0].question += ' ' + '\\'.repeat(4) + '(x' + '\\'.repeat(4) + ')';
+  await fs.writeFile(topicPath, JSON.stringify(badTopic));
+  await fs.writeFile(mockPath, JSON.stringify(badMock));
+  assert.equal((await call('lernly_build_trainer')).built, false);
+  const old = await call('lernly_read_course_file', { file: 'themen/dcf.json' });
+  const invalid = await call('lernly_save_course_file', { file: old.file, data: badTopic, expected_revision: old.revision });
+  assert.equal(invalid.saved, false);
+  const repaired = await call('lernly_save_course_file', { file: old.file, data: topic, expected_revision: old.revision });
+  assert.equal(repaired.saved, true);
+  assert.ok(repaired.remaining_errors.length > 0);
+  assert.equal((await call('lernly_build_trainer')).built, false);
+  const oldMock = await call('lernly_read_course_file', { file: 'probeklausuren/a.json' });
+  const repairedMock = await call('lernly_save_course_file', { file: oldMock.file, data: mock, expected_revision: oldMock.revision });
+  assert.equal(repairedMock.saved, true);
+  assert.deepEqual(repairedMock.remaining_errors, []);
+  assert.equal((await call('lernly_build_trainer')).built, true);
+});
+
 test('MCPB has self-contained runtime assets and no test courses or credentials', async () => {
   const manifest = JSON.parse(await fs.readFile(path.join(root, 'build/extension/manifest.json'), 'utf8'));
   assert.equal(manifest.manifest_version, '0.3');
