@@ -27,11 +27,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   applicationName: "Lernly",
   title: {
-    default: "Dein persönlicher Klausurtrainer mit Claude | Lernly",
+    default: "Dein persönlicher Klausurtrainer | Lernly",
     template: "%s | Lernly",
   },
   description:
-    "Aus deinen BWL-Unterlagen wird dein persönlicher Klausurtrainer. Mit Claude verstehen. Mit Lernly üben. Entdecke die interaktive Vorschau.",
+    "Aus deinen BWL-Unterlagen wird dein persönlicher Klausurtrainer. Verstehen, üben und wiederholen. Entdecke die interaktive Vorschau.",
   manifest: "/manifest.webmanifest",
   alternates: {
     canonical: "/",
@@ -46,16 +46,16 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
-    title: "Dein persönlicher Klausurtrainer mit Claude | Lernly",
+    title: "Dein persönlicher Klausurtrainer | Lernly",
     description:
-      "Dein Stoff. Dein Ich-kann-das. Entdecke Lernly für Claude und probiere den Beispieltrainer für Finance, Mathe und Marketing aus.",
+      "Dein Stoff. Dein Ich-kann-das. Entdecke Lernly für dein Studium und probiere den Beispieltrainer für Finance, Mathe und Marketing aus.",
     locale: "de_DE",
     images: [
       {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Lernly – dein persönlicher Klausurtrainer mit Claude",
+        alt: "Lernly – dein persönlicher Klausurtrainer",
       },
     ],
     type: "website",
@@ -63,9 +63,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Dein persönlicher Klausurtrainer mit Claude | Lernly",
+    title: "Dein persönlicher Klausurtrainer | Lernly",
     description:
-      "Mit Claude verstehen. Mit Lernly üben. Dein persönlicher Klausurtrainer für das BWL-Studium.",
+      "Verstehen, üben und wiederholen. Dein persönlicher Klausurtrainer für das BWL-Studium.",
     images: ["/opengraph-image"],
   },
   appleWebApp: {
@@ -87,7 +87,7 @@ const organizationJsonLd = {
   logo: `${SITE_URL}/icon.png`,
   email: "info@lernly-app.de",
   description:
-    "Lernly entwickelt persönliche Klausurtrainer für das Lernen mit Claude: Erklärungen, aktive Übungen und Karteikarten aus eigenen Kursunterlagen.",
+    "Lernly entwickelt persönliche Klausurtrainer für das Lernen: Erklärungen, aktive Übungen und Karteikarten aus eigenen Kursunterlagen.",
 };
 
 export default function RootLayout({

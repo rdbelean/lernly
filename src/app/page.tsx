@@ -4,14 +4,14 @@ import { getUser } from "@/lib/dal";
 import LandingClient from "@/components/landing/LernlyLanding";
 
 const META_DE = {
-  title: "Dein persönlicher Klausurtrainer mit Claude | Lernly",
+  title: "Dein persönlicher Klausurtrainer | Lernly",
   description:
-    "Verstehe deinen BWL-Stoff und übe aktiv mit Lernly für Claude. Entdecke den interaktiven Beispieltrainer für Finance, Mathe und Marketing.",
+    "Verstehe deinen BWL-Stoff und übe aktiv mit Lernly für dein Studium. Entdecke den interaktiven Beispieltrainer für Finance, Mathe und Marketing.",
   ogTitle: "Dein Stoff. Dein Ich-kann-das. | Lernly",
   ogDescription:
-    "Aus deinen BWL-Unterlagen wird dein persönlicher Klausurtrainer. Mit Claude verstehen. Mit Lernly üben. Jetzt die Vorschau ausprobieren.",
+    "Aus deinen BWL-Unterlagen wird dein persönlicher Klausurtrainer. Verstehen, üben und wiederholen. Jetzt die Vorschau ausprobieren.",
   twitterDescription:
-    "Mit Claude verstehen. Mit Lernly üben. Dein persönlicher Klausurtrainer für dein BWL-Studium.",
+    "Verstehen, üben und wiederholen. Dein persönlicher Klausurtrainer für dein BWL-Studium.",
   locale: "de_DE",
 } as const;
 
@@ -51,7 +51,7 @@ export async function generateMetadata(): Promise<Metadata> {
           height: 630,
           alt: isEn
             ? "Lernly - Flashcards from PDF in 2 minutes"
-            : "Lernly – dein persönlicher Klausurtrainer mit Claude",
+            : "Lernly – dein persönlicher Klausurtrainer",
         },
       ],
       type: "website",

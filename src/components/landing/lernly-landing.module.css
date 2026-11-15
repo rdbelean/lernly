@@ -6,3 +6,16 @@
 @media(prefers-reduced-motion:reduce){.page *{transition:none!important;scroll-behavior:auto!important}.heroLogos>div,.integrationLogos>div{animation:none}}
 
 .stepVisual{height:262px}@media(max-width:560px){.hero h1{font-size:clamp(28px,8.8vw,38px);letter-spacing:-.05em}.stepVisual{height:260px}}
+
+/* Reference fidelity: full colour brand tiles, air, and deliberate motion. */
+.heroLogos>div{width:92px;height:92px;border:6px solid #fff;border-radius:23px;background:#f6f6f6;box-shadow:0 8px 24px #18243806;animation:brandDrift 7s ease-in-out infinite}
+.heroLogos>div>img{width:50px;height:50px;opacity:1;filter:none}
+.logoClaude{--tilt:-10deg}.logoQuizlet{--tilt:-12deg}.logoAnki{--tilt:12deg}.logoLernly{--tilt:15deg}
+@keyframes brandDrift{0%,100%{transform:translate3d(0,0,0) rotate(var(--tilt,8deg))}50%{transform:translate3d(7px,-20px,0) rotate(calc(var(--tilt,8deg) + 5deg))}}
+.pdfLogo{display:flex;flex-direction:column;align-items:center;gap:2px;color:#ed4539}.pdfLogo b{font-size:11px;letter-spacing:0}.mathLogo{font-family:Georgia,serif;font-size:32px;color:#126dfb}
+.integrationLogos>div{opacity:1;background:white;border:1px solid #eee;box-shadow:0 10px 30px #18345408;animation:brandDrift 9s ease-in-out infinite}.integrationLogos>div>img{filter:none;opacity:1}
+.heroTop>p{max-width:490px}.dashboardStage{max-width:1152px;padding:0 24px 36px}.featureVisual{height:340px;overflow:hidden;border:10px solid white;border-radius:22px;box-shadow:0 8px 35px #1b315608;position:relative}.featureGrid{gap:50px 30px}.featureGrid article{transition:transform .35s}.featureGrid article:hover{transform:translateY(-4px)}.stepVisual{height:280px}.stepsGrid article{box-shadow:0 8px 35px #1c315406}.toolStrip>div>span{color:#303030}.toolStrip>p{color:#666}.heroBadge{box-shadow:0 2px 3px #126dfb04}.primaryButton{transition:transform .25s,background .25s,box-shadow .25s}.primaryButton:hover{transform:translateY(-2px);box-shadow:0 7px 20px #126dfb25}
+.reveal.revealed{animation:sectionEnter .75s cubic-bezier(.2,.7,.2,1) both}@keyframes sectionEnter{from{opacity:.3;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:560px){.heroLogos>div{width:58px;height:58px;border-width:4px;border-radius:16px}.heroLogos>div>img{width:33px;height:33px}.heroLogos .logoClaude{left:-19px;top:130px}.heroLogos .logoAnki{right:-17px;top:145px}.heroLogos .logoQuizlet{left:-15px;top:320px}.heroLogos .logoLernly{right:-15px;top:325px}.heroTop{padding-bottom:95px}.dashboardStage{height:495px;padding:0 14px 0}.featureVisual{height:275px}.toolStrip>div{gap:22px;flex-wrap:wrap}.toolStrip>div>span{font-size:18px}.stepVisual{height:260px}.pdfLogo>svg{width:23px;height:23px}.pdfLogo b{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.heroLogos>div,.integrationLogos>div,.reveal.revealed{animation:none}.primaryButton:hover,.featureGrid article:hover{transform:none}}
+@media(max-width:560px){.dashboardStage{height:auto;padding-bottom:20px}.heroLogos{display:block}.heroLogos .logoQuizlet,.heroLogos .logoLernly{display:none}.heroLogos .logoClaude{top:35px;left:-24px}.heroLogos .logoAnki{top:45px;right:-25px}}
