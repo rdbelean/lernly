@@ -8,7 +8,7 @@ Stand: 2026-11-15. Kompakt halten, nur Fakten.
 ## Aktuelles Ziel / Stand
 **Landing-Revamp fertig:** Lernly als eigenständige App positioniert. Alytics erneut direkt geprüft. Inter (64 px/500, cv03/cv04/cv09/cv11), Blau #126dfb; kräftige schwebende Logo-Kacheln, Scroll-/Diagramm-Animationen und interaktiver Study-OS-Hero. Feature-Mockups ausgerichtet, mobile Studio-Ansicht lesbar, Claude-Botschaft aus Marketing/Metadaten entfernt.
 
-Geändert: beide Landing-Komponenten/CSS-Module und App-Metadaten (page/layout/opengraph-image). Produktionsbuild erfolgreich; Browser Desktop/380 px, Rechenfeedback 751,31, Kartenflip, Demo-Dialog und Mobilmenü geprüft. Keine Konsolenfehler. Screenshots: /private/tmp/lernly-revamp-{desktop,mobile,studio}.jpg. Designvorschau klar markiert; kein neuer Kursgenerator implementiert. Feature-Branch wird als Vercel-Vorschau bereitgestellt; vor main-Merge Freigabe einholen.
+Geändert: beide Landing-Komponenten/CSS-Module und App-Metadaten (page/layout/opengraph-image). Produktionsbuild erfolgreich; Browser Desktop/380 px, Rechenfeedback 751,31, Kartenflip, Demo-Dialog und Mobilmenü geprüft. Keine Konsolenfehler. Screenshots: /private/tmp/lernly-revamp-{desktop,mobile,studio}.jpg. Designvorschau klar markiert; kein neuer Kursgenerator implementiert. Vercel-Vorschau erfolgreich (65ed0c9). Nutzer hat Veröffentlichung auf der Hauptseite ausdrücklich freigegeben; Release über PR nach main läuft.
 
 **Lokale Claude-Desktop-MCP-Beta 0.2.0 fertig zum persönlichen Installationstest.** Nutzer installiert selbst und wählt seinen Kursordner. Keine neuen Änderungen an App, Auth, Stripe, DB oder Produktion.
 
