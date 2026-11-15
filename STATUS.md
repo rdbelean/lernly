@@ -6,6 +6,10 @@ Stand: 2026-11-15. Kompakt halten, nur Fakten.
 `codex/lernly-mcp-beta` — gemeinsamer Feature-Branch; kein Wechsel ohne Absprache. Nie direkt auf `main`.
 
 ## Aktuelles Ziel / Stand
+**Landing-Revamp fertig:** Lernly als eigenständige App positioniert. Alytics erneut direkt geprüft. Inter (64 px/500, cv03/cv04/cv09/cv11), Blau #126dfb; kräftige schwebende Logo-Kacheln, Scroll-/Diagramm-Animationen und interaktiver Study-OS-Hero. Feature-Mockups ausgerichtet, mobile Studio-Ansicht lesbar, Claude-Botschaft aus Marketing/Metadaten entfernt.
+
+Geändert: beide Landing-Komponenten/CSS-Module und App-Metadaten (page/layout/opengraph-image). Produktionsbuild erfolgreich; Browser Desktop/380 px, Rechenfeedback 751,31, Kartenflip, Demo-Dialog und Mobilmenü geprüft. Keine Konsolenfehler. Screenshots: /private/tmp/lernly-revamp-{desktop,mobile,studio}.jpg. Designvorschau klar markiert; kein neuer Kursgenerator implementiert. Feature-Branch wird als Vercel-Vorschau bereitgestellt; vor main-Merge Freigabe einholen.
+
 **Lokale Claude-Desktop-MCP-Beta 0.2.0 fertig zum persönlichen Installationstest.** Nutzer installiert selbst und wählt seinen Kursordner. Keine neuen Änderungen an App, Auth, Stripe, DB oder Produktion.
 
 ## Erledigt
@@ -15,6 +19,9 @@ Stand: 2026-11-15. Kompakt halten, nur Fakten.
 - Browser: Desktop + 380 px, Formeln, falsche/richtige Rechenantworten, Karten, Lernstand nach Neuladen und Probeklausur-Selbstbewertung geprüft.
 - CF-Rohmaterial-Testkopie: neuer Connector indexiert **20/20 Dateien**, inklusive drei XLSX und CBRE-PDF; 309 Seiten/Blätter, 24 textarme Stellen, Klausurduplikat erkannt. Noch kein vollständiger CF-Trainer-Qualitätsnachweis.
 - Phase-0-Plugin unter `plugin/lernly/` bleibt Grundlage für Format, Validator und HTML-Vorlage. LaTeX-Prüfung in `skills/lernly-trainer-bauen/scripts/validate.py` ergänzt.
+
+## Erklärung / Visual
+- Interaktives Architektur-Schaubild erstellt: Unterlagen → KI/Prüfung → JSON → Oberfläche, Lernlogik und Speicher; Karten-Simulation für Active Recall/Spaced Repetition. Liegt im Chat-Visualisierungsordner als `lernly-verstehen.html`; keine App-Änderung. JSON ist Inhalt, kein vollständiges Artifact. Eigener modellunabhängiger Web-Generator bisher nur besprochen.
 
 ## Nächster konkreter Schritt
 Nutzer installiert das MCPB in Claude Desktop, wählt seinen Kursordner und verwendet den Startprompt aus der README. **Natives Claude-Artifact im persönlichen Desktop-Chat prüfen**, danach vollständigen CF-Kurstest gegen CF Study OS. Desktop-Installation wurde nicht stellvertretend durchgeführt.
