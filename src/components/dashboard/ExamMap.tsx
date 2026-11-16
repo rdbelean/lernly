@@ -27,7 +27,7 @@ export default function ExamMap({ topics, nextKey, hrefFor, inert, maxTiles = 8,
   const spans = tileSpans(shown.map((t) => t.share));
 
   return (
-    <div {...(inert ? { inert: true } : {})}>
+    <div className={compact ? styles.compactWrap : undefined} {...(inert ? { inert: true } : {})}>
       <ol className={`${styles.grid} ${compact ? styles.compact : ""}`} aria-label="Themen der Klausur">
         {shown.map((t, i) => {
           const isNext = t.key === nextKey;

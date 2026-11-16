@@ -44,10 +44,10 @@
 .arbeit { background: var(--color-work-bg); color: var(--color-work-ink); }
 .offen { background: var(--color-surface); color: var(--color-text); border-color: var(--color-line); }
 .next {
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-  outline: 2px solid var(--color-text);
-  outline-offset: 2px;
+  background: var(--color-work-bg);
+  color: var(--color-work-ink);
+  border: 2px solid var(--color-primary);
+  padding: 11px;
 }
 .more { margin: 10px 0 0; font-size: 13px; color: var(--color-text-dim); }
 .legend {
@@ -75,5 +75,7 @@ a.tile:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 
 }
 
 @media (max-width: 639px) {
-  .compact > li:nth-child(n + 6) { display: none; }
+  /* Landing hero on phones: three full-width tiles, no legend. */
+  .compact > li:nth-child(n + 4) { display: none; }
+  .compactWrap .more, .compactWrap .legend { display: none; }
 }

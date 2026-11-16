@@ -91,10 +91,11 @@ test("pickNextStep: all sicher or empty is null", () => {
   assert.equal(pickNextStep([]), null);
 });
 
-test("tileSpans: big for >=0.2, wide for >=0.1, else single", () => {
-  assert.deepEqual(tileSpans([0.25, 0.12, 0.05]), [
-    { col: 2, row: 2 },
+test("tileSpans: wide (2x1) from 0.15, else single; never taller than one row", () => {
+  assert.deepEqual(tileSpans([0.25, 0.15, 0.12, 0.05]), [
     { col: 2, row: 1 },
+    { col: 2, row: 1 },
+    { col: 1, row: 1 },
     { col: 1, row: 1 },
   ]);
   assert.deepEqual(tileSpans([]), []);

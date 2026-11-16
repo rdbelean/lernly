@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowRight, ArrowUpRight, BarChart3, BookOpen, Check, CheckCheck, ChevronDown, ChevronRight, CircleHelp, Download, FileText, GraduationCap, Layers, LayoutDashboard, Menu, MessageCircle, Plus, RotateCcw, Sparkles, Target, TrendingUp, X } from "lucide-react";
 import Link from "next/link";
 import LernlyLogo from "@/components/LernlyLogo";
-import HeroDashboard from "./HeroDashboard";
+import HeroScene from "./HeroScene";
 import { BrandIcon, DrillVisual, ExplainVisual, GuideExamVisual, GuideRecallVisual, GuideStepsVisual, MaterialsVisual, NextStepVisual, PointsVisual, RecallVisual, TodayVisual, TopicsVisual } from "./LearningVisuals";
 import s from "./lernly-landing.module.css";
 
@@ -147,7 +147,7 @@ export default function LernlyLanding() {
           <button className={s.primaryButton} onClick={openDemo}>Lerntrainer ausprobieren</button>
           <span className={s.heroCaption}><LayoutDashboard size={16} />Ohne Anmeldung ausprobieren</span>
         </div>
-        <div className={s.dashboardStage}><HeroDashboard /></div>
+        <div className={s.dashboardStage}><HeroScene /></div>
         <div className={s.toolStrip}><p>Dein Lernweg darf offen bleiben.</p><div><span><BrandIcon name="claude" size={28} />Claude</span><span><BrandIcon name="openai" size={26} />ChatGPT</span><span><BrandIcon name="anki" size={26} />Anki</span><span><BrandIcon name="quizlet" size={26} />Quizlet</span></div><small>Deine Tools im Blick: Kartenexport im Prototyp · weitere Verbindungen in Entwicklung.</small></div>
       </section>
 
