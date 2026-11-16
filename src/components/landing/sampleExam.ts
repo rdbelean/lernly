@@ -25,3 +25,11 @@ export const SAMPLE_EXAM = {
     t("Markteffizienz", 7, "offen"),
   ],
 };
+
+/** Same exam after the learning scene: Discounted Cashflow is now sicher. */
+export const SAMPLE_EXAM_AFTER = {
+  ...SAMPLE_EXAM,
+  topics: SAMPLE_EXAM.topics.map((x) =>
+    x.name === "Discounted Cashflow" ? { ...x, status: "sicher" as const } : x,
+  ),
+};

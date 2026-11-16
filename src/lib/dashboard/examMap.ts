@@ -95,9 +95,9 @@ export function pickNextStep(topics: MapTopic[]): MapTopic | null {
   });
 }
 
-/** Grid spans for a topic tile by its share of the exam. */
+/** Grid spans for a topic tile: heavier topics are wider, never taller. */
 export function tileSpans(shares: number[]): { col: 1 | 2; row: 1 | 2 }[] {
-  return shares.map((s) => (s >= 0.2 ? { col: 2, row: 2 } : s >= 0.1 ? { col: 2, row: 1 } : { col: 1, row: 1 }));
+  return shares.map((s) => (s >= 0.15 ? { col: 2, row: 1 } : { col: 1, row: 1 }));
 }
 
 /** Whole days from `today` to `examDate` (both YYYY-MM-DD); null if unset or past. */
