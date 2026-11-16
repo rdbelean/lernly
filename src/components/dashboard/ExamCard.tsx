@@ -130,10 +130,11 @@ export default function ExamCard({
 
   return (
     <article
+      id={`exam-${exam.id}`}
       className="relative overflow-hidden border"
       style={{
-        background: "#141930",
-        borderColor: "rgba(255,255,255,0.06)",
+        background: "var(--color-surface)",
+        borderColor: "var(--color-ink-a06)",
         borderRadius: "16px",
       }}
     >
@@ -144,7 +145,7 @@ export default function ExamCard({
             type="button"
             onClick={() => setColorMenu((v) => !v)}
             aria-label="Farbe ändern"
-            className="relative mt-1 h-3 w-3 shrink-0 rounded-full border border-white/20"
+            className="relative mt-1 h-3 w-3 shrink-0 rounded-full border border-[color:var(--color-ink-a14)]"
             style={{ background: examRgba(exam.color, 0.9) }}
           />
           <div className="min-w-0 flex-1">
@@ -162,7 +163,7 @@ export default function ExamCard({
                   }
                 }}
                 disabled={pending}
-                className="w-full rounded-md border bg-transparent px-1.5 py-0.5 text-[17px] font-bold leading-tight text-white outline-none"
+                className="w-full rounded-md border bg-transparent px-1.5 py-0.5 text-[17px] font-bold leading-tight text-[color:var(--color-text)] outline-none"
                 style={{ borderColor: examRgba(exam.color, 0.5) }}
               />
             ) : (
@@ -172,7 +173,7 @@ export default function ExamCard({
                   setTitleDraft(exam.title);
                   setEditingTitle(true);
                 }}
-                className="w-full rounded-md px-0 py-0 text-left text-[17px] font-bold leading-tight text-white transition hover:text-white"
+                className="w-full rounded-md px-0 py-0 text-left text-[17px] font-bold leading-tight text-[color:var(--color-text)] transition hover:text-[color:var(--color-text)]"
                 title="Umbenennen"
               >
                 {exam.title}
@@ -194,7 +195,7 @@ export default function ExamCard({
                     }
                   }}
                   disabled={pending}
-                  className="rounded-md border bg-transparent px-1.5 py-0.5 text-[12px] text-white outline-none"
+                  className="rounded-md border bg-transparent px-1.5 py-0.5 text-[12px] text-[color:var(--color-text)] outline-none"
                   style={{
                     borderColor: examRgba(exam.color, 0.5),
                     colorScheme: "dark",
@@ -207,19 +208,19 @@ export default function ExamCard({
                     setDateDraft(exam.exam_date ?? "");
                     setEditingDate(true);
                   }}
-                  className="rounded-md text-white/55 transition hover:text-white/85"
+                  className="rounded-md text-[color:var(--color-text-faint)] transition hover:text-[color:var(--color-text-dim)]"
                   title="Datum ändern"
                 >
                   {formatExamDate(exam.exam_date)}
                 </button>
               )}
               <span
-                className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-[0.1em]"
+                className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[12px] font-semibold"
                 style={{
                   background:
                     countdown.tone === "past" || countdown.tone === "undated"
-                      ? "rgba(255,255,255,0.06)"
-                      : "rgba(242, 163, 60, 0.14)",
+                      ? "var(--color-ink-a06)"
+                      : "var(--color-urgent-bg)",
                   color:
                     countdown.tone === "past" || countdown.tone === "undated"
                       ? "var(--color-text-faint)"
@@ -237,7 +238,7 @@ export default function ExamCard({
             disabled={pending}
             aria-label="Klausur löschen"
             title="Löschen"
-            className="rounded-full p-1.5 text-white/40 transition hover:bg-white/5 hover:text-rose-300"
+            className="rounded-full p-1.5 text-[color:var(--color-text-faint)] transition hover:bg-[color:var(--color-ink-a06)] hover:text-rose-300"
           >
             <svg
               width="16"
@@ -270,7 +271,7 @@ export default function ExamCard({
                 className="h-6 w-6 rounded-full border-2 transition"
                 style={{
                   background: examRgba(c, 0.85),
-                  borderColor: exam.color === c ? "white" : "rgba(255,255,255,0.15)",
+                  borderColor: exam.color === c ? "white" : "var(--color-ink-a14)",
                 }}
               />
             ))}
@@ -283,8 +284,8 @@ export default function ExamCard({
             <p
               className="rounded-lg border border-dashed px-3 py-3 text-[12.5px]"
               style={{
-                borderColor: "rgba(255,255,255,0.1)",
-                color: "rgba(255,255,255,0.55)",
+                borderColor: "var(--color-ink-a10)",
+                color: "var(--color-text-faint)",
               }}
             >
               Noch keine Pakete zugeordnet.
@@ -294,18 +295,18 @@ export default function ExamCard({
               {packs.map((p) => (
                 <li
                   key={p.id}
-                  className="group flex items-center justify-between gap-2 rounded-lg border border-white/8 bg-black/15 px-3 py-2 transition hover:border-white/20"
+                  className="group flex items-center justify-between gap-2 rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-ink-a04)] px-3 py-2 transition hover:border-[color:var(--color-ink-a14)]"
                 >
                   <Link
                     href={`/dashboard/pack/${p.id}`}
                     className="min-w-0 flex-1"
                   >
-                    <div className="truncate text-[13.5px] font-semibold text-white">
+                    <div className="truncate text-[13.5px] font-semibold text-[color:var(--color-text)]">
                       {p.title}
                     </div>
                     <div
-                      className="text-[11px]"
-                      style={{ color: "rgba(255,255,255,0.45)" }}
+                      className="text-[12px]"
+                      style={{ color: "var(--color-text-faint)" }}
                     >
                       {p.card_count} Karten
                     </div>
@@ -316,7 +317,7 @@ export default function ExamCard({
                     disabled={pending}
                     aria-label="Aus dieser Klausur entfernen"
                     title="Aus Klausur entfernen"
-                    className="opacity-0 transition group-hover:opacity-100 text-white/40 hover:text-white"
+                    className="opacity-0 transition group-hover:opacity-100 text-[color:var(--color-text-faint)] hover:text-[color:var(--color-text)]"
                   >
                     ✕
                   </button>
@@ -361,7 +362,7 @@ export default function ExamCard({
         {error && (
           <p
             className="mt-3 text-[12px]"
-            style={{ color: "rgba(255,170,170,0.95)" }}
+            style={{ color: "var(--color-err-ink)" }}
           >
             {error}
           </p>

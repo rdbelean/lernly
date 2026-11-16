@@ -12,7 +12,7 @@ import {
 // =========================================================================
 // PrimaryCTA — the ONE primary-action button. Every "Weiterlernen",
 // "Übungsklausur starten", "Neues Paket", "Upgrade" call-to-action must
-// route through this component so the deep-indigo fill (#2B3499) can
+// route through this component so the deep-indigo fill (var(--color-primary)) can
 // never drift back to charcoal again.
 // =========================================================================
 // Two ways to pass icons:
@@ -102,8 +102,8 @@ function CTABody({
         <div className="min-w-0 flex-1 text-left">
           {eyebrow && (
             <div
-              className="text-[11px] font-semibold uppercase tracking-[0.16em]"
-              style={{ color: "rgba(255,255,255,0.70)" }}
+              className="text-[12px] font-semibold"
+              style={{ color: "var(--color-on-primary-dim)" }}
             >
               {eyebrow}
             </div>
@@ -114,7 +114,7 @@ function CTABody({
               fontFamily: "var(--font-display)",
               fontWeight: 600,
               fontSize: SIZE_TITLE[size],
-              color: "white",
+              color: "var(--color-on-primary)",
             }}
           >
             {children}
@@ -122,7 +122,7 @@ function CTABody({
           {subtitle && (
             <div
               className="mt-0.5 text-[13px] leading-snug"
-              style={{ color: "#A6AEF0" }}
+              style={{ color: "var(--color-on-primary-dim)" }}
             >
               {subtitle}
             </div>
@@ -146,7 +146,7 @@ function CTABody({
           className="ml-1 inline-flex shrink-0 items-center justify-center rounded-lg"
           style={{
             padding: hasHero ? "8px" : "0",
-            background: hasHero ? "rgba(255,255,255,0.14)" : "transparent",
+            background: hasHero ? "var(--color-on-primary-a)" : "transparent",
           }}
         >
           <Trailing size={SIZE_ICON[size]} strokeWidth={2} />
@@ -157,15 +157,14 @@ function CTABody({
 }
 
 const baseStyle = (size: Size, fullWidth: boolean): React.CSSProperties => ({
-  background: "#2B3499",
-  color: "white",
+  color: "var(--color-on-primary)",
   borderRadius: SIZE_RADIUS[size],
   padding: SIZE_PADDING[size],
   width: fullWidth ? "100%" : undefined,
 });
 
 const baseClass =
-  "group inline-flex items-center gap-3 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60";
+  "group inline-flex items-center gap-3 bg-[color:var(--color-primary)] transition-[transform,background-color] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60 [@media(hover:hover)]:hover:bg-[color:var(--color-primary-press)]";
 
 // Native <button> variant
 type ButtonProps = CommonProps &

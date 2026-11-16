@@ -59,24 +59,24 @@ export default function ClaimPage() {
         <div
           className="rounded-2xl border p-10 text-center"
           style={{
-            background: "#141930",
-            borderColor: "rgba(255,255,255,0.06)",
+            background: "var(--color-surface)",
+            borderColor: "var(--color-ink-a06)",
           }}
         >
           {status === "working" && (
             <>
               <div
                 className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl"
-                style={{ background: "rgba(43,52,153,0.20)", color: "#9aa6ff" }}
+                style={{ background: "var(--color-work-bg)", color: "var(--color-work-ink)" }}
               >
                 <Loader2 size={22} strokeWidth={2} aria-hidden className="animate-spin" />
               </div>
-              <h1 className="mt-4 text-[22px] font-semibold text-white">
+              <h1 className="mt-4 text-[22px] font-semibold text-[color:var(--color-text)]">
                 Pack wird gespeichert…
               </h1>
               <p
                 className="mt-2 text-[14px]"
-                style={{ color: "var(--color-text-dim, #9098B6)" }}
+                style={{ color: "var(--color-text-dim, var(--color-text-dim))" }}
               >
                 Wir hängen dein Probepaket an deinen frischen Account.
               </p>
@@ -87,16 +87,16 @@ export default function ClaimPage() {
             <>
               <div
                 className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl"
-                style={{ background: "rgba(43,52,153,0.20)", color: "#9aa6ff" }}
+                style={{ background: "var(--color-work-bg)", color: "var(--color-work-ink)" }}
               >
                 <Sparkles size={22} strokeWidth={2} aria-hidden />
               </div>
-              <h1 className="mt-4 text-[22px] font-semibold text-white">
+              <h1 className="mt-4 text-[22px] font-semibold text-[color:var(--color-text)]">
                 Willkommen
               </h1>
               <p
                 className="mt-2 text-[14px]"
-                style={{ color: "var(--color-text-dim, #9098B6)" }}
+                style={{ color: "var(--color-text-dim, var(--color-text-dim))" }}
               >
                 Wir haben kein offenes Paket zum Speichern gefunden — geh ins
                 Dashboard und erstelle ein neues.
@@ -104,7 +104,7 @@ export default function ClaimPage() {
               <Link
                 href="/dashboard"
                 className="mt-5 inline-block rounded-xl px-5 py-2.5 text-[14px] font-semibold text-white transition hover:opacity-90"
-                style={{ background: "#2B3499" }}
+                style={{ background: "var(--color-primary)" }}
               >
                 Zum Dashboard
               </Link>
@@ -115,23 +115,23 @@ export default function ClaimPage() {
             <>
               <div
                 className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl"
-                style={{ background: "rgba(244,114,98,0.16)", color: "#f47262" }}
+                style={{ background: "var(--color-err-bg)", color: "var(--color-err-ink)" }}
               >
                 <AlertTriangle size={22} strokeWidth={2} aria-hidden />
               </div>
-              <h1 className="mt-4 text-[22px] font-semibold text-white">
+              <h1 className="mt-4 text-[22px] font-semibold text-[color:var(--color-text)]">
                 Speichern fehlgeschlagen
               </h1>
               <p
                 className="mt-2 text-[14px]"
-                style={{ color: "rgba(255,200,120,0.85)" }}
+                style={{ color: "var(--color-urgent-ink)" }}
               >
                 {errorMsg ?? "Unbekannter Fehler"}
               </p>
               <Link
                 href="/dashboard"
-                className="mt-5 inline-block rounded-xl border px-5 py-2.5 text-[14px] font-medium text-white transition hover:bg-white/5"
-                style={{ borderColor: "rgba(255,255,255,0.14)" }}
+                className="mt-5 inline-block rounded-xl border px-5 py-2.5 text-[14px] font-medium text-[color:var(--color-text)] transition hover:bg-[color:var(--color-ink-a06)]"
+                style={{ borderColor: "var(--color-ink-a14)" }}
               >
                 Zum Dashboard
               </Link>

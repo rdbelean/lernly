@@ -20,12 +20,12 @@ export default function ChartCard({
   return (
     <div
       className="rounded-2xl border p-5"
-      style={{ background: "#141930", borderColor: "rgba(255,255,255,0.06)" }}
+      style={{ background: "var(--color-surface)", borderColor: "var(--color-ink-a06)" }}
     >
       <div className="mb-3 flex items-start justify-between gap-3">
         <div>
           <p
-            className="text-[11px] uppercase tracking-[0.16em]"
+            className="text-[12px]"
             style={{ color: "var(--color-text-faint)" }}
           >
             {title}

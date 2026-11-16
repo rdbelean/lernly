@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
+import GoogleLogo from "@/components/GoogleLogo";
 import { useFormStatus } from "react-dom";
 import { Inbox } from "lucide-react";
 import TurnstileWidget from "@/components/TurnstileWidget";
@@ -23,16 +24,16 @@ function PendingButton({
     <button
       type="submit"
       disabled={isPending}
-      className="flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[15px] font-medium text-white transition hover:bg-white/15 disabled:opacity-50"
+      className="flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[15px] font-medium text-[color:var(--color-text)] transition hover:bg-[color:var(--color-ink-a14)] disabled:opacity-50"
       style={{
-        background: "rgba(255,255,255,0.08)",
-        border: "1px solid rgba(255,255,255,0.18)",
+        background: "var(--color-ink-a10)",
+        border: "1px solid var(--color-ink-a14)",
       }}
     >
       {isPending && (
         <span
           className="inline-block h-4 w-4 animate-spin rounded-full"
-          style={{ border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff" }}
+          style={{ border: "2px solid var(--color-ink-a14)", borderTopColor: "var(--color-primary)" }}
           aria-hidden
         />
       )}
@@ -46,9 +47,9 @@ function ErrorBox({ children }: { children: React.ReactNode }) {
     <div
       className="mb-6 rounded-2xl p-4 text-[14px]"
       style={{
-        background: "rgba(217, 119, 87, 0.12)",
-        border: "1px solid rgba(217, 119, 87, 0.35)",
-        color: "#E8A88D",
+        background: "var(--color-err-bg)",
+        border: "1px solid var(--color-err-bg)",
+        color: "var(--color-err-ink)",
       }}
     >
       {children}
@@ -141,9 +142,9 @@ export default function LoginForm({
         <div
           className="mb-4 rounded-2xl p-4 text-[14px]"
           style={{
-            background: "rgba(111, 199, 227, 0.12)",
-            border: "1px solid rgba(111, 199, 227, 0.35)",
-            color: "#9BD8EB",
+            background: "var(--color-work-bg)",
+            border: "1px solid var(--color-work-bg)",
+            color: "var(--color-work-ink)",
           }}
         >
           <div className="font-medium">Check deine E-Mails</div>
@@ -157,20 +158,20 @@ export default function LoginForm({
         <div
           className="mb-5 flex gap-2.5 rounded-2xl p-3.5 text-[13px] leading-snug"
           style={{
-            background: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.10)",
-            color: "rgba(255,255,255,0.7)",
+            background: "var(--color-ink-a04)",
+            border: "1px solid var(--color-ink-a10)",
+            color: "var(--color-text-dim)",
           }}
         >
           <Inbox
             size={16}
             strokeWidth={1.9}
             aria-hidden
-            style={{ marginTop: 2, flexShrink: 0, color: "rgba(255,255,255,0.5)" }}
+            style={{ marginTop: 2, flexShrink: 0, color: "var(--color-text-faint)" }}
           />
           <span>
             Nichts im Posteingang? Schau im{" "}
-            <strong style={{ color: "#fff", fontWeight: 600 }}>
+            <strong style={{ color: "var(--color-text)", fontWeight: 600 }}>
               Spam-/Junk-Ordner
             </strong>{" "}
             nach und markier die Mail als „Kein Spam“ — dann landet die nächste
@@ -185,8 +186,8 @@ export default function LoginForm({
           <input type="hidden" name="email" value={email} />
           <label
             htmlFor="code"
-            className="text-[12px] uppercase tracking-[0.18em]"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+            className="text-[12px]"
+            style={{ color: "var(--color-text-faint)" }}
           >
             Oder gib den Code aus der Mail ein
           </label>
@@ -199,10 +200,10 @@ export default function LoginForm({
             pattern="[0-9]*"
             maxLength={10}
             autoFocus
-            className="rounded-2xl px-4 py-3 text-center text-[20px] font-semibold tracking-[0.3em] text-white outline-none transition focus:border-white/40"
+            className="rounded-2xl px-4 py-3 text-center text-[20px] font-semibold text-[color:var(--color-text)] outline-none transition focus:border-[color:var(--color-ink-a14)]"
             style={{
-              background: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.16)",
+              background: "var(--color-ink-a06)",
+              border: "1px solid var(--color-ink-a14)",
             }}
           />
           <PendingButton idle="Anmelden" pending="Wird geprüft…" />
@@ -211,7 +212,7 @@ export default function LoginForm({
         {resendNote ? (
           <p
             className="mt-3 text-center text-[12.5px]"
-            style={{ color: "rgba(255,255,255,0.6)" }}
+            style={{ color: "var(--color-text-faint)" }}
           >
             {resendNote}
           </p>
@@ -224,8 +225,8 @@ export default function LoginForm({
             disabled={
               cooldown > 0 || resending || (turnstileConfigured && !resendToken)
             }
-            className="underline-offset-2 transition hover:text-white disabled:cursor-not-allowed disabled:no-underline disabled:opacity-50"
-            style={{ color: "rgba(255,255,255,0.6)" }}
+            className="underline-offset-2 transition hover:text-[color:var(--color-text)] disabled:cursor-not-allowed disabled:no-underline disabled:opacity-50"
+            style={{ color: "var(--color-text-faint)" }}
           >
             {cooldown > 0
               ? `Mail erneut senden (${cooldown}s)`
@@ -235,8 +236,8 @@ export default function LoginForm({
           </button>
           <a
             href={backHref}
-            className="underline-offset-2 hover:text-white"
-            style={{ color: "rgba(255,255,255,0.45)" }}
+            className="underline-offset-2 hover:text-[color:var(--color-text)]"
+            style={{ color: "var(--color-text-faint)" }}
           >
             Andere Adresse verwenden
           </a>
@@ -265,26 +266,9 @@ export default function LoginForm({
         <input type="hidden" name="next" value={next} />
         <button
           type="submit"
-          className="flex w-full items-center justify-center gap-3 rounded-full bg-white px-5 py-3 text-[15px] font-medium text-[#14161C] transition hover:bg-white/90"
+          className="flex w-full items-center justify-center gap-3 rounded-full border border-[color:var(--color-ink-a14)] bg-[color:var(--color-surface)] px-5 py-3 text-[15px] font-medium text-[color:var(--color-text)] transition-colors hover:bg-[color:var(--color-surface-2)]"
         >
-          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
-            <path
-              fill="#4285F4"
-              d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"
-            />
-            <path
-              fill="#34A853"
-              d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M3.964 10.706A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.038l3.007-2.332z"
-            />
-            <path
-              fill="#EA4335"
-              d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.962L3.964 7.294C4.672 5.167 6.656 3.58 9 3.58z"
-            />
-          </svg>
+          <GoogleLogo />
           Mit Google fortfahren
         </button>
       </form>
@@ -298,8 +282,8 @@ export default function LoginForm({
             // Focus the field after it mounts.
             setTimeout(() => emailInputRef.current?.focus(), 0);
           }}
-          className="mt-6 w-full text-center text-[13px] transition hover:text-white"
-          style={{ color: "rgba(255,255,255,0.5)" }}
+          className="mt-6 w-full text-center text-[13px] transition hover:text-[color:var(--color-text)]"
+          style={{ color: "var(--color-text-faint)" }}
         >
           {register ? "oder mit E-Mail registrieren" : "oder mit E-Mail anmelden"}
         </button>
@@ -314,8 +298,8 @@ export default function LoginForm({
           <input type="hidden" name="turnstileToken" value={turnstileToken} />
           <label
             htmlFor="email"
-            className="text-[12px] uppercase tracking-[0.18em]"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+            className="text-[12px]"
+            style={{ color: "var(--color-text-faint)" }}
           >
             E-Mail
           </label>
@@ -326,10 +310,10 @@ export default function LoginForm({
             type="email"
             autoComplete="email"
             placeholder="du@uni.de"
-            className="rounded-2xl px-4 py-3 text-[15px] text-white outline-none transition focus:border-white/40"
+            className="rounded-2xl px-4 py-3 text-[15px] text-[color:var(--color-text)] outline-none transition focus:border-[color:var(--color-ink-a14)]"
             style={{
-              background: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.16)",
+              background: "var(--color-ink-a06)",
+              border: "1px solid var(--color-ink-a14)",
             }}
           />
           <TurnstileWidget
@@ -345,14 +329,14 @@ export default function LoginForm({
 
       <p
         className="mt-6 text-center text-[13px]"
-        style={{ color: "rgba(255,255,255,0.5)" }}
+        style={{ color: "var(--color-text-faint)" }}
       >
         {register ? (
           <>
             Schon ein Konto?{" "}
             <a
               href={`/login?next=${encodeURIComponent(next)}`}
-              className="underline underline-offset-2 hover:text-white"
+              className="underline underline-offset-2 hover:text-[color:var(--color-text)]"
             >
               Anmelden
             </a>
@@ -362,7 +346,7 @@ export default function LoginForm({
             Neu hier?{" "}
             <a
               href={`/login?mode=register&next=${encodeURIComponent(next)}`}
-              className="underline underline-offset-2 hover:text-white"
+              className="underline underline-offset-2 hover:text-[color:var(--color-text)]"
             >
               Kostenlos registrieren
             </a>

@@ -89,23 +89,23 @@ export default function BetaCheckoutHost() {
         aria-label="Schließen"
         onClick={close}
         className="absolute inset-0"
-        style={{ background: "rgba(0,0,0,0.68)" }}
+        style={{ background: "var(--color-surface)" }}
       />
       <div
-        className="relative w-full max-w-[440px] overflow-hidden rounded-3xl border p-7 text-white"
+        className="relative w-full max-w-[440px] overflow-hidden rounded-3xl border p-7 text-[color:var(--color-text)]"
         style={{
-          background: "rgba(20, 22, 28, 0.96)",
-          borderColor: "rgba(255,255,255,0.14)",
+          background: "var(--color-surface)",
+          borderColor: "var(--color-ink-a14)",
           backdropFilter: "blur(24px)",
-          boxShadow: "0 24px 60px rgba(0,0,0,0.7)",
+          boxShadow: "0 24px 60px var(--color-surface)",
         }}
       >
         <button
           type="button"
           aria-label="Schließen"
           onClick={close}
-          className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-white/[0.06]"
-          style={{ color: "rgba(255,255,255,0.5)" }}
+          className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-[color:var(--color-ink-a06)]"
+          style={{ color: "var(--color-text-faint)" }}
         >
           <X size={17} strokeWidth={2} aria-hidden />
         </button>
@@ -113,9 +113,9 @@ export default function BetaCheckoutHost() {
         <span
           aria-hidden
           className="flex h-12 w-12 items-center justify-center rounded-2xl"
-          style={{ background: "rgba(242,163,60,0.14)" }}
+          style={{ background: "var(--color-urgent-bg)" }}
         >
-          <Wrench size={22} strokeWidth={1.9} style={{ color: "#F2A33C" }} />
+          <Wrench size={22} strokeWidth={1.9} style={{ color: "var(--color-urgent-ink)" }} />
         </span>
 
         <h2
@@ -127,7 +127,7 @@ export default function BetaCheckoutHost() {
         </h2>
         <p
           className="mt-2 text-[14px] leading-relaxed"
-          style={{ color: "rgba(255,255,255,0.7)" }}
+          style={{ color: "var(--color-text-dim)" }}
         >
           {BETA_CHECKOUT_BODY}
         </p>
@@ -135,8 +135,8 @@ export default function BetaCheckoutHost() {
         <div className="mt-5">
           <label
             htmlFor="beta-pw"
-            className="text-[11px] font-semibold uppercase tracking-[0.16em]"
-            style={{ color: "rgba(255,255,255,0.4)" }}
+            className="text-[12px] font-semibold"
+            style={{ color: "var(--color-ink-a14)" }}
           >
             Team-Zugang
           </label>
@@ -151,14 +151,14 @@ export default function BetaCheckoutHost() {
             onKeyDown={(e) => {
               if (e.key === "Enter") submit();
             }}
-            className="mt-1.5 w-full rounded-2xl px-4 py-3 text-[15px] text-white outline-none transition focus:border-white/40"
+            className="mt-1.5 w-full rounded-2xl px-4 py-3 text-[15px] text-[color:var(--color-text)] outline-none transition focus:border-[color:var(--color-ink-a14)]"
             style={{
-              background: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.16)",
+              background: "var(--color-ink-a06)",
+              border: "1px solid var(--color-ink-a14)",
             }}
           />
           {error && (
-            <p className="mt-2 text-[13px]" style={{ color: "#F2845C" }}>
+            <p className="mt-2 text-[13px]" style={{ color: "var(--color-err-ink)" }}>
               {error}
             </p>
           )}
@@ -167,7 +167,7 @@ export default function BetaCheckoutHost() {
             onClick={submit}
             disabled={pending || pw.length === 0}
             className="mt-3 w-full rounded-full px-5 py-3 text-[15px] font-semibold text-white transition disabled:opacity-50"
-            style={{ background: "var(--color-primary, #2B3499)" }}
+            style={{ background: "var(--color-primary, var(--color-primary))" }}
           >
             {pending ? "Einen Moment…" : "Weiter"}
           </button>

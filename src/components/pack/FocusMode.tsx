@@ -55,9 +55,9 @@ export default function FocusMode({
           type="button"
           onClick={() => setFocused((f) => !f)}
           aria-pressed={focused}
-          className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12.5px] font-medium transition hover:bg-white/[0.06]"
+          className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12.5px] font-medium transition hover:bg-[color:var(--color-ink-a06)]"
           style={{
-            borderColor: "rgba(255,255,255,0.12)",
+            borderColor: "var(--color-ink-a14)",
             color: "var(--color-text-dim)",
           }}
         >

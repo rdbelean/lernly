@@ -88,10 +88,10 @@ function topicTone(
 }
 
 const TONE_COLOR: Record<"weak" | "warn" | "strong" | "skipped", string> = {
-  weak: "#fb7185",
-  warn: "#fbbf24",
-  strong: "#34d399",
-  skipped: "rgba(255,255,255,0.4)",
+  weak: "var(--color-err-ink)",
+  warn: "var(--color-urgent-ink)",
+  strong: "var(--color-ok-ink)",
+  skipped: "var(--color-ink-a14)",
 };
 
 function shuffle<T>(arr: T[]): T[] {
@@ -192,7 +192,7 @@ export default function QuizView({
   const verdict =
     scorePct >= 75 ? labels.verdictPass : scorePct >= 50 ? labels.verdictMid : labels.verdictFail;
   const verdictColor =
-    scorePct >= 75 ? "#34d399" : scorePct >= 50 ? "#fbbf24" : "#fb7185";
+    scorePct >= 75 ? "var(--color-ok-ink)" : scorePct >= 50 ? "var(--color-urgent-ink)" : "var(--color-err-ink)";
 
   const visibleDeck =
     checked && filter === "wrong"
@@ -347,7 +347,7 @@ export default function QuizView({
         <div className="flex-1 min-w-[160px]">
           <div
             className="h-1.5 overflow-hidden rounded-full"
-            style={{ background: "rgba(255,255,255,0.08)" }}
+            style={{ background: "var(--color-ink-a10)" }}
           >
             <div
               className="h-full rounded-full transition-[width] duration-400"
@@ -360,8 +360,8 @@ export default function QuizView({
             />
           </div>
           <div
-            className="mt-1.5 text-[11.5px]"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+            className="mt-1.5 text-[12px]"
+            style={{ color: "var(--color-text-faint)" }}
           >
             {checked
               ? `${correctCount}/${deck.length} ${labels.correct.toLowerCase()} (${scorePct}%)`
@@ -373,10 +373,10 @@ export default function QuizView({
             <button
               onClick={() => setFilter("all")}
               className={
-                "rounded-full border px-3 py-1.5 text-[11px] font-semibold transition " +
+                "rounded-full border px-3 py-1.5 text-[12px] font-semibold transition " +
                 (filter === "all"
-                  ? "border-[color:var(--color-ln-cyan)] text-white"
-                  : "border-white/10 text-white/55 hover:text-white")
+                  ? "border-[color:var(--color-ln-cyan)] text-[color:var(--color-text)]"
+                  : "border-[color:var(--color-line)] text-[color:var(--color-text-faint)] hover:text-[color:var(--color-text)]")
               }
             >
               {labels.filterAll}
@@ -385,10 +385,10 @@ export default function QuizView({
               onClick={() => setFilter("wrong")}
               disabled={wrongCount === 0}
               className={
-                "rounded-full border px-3 py-1.5 text-[11px] font-semibold transition disabled:cursor-not-allowed disabled:opacity-40 " +
+                "rounded-full border px-3 py-1.5 text-[12px] font-semibold transition disabled:cursor-not-allowed disabled:opacity-40 " +
                 (filter === "wrong"
-                  ? "border-[#fb7185] text-white"
-                  : "border-white/10 text-white/55 hover:text-white")
+                  ? "border-[var(--color-err-ink)] text-[color:var(--color-text)]"
+                  : "border-[color:var(--color-line)] text-[color:var(--color-text-faint)] hover:text-[color:var(--color-text)]")
               }
             >
               <span className="inline-flex items-center gap-1.5">
@@ -406,15 +406,15 @@ export default function QuizView({
           ref={resultsRef}
           className="mb-6 rounded-2xl border p-5 sm:p-6"
           style={{
-            background: "rgba(20,22,28,0.6)",
-            borderColor: "rgba(255,255,255,0.1)",
+            background: "var(--color-surface)",
+            borderColor: "var(--color-ink-a10)",
           }}
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <div
-                className="text-[11px] font-bold uppercase tracking-[0.12em]"
-                style={{ color: "rgba(255,255,255,0.5)" }}
+                className="text-[12px] font-bold"
+                style={{ color: "var(--color-text-faint)" }}
               >
                 {labels.results}
               </div>
@@ -432,22 +432,22 @@ export default function QuizView({
               </div>
             </div>
             <div className="flex gap-4 text-center sm:gap-6">
-              <ScoreStat n={correctCount} label={labels.correct} color="#34d399" />
-              <ScoreStat n={wrongCount} label={labels.wrong} color="#fb7185" />
+              <ScoreStat n={correctCount} label={labels.correct} color="var(--color-ok-ink)" />
+              <ScoreStat n={wrongCount} label={labels.wrong} color="var(--color-err-ink)" />
               <ScoreStat
                 n={skippedCount}
                 label={labels.skipped}
-                color="rgba(255,255,255,0.5)"
+                color="var(--color-text-faint)"
               />
             </div>
           </div>
           {isRePractice && (
             <div
-              className="mt-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em]"
+              className="mt-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-bold"
               style={{
-                background: "rgba(154,140,224,0.14)",
+                background: "var(--color-work-bg)",
                 color: "var(--color-ln-violet)",
-                border: "1px solid rgba(154,140,224,0.35)",
+                border: "1px solid var(--color-work-bg)",
               }}
             >
               <Sparkles size={11} strokeWidth={2} aria-hidden />
@@ -460,13 +460,13 @@ export default function QuizView({
             <div
               className="mt-5 rounded-xl border p-3.5"
               style={{
-                background: "rgba(251,113,133,0.06)",
-                borderColor: "rgba(251,113,133,0.3)",
+                background: "var(--color-err-bg)",
+                borderColor: "var(--color-err-bg)",
               }}
             >
               <div
-                className="text-[12px] font-bold uppercase tracking-[0.1em]"
-                style={{ color: "#fb7185" }}
+                className="text-[12px] font-bold"
+                style={{ color: "var(--color-err-ink)" }}
               >
                 <span className="inline-flex items-center gap-1.5">
                   <Target size={12} strokeWidth={2} aria-hidden />
@@ -479,9 +479,9 @@ export default function QuizView({
                     key={t}
                     className="rounded-full px-2.5 py-1 text-[12px] font-semibold"
                     style={{
-                      background: "rgba(251,113,133,0.12)",
-                      color: "#fda4af",
-                      border: "1px solid rgba(251,113,133,0.35)",
+                      background: "var(--color-err-bg)",
+                      color: "var(--color-err-ink)",
+                      border: "1px solid var(--color-err-bg)",
                     }}
                   >
                     {t}
@@ -495,8 +495,8 @@ export default function QuizView({
           {topicEntries.length > 0 && (
             <div className="mt-5">
               <div
-                className="mb-2 text-[11px] font-bold uppercase tracking-[0.12em]"
-                style={{ color: "rgba(255,255,255,0.55)" }}
+                className="mb-2 text-[12px] font-bold"
+                style={{ color: "var(--color-text-faint)" }}
               >
                 {labels.breakdownHeader}
               </div>
@@ -512,24 +512,24 @@ export default function QuizView({
                       key={name}
                       className="flex flex-wrap items-center gap-2 rounded-lg border px-3 py-2 text-[13px]"
                       style={{
-                        background: "rgba(255,255,255,0.025)",
-                        borderColor: "rgba(255,255,255,0.08)",
+                        background: "var(--color-ink-a04)",
+                        borderColor: "var(--color-ink-a10)",
                         borderLeft: `3px solid ${color}`,
                       }}
                     >
-                      <span className="flex-1 text-white" style={{ minWidth: "10ch" }}>
+                      <span className="flex-1 text-[color:var(--color-text)]" style={{ minWidth: "10ch" }}>
                         {name}
                       </span>
                       <span
                         className="tabular-nums"
-                        style={{ color: "rgba(255,255,255,0.55)" }}
+                        style={{ color: "var(--color-text-faint)" }}
                       >
                         {score.correct}/{answered || score.skipped} {answered === 0 ? labels.skipped.toLowerCase() : ""}
                       </span>
                       <span
-                        className="rounded-full px-2 py-0.5 text-[11px] font-bold tabular-nums"
+                        className="rounded-full px-2 py-0.5 text-[12px] font-bold tabular-nums"
                         style={{
-                          background: `${color}1f`,
+                          background: `color-mix(in srgb, ${color} 12%, transparent)`,
                           color,
                         }}
                       >
@@ -562,7 +562,7 @@ export default function QuizView({
               className={
                 "inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-semibold transition " +
                 (weakTopics.length > 0 && packId
-                  ? "border border-white/15 text-white/80 hover:text-white"
+                  ? "border border-[color:var(--color-line)] text-[color:var(--color-text-dim)] hover:text-[color:var(--color-text)]"
                   : "")
               }
               style={
@@ -581,7 +581,7 @@ export default function QuizView({
           {repracticeError && (
             <p
               className="mt-3 text-[12.5px]"
-              style={{ color: "rgba(255,170,170,0.95)" }}
+              style={{ color: "var(--color-err-ink)" }}
             >
               {repracticeError}
             </p>
@@ -609,17 +609,17 @@ export default function QuizView({
               key={q.id}
               className="rounded-2xl border p-4 transition-colors sm:p-5"
               style={{
-                background: "rgba(20,22,28,0.55)",
+                background: "var(--color-surface)",
                 borderColor: isCorrect
-                  ? "rgba(52,211,153,0.45)"
+                  ? "var(--color-ok-ink)"
                   : isWrong
-                    ? "rgba(251,113,133,0.45)"
-                    : "rgba(255,255,255,0.08)",
+                    ? "var(--color-err-ink)"
+                    : "var(--color-ink-a10)",
               }}
             >
               <div
-                className="mb-2 flex flex-wrap items-center gap-2 text-[10.5px] font-bold uppercase tracking-[0.12em]"
-                style={{ color: "rgba(255,255,255,0.5)" }}
+                className="mb-2 flex flex-wrap items-center gap-2 text-[12px] font-bold"
+                style={{ color: "var(--color-text-faint)" }}
               >
                 <span>
                   {labels.q} {realIdx + 1} {labels.of} {deck.length}
@@ -628,7 +628,7 @@ export default function QuizView({
                   <span
                     className="rounded px-1.5 py-0.5 text-[9.5px]"
                     style={{
-                      background: "rgba(91,184,216,0.12)",
+                      background: "var(--color-work-bg)",
                       color: "var(--color-ln-cyan)",
                     }}
                   >
@@ -637,11 +637,11 @@ export default function QuizView({
                 )}
                 {examLens && appearances !== null && (
                   <span
-                    className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold normal-case tracking-[0.08em]"
+                    className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold normal-case"
                     style={{
-                      background: "rgba(79,209,165,0.10)",
-                      borderColor: "#4FD1A5",
-                      color: "#4FD1A5",
+                      background: "var(--color-ok-bg)",
+                      borderColor: "var(--color-ok-ink)",
+                      color: "var(--color-ok-ink)",
                     }}
                   >
                     <Sparkles size={9} strokeWidth={2.2} aria-hidden />
@@ -650,7 +650,7 @@ export default function QuizView({
                 )}
               </div>
               <div
-                className="text-[16px] font-semibold leading-snug text-white sm:text-[18px]"
+                className="text-[16px] font-semibold leading-snug text-[color:var(--color-text)] sm:text-[18px]"
                 dangerouslySetInnerHTML={{ __html: renderRichText(q.stem) }}
               />
 
@@ -658,19 +658,19 @@ export default function QuizView({
                 <button
                   onClick={() => toggleTheory(q.id)}
                   className={
-                    "mt-3 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[11px] font-semibold transition " +
+                    "mt-3 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[12px] font-semibold transition " +
                     (theoryOpen
-                      ? "border-[color:var(--color-ln-violet)] bg-[color:var(--color-ln-violet)]/10 text-white"
-                      : "border-white/15 text-white/65 hover:text-white")
+                      ? "border-[color:var(--color-ln-violet)] bg-[color:var(--color-ln-violet)]/10 text-[color:var(--color-text)]"
+                      : "border-[color:var(--color-line)] text-[color:var(--color-text-faint)] hover:text-[color:var(--color-text)]")
                   }
                 >
                   <BookOpen size={12} strokeWidth={1.9} aria-hidden />
                   {theoryOpen ? labels.hideTheory : labels.showTheory}
                   {!theoryOpen && (
                     <span
-                      className="ml-1 rounded px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-[0.1em]"
+                      className="ml-1 rounded px-1.5 py-0.5 text-[9.5px] font-bold"
                       style={{
-                        background: "rgba(154,140,224,0.16)",
+                        background: "var(--color-work-bg)",
                         color: "var(--color-ln-violet)",
                       }}
                     >
@@ -684,20 +684,20 @@ export default function QuizView({
                 <div
                   className="mt-2 rounded-lg border p-3 text-[12.5px] leading-relaxed"
                   style={{
-                    background: "rgba(154,140,224,0.06)",
-                    borderColor: "rgba(154,140,224,0.3)",
-                    color: "rgba(255,255,255,0.78)",
+                    background: "var(--color-work-bg)",
+                    borderColor: "var(--color-work-bg)",
+                    color: "var(--color-text-dim)",
                   }}
                 >
                   <div
-                    className="mb-1 text-[10.5px] font-bold uppercase tracking-[0.12em]"
+                    className="mb-1 text-[12px] font-bold"
                     style={{ color: "var(--color-ln-violet)" }}
                   >
                     {concept.term}
                     {concept.author && (
                       <span
                         className="ml-2 font-normal"
-                        style={{ color: "rgba(255,255,255,0.45)" }}
+                        style={{ color: "var(--color-text-faint)" }}
                       >
                         {concept.author}
                       </span>
@@ -710,8 +710,8 @@ export default function QuizView({
                   />
                   {concept.examRelevance && (
                     <div
-                      className="mt-2 text-[11.5px]"
-                      style={{ color: "rgba(255,255,255,0.55)" }}
+                      className="mt-2 text-[12px]"
+                      style={{ color: "var(--color-text-faint)" }}
                       dangerouslySetInnerHTML={{
                         __html: renderRichText(concept.examRelevance),
                       }}
@@ -726,24 +726,24 @@ export default function QuizView({
                   const showCorrect = checked && oi === q.correctIndex;
                   const showWrong = checked && selected && oi !== q.correctIndex;
 
-                  let border = "rgba(255,255,255,0.1)";
+                  let border = "var(--color-ink-a10)";
                   let bg = "transparent";
                   let mark: string | null = null;
                   let markColor = "transparent";
 
                   if (showCorrect) {
-                    border = "rgba(52,211,153,0.55)";
-                    bg = "rgba(52,211,153,0.1)";
+                    border = "var(--color-ok-ink)";
+                    bg = "var(--color-ok-bg)";
                     mark = "✓";
-                    markColor = "#34d399";
+                    markColor = "var(--color-ok-ink)";
                   } else if (showWrong) {
-                    border = "rgba(251,113,133,0.55)";
-                    bg = "rgba(251,113,133,0.1)";
+                    border = "var(--color-err-ink)";
+                    bg = "var(--color-err-bg)";
                     mark = "✗";
-                    markColor = "#fb7185";
+                    markColor = "var(--color-err-ink)";
                   } else if (selected && !checked) {
-                    border = "rgba(91,184,216,0.55)";
-                    bg = "rgba(91,184,216,0.08)";
+                    border = "var(--color-work-ink)";
+                    bg = "var(--color-work-bg)";
                   }
 
                   return (
@@ -754,23 +754,23 @@ export default function QuizView({
                       disabled={checked}
                       className={
                         "flex w-full items-start gap-3 rounded-xl border px-4 py-3.5 text-left text-[15px] leading-snug transition disabled:cursor-default sm:px-5 sm:text-[16px] " +
-                        (!checked ? "hover:border-white/30" : "")
+                        (!checked ? "hover:border-[color:var(--color-ink-a14)]" : "")
                       }
                       style={{
                         background: bg,
                         borderColor: border,
-                        color: "rgba(255,255,255,0.92)",
+                        color: "var(--color-text)",
                       }}
                     >
                       <span
                         className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[13px] font-bold"
                         style={{
                           background: selected
-                            ? "rgba(91,184,216,0.18)"
-                            : "rgba(255,255,255,0.06)",
+                            ? "var(--color-work-bg)"
+                            : "var(--color-ink-a06)",
                           color: selected
                             ? "var(--color-ln-cyan)"
-                            : "rgba(255,255,255,0.7)",
+                            : "var(--color-text-dim)",
                         }}
                       >
                         {LETTERS[oi]}
@@ -796,16 +796,16 @@ export default function QuizView({
                 <div
                   className="mt-3 rounded-lg border-l-[3px] border-y border-r px-3.5 py-2.5 text-[12.5px] leading-relaxed"
                   style={{
-                    background: "rgba(91,184,216,0.04)",
+                    background: "var(--color-work-bg)",
                     borderLeftColor: "var(--color-ln-cyan)",
-                    borderTopColor: "rgba(91,184,216,0.15)",
-                    borderRightColor: "rgba(91,184,216,0.15)",
-                    borderBottomColor: "rgba(91,184,216,0.15)",
-                    color: "rgba(255,255,255,0.78)",
+                    borderTopColor: "var(--color-work-bg)",
+                    borderRightColor: "var(--color-work-bg)",
+                    borderBottomColor: "var(--color-work-bg)",
+                    color: "var(--color-text-dim)",
                   }}
                 >
                   <div
-                    className="mb-1 text-[10px] font-bold uppercase tracking-[0.12em]"
+                    className="mb-1 text-[12px] font-bold"
                     style={{ color: "var(--color-ln-cyan)" }}
                   >
                     {labels.explanationLabel}
@@ -818,10 +818,10 @@ export default function QuizView({
                   <button
                     type="button"
                     onClick={() => setTutorQ(q.id)}
-                    className="mt-2.5 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11.5px] font-semibold transition"
+                    className="mt-2.5 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[12px] font-semibold transition"
                     style={{
-                      background: "rgba(91,184,216,0.06)",
-                      borderColor: "rgba(91,184,216,0.3)",
+                      background: "var(--color-work-bg)",
+                      borderColor: "var(--color-work-bg)",
                       color: "var(--color-ln-cyan)",
                     }}
                   >
@@ -841,18 +841,18 @@ export default function QuizView({
           <button
             onClick={checkAll}
             disabled={answeredCount === 0}
-            className="rounded-full bg-white px-6 py-3 text-[14px] font-bold text-[#0F1535] shadow-lg shadow-black/30 transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-full bg-[color:var(--color-primary)] px-6 py-3 text-[14px] font-bold text-[color:var(--color-on-primary)] shadow-lg shadow-black/30 transition hover:bg-[color:var(--color-primary-press)] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {labels.checkAll}
             <span
-              className="ml-2 rounded-full px-2 py-0.5 text-[11px] font-bold"
+              className="ml-2 rounded-full px-2 py-0.5 text-[12px] font-bold"
               style={{
                 background:
                   answeredCount === deck.length
-                    ? "rgba(52,211,153,0.18)"
-                    : "rgba(15,21,53,0.1)",
+                    ? "var(--color-ok-bg)"
+                    : "var(--color-work-bg)",
                 color:
-                  answeredCount === deck.length ? "#34d399" : "rgba(15,21,53,0.6)",
+                  answeredCount === deck.length ? "var(--color-ok-ink)" : "var(--color-work-ink)",
               }}
             >
               {answeredCount}/{deck.length}
@@ -865,7 +865,7 @@ export default function QuizView({
         <div className="mt-6 flex justify-center">
           <button
             onClick={restart}
-            className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-[13px] font-semibold text-white/80 transition hover:text-white"
+            className="inline-flex items-center gap-2 rounded-full border border-[color:var(--color-line)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--color-text-dim)] transition hover:text-[color:var(--color-text)]"
           >
             <RefreshCw size={14} strokeWidth={2} aria-hidden />
             {labels.restart}
@@ -911,8 +911,8 @@ function ScoreStat({
         {n}
       </div>
       <div
-        className="text-[10px] font-bold uppercase tracking-[0.1em]"
-        style={{ color: "rgba(255,255,255,0.5)" }}
+        className="text-[12px] font-bold"
+        style={{ color: "var(--color-text-faint)" }}
       >
         {label}
       </div>

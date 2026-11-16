@@ -222,9 +222,9 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-semibold transition hover:text-white"
+        className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-semibold transition hover:text-[color:var(--color-text)]"
         style={{
-          borderColor: "rgba(255,255,255,0.10)",
+          borderColor: "var(--color-ink-a10)",
           color: "var(--color-text-dim)",
         }}
       >
@@ -238,8 +238,8 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
     <div
       className="border"
       style={{
-        background: "#141930",
-        borderColor: "rgba(255,255,255,0.06)",
+        background: "var(--color-surface)",
+        borderColor: "var(--color-ink-a06)",
         borderRadius: "16px",
         padding: "20px",
       }}
@@ -248,8 +248,8 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
       <div className="grid gap-3 sm:grid-cols-[1fr_180px]">
         <div>
           <label
-            className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.12em]"
-            style={{ color: "rgba(255,255,255,0.5)" }}
+            className="mb-1 block text-[12px] font-semibold"
+            style={{ color: "var(--color-text-faint)" }}
           >
             Titel <span style={{ color: "var(--color-cat-coral)" }}>*</span>
           </label>
@@ -259,17 +259,17 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="z. B. Global Strategic Management"
-            className="w-full rounded-xl border px-3 py-2 text-[14px] text-white outline-none transition focus:border-white/40"
+            className="w-full rounded-xl border px-3 py-2 text-[14px] text-[color:var(--color-text)] outline-none transition focus:border-[color:var(--color-ink-a14)]"
             style={{
-              background: "rgba(255,255,255,0.04)",
-              borderColor: "rgba(255,255,255,0.14)",
+              background: "var(--color-ink-a04)",
+              borderColor: "var(--color-ink-a14)",
             }}
           />
         </div>
         <div>
           <label
-            className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.12em]"
-            style={{ color: "rgba(255,255,255,0.5)" }}
+            className="mb-1 block text-[12px] font-semibold"
+            style={{ color: "var(--color-text-faint)" }}
           >
             Datum (optional)
           </label>
@@ -277,10 +277,10 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
             type="date"
             value={examDate}
             onChange={(e) => setExamDate(e.target.value)}
-            className="w-full rounded-xl border px-3 py-2 text-[14px] text-white outline-none transition focus:border-white/40"
+            className="w-full rounded-xl border px-3 py-2 text-[14px] text-[color:var(--color-text)] outline-none transition focus:border-[color:var(--color-ink-a14)]"
             style={{
-              background: "rgba(255,255,255,0.04)",
-              borderColor: "rgba(255,255,255,0.14)",
+              background: "var(--color-ink-a04)",
+              borderColor: "var(--color-ink-a14)",
               colorScheme: "dark",
             }}
           />
@@ -290,8 +290,8 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
       {/* Color */}
       <div className="mt-3">
         <div
-          className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.12em]"
-          style={{ color: "rgba(255,255,255,0.5)" }}
+          className="mb-1.5 text-[12px] font-semibold"
+          style={{ color: "var(--color-text-faint)" }}
         >
           Farbe
         </div>
@@ -308,7 +308,7 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
                 className="h-7 w-7 rounded-full border-2 transition"
                 style={{
                   background: examRgba(c, 0.85),
-                  borderColor: selected ? "white" : "rgba(255,255,255,0.15)",
+                  borderColor: selected ? "white" : "var(--color-ink-a14)",
                 }}
               />
             );
@@ -319,7 +319,7 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
       {/* 3-path branch */}
       <div className="mt-5">
         <div
-          className="mb-2 text-[13px] font-semibold text-white"
+          className="mb-2 text-[13px] font-semibold text-[color:var(--color-text)]"
         >
           Wie lernst du für diese Klausur?
         </div>
@@ -354,8 +354,8 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
         <div className="mt-4 space-y-3">
           <div>
             <label
-              className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.12em]"
-              style={{ color: "rgba(255,255,255,0.5)" }}
+              className="mb-1 block text-[12px] font-semibold"
+              style={{ color: "var(--color-text-faint)" }}
             >
               Altklausuren (optional)
             </label>
@@ -364,21 +364,21 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
               className="cursor-pointer rounded-xl border border-dashed px-3 py-5 text-center transition"
               style={{
                 borderColor: pastExamZone.isDragActive
-                  ? "rgba(79,209,165,0.7)"
-                  : "rgba(255,255,255,0.18)",
+                  ? "var(--color-ok-ink)"
+                  : "var(--color-ink-a14)",
                 background: pastExamZone.isDragActive
-                  ? "rgba(79,209,165,0.06)"
-                  : "rgba(255,255,255,0.03)",
+                  ? "var(--color-ok-bg)"
+                  : "var(--color-ink-a04)",
               }}
             >
               <input {...pastExamZone.getInputProps()} />
-              <p className="text-[12.5px] leading-snug text-white/85">
+              <p className="text-[12.5px] leading-snug text-[color:var(--color-text-dim)]">
                 Altklausuren hier rein (PDF) – je mehr, desto realistischer
                 wird deine Probeklausur.
               </p>
               <p
-                className="mt-1 text-[11px]"
-                style={{ color: "rgba(255,255,255,0.45)" }}
+                className="mt-1 text-[12px]"
+                style={{ color: "var(--color-text-faint)" }}
               >
                 max. {MAX_PAST_EXAM_FILES} Dateien · PDF, TXT, MD
               </p>
@@ -388,13 +388,13 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
                 {pastExamFiles.map((f) => (
                   <li
                     key={f.name}
-                    className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-[11.5px]"
+                    className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-[12px]"
                     style={{
-                      background: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(255,255,255,0.08)",
+                      background: "var(--color-ink-a04)",
+                      border: "1px solid var(--color-ink-a10)",
                     }}
                   >
-                    <span className="min-w-0 flex-1 truncate text-white/85">
+                    <span className="min-w-0 flex-1 truncate text-[color:var(--color-text-dim)]">
                       {f.name} · {(f.size / 1024).toFixed(0)} KB
                     </span>
                     <button
@@ -405,7 +405,7 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
                         )
                       }
                       aria-label={`${f.name} entfernen`}
-                      className="ml-2 shrink-0 text-white/50 transition hover:text-white"
+                      className="ml-2 shrink-0 text-[color:var(--color-text-faint)] transition hover:text-[color:var(--color-text)]"
                     >
                       <X size={12} strokeWidth={2.2} aria-hidden />
                     </button>
@@ -416,8 +416,8 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
           </div>
           <div>
             <label
-              className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.12em]"
-              style={{ color: "rgba(255,255,255,0.5)" }}
+              className="mb-1 block text-[12px] font-semibold"
+              style={{ color: "var(--color-text-faint)" }}
             >
               Hinweise vom Prof (optional)
             </label>
@@ -426,17 +426,17 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
               onChange={(e) => setHints(e.target.value)}
               rows={3}
               placeholder='z. B. "Kapitel 5 ist Schwerpunkt. Mündlich keine Berechnungen — dafür viele Definitionen."'
-              className="w-full rounded-xl border px-3 py-2 text-[13px] text-white outline-none transition focus:border-white/40"
+              className="w-full rounded-xl border px-3 py-2 text-[13px] text-[color:var(--color-text)] outline-none transition focus:border-[color:var(--color-ink-a14)]"
               style={{
-                background: "rgba(255,255,255,0.04)",
-                borderColor: "rgba(255,255,255,0.14)",
+                background: "var(--color-ink-a04)",
+                borderColor: "var(--color-ink-a14)",
               }}
             />
           </div>
           <div>
             <div
-              className="mb-1 text-[11px] font-semibold uppercase tracking-[0.12em]"
-              style={{ color: "rgba(255,255,255,0.5)" }}
+              className="mb-1 text-[12px] font-semibold"
+              style={{ color: "var(--color-text-faint)" }}
             >
               Wie eng am Altklausur-Stoff?
             </div>
@@ -451,19 +451,19 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
                     className="block w-full rounded-lg border px-3 py-2 text-left transition"
                     style={{
                       background: sel
-                        ? "rgba(110, 128, 242, 0.10)"
-                        : "#171C30",
+                        ? "var(--color-work-bg)"
+                        : "var(--color-surface-2)",
                       borderColor: sel
                         ? "var(--color-primary-bright)"
-                        : "rgba(255,255,255,0.06)",
+                        : "var(--color-ink-a06)",
                     }}
                   >
-                    <div className="text-[13px] font-semibold text-white">
+                    <div className="text-[13px] font-semibold text-[color:var(--color-text)]">
                       {opt.label}
                     </div>
                     <div
-                      className="text-[11.5px] leading-snug"
-                      style={{ color: "rgba(255,255,255,0.55)" }}
+                      className="text-[12px] leading-snug"
+                      style={{ color: "var(--color-text-faint)" }}
                     >
                       {opt.sub}
                     </div>
@@ -472,8 +472,8 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
               })}
             </div>
             <p
-              className="mt-2 text-[11px] italic"
-              style={{ color: "rgba(255,255,255,0.45)" }}
+              className="mt-2 text-[12px] italic"
+              style={{ color: "var(--color-text-faint)" }}
             >
               Schwerpunkt, keine Garantie — wir können nicht wissen, was genau drankommt.
             </p>
@@ -485,8 +485,8 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
       {path === "C" && (
         <div className="mt-4">
           <label
-            className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.12em]"
-            style={{ color: "rgba(255,255,255,0.5)" }}
+            className="mb-1 block text-[12px] font-semibold"
+            style={{ color: "var(--color-text-faint)" }}
           >
             Welche Themen?
           </label>
@@ -495,10 +495,10 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
             onChange={(e) => setTopicsList(e.target.value)}
             rows={3}
             placeholder="z. B. Vertikale Integration, Porter's Five Forces, BCG-Matrix"
-            className="w-full rounded-xl border px-3 py-2 text-[13px] text-white outline-none transition focus:border-white/40"
+            className="w-full rounded-xl border px-3 py-2 text-[13px] text-[color:var(--color-text)] outline-none transition focus:border-[color:var(--color-ink-a14)]"
             style={{
-              background: "rgba(255,255,255,0.04)",
-              borderColor: "rgba(255,255,255,0.14)",
+              background: "var(--color-ink-a04)",
+              borderColor: "var(--color-ink-a14)",
             }}
           />
         </div>
@@ -507,7 +507,7 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
       {error && (
         <p
           className="mt-3 text-[12.5px]"
-          style={{ color: "rgba(255,170,170,0.95)" }}
+          style={{ color: "var(--color-err-ink)" }}
         >
           {error}
         </p>
@@ -518,9 +518,9 @@ export default function NewExamForm({ embedded, onCreated, onCancel: onParentCan
           type="button"
           onClick={onCancel}
           disabled={pending}
-          className="rounded-full border px-4 py-2 text-[13px] font-semibold transition hover:text-white disabled:opacity-50"
+          className="rounded-full border px-4 py-2 text-[13px] font-semibold transition hover:text-[color:var(--color-text)] disabled:opacity-50"
           style={{
-            borderColor: "rgba(255,255,255,0.10)",
+            borderColor: "var(--color-ink-a10)",
             color: "var(--color-text-dim)",
           }}
         >
@@ -562,30 +562,30 @@ function PathRow({
       className="block w-full rounded-xl border px-3 py-2.5 text-left transition"
       style={{
         background: selected
-          ? "rgba(110, 128, 242, 0.10)"
-          : "#171C30",
+          ? "var(--color-work-bg)"
+          : "var(--color-surface-2)",
         borderColor: selected
           ? "var(--color-primary-bright)"
-          : "rgba(255,255,255,0.06)",
+          : "var(--color-ink-a06)",
       }}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1">
-          <div className="text-[13.5px] font-semibold text-white">{title}</div>
+          <div className="text-[13.5px] font-semibold text-[color:var(--color-text)]">{title}</div>
           <div
-            className="mt-0.5 text-[11.5px] leading-snug"
-            style={{ color: "rgba(255,255,255,0.6)" }}
+            className="mt-0.5 text-[12px] leading-snug"
+            style={{ color: "var(--color-text-faint)" }}
           >
             {sub}
           </div>
         </div>
         {badge && (
           <span
-            className="inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em]"
+            className="inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[12px] font-semibold"
             style={{
-              background: "rgba(79, 209, 165, 0.14)",
+              background: "var(--color-ok-bg)",
               color: "var(--color-cat-teal)",
-              border: "1px solid rgba(79, 209, 165, 0.35)",
+              border: "1px solid var(--color-ok-ink)",
             }}
           >
             <Target size={10} strokeWidth={2.2} aria-hidden />

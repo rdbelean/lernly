@@ -48,7 +48,7 @@ export default function GuideNav({ blocks }: { blocks: VisualBlock[] }) {
       aria-label="Themen"
       className="scrollbar-none sticky top-0 z-20 -mx-1 mb-6 flex gap-1.5 overflow-x-auto px-1 py-2"
       style={{
-        background: "rgba(15,19,34,0.92)",
+        background: "var(--color-work-ink)",
         backdropFilter: "blur(14px)",
         WebkitBackdropFilter: "blur(14px)",
         borderBottom: `1px solid ${NEUTRAL_BORDER}`,

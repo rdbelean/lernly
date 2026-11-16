@@ -52,7 +52,7 @@ function Row({
       </div>
       <div
         className="h-[3px] w-full overflow-hidden rounded-full"
-        style={{ background: "rgba(255,255,255,0.04)" }}
+        style={{ background: "var(--color-ink-a04)" }}
       >
         <div
           className="h-full transition-all"

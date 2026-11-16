@@ -51,7 +51,7 @@ function NodeBox({
         {stripEmoji(label)}
       </div>
       {sub && (
-        <div className="mt-0.5 text-[10.5px]" style={{ color: TEXT_DIM }}>
+        <div className="mt-0.5 text-[12px]" style={{ color: TEXT_DIM }}>
           {stripEmoji(sub)}
         </div>
       )}

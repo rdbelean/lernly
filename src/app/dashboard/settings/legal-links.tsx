@@ -16,7 +16,7 @@ export default function LegalLinks() {
         <li key={l.href}>
           <a
             href={l.href}
-            className="inline-flex items-center gap-1.5 text-[13px] transition hover:text-white"
+            className="inline-flex items-center gap-1.5 text-[13px] transition hover:text-[color:var(--color-text)]"
             style={{ color: "var(--color-text-dim)" }}
           >
             <FileText

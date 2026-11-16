@@ -46,7 +46,7 @@ export default function ChecklistFw({
             style={{
               borderBottom:
                 i < fw.items.length - 1
-                  ? "1px solid rgba(255,255,255,0.04)"
+                  ? "1px solid var(--color-ink-a04)"
                   : "none",
             }}
           >

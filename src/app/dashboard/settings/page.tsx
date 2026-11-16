@@ -48,8 +48,8 @@ function SectionCard({
     <section
       className="overflow-hidden border"
       style={{
-        background: "#141930",
-        borderColor: "rgba(255,255,255,0.06)",
+        background: "var(--color-surface)",
+        borderColor: "var(--color-ink-a06)",
         borderRadius: "16px",
         padding: "24px",
       }}
@@ -58,7 +58,7 @@ function SectionCard({
         <span
           aria-hidden
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
-          style={{ background: "rgba(110, 128, 242, 0.10)" }}
+          style={{ background: "var(--color-work-bg)" }}
         >
           <Icon
             size={18}
@@ -155,13 +155,13 @@ export default async function SettingsPage() {
       <div className="mx-auto max-w-[720px]">
         <Link
           href="/dashboard"
-          className="text-[13px] transition hover:text-white"
+          className="text-[13px] transition hover:text-[color:var(--color-text)]"
           style={{ color: "var(--color-text-dim)" }}
         >
           ← Dashboard
         </Link>
         <p
-          className="mt-6 mb-3 text-[11px] uppercase tracking-[0.22em]"
+          className="mt-6 mb-3 text-[12px]"
           style={{ color: "var(--color-text-faint)" }}
         >
           Einstellungen
@@ -229,7 +229,7 @@ export default async function SettingsPage() {
                     href="https://console.anthropic.com/settings/keys"
                     target="_blank"
                     rel="noreferrer"
-                    className="underline hover:text-white"
+                    className="underline hover:text-[color:var(--color-text)]"
                     style={{ color: "var(--color-text-dim)" }}
                   >
                     console.anthropic.com
@@ -242,8 +242,8 @@ export default async function SettingsPage() {
               <span
                 className="inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[12.5px] font-semibold"
                 style={{
-                  borderColor: "rgba(255,255,255,0.12)",
-                  background: "rgba(255,255,255,0.03)",
+                  borderColor: "var(--color-ink-a14)",
+                  background: "var(--color-ink-a04)",
                   color: "var(--color-text-dim)",
                 }}
               >
@@ -266,10 +266,10 @@ export default async function SettingsPage() {
 
           <div
             className="border-t pt-6"
-            style={{ borderColor: "rgba(255,255,255,0.06)" }}
+            style={{ borderColor: "var(--color-ink-a06)" }}
           >
             <p
-              className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em]"
+              className="mb-3 text-[12px] font-semibold"
               style={{ color: "var(--color-text-faint)" }}
             >
               Rechtliches

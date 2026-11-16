@@ -82,8 +82,8 @@ export default function BYOKForm({ keySetAt }: { keySetAt: string | null }) {
         <div
           className="mb-5 flex items-center justify-between gap-3 rounded-xl px-4 py-3"
           style={{
-            background: "rgba(79, 209, 165, 0.08)",
-            border: "1px solid rgba(79, 209, 165, 0.3)",
+            background: "var(--color-ok-bg)",
+            border: "1px solid var(--color-ok-bg)",
           }}
         >
           <div
@@ -100,7 +100,7 @@ export default function BYOKForm({ keySetAt }: { keySetAt: string | null }) {
               Key aktiv
             </div>
             <div
-              className="text-[11.5px]"
+              className="text-[12px]"
               style={{ color: "var(--color-text-dim)" }}
             >
               Hinzugefügt am {formatDate(keySetAt)}
@@ -124,7 +124,7 @@ export default function BYOKForm({ keySetAt }: { keySetAt: string | null }) {
                 type="button"
                 onClick={() => setConfirmingDelete(false)}
                 disabled={pending}
-                className="text-[12.5px] transition hover:text-white"
+                className="text-[12.5px] transition hover:text-[color:var(--color-text)]"
                 style={{ color: "var(--color-text-dim)" }}
               >
                 Abbrechen
@@ -134,9 +134,9 @@ export default function BYOKForm({ keySetAt }: { keySetAt: string | null }) {
             <button
               type="button"
               onClick={() => setConfirmingDelete(true)}
-              className="rounded-full border px-3 py-1.5 text-[12.5px] transition hover:text-white"
+              className="rounded-full border px-3 py-1.5 text-[12.5px] transition hover:text-[color:var(--color-text)]"
               style={{
-                borderColor: "rgba(255,255,255,0.10)",
+                borderColor: "var(--color-ink-a10)",
                 color: "var(--color-text-dim)",
               }}
             >
@@ -148,7 +148,7 @@ export default function BYOKForm({ keySetAt }: { keySetAt: string | null }) {
 
       <label
         htmlFor="apiKey"
-        className="block text-[12px] font-semibold uppercase tracking-[0.14em]"
+        className="block text-[12px] font-semibold"
         style={{ color: "var(--color-text-faint)" }}
       >
         {keySetAt ? "Neuen Key eintragen (ersetzt den alten)" : "API-Key"}
@@ -161,10 +161,10 @@ export default function BYOKForm({ keySetAt }: { keySetAt: string | null }) {
           onChange={(e) => setApiKey(e.target.value)}
           placeholder="sk-ant-..."
           autoComplete="off"
-          className="flex-1 rounded-xl px-4 py-3 text-[14px] outline-none transition focus:border-white/40"
+          className="flex-1 rounded-xl px-4 py-3 text-[14px] outline-none transition focus:border-[color:var(--color-ink-a14)]"
           style={{
             background: "var(--color-surface-2)",
-            border: "1px solid rgba(255,255,255,0.10)",
+            border: "1px solid var(--color-ink-a10)",
             color: "var(--color-text)",
           }}
         />

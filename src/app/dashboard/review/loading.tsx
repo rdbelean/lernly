@@ -7,17 +7,17 @@ export default function ReviewLoading() {
         <div className="mx-auto max-w-[640px]">
           <div
             className="h-3 w-24 rounded"
-            style={{ background: "rgba(255,255,255,0.08)" }}
+            style={{ background: "var(--color-ink-a10)" }}
           />
           <div
             className="mt-3 h-[38px] w-56 rounded-md"
-            style={{ background: "rgba(255,255,255,0.08)" }}
+            style={{ background: "var(--color-ink-a10)" }}
           />
           <div
             className="relative mt-8 h-[420px] overflow-hidden rounded-2xl"
             style={{
-              background: "rgba(20, 22, 28, 0.6)",
-              border: "1px solid rgba(255,255,255,0.1)",
+              background: "var(--color-surface)",
+              border: "1px solid var(--color-ink-a10)",
             }}
           >
             <div className="ln-skeleton-shimmer absolute inset-0" />

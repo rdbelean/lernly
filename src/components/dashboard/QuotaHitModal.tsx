@@ -56,32 +56,18 @@ export default function QuotaHitModal({ details, onClose }: Props) {
         aria-label="Schließen"
         onClick={onClose}
         className="absolute inset-0"
-        style={{ background: "rgba(0,0,0,0.65)" }}
+        style={{ background: "var(--color-scrim)" }}
       />
       <div
-        className="relative w-full max-w-[460px] overflow-hidden rounded-3xl border p-7 text-white"
+        className="relative w-full max-w-[460px] overflow-hidden rounded-[18px] border p-7"
         style={{
-          background: "rgba(20, 22, 28, 0.95)",
-          borderColor: "rgba(255,255,255,0.14)",
-          backdropFilter: "blur(24px)",
-          boxShadow: "0 24px 60px rgba(0,0,0,0.7)",
+          background: "var(--color-surface)",
+          color: "var(--color-text)",
+          borderColor: "var(--color-line)",
+          boxShadow: "var(--shadow-pop)",
         }}
       >
-        <div
-          aria-hidden
-          className="absolute -top-20 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full blur-3xl"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(99,102,241,0.45) 0%, transparent 70%)",
-          }}
-        />
         <div className="relative">
-          <p
-            className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em]"
-            style={{ color: "rgba(255,255,255,0.55)" }}
-          >
-            Limit erreicht
-          </p>
           <h2
             className="mb-3 text-balance text-[26px] font-bold leading-tight"
             style={{
@@ -93,7 +79,7 @@ export default function QuotaHitModal({ details, onClose }: Props) {
           </h2>
           <p
             className="mb-6 text-[14px] leading-relaxed"
-            style={{ color: "rgba(255,255,255,0.7)" }}
+            style={{ color: "var(--color-text-dim)" }}
           >
             Nur diese eine Klausur? Hol dir Einzelklausur. Lernst du das ganze
             Semester durch, ist Semester der günstigste Weg.
@@ -104,11 +90,10 @@ export default function QuotaHitModal({ details, onClose }: Props) {
             type="button"
             onClick={() => launch("einzelklausur")}
             disabled={Boolean(pending)}
-            className="mb-3 flex w-full items-center justify-between rounded-2xl border px-5 py-4 text-left transition hover:border-white/30 disabled:opacity-50"
+            className="mb-3 flex w-full items-center justify-between rounded-2xl border px-5 py-4 text-left transition hover:border-[color:var(--color-ink-a14)] disabled:opacity-50"
             style={{
-              background:
-                "linear-gradient(135deg, rgba(99,102,241,0.18), rgba(168,85,247,0.12))",
-              borderColor: "rgba(255,255,255,0.18)",
+              background: "var(--color-work-bg)",
+              borderColor: "var(--color-ink-a14)",
             }}
           >
             <div>
@@ -117,7 +102,7 @@ export default function QuotaHitModal({ details, onClose }: Props) {
               </div>
               <div
                 className="mt-0.5 text-[12.5px]"
-                style={{ color: "rgba(255,255,255,0.7)" }}
+                style={{ color: "var(--color-text-dim)" }}
               >
                 5 Pakete · 14 Tage · einmalig, kein Abo
               </div>
@@ -132,10 +117,10 @@ export default function QuotaHitModal({ details, onClose }: Props) {
             type="button"
             onClick={() => launch("semester")}
             disabled={Boolean(pending)}
-            className="flex w-full items-center justify-between rounded-2xl border px-5 py-4 text-left transition hover:border-white/30 disabled:opacity-50"
+            className="flex w-full items-center justify-between rounded-2xl border px-5 py-4 text-left transition hover:border-[color:var(--color-ink-a14)] disabled:opacity-50"
             style={{
-              background: "rgba(255,255,255,0.04)",
-              borderColor: "rgba(255,255,255,0.12)",
+              background: "var(--color-ink-a04)",
+              borderColor: "var(--color-ink-a14)",
             }}
           >
             <div>
@@ -144,7 +129,7 @@ export default function QuotaHitModal({ details, onClose }: Props) {
               </div>
               <div
                 className="mt-0.5 text-[12px]"
-                style={{ color: "rgba(255,255,255,0.55)" }}
+                style={{ color: "var(--color-text-faint)" }}
               >
                 Das ganze Semester, 60 Pakete/Monat — 6× Einzelklausur = 30 €.
               </div>
@@ -156,7 +141,7 @@ export default function QuotaHitModal({ details, onClose }: Props) {
 
           <p
             className="mt-5 text-center text-[12px]"
-            style={{ color: "rgba(255,255,255,0.45)" }}
+            style={{ color: "var(--color-text-faint)" }}
           >
             Lieber monatlich kündbar?{" "}
             <button
@@ -164,7 +149,7 @@ export default function QuotaHitModal({ details, onClose }: Props) {
               onClick={() => launch("monthly")}
               disabled={Boolean(pending)}
               className="underline-offset-2 hover:underline disabled:opacity-50"
-              style={{ color: "rgba(255,255,255,0.75)" }}
+              style={{ color: "var(--color-text-dim)" }}
             >
               Monatlich für 8,99 € / Monat
             </button>
@@ -173,8 +158,8 @@ export default function QuotaHitModal({ details, onClose }: Props) {
           <button
             type="button"
             onClick={onClose}
-            className="mt-5 w-full text-[12px] transition hover:text-white"
-            style={{ color: "rgba(255,255,255,0.45)" }}
+            className="mt-5 w-full text-[12px] transition hover:text-[color:var(--color-text)]"
+            style={{ color: "var(--color-text-faint)" }}
           >
             Später
           </button>

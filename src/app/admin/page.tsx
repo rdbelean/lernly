@@ -64,7 +64,7 @@ const toSeries = (pts: DayPoint[]): SeriesPoint[] =>
 function SectionLabel({ children, first }: { children: ReactNode; first?: boolean }) {
   return (
     <h2
-      className={`${first ? "mt-1" : "mt-10"} mb-3 text-[12px] font-semibold uppercase tracking-[0.18em]`}
+      className={`${first ? "mt-1" : "mt-10"} mb-3 text-[12px] font-semibold`}
       style={{ color: "var(--color-text-faint)", fontFamily: "var(--font-display)" }}
     >
       {children}
@@ -272,7 +272,7 @@ export default async function AdminPage() {
               href={POSTHOG}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11.5px] transition hover:text-white"
+              className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[12px] transition hover:text-[color:var(--color-text)]"
               style={{ background: "var(--color-surface-2)", color: "var(--color-text-dim)" }}
             >
               Aktivierung
@@ -307,7 +307,7 @@ export default async function AdminPage() {
 
         <div
           className="rounded-2xl border p-5"
-          style={{ background: "#141930", borderColor: "rgba(255,255,255,0.06)" }}
+          style={{ background: "var(--color-surface)", borderColor: "var(--color-ink-a06)" }}
         >
           <div className="flex items-center gap-2">
             {cramHealthy ? (
@@ -329,7 +329,7 @@ export default async function AdminPage() {
                 href={l.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[13px] transition hover:text-white"
+                className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[13px] transition hover:text-[color:var(--color-text)]"
                 style={{ background: "var(--color-surface-2)", color: "var(--color-text-dim)" }}
               >
                 {l.label}

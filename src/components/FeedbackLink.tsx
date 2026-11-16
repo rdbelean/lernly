@@ -23,7 +23,7 @@ export default function FeedbackLink({
         onClick={() => setOpen(true)}
         aria-label="Feedback oder Problem melden"
         className={
-          "inline-flex items-center gap-1.5 text-[12px] transition hover:text-white " +
+          "inline-flex items-center gap-1.5 text-[12px] transition hover:text-[color:var(--color-text)] " +
           (className ?? "")
         }
         style={{ color: "var(--color-text-faint)" }}

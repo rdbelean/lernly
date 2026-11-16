@@ -3,8 +3,8 @@ function SkeletonBlock({ className, style }: { className?: string; style?: React
     <div
       className={`relative overflow-hidden rounded-2xl ${className ?? ""}`}
       style={{
-        background: "rgba(20, 22, 28, 0.6)",
-        border: "1px solid rgba(255,255,255,0.1)",
+        background: "var(--color-surface)",
+        border: "1px solid var(--color-ink-a10)",
         ...style,
       }}
     >
@@ -21,11 +21,11 @@ export default function DashboardLoading() {
         <div className="mb-8">
           <div
             className="mb-3 h-3 w-32 rounded"
-            style={{ background: "rgba(255,255,255,0.08)" }}
+            style={{ background: "var(--color-ink-a10)" }}
           />
           <div
             className="h-[50px] w-56 rounded-md"
-            style={{ background: "rgba(255,255,255,0.08)" }}
+            style={{ background: "var(--color-ink-a10)" }}
           />
         </div>
 
@@ -38,7 +38,7 @@ export default function DashboardLoading() {
         {/* Grid skeleton */}
         <div
           className="mb-4 h-3 w-24 rounded"
-          style={{ background: "rgba(255,255,255,0.06)" }}
+          style={{ background: "var(--color-ink-a06)" }}
         />
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (

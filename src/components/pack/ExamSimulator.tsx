@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import confetti from "canvas-confetti";
+import { CONFETTI_COLORS } from "@/lib/design/confetti";
 import { Sparkles, Trophy, CheckCircle2, Target, AlertCircle, Flame } from "lucide-react";
 import type { ExamLens, SimulatorQuestion } from "@/lib/schema";
 import { examLensBadgeText, findTopicAppearances } from "@/lib/examLens";
@@ -15,7 +16,6 @@ import type { TutorScope } from "@/lib/tutorPrompt";
 
 type Language = "en" | "de";
 
-const CONFETTI_COLORS = ["#22d3ee", "#a78bfa", "#fbbf24", "#4ade80", "#f87171"];
 
 function burst(big = false) {
   if (typeof window === "undefined") return;
@@ -76,12 +76,12 @@ export default function ExamSimulator({
     const pct = Math.round((correct / questions.length) * 100);
     const tier =
       pct >= 90
-        ? { Icon: Trophy, color: "#4FD1A5" }
+        ? { Icon: Trophy, color: "var(--color-ok-ink)" }
         : pct >= 70
-          ? { Icon: CheckCircle2, color: "#4FD1A5" }
+          ? { Icon: CheckCircle2, color: "var(--color-ok-ink)" }
           : pct >= 50
-            ? { Icon: Target, color: "#F2A33C" }
-            : { Icon: AlertCircle, color: "#F2845C" };
+            ? { Icon: Target, color: "var(--color-urgent-ink)" }
+            : { Icon: AlertCircle, color: "var(--color-err-ink)" };
     const TierIcon = tier.Icon;
     const topicRows = simulatorTopicRows(questions, answers);
     return (
@@ -91,12 +91,12 @@ export default function ExamSimulator({
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: "spring", stiffness: 220, damping: 14 }}
           className="flex h-16 w-16 items-center justify-center rounded-2xl"
-          style={{ background: `${tier.color}26` }}
+          style={{ background: `color-mix(in srgb, ${tier.color} 15%, transparent)` }}
         >
           <TierIcon size={30} strokeWidth={2} color={tier.color} />
         </motion.div>
         <div>
-          <h3 className="text-[28px] font-bold tracking-[-0.6px] text-white">
+          <h3 className="text-[28px] font-bold tracking-[-0.6px] text-[color:var(--color-text)]">
             {isEn ? "Finished" : "Fertig"}
           </h3>
           <p className="mt-2 text-[14px]" style={{ color: "var(--color-ln-mute)" }}>
@@ -114,7 +114,7 @@ export default function ExamSimulator({
             setStreak(0);
             completionFired.current = false;
           }}
-          className="rounded-full bg-white px-5 py-2.5 text-[13px] font-semibold text-[#0F1535] transition hover:bg-white/90"
+          className="rounded-full bg-[color:var(--color-primary)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--color-on-primary)] transition hover:bg-[color:var(--color-primary-press)]"
         >
           {isEn ? "Start again" : "Nochmal starten"}
         </button>
@@ -161,7 +161,7 @@ export default function ExamSimulator({
       {!examLens && (
         <p
           className="mb-3 text-[12px] leading-relaxed"
-          style={{ color: "rgba(255,255,255,0.45)" }}
+          style={{ color: "var(--color-text-faint)" }}
         >
           Ohne Altklausuren schätze ich, was drankommt. Mit ihnen weiß ich es.
         </p>
@@ -185,9 +185,9 @@ export default function ExamSimulator({
                 transition={{ type: "spring", stiffness: 320, damping: 18 }}
                 className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[12px] font-semibold"
                 style={{
-                  background: "rgba(251,191,36,0.18)",
-                  color: "rgb(252,211,77)",
-                  border: "1px solid rgba(251,191,36,0.35)",
+                  background: "var(--color-urgent-bg)",
+                  color: "var(--color-urgent-ink)",
+                  border: "1px solid var(--color-urgent-bg)",
                 }}
               >
                 <Flame size={12} strokeWidth={2.2} aria-hidden />
@@ -198,9 +198,9 @@ export default function ExamSimulator({
           <span
             className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[12px] font-medium tabular-nums"
             style={{
-              background: "rgba(255,255,255,0.06)",
-              color: "rgba(255,255,255,0.78)",
-              border: "1px solid rgba(255,255,255,0.1)",
+              background: "var(--color-ink-a06)",
+              color: "var(--color-text-dim)",
+              border: "1px solid var(--color-ink-a10)",
             }}
           >
             {correctSoFar} / {index} {isEn ? "correct" : "richtig"}
@@ -208,7 +208,7 @@ export default function ExamSimulator({
         </div>
       </div>
 
-      <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-white/10">
+      <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-[color:var(--color-ink-a10)]">
         <motion.div
           className="h-full"
           initial={false}
@@ -216,7 +216,7 @@ export default function ExamSimulator({
           transition={{ type: "spring", stiffness: 180, damping: 25 }}
           style={{
             background:
-              "linear-gradient(90deg, rgba(74,222,128,0.95), rgba(34,211,238,0.95))",
+              "linear-gradient(90deg, var(--color-ok-ink), var(--color-work-ink))",
           }}
         />
       </div>
@@ -234,11 +234,11 @@ export default function ExamSimulator({
             <div className="mt-5 flex flex-wrap items-center gap-1.5">
               {examLens && appearances !== null && (
                 <span
-                  className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.08em]"
+                  className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold"
                   style={{
-                    background: "rgba(79,209,165,0.10)",
-                    borderColor: "#4FD1A5",
-                    color: "#4FD1A5",
+                    background: "var(--color-ok-bg)",
+                    borderColor: "var(--color-ok-ink)",
+                    color: "var(--color-ok-ink)",
                   }}
                 >
                   <Sparkles size={9} strokeWidth={2.2} aria-hidden />
@@ -247,11 +247,11 @@ export default function ExamSimulator({
               )}
               {typeof q.points === "number" && (
                 <span
-                  className="inline-flex items-center rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.08em]"
+                  className="inline-flex items-center rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold"
                   style={{
-                    background: "rgba(255,255,255,0.06)",
-                    borderColor: "rgba(255,255,255,0.14)",
-                    color: "rgba(255,255,255,0.75)",
+                    background: "var(--color-ink-a06)",
+                    borderColor: "var(--color-ink-a14)",
+                    color: "var(--color-text-dim)",
                   }}
                 >
                   {q.points} {q.points === 1 ? "Punkt" : "Punkte"}
@@ -262,14 +262,14 @@ export default function ExamSimulator({
 
           {q.scenario && (
             <div
-              className="mt-5 rounded-2xl border border-white/10 bg-black/20 px-5 py-4 text-[13px] leading-relaxed"
+              className="mt-5 rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-ink-a04)] px-5 py-4 text-[13px] leading-relaxed"
               style={{ color: "var(--color-ln-ink-soft)" }}
               dangerouslySetInnerHTML={{ __html: renderRichText(q.scenario) }}
             />
           )}
 
           <h3
-            className="mt-5 text-[20px] font-semibold leading-snug text-white"
+            className="mt-5 text-[20px] font-semibold leading-snug text-[color:var(--color-text)]"
             dangerouslySetInnerHTML={{ __html: renderRichText(q.question) }}
           />
 
@@ -280,23 +280,23 @@ export default function ExamSimulator({
               const isWrong = revealed && isPicked && i !== q.correctIndex;
 
               const border = isCorrect
-                ? "rgba(74,222,128,0.7)"
+                ? "var(--color-ok-ink)"
                 : isWrong
-                  ? "rgba(244,114,98,0.7)"
+                  ? "var(--color-err-ink)"
                   : isPicked
-                    ? "rgba(34,211,238,0.7)"
-                    : "rgba(255,255,255,0.1)";
+                    ? "var(--color-work-ink)"
+                    : "var(--color-ink-a10)";
               const bg = isCorrect
-                ? "rgba(74,222,128,0.12)"
+                ? "var(--color-ok-bg)"
                 : isWrong
-                  ? "rgba(244,114,98,0.12)"
+                  ? "var(--color-err-bg)"
                   : isPicked
-                    ? "rgba(34,211,238,0.1)"
-                    : "rgba(0,0,0,0.2)";
+                    ? "var(--color-work-bg)"
+                    : "var(--color-ink-a10)";
               const shadow = isCorrect
-                ? "0 0 0 1px rgba(74,222,128,0.5), 0 12px 32px -10px rgba(74,222,128,0.4)"
+                ? "0 0 0 1px var(--color-ok-ink), 0 12px 32px -10px var(--color-ok-ink)"
                 : isWrong
-                  ? "0 0 0 1px rgba(244,114,98,0.5), 0 12px 32px -10px rgba(244,114,98,0.4)"
+                  ? "0 0 0 1px var(--color-err-ink), 0 12px 32px -10px var(--color-err-ink)"
                   : "none";
 
               return (
@@ -314,7 +314,7 @@ export default function ExamSimulator({
                         : { scale: 1, x: 0 }
                   }
                   transition={{ duration: 0.35 }}
-                  className="flex w-full items-start gap-3 rounded-xl border px-5 py-4 text-left text-[15px] text-white transition sm:text-[16px]"
+                  className="flex w-full items-start gap-3 rounded-xl border px-5 py-4 text-left text-[15px] text-[color:var(--color-text)] transition sm:text-[16px]"
                   style={{
                     borderColor: border,
                     background: bg,
@@ -326,11 +326,11 @@ export default function ExamSimulator({
                     className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold tabular-nums"
                     style={{
                       background: isCorrect
-                        ? "rgba(74,222,128,0.25)"
+                        ? "var(--color-ok-bg)"
                         : isWrong
-                          ? "rgba(244,114,98,0.25)"
-                          : "rgba(0,0,0,0.3)",
-                      border: `1px solid ${isCorrect ? "rgba(74,222,128,0.5)" : isWrong ? "rgba(244,114,98,0.5)" : "rgba(255,255,255,0.2)"}`,
+                          ? "var(--color-err-bg)"
+                          : "var(--color-ink-a10)",
+                      border: `1px solid ${isCorrect ? "var(--color-ok-ink)" : isWrong ? "var(--color-err-ink)" : "var(--color-ink-a14)"}`,
                       color: "white",
                     }}
                   >
@@ -356,21 +356,21 @@ export default function ExamSimulator({
                 style={{
                   borderColor:
                     answer === q.correctIndex
-                      ? "rgba(74,222,128,0.35)"
-                      : "rgba(244,114,98,0.35)",
+                      ? "var(--color-ok-bg)"
+                      : "var(--color-err-bg)",
                   background:
                     answer === q.correctIndex
-                      ? "rgba(74,222,128,0.08)"
-                      : "rgba(244,114,98,0.08)",
+                      ? "var(--color-ok-bg)"
+                      : "var(--color-err-bg)",
                 }}
               >
                 <div
-                  className="text-[11px] font-semibold uppercase tracking-[2px]"
+                  className="text-[12px] font-semibold tracking-[2px]"
                   style={{
                     color:
                       answer === q.correctIndex
-                        ? "rgb(134,239,172)"
-                        : "rgb(252,165,165)",
+                        ? "var(--color-ok-ink)"
+                        : "var(--color-err-ink)",
                   }}
                 >
                   {answer === q.correctIndex
@@ -385,7 +385,7 @@ export default function ExamSimulator({
                 </div>
                 <p
                   className="mt-2 text-[14px] leading-relaxed"
-                  style={{ color: "rgba(255,255,255,0.85)" }}
+                  style={{ color: "var(--color-text-dim)" }}
                   dangerouslySetInnerHTML={{
                     __html: renderRichText(q.explanation),
                   }}
@@ -398,7 +398,7 @@ export default function ExamSimulator({
                     onClick={goNext}
                     whileHover={{ x: 2 }}
                     whileTap={{ scale: 0.96 }}
-                    className="rounded-full bg-white px-5 py-2 text-[13px] font-semibold text-[#0F1535] transition hover:bg-white/90"
+                    className="rounded-full bg-[color:var(--color-primary)] px-5 py-2 text-[13px] font-semibold text-[color:var(--color-on-primary)] transition hover:bg-[color:var(--color-primary-press)]"
                   >
                     {isEn ? "Next →" : "Weiter →"}
                   </motion.button>
@@ -407,8 +407,8 @@ export default function ExamSimulator({
                     onClick={() => setTutorOpen(true)}
                     className="inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[12.5px] font-semibold transition"
                     style={{
-                      background: "rgba(91,184,216,0.06)",
-                      borderColor: "rgba(91,184,216,0.3)",
+                      background: "var(--color-work-bg)",
+                      borderColor: "var(--color-work-bg)",
                       color: "var(--color-ln-cyan)",
                     }}
                   >

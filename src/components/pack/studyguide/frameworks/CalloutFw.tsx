@@ -43,7 +43,7 @@ export default function CalloutFw({ fw }: { fw: CalloutFw }) {
     >
       {fw.title && (
         <div
-          className="mb-1 inline-flex items-center gap-1.5 text-[12px] font-semibold uppercase tracking-[0.1em]"
+          className="mb-1 inline-flex items-center gap-1.5 text-[12px] font-semibold"
           style={{ color: tone.fg }}
         >
           {tone.Icon && <tone.Icon size={13} strokeWidth={2.2} aria-hidden />}

@@ -567,8 +567,8 @@ export default function NewPackPage() {
           <div
             className="rounded-[28px] p-10"
             style={{
-              background: "rgba(20, 22, 28, 0.78)",
-              border: "1px solid rgba(255, 255, 255, 0.18)",
+              background: "var(--color-surface)",
+              border: "1px solid var(--color-ink-a14)",
               backdropFilter: "blur(24px)",
             }}
           >
@@ -581,12 +581,12 @@ export default function NewPackPage() {
                   color="var(--color-ln-cyan)"
                   aria-hidden
                 />
-                <p className="mt-4 text-[15px] font-medium text-white">
+                <p className="mt-4 text-[15px] font-medium text-[color:var(--color-text)]">
                   Analysiere Altklausuren…
                 </p>
                 <p
                   className="mt-2 text-[12.5px]"
-                  style={{ color: "rgba(255,255,255,0.5)" }}
+                  style={{ color: "var(--color-text-faint)" }}
                 >
                   {pastExamFiles.length} Datei
                   {pastExamFiles.length === 1 ? "" : "en"} — dauert etwa eine
@@ -618,20 +618,20 @@ export default function NewPackPage() {
       <div className="mx-auto max-w-[720px]">
         <Link
           href="/dashboard"
-          className="text-[13px] transition hover:text-white"
-          style={{ color: "rgba(255,255,255,0.55)" }}
+          className="text-[13px] transition hover:text-[color:var(--color-text)]"
+          style={{ color: "var(--color-text-faint)" }}
         >
           ← Dashboard
         </Link>
 
         <p
-          className="mt-6 mb-3 text-[12px] uppercase tracking-[0.22em]"
-          style={{ color: "rgba(255,255,255,0.55)" }}
+          className="mt-6 mb-3 text-[12px]"
+          style={{ color: "var(--color-text-faint)" }}
         >
           Neues Lernpaket
         </p>
         <h1
-          className="mb-10 text-white"
+          className="mb-10 text-[color:var(--color-text)]"
           style={{
             fontFamily: "var(--font-display)",
             fontSize: "44px",
@@ -647,9 +647,9 @@ export default function NewPackPage() {
           <div
             className="mb-6 rounded-2xl p-4 text-[14px]"
             style={{
-              background: "rgba(217, 119, 87, 0.12)",
-              border: "1px solid rgba(217, 119, 87, 0.35)",
-              color: "#E8A88D",
+              background: "var(--color-err-bg)",
+              border: "1px solid var(--color-err-bg)",
+              color: "var(--color-err-ink)",
             }}
           >
             {error}
@@ -660,7 +660,7 @@ export default function NewPackPage() {
           <button
             type="button"
             onClick={() => setMode("single")}
-            className={`rounded-lg px-4 py-2 text-[14px] font-semibold ${mode === "single" ? "bg-white text-[color:var(--color-ln-bg-bot)]" : "border border-white/15 text-white"}`}
+            className={`rounded-lg px-4 py-2 text-[14px] font-semibold ${mode === "single" ? "bg-[color:var(--color-primary)] text-[color:var(--color-on-primary)]" : "border border-[color:var(--color-line)] text-white"}`}
           >
             Ein Paket
           </button>
@@ -671,10 +671,10 @@ export default function NewPackPage() {
             title={!CRAM_ENABLED ? "Bald verfügbar" : undefined}
             className={`rounded-lg px-4 py-2 text-[14px] font-semibold ${
               !CRAM_ENABLED
-                ? "cursor-not-allowed border border-white/10 text-white/40"
+                ? "cursor-not-allowed border border-[color:var(--color-line)] text-[color:var(--color-text-faint)]"
                 : mode === "cram"
-                  ? "bg-white text-[color:var(--color-ln-bg-bot)]"
-                  : "border border-white/15 text-white"
+                  ? "bg-[color:var(--color-primary)] text-[color:var(--color-on-primary)]"
+                  : "border border-[color:var(--color-line)] text-[color:var(--color-text)]"
             }`}
           >
             Alles reinwerfen (Cram){!CRAM_ENABLED && " · bald verfügbar"}
@@ -683,7 +683,7 @@ export default function NewPackPage() {
         {mode === "cram" && (
           <p
             className="mb-4 text-[13px]"
-            style={{ color: "rgba(255,255,255,0.6)" }}
+            style={{ color: "var(--color-text-faint)" }}
           >
             Wirf dein komplettes Klausur-Material rein — wir machen pro Kapitel
             ein Lernpaket. Läuft im Hintergrund; du bekommst Bescheid, wenn
@@ -694,8 +694,8 @@ export default function NewPackPage() {
         <section
           className="rounded-2xl p-6"
           style={{
-            background: "rgba(20, 22, 28, 0.55)",
-            border: "1px solid rgba(255,255,255,0.14)",
+            background: "var(--color-surface)",
+            border: "1px solid var(--color-ink-a14)",
             backdropFilter: "blur(20px)",
           }}
         >
@@ -704,21 +704,21 @@ export default function NewPackPage() {
             className="cursor-pointer rounded-2xl px-6 py-12 text-center transition"
             style={{
               border: `1px dashed ${
-                isDragActive ? "rgba(111,199,227,0.7)" : "rgba(255,255,255,0.22)"
+                isDragActive ? "var(--color-work-ink)" : "var(--color-ink-a14)"
               }`,
-              background: isDragActive ? "rgba(111,199,227,0.06)" : "transparent",
+              background: isDragActive ? "var(--color-work-bg)" : "transparent",
             }}
           >
             <input {...getInputProps()} />
             <div className="text-[44px]">📂</div>
-            <p className="mt-3 text-[16px] font-medium text-white">
+            <p className="mt-3 text-[16px] font-medium text-[color:var(--color-text)]">
               {isDragActive
                 ? "Loslassen zum Hinzufügen"
                 : "PDFs, TXT oder MD hierher ziehen"}
             </p>
             <p
               className="mt-1 text-[13px]"
-              style={{ color: "rgba(255,255,255,0.5)" }}
+              style={{ color: "var(--color-text-faint)" }}
             >
               oder klicken zum Auswählen · max. {MAX_FILES} Dateien ·{" "}
               {bytes(MAX_FILE_BYTES)} pro Datei
@@ -732,15 +732,15 @@ export default function NewPackPage() {
                   key={f.name}
                   className="flex items-center justify-between rounded-xl px-4 py-3 text-[13px]"
                   style={{
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.1)",
+                    background: "var(--color-ink-a04)",
+                    border: "1px solid var(--color-ink-a10)",
                   }}
                 >
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-white">{f.name}</div>
+                    <div className="truncate text-[color:var(--color-text)]">{f.name}</div>
                     <div
-                      className="text-[11px]"
-                      style={{ color: "rgba(255,255,255,0.5)" }}
+                      className="text-[12px]"
+                      style={{ color: "var(--color-text-faint)" }}
                     >
                       {bytes(f.size)}
                     </div>
@@ -748,7 +748,7 @@ export default function NewPackPage() {
                   <button
                     type="button"
                     onClick={() => removeFile(f.name)}
-                    className="ml-3 text-white/50 transition hover:text-white"
+                    className="ml-3 text-[color:var(--color-text-faint)] transition hover:text-[color:var(--color-text)]"
                     aria-label={`${f.name} entfernen`}
                   >
                     ✕
@@ -761,8 +761,8 @@ export default function NewPackPage() {
 
         <section className="mt-6">
           <h2
-            className="mb-3 text-[12px] uppercase tracking-[0.22em]"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+            className="mb-3 text-[12px]"
+            style={{ color: "var(--color-text-faint)" }}
           >
             Klausur <span className="lowercase">(optional)</span>
           </h2>
@@ -778,10 +778,10 @@ export default function NewPackPage() {
                 setExamId(v || null);
               }
             }}
-            className="w-full appearance-none rounded-2xl px-4 py-3 text-[14px] text-white outline-none transition focus:border-white/40"
+            className="w-full appearance-none rounded-2xl px-4 py-3 text-[14px] text-[color:var(--color-text)] outline-none transition focus:border-[color:var(--color-ink-a14)]"
             style={{
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.14)",
+              background: "var(--color-ink-a04)",
+              border: "1px solid var(--color-ink-a14)",
             }}
           >
             <option value="">Keine zugeordnet</option>
@@ -797,7 +797,7 @@ export default function NewPackPage() {
             <div className="mt-3">
               <p
                 className="mb-2 text-[12.5px] leading-relaxed"
-                style={{ color: "rgba(255,255,255,0.65)" }}
+                style={{ color: "var(--color-text-dim)" }}
               >
                 Hast du eine Altklausur? Lade sie hoch für Fragen im Stil
                 deiner echten Prüfung — siehe „Pfad A" unten.
@@ -824,8 +824,8 @@ export default function NewPackPage() {
 
         <section className="mt-6">
           <h2
-            className="mb-3 text-[12px] uppercase tracking-[0.22em]"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+            className="mb-3 text-[12px]"
+            style={{ color: "var(--color-text-faint)" }}
           >
             Altklausuren <span className="lowercase">(optional)</span>
           </h2>
@@ -837,22 +837,22 @@ export default function NewPackPage() {
                 style={{
                   border: `1px dashed ${
                     pastExamZone.isDragActive
-                      ? "rgba(79,209,165,0.7)"
-                      : "rgba(255,255,255,0.22)"
+                      ? "var(--color-ok-ink)"
+                      : "var(--color-ink-a14)"
                   }`,
                   background: pastExamZone.isDragActive
-                    ? "rgba(79,209,165,0.06)"
+                    ? "var(--color-ok-bg)"
                     : "transparent",
                 }}
               >
                 <input {...pastExamZone.getInputProps()} />
-                <p className="text-[14px] font-medium text-white">
+                <p className="text-[14px] font-medium text-[color:var(--color-text)]">
                   Altklausuren hier rein (PDF) – je mehr, desto realistischer
                   wird deine Probeklausur.
                 </p>
                 <p
                   className="mt-1 text-[12px]"
-                  style={{ color: "rgba(255,255,255,0.5)" }}
+                  style={{ color: "var(--color-text-faint)" }}
                 >
                   oder klicken zum Auswählen · max. {MAX_PAST_EXAM_FILES}{" "}
                   Dateien
@@ -861,7 +861,7 @@ export default function NewPackPage() {
               {existingRefsCount > 0 && (
                 <p
                   className="mt-2 text-[12px]"
-                  style={{ color: "rgba(255,255,255,0.55)" }}
+                  style={{ color: "var(--color-text-faint)" }}
                 >
                   {existingRefsCount} Altklausur
                   {existingRefsCount === 1 ? "" : "en"} bereits hinterlegt —
@@ -875,15 +875,15 @@ export default function NewPackPage() {
                       key={f.name}
                       className="flex items-center justify-between rounded-xl px-4 py-3 text-[13px]"
                       style={{
-                        background: "rgba(255,255,255,0.04)",
-                        border: "1px solid rgba(255,255,255,0.1)",
+                        background: "var(--color-ink-a04)",
+                        border: "1px solid var(--color-ink-a10)",
                       }}
                     >
                       <div className="min-w-0 flex-1">
-                        <div className="truncate text-white">{f.name}</div>
+                        <div className="truncate text-[color:var(--color-text)]">{f.name}</div>
                         <div
-                          className="text-[11px]"
-                          style={{ color: "rgba(255,255,255,0.5)" }}
+                          className="text-[12px]"
+                          style={{ color: "var(--color-text-faint)" }}
                         >
                           {bytes(f.size)}
                         </div>
@@ -895,7 +895,7 @@ export default function NewPackPage() {
                             prev.filter((x) => x.name !== f.name),
                           )
                         }
-                        className="ml-3 text-white/50 transition hover:text-white"
+                        className="ml-3 text-[color:var(--color-text-faint)] transition hover:text-[color:var(--color-text)]"
                         aria-label={`${f.name} entfernen`}
                       >
                         ✕
@@ -909,17 +909,17 @@ export default function NewPackPage() {
             <div
               className="rounded-2xl px-4 py-4"
               style={{
-                background: "rgba(20, 22, 28, 0.45)",
-                border: "1px solid rgba(255,255,255,0.12)",
+                background: "var(--color-surface)",
+                border: "1px solid var(--color-ink-a14)",
               }}
             >
-              <p className="text-[13px] leading-relaxed text-white">
+              <p className="text-[13px] leading-relaxed text-[color:var(--color-text)]">
                 Ohne Altklausuren schätze ich, was drankommt. Mit ihnen weiß
                 ich es.
               </p>
               <p
                 className="mt-1 text-[12px]"
-                style={{ color: "rgba(255,255,255,0.55)" }}
+                style={{ color: "var(--color-text-faint)" }}
               >
                 Wähl oben eine Klausur aus oder leg eine neue an, um
                 Altklausuren hochzuladen.
@@ -931,10 +931,10 @@ export default function NewPackPage() {
         <section className="mt-6">
           <p
             className="mb-3 text-[13px] leading-relaxed"
-            style={{ color: "rgba(255,255,255,0.65)" }}
+            style={{ color: "var(--color-text-dim)" }}
           >
             Jedes Paket enthält{" "}
-            <span className="text-white">Karteikarten, Visual Map &amp; Übersicht</span>
+            <span className="text-[color:var(--color-text)]">Karteikarten, Visual Map &amp; Übersicht</span>
             . Wähl dazu deinen Übungsmodus:
           </p>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
@@ -957,23 +957,23 @@ export default function NewPackPage() {
                   }
                   style={{
                     background: active
-                      ? "rgba(111,199,227,0.08)"
-                      : "rgba(20, 22, 28, 0.45)",
+                      ? "var(--color-work-bg)"
+                      : "var(--color-surface)",
                     border: `1px solid ${
                       active
-                        ? "rgba(111,199,227,0.5)"
-                        : "rgba(255,255,255,0.12)"
+                        ? "var(--color-work-ink)"
+                        : "var(--color-ink-a14)"
                     }`,
                     opacity: locked ? 0.55 : 1,
                   }}
                 >
                   {locked && (
                     <span
-                      className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.1em]"
+                      className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[12px] font-bold"
                       style={{
-                        background: "rgba(255,255,255,0.08)",
-                        color: "rgba(255,255,255,0.7)",
-                        border: "1px solid rgba(255,255,255,0.14)",
+                        background: "var(--color-ink-a10)",
+                        color: "var(--color-text-dim)",
+                        border: "1px solid var(--color-ink-a14)",
                       }}
                     >
                       Bald verfügbar
@@ -991,17 +991,17 @@ export default function NewPackPage() {
                       <opt.Icon
                         size={18}
                         strokeWidth={1.9}
-                        color={active ? "var(--color-ln-cyan)" : "rgba(255,255,255,0.7)"}
+                        color={active ? "var(--color-ln-cyan)" : "var(--color-text-dim)"}
                         aria-hidden
                       />
                     )}
                   </div>
-                  <div className="mt-2 text-[14px] font-semibold text-white">
+                  <div className="mt-2 text-[14px] font-semibold text-[color:var(--color-text)]">
                     {opt.title}
                   </div>
                   <div
                     className="mt-1 text-[12px] leading-snug"
-                    style={{ color: "rgba(255,255,255,0.55)" }}
+                    style={{ color: "var(--color-text-faint)" }}
                   >
                     {opt.description}
                   </div>
@@ -1013,8 +1013,8 @@ export default function NewPackPage() {
 
         <section className="mt-6">
           <h2
-            className="mb-3 text-[12px] uppercase tracking-[0.22em]"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+            className="mb-3 text-[12px]"
+            style={{ color: "var(--color-text-faint)" }}
           >
             Anzahl Karteikarten
           </h2>
@@ -1038,10 +1038,10 @@ export default function NewPackPage() {
                   }
                   style={{
                     background: active
-                      ? "rgba(111,199,227,0.08)"
-                      : "rgba(20, 22, 28, 0.45)",
+                      ? "var(--color-work-bg)"
+                      : "var(--color-surface)",
                     border: `1px solid ${
-                      active ? "rgba(111,199,227,0.5)" : "rgba(255,255,255,0.12)"
+                      active ? "var(--color-work-ink)" : "var(--color-ink-a14)"
                     }`,
                     opacity: locked ? 0.55 : 1,
                   }}
@@ -1055,15 +1055,15 @@ export default function NewPackPage() {
                       className="absolute right-2.5 top-2.5"
                     />
                   )}
-                  <div className="text-[17px] font-bold tabular-nums text-white">
+                  <div className="text-[17px] font-bold tabular-nums text-[color:var(--color-text)]">
                     {n}
                   </div>
                   <div
-                    className="mt-0.5 text-[11px] leading-snug"
+                    className="mt-0.5 text-[12px] leading-snug"
                     style={{
                       color: active
                         ? "var(--color-ln-cyan)"
-                        : "rgba(255,255,255,0.55)",
+                        : "var(--color-text-faint)",
                     }}
                   >
                     {CARD_COUNT_LABELS[n]}
@@ -1075,7 +1075,7 @@ export default function NewPackPage() {
           {(CARD_COUNT_MAX[plan] ?? CARD_COUNT_MAX.free) < 50 && (
             <p
               className="mt-2 text-[12px]"
-              style={{ color: "rgba(255,255,255,0.5)" }}
+              style={{ color: "var(--color-text-faint)" }}
             >
               Bis zu 50 Karten pro Paket mit einem{" "}
               <Link
@@ -1093,18 +1093,18 @@ export default function NewPackPage() {
             onChange={(e) => setCardInstructions(e.target.value)}
             rows={2}
             placeholder="Worauf sollen die Karten fokussieren? (optional — z.B. Formeln, Definitionen, Fallbeispiele)"
-            className="mt-3 w-full rounded-2xl px-4 py-3 text-[14px] text-white outline-none transition focus:border-white/40"
+            className="mt-3 w-full rounded-2xl px-4 py-3 text-[14px] text-[color:var(--color-text)] outline-none transition focus:border-[color:var(--color-ink-a14)]"
             style={{
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.14)",
+              background: "var(--color-ink-a04)",
+              border: "1px solid var(--color-ink-a14)",
             }}
           />
         </section>
 
         <section className="mt-6">
           <h2
-            className="mb-3 text-[12px] uppercase tracking-[0.22em]"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+            className="mb-3 text-[12px]"
+            style={{ color: "var(--color-text-faint)" }}
           >
             Zusatzinfos <span className="lowercase">(optional)</span>
           </h2>
@@ -1113,10 +1113,10 @@ export default function NewPackPage() {
             onChange={(e) => setExtraInfo(e.target.value)}
             rows={3}
             placeholder="z.B. Klausur dauert 90 min, Fokus liegt auf Kapitel 3–5, deutsche Sprache."
-            className="w-full rounded-2xl px-4 py-3 text-[14px] text-white outline-none transition focus:border-white/40"
+            className="w-full rounded-2xl px-4 py-3 text-[14px] text-[color:var(--color-text)] outline-none transition focus:border-[color:var(--color-ink-a14)]"
             style={{
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.14)",
+              background: "var(--color-ink-a04)",
+              border: "1px solid var(--color-ink-a14)",
             }}
           />
         </section>
@@ -1124,7 +1124,7 @@ export default function NewPackPage() {
         <div className="mt-8 flex items-center justify-between gap-4">
           <p
             className="text-[12px]"
-            style={{ color: "rgba(255,255,255,0.45)" }}
+            style={{ color: "var(--color-text-faint)" }}
           >
             {files.reduce((sum, f) => sum + f.size, 0) > 15 * 1024 * 1024
               ? "Große Datei — Generierung dauert ~5–10 Minuten. Lass den Tab offen."
@@ -1134,7 +1134,7 @@ export default function NewPackPage() {
             type="button"
             onClick={mode === "cram" ? submitCram : submit}
             disabled={files.length === 0}
-            className="rounded-full bg-white px-6 py-3 text-[14px] font-medium text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-full bg-[color:var(--color-primary)] px-6 py-3 text-[14px] font-medium text-[color:var(--color-on-primary)] transition hover:bg-[color:var(--color-primary-press)] disabled:cursor-not-allowed disabled:opacity-40"
           >
             {mode === "cram"
               ? "Alles reinwerfen →"

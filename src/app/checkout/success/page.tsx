@@ -44,12 +44,12 @@ export default async function CheckoutSuccessPage({
   return (
     <main className="flex flex-1 items-center justify-center px-6 py-16">
       <div
-        className="w-full max-w-[420px] rounded-[28px] p-10 text-white"
+        className="w-full max-w-[420px] rounded-[28px] p-10 text-[color:var(--color-text)]"
         style={{
-          background: "rgba(20, 22, 28, 0.78)",
-          border: "1px solid rgba(255, 255, 255, 0.22)",
+          background: "var(--color-surface)",
+          border: "1px solid var(--color-ink-a14)",
           backdropFilter: "blur(24px)",
-          boxShadow: "0 24px 60px rgba(0, 0, 0, 0.6)",
+          boxShadow: "0 24px 60px var(--color-surface)",
         }}
       >
         <Link
@@ -71,9 +71,9 @@ export default async function CheckoutSuccessPage({
             <span
               aria-hidden
               className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl"
-              style={{ background: "rgba(79,209,165,0.16)" }}
+              style={{ background: "var(--color-ok-bg)" }}
             >
-              <CheckCircle2 size={26} strokeWidth={2} color="#4FD1A5" />
+              <CheckCircle2 size={26} strokeWidth={2} color="var(--color-ok-ink)" />
             </span>
             <h1
               className="mb-2"
@@ -89,7 +89,7 @@ export default async function CheckoutSuccessPage({
             </h1>
             <p
               className="mb-6 text-[15px]"
-              style={{ color: "rgba(255,255,255,0.65)" }}
+              style={{ color: "var(--color-text-dim)" }}
             >
               Dein Konto ist eingerichtet. Logg dich direkt ein — kein Code
               nötig:
@@ -106,21 +106,21 @@ export default async function CheckoutSuccessPage({
             ) : null}
 
             <div className="mb-5 flex items-center gap-3">
-              <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.12)" }} />
+              <div className="h-px flex-1" style={{ background: "var(--color-ink-a14)" }} />
               <span
-                className="text-[11px] uppercase tracking-[0.16em]"
-                style={{ color: "rgba(255,255,255,0.4)" }}
+                className="text-[12px]"
+                style={{ color: "var(--color-ink-a14)" }}
               >
                 oder mit Code aus der Mail
               </span>
-              <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.12)" }} />
+              <div className="h-px flex-1" style={{ background: "var(--color-ink-a14)" }} />
             </div>
 
             <SuccessLogin email={email ?? ""} />
 
             <p
               className="mt-6 text-center text-[13px]"
-              style={{ color: "rgba(255,255,255,0.45)" }}
+              style={{ color: "var(--color-text-faint)" }}
             >
               Oder klick einfach den Login-Link in der E-Mail
               {email ? ` an ${email}` : ""}.
@@ -142,14 +142,14 @@ export default async function CheckoutSuccessPage({
             </h1>
             <p
               className="mb-7 text-[15px]"
-              style={{ color: "rgba(255,255,255,0.65)" }}
+              style={{ color: "var(--color-text-dim)" }}
             >
               Wir konnten den Zahlungsstatus gerade nicht sofort bestätigen.
               Wenn deine Zahlung durchging, kommt in Kürze eine E-Mail mit
               deinem Login-Code. Kommt nichts an, schreib uns:{" "}
               <a
                 href="mailto:info@lernly-app.de"
-                className="underline hover:text-white"
+                className="underline hover:text-[color:var(--color-text)]"
               >
                 info@lernly-app.de
               </a>
@@ -157,10 +157,10 @@ export default async function CheckoutSuccessPage({
             </p>
             <Link
               href="/login"
-              className="flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[15px] font-medium text-white transition hover:bg-white/15"
+              className="flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[15px] font-medium text-[color:var(--color-text)] transition hover:bg-[color:var(--color-ink-a14)]"
               style={{
-                background: "rgba(255,255,255,0.08)",
-                border: "1px solid rgba(255,255,255,0.18)",
+                background: "var(--color-ink-a10)",
+                border: "1px solid var(--color-ink-a14)",
               }}
             >
               Zum Login

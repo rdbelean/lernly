@@ -31,8 +31,8 @@ function ModeSkeleton() {
     <div
       className="relative h-[340px] overflow-hidden rounded-2xl"
       style={{
-        background: "rgba(20, 22, 28, 0.6)",
-        border: "1px solid rgba(255,255,255,0.1)",
+        background: "var(--color-surface)",
+        border: "1px solid var(--color-ink-a10)",
       }}
     >
       <div className="ln-skeleton-shimmer absolute inset-0" />
@@ -165,7 +165,7 @@ export default function PackView({
     <div>
       <div
         className="flex overflow-x-auto border-b"
-        style={{ borderColor: "rgba(255,255,255,0.06)" }}
+        style={{ borderColor: "var(--color-ink-a06)" }}
       >
         {tabs.map((t) => {
           const active = tab === t.id;

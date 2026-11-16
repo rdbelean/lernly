@@ -150,7 +150,7 @@ export default function TutorChat({
             transition={{ duration: 0.18 }}
             onClick={onClose}
             className="fixed inset-0 z-[80] sm:hidden"
-            style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)" }}
+            style={{ background: "var(--color-surface)", backdropFilter: "blur(6px)" }}
           />
           {/* Sheet (mobile: bottom; desktop: centered modal) */}
           <motion.div
@@ -161,30 +161,30 @@ export default function TutorChat({
             transition={{ duration: 0.22, ease: "easeOut" }}
             role="dialog"
             aria-modal="true"
-            className="fixed inset-x-0 bottom-0 z-[81] mx-auto flex max-h-[88vh] w-full flex-col rounded-t-2xl border border-white/10 bg-[#0F1535] sm:inset-y-0 sm:right-0 sm:left-auto sm:mx-0 sm:h-full sm:max-h-none sm:w-[380px] sm:max-w-none sm:rounded-none sm:rounded-l-2xl"
+            className="fixed inset-x-0 bottom-0 z-[81] mx-auto flex max-h-[88vh] w-full flex-col rounded-t-2xl border border-[color:var(--color-line)] bg-[var(--color-work-ink)] sm:inset-y-0 sm:right-0 sm:left-auto sm:mx-0 sm:h-full sm:max-h-none sm:w-[380px] sm:max-w-none sm:rounded-none sm:rounded-l-2xl"
             style={{
               background:
-                "linear-gradient(180deg, rgba(20,22,28,0.96), rgba(15,21,53,0.96))",
-              boxShadow: "0 -10px 40px rgba(0,0,0,0.5)",
+                "linear-gradient(180deg, var(--color-surface), var(--color-work-ink))",
+              boxShadow: "0 -10px 40px var(--color-surface)",
             }}
           >
             {/* Drag handle (mobile visual) */}
             <div className="flex justify-center pt-2 sm:hidden">
-              <div className="h-1 w-12 rounded-full bg-white/15" />
+              <div className="h-1 w-12 rounded-full bg-[color:var(--color-ink-a14)]" />
             </div>
 
             {/* Header */}
-            <div className="flex items-center justify-between gap-3 border-b border-white/8 px-4 py-3 sm:py-4">
+            <div className="flex items-center justify-between gap-3 border-b border-[color:var(--color-line)] px-4 py-3 sm:py-4">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <LernlyLogo variant="symbol" size={18} alt="" />
-                  <h2 className="text-[15px] font-bold text-white sm:text-[16px]">
+                  <h2 className="text-[15px] font-bold text-[color:var(--color-text)] sm:text-[16px]">
                     {labels.title}
                   </h2>
                 </div>
                 <p
-                  className="mt-0.5 truncate text-[11.5px]"
-                  style={{ color: "rgba(255,255,255,0.55)" }}
+                  className="mt-0.5 truncate text-[12px]"
+                  style={{ color: "var(--color-text-faint)" }}
                 >
                   {isEn ? labels.subtitleEn : labels.subtitleDe}
                 </p>
@@ -192,12 +192,12 @@ export default function TutorChat({
               {usage && (
                 <div
                   className="hidden flex-col items-end text-right sm:flex"
-                  style={{ color: "rgba(255,255,255,0.6)" }}
+                  style={{ color: "var(--color-text-faint)" }}
                 >
-                  <span className="text-[11px] font-bold tabular-nums">
+                  <span className="text-[12px] font-bold tabular-nums">
                     {usage.used}/{usage.limit}
                   </span>
-                  <span className="text-[10px] opacity-80">
+                  <span className="text-[12px] opacity-80">
                     {labels.quotaUsed}
                   </span>
                 </div>
@@ -206,7 +206,7 @@ export default function TutorChat({
                 type="button"
                 onClick={onClose}
                 aria-label={labels.close}
-                className="rounded-full p-2 text-white/55 transition hover:bg-white/5 hover:text-white"
+                className="rounded-full p-2 text-[color:var(--color-text-faint)] transition hover:bg-[color:var(--color-ink-a06)] hover:text-[color:var(--color-text)]"
               >
                 <svg
                   width="18"
@@ -234,7 +234,7 @@ export default function TutorChat({
               {messages.length === 0 && !busy && (
                 <p
                   className="px-1 text-[12.5px] leading-relaxed"
-                  style={{ color: "rgba(255,255,255,0.5)" }}
+                  style={{ color: "var(--color-text-faint)" }}
                 >
                   {labels.emptyHint}
                 </p>
@@ -252,14 +252,14 @@ export default function TutorChat({
                     <div
                       className={
                         "max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-relaxed " +
-                        (m.role === "user" ? "text-[#0F1535]" : "text-white/90")
+                        (m.role === "user" ? "text-[color:var(--color-on-primary)]" : "text-[color:var(--color-text)]")
                       }
                       style={
                         m.role === "user"
-                          ? { background: "rgba(255,255,255,0.92)" }
+                          ? { background: "var(--color-primary)" }
                           : {
-                              background: "rgba(91,184,216,0.12)",
-                              border: "1px solid rgba(91,184,216,0.22)",
+                              background: "var(--color-surface-2)",
+                              border: "1px solid var(--color-line)",
                             }
                       }
                     >
@@ -280,9 +280,9 @@ export default function TutorChat({
                     <div
                       className="flex items-center gap-1.5 rounded-2xl px-3.5 py-3 text-[12px]"
                       style={{
-                        background: "rgba(91,184,216,0.12)",
-                        border: "1px solid rgba(91,184,216,0.22)",
-                        color: "rgba(255,255,255,0.65)",
+                        background: "var(--color-work-bg)",
+                        border: "1px solid var(--color-work-bg)",
+                        color: "var(--color-text-dim)",
                       }}
                     >
                       <span className="ln-tutor-dot" />
@@ -297,8 +297,8 @@ export default function TutorChat({
 
             {error && !quotaExhausted && (
               <div
-                className="border-t border-white/8 px-4 py-2 text-[12px]"
-                style={{ color: "rgba(255,170,170,0.95)" }}
+                className="border-t border-[color:var(--color-line)] px-4 py-2 text-[12px]"
+                style={{ color: "var(--color-err-ink)" }}
               >
                 {labels.errorPrefix}
                 {error}
@@ -307,16 +307,16 @@ export default function TutorChat({
 
             {/* Input / quota wall */}
             {quotaExhausted ? (
-              <div className="border-t border-white/8 px-4 py-4">
+              <div className="border-t border-[color:var(--color-line)] px-4 py-4">
                 <div
                   className="rounded-xl border p-3 text-[12.5px] leading-relaxed"
                   style={{
-                    background: "rgba(251,191,36,0.06)",
-                    borderColor: "rgba(251,191,36,0.3)",
-                    color: "rgba(255,224,160,0.95)",
+                    background: "var(--color-urgent-bg)",
+                    borderColor: "var(--color-urgent-bg)",
+                    color: "var(--color-urgent-ink)",
                   }}
                 >
-                  <div className="flex items-center gap-1.5 text-[13px] font-bold text-white">
+                  <div className="flex items-center gap-1.5 text-[13px] font-bold text-[color:var(--color-text)]">
                     <Lock size={13} strokeWidth={2.2} aria-hidden />
                     {labels.quotaExhaustedTitle}
                   </div>
@@ -327,14 +327,14 @@ export default function TutorChat({
                   </p>
                   <Link
                     href="/dashboard/settings"
-                    className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-[12.5px] font-bold text-[#0F1535] transition hover:bg-white/90"
+                    className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[color:var(--color-primary)] px-4 py-1.5 text-[12.5px] font-bold text-[color:var(--color-on-primary)] transition hover:bg-[color:var(--color-primary-press)]"
                   >
                     {labels.upgrade} →
                   </Link>
                 </div>
               </div>
             ) : (
-              <div className="border-t border-white/8 px-3 pb-3 pt-2 sm:pb-4">
+              <div className="border-t border-[color:var(--color-line)] px-3 pb-3 pt-2 sm:pb-4">
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
@@ -349,25 +349,25 @@ export default function TutorChat({
                     placeholder={
                       isEn ? labels.placeholderEn : labels.placeholderDe
                     }
-                    className="flex-1 rounded-xl border px-3 py-2.5 text-[14px] text-white outline-none transition focus:border-white/40 disabled:opacity-60"
+                    className="flex-1 rounded-xl border px-3 py-2.5 text-[14px] text-[color:var(--color-text)] outline-none transition focus:border-[color:var(--color-ink-a14)] disabled:opacity-60"
                     style={{
-                      background: "rgba(255,255,255,0.04)",
-                      borderColor: "rgba(255,255,255,0.14)",
+                      background: "var(--color-ink-a04)",
+                      borderColor: "var(--color-ink-a14)",
                     }}
                     autoFocus
                   />
                   <button
                     type="submit"
                     disabled={busy || input.trim().length === 0}
-                    className="rounded-xl bg-white px-4 py-2.5 text-[13px] font-bold text-[#0F1535] transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-xl bg-[color:var(--color-primary)] px-4 py-2.5 text-[13px] font-bold text-[color:var(--color-on-primary)] transition hover:bg-[color:var(--color-primary-press)] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {busy ? "…" : labels.send}
                   </button>
                 </form>
                 {usage && (
                   <p
-                    className="mt-2 text-center text-[11px] tabular-nums sm:hidden"
-                    style={{ color: "rgba(255,255,255,0.45)" }}
+                    className="mt-2 text-center text-[12px] tabular-nums sm:hidden"
+                    style={{ color: "var(--color-text-faint)" }}
                   >
                     {usage.used}/{usage.limit} {labels.quotaUsed}
                   </p>
@@ -385,7 +385,7 @@ export default function TutorChat({
                 width: 5px;
                 height: 5px;
                 border-radius: 50%;
-                background: var(--color-ln-cyan, #5bb8d8);
+                background: var(--color-ln-cyan, var(--color-work-ink));
                 animation: ln-tutor-pulse 0.9s ease-in-out infinite;
               }
             `}</style>

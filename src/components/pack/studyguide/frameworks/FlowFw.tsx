@@ -60,7 +60,7 @@ export default function FlowFw({
                 </div>
                 {box.sub && (
                   <div
-                    className="mt-0.5 text-[10.5px]"
+                    className="mt-0.5 text-[12px]"
                     style={{ color: TEXT_DIM }}
                   >
                     {stripEmoji(box.sub)}

@@ -37,7 +37,7 @@ export default function MnemonicFw({
         <div className="flex items-center gap-2">
           <Brain size={20} strokeWidth={1.75} color={fg} aria-hidden />
           <span
-            className="text-[20px] font-semibold tracking-[0.08em]"
+            className="text-[20px] font-semibold"
             style={{ color: fg, fontFamily: DISPLAY_FONT }}
           >
             {fw.acronym}
@@ -56,7 +56,7 @@ export default function MnemonicFw({
         {fw.hook && (
           <div
             className="mt-3 rounded-lg px-3 py-2 text-[12px] italic leading-relaxed"
-            style={{ background: "rgba(0,0,0,0.18)", color: TEXT_DIM }}
+            style={{ background: "var(--color-ink-a10)", color: TEXT_DIM }}
           >
             {stripEmoji(fw.hook)}
           </div>

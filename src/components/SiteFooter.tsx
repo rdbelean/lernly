@@ -41,15 +41,15 @@ export default function SiteFooter({ language = "de" }: { language?: Language })
   const copy = FOOTER_COPY[language];
 
   const socialIconClass =
-    "flex h-9 w-9 items-center justify-center rounded-lg border border-white/8 transition hover:border-white/20 hover:text-white";
+    "flex h-9 w-9 items-center justify-center rounded-lg border border-[color:var(--color-line)] transition hover:border-[color:var(--color-ink-a14)] hover:text-[color:var(--color-text)]";
 
   return (
-    <footer className="border-t border-white/5 px-6 py-10">
+    <footer className="border-t border-[color:var(--color-line)] px-6 py-10">
       <div className="mx-auto max-w-[1200px]">
         {/* Top row: brand + socials */}
         <div className="flex flex-col items-center justify-between gap-5 sm:flex-row">
           <div
-            className="flex items-center gap-2.5 text-white"
+            className="flex items-center gap-2.5 text-[color:var(--color-text)]"
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "16px",
@@ -91,7 +91,7 @@ export default function SiteFooter({ language = "de" }: { language?: Language })
         </div>
 
         {/* Divider */}
-        <div className="my-6 h-px w-full bg-white/5" />
+        <div className="my-6 h-px w-full bg-[color:var(--color-ink-a06)]" />
 
         {/* Bottom row: legal links + copyright */}
         <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
@@ -99,22 +99,22 @@ export default function SiteFooter({ language = "de" }: { language?: Language })
             className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[13px]"
             style={{ color: "var(--color-ln-mute)" }}
           >
-            <a href="/impressum" className="transition hover:text-white">
+            <a href="/impressum" className="transition hover:text-[color:var(--color-text)]">
               {copy.legalNotice}
             </a>
-            <a href="/datenschutz" className="transition hover:text-white">
+            <a href="/datenschutz" className="transition hover:text-[color:var(--color-text)]">
               {copy.privacy}
             </a>
-            <a href="/agb" className="transition hover:text-white">
+            <a href="/agb" className="transition hover:text-[color:var(--color-text)]">
               {copy.terms}
             </a>
             <a
               href="mailto:info@lernly-app.de"
-              className="transition hover:text-white"
+              className="transition hover:text-[color:var(--color-text)]"
             >
               {copy.contact}
             </a>
-            <a href="/hochschulen" className="transition hover:text-white">
+            <a href="/hochschulen" className="transition hover:text-[color:var(--color-text)]">
               {copy.forUniversities}
             </a>
             {FEEDBACK_FORM_URL && (
@@ -122,7 +122,7 @@ export default function SiteFooter({ language = "de" }: { language?: Language })
                 href={FEEDBACK_FORM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition hover:text-white"
+                className="transition hover:text-[color:var(--color-text)]"
               >
                 {copy.feedback}
               </a>
@@ -143,8 +143,8 @@ export default function SiteFooter({ language = "de" }: { language?: Language })
             href="https://belerate.de"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium underline-offset-2 transition hover:text-white hover:underline"
-            style={{ color: "rgba(255,255,255,0.75)" }}
+            className="font-medium underline-offset-2 transition hover:text-[color:var(--color-text)] hover:underline"
+            style={{ color: "var(--color-text-dim)" }}
           >
             Belerate
           </a>

@@ -86,7 +86,7 @@ export default function NotificationsSection({
           style={{
             background: enabled
               ? "var(--color-primary)"
-              : "rgba(255,255,255,0.10)",
+              : "var(--color-ink-a10)",
             cursor: pending ? "wait" : "pointer",
           }}
         >
@@ -121,9 +121,9 @@ export default function NotificationsSection({
         <div
           className="rounded-xl px-4 py-3 text-[12.5px]"
           style={{
-            background: "rgba(242, 163, 60, 0.08)",
-            border: "1px solid rgba(242, 163, 60, 0.25)",
-            color: "rgba(255,220,170,0.95)",
+            background: "var(--color-urgent-bg)",
+            border: "1px solid var(--color-urgent-bg)",
+            color: "var(--color-urgent-ink)",
           }}
         >
           E-Mail-Versand ist gerade nicht konfiguriert (RESEND_API_KEY

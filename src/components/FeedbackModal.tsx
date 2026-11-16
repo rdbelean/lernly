@@ -28,11 +28,11 @@ const TYPES: { value: FeedbackType; label: string; icon: typeof Bug }[] = [
 ];
 
 const FIELD =
-  "w-full rounded-xl border px-3 py-2.5 text-[13.5px] outline-none transition focus:border-[#4B57D6]";
+  "w-full rounded-xl border px-3 py-2.5 text-[13.5px] outline-none transition focus:border-[color:var(--color-primary)]";
 const fieldStyle = {
-  background: "rgba(255,255,255,0.04)",
-  borderColor: "rgba(255,255,255,0.10)",
-  color: "var(--color-text, #EAEDF7)",
+  background: "var(--color-ink-a04)",
+  borderColor: "var(--color-ink-a10)",
+  color: "var(--color-text, var(--color-text))",
 };
 
 export default function FeedbackModal({
@@ -126,13 +126,13 @@ export default function FeedbackModal({
         aria-label="Schließen"
         onClick={onClose}
         className="absolute inset-0 cursor-default"
-        style={{ background: "rgba(5,7,15,0.65)" }}
+        style={{ background: "var(--color-scrim)" }}
       />
       <div
         className="relative w-full max-w-[440px] rounded-2xl border p-5 shadow-2xl"
         style={{
-          background: "var(--color-surface, #141930)",
-          borderColor: "rgba(255,255,255,0.10)",
+          background: "var(--color-surface, var(--color-surface))",
+          borderColor: "var(--color-ink-a10)",
         }}
       >
         <div className="flex items-start justify-between gap-3">
@@ -141,14 +141,14 @@ export default function FeedbackModal({
               className="text-[17px] font-semibold"
               style={{
                 fontFamily: "var(--font-display)",
-                color: "var(--color-text, #EAEDF7)",
+                color: "var(--color-text, var(--color-text))",
               }}
             >
               Feedback
             </h2>
             <p
               className="mt-0.5 text-[12.5px]"
-              style={{ color: "var(--color-text-dim, #9098B6)" }}
+              style={{ color: "var(--color-text-dim, var(--color-text-dim))" }}
             >
               Bug gefunden, Idee, Frage? Geht direkt an den Gründer.
             </p>
@@ -157,8 +157,8 @@ export default function FeedbackModal({
             type="button"
             onClick={onClose}
             aria-label="Schließen"
-            className="rounded-lg p-1.5 transition hover:bg-white/[0.06]"
-            style={{ color: "var(--color-text-dim, #9098B6)" }}
+            className="rounded-lg p-1.5 transition hover:bg-[color:var(--color-ink-a06)]"
+            style={{ color: "var(--color-text-dim, var(--color-text-dim))" }}
           >
             <X size={16} strokeWidth={2} aria-hidden />
           </button>
@@ -170,11 +170,11 @@ export default function FeedbackModal({
               size={32}
               strokeWidth={1.75}
               aria-hidden
-              style={{ color: "rgb(94, 200, 142)" }}
+              style={{ color: "var(--color-ok-ink)" }}
             />
             <p
               className="text-[14px] font-medium"
-              style={{ color: "var(--color-text, #EAEDF7)" }}
+              style={{ color: "var(--color-text, var(--color-text))" }}
             >
               Danke — ist angekommen.
             </p>
@@ -190,17 +190,17 @@ export default function FeedbackModal({
                     type="button"
                     onClick={() => setTyp(value)}
                     aria-pressed={active}
-                    className="flex flex-col items-center gap-1 rounded-xl border px-1 py-2 text-[11.5px] transition"
+                    className="flex flex-col items-center gap-1 rounded-xl border px-1 py-2 text-[12px] transition"
                     style={{
                       background: active
-                        ? "rgba(43,52,153,0.35)"
-                        : "rgba(255,255,255,0.03)",
+                        ? "var(--color-work-bg)"
+                        : "var(--color-ink-a04)",
                       borderColor: active
-                        ? "rgba(107,118,229,0.55)"
-                        : "rgba(255,255,255,0.08)",
+                        ? "var(--color-primary)"
+                        : "var(--color-ink-a10)",
                       color: active
-                        ? "var(--color-text, #EAEDF7)"
-                        : "var(--color-text-dim, #9098B6)",
+                        ? "var(--color-text, var(--color-text))"
+                        : "var(--color-text-dim, var(--color-text-dim))",
                     }}
                   >
                     <Icon size={15} strokeWidth={1.85} aria-hidden />
@@ -243,7 +243,7 @@ export default function FeedbackModal({
               type="submit"
               disabled={state === "sending" || nachricht.trim().length < 3}
               className="mt-1 flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[13.5px] font-medium text-white transition disabled:opacity-50"
-              style={{ background: "#2B3499" }}
+              style={{ background: "var(--color-primary)" }}
             >
               {state === "sending" && (
                 <Loader2 size={15} className="animate-spin" aria-hidden />

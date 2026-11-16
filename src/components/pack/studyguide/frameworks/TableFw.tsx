@@ -32,9 +32,9 @@ export default function TableFw({ fw }: { fw: TableFw }) {
                 {fw.headers.map((h, i) => (
                   <th
                     key={i}
-                    className="px-3.5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.08em]"
+                    className="px-3.5 py-3 text-left text-[12px] font-semibold"
                     style={{
-                      background: "rgba(255,255,255,0.02)",
+                      background: "var(--color-ink-a04)",
                       borderBottom: `1px solid ${NEUTRAL_BORDER}`,
                       color: TEXT_DIM,
                     }}
@@ -56,7 +56,7 @@ export default function TableFw({ fw }: { fw: TableFw }) {
                     style={{
                       borderBottom:
                         ri < fw.rows.length - 1
-                          ? "1px solid rgba(255,255,255,0.03)"
+                          ? "1px solid var(--color-ink-a04)"
                           : "none",
                       color: TEXT,
                     }}
@@ -71,7 +71,7 @@ export default function TableFw({ fw }: { fw: TableFw }) {
         </table>
       </div>
       {fw.caption && (
-        <p className="mt-2 text-[11.5px]" style={{ color: TEXT_FAINT }}>
+        <p className="mt-2 text-[12px]" style={{ color: TEXT_FAINT }}>
           {stripEmoji(fw.caption)}
         </p>
       )}

@@ -28,7 +28,7 @@ function MatrixCell({
     return (
       <div
         className="rounded-lg border border-dashed"
-        style={{ background: "rgba(0,0,0,0.15)", borderColor: NEUTRAL_BORDER }}
+        style={{ background: "var(--color-ink-a10)", borderColor: NEUTRAL_BORDER }}
       />
     );
   }
@@ -57,7 +57,7 @@ function MatrixCell({
         {stripEmoji(cell.title)}
       </div>
       {cell.sub && (
-        <div className="mt-1 text-[11px] leading-snug" style={{ color: TEXT_DIM }}>
+        <div className="mt-1 text-[12px] leading-snug" style={{ color: TEXT_DIM }}>
           {stripEmoji(cell.sub)}
         </div>
       )}
@@ -81,19 +81,19 @@ export default function MatrixFw({ fw }: { fw: Matrix2x2Fw }) {
         >
           <div />
           <div
-            className="px-2 py-1.5 text-center text-[11px] font-medium uppercase tracking-[0.1em]"
+            className="px-2 py-1.5 text-center text-[12px] font-medium"
             style={{ color: TEXT_DIM }}
           >
             {stripEmoji(fw.xAxis.low)}
           </div>
           <div
-            className="px-2 py-1.5 text-center text-[11px] font-medium uppercase tracking-[0.1em]"
+            className="px-2 py-1.5 text-center text-[12px] font-medium"
             style={{ color: TEXT_DIM }}
           >
             {stripEmoji(fw.xAxis.high)}
           </div>
           <div
-            className="flex items-center justify-center px-2 py-2 text-[11px] font-medium uppercase tracking-[0.1em]"
+            className="flex items-center justify-center px-2 py-2 text-[12px] font-medium"
             style={{ color: TEXT_DIM }}
           >
             <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}>
@@ -104,7 +104,7 @@ export default function MatrixFw({ fw }: { fw: Matrix2x2Fw }) {
             <MatrixCell key={`hi-${x}`} cell={cellAt(x, "high")} />
           ))}
           <div
-            className="flex items-center justify-center px-2 py-2 text-[11px] font-medium uppercase tracking-[0.1em]"
+            className="flex items-center justify-center px-2 py-2 text-[12px] font-medium"
             style={{ color: TEXT_DIM }}
           >
             <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}>
@@ -117,8 +117,8 @@ export default function MatrixFw({ fw }: { fw: Matrix2x2Fw }) {
         </div>
       </div>
       <div
-        className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]"
-        style={{ color: "var(--color-text-faint, #6F7799)" }}
+        className="mt-2 flex flex-wrap items-center gap-1.5 text-[12px]"
+        style={{ color: "var(--color-text-faint, var(--color-text-faint))" }}
       >
         <ArrowLeftRight
           size={11}

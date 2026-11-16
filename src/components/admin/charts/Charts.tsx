@@ -26,8 +26,8 @@ import {
 
 // Shared chart chrome colors (token values; recharts needs concrete strings for
 // some props but CSS var() works for fill/stroke).
-const AXIS = "#6F7799"; // --color-text-faint
-const GRID = "rgba(255,255,255,0.06)";
+const AXIS = "var(--color-text-faint)"; // --color-text-faint
+const GRID = "var(--color-ink-a06)";
 const DEFAULT_COLOR = "var(--color-primary-bright)";
 const BAR_PALETTE = [
   "var(--color-cat-blue)",
@@ -44,11 +44,11 @@ const TOOLTIP: {
 } = {
   contentStyle: {
     background: "var(--color-surface-2)",
-    border: "1px solid rgba(255,255,255,0.1)",
+    border: "1px solid var(--color-ink-a10)",
     borderRadius: 8,
     fontSize: 12,
     color: "var(--color-text)",
-    boxShadow: "0 4px 16px rgba(0,0,0,0.4)",
+    boxShadow: "0 4px 16px var(--color-surface)",
   },
   labelStyle: { color: "var(--color-text-faint)", marginBottom: 2 },
   itemStyle: { color: "var(--color-text)" },
@@ -210,7 +210,7 @@ export function DonutChart({
           </span>
           {centerSub && (
             <span
-              className="mt-1 text-[11px] uppercase tracking-[0.14em]"
+              className="mt-1 text-[12px]"
               style={{ color: "var(--color-text-faint)" }}
             >
               {centerSub}

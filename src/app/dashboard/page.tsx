@@ -12,6 +12,9 @@ import { CRAM_ENABLED } from "@/lib/features";
 import { PLAN_LABEL, PLAN_LIMITS, effectivePlan } from "@/lib/quota";
 import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
 import { dashboardGreeting } from "@/lib/greeting";
+import { getExamMap } from "@/lib/dashboard/examMap.server";
+import { berlinDay } from "@/lib/studyDay";
+import { Check } from "lucide-react";
 
 type PackSummary = {
   id: string;
@@ -73,14 +76,14 @@ export default async function DashboardPage({
   const planLabel = PLAN_LABEL[plan] ?? plan;
   const greeting = dashboardGreeting(profile?.name as string | null | undefined);
   const quotaReached = used >= planLimit;
-  const quotaPercent = planLimit > 0 ? Math.min(100, (used / planLimit) * 100) : 0;
+
   const dueCount = dueRes.count ?? 0;
 
   if (error) {
     return (
       <main>
         <div className={LAYOUT.pageContainerClass}>
-          <p className="text-[15px]" style={{ color: "rgba(255,200,120,0.85)" }}>
+          <p className="text-[15px]" style={{ color: "var(--color-err-ink)" }}>
             Pakete konnten nicht geladen werden: {error.message}
           </p>
         </div>
@@ -118,49 +121,49 @@ export default async function DashboardPage({
         now: new Date(),
       });
 
+  // Focus exam = soonest upcoming exam that has at least one pack.
+  const today = berlinDay(new Date());
+  const focusExam = progress?.exams
+    .map((pe) => exams.find((e) => e.id === pe.examId))
+    .find((e) => e && (packsByExam.get(e.id)?.length ?? 0) > 0);
+  const focus = focusExam ? await getExamMap(supabase, focusExam) : null;
+
   return (
     <main>
       <div className={LAYOUT.pageContainerClass}>
         {params.upgraded === "1" && (
           <div
-            className="mb-6 rounded-2xl p-4 text-[14px]"
-            style={{
-              background: "rgba(124,196,160,0.12)",
-              border: "1px solid rgba(124,196,160,0.35)",
-              color: "#9FD4B8",
-            }}
+            className="mb-6 flex items-center gap-2 rounded-[14px] p-4 text-[14px]"
+            style={{ background: "var(--color-ok-bg)", color: "var(--color-ok-ink)" }}
           >
-            <span className="font-medium">Zugang freigeschaltet ✓</span>
-            <span className="opacity-80"> — du kannst wieder Lernpakete erstellen.</span>
+            <Check size={16} strokeWidth={2.2} aria-hidden />
+            <span>Zugang freigeschaltet. Du kannst wieder Lernpakete erstellen.</span>
           </div>
         )}
 
-        <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p
-              className="mb-1 text-[15px] font-medium"
-              style={{ color: "var(--color-text)" }}
-            >
-              {greeting}
-            </p>
-            <p
-              className="mb-2 text-[11px] uppercase tracking-[0.22em]"
-              style={{ color: "var(--color-text-faint)" }}
-            >
-              Deine Klausuren
-            </p>
-            <h1
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "40px",
-                fontWeight: 600,
-                letterSpacing: "-1.2px",
-                lineHeight: 1.05,
-                color: "var(--color-text)",
-              }}
-            >
-              Bibliothek
-            </h1>
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+          <div
+            className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px]"
+            style={{ color: "var(--color-text-dim)" }}
+          >
+            <span>{greeting}</span>
+            <span aria-hidden>·</span>
+            <span>
+              {planLabel}, <span className="tabular-nums">{used}/{planLimit}</span> Pakete
+              {credits > 0 && ` + ${credits} Extra`}
+              {quotaReached && credits === 0 && (
+                <span style={{ color: "var(--color-err-ink)" }}> (Limit erreicht)</span>
+              )}
+            </span>
+            {plan === "free" && (
+              <Link
+                href="/dashboard/settings"
+                className="font-medium underline underline-offset-2"
+                style={{ color: "var(--color-primary)" }}
+              >
+                Upgrade
+              </Link>
+            )}
           </div>
           <PrimaryCTALink
             size="sm"
@@ -172,86 +175,7 @@ export default async function DashboardPage({
           </PrimaryCTALink>
         </div>
 
-        {/* Slim quota strip — one row: plan · usage · inline mini-bar · CTA.
-            Calm single-tone bar; coral only when fully consumed (signal). */}
-        <div
-          className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-2.5 px-4 py-2.5"
-          style={{
-            background: "#141930",
-            border: "1px solid rgba(255,255,255,0.06)",
-            borderRadius: "14px",
-          }}
-        >
-          <div
-            className="flex items-center gap-2 text-[12.5px]"
-            style={{ color: "var(--color-text-dim)" }}
-          >
-            <span style={{ color: "var(--color-text)", fontWeight: 600 }}>
-              {planLabel}
-            </span>
-            <span className="opacity-40">·</span>
-            <span className="tabular-nums">
-              <span style={{ color: "var(--color-text)", fontWeight: 600 }}>
-                {used}
-              </span>
-              /{planLimit} Pakete
-            </span>
-            {credits > 0 && (
-              <span
-                className="rounded-full px-1.5 py-0.5 text-[11px] font-semibold"
-                style={{
-                  color: "var(--color-primary-bright)",
-                  background: "rgba(110,128,242,0.12)",
-                }}
-              >
-                +{credits} Extra
-              </span>
-            )}
-          </div>
-
-          {/* Inline mini-bar — fills the middle on desktop, wraps full-width on mobile */}
-          <div className="order-last w-full sm:order-none sm:w-auto sm:min-w-[80px] sm:max-w-[240px] sm:flex-1">
-            <div
-              aria-hidden
-              className="h-1.5 w-full overflow-hidden rounded-full"
-              style={{ background: "rgba(255,255,255,0.06)" }}
-            >
-              <div
-                className="h-full rounded-full transition-all"
-                style={{
-                  width: `${quotaPercent}%`,
-                  background: quotaReached
-                    ? "var(--color-cat-coral)"
-                    : "var(--color-primary-bright)",
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="ml-auto">
-            {quotaReached && credits === 0 ? (
-              <PrimaryCTALink
-                size="sm"
-                href="/dashboard/settings"
-                trailingIconName="arrow-right"
-              >
-                Upgrade
-              </PrimaryCTALink>
-            ) : (
-              plan === "free" && (
-                <Link
-                  href="/dashboard/settings"
-                  className="text-[12.5px] font-medium underline-offset-2 hover:underline"
-                  style={{ color: "var(--color-primary-bright)" }}
-                >
-                  Upgrade
-                </Link>
-              )
-            )}
-          </div>
-        </div>
-
-        {progress && <StudentDashboard progress={progress} />}
+        {progress && <StudentDashboard progress={progress} focus={focus} today={today} />}
 
         {CRAM_ENABLED && <CramJobsPanel />}
 
@@ -259,9 +183,15 @@ export default async function DashboardPage({
           <ProgressEmptyState />
         ) : (
           <div className="space-y-10">
+            <h2
+              className="m-0 text-[22px] font-medium"
+              style={{ fontFamily: "var(--font-display)", color: "var(--color-text)" }}
+            >
+              Bibliothek
+            </h2>
             <NewExamForm />
             {exams.length > 0 && (
-              <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+              <div className="grid grid-cols-1 gap-5">
                 {exams.map((e) => (
                   <ExamCard
                     key={e.id}
