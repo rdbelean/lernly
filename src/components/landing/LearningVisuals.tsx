@@ -1,17 +1,8 @@
 import type { ReactNode } from "react";
 import { ArrowRight, Check, Clock3, FileSpreadsheet, FileText, Folder, Layers, Sparkles, Target, X } from "lucide-react";
-import Image from "next/image";
 import v from "./learning-visuals.module.css";
 import ExamMap from "@/components/dashboard/ExamMap";
 import { SAMPLE_EXAM } from "./sampleExam";
-
-type Brand = "claude" | "anki" | "quizlet" | "openai";
-const BRAND_LABEL: Record<Brand, string> = { claude: "Claude", openai: "ChatGPT", anki: "Anki", quizlet: "Quizlet" };
-
-export function BrandIcon({ name, size = 42 }: { name: Brand; size?: number }) {
-  const ext = name === "claude" || name === "openai" ? ".svg" : ".jpg";
-  return <Image src={"/brands/" + name + ext} width={size} height={size} alt={BRAND_LABEL[name]} className={v.brandIcon} />;
-}
 
 /* Fraction rendered with HTML so it stays crisp at every size. */
 function Frac({ top, bottom }: { top: ReactNode; bottom: ReactNode }) {
@@ -83,7 +74,6 @@ export function MaterialsVisual() {
   return <div className={v.visual} aria-hidden="true"><div className={v.sheet}>
     <div className={v.sheetTop}><span className={v.cardTag}><Folder size={14} />Corporate Finance</span><small>Kursordner</small></div>
     {files.map(({ icon: Icon, name, meta }) => <div className={v.fileRow} key={name}><span><Icon size={17} /></span><p>{name}<small>{meta}</small></p><i><Check size={14} /></i></div>)}
-    <div className={v.worksWith}><span>Erstellt mit</span><span className={v.brandPill}><BrandIcon name="claude" size={18} />Claude</span><span className={v.brandPill + " " + v.brandPlanned}><BrandIcon name="openai" size={18} />ChatGPT bald</span></div>
   </div></div>;
 }
 
@@ -109,37 +99,10 @@ export function TodayVisual() {
 
 /* ---------- Learning-method visuals ---------- */
 
-export function GuideRecallVisual() {
-  return <div className={v.visual} aria-hidden="true"><div className={v.sheet + " " + v.sheetCompact}>
-    <span className={v.eyebrow}>Aus dem Gedächtnis</span>
-    <h4 className={v.sheetTitle}>Wie läuft eine DCF‑Bewertung ab?</h4>
-    <div className={v.writeLines}><i /><i /><i /></div>
-    <span className={v.softAction}>Erst antworten, dann vergleichen<ArrowRight size={14} /></span>
-  </div></div>;
-}
-
-export function GuideStepsVisual() {
-  const s = ["Formel aufschreiben", "Zahlen einsetzen", "Ergebnis einordnen"];
-  return <div className={v.visual} aria-hidden="true"><div className={v.sheet + " " + v.sheetCompact}>
-    <span className={v.eyebrow}>Dein Rechenweg</span>
-    {s.map((label, i) => <div className={v.recipeRow} key={label}><span>{i + 1}</span><b>{label}</b>{i < 2 && <Check size={15} />}</div>)}
-  </div></div>;
-}
-
-export function GuideExamVisual() {
-  const rows = [["DCF", [1, 1, 1]], ["Leverage", [1, 1, 1]], ["Ratings", [0, 1, 0]]] as const;
-  return <div className={v.visual} aria-hidden="true"><div className={v.sheet + " " + v.sheetCompact}>
-    <span className={v.eyebrow}>Was kam in den Altklausuren?</span>
-    <div className={v.examGrid}><span /><small>2021</small><small>2022</small><small>2023</small>
-      {rows.map(([name, hits]) => <div className={v.examRow} key={name}><b>{name}</b>{hits.map((h, i) => <i key={i} className={h ? v.hit : ""} />)}</div>)}
-    </div>
-  </div></div>;
-}
-
 export function NextStepVisual() {
   return <div className={v.visual + " " + v.visualPlain} aria-hidden="true"><div className={v.sheet + " " + v.sheetCompact}>
     <div className={v.sheetTop}><span className={v.cardTag}><Sparkles size={14} />Dein nächster Schritt</span></div>
     <h4 className={v.sheetTitle}>Ein Thema verstehen. Eine Aufgabe selbst lösen.</h4>
-    <span className={v.softAction}>Lerntrainer ausprobieren<ArrowRight size={14} /></span>
+    <span className={v.softAction}>Gratis ausprobieren<ArrowRight size={14} /></span>
   </div></div>;
 }
