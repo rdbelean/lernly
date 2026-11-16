@@ -42,7 +42,7 @@ export default function PackHeader({
       >
         <Link
           href="/dashboard"
-          className="transition hover:text-white"
+          className="transition hover:text-[color:var(--color-text)]"
         >
           Bibliothek
         </Link>
@@ -85,7 +85,7 @@ function ExamPill({ exam }: { exam: PackExamSummary }) {
   return (
     <Link
       href="/dashboard"
-      className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[12.5px] font-semibold transition hover:bg-white/5"
+      className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[12.5px] font-semibold transition hover:bg-[color:var(--color-ink-a06)]"
       style={{
         background: examRgba(exam.color, 0.06),
         borderColor: examRgba(exam.color, 0.28),
@@ -101,9 +101,9 @@ function ExamPill({ exam }: { exam: PackExamSummary }) {
       <span className="max-w-[28ch] truncate">{exam.title}</span>
       {!isUndated && (
         <span
-          className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-[0.08em]"
+          className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[12px] font-semibold"
           style={{
-            background: "rgba(242, 163, 60, 0.14)",
+            background: "var(--color-urgent-bg)",
             color: "var(--color-amber)",
           }}
         >

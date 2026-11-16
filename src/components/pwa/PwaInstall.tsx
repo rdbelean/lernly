@@ -71,15 +71,15 @@ function Benefit({
     <div className="flex items-start gap-3">
       <div
         className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
-        style={{ background: "rgba(43,52,153,0.20)", color: "#9aa6ff" }}
+        style={{ background: "var(--color-work-bg)", color: "var(--color-work-ink)" }}
       >
         <Icon size={17} strokeWidth={2} aria-hidden />
       </div>
       <div className="min-w-0">
-        <div className="text-[14px] font-semibold text-white">{title}</div>
+        <div className="text-[14px] font-semibold text-[color:var(--color-text)]">{title}</div>
         <div
           className="text-[13px] leading-snug"
-          style={{ color: "var(--color-text-dim, #9098B6)" }}
+          style={{ color: "var(--color-text-dim, var(--color-text-dim))" }}
         >
           {sub}
         </div>
@@ -92,13 +92,13 @@ function IosStep({ n, icon: Icon, text }: { n: number; icon: typeof Share; text:
   return (
     <li className="flex items-center gap-3">
       <span
-        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[12px] font-bold text-white"
-        style={{ background: "rgba(255,255,255,0.10)" }}
+        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[12px] font-bold text-[color:var(--color-text)]"
+        style={{ background: "var(--color-ink-a10)" }}
       >
         {n}
       </span>
-      <Icon size={16} strokeWidth={2} aria-hidden className="shrink-0 text-white/70" />
-      <span className="text-[13px] text-white/85">{text}</span>
+      <Icon size={16} strokeWidth={2} aria-hidden className="shrink-0 text-[color:var(--color-text-dim)]" />
+      <span className="text-[13px] text-[color:var(--color-text-dim)]">{text}</span>
     </li>
   );
 }
@@ -188,20 +188,20 @@ export function PwaInstall({ autoShow = true }: { autoShow?: boolean }) {
         aria-label="Schließen"
         onClick={() => setOpen(false)}
         className="absolute inset-0"
-        style={{ background: "rgba(0,0,0,0.65)", backdropFilter: "blur(4px)" }}
+        style={{ background: "var(--color-surface)", backdropFilter: "blur(4px)" }}
       />
       <div
-        className="relative w-full max-w-[420px] overflow-hidden rounded-3xl border p-6 text-white sm:p-7"
+        className="relative w-full max-w-[420px] overflow-hidden rounded-3xl border p-6 text-[color:var(--color-text)] sm:p-7"
         style={{
-          background: "#141930",
-          borderColor: "rgba(255,255,255,0.10)",
-          boxShadow: "0 24px 60px rgba(0,0,0,0.7)",
+          background: "var(--color-surface)",
+          borderColor: "var(--color-ink-a10)",
+          boxShadow: "0 24px 60px var(--color-surface)",
         }}
       >
         <button
           onClick={() => setOpen(false)}
           aria-label="Schließen"
-          className="absolute right-4 top-4 inline-flex text-white/50 transition hover:text-white"
+          className="absolute right-4 top-4 inline-flex text-[color:var(--color-text-faint)] transition hover:text-[color:var(--color-text)]"
         >
           <X size={18} strokeWidth={2} aria-hidden />
         </button>
@@ -209,7 +209,7 @@ export function PwaInstall({ autoShow = true }: { autoShow?: boolean }) {
         <div className="flex items-center gap-3">
           <div
             className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+            style={{ background: "var(--color-ink-a04)", border: "1px solid var(--color-ink-a10)" }}
           >
             <LernlyLogo size={32} alt="" />
           </div>
@@ -221,7 +221,7 @@ export function PwaInstall({ autoShow = true }: { autoShow?: boolean }) {
             >
               Lernly installieren
             </h3>
-            <p className="text-[13px]" style={{ color: "var(--color-text-dim, #9098B6)" }}>
+            <p className="text-[13px]" style={{ color: "var(--color-text-dim, var(--color-text-dim))" }}>
               Für die beste Experience
             </p>
           </div>
@@ -245,7 +245,7 @@ export function PwaInstall({ autoShow = true }: { autoShow?: boolean }) {
           <button
             onClick={handleNativeInstall}
             className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-[15px] font-semibold text-white transition hover:opacity-90"
-            style={{ background: "#2B3499" }}
+            style={{ background: "var(--color-primary)" }}
           >
             <Download size={16} strokeWidth={2} aria-hidden />
             Installieren
@@ -262,7 +262,7 @@ export function PwaInstall({ autoShow = true }: { autoShow?: boolean }) {
             <button
               onClick={() => setOpen(false)}
               className="mt-6 w-full rounded-xl px-5 py-3.5 text-[15px] font-semibold text-white transition hover:opacity-90"
-              style={{ background: "#2B3499" }}
+              style={{ background: "var(--color-primary)" }}
             >
               Verstanden
             </button>
@@ -270,13 +270,13 @@ export function PwaInstall({ autoShow = true }: { autoShow?: boolean }) {
         ) : (
           // Other mobile browsers — generic add-to-home hint.
           <>
-            <p className="mt-6 text-[13px]" style={{ color: "var(--color-text-dim, #9098B6)" }}>
+            <p className="mt-6 text-[13px]" style={{ color: "var(--color-text-dim, var(--color-text-dim))" }}>
               Öffne das Browser-Menü und wähle „Zum Startbildschirm hinzufügen".
             </p>
             <button
               onClick={() => setOpen(false)}
               className="mt-5 w-full rounded-xl px-5 py-3.5 text-[15px] font-semibold text-white transition hover:opacity-90"
-              style={{ background: "#2B3499" }}
+              style={{ background: "var(--color-primary)" }}
             >
               Verstanden
             </button>
@@ -303,7 +303,7 @@ export function PwaInstallEntry({ className }: { className?: string }) {
       type="button"
       onClick={() => window.dispatchEvent(new Event(PWA_OPEN_EVENT))}
       className={
-        "inline-flex items-center gap-1.5 text-[12px] transition hover:text-white " +
+        "inline-flex items-center gap-1.5 text-[12px] transition hover:text-[color:var(--color-text)] " +
         (className ?? "")
       }
       style={{ color: "var(--color-text-faint)" }}

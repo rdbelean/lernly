@@ -30,25 +30,25 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-export const NEUTRAL_BG = "#141930";
-export const NEUTRAL_BG_2 = "#171C30";
-export const NEUTRAL_BORDER = "rgba(255,255,255,0.06)";
-export const NEUTRAL_BORDER_2 = "rgba(255,255,255,0.10)";
-export const TEXT = "#EAEDF7";
-export const TEXT_DIM = "#9098B6";
-export const TEXT_FAINT = "#6F7799";
-export const HIGHLIGHT_FG = "#6E80F2";
-export const HIGHLIGHT_TINT = "rgba(110,128,242,0.09)";
-export const AMBER = "#F2A33C";
-export const AMBER_TINT = "rgba(242,163,60,0.10)";
-export const CORAL = "#F2845C";
-export const CORAL_TINT = "rgba(242,132,92,0.10)";
-export const TEAL = "#4FD1A5";
-export const TEAL_TINT = "rgba(79,209,165,0.10)";
-export const VIOLET = "#A78BFA";
-export const VIOLET_TINT = "rgba(167,139,250,0.10)";
-export const CYAN = "#5BB8D8";
-export const CYAN_TINT = "rgba(91,184,216,0.10)";
+export const NEUTRAL_BG = "var(--color-surface)";
+export const NEUTRAL_BG_2 = "var(--color-surface-2)";
+export const NEUTRAL_BORDER = "var(--color-ink-a06)";
+export const NEUTRAL_BORDER_2 = "var(--color-ink-a10)";
+export const TEXT = "var(--color-text)";
+export const TEXT_DIM = "var(--color-text-dim)";
+export const TEXT_FAINT = "var(--color-text-faint)";
+export const HIGHLIGHT_FG = "var(--color-primary)";
+export const HIGHLIGHT_TINT = "var(--color-work-bg)";
+export const AMBER = "var(--color-urgent-ink)";
+export const AMBER_TINT = "var(--color-urgent-bg)";
+export const CORAL = "var(--color-err-ink)";
+export const CORAL_TINT = "var(--color-err-bg)";
+export const TEAL = "var(--color-ok-ink)";
+export const TEAL_TINT = "var(--color-ok-bg)";
+export const VIOLET = "var(--color-work-ink)";
+export const VIOLET_TINT = "var(--color-work-bg)";
+export const CYAN = "var(--color-work-ink)";
+export const CYAN_TINT = "var(--color-work-bg)";
 export const DISPLAY_FONT = "var(--font-display)";
 export const MONO_FONT = "var(--font-mono, ui-monospace, monospace)";
 
@@ -63,20 +63,20 @@ export type Accent = {
   grad: string;
 };
 
-const accent = (fg: string, rgb: string): Accent => ({
+const accent = (fg: string): Accent => ({
   fg,
-  tint: `rgba(${rgb},0.10)`,
-  border: `rgba(${rgb},0.28)`,
-  grad: `linear-gradient(135deg, rgba(${rgb},0.22), rgba(${rgb},0.08))`,
+  tint: `color-mix(in srgb, ${fg} 10%, transparent)`,
+  border: `color-mix(in srgb, ${fg} 28%, transparent)`,
+  grad: `color-mix(in srgb, ${fg} 14%, transparent)`,
 });
 
 export const ACCENTS: Accent[] = [
-  accent(HIGHLIGHT_FG, "110,128,242"), // indigo
-  accent(TEAL, "79,209,165"),
-  accent(AMBER, "242,163,60"),
-  accent(CORAL, "242,132,92"),
-  accent(VIOLET, "167,139,250"),
-  accent(CYAN, "91,184,216"),
+  accent(HIGHLIGHT_FG),
+  accent(TEAL),
+  accent(AMBER),
+  accent(CORAL),
+  accent(VIOLET),
+  accent(CYAN),
 ];
 
 export function accentFor(index: number): Accent {
@@ -109,7 +109,7 @@ export const PRIORITY_TONE: Record<
 > = {
   highest: { fg: CORAL, bg: CORAL_TINT, de: "HÖCHSTE PRIORITÄT", en: "HIGHEST PRIORITY" },
   high: { fg: HIGHLIGHT_FG, bg: HIGHLIGHT_TINT, de: "WICHTIG", en: "HIGH PRIORITY" },
-  moderate: { fg: TEXT_FAINT, bg: "rgba(255,255,255,0.04)", de: "BASIS", en: "FOUNDATION" },
+  moderate: { fg: TEXT_FAINT, bg: "var(--color-ink-a04)", de: "BASIS", en: "FOUNDATION" },
   quick_win: { fg: AMBER, bg: AMBER_TINT, de: "QUICK WIN", en: "QUICK WIN" },
 };
 

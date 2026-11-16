@@ -38,7 +38,7 @@ export default function AccountSection({
     <div className="space-y-4">
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span
-          className="text-[12px] font-semibold uppercase tracking-[0.14em]"
+          className="text-[12px] font-semibold"
           style={{ color: "var(--color-text-faint)" }}
         >
           Aktuelle E-Mail
@@ -54,8 +54,8 @@ export default function AccountSection({
       <div
         className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[12.5px]"
         style={{
-          background: "rgba(110, 128, 242, 0.08)",
-          borderColor: "rgba(110, 128, 242, 0.24)",
+          background: "var(--color-work-bg)",
+          borderColor: "var(--color-work-bg)",
           color: "var(--color-primary-bright)",
         }}
       >
@@ -67,9 +67,9 @@ export default function AccountSection({
         <button
           type="button"
           onClick={() => setEditing(true)}
-          className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-semibold transition hover:text-white"
+          className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-semibold transition hover:text-[color:var(--color-text)]"
           style={{
-            borderColor: "rgba(255,255,255,0.10)",
+            borderColor: "var(--color-ink-a10)",
             color: "var(--color-text-dim)",
           }}
         >
@@ -79,7 +79,7 @@ export default function AccountSection({
       ) : (
         <form action={formAction} className="space-y-3">
           <label
-            className="block text-[12px] font-semibold uppercase tracking-[0.14em]"
+            className="block text-[12px] font-semibold"
             style={{ color: "var(--color-text-faint)" }}
           >
             Neue E-Mail-Adresse
@@ -90,10 +90,10 @@ export default function AccountSection({
             required
             autoFocus
             placeholder="dein.name@uni.de"
-            className="w-full rounded-xl border px-3 py-2 text-[14px] outline-none transition focus:border-white/40"
+            className="w-full rounded-xl border px-3 py-2 text-[14px] outline-none transition focus:border-[color:var(--color-ink-a14)]"
             style={{
               background: "var(--color-surface-2)",
-              borderColor: "rgba(255,255,255,0.10)",
+              borderColor: "var(--color-ink-a10)",
               color: "var(--color-text)",
             }}
           />
@@ -116,9 +116,9 @@ export default function AccountSection({
               type="button"
               onClick={() => setEditing(false)}
               disabled={pending}
-              className="rounded-full border px-4 py-2 text-[13px] font-semibold transition hover:text-white disabled:opacity-50"
+              className="rounded-full border px-4 py-2 text-[13px] font-semibold transition hover:text-[color:var(--color-text)] disabled:opacity-50"
               style={{
-                borderColor: "rgba(255,255,255,0.10)",
+                borderColor: "var(--color-ink-a10)",
                 color: "var(--color-text-dim)",
               }}
             >

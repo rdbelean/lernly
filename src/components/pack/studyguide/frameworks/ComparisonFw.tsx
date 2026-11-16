@@ -25,9 +25,9 @@ type SideStyle = { fg: string; bg: string; border: string; Icon: LucideIcon | nu
 
 function sideStyle(tone: ComparisonFw["left"]["tone"] | undefined): SideStyle {
   if (tone === "pro")
-    return { fg: TEAL, bg: TEAL_TINT, border: "rgba(79,209,165,0.22)", Icon: Check };
+    return { fg: TEAL, bg: TEAL_TINT, border: "var(--color-ok-bg)", Icon: Check };
   if (tone === "con")
-    return { fg: CORAL, bg: CORAL_TINT, border: "rgba(242,132,92,0.22)", Icon: X };
+    return { fg: CORAL, bg: CORAL_TINT, border: "var(--color-err-bg)", Icon: X };
   return { fg: TEXT_DIM, bg: NEUTRAL_BG_2, border: NEUTRAL_BORDER, Icon: null };
 }
 
@@ -49,7 +49,7 @@ export default function ComparisonFw({ fw }: { fw: ComparisonFw }) {
               style={{ background: col.style.bg, borderColor: col.style.border }}
             >
               <div
-                className="mb-2 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.12em]"
+                className="mb-2 inline-flex items-center gap-1.5 text-[12px] font-semibold"
                 style={{ color: col.style.fg }}
               >
                 {ItemIcon && <ItemIcon size={12} strokeWidth={2.2} aria-hidden />}

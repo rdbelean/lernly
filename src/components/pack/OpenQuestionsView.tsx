@@ -56,11 +56,11 @@ export default function OpenQuestionsView({
           {q.category && <span>{q.category}</span>}
           {examLens && appearances !== null && (
             <span
-              className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.08em]"
+              className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold"
               style={{
-                background: "rgba(79,209,165,0.10)",
-                borderColor: "#4FD1A5",
-                color: "#4FD1A5",
+                background: "var(--color-ok-bg)",
+                borderColor: "var(--color-ok-ink)",
+                color: "var(--color-ok-ink)",
               }}
             >
               <Sparkles size={9} strokeWidth={2.2} aria-hidden />
@@ -79,18 +79,18 @@ export default function OpenQuestionsView({
           transition={{ duration: 0.25 }}
         >
           <div
-            className="rounded-2xl border bg-black/20 p-5"
-            style={{ borderColor: "rgba(255,255,255,0.12)" }}
+            className="rounded-2xl border bg-[color:var(--color-ink-a04)] p-5"
+            style={{ borderColor: "var(--color-ink-a14)" }}
           >
             <p
-              className="text-[16px] leading-relaxed text-white"
+              className="text-[16px] leading-relaxed text-[color:var(--color-text)]"
               dangerouslySetInnerHTML={{ __html: renderRichText(q.question) }}
             />
 
             {!revealed ? (
               <button
                 onClick={() => setRevealed(true)}
-                className="mt-5 rounded-full bg-white px-5 py-2 text-[13px] font-semibold text-[#0F1535] transition hover:bg-white/90"
+                className="mt-5 rounded-full bg-[color:var(--color-primary)] px-5 py-2 text-[13px] font-semibold text-[color:var(--color-on-primary)] transition hover:bg-[color:var(--color-primary-press)]"
               >
                 {isEn ? "Reveal answer" : "Antwort aufdecken"}
               </button>
@@ -103,13 +103,13 @@ export default function OpenQuestionsView({
               >
                 <div>
                   <div
-                    className="mb-2 text-[11px] font-medium uppercase tracking-[2px]"
+                    className="mb-2 text-[12px] font-medium tracking-[2px]"
                     style={{ color: "var(--color-ln-mute)" }}
                   >
                     {isEn ? "Model answer" : "Musterlösung"}
                   </div>
                   <div
-                    className="text-[14px] leading-relaxed text-white/90"
+                    className="text-[14px] leading-relaxed text-[color:var(--color-text-dim)]"
                     dangerouslySetInnerHTML={{
                       __html: renderRichText(q.modelAnswer),
                     }}
@@ -119,12 +119,12 @@ export default function OpenQuestionsView({
                   <div
                     className="rounded-xl border p-4"
                     style={{
-                      background: "rgba(34,211,238,0.06)",
-                      borderColor: "rgba(34,211,238,0.2)",
+                      background: "var(--color-work-bg)",
+                      borderColor: "var(--color-work-bg)",
                     }}
                   >
                     <div
-                      className="mb-2 text-[11px] font-medium uppercase tracking-[2px]"
+                      className="mb-2 text-[12px] font-medium tracking-[2px]"
                       style={{ color: "var(--color-ln-cyan)" }}
                     >
                       {isEn ? "Must include" : "Das muss rein"}
@@ -133,7 +133,7 @@ export default function OpenQuestionsView({
                       {q.keyPoints.map((kp, i) => (
                         <li
                           key={i}
-                          className="flex items-start gap-2 text-[13px] text-white/80"
+                          className="flex items-start gap-2 text-[13px] text-[color:var(--color-text-dim)]"
                         >
                           <span aria-hidden style={{ color: "var(--color-ln-cyan)" }}>
                             ✓
@@ -152,8 +152,8 @@ export default function OpenQuestionsView({
                     onClick={() => setTutorOpen(true)}
                     className="inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[12.5px] font-semibold transition"
                     style={{
-                      background: "rgba(91,184,216,0.06)",
-                      borderColor: "rgba(91,184,216,0.3)",
+                      background: "var(--color-work-bg)",
+                      borderColor: "var(--color-work-bg)",
                       color: "var(--color-ln-cyan)",
                     }}
                   >
@@ -171,14 +171,14 @@ export default function OpenQuestionsView({
         <button
           onClick={() => go(-1)}
           disabled={index === 0}
-          className="rounded-full border border-white/15 px-4 py-2 text-[13px] text-white/70 transition hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+          className="rounded-full border border-[color:var(--color-line)] px-4 py-2 text-[13px] text-[color:var(--color-text-dim)] transition hover:text-[color:var(--color-text)] disabled:cursor-not-allowed disabled:opacity-40"
         >
           ← {isEn ? "Back" : "Zurück"}
         </button>
         <button
           onClick={() => go(1)}
           disabled={index === questions.length - 1}
-          className="rounded-full border border-white/15 px-4 py-2 text-[13px] text-white/70 transition hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+          className="rounded-full border border-[color:var(--color-line)] px-4 py-2 text-[13px] text-[color:var(--color-text-dim)] transition hover:text-[color:var(--color-text)] disabled:cursor-not-allowed disabled:opacity-40"
         >
           {isEn ? "Next" : "Weiter"} →
         </button>

@@ -83,47 +83,47 @@ export default function CramJobsPanel() {
             key={job.id}
             className="overflow-hidden"
             style={{
-              background: "#141930",
-              border: "1px solid rgba(255,255,255,0.06)",
+              background: "var(--color-surface)",
+              border: "1px solid var(--color-ink-a06)",
               borderRadius: "16px",
             }}
           >
             <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
-              <div className="flex items-center gap-2 text-[14px] font-semibold text-white">
+              <div className="flex items-center gap-2 text-[14px] font-semibold text-[color:var(--color-text)]">
                 {active && (
                   <span
                     className="inline-block h-3 w-3 animate-spin rounded-full"
-                    style={{ border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff" }}
+                    style={{ border: "2px solid var(--color-ink-a14)", borderTopColor: "var(--color-primary)" }}
                     aria-hidden
                   />
                 )}
                 <span>Cram-Paket</span>
               </div>
-              <div className="text-[13px]" style={{ color: "rgba(255,255,255,0.7)" }}>
+              <div className="text-[13px]" style={{ color: "var(--color-text-dim)" }}>
                 {job.done} von {job.total} fertig
                 {job.failed > 0 && (
-                  <span style={{ color: "rgba(255,170,120,0.95)" }}> · {job.failed} fehlgeschlagen</span>
+                  <span style={{ color: "var(--color-urgent-ink)" }}> · {job.failed} fehlgeschlagen</span>
                 )}
               </div>
             </div>
-            <ul className="divide-y divide-white/5 border-t border-white/5">
+            <ul className="divide-y divide-[color:var(--color-line)] border-t border-[color:var(--color-line)]">
               {job.chunks.map((c) => (
                 <li key={c.id} className="flex items-center justify-between gap-3 px-5 py-2.5 text-[13.5px]">
-                  <span className="min-w-0 truncate text-white/85">{c.label ?? "Paket"}</span>
+                  <span className="min-w-0 truncate text-[color:var(--color-text-dim)]">{c.label ?? "Paket"}</span>
                   {c.status === "ready" ? (
-                    <Link href={`/dashboard/pack/${c.id}`} className="shrink-0 font-semibold text-white underline-offset-2 hover:underline">
+                    <Link href={`/dashboard/pack/${c.id}`} className="shrink-0 font-semibold text-[color:var(--color-text)] underline-offset-2 hover:underline">
                       Öffnen →
                     </Link>
                   ) : c.status === "failed" ? (
                     <button
                       type="button"
                       onClick={() => retry(c.id)}
-                      className="shrink-0 rounded-full border border-white/20 px-3 py-1 text-[12px] font-medium text-white hover:bg-white/10"
+                      className="shrink-0 rounded-full border border-[color:var(--color-ink-a14)] px-3 py-1 text-[12px] font-medium text-[color:var(--color-text)] hover:bg-[color:var(--color-ink-a10)]"
                     >
                       Erneut versuchen
                     </button>
                   ) : (
-                    <span className="shrink-0" style={{ color: "rgba(255,255,255,0.5)" }}>
+                    <span className="shrink-0" style={{ color: "var(--color-text-faint)" }}>
                       wird erstellt …
                     </span>
                   )}

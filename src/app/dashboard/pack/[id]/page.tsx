@@ -106,18 +106,18 @@ export default async function PackDetailPage({
           <nav
             aria-label="Breadcrumb"
             className="flex items-center gap-2 text-[12px]"
-            style={{ color: "rgba(255,255,255,0.45)" }}
+            style={{ color: "var(--color-text-faint)" }}
           >
-            <Link href="/dashboard" className="transition hover:text-white">
+            <Link href="/dashboard" className="transition hover:text-[color:var(--color-text)]">
               Bibliothek
             </Link>
             <span aria-hidden>›</span>
-            <span style={{ color: "rgba(255,255,255,0.7)" }}>{data.title}</span>
+            <span style={{ color: "var(--color-text-dim)" }}>{data.title}</span>
           </nav>
-          <h1 className="mt-4 text-[28px] font-bold text-white">{data.title}</h1>
+          <h1 className="mt-4 text-[28px] font-bold text-[color:var(--color-text)]">{data.title}</h1>
           <p
             className="mt-3 text-[14px]"
-            style={{ color: "rgba(255,200,120,0.85)" }}
+            style={{ color: "var(--color-urgent-ink)" }}
           >
             Dieses Paket konnte nicht geöffnet werden — das gespeicherte Format
             ist veraltet oder defekt.
@@ -194,9 +194,9 @@ export default async function PackDetailPage({
           <div
             className="mb-6 rounded-xl border px-4 py-3 text-[12.5px]"
             style={{
-              background: "rgba(251,191,36,0.08)",
-              borderColor: "rgba(251,191,36,0.3)",
-              color: "rgba(255,224,160,0.95)",
+              background: "var(--color-urgent-bg)",
+              borderColor: "var(--color-urgent-bg)",
+              color: "var(--color-urgent-ink)",
             }}
           >
             <strong>Demo-Modus aktiv:</strong> Visual Map wird aus einem

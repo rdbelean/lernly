@@ -65,7 +65,7 @@ export default function ConceptChips({
   return (
     <div className="mb-4">
       <div
-        className="mb-2 text-[10.5px] font-semibold uppercase tracking-[0.14em]"
+        className="mb-2 text-[12px] font-semibold"
         style={{ color: TEXT_FAINT }}
       >
         {isEn ? "Concepts to know" : "Konzepte in diesem Thema"}
@@ -114,7 +114,7 @@ export default function ConceptChips({
                 <div className="mt-1 flex flex-wrap gap-1">
                   {isHigh && (
                     <span
-                      className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.08em]"
+                      className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold"
                       style={{
                         background: HIGHLIGHT_TINT,
                         borderColor: HIGHLIGHT_FG,
@@ -138,7 +138,7 @@ export default function ConceptChips({
                       <>
                         {showFrequency && examLens && (
                           <span
-                            className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.08em]"
+                            className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold"
                             style={{
                               background: TEAL_TINT,
                               borderColor: TEAL,
@@ -151,7 +151,7 @@ export default function ConceptChips({
                         )}
                         {showProfHint && (
                           <span
-                            className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.08em]"
+                            className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold"
                             style={{
                               background: TEAL_TINT,
                               borderColor: TEAL,
@@ -163,7 +163,7 @@ export default function ConceptChips({
                         )}
                         {showLegacyTag && c.relevanceTag && (
                           <span
-                            className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.08em]"
+                            className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-semibold"
                             style={{
                               background: TEAL_TINT,
                               borderColor: TEAL,
@@ -185,7 +185,7 @@ export default function ConceptChips({
                   >
                     {c.author && (
                       <div
-                        className="mb-1.5 text-[10.5px] font-medium uppercase tracking-[0.1em]"
+                        className="mb-1.5 text-[12px] font-medium"
                         style={{ color: TEXT_FAINT }}
                       >
                         {stripEmoji(c.author)}
@@ -215,7 +215,7 @@ export default function ConceptChips({
                             className="mt-0.5 shrink-0"
                           />
                           <p
-                            className="text-[11.5px] leading-relaxed"
+                            className="text-[12px] leading-relaxed"
                             style={{ color: TEXT }}
                             dangerouslySetInnerHTML={{
                               __html: renderRichText(c.examRelevance),

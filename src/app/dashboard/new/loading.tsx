@@ -8,23 +8,23 @@ export default function NewPackLoading() {
       <div className="mx-auto max-w-[720px]">
         <div
           className="h-3 w-24 rounded"
-          style={{ background: "rgba(255,255,255,0.07)" }}
+          style={{ background: "var(--color-ink-a10)" }}
         />
         <div
           className="mt-6 h-3 w-28 rounded"
-          style={{ background: "rgba(255,255,255,0.05)" }}
+          style={{ background: "var(--color-ink-a04)" }}
         />
         <div
           className="mt-3 h-[40px] w-2/3 max-w-[380px] rounded-md"
-          style={{ background: "rgba(255,255,255,0.08)" }}
+          style={{ background: "var(--color-ink-a10)" }}
         />
 
         {/* Dropzone */}
         <div
           className="relative mt-8 h-[220px] overflow-hidden rounded-2xl"
           style={{
-            background: "rgba(20, 22, 28, 0.6)",
-            border: "1px dashed rgba(255,255,255,0.14)",
+            background: "var(--color-surface)",
+            border: "1px dashed var(--color-ink-a14)",
           }}
         >
           <div className="ln-skeleton-shimmer absolute inset-0" />
@@ -37,8 +37,8 @@ export default function NewPackLoading() {
               key={i}
               className="relative h-[84px] overflow-hidden rounded-xl"
               style={{
-                background: "rgba(20, 22, 28, 0.6)",
-                border: "1px solid rgba(255,255,255,0.1)",
+                background: "var(--color-surface)",
+                border: "1px solid var(--color-ink-a10)",
               }}
             >
               <div className="ln-skeleton-shimmer absolute inset-0" />

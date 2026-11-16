@@ -1,16 +1,14 @@
 import type { HeatmapGrid } from "@/lib/dashboard/studentProgressShared";
 
-const TEAL = "79,209,165"; // --color-cat-teal
-
 // Intensity buckets (Anki-style): empty days are faint, studied days scale
 // teal by relative count. Out-of-range cells (future days in the current week)
 // are invisible so the grid keeps a clean rectangle.
 function cellColor(count: number, inRange: boolean, maxCount: number): string {
   if (!inRange) return "transparent";
-  if (count <= 0) return "rgba(255,255,255,0.04)";
+  if (count <= 0) return "var(--color-ink-a06)";
   const level = maxCount <= 1 ? 4 : Math.min(4, Math.ceil((count / maxCount) * 4));
-  const alpha = [0.22, 0.4, 0.62, 0.9][level - 1];
-  return `rgba(${TEAL},${alpha})`;
+  const pct = [25, 45, 70, 100][level - 1];
+  return `color-mix(in srgb, var(--color-ok-ink) ${pct}%, transparent)`;
 }
 
 export default function StudyHeatmap({ heatmap }: { heatmap: HeatmapGrid }) {

@@ -8,8 +8,8 @@ function Card({ h }: { h: number }) {
       className="relative mt-4 overflow-hidden rounded-2xl"
       style={{
         height: h,
-        background: "rgba(20, 22, 28, 0.6)",
-        border: "1px solid rgba(255,255,255,0.1)",
+        background: "var(--color-surface)",
+        border: "1px solid var(--color-ink-a10)",
       }}
     >
       <div className="ln-skeleton-shimmer absolute inset-0" />
@@ -23,11 +23,11 @@ export default function SettingsLoading() {
       <div className="mx-auto max-w-[720px]">
         <div
           className="h-3 w-24 rounded"
-          style={{ background: "rgba(255,255,255,0.07)" }}
+          style={{ background: "var(--color-ink-a10)" }}
         />
         <div
           className="mt-6 mb-3 h-3 w-32 rounded"
-          style={{ background: "rgba(255,255,255,0.05)" }}
+          style={{ background: "var(--color-ink-a04)" }}
         />
         <Card h={120} />
         <Card h={96} />

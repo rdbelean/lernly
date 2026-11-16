@@ -10,12 +10,12 @@ export const EXAM_COLORS = [
 export type ExamColor = (typeof EXAM_COLORS)[number];
 
 const EXAM_COLOR_RGB: Record<ExamColor, string> = {
-  cyan: "91,184,216",
-  violet: "154,140,224",
-  sage: "124,196,160",
-  rose: "251,113,133",
-  amber: "251,191,36",
-  indigo: "124,120,216",
+  cyan: "21,128,166",
+  violet: "109,94,196",
+  sage: "52,140,98",
+  rose: "200,48,86",
+  amber: "180,100,10",
+  indigo: "70,62,180",
 };
 
 export function isExamColor(c: string | null | undefined): c is ExamColor {
@@ -58,11 +58,11 @@ export function countdownInfo(examDate: string | null | undefined): CountdownInf
 }
 
 const TONE_RGB: Record<CountdownTone, string> = {
-  panic: "251,113,133",
-  warn: "251,191,36",
-  calm: "124,196,160",
-  past: "255,255,255",
-  undated: "255,255,255",
+  panic: "179,38,30",
+  warn: "138,75,11",
+  calm: "14,74,44",
+  past: "18,23,43",
+  undated: "18,23,43",
 };
 
 export function countdownToneRgba(tone: CountdownTone, alpha: number): string {

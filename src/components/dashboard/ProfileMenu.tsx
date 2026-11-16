@@ -13,7 +13,7 @@ import { PwaInstallEntry } from "@/components/pwa/PwaInstall";
 // standalone sidebar row. Logout stays the exact same /auth/signout form POST.
 
 const ROW =
-  "flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-[13px] transition hover:bg-white/[0.05]";
+  "flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-[13px] transition hover:bg-[color:var(--color-ink-a06)]";
 
 function initials(name: string | null, email: string): string {
   const n = name?.trim();
@@ -71,18 +71,18 @@ export default function ProfileMenu({
           }
           style={{
             background: "var(--color-surface)",
-            borderColor: "rgba(255,255,255,0.10)",
+            borderColor: "var(--color-ink-a10)",
           }}
         >
           {/* E-mail — quiet, informational, not a tap target */}
           <div
-            className="truncate px-2.5 py-1.5 text-[11.5px]"
+            className="truncate px-2.5 py-1.5 text-[12px]"
             style={{ color: "var(--color-text-faint)" }}
             title={email}
           >
             {email}
           </div>
-          <div className="my-1 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
+          <div className="my-1 h-px" style={{ background: "var(--color-ink-a10)" }} />
 
           <Link
             href="/dashboard/settings"
@@ -124,14 +124,14 @@ export default function ProfileMenu({
         aria-expanded={open}
         title={collapsed ? displayName : undefined}
         className={
-          "flex w-full items-center gap-2.5 rounded-xl py-2 transition hover:bg-white/[0.04] " +
+          "flex w-full items-center gap-2.5 rounded-xl py-2 transition hover:bg-[color:var(--color-ink-a06)] " +
           (collapsed ? "justify-center px-0" : "px-2")
         }
       >
         <span
           aria-hidden
           className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold text-white"
-          style={{ background: "linear-gradient(135deg,#2B3499,#4B57D6)" }}
+          style={{ background: "var(--color-primary)" }}
         >
           {initials(name, email)}
         </span>

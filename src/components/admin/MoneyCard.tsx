@@ -56,10 +56,10 @@ export default function MoneyCard({
     <div
       className="rounded-2xl border p-5"
       style={{
-        background: accent ? "rgba(43,52,153,0.18)" : "#141930",
+        background: accent ? "var(--color-work-bg)" : "var(--color-surface)",
         borderColor: accent
-          ? "rgba(110,128,242,0.45)"
-          : "rgba(255,255,255,0.06)",
+          ? "var(--color-work-ink)"
+          : "var(--color-ink-a06)",
       }}
     >
       <div className="flex items-center gap-2">
@@ -72,7 +72,7 @@ export default function MoneyCard({
           />
         )}
         <span
-          className="text-[11px] uppercase tracking-[0.16em]"
+          className="text-[12px]"
           style={{ color: "var(--color-text-faint)" }}
         >
           {label}

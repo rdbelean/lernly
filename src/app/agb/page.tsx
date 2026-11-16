@@ -24,12 +24,12 @@ const breadcrumbJsonLd = {
 
 const sectionStyle = { marginBottom: "32px" } as const;
 const bodyStyle = {
-  color: "rgba(255,255,255,0.8)",
+  color: "var(--color-text-dim)",
   fontSize: "15px",
   lineHeight: 1.7,
 } as const;
 const headingStyle = {
-  color: "#ffffff",
+  color: "var(--color-text)",
   fontWeight: 600,
   fontSize: "22px",
   marginBottom: "12px",
@@ -57,14 +57,14 @@ function AgbContent() {
       <main className="flex flex-1 flex-col px-6 py-20 md:py-24">
         <div className="mx-auto w-full max-w-[700px]">
           <h1
-            className="font-bold leading-[1.05] tracking-[-1.92px] text-white"
+            className="font-bold leading-[1.05] tracking-[-1.92px] text-[color:var(--color-text)]"
             style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
           >
             AGB
           </h1>
           <p
             className="mt-3 text-[14px]"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+            style={{ color: "var(--color-text-faint)" }}
           >
             Allgemeine Geschäftsbedingungen - Stand:{" "}
             {new Date().toLocaleDateString("de-DE", {

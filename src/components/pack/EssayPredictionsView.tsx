@@ -39,7 +39,7 @@ export default function EssayPredictionsView({
     <div>
       <p
         className="mb-5 text-[12.5px]"
-        style={{ color: "rgba(255,255,255,0.55)" }}
+        style={{ color: "var(--color-text-faint)" }}
       >
         {labels.intro}{" "}
         <span style={{ color: "var(--color-ln-cyan)" }}>
@@ -56,23 +56,23 @@ export default function EssayPredictionsView({
             transition={{ delay: i * 0.05, duration: 0.3 }}
             className="rounded-2xl border p-4 sm:p-5"
             style={{
-              background: "rgba(20,22,28,0.55)",
-              borderColor: "rgba(255,255,255,0.1)",
+              background: "var(--color-surface)",
+              borderColor: "var(--color-ink-a10)",
             }}
           >
             {/* Question */}
             <div className="flex items-baseline gap-2.5">
               <span
-                className="inline-flex h-6 min-w-6 items-center justify-center rounded-full px-2 text-[11px] font-bold tabular-nums"
+                className="inline-flex h-6 min-w-6 items-center justify-center rounded-full px-2 text-[12px] font-bold tabular-nums"
                 style={{
-                  background: "rgba(154,140,224,0.18)",
+                  background: "var(--color-work-bg)",
                   color: "var(--color-ln-violet)",
                 }}
               >
                 {String(i + 1).padStart(2, "0")}
               </span>
               <h3
-                className="flex-1 text-[15.5px] font-bold leading-snug text-white sm:text-[16.5px]"
+                className="flex-1 text-[15.5px] font-bold leading-snug text-[color:var(--color-text)] sm:text-[16.5px]"
                 dangerouslySetInnerHTML={{ __html: renderRichText(p.question) }}
               />
             </div>
@@ -81,21 +81,21 @@ export default function EssayPredictionsView({
             <div
               className="mt-3 rounded-xl border-l-[3px] border-y border-r px-3.5 py-2.5"
               style={{
-                background: "rgba(91,184,216,0.06)",
+                background: "var(--color-work-bg)",
                 borderLeftColor: "var(--color-ln-cyan)",
-                borderTopColor: "rgba(91,184,216,0.15)",
-                borderRightColor: "rgba(91,184,216,0.15)",
-                borderBottomColor: "rgba(91,184,216,0.15)",
+                borderTopColor: "var(--color-work-bg)",
+                borderRightColor: "var(--color-work-bg)",
+                borderBottomColor: "var(--color-work-bg)",
               }}
             >
               <div
-                className="mb-0.5 text-[10px] font-bold uppercase tracking-[0.12em]"
+                className="mb-0.5 text-[12px] font-bold"
                 style={{ color: "var(--color-ln-cyan)" }}
               >
                 {labels.thesis}
               </div>
               <p
-                className="text-[13.5px] font-medium leading-snug text-white"
+                className="text-[13.5px] font-medium leading-snug text-[color:var(--color-text)]"
                 dangerouslySetInnerHTML={{ __html: renderRichText(p.thesis) }}
               />
             </div>
@@ -103,8 +103,8 @@ export default function EssayPredictionsView({
             {/* Structure — numbered argument steps */}
             <div className="mt-4">
               <div
-                className="mb-2 text-[11px] font-bold uppercase tracking-[0.12em]"
-                style={{ color: "rgba(255,255,255,0.55)" }}
+                className="mb-2 text-[12px] font-bold"
+                style={{ color: "var(--color-text-faint)" }}
               >
                 {labels.structure}
               </div>
@@ -113,13 +113,13 @@ export default function EssayPredictionsView({
                   <li
                     key={si}
                     className="flex items-start gap-2.5 text-[13px] leading-relaxed"
-                    style={{ color: "rgba(255,255,255,0.82)" }}
+                    style={{ color: "var(--color-text-dim)" }}
                   >
                     <span
-                      className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10.5px] font-bold tabular-nums"
+                      className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[12px] font-bold tabular-nums"
                       style={{
-                        background: "rgba(255,255,255,0.08)",
-                        color: "rgba(255,255,255,0.65)",
+                        background: "var(--color-ink-a10)",
+                        color: "var(--color-text-dim)",
                       }}
                     >
                       {si + 1}
@@ -137,8 +137,8 @@ export default function EssayPredictionsView({
             {p.paragraphCues.length > 0 && (
               <div className="mt-4">
                 <div
-                  className="mb-2 text-[11px] font-bold uppercase tracking-[0.12em]"
-                  style={{ color: "rgba(255,255,255,0.55)" }}
+                  className="mb-2 text-[12px] font-bold"
+                  style={{ color: "var(--color-text-faint)" }}
                 >
                   {labels.cues}
                 </div>
@@ -147,12 +147,12 @@ export default function EssayPredictionsView({
                     <li
                       key={ci}
                       className="flex items-start gap-2 text-[12.5px] leading-relaxed"
-                      style={{ color: "rgba(255,255,255,0.7)" }}
+                      style={{ color: "var(--color-text-dim)" }}
                     >
                       <span
                         aria-hidden
                         className="mt-1.5 h-1 w-1 shrink-0 rounded-full"
-                        style={{ background: "rgba(255,255,255,0.4)" }}
+                        style={{ background: "var(--color-ink-a14)" }}
                       />
                       <span
                         className="flex-1"
@@ -170,8 +170,8 @@ export default function EssayPredictionsView({
             {p.examples.length > 0 && (
               <div className="mt-4">
                 <div
-                  className="mb-2 text-[11px] font-bold uppercase tracking-[0.12em]"
-                  style={{ color: "rgba(255,255,255,0.55)" }}
+                  className="mb-2 text-[12px] font-bold"
+                  style={{ color: "var(--color-text-faint)" }}
                 >
                   {labels.examples}
                 </div>
@@ -181,9 +181,9 @@ export default function EssayPredictionsView({
                       key={ei}
                       className="rounded-lg border px-3 py-2 text-[12.5px] leading-relaxed"
                       style={{
-                        background: "rgba(251,191,36,0.04)",
-                        borderColor: "rgba(251,191,36,0.2)",
-                        color: "rgba(255,224,160,0.92)",
+                        background: "var(--color-urgent-bg)",
+                        borderColor: "var(--color-urgent-bg)",
+                        color: "var(--color-urgent-ink)",
                       }}
                       dangerouslySetInnerHTML={{
                         __html: renderRichText(ex),

@@ -46,13 +46,13 @@ export default function AuthMenu({ language = "en" }: { language?: Language }) {
     return (
       <a
         href="/dashboard"
-        className="flex items-center gap-2 text-[14px] font-medium text-white transition hover:opacity-80"
+        className="flex items-center gap-2 text-[14px] font-medium text-[color:var(--color-text)] transition hover:opacity-80"
       >
         <span
           className="inline-flex h-7 w-7 items-center justify-center rounded-full text-[12px] font-semibold"
           style={{
-            background: "rgba(255,255,255,0.12)",
-            border: "1px solid rgba(255,255,255,0.2)",
+            background: "var(--color-ink-a14)",
+            border: "1px solid var(--color-ink-a14)",
           }}
         >
           {initial}
@@ -65,10 +65,10 @@ export default function AuthMenu({ language = "en" }: { language?: Language }) {
   return (
     <a
       href="/login"
-      className="rounded-full px-4 py-1.5 text-[13.5px] font-medium text-white transition hover:bg-white/10"
+      className="rounded-full px-4 py-1.5 text-[13.5px] font-medium text-[color:var(--color-text)] transition hover:bg-[color:var(--color-ink-a10)]"
       style={{
-        background: "rgba(255,255,255,0.06)",
-        border: "1px solid rgba(255,255,255,0.18)",
+        background: "var(--color-ink-a06)",
+        border: "1px solid var(--color-ink-a14)",
       }}
     >
       {copy.signIn}

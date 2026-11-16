@@ -29,7 +29,7 @@ export function PriorityChip({
   const tone = PRIORITY_TONE[priority];
   return (
     <span
-      className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.1em]"
+      className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[12px] font-semibold"
       style={{ background: tone.bg, color: tone.fg }}
     >
       {language === "en" ? tone.en : tone.de}
@@ -40,9 +40,9 @@ export function PriorityChip({
 export function TimeChip({ minutes }: { minutes: number }) {
   return (
     <span
-      className="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10.5px] font-semibold"
+      className="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[12px] font-semibold"
       style={{
-        background: "rgba(255,255,255,0.03)",
+        background: "var(--color-ink-a04)",
         borderColor: NEUTRAL_BORDER,
         color: TEXT_DIM,
       }}
@@ -80,7 +80,7 @@ export default function SectionHeader({
       </span>
       <div className="min-w-0 flex-1">
         <div
-          className="text-[10.5px] font-semibold uppercase tracking-[0.14em]"
+          className="text-[12px] font-semibold"
           style={{ color: TEXT_FAINT }}
         >
           {language === "en" ? `Topic ${index + 1}` : `Thema ${index + 1}`}

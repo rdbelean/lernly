@@ -54,7 +54,7 @@ export default function LoosePacksSection({
   return (
     <section>
       <h2
-        className="mb-3 text-[11px] uppercase tracking-[0.22em]"
+        className="mb-3 text-[12px]"
         style={{ color: "var(--color-text-faint)" }}
       >
         Nicht zugeordnet ({packs.length})
@@ -65,8 +65,8 @@ export default function LoosePacksSection({
             key={p.id}
             className="flex flex-wrap items-center gap-3 px-3 py-2"
             style={{
-              background: "rgba(20, 25, 48, 0.5)",
-              border: "1px solid rgba(255,255,255,0.04)",
+              background: "var(--color-surface)",
+              border: "1px solid var(--color-ink-a04)",
               borderRadius: "10px",
             }}
           >
@@ -78,7 +78,7 @@ export default function LoosePacksSection({
                 {p.title}
               </div>
               <div
-                className="text-[11px]"
+                className="text-[12px]"
                 style={{ color: "var(--color-text-faint)" }}
               >
                 {p.card_count} Karten
@@ -90,10 +90,10 @@ export default function LoosePacksSection({
                 disabled={pending}
                 onChange={(e) => onAssign(p.id, e.target.value)}
                 aria-label="Klausur zuweisen"
-                className="appearance-none rounded-md border px-2 py-1 text-[11px] outline-none transition"
+                className="appearance-none rounded-md border px-2 py-1 text-[12px] outline-none transition"
                 style={{
-                  background: "rgba(255,255,255,0.03)",
-                  borderColor: "rgba(255,255,255,0.08)",
+                  background: "var(--color-ink-a04)",
+                  borderColor: "var(--color-ink-a10)",
                   color: "var(--color-text-dim)",
                 }}
               >

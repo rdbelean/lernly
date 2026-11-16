@@ -1,8 +1,9 @@
-import { useState, type ReactNode } from "react";
-import { ArrowRight, BookOpen, Check, ChevronRight, Clock3, FileSpreadsheet, FileText, Folder, Layers, Sparkles, Target, X } from "lucide-react";
+import type { ReactNode } from "react";
+import { ArrowRight, Check, Clock3, FileSpreadsheet, FileText, Folder, Layers, Sparkles, Target, X } from "lucide-react";
 import Image from "next/image";
-import LernlyLogo from "@/components/LernlyLogo";
 import v from "./learning-visuals.module.css";
+import ExamMap from "@/components/dashboard/ExamMap";
+import { SAMPLE_EXAM } from "./sampleExam";
 
 type Brand = "claude" | "anki" | "quizlet" | "openai";
 const BRAND_LABEL: Record<Brand, string> = { claude: "Claude", openai: "ChatGPT", anki: "Anki", quizlet: "Quizlet" };
@@ -33,91 +34,9 @@ const ratings = [
   { label: "Leicht", when: "7 Tage", tone: v.rateBlue },
 ];
 
-export function DashboardPreview() {
-  const [tab, setTab] = useState("Verstehen");
-  const [flipped, setFlipped] = useState(false);
-  const [rated, setRated] = useState<string | null>(null);
-  const [answer, setAnswer] = useState("");
-  const [checked, setChecked] = useState(false);
-  const value = Number(answer.replace(/\s/g, "").replace(/\.(?=\d{3})/g, "").replace(",", "."));
-  const correct = answer.trim() !== "" && Math.abs(value - 751.31) < 0.02;
-  const steps = [
-    { label: "Verstehen", text: "Das Prinzip durchblicken", icon: BookOpen },
-    { label: "Üben", text: "Den Rechenweg anwenden", icon: Target },
-    { label: "Merken", text: "Aus dem Kopf abrufen", icon: Layers },
-  ];
-  return <div className={v.studio}>
-    <div className={v.windowBar}><div aria-hidden="true"><i /><i /><i /></div><span>Dein Lernraum</span><span>Interaktive Beispielansicht</span></div>
-    <div className={v.studioLayout}>
-      <aside className={v.studioSidebar}>
-        <div className={v.studioBrand}><LernlyLogo variant="icon" size={28} alt="" /><b>Lernly</b></div>
-        <div className={v.studioCourse}><BookOpen size={18} /><div><b>Corporate Finance</b><small>Klausur in 6 Tagen</small></div></div>
-        <span className={v.sidebarLabel}>Themen nach Klausurpunkten</span>
-        {topics.slice(0, 3).map((t, i) => <div className={v.sidebarTopic + (i === 1 ? " " + v.selectedTopic : "")} key={t.name}>
-          <span className={v.topicPts}>{t.points} P</span>
-          <div><b>{t.name}</b><small>{t.done}</small></div>
-        </div>)}
-        <div className={v.sidebarScore}><span>Punkte, die du jetzt holen würdest</span><strong>38<small> / 90</small></strong><div className={v.scoreTrack}><i style={{ width: "42%" }} /></div></div>
-      </aside>
-      <div className={v.studioMain}>
-        <header><span>Corporate Finance <ChevronRight size={14} /> Discounted Cashflow</span><span><Clock3 size={14} />Beispielkurs</span></header>
-        <div className={v.studioHeading}>
-          <div><span className={v.subjectPill}>Unternehmensbewertung</span><span className={v.examPill}>Altklausur Q2 · 15 P</span></div>
-          <h3>Discounted Cashflow</h3>
-        </div>
-        <div className={v.studioTabs} role="group" aria-label="Lernschritt">{steps.map(({ label, icon: Icon }, i) =>
-          <button key={label} aria-pressed={tab === label} onClick={() => setTab(label)}><Icon size={16} /><span><span className={v.tabNumber}>{i + 1} · </span>{label}</span></button>)}</div>
-        <div className={v.studioColumns}>
-          <div className={v.lesson}>
-            {tab === "Verstehen" && <>
-              <div className={v.simple}><b>Einfach gesagt:</b> Ein Euro heute ist mehr wert als ein Euro in drei Jahren. Darum rechnen wir zukünftige Zahlungen auf heute zurück.</div>
-              <div className={v.formula}><span>PV</span><span>=</span><Frac top="1.000 €" bottom={<>(1 + 0,10)<sup>3</sup></>} /><span>=</span><b>751,31 €</b></div>
-              <div className={v.example}><b>Beispiel:</b> 751,31 € heute angelegt zu 10 % sind in drei Jahren genau 1.000 €.</div>
-              <button className={v.studioAction} onClick={() => setTab("Üben")}>Verstanden, jetzt selbst rechnen<ArrowRight size={15} /></button>
-            </>}
-            {tab === "Üben" && <form className={v.studioExercise} onSubmit={e => { e.preventDefault(); setChecked(true); }}>
-              <span className={v.taskLabel}>Aufgabe · neue Zahlen</span>
-              <p>Du erhältst in drei Jahren 1.000 €. Der Zins beträgt 10 % pro Jahr. Wie viel ist die Zahlung heute wert?</p>
-              <label htmlFor="pv-answer">Barwert in €</label>
-              <div className={v.inputRow}>
-                <input id="pv-answer" required inputMode="decimal" value={answer} onChange={e => { setAnswer(e.target.value); setChecked(false); }} placeholder="z. B. 750,00" className={checked ? (correct ? v.inputOk : v.inputBad) : ""} />
-                <button className={v.studioAction} type="submit">Prüfen</button>
-              </div>
-              {checked && <p role="status" className={correct ? v.correct : v.retry}>{correct ? <><Check size={15} />Richtig. 1.000 € ÷ 1,10³ = 751,31 €.</> : <><X size={15} />Noch nicht. Teile 1.000 € durch 1,10³.</>}</p>}
-            </form>}
-            {tab === "Merken" && <div className={v.studioCard}>
-              <span className={v.taskLabel}>Karteikarte · 3 von 11</span>
-              <h4>Wie berechnest du den Barwert einer Zahlung in t Jahren?</h4>
-              {flipped
-                ? <div className={v.cardBackFace}><div className={v.formula}><span>PV</span><span>=</span><Frac top={<>CF<sub>t</sub></>} bottom={<>(1 + r)<sup>t</sup></>} /></div>
-                  <div className={v.rates}>{ratings.map(r => <button key={r.label} className={r.tone + (rated === r.label ? " " + v.rateOn : "")} onClick={() => setRated(r.label)}>{r.label}<small>{r.when}</small></button>)}</div></div>
-                : <button className={v.studioAction} onClick={() => setFlipped(true)}>Antwort aufdecken<ArrowRight size={15} /></button>}
-            </div>}
-          </div>
-          <aside className={v.studioRail}>
-            <span>Dein Lernweg</span>
-            {steps.map(({ label, text }, i) => <div className={v.railStep + (tab === label ? " " + v.currentStep : "")} key={label}><span>{i + 1}</span><p>{label}<small>{text}</small></p></div>)}
-            <div className={v.railNote}><b>Typischer Fehler</b><p>Den Exponenten vergessen. Diskontiere über alle drei Jahre.</p></div>
-          </aside>
-        </div>
-      </div>
-    </div>
-  </div>;
-}
-
-/* ---------- Feature visuals: one function each, large and readable ---------- */
-
 export function PointsVisual() {
-  return <div className={v.visual} aria-hidden="true"><div className={v.sheet}>
-    <span className={v.eyebrow}>Punkte, die du jetzt holen würdest</span>
-    <div className={v.bigScore}>38<small> / 90</small></div>
-    <div className={v.stackBar}><i style={{ width: "42%" }} /><i style={{ width: "16%" }} /></div>
-    <div className={v.legend}><span><i className={v.dotBlue} />Sitzt</span><span><i className={v.dotLight} />In Arbeit</span><span><i className={v.dotGrey} />Offen</span></div>
-    <div className={v.nextBox}>
-      <span className={v.eyebrow}>Als Nächstes</span>
-      <b>Discounted Cashflow</b>
-      <p><span className={v.ptsInline}>15 P</span>Rechenweg üben · 20 Min.</p>
-    </div>
+  return <div className={v.visual} aria-hidden="true"><div className={v.mapSheet}>
+    <ExamMap inert maxTiles={5} topics={SAMPLE_EXAM.topics} nextKey="Discounted Cashflow" />
   </div></div>;
 }
 

@@ -189,7 +189,7 @@ export default function GenerationProgress({
             fontSize: "12px",
             fontWeight: 600,
             letterSpacing: "0.04em",
-            color: "rgba(255,255,255,0.55)",
+            color: "var(--color-text-faint)",
           }}
         >
           {language === "de"
@@ -202,7 +202,7 @@ export default function GenerationProgress({
         style={{
           width: "100%",
           height: "4px",
-          background: "rgba(255,255,255,0.06)",
+          background: "var(--color-ink-a06)",
           borderRadius: "2px",
           overflow: "hidden",
           marginBottom: "24px",
@@ -225,9 +225,9 @@ export default function GenerationProgress({
           style={{
             fontSize: "13px",
             lineHeight: 1.5,
-            color: "rgba(255,224,160,0.92)",
-            background: "rgba(251,191,36,0.06)",
-            border: "1px solid rgba(251,191,36,0.25)",
+            color: "var(--color-urgent-ink)",
+            background: "var(--color-urgent-bg)",
+            border: "1px solid var(--color-line)",
             borderRadius: "10px",
             padding: "10px 14px",
             margin: "0 auto 18px",
@@ -254,7 +254,7 @@ export default function GenerationProgress({
                 transition: "all 0.4s ease",
                 opacity: isDone ? 0.4 : isActive ? 1 : 0.15,
                 transform: isActive ? "scale(1.02)" : "scale(1)",
-                background: isActive ? "rgba(255,255,255,0.04)" : "transparent",
+                background: isActive ? "var(--color-ink-a04)" : "transparent",
               }}
             >
               <span
@@ -270,7 +270,7 @@ export default function GenerationProgress({
                 ) : isActive ? (
                   <step.Icon size={16} strokeWidth={2} color="var(--color-ln-cyan)" aria-hidden />
                 ) : (
-                  <Circle size={9} strokeWidth={2} color="rgba(255,255,255,0.25)" aria-hidden />
+                  <Circle size={9} strokeWidth={2} color="var(--color-ink-a14)" aria-hidden />
                 )}
               </span>
 
@@ -279,10 +279,10 @@ export default function GenerationProgress({
                   fontSize: "14px",
                   fontWeight: isActive ? 500 : 400,
                   color: isActive
-                    ? "rgba(255,255,255,0.85)"
+                    ? "var(--color-text-dim)"
                     : isDone
-                      ? "rgba(255,255,255,0.35)"
-                      : "rgba(255,255,255,0.15)",
+                      ? "var(--color-ink-a14)"
+                      : "var(--color-ink-a14)",
                   textAlign: "left",
                 }}
               >
@@ -295,7 +295,7 @@ export default function GenerationProgress({
                     marginLeft: "auto",
                     width: "16px",
                     height: "16px",
-                    border: "2px solid rgba(255,255,255,0.1)",
+                    border: "2px solid var(--color-ink-a10)",
                     borderTopColor: "var(--color-ln-cyan)",
                     borderRadius: "50%",
                     animation: "ln-progress-spin 0.8s linear infinite",
@@ -311,7 +311,7 @@ export default function GenerationProgress({
         <p
           style={{
             fontSize: "13px",
-            color: "rgba(255,255,255,0.3)",
+            color: "var(--color-ink-a14)",
             marginTop: "20px",
             fontFamily: "var(--font-mono, monospace)",
           }}

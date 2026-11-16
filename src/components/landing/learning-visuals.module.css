@@ -5,7 +5,7 @@
 
 .studio,.visual{
   --ink:#151b26;--soft:#4a5566;--muted:#748093;--line:#e4e9f0;--stage:#f3f5f8;
-  --blue:#126dfb;--blue-bg:#ebf3ff;--blue-ink:#0d55c7;
+  --blue:#3646D6;--blue-bg:#DCE2FA;--blue-ink:#2B3499;
   --green:#1d7f53;--green-bg:#e5f5ec;--orange:#b0601a;--orange-bg:#fdf1e3;--red:#bf3a2f;--red-bg:#fbe9e7;
   font-family:var(--font-inter),sans-serif;font-feature-settings:"cv03","cv04","cv09","cv11";
   color:var(--ink);text-align:left;letter-spacing:-.01em;line-height:1.45
@@ -235,3 +235,5 @@
 @container (max-width:360px){.visual{padding:20px 14px 0}}
 .sidebarTopic>div{min-width:0}.sidebarTopic b{hyphens:auto;overflow-wrap:break-word}
 @media(max-width:1000px){.studioSidebar{padding:22px 12px}.sidebarTopic{gap:8px;padding:9px 6px}}
+
+.mapSheet{width:100%;max-width:520px;background:#fff;border-radius:12px;padding:14px 14px 10px}

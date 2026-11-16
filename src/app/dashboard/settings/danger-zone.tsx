@@ -37,9 +37,9 @@ export default function DangerZone({ email }: { email: string }) {
       <button
         type="button"
         onClick={onExport}
-        className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-semibold transition hover:text-white"
+        className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-semibold transition hover:text-[color:var(--color-text)]"
         style={{
-          borderColor: "rgba(255,255,255,0.10)",
+          borderColor: "var(--color-ink-a10)",
           color: "var(--color-text-dim)",
         }}
       >
@@ -50,12 +50,12 @@ export default function DangerZone({ email }: { email: string }) {
       <div
         className="rounded-xl border p-4"
         style={{
-          background: "rgba(242, 132, 92, 0.06)",
-          borderColor: "rgba(242, 132, 92, 0.25)",
+          background: "var(--color-err-bg)",
+          borderColor: "var(--color-err-bg)",
         }}
       >
         <div
-          className="mb-2 inline-flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.1em]"
+          className="mb-2 inline-flex items-center gap-2 text-[13px] font-semibold"
           style={{ color: "var(--color-cat-coral)" }}
         >
           <AlertTriangle size={13} strokeWidth={2.2} aria-hidden />
@@ -94,7 +94,7 @@ export default function DangerZone({ email }: { email: string }) {
               <code
                 className="rounded px-1 py-0.5"
                 style={{
-                  background: "rgba(255,255,255,0.05)",
+                  background: "var(--color-ink-a04)",
                   color: "var(--color-text)",
                 }}
               >
@@ -111,7 +111,7 @@ export default function DangerZone({ email }: { email: string }) {
               className="w-full rounded-xl border px-3 py-2 text-[14px] outline-none"
               style={{
                 background: "var(--color-surface-2)",
-                borderColor: "rgba(255,255,255,0.10)",
+                borderColor: "var(--color-ink-a10)",
                 color: "var(--color-text)",
               }}
             />
@@ -137,9 +137,9 @@ export default function DangerZone({ email }: { email: string }) {
                   setError(null);
                 }}
                 disabled={pending}
-                className="rounded-full border px-4 py-2 text-[13px] font-semibold transition hover:text-white disabled:opacity-50"
+                className="rounded-full border px-4 py-2 text-[13px] font-semibold transition hover:text-[color:var(--color-text)] disabled:opacity-50"
                 style={{
-                  borderColor: "rgba(255,255,255,0.10)",
+                  borderColor: "var(--color-ink-a10)",
                   color: "var(--color-text-dim)",
                 }}
               >

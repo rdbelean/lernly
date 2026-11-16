@@ -1,79 +1,61 @@
-import { Layers, ListChecks, CalendarDays, BookOpen } from "lucide-react";
 import type { StudentProgress } from "@/lib/dashboard/studentProgressShared";
-import StatTile from "@/components/ui/StatTile";
+import type { ExamMapData } from "@/lib/dashboard/examMap.server";
+import { daysLeft, pickNextStep } from "@/lib/dashboard/examMap";
+import NextStep from "@/components/dashboard/NextStep";
+import ExamMap from "@/components/dashboard/ExamMap";
 import StudyHeatmap from "./StudyHeatmap";
 import StreakCard from "./StreakCard";
 import ExamProgressList from "./ExamProgressList";
 import HeuteDran from "./HeuteDran";
 
-// Student progress hub at the top of the library. Server-rendered; receives
-// only pre-aggregated, serializable data. The page renders this only when the
-// user has content (exams/packs); truly-new users get ProgressEmptyState from
-// the page instead. With content but no study yet, this shows honest zeros +
-// per-exam rows (a "start studying" state), not empty-state copy.
+// Dashboard top: ONE next step, the exam map (area = weight, color = status)
+// and what is due today. Server-rendered; receives pre-aggregated data only.
 export default function StudentDashboard({
   progress,
+  focus,
+  today,
 }: {
   progress: StudentProgress;
+  focus: ExamMapData | null;
+  today: string;
 }) {
-  const { streak, heatmap, totals, exams, due } = progress;
+  const { streak, heatmap, exams, due } = progress;
+  const next = focus ? pickNextStep(focus.topics) : null;
+  const otherExams = exams.filter((e) => e.examId !== focus?.examId);
+  const packHref = (packId: string) => `/dashboard/pack/${packId}`;
 
   return (
-    <div className="mb-10 space-y-5">
-      <div
-        className="rounded-2xl border p-5"
-        style={{ background: "#141930", borderColor: "rgba(255,255,255,0.06)" }}
-      >
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+    <div className="mb-12 space-y-10">
+      {focus && focus.topics.length > 0 ? (
+        <>
+          <NextStep
+            examTitle={focus.examTitle}
+            daysLeft={daysLeft(focus.examDate, today)}
+            topic={next}
+            href={next ? packHref(next.packId) : "/dashboard/review"}
+          />
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
+            <ExamMap
+              topics={focus.topics}
+              nextKey={next?.key}
+              hrefFor={(t) => packHref(t.packId)}
+            />
+            <aside className="space-y-6">
+              <HeuteDran dueCount={due.count} />
+              <StreakCard current={streak.current} longest={streak.longest} />
+            </aside>
+          </div>
+        </>
+      ) : (
+        <div className="grid gap-6 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
+          <HeuteDran dueCount={due.count} />
           <StreakCard current={streak.current} longest={streak.longest} />
-          <StudyHeatmap heatmap={heatmap} />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatTile
-          icon={Layers}
-          chipBg="rgba(79,209,165,0.14)"
-          chipFg="var(--color-cat-teal)"
-          label="Karten beherrscht"
-          value={String(totals.masteredCards)}
-        />
-        <StatTile
-          icon={ListChecks}
-          chipBg="rgba(110,128,242,0.16)"
-          chipFg="var(--color-primary-bright)"
-          label="Fragen beantwortet"
-          value={String(totals.questionsAnswered)}
-        />
-        <StatTile
-          icon={CalendarDays}
-          chipBg="rgba(242,163,60,0.14)"
-          chipFg="var(--color-amber)"
-          label="Lern-Tage"
-          value={String(totals.studyDays)}
-        />
-        <StatTile
-          icon={BookOpen}
-          chipBg="rgba(255,255,255,0.06)"
-          chipFg="var(--color-text-dim)"
-          label="Pakete"
-          value={String(totals.packs)}
-        />
-      </div>
-
-      {exams.length > 0 && (
-        <div>
-          <p
-            className="mb-3 text-[11px] uppercase tracking-[0.18em]"
-            style={{ color: "var(--color-text-faint)" }}
-          >
-            Fortschritt pro Klausur
-          </p>
-          <ExamProgressList exams={exams} />
         </div>
       )}
 
-      <HeuteDran dueCount={due.count} />
+      {otherExams.length > 0 && <ExamProgressList exams={otherExams} />}
+
+      <StudyHeatmap heatmap={heatmap} />
     </div>
   );
 }

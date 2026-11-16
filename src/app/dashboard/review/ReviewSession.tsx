@@ -21,14 +21,14 @@ export default function ReviewSession({ cards }: { cards: DueCard[] }) {
           className="flex flex-col items-center gap-5 px-6 py-12"
           style={{
             background: "var(--color-surface)",
-            border: "1px solid rgba(255,255,255,0.06)",
+            border: "1px solid var(--color-ink-a06)",
             borderRadius: "16px",
           }}
         >
           <span
             aria-hidden
             className="flex h-14 w-14 items-center justify-center rounded-2xl"
-            style={{ background: "rgba(79, 209, 165, 0.14)" }}
+            style={{ background: "var(--color-ok-bg)" }}
           >
             <Sparkles
               size={26}
@@ -70,7 +70,7 @@ export default function ReviewSession({ cards }: { cards: DueCard[] }) {
     <div className="mx-auto max-w-[640px]">
       <Link
         href="/dashboard"
-        className="inline-flex items-center gap-1.5 text-[12.5px] font-medium transition hover:text-white"
+        className="inline-flex items-center gap-1.5 text-[12.5px] font-medium transition hover:text-[color:var(--color-text)]"
         style={{ color: "var(--color-text-faint)" }}
       >
         <ArrowLeft size={14} strokeWidth={2} aria-hidden />

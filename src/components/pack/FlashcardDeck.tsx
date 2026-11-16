@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import confetti from "canvas-confetti";
+import { CONFETTI_COLORS } from "@/lib/design/confetti";
 import type { Flashcard } from "@/lib/schema";
 import { recordCardReview } from "@/app/dashboard/review/actions";
 import { track } from "@/lib/analytics";
@@ -36,9 +37,9 @@ const deckKey = (c: Flashcard & { packId?: string }) =>
   c.packId ? `${c.packId}:${c.id}` : c.id;
 
 const TONE_GLOW: Record<Tone, string> = {
-  rose: "0 0 0 3px rgba(244,114,98,0.55), 0 20px 60px -10px rgba(244,114,98,0.5)",
-  amber: "0 0 0 3px rgba(251,191,36,0.55), 0 20px 60px -10px rgba(251,191,36,0.5)",
-  sage: "0 0 0 3px rgba(74,222,128,0.55), 0 20px 60px -10px rgba(74,222,128,0.5)",
+  rose: "0 0 0 3px var(--color-err-ink), 0 20px 60px -10px var(--color-err-ink)",
+  amber: "0 0 0 3px var(--color-urgent-ink), 0 20px 60px -10px var(--color-urgent-ink)",
+  sage: "0 0 0 3px var(--color-ok-ink), 0 20px 60px -10px var(--color-ok-ink)",
 };
 
 const TONE_EXIT: Record<Tone, { x: number; y: number; rotate: number }> = {
@@ -47,7 +48,6 @@ const TONE_EXIT: Record<Tone, { x: number; y: number; rotate: number }> = {
   sage: { x: 360, y: 40, rotate: 18 },
 };
 
-const CONFETTI_COLORS = ["#22d3ee", "#a78bfa", "#fbbf24", "#4ade80", "#f87171"];
 
 function burstConfetti(big = false) {
   if (typeof window === "undefined") return;
@@ -195,12 +195,12 @@ export default function FlashcardDeck({
     const mastery = Math.round((knownCount / cards.length) * 100);
     const tier =
       mastery === 100
-        ? { Icon: Trophy, color: "#4FD1A5" }
+        ? { Icon: Trophy, color: "var(--color-ok-ink)" }
         : mastery >= 70
-          ? { Icon: CheckCircle2, color: "#4FD1A5" }
+          ? { Icon: CheckCircle2, color: "var(--color-ok-ink)" }
           : mastery >= 50
-            ? { Icon: Target, color: "#F2A33C" }
-            : { Icon: AlertCircle, color: "#F2845C" };
+            ? { Icon: Target, color: "var(--color-urgent-ink)" }
+            : { Icon: AlertCircle, color: "var(--color-err-ink)" };
     const TierIcon = tier.Icon;
     const topicRows = flashcardTopicRows(
       cards.map((c) => ({ category: c.category, status: statuses[deckKey(c)] })),
@@ -212,12 +212,12 @@ export default function FlashcardDeck({
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: "spring", stiffness: 220, damping: 14 }}
           className="flex h-16 w-16 items-center justify-center rounded-2xl"
-          style={{ background: `${tier.color}26` }}
+          style={{ background: `color-mix(in srgb, ${tier.color} 15%, transparent)` }}
         >
           <TierIcon size={30} strokeWidth={2} color={tier.color} />
         </motion.div>
         <div>
-          <h3 className="text-[28px] font-bold tracking-[-0.6px] text-white">
+          <h3 className="text-[28px] font-bold tracking-[-0.6px] text-[color:var(--color-text)]">
             {isEn ? "Done!" : "Durch!"}
           </h3>
           <p className="mt-2 text-[14px]" style={{ color: "var(--color-ln-mute)" }}>
@@ -231,14 +231,14 @@ export default function FlashcardDeck({
           {wrong > 0 && (
             <button
               onClick={() => restart("wrong")}
-              className="rounded-full bg-white px-5 py-2.5 text-[13px] font-semibold text-[#0F1535] transition hover:bg-white/90"
+              className="rounded-full bg-[color:var(--color-primary)] px-5 py-2.5 text-[13px] font-semibold text-[color:var(--color-on-primary)] transition hover:bg-[color:var(--color-primary-press)]"
             >
               {isEn ? `Review missed (${wrong})` : `Nur falsche wiederholen (${wrong})`}
             </button>
           )}
           <button
             onClick={() => restart("all")}
-            className="rounded-full border border-white/20 bg-transparent px-5 py-2.5 text-[13px] font-medium text-white transition hover:bg-white/5"
+            className="rounded-full border border-[color:var(--color-ink-a14)] bg-transparent px-5 py-2.5 text-[13px] font-medium text-[color:var(--color-text)] transition hover:bg-[color:var(--color-ink-a06)]"
           >
             {isEn ? "All again" : "Alle nochmal"}
           </button>
@@ -280,9 +280,9 @@ export default function FlashcardDeck({
                 transition={{ type: "spring", stiffness: 320, damping: 18 }}
                 className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[12px] font-semibold"
                 style={{
-                  background: "rgba(251,191,36,0.18)",
-                  color: "rgb(252,211,77)",
-                  border: "1px solid rgba(251,191,36,0.35)",
+                  background: "var(--color-urgent-bg)",
+                  color: "var(--color-urgent-ink)",
+                  border: "1px solid var(--color-urgent-bg)",
                 }}
               >
                 <Flame size={12} strokeWidth={2.2} aria-hidden />
@@ -294,7 +294,7 @@ export default function FlashcardDeck({
         </div>
       </div>
 
-      <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-white/10">
+      <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-[color:var(--color-ink-a10)]">
         <motion.div
           className="h-full"
           initial={false}
@@ -302,7 +302,7 @@ export default function FlashcardDeck({
           transition={{ type: "spring", stiffness: 180, damping: 25 }}
           style={{
             background:
-              "linear-gradient(90deg, rgba(74,222,128,0.95), rgba(34,211,238,0.95))",
+              "linear-gradient(90deg, var(--color-ok-ink), var(--color-work-ink))",
           }}
         />
       </div>
@@ -325,7 +325,7 @@ export default function FlashcardDeck({
               <div
                 key={`ghost-${deckKey(g)}`}
                 aria-hidden
-                className="absolute inset-0 rounded-2xl border border-white/10 bg-black/15"
+                className="absolute inset-0 rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-ink-a04)]"
                 style={{
                   transform: `translateY(${depth * 10}px) scale(${1 - depth * 0.045})`,
                   opacity: 0.55 - (depth - 1) * 0.22,
@@ -347,7 +347,7 @@ export default function FlashcardDeck({
               scale: 1,
               boxShadow: exitTone
                 ? TONE_GLOW[exitTone]
-                : "0 4px 24px rgba(0,0,0,0.18)",
+                : "0 4px 24px var(--color-ink-a10)",
             }}
             exit={
               exitTone
@@ -378,25 +378,25 @@ export default function FlashcardDeck({
                   as one calm focal point, with the flip hint anchored quietly
                   at the bottom. */}
               <div
-                className="relative flex flex-col items-center justify-center rounded-2xl border border-white/8 px-6 pt-10 pb-14 text-center sm:px-9"
+                className="relative flex flex-col items-center justify-center rounded-2xl border border-[color:var(--color-line)] px-6 pt-10 pb-14 text-center sm:px-9"
                 style={{
                   gridArea: "1 / 1",
                   backfaceVisibility: "hidden",
                   WebkitBackfaceVisibility: "hidden",
-                  background: "rgba(20, 22, 28, 0.92)",
+                  background: "var(--color-surface)",
                 }}
               >
                 <div
-                  className="text-[11px] font-medium uppercase tracking-[2px]"
+                  className="text-[12px] font-medium tracking-[2px]"
                   style={{ color: "var(--color-ln-mute)" }}
                 >
                   {isEn ? "Question" : "Frage"}
                 </div>
                 <div
-                  className="mt-4 break-words text-[22px] font-medium leading-snug text-white sm:text-[26px]"
+                  className="mt-4 break-words text-[22px] font-medium leading-snug text-[color:var(--color-text)] sm:text-[26px]"
                   dangerouslySetInnerHTML={{ __html: renderRichText(card.question) }}
                 />
-                <div className="absolute inset-x-0 bottom-5 flex items-center justify-center gap-1.5 text-[11px]" style={{ color: "var(--color-ln-mute)" }}>
+                <div className="absolute inset-x-0 bottom-5 flex items-center justify-center gap-1.5 text-[12px]" style={{ color: "var(--color-ln-mute)" }}>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
                     <polyline points="21 3 21 8 16 8" />
@@ -408,23 +408,23 @@ export default function FlashcardDeck({
               {/* Answer face (rotated 180deg) — block vertically centred; text
                   stays left-aligned in a readable column. */}
               <div
-                className="flex flex-col justify-center rounded-2xl border border-white/8 px-6 py-8 sm:px-9"
+                className="flex flex-col justify-center rounded-2xl border border-[color:var(--color-line)] px-6 py-8 sm:px-9"
                 style={{
                   gridArea: "1 / 1",
                   backfaceVisibility: "hidden",
                   WebkitBackfaceVisibility: "hidden",
                   transform: "rotateY(180deg)",
-                  background: "rgba(20, 22, 28, 0.92)",
+                  background: "var(--color-surface)",
                 }}
               >
                 <div className="mx-auto w-full max-w-[460px]">
                   <div
-                    className="text-center text-[11px] font-medium uppercase tracking-[2px]"
+                    className="text-center text-[12px] font-medium tracking-[2px]"
                     style={{ color: "var(--color-ln-mute)" }}
                   >
                     {isEn ? "Answer" : "Antwort"}
                   </div>
-                  <div className="mt-4 space-y-2.5 break-words text-[16px] leading-relaxed text-white sm:text-[17px]">
+                  <div className="mt-4 space-y-2.5 break-words text-[16px] leading-relaxed text-[color:var(--color-text)] sm:text-[17px]">
                     {answerBodyParts.map((p, i) => (
                       <p
                         key={i}
@@ -435,17 +435,17 @@ export default function FlashcardDeck({
                   {answerMnemonic && (
                     <div
                       className="mt-4 border-t pt-4"
-                      style={{ borderColor: "rgba(255,255,255,0.08)" }}
+                      style={{ borderColor: "var(--color-ink-a10)" }}
                     >
                       <div
-                        className="text-[10.5px] font-semibold uppercase tracking-[0.16em]"
+                        className="text-[12px] font-semibold"
                         style={{ color: "var(--color-cat-teal)" }}
                       >
                         {isEn ? "Memory hook" : "Merkhilfe"}
                       </div>
                       <div
                         className="mt-1.5 break-words text-[14.5px] leading-relaxed"
-                        style={{ color: "rgba(255,255,255,0.82)" }}
+                        style={{ color: "var(--color-text-dim)" }}
                         dangerouslySetInnerHTML={{
                           __html: renderRichText(answerMnemonic),
                         }}
@@ -468,8 +468,8 @@ export default function FlashcardDeck({
             onClick={() => setTutorOpen(true)}
             className="inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[12.5px] font-semibold transition"
             style={{
-              background: "rgba(91,184,216,0.06)",
-              borderColor: "rgba(91,184,216,0.3)",
+              background: "var(--color-work-bg)",
+              borderColor: "var(--color-work-bg)",
               color: "var(--color-ln-cyan)",
             }}
           >
@@ -546,16 +546,16 @@ function RateButton({
         : "var(--color-cat-teal)";
   const hoverBorder =
     tone === "rose"
-      ? "rgba(242, 132, 92, 0.55)"
+      ? "var(--color-err-ink)"
       : tone === "amber"
-        ? "rgba(242, 163, 60, 0.55)"
-        : "rgba(79, 209, 165, 0.55)";
+        ? "var(--color-urgent-ink)"
+        : "var(--color-ok-ink)";
   const hoverBg =
     tone === "rose"
-      ? "rgba(242, 132, 92, 0.08)"
+      ? "var(--color-err-bg)"
       : tone === "amber"
-        ? "rgba(242, 163, 60, 0.08)"
-        : "rgba(79, 209, 165, 0.08)";
+        ? "var(--color-urgent-bg)"
+        : "var(--color-ok-bg)";
 
   return (
     <motion.button
@@ -564,7 +564,7 @@ function RateButton({
       whileHover={disabled ? undefined : { y: -2 }}
       whileTap={disabled ? undefined : { scale: 0.94 }}
       transition={{ type: "spring", stiffness: 380, damping: 20 }}
-      className="flex flex-col items-center gap-1 rounded-xl border border-white/10 bg-black/20 px-3 py-3.5 text-[13px] font-medium text-white transition disabled:cursor-not-allowed disabled:opacity-30"
+      className="flex flex-col items-center gap-1 rounded-xl border border-[color:var(--color-line)] bg-[color:var(--color-ink-a04)] px-3 py-3.5 text-[13px] font-medium text-[color:var(--color-text)] transition disabled:cursor-not-allowed disabled:opacity-30"
       style={
         disabled
           ? undefined

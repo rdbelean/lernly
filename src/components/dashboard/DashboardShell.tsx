@@ -75,7 +75,7 @@ function NavLink({
       onClick={onClick}
       title={collapsed ? label : undefined}
       aria-label={ariaLabel}
-      className={`group relative flex items-center gap-3 rounded-xl py-2.5 text-[14px] font-medium transition ${collapsed ? "justify-center px-0" : "px-3"} ${active ? "" : "hover:bg-white/[0.04] hover:text-white"}`}
+      className={`group relative flex items-center gap-3 rounded-xl py-2.5 text-[14px] font-medium transition ${collapsed ? "justify-center px-0" : "px-3"} ${active ? "" : "hover:bg-[color:var(--color-ink-a06)] hover:text-[color:var(--color-text)]"}`}
       style={{
         background: active ? "var(--color-surface-2)" : undefined,
         color: active ? "var(--color-text)" : "var(--color-text-dim)",
@@ -103,8 +103,8 @@ function NavLink({
         ) : (
           <span
             aria-hidden
-            className="ml-auto min-w-[20px] rounded-full px-1.5 py-0.5 text-center text-[11px] font-semibold leading-none"
-            style={{ background: "var(--color-primary)", color: "#fff" }}
+            className="ml-auto min-w-[20px] rounded-full px-1.5 py-0.5 text-center text-[12px] font-semibold leading-none"
+            style={{ background: "var(--color-primary)", color: "var(--color-on-primary)" }}
           >
             {badge > 99 ? "99+" : badge}
           </span>
@@ -129,7 +129,7 @@ function RecentList({
   return (
     <div className="mt-7">
       <p
-        className="mb-2 px-3 text-[11px] uppercase tracking-[0.18em]"
+        className="mb-2 px-3 text-[12px]"
         style={{ color: "var(--color-text-faint)" }}
       >
         Zuletzt
@@ -162,7 +162,7 @@ function RecentList({
         <button
           type="button"
           onClick={() => setShowAll(true)}
-          className="mt-1 flex items-center gap-1 px-3 py-1.5 text-[12px] transition hover:text-white"
+          className="mt-1 flex items-center gap-1 px-3 py-1.5 text-[12px] transition hover:text-[color:var(--color-text)]"
           style={{ color: "var(--color-text-faint)" }}
         >
           <ChevronDown size={13} strokeWidth={2} aria-hidden />
@@ -225,7 +225,7 @@ function SidebarContent({
             onClick={onToggleCollapse}
             aria-label={collapsed ? "Sidebar ausklappen" : "Sidebar einklappen"}
             title={collapsed ? "Ausklappen" : "Einklappen"}
-            className={`flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-white/[0.06] ${collapsed ? "" : "ml-auto"}`}
+            className={`flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-[color:var(--color-ink-a06)] ${collapsed ? "" : "ml-auto"}`}
             style={{ color: "var(--color-text-faint)" }}
           >
             {collapsed ? (
@@ -362,7 +362,7 @@ export default function DashboardShell({
           width: collapsed ? "76px" : "260px",
           transition: "width 0.2s ease",
           background: "var(--color-bg-deep)",
-          borderColor: "var(--color-border, rgba(255,255,255,0.06))",
+          borderColor: "var(--color-border, var(--color-ink-a06))",
           position: "sticky",
           top: 0,
           height: "100vh",
@@ -396,7 +396,7 @@ export default function DashboardShell({
             "absolute inset-0 transition " +
             (drawerOpen ? "opacity-100" : "opacity-0")
           }
-          style={{ background: "rgba(0,0,0,0.6)" }}
+          style={{ background: "var(--color-scrim)" }}
         />
         <aside
           className={
@@ -405,7 +405,7 @@ export default function DashboardShell({
           }
           style={{
             background: "var(--color-bg-deep)",
-            borderRight: "1px solid rgba(255,255,255,0.06)",
+            borderRight: "1px solid var(--color-ink-a06)",
           }}
         >
           <SidebarContent
@@ -425,7 +425,7 @@ export default function DashboardShell({
           className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b px-4 md:hidden"
           style={{
             background: "var(--color-bg-deep)",
-            borderColor: "rgba(255,255,255,0.06)",
+            borderColor: "var(--color-ink-a06)",
           }}
         >
           <button
@@ -472,7 +472,7 @@ export default function DashboardShell({
         toastOptions={{
           style: {
             background: "var(--color-surface)",
-            border: "1px solid rgba(255,255,255,0.10)",
+            border: "1px solid var(--color-ink-a10)",
             color: "var(--color-text)",
           },
         }}

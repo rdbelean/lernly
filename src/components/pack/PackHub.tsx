@@ -132,10 +132,10 @@ function pickWeiterlernen(
 type ChipTone = "blue" | "teal" | "coral" | "primary";
 
 const CHIP_BG: Record<ChipTone, string> = {
-  blue: "rgba(142, 154, 245, 0.14)",
-  teal: "rgba(79, 209, 165, 0.14)",
-  coral: "rgba(242, 132, 92, 0.14)",
-  primary: "rgba(110, 128, 242, 0.16)",
+  blue: "var(--color-work-bg)",
+  teal: "var(--color-ok-bg)",
+  coral: "var(--color-err-bg)",
+  primary: "var(--color-work-bg)",
 };
 const CHIP_FG: Record<ChipTone, string> = {
   blue: "var(--color-cat-blue)",
@@ -295,11 +295,11 @@ export default function PackHub({
           className="rounded-2xl border p-4 sm:p-5"
           style={{
             background: "var(--color-surface)",
-            borderColor: "rgba(255,255,255,0.06)",
+            borderColor: "var(--color-ink-a06)",
           }}
         >
           <div
-            className="mb-3 text-[11px] font-semibold uppercase tracking-[0.16em]"
+            className="mb-3 text-[12px] font-semibold"
             style={{ color: "var(--color-text-faint)" }}
           >
             {isEn ? "Your situation" : "Deine Situation"}
@@ -308,7 +308,7 @@ export default function PackHub({
             {exam && countdown && (
               <SituationStat
                 icon={Clock}
-                chipBg="rgba(242, 163, 60, 0.14)"
+                chipBg="var(--color-urgent-bg)"
                 chipFg="var(--color-amber)"
                 label={isEn ? "Until exam" : "Bis zur Klausur"}
                 value={countdown.label}
@@ -322,10 +322,10 @@ export default function PackHub({
                 icon={Trophy}
                 chipBg={
                   lastPct >= 80
-                    ? "rgba(79, 209, 165, 0.14)"
+                    ? "var(--color-ok-bg)"
                     : lastPct >= 60
-                      ? "rgba(242, 163, 60, 0.14)"
-                      : "rgba(242, 132, 92, 0.14)"
+                      ? "var(--color-urgent-bg)"
+                      : "var(--color-err-bg)"
                 }
                 chipFg={
                   lastPct >= 80
@@ -348,7 +348,7 @@ export default function PackHub({
             )}
             <SituationStat
               icon={BookOpen}
-              chipBg="rgba(110, 128, 242, 0.14)"
+              chipBg="var(--color-work-bg)"
               chipFg="var(--color-primary-bright)"
               label={isEn ? "Content" : "Inhalt"}
               value={`${pack.flashcards.length} ${isEn ? "cards" : "Karten"}`}
@@ -359,7 +359,7 @@ export default function PackHub({
             {mastery && mastery.total > 0 && (
               <SituationStat
                 icon={GraduationCap}
-                chipBg="rgba(79, 209, 165, 0.14)"
+                chipBg="var(--color-ok-bg)"
                 chipFg="var(--color-cat-teal)"
                 label={isEn ? "Mastery" : "Beherrscht"}
                 value={`${Math.round((mastery.mastered / mastery.total) * 100)}%`}
@@ -397,7 +397,7 @@ export default function PackHub({
       {/* Mode launcher — vertical list of rows with tinted icon chips. */}
       <section>
         <h2
-          className="mb-3 text-[11px] font-semibold uppercase tracking-[0.16em]"
+          className="mb-3 text-[12px] font-semibold"
           style={{ color: "var(--color-text-faint)" }}
         >
           {isEn ? "Pick a study mode" : "Wähl deinen Lernmodus"}
@@ -412,8 +412,8 @@ export default function PackHub({
                   onClick={() => onEnterMode(c.tab)}
                   className="mode-row group flex w-full items-center gap-3.5 text-left transition"
                   style={{
-                    background: "#141930",
-                    border: "1px solid rgba(255,255,255,0.06)",
+                    background: "var(--color-surface)",
+                    border: "1px solid var(--color-ink-a06)",
                     borderRadius: "12px",
                     padding: "13px 15px",
                   }}
@@ -442,15 +442,15 @@ export default function PackHub({
                     </div>
                     <div
                       className="mt-0.5 truncate text-[12px]"
-                      style={{ color: "#8C95B6" }}
+                      style={{ color: "var(--color-text-faint)" }}
                     >
                       {c.sub}
                     </div>
                   </div>
                   <div className="hidden shrink-0 text-right sm:block">
                     <div
-                      className="text-[11px] font-medium tabular-nums"
-                      style={{ color: "#6F7799" }}
+                      className="text-[12px] font-medium tabular-nums"
+                      style={{ color: "var(--color-text-faint)" }}
                     >
                       {c.count}
                     </div>
@@ -460,7 +460,7 @@ export default function PackHub({
                     strokeWidth={1.75}
                     aria-hidden
                     className="shrink-0 transition-transform group-hover:translate-x-0.5"
-                    color="#5A627F"
+                    color="var(--color-text-dim)"
                   />
                 </button>
               </li>
@@ -502,7 +502,7 @@ function SituationStat({
       </span>
       <div className="min-w-0 flex-1">
         <div
-          className="text-[10.5px] font-semibold uppercase tracking-[0.14em]"
+          className="text-[12px] font-semibold"
           style={{ color: "var(--color-text-faint)" }}
         >
           {label}

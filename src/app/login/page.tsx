@@ -37,12 +37,12 @@ export default async function LoginPage({
   return (
     <main className="flex flex-1 items-center justify-center px-6 py-16">
       <div
-        className="w-full max-w-[420px] rounded-[28px] p-10 text-white"
+        className="w-full max-w-[420px] rounded-[28px] p-10 text-[color:var(--color-text)]"
         style={{
-          background: "rgba(20, 22, 28, 0.78)",
-          border: "1px solid rgba(255, 255, 255, 0.22)",
+          background: "var(--color-surface)",
+          border: "1px solid var(--color-ink-a14)",
           backdropFilter: "blur(24px)",
-          boxShadow: "0 24px 60px rgba(0, 0, 0, 0.6)",
+          boxShadow: "0 24px 60px var(--color-surface)",
         }}
       >
         <Link
@@ -71,7 +71,7 @@ export default async function LoginPage({
         >
           {isRegister ? "Kostenlos registrieren" : "Anmelden"}
         </h1>
-        <p className="mb-8 text-[15px]" style={{ color: "rgba(255,255,255,0.6)" }}>
+        <p className="mb-8 text-[15px]" style={{ color: "var(--color-text-faint)" }}>
           {isRegister
             ? "Gib deine E-Mail ein — wir legen dein kostenloses Konto an. Kein Upload nötig."
             : "Speichere deine Lernpakete und greife von überall darauf zu."}
@@ -81,9 +81,9 @@ export default async function LoginPage({
           <div
             className="mb-6 rounded-2xl p-4 text-[14px]"
             style={{
-              background: "rgba(217, 119, 87, 0.12)",
-              border: "1px solid rgba(217, 119, 87, 0.35)",
-              color: "#E8A88D",
+              background: "var(--color-err-bg)",
+              border: "1px solid var(--color-err-bg)",
+              color: "var(--color-err-ink)",
             }}
           >
             {decodeURIComponent(errorMessage)}
@@ -94,10 +94,10 @@ export default async function LoginPage({
 
         <p
           className="mt-8 text-center text-[13px]"
-          style={{ color: "rgba(255,255,255,0.45)" }}
+          style={{ color: "var(--color-text-faint)" }}
         >
           Mit dem Login akzeptierst du unsere{" "}
-          <a href="/datenschutz" className="underline hover:text-white">
+          <a href="/datenschutz" className="underline hover:text-[color:var(--color-text)]">
             Datenschutzerklärung
           </a>
           .

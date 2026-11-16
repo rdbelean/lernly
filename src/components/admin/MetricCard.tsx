@@ -25,8 +25,8 @@ export default function MetricCard({
     <div
       className="rounded-2xl border p-5"
       style={{
-        background: "#141930",
-        borderColor: "rgba(255,255,255,0.06)",
+        background: "var(--color-surface)",
+        borderColor: "var(--color-ink-a06)",
       }}
     >
       <div className="flex items-center gap-2">
@@ -39,7 +39,7 @@ export default function MetricCard({
           />
         )}
         <span
-          className="text-[11px] uppercase tracking-[0.16em]"
+          className="text-[12px]"
           style={{ color: "var(--color-text-faint)" }}
         >
           {label}

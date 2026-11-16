@@ -81,7 +81,7 @@ export default function BillingSection({
     <div className="space-y-5">
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span
-          className="text-[12px] font-semibold uppercase tracking-[0.14em]"
+          className="text-[12px] font-semibold"
           style={{ color: "var(--color-text-faint)" }}
         >
           Aktueller Plan
@@ -107,9 +107,9 @@ export default function BillingSection({
         <div
           className="rounded-xl px-4 py-3 text-[13px]"
           style={{
-            background: "rgba(242, 163, 60, 0.08)",
-            border: "1px solid rgba(242, 163, 60, 0.25)",
-            color: "rgba(255,220,170,0.95)",
+            background: "var(--color-urgent-bg)",
+            border: "1px solid var(--color-urgent-bg)",
+            color: "var(--color-urgent-ink)",
           }}
         >
           Abrechnung ist noch nicht konfiguriert. Sobald die Stripe-Keys in
@@ -135,7 +135,7 @@ export default function BillingSection({
               onClick={() => startCheckout("semester")}
               className="rounded-2xl px-5 py-4 text-left transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
               style={{
-                background: "rgba(110, 128, 242, 0.10)",
+                background: "var(--color-work-bg)",
                 border: "1px solid var(--color-primary-bright)",
               }}
             >
@@ -163,7 +163,7 @@ export default function BillingSection({
               className="rounded-2xl px-5 py-4 text-left transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
               style={{
                 background: "var(--color-surface-2)",
-                border: "1px solid rgba(255,255,255,0.10)",
+                border: "1px solid var(--color-ink-a10)",
               }}
             >
               <div
@@ -190,7 +190,7 @@ export default function BillingSection({
               className="rounded-2xl px-5 py-4 text-left transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
               style={{
                 background: "var(--color-surface-2)",
-                border: "1px solid rgba(255,255,255,0.10)",
+                border: "1px solid var(--color-ink-a10)",
               }}
             >
               <div

@@ -76,7 +76,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1421C5",
+  themeColor: "var(--color-work-ink)",
 };
 
 const organizationJsonLd = {

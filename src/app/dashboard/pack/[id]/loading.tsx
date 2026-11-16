@@ -16,8 +16,8 @@ function Shimmer({
     <div
       className={`relative overflow-hidden rounded-2xl ${className ?? ""}`}
       style={{
-        background: "rgba(20, 22, 28, 0.6)",
-        border: "1px solid rgba(255,255,255,0.1)",
+        background: "var(--color-surface)",
+        border: "1px solid var(--color-ink-a10)",
         ...style,
       }}
     >
@@ -33,7 +33,7 @@ export default function PackLoading() {
         {/* Breadcrumb */}
         <div
           className="h-3 w-40 rounded"
-          style={{ background: "rgba(255,255,255,0.07)" }}
+          style={{ background: "var(--color-ink-a10)" }}
         />
 
         {/* Title + meta chips / exam pill row */}
@@ -41,21 +41,21 @@ export default function PackLoading() {
           <div className="min-w-0 flex-1">
             <div
               className="h-[34px] w-3/4 max-w-[420px] rounded-md"
-              style={{ background: "rgba(255,255,255,0.08)" }}
+              style={{ background: "var(--color-ink-a10)" }}
             />
             <div className="mt-3 flex flex-wrap gap-2">
               {[64, 72, 56].map((w, i) => (
                 <div
                   key={i}
                   className="h-6 rounded-md"
-                  style={{ width: w, background: "rgba(255,255,255,0.05)" }}
+                  style={{ width: w, background: "var(--color-ink-a04)" }}
                 />
               ))}
             </div>
           </div>
           <div
             className="hidden h-8 w-40 shrink-0 rounded-full sm:block"
-            style={{ background: "rgba(255,255,255,0.05)" }}
+            style={{ background: "var(--color-ink-a04)" }}
           />
         </div>
 
@@ -63,13 +63,13 @@ export default function PackLoading() {
             (px-4 py-4 + 16px icon ≈ 49px row) so content below doesn't jump. */}
         <div
           className="mt-8 flex items-center gap-3 border-b py-4 sm:mt-10"
-          style={{ borderColor: "rgba(255,255,255,0.06)" }}
+          style={{ borderColor: "var(--color-ink-a06)" }}
         >
           {[44, 92, 84, 96, 88].map((w, i) => (
             <div
               key={i}
               className="h-4 rounded"
-              style={{ width: w, background: "rgba(255,255,255,0.06)" }}
+              style={{ width: w, background: "var(--color-ink-a06)" }}
             />
           ))}
         </div>

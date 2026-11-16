@@ -134,16 +134,16 @@ export default function WelcomeModal({
         aria-label="Schließen"
         onClick={() => skip(step)}
         className="absolute inset-0"
-        style={{ background: "rgba(0,0,0,0.65)", backdropFilter: "blur(4px)" }}
+        style={{ background: "var(--color-scrim)" }}
       />
       <div
-        className={`relative max-h-[90vh] w-full overflow-y-auto rounded-3xl border p-7 text-white ${
+        className={`relative max-h-[90vh] w-full overflow-y-auto rounded-[18px] border p-7 text-[color:var(--color-text)] ${
           isExam ? "max-w-[600px]" : "max-w-[420px]"
         }`}
         style={{
-          background: "#141930",
-          borderColor: "rgba(255,255,255,0.10)",
-          boxShadow: "0 24px 60px rgba(0,0,0,0.7)",
+          background: "var(--color-surface)",
+          borderColor: "var(--color-ink-a10)",
+          boxShadow: "var(--shadow-pop)",
         }}
       >
         <div className="relative">
@@ -193,10 +193,10 @@ export default function WelcomeModal({
                 maxLength={80}
                 placeholder="Dein Vorname"
                 autoComplete="given-name"
-                className="mb-5 w-full rounded-xl px-4 py-3 text-[15px] text-white outline-none transition focus:border-white/40"
+                className="mb-5 w-full rounded-xl px-4 py-3 text-[15px] text-[color:var(--color-text)] outline-none transition focus:border-[color:var(--color-ink-a14)]"
                 style={{
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.14)",
+                  background: "var(--color-ink-a04)",
+                  border: "1px solid var(--color-ink-a14)",
                 }}
               />
 
@@ -237,7 +237,7 @@ export default function WelcomeModal({
                 type="button"
                 onClick={() => skip("name")}
                 disabled={pending}
-                className="mt-3 w-full text-center text-[13px] transition hover:text-white disabled:opacity-50"
+                className="mt-3 w-full text-center text-[13px] transition hover:text-[color:var(--color-text)] disabled:opacity-50"
                 style={{ color: "var(--color-text-faint)" }}
               >
                 Später einrichten
@@ -275,7 +275,7 @@ export default function WelcomeModal({
                 type="button"
                 onClick={() => skip("exam")}
                 disabled={pending}
-                className="mt-4 w-full text-center text-[13px] transition hover:text-white disabled:opacity-50"
+                className="mt-4 w-full text-center text-[13px] transition hover:text-[color:var(--color-text)] disabled:opacity-50"
                 style={{ color: "var(--color-text-faint)" }}
               >
                 Überspringen — direkt zum Dashboard

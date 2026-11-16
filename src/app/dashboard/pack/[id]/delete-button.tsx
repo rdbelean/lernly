@@ -15,7 +15,7 @@ export default function DeletePackButton({ id }: { id: string }) {
       <button
         type="button"
         onClick={() => setConfirming(true)}
-        className="shrink-0 rounded-full border border-white/15 px-3 py-1.5 text-[13px] text-white/55 transition hover:border-[color:var(--color-ln-rose)]/40 hover:text-white"
+        className="shrink-0 rounded-full border border-[color:var(--color-line)] px-3 py-1.5 text-[13px] text-[color:var(--color-text-faint)] transition hover:border-[color:var(--color-ln-rose)]/40 hover:text-[color:var(--color-text)]"
       >
         Löschen
       </button>
@@ -42,8 +42,8 @@ export default function DeletePackButton({ id }: { id: string }) {
         }
         className="rounded-full px-3 py-1.5 text-[13px] font-medium text-white transition disabled:opacity-50"
         style={{
-          background: "rgba(217,119,87,0.18)",
-          border: "1px solid rgba(217,119,87,0.45)",
+          background: "var(--color-err-bg)",
+          border: "1px solid var(--color-err-ink)",
         }}
       >
         {pending ? "Lösche…" : "Wirklich löschen"}
@@ -52,7 +52,7 @@ export default function DeletePackButton({ id }: { id: string }) {
         type="button"
         onClick={() => setConfirming(false)}
         disabled={pending}
-        className="text-[13px] text-white/55 transition hover:text-white"
+        className="text-[13px] text-[color:var(--color-text-faint)] transition hover:text-[color:var(--color-text)]"
       >
         Abbrechen
       </button>

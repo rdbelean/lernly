@@ -126,7 +126,7 @@ export default function FlashcardStudio({
                 className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-medium"
                 style={{
                   background: "var(--color-surface-2)",
-                  border: "1px solid rgba(255,255,255,0.06)",
+                  border: "1px solid var(--color-ink-a06)",
                   color: "var(--color-text-dim)",
                 }}
               >
@@ -148,7 +148,7 @@ export default function FlashcardStudio({
           {/* Lernen / Liste toggle */}
           <div
             className="flex items-center rounded-xl p-0.5"
-            style={{ background: "var(--color-surface-2)", border: "1px solid rgba(255,255,255,0.06)" }}
+            style={{ background: "var(--color-surface-2)", border: "1px solid var(--color-ink-a06)" }}
           >
             {(
               [
@@ -165,7 +165,7 @@ export default function FlashcardStudio({
                   className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[13px] font-medium transition"
                   style={{
                     background: active ? "var(--color-primary)" : "transparent",
-                    color: active ? "#fff" : "var(--color-text-dim)",
+                    color: active ? "var(--color-on-primary)" : "var(--color-text-dim)",
                   }}
                 >
                   <Icon size={14} strokeWidth={2} aria-hidden />
@@ -179,10 +179,10 @@ export default function FlashcardStudio({
             <button
               type="button"
               onClick={() => setMoreOpen((v) => !v)}
-              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[13px] font-medium transition hover:bg-white/[0.06]"
+              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[13px] font-medium transition hover:bg-[color:var(--color-ink-a06)]"
               style={{
                 background: "var(--color-surface-2)",
-                border: "1px solid rgba(255,255,255,0.06)",
+                border: "1px solid var(--color-ink-a06)",
                 color: "var(--color-text)",
               }}
             >
@@ -197,7 +197,7 @@ export default function FlashcardStudio({
       {moreOpen && packId && (
         <div
           className="mb-6 rounded-2xl p-4 sm:p-5"
-          style={{ background: "var(--color-surface)", border: "1px solid rgba(255,255,255,0.08)" }}
+          style={{ background: "var(--color-surface)", border: "1px solid var(--color-ink-a10)" }}
         >
           <div className="flex items-center gap-2 text-[13px] font-semibold" style={{ color: "var(--color-text)" }}>
             <Sparkles size={15} strokeWidth={2} color="var(--color-primary-bright)" aria-hidden />
@@ -220,8 +220,8 @@ export default function FlashcardStudio({
                   onClick={() => setMoreCount(n)}
                   className="rounded-lg px-3 py-1.5 text-[13px] font-semibold tabular-nums transition"
                   style={{
-                    background: active ? "rgba(110,128,242,0.16)" : "var(--color-surface-2)",
-                    border: `1px solid ${active ? "var(--color-primary-bright)" : "rgba(255,255,255,0.08)"}`,
+                    background: active ? "var(--color-work-bg)" : "var(--color-surface-2)",
+                    border: `1px solid ${active ? "var(--color-primary-bright)" : "var(--color-ink-a10)"}`,
                     color: active ? "var(--color-primary-bright)" : "var(--color-text-dim)",
                   }}
                 >
@@ -241,14 +241,14 @@ export default function FlashcardStudio({
                 ? "Focus? (optional — e.g. formulas, edge cases, chapter 4)"
                 : "Fokus? (optional — z.B. Formeln, Sonderfälle, Kapitel 4)"
             }
-            className="mt-3 w-full rounded-xl px-3 py-2 text-[13px] text-white outline-none transition focus:border-white/40"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.14)" }}
+            className="mt-3 w-full rounded-xl px-3 py-2 text-[13px] text-[color:var(--color-text)] outline-none transition focus:border-[color:var(--color-ink-a14)]"
+            style={{ background: "var(--color-ink-a04)", border: "1px solid var(--color-ink-a14)" }}
           />
 
           {limitReached && (
             <div
               className="mt-3 flex flex-wrap items-center gap-2 rounded-xl px-3 py-2.5 text-[12.5px]"
-              style={{ background: "rgba(242,163,60,0.10)", border: "1px solid rgba(242,163,60,0.28)", color: "rgba(255,224,160,0.95)" }}
+              style={{ background: "var(--color-urgent-bg)", border: "1px solid var(--color-urgent-bg)", color: "var(--color-urgent-ink)" }}
             >
               <Lock size={13} strokeWidth={2} aria-hidden />
               {isEn
@@ -288,7 +288,7 @@ export default function FlashcardStudio({
               <button
                 type="button"
                 onClick={() => setMoreOpen(false)}
-                className="rounded-xl px-3 py-2 text-[13px] font-medium transition hover:bg-white/[0.04]"
+                className="rounded-xl px-3 py-2 text-[13px] font-medium transition hover:bg-[color:var(--color-ink-a06)]"
                 style={{ color: "var(--color-text-dim)" }}
               >
                 {isEn ? "Cancel" : "Abbrechen"}

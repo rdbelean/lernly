@@ -30,7 +30,7 @@ const breadcrumbJsonLd = {
 
 const sectionStyle = { marginBottom: "32px" } as const;
 const bodyStyle = {
-  color: "rgba(255,255,255,0.8)",
+  color: "var(--color-text-dim)",
   fontSize: "15px",
   lineHeight: 1.7,
 } as const;
@@ -46,8 +46,8 @@ const anbieterBlockStyle = {
   marginTop: "12px",
   marginBottom: "12px",
   paddingLeft: "16px",
-  borderLeft: "2px solid rgba(110,128,242,0.45)",
-  color: "rgba(255,255,255,0.92)",
+  borderLeft: "2px solid var(--color-work-ink)",
+  color: "var(--color-text)",
 } as const;
 
 // =========================================================================
@@ -94,13 +94,13 @@ export default function WiderrufPage() {
       <main className="px-6 py-16">
         <div className="mx-auto max-w-[720px]">
           <p
-            className="mb-3 text-[12px] uppercase tracking-[0.22em]"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+            className="mb-3 text-[12px]"
+            style={{ color: "var(--color-text-faint)" }}
           >
             Rechtliches
           </p>
           <h1
-            className="mb-10 text-white"
+            className="mb-10 text-[color:var(--color-text)]"
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "44px",
@@ -231,7 +231,7 @@ export default function WiderrufPage() {
               style={{
                 ...bodyStyle,
                 marginTop: "12px",
-                color: "rgba(255,255,255,0.6)",
+                color: "var(--color-text-faint)",
                 fontSize: "13.5px",
               }}
             >
@@ -243,8 +243,8 @@ export default function WiderrufPage() {
             Bei Fragen zum Widerruf: siehe Kontaktdaten im{" "}
             <a
               href="/impressum"
-              className="underline hover:text-white"
-              style={{ color: "rgba(255,255,255,0.85)" }}
+              className="underline hover:text-[color:var(--color-text)]"
+              style={{ color: "var(--color-text-dim)" }}
             >
               Impressum
             </a>

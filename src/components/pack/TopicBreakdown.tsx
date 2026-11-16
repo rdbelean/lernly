@@ -8,9 +8,9 @@ import {
 // "Was saß, was nicht" — per-topic analysis for the quiz/flashcard completion
 // screens so the student knows what to study next. `rows` come in weakest-first.
 const TONE_COLOR: Record<string, string> = {
-  weak: "#F2845C", // coral
-  warn: "#F2A33C", // amber
-  strong: "#4FD1A5", // teal
+  weak: "var(--color-err-ink)", // coral
+  warn: "var(--color-urgent-ink)", // amber
+  strong: "var(--color-ok-ink)", // teal
 };
 
 export default function TopicBreakdown({
@@ -30,7 +30,7 @@ export default function TopicBreakdown({
     <div className="w-full max-w-[440px] text-left">
       <div className="mb-2.5 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
         <span
-          className="text-[11px] font-semibold uppercase tracking-[0.16em]"
+          className="text-[12px] font-semibold"
           style={{ color: "var(--color-text-faint)" }}
         >
           {title ?? (isEn ? "By topic" : "Themen-Analyse")}
@@ -53,8 +53,8 @@ export default function TopicBreakdown({
               key={r.name}
               className="flex items-center gap-2 rounded-lg border px-3 py-2 text-[13px]"
               style={{
-                background: "rgba(255,255,255,0.025)",
-                borderColor: "rgba(255,255,255,0.08)",
+                background: "var(--color-ink-a04)",
+                borderColor: "var(--color-ink-a10)",
                 borderLeft: `3px solid ${color}`,
               }}
             >
@@ -65,8 +65,8 @@ export default function TopicBreakdown({
                 {r.correct}/{r.total}
               </span>
               <span
-                className="rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums"
-                style={{ background: `${color}1f`, color }}
+                className="rounded-full px-2 py-0.5 text-[12px] font-semibold tabular-nums"
+                style={{ background: `color-mix(in srgb, ${color} 12%, transparent)`, color }}
               >
                 {pct}%
               </span>

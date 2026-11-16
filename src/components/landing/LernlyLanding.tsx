@@ -4,7 +4,8 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowRight, ArrowUpRight, BarChart3, BookOpen, Check, CheckCheck, ChevronDown, ChevronRight, CircleHelp, Download, FileText, GraduationCap, Layers, LayoutDashboard, Menu, MessageCircle, Plus, RotateCcw, Sparkles, Target, TrendingUp, X } from "lucide-react";
 import Link from "next/link";
 import LernlyLogo from "@/components/LernlyLogo";
-import { BrandIcon, DashboardPreview, DrillVisual, ExplainVisual, GuideExamVisual, GuideRecallVisual, GuideStepsVisual, MaterialsVisual, NextStepVisual, PointsVisual, RecallVisual, TodayVisual, TopicsVisual } from "./LearningVisuals";
+import HeroDashboard from "./HeroDashboard";
+import { BrandIcon, DrillVisual, ExplainVisual, GuideExamVisual, GuideRecallVisual, GuideStepsVisual, MaterialsVisual, NextStepVisual, PointsVisual, RecallVisual, TodayVisual, TopicsVisual } from "./LearningVisuals";
 import s from "./lernly-landing.module.css";
 
 const BETA = "mailto:info@lernly-app.de?subject=Lernly%20Beta%20testen&body=Hi%20Lernly%2C%0A%0Aich%20m%C3%B6chte%20die%20Beta%20testen.%0AMein%20Kurs%3A%20%0A";
@@ -71,8 +72,8 @@ const faqs = [
 
 
 
-function SectionHeading({ tag, title, description }: { tag: string; title: ReactNode; description: string }) {
-  return <div className={s.sectionHeading}><span className={s.tag}>{tag}</span><h2>{title}</h2><p>{description}</p></div>;
+function SectionHeading({ title, description }: { title: ReactNode; description: string }) {
+  return <div className={s.sectionHeading}><h2>{title}</h2><p>{description}</p></div>;
 }
 
 function FloatingLogos({ integration = false }: { integration?: boolean }) {
@@ -146,12 +147,12 @@ export default function LernlyLanding() {
           <button className={s.primaryButton} onClick={openDemo}>Lerntrainer ausprobieren</button>
           <span className={s.heroCaption}><LayoutDashboard size={16} />Ohne Anmeldung ausprobieren</span>
         </div>
-        <div className={s.dashboardStage}><DashboardPreview /></div>
+        <div className={s.dashboardStage}><HeroDashboard /></div>
         <div className={s.toolStrip}><p>Dein Lernweg darf offen bleiben.</p><div><span><BrandIcon name="claude" size={28} />Claude</span><span><BrandIcon name="openai" size={26} />ChatGPT</span><span><BrandIcon name="anki" size={26} />Anki</span><span><BrandIcon name="quizlet" size={26} />Quizlet</span></div><small>Deine Tools im Blick: Kartenexport im Prototyp · weitere Verbindungen in Entwicklung.</small></div>
       </section>
 
       <section className={s.section} id="features">
-        <SectionHeading tag="Funktionen" title={<>Dein Lernstoff kann<br />mehr als gelesen werden</>} description="Alles, was dich vom ersten Verstehen zum eigenen Anwenden bringt – in einem persönlichen Lerntrainer." />
+        <SectionHeading title={<>Dein Lernstoff kann<br />mehr als gelesen werden</>} description="Alles, was dich vom ersten Verstehen zum eigenen Anwenden bringt – in einem persönlichen Lerntrainer." />
         <div className={s.featureGrid}>
           <article><div className={s.featureVisual}><PointsVisual /></div><h3>Alles in einem Lernraum</h3><p>Themen, Aufgaben und Wiederholungen in einer klaren Struktur. So findest du deinen nächsten Schritt.</p></article>
           <article><div className={s.featureVisual}><ExplainVisual /></div><h3>Erklärungen, die dich weiterbringen</h3><p>Lass dir Zusammenhänge einfach erklären. Vom Grundprinzip bis zum durchgerechneten Beispiel. Genau dort weiterlernen, wo es noch hakt.</p></article>
@@ -162,12 +163,12 @@ export default function LernlyLanding() {
       </section>
 
       <section className={s.section} id="vorteile">
-        <SectionHeading tag="Deine Vorteile" title={<>Weniger Lernchaos.<br />Mehr Aha-Momente.</>} description="Ein Lernablauf, der zu deinem Stoff passt und dir den nächsten Schritt leichter macht." />
+        <SectionHeading title={<>Weniger Lernchaos.<br />Mehr Aha-Momente.</>} description="Ein Lernablauf, der zu deinem Stoff passt und dir den nächsten Schritt leichter macht." />
         <div className={s.benefitsGrid}>{benefits.map(({ icon: Icon, title, text }) => <article key={title}><span><Icon size={22} strokeWidth={1.6} /></span><h3>{title}</h3><p>{text}</p></article>)}</div>
       </section>
 
       <section className={s.section} id="so-gehts">
-        <SectionHeading tag="So funktioniert’s" title={<>Vom Kursordner zum<br />Lernen in drei Schritten</>} description="Deine Unterlagen geben den Stoff vor. Lernly bringt den Ablauf mit. Du konzentrierst dich aufs Verstehen." />
+        <SectionHeading title={<>Vom Kursordner zum<br />Lernen in drei Schritten</>} description="Deine Unterlagen geben den Stoff vor. Lernly bringt den Ablauf mit. Du konzentrierst dich aufs Verstehen." />
         <div className={s.stepsGrid}>
           <article><div className={s.stepVisual}><MaterialsVisual /></div><h3>Deinen Kurs mitbringen</h3><p>Arbeite mit deinen Folien, Übungen und Altklausuren. Dein eigener Stoff ist der Ausgangspunkt für deinen Lernweg.</p></article>
           <article><div className={s.stepVisual}><TopicsVisual /></div><h3>Deinen Stoff verstehen</h3><p>Aus deinem Stoff soll ein persönlicher Lernraum werden. Mit verständlichen Erklärungen und passenden Aufgaben.</p></article>
@@ -175,10 +176,10 @@ export default function LernlyLanding() {
         </div>
       </section>
 
-      <section className={s.integrationSection} id="integrationen"><div className={s.integrationPanel}><FloatingLogos integration /><div className={s.integrationCopy}><span className={s.tag}>Deine Tools</span><h2>Dein Lernweg.<br />Deine liebsten Tools.</h2><p>Verstehen, rechnen, wiederholen. In Lernly.<br />Deine Karten zu Anki oder Quizlet mitnehmen.</p><button className={s.primaryButton} onClick={openDemo}>Lerntrainer entdecken</button><small>Anki & Quizlet: Kartenexport im Prototyp. Claude: lokale Connector-Beta. ChatGPT: geplante Anbindung. Keine automatische Synchronisierung.</small></div></div></section>
+      <section className={s.integrationSection} id="integrationen"><div className={s.integrationPanel}><FloatingLogos integration /><div className={s.integrationCopy}><h2>Dein Lernweg.<br />Deine liebsten Tools.</h2><p>Verstehen, rechnen, wiederholen. In Lernly.<br />Deine Karten zu Anki oder Quizlet mitnehmen.</p><button className={s.primaryButton} onClick={openDemo}>Lerntrainer entdecken</button><small>Anki & Quizlet: Kartenexport im Prototyp. Claude: lokale Connector-Beta. ChatGPT: geplante Anbindung. Keine automatische Synchronisierung.</small></div></div></section>
 
       <section className={s.section} id="faecher">
-        <SectionHeading tag="Für deinen Stoff" title={<>Jedes Fach lernt<br />sich ein bisschen anders</>} description="Wir starten im BWL-Studium. Die Lernformen richten sich danach, was du verstehen und anwenden möchtest." />
+        <SectionHeading title={<>Jedes Fach lernt<br />sich ein bisschen anders</>} description="Wir starten im BWL-Studium. Die Lernformen richten sich danach, was du verstehen und anwenden möchtest." />
         <div className={s.subjectCards}>{[
           { name: "Corporate Finance", letter: "CF", text: "Bewertungen rechnen, Kapitalstruktur verstehen und Ergebnisse einordnen.", kind: "Rechnen & Verstehen", icon: TrendingUp },
           { name: "Marketing", letter: "M", text: "Begriffe abrufen, Frameworks unterscheiden und auf kleine Fälle anwenden.", kind: "Erinnern & Anwenden", icon: MessageCircle },
@@ -187,7 +188,7 @@ export default function LernlyLanding() {
       </section>
 
       <section className={s.section} id="zugang">
-        <SectionHeading tag="Dein Einstieg" title={<>Finde deinen nächsten<br />Schritt mit Lernly</>} description="Erst ausprobieren. Dann mit deinem eigenen Stoff weiterdenken. Die neue Version befindet sich in der Testphase." />
+        <SectionHeading title={<>Finde deinen nächsten<br />Schritt mit Lernly</>} description="Erst ausprobieren. Dann mit deinem eigenen Stoff weiterdenken. Die neue Version befindet sich in der Testphase." />
         <div className={s.pricingGrid}>
           <article><h3>Entdecken</h3><div className={s.planPrice}>0 €<span>für die Vorschau</span></div><p>Ein erster Aha-Moment, direkt hier.</p><button className={s.outlineButton} onClick={openDemo}>Demo ausprobieren</button><h4>Das erwartet dich</h4><ul>{["Finance-, Mathe- und Marketing-Beispiele", "Aufgaben selbst beantworten", "Karteikarten umdrehen", "Ohne Konto und ohne Anmeldung"].map(x => <li key={x}><Check size={15} />{x}</li>)}</ul></article>
           <article className={s.highlightPlan}><span className={s.planBadge}>Dein nächster Schritt</span><h3>Mitgestalten</h3><div className={s.planPrice}>Beta<span>mit deinem eigenen Kurs</span></div><p>Gestalte deinen persönlichen Lernraum mit.</p><a className={s.primaryButton} href={BETA}>Beta-Zugang anfragen</a><h4>Gemeinsam weiterentwickeln</h4><ul>{["Interesse für deinen Kurs anmelden", "Deinen bisherigen Lernweg einbringen", "Feedback zum Trainer geben", "Preise vor dem Start transparent erfahren"].map(x => <li key={x}><Check size={15} />{x}</li>)}</ul></article>
@@ -196,17 +197,17 @@ export default function LernlyLanding() {
       </section>
 
       <section className={s.section} id="warum-lernly">
-        <SectionHeading tag="Warum Lernly" title={<>Ein roter Faden<br />für dein Lernen</>} description="Dein Stoff verdient mehr als eine Zusammenfassung. Ein klarer Ablauf bringt dich vom ersten Lesen zum eigenen Können." />
+        <SectionHeading title={<>Ein roter Faden<br />für dein Lernen</>} description="Dein Stoff verdient mehr als eine Zusammenfassung. Ein klarer Ablauf bringt dich vom ersten Lesen zum eigenen Können." />
         <div className={s.comparison}><article><h3>Ohne roten Faden</h3>{["Unterlagen an vielen verschiedenen Orten", "Lesen, ohne das Wissen anzuwenden", "Jede Karte von Hand vorbereiten", "Bei jedem Thema wieder von vorn starten", "Unsicher, was du noch üben solltest"].map(x => <p key={x}><X size={15} />{x}</p>)}</article><article><h3><LernlyLogo variant="icon" size={29} alt="" />Lernly</h3>{["Dein Kurs in einem klaren Lernraum", "Verstehen und direkt selbst ausprobieren", "Erklärungen, Übungen und Karten zusammen", "Ein wiederkehrender Ablauf für jedes Thema", "Gezielt dort weitermachen, wo es noch hakt"].map(x => <p key={x}><Check size={15} />{x}</p>)}</article></div>
       </section>
 
       <section className={s.section} id="fragen">
-        <SectionHeading tag="FAQ" title={<>Deine Fragen.<br />Klare Antworten.</>} description="Was du wissen solltest, bevor du deinen neuen Lernweg ausprobierst." />
+        <SectionHeading title={<>Deine Fragen.<br />Klare Antworten.</>} description="Was du wissen solltest, bevor du deinen neuen Lernweg ausprobierst." />
         <div className={s.faqList}>{faqs.map(([q,a]) => <details key={q}><summary>{q}<Plus size={17} /></summary><p>{a}</p></details>)}</div>
       </section>
 
       <section className={s.section} id="lernmethoden">
-        <SectionHeading tag="Lernmethoden" title={<>Kleine Veränderungen.<br />Ein besserer Lernablauf.</>} description="Drei Ideen, die du schon jetzt mit deinen eigenen Unterlagen ausprobieren kannst." />
+        <SectionHeading title={<>Kleine Veränderungen.<br />Ein besserer Lernablauf.</>} description="Drei Ideen, die du schon jetzt mit deinen eigenen Unterlagen ausprobieren kannst." />
         <div className={s.guides}>{learningMethods.map(({tag,title,text},i) => <details key={title}><summary><div className={s.guideVisual}>{i === 0 ? <GuideRecallVisual /> : i === 1 ? <GuideStepsVisual /> : <GuideExamVisual />}</div><span>{tag}</span><h3>{title}</h3><span className={s.guideRead}>Tipp lesen<ArrowUpRight size={16} /></span></summary><p>{text}</p></details>)}</div>
       </section>
 

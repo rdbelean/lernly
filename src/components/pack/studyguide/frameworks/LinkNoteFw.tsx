@@ -31,7 +31,7 @@ export default function LinkNoteFw({ fw }: { fw: LinkNoteFw }) {
           className="mt-0.5 shrink-0"
         />
         <div className="min-w-0 flex-1">
-          <div className="mb-1 flex flex-wrap items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.12em]">
+          <div className="mb-1 flex flex-wrap items-center gap-1.5 text-[12px] font-semibold">
             <span style={{ color: HIGHLIGHT_FG }}>{stripEmoji(fw.fromTopic)}</span>
             <ArrowRight size={11} strokeWidth={1.75} color={TEXT_FAINT} aria-hidden />
             <span style={{ color: HIGHLIGHT_FG }}>{stripEmoji(fw.toTopic)}</span>

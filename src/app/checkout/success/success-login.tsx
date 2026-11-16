@@ -10,16 +10,16 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[15px] font-medium text-white transition hover:bg-white/15 disabled:opacity-50"
+      className="flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[15px] font-medium text-[color:var(--color-text)] transition hover:bg-[color:var(--color-ink-a14)] disabled:opacity-50"
       style={{
-        background: "rgba(255,255,255,0.08)",
-        border: "1px solid rgba(255,255,255,0.18)",
+        background: "var(--color-ink-a10)",
+        border: "1px solid var(--color-ink-a14)",
       }}
     >
       {pending && (
         <span
           className="inline-block h-4 w-4 animate-spin rounded-full"
-          style={{ border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff" }}
+          style={{ border: "2px solid var(--color-ink-a14)", borderTopColor: "var(--color-primary)" }}
           aria-hidden
         />
       )}
@@ -42,9 +42,9 @@ export default function SuccessLogin({ email }: { email: string }) {
         <div
           className="mb-4 rounded-2xl p-4 text-[14px]"
           style={{
-            background: "rgba(217, 119, 87, 0.12)",
-            border: "1px solid rgba(217, 119, 87, 0.35)",
-            color: "#E8A88D",
+            background: "var(--color-err-bg)",
+            border: "1px solid var(--color-err-bg)",
+            color: "var(--color-err-ink)",
           }}
         >
           {state.error}
@@ -56,8 +56,8 @@ export default function SuccessLogin({ email }: { email: string }) {
         <input type="hidden" name="email" value={email} />
         <label
           htmlFor="code"
-          className="text-[12px] uppercase tracking-[0.18em]"
-          style={{ color: "rgba(255,255,255,0.55)" }}
+          className="text-[12px]"
+          style={{ color: "var(--color-text-faint)" }}
         >
           Login-Code
         </label>
@@ -70,10 +70,10 @@ export default function SuccessLogin({ email }: { email: string }) {
           pattern="[0-9]*"
           maxLength={10}
           autoFocus
-          className="rounded-2xl px-4 py-3 text-center text-[20px] font-semibold tracking-[0.3em] text-white outline-none transition focus:border-white/40"
+          className="rounded-2xl px-4 py-3 text-center text-[20px] font-semibold text-[color:var(--color-text)] outline-none transition focus:border-[color:var(--color-ink-a14)]"
           style={{
-            background: "rgba(255,255,255,0.06)",
-            border: "1px solid rgba(255,255,255,0.16)",
+            background: "var(--color-ink-a06)",
+            border: "1px solid var(--color-ink-a14)",
           }}
         />
         <SubmitButton />

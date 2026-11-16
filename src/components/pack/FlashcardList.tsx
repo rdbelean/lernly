@@ -97,12 +97,12 @@ export default function FlashcardList({
             className="grid grid-cols-1 gap-x-5 gap-y-1.5 rounded-xl px-4 py-3.5 sm:grid-cols-[minmax(0,38%)_minmax(0,1fr)_auto]"
             style={{
               background: "var(--color-surface)",
-              border: "1px solid rgba(255,255,255,0.06)",
+              border: "1px solid var(--color-ink-a06)",
             }}
           >
             {/* Term (question) */}
             <div
-              className="text-[14px] font-semibold leading-snug text-white"
+              className="text-[14px] font-semibold leading-snug text-[color:var(--color-text)]"
               dangerouslySetInnerHTML={{ __html: renderRichText(c.question) }}
             />
             {/* Definition (answer) */}
@@ -121,7 +121,7 @@ export default function FlashcardList({
                       onClick={() => confirmDelete(c.id)}
                       aria-label={isEn ? "Confirm delete" : "Löschen bestätigen"}
                       className="flex h-8 w-8 items-center justify-center rounded-lg transition"
-                      style={{ background: "rgba(244,114,98,0.16)", color: "var(--color-cat-coral)" }}
+                      style={{ background: "var(--color-err-bg)", color: "var(--color-cat-coral)" }}
                     >
                       <Check size={15} strokeWidth={2.2} aria-hidden />
                     </button>
@@ -129,7 +129,7 @@ export default function FlashcardList({
                       type="button"
                       onClick={() => setConfirmId(null)}
                       aria-label={isEn ? "Cancel" : "Abbrechen"}
-                      className="flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-white/[0.06]"
+                      className="flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-[color:var(--color-ink-a06)]"
                       style={{ color: "var(--color-text-dim)" }}
                     >
                       <X size={15} strokeWidth={2.2} aria-hidden />
@@ -142,7 +142,7 @@ export default function FlashcardList({
                       onClick={() => toggleFav(c.id)}
                       aria-label={isEn ? "Favorite" : "Favorit"}
                       aria-pressed={fav}
-                      className="flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-white/[0.06]"
+                      className="flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-[color:var(--color-ink-a06)]"
                       style={{ color: fav ? "var(--color-amber)" : "var(--color-text-faint)" }}
                     >
                       <Star
@@ -156,7 +156,7 @@ export default function FlashcardList({
                       type="button"
                       onClick={() => setConfirmId(c.id)}
                       aria-label={isEn ? "Delete" : "Löschen"}
-                      className="flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-white/[0.06]"
+                      className="flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-[color:var(--color-ink-a06)]"
                       style={{ color: "var(--color-text-faint)" }}
                     >
                       <Trash2 size={15} strokeWidth={2} aria-hidden />

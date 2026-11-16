@@ -32,14 +32,14 @@ export default function FormulaFw({
   accent?: Accent;
 }) {
   const fg = accent?.fg ?? HIGHLIGHT_FG;
-  const tint = accent?.tint ?? "rgba(110,128,242,0.09)";
+  const tint = accent?.tint ?? "var(--color-work-bg)";
   return (
     <div className="mt-4">
       <FwTitle title={fw.title} />
       <div
         className="rounded-xl px-5 py-4 text-center"
         style={{
-          background: `linear-gradient(135deg, ${tint}, rgba(0,0,0,0.12))`,
+          background: `linear-gradient(135deg, ${tint}, var(--color-ink-a10))`,
           border: `1px solid ${NEUTRAL_BORDER}`,
           borderLeft: `3px solid ${fg}`,
         }}
@@ -71,9 +71,9 @@ export default function FormulaFw({
                       fontFamily: MONO_FONT,
                       borderBottom:
                         i < fw.variables!.length - 1
-                          ? "1px solid rgba(255,255,255,0.03)"
+                          ? "1px solid var(--color-ink-a04)"
                           : "none",
-                      background: "rgba(255,255,255,0.02)",
+                      background: "var(--color-ink-a04)",
                     }}
                     dangerouslySetInnerHTML={{
                       __html: renderRichText(v.symbol),
@@ -85,7 +85,7 @@ export default function FormulaFw({
                       color: TEXT,
                       borderBottom:
                         i < fw.variables!.length - 1
-                          ? "1px solid rgba(255,255,255,0.03)"
+                          ? "1px solid var(--color-ink-a04)"
                           : "none",
                     }}
                     dangerouslySetInnerHTML={{

@@ -102,11 +102,11 @@ export default function SiteNav({
         type="button"
         onClick={toggleLanguage}
         aria-label={copy.languageLabel}
-        className="flex items-center gap-1 rounded-full px-3 py-1.5 text-[12px] font-semibold uppercase tracking-[0.1em] transition hover:bg-white/10"
+        className="flex items-center gap-1 rounded-full px-3 py-1.5 text-[12px] font-semibold transition hover:bg-[color:var(--color-ink-a10)]"
         style={{
-          color: "rgba(255,255,255,0.75)",
-          background: "rgba(255,255,255,0.04)",
-          border: "1px solid rgba(255,255,255,0.12)",
+          color: "var(--color-text-dim)",
+          background: "var(--color-ink-a04)",
+          border: "1px solid var(--color-ink-a14)",
         }}
       >
         <span>{language}</span>
@@ -136,8 +136,8 @@ export default function SiteNav({
         <span
           className="inline-flex h-7 w-7 items-center justify-center rounded-full text-[12px] font-semibold"
           style={{
-            background: "rgba(255,255,255,0.12)",
-            border: "1px solid rgba(255,255,255,0.2)",
+            background: "var(--color-ink-a14)",
+            border: "1px solid var(--color-ink-a14)",
             color: "white",
           }}
         >
@@ -164,7 +164,7 @@ export default function SiteNav({
       <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between px-6 py-[18px]">
         <a
           href="/"
-          className="flex items-center gap-3 text-white"
+          className="flex items-center gap-3 text-[color:var(--color-text)]"
           style={{
             fontFamily: "var(--font-display)",
             fontSize: "26px",
@@ -180,30 +180,30 @@ export default function SiteNav({
         <div className="hidden items-center gap-7 md:flex">
           <a
             href={`${prefix}#demo`}
-            className="text-[14px] font-medium text-white transition hover:opacity-70"
+            className="text-[14px] font-medium text-[color:var(--color-text)] transition hover:opacity-70"
           >
             {copy.demos}
           </a>
           <a
             href={`${prefix}#features`}
-            className="text-[14px] font-medium text-white transition hover:opacity-70"
+            className="text-[14px] font-medium text-[color:var(--color-text)] transition hover:opacity-70"
           >
             {copy.features}
           </a>
           <a
             href={`${prefix}#pricing`}
-            className="text-[14px] font-medium text-white transition hover:opacity-70"
+            className="text-[14px] font-medium text-[color:var(--color-text)] transition hover:opacity-70"
           >
             {copy.pricing}
           </a>
           <a
             href={`${prefix}#faq`}
-            className="text-[14px] font-medium text-white transition hover:opacity-70"
+            className="text-[14px] font-medium text-[color:var(--color-text)] transition hover:opacity-70"
           >
             {copy.faq}
           </a>
 
-          <span className="mx-1 h-5 w-px" style={{ background: "rgba(255,255,255,0.1)" }} />
+          <span className="mx-1 h-5 w-px" style={{ background: "var(--color-ink-a10)" }} />
 
           {renderLanguageToggle()}
           {authLoaded && renderUserPill()}
@@ -212,13 +212,13 @@ export default function SiteNav({
             <>
               <a
                 href={REGISTER_HREF}
-                className="text-[14px] font-medium text-white transition hover:opacity-70"
+                className="text-[14px] font-medium text-[color:var(--color-text)] transition hover:opacity-70"
               >
                 {copy.register}
               </a>
               <a
                 href="/login"
-                className="text-[14px] font-medium text-white transition hover:opacity-70"
+                className="text-[14px] font-medium text-[color:var(--color-text)] transition hover:opacity-70"
               >
                 {copy.signIn}
               </a>
@@ -229,14 +229,14 @@ export default function SiteNav({
             <button
               type="button"
               onClick={onActivateUpload}
-              className="rounded-lg bg-white px-4 py-1.5 text-[14px] font-semibold text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
+              className="rounded-lg bg-[color:var(--color-primary)] px-4 py-1.5 text-[14px] font-semibold text-[color:var(--color-on-primary)] transition hover:bg-[color:var(--color-primary-press)]"
             >
               {ctaLabel}
             </button>
           ) : (
             <a
               href={ctaHref ?? "/login"}
-              className="rounded-lg bg-white px-4 py-1.5 text-[14px] font-semibold text-[color:var(--color-ln-bg-bot)] transition hover:bg-white/90"
+              className="rounded-lg bg-[color:var(--color-primary)] px-4 py-1.5 text-[14px] font-semibold text-[color:var(--color-on-primary)] transition hover:bg-[color:var(--color-primary-press)]"
             >
               {ctaLabel}
             </a>
@@ -249,14 +249,14 @@ export default function SiteNav({
             <button
               type="button"
               onClick={onActivateUpload}
-              className="rounded-lg bg-white px-3 py-1.5 text-[12.5px] font-semibold text-[color:var(--color-ln-bg-bot)]"
+              className="rounded-lg bg-[color:var(--color-primary)] px-3 py-1.5 text-[12.5px] font-semibold text-[color:var(--color-on-primary)]"
             >
               {ctaLabel}
             </button>
           ) : (
             <a
               href={ctaHref ?? "/login"}
-              className="rounded-lg bg-white px-3 py-1.5 text-[12.5px] font-semibold text-[color:var(--color-ln-bg-bot)]"
+              className="rounded-lg bg-[color:var(--color-primary)] px-3 py-1.5 text-[12.5px] font-semibold text-[color:var(--color-on-primary)]"
             >
               {ctaLabel}
             </a>
@@ -264,7 +264,7 @@ export default function SiteNav({
           <button
             aria-label={copy.menu}
             onClick={() => setOpen((v) => !v)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/12 bg-white/[0.04] text-white transition hover:bg-white/[0.08]"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-ink-a06)] text-[color:var(--color-text)] transition hover:bg-[color:var(--color-ink-a10)]"
           >
             <svg
               width="18"
@@ -282,33 +282,33 @@ export default function SiteNav({
       </div>
 
       {open && (
-        <div className="border-t border-white/10 px-6 py-5 md:hidden">
+        <div className="border-t border-[color:var(--color-line)] px-6 py-5 md:hidden">
           <div className="flex flex-col gap-3">
             <a
               href={`${prefix}#demo`}
               onClick={() => setOpen(false)}
-              className="text-[15px] font-medium text-white"
+              className="text-[15px] font-medium text-[color:var(--color-text)]"
             >
               {copy.demos}
             </a>
             <a
               href={`${prefix}#features`}
               onClick={() => setOpen(false)}
-              className="text-[15px] font-medium text-white"
+              className="text-[15px] font-medium text-[color:var(--color-text)]"
             >
               {copy.features}
             </a>
             <a
               href={`${prefix}#pricing`}
               onClick={() => setOpen(false)}
-              className="text-[15px] font-medium text-white"
+              className="text-[15px] font-medium text-[color:var(--color-text)]"
             >
               {copy.pricing}
             </a>
             <a
               href={`${prefix}#faq`}
               onClick={() => setOpen(false)}
-              className="text-[15px] font-medium text-white"
+              className="text-[15px] font-medium text-[color:var(--color-text)]"
             >
               {copy.faq}
             </a>
@@ -316,14 +316,14 @@ export default function SiteNav({
               href={`${prefix}#connect`}
               onClick={() => setOpen(false)}
               className="text-[14px] font-normal"
-              style={{ color: "rgba(255,255,255,0.55)" }}
+              style={{ color: "var(--color-text-faint)" }}
             >
               {copy.apiKey}
             </a>
 
             <div
               className="my-2 h-px w-full"
-              style={{ background: "rgba(255,255,255,0.08)" }}
+              style={{ background: "var(--color-ink-a10)" }}
             />
 
             {authLoaded &&
@@ -332,7 +332,7 @@ export default function SiteNav({
                   href="/dashboard"
                   onClick={() => setOpen(false)}
                   className="text-[14px] font-medium"
-                  style={{ color: "rgba(255,255,255,0.85)" }}
+                  style={{ color: "var(--color-text-dim)" }}
                 >
                   {user.email}
                 </a>
@@ -342,7 +342,7 @@ export default function SiteNav({
                     href={REGISTER_HREF}
                     onClick={() => setOpen(false)}
                     className="text-[14px] font-semibold"
-                    style={{ color: "rgba(255,255,255,0.9)" }}
+                    style={{ color: "var(--color-text-dim)" }}
                   >
                     {copy.register}
                   </a>
@@ -350,7 +350,7 @@ export default function SiteNav({
                     href="/login"
                     onClick={() => setOpen(false)}
                     className="text-[14px] font-medium"
-                    style={{ color: "rgba(255,255,255,0.75)" }}
+                    style={{ color: "var(--color-text-dim)" }}
                   >
                     {copy.signIn}
                   </a>
@@ -361,7 +361,7 @@ export default function SiteNav({
               <div className="flex items-center justify-between">
                 <span
                   className="text-[12px]"
-                  style={{ color: "rgba(255,255,255,0.5)" }}
+                  style={{ color: "var(--color-text-faint)" }}
                 >
                   {copy.languageLabel}
                 </span>
