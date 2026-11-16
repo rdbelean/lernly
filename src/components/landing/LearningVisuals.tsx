@@ -1,85 +1,226 @@
-import { useState } from "react";
-import { BookOpen, Check, ChevronRight, FileText, Layers, ArrowRight, Clock3, Sparkles, Target } from "lucide-react";
+import { useState, type ReactNode } from "react";
+import { ArrowRight, BookOpen, Check, ChevronRight, Clock3, FileSpreadsheet, FileText, Folder, Layers, Sparkles, Target, X } from "lucide-react";
 import Image from "next/image";
 import LernlyLogo from "@/components/LernlyLogo";
 import v from "./learning-visuals.module.css";
 
-export function BrandIcon({ name, size = 42 }: { name: "claude" | "anki" | "quizlet" | "openai"; size?: number }) {
-  return <Image src={"/brands/" + name + (name === "claude" || name === "openai" ? ".svg" : ".jpg")} width={size} height={size} alt={name === "openai" ? "ChatGPT" : name === "claude" ? "Claude" : name === "anki" ? "Anki" : "Quizlet"} className={v.brandIcon} />;
+type Brand = "claude" | "anki" | "quizlet" | "openai";
+const BRAND_LABEL: Record<Brand, string> = { claude: "Claude", openai: "ChatGPT", anki: "Anki", quizlet: "Quizlet" };
+
+export function BrandIcon({ name, size = 42 }: { name: Brand; size?: number }) {
+  const ext = name === "claude" || name === "openai" ? ".svg" : ".jpg";
+  return <Image src={"/brands/" + name + ext} width={size} height={size} alt={BRAND_LABEL[name]} className={v.brandIcon} />;
 }
 
-const courseTopics = [
-  { name: "Kapitalstruktur & Leverage", detail: "Modigliani–Miller · 5 Aufgaben", points: "19 P", progress: 80 },
-  { name: "Discounted Cashflow", detail: "Bewertung · 13 Aufgaben", points: "15 P", progress: 46 },
-  { name: "Agency-Konflikte", detail: "Anreize · 3 Aufgaben", points: "10 P", progress: 0 },
+/* Fraction rendered with HTML so it stays crisp at every size. */
+function Frac({ top, bottom }: { top: ReactNode; bottom: ReactNode }) {
+  return <span className={v.frac}><span>{top}</span><span>{bottom}</span></span>;
+}
+
+const topics = [
+  { name: "Kapitalstruktur & Leverage", short: "Leverage & MM", points: 19, done: "Schon geübt", progress: 72 },
+  { name: "Discounted Cashflow", short: "Discounted Cashflow", points: 15, done: "Hier lernst du weiter", progress: 40 },
+  { name: "Ertragswertverfahren", short: "Ertragswertverfahren", points: 11, done: "Noch offen", progress: 0 },
+  { name: "Markteffizienz", short: "Markteffizienz", points: 9, done: "Noch offen", progress: 0 },
 ];
 
-export function CourseVisual() {
-  return <div className={v.visual}><div className={v.courseSheet}>
-    <div className={v.sheetHeading}><span><BookOpen size={16}/>Deine Themen</span><small>Beispielkurs</small></div>
-    {courseTopics.map((topic,i)=><div className={v.courseRow} key={topic.name}><span className={v.topicNumber}>{i+1}</span><div><b>{topic.name}</b><small>{topic.detail}</small><div className={v.progressTrack}><i style={{width:topic.progress+"%"}}/></div></div><span className={v.points}>{topic.points}</span></div>)}
-    <div className={v.sheetFooter}><Target size={14}/>Nach Klausurrelevanz sortiert</div>
-  </div></div>;
-}
+/* ---------- Hero: the full study workspace (interactive) ---------- */
+
+const ratings = [
+  { label: "Nochmal", when: "< 1 Min", tone: v.rateRed },
+  { label: "Schwer", when: "1 Tag", tone: v.rateOrange },
+  { label: "Gut", when: "3 Tage", tone: v.rateGreen },
+  { label: "Leicht", when: "7 Tage", tone: v.rateBlue },
+];
 
 export function DashboardPreview() {
   const [tab, setTab] = useState("Verstehen");
   const [flipped, setFlipped] = useState(false);
+  const [rated, setRated] = useState<string | null>(null);
   const [answer, setAnswer] = useState("");
   const [checked, setChecked] = useState(false);
-  const correct = answer.trim() !== "" && Math.abs(Number(answer.replace(",", "."))-751.31)<.02;
+  const value = Number(answer.replace(/\s/g, "").replace(/\.(?=\d{3})/g, "").replace(",", "."));
+  const correct = answer.trim() !== "" && Math.abs(value - 751.31) < 0.02;
+  const steps = [
+    { label: "Verstehen", text: "Das Prinzip durchblicken", icon: BookOpen },
+    { label: "Üben", text: "Den Rechenweg anwenden", icon: Target },
+    { label: "Merken", text: "Aus dem Kopf abrufen", icon: Layers },
+  ];
   return <div className={v.studio}>
-    <div className={v.windowBar}><div><i/><i/><i/></div><span>Dein Lernraum</span><span>Interaktive Designvorschau</span></div>
+    <div className={v.windowBar}><div aria-hidden="true"><i /><i /><i /></div><span>Dein Lernraum</span><span>Interaktive Beispielansicht</span></div>
     <div className={v.studioLayout}>
       <aside className={v.studioSidebar}>
-        <div className={v.studioBrand}><LernlyLogo variant="icon" size={28} alt=""/><b>Lernly</b></div>
-        <div className={v.studioCourse}><BookOpen size={17}/><div><b>Corporate Finance</b><small>Dein Beispielkurs</small></div></div>
-        <span className={v.sidebarLabel}>Deine Themen</span>
-        {courseTopics.map((topic,i)=><div className={v.sidebarTopic + (i===1?" "+v.selectedTopic:"")} key={topic.name}><span>{i===0?<Check size={12}/>:String(i+1).padStart(2,"0")}</span><div><b>{topic.name}</b><small>{topic.points} · {i===0?"Schon geübt":i===1?"Hier lernst du weiter":"Noch offen"}</small></div></div>)}
-        <div className={v.sidebarNote}><Layers size={18}/><b>Wissen, das bleibt.</b><p>Verstehen. Selbst lösen.<br/>Im richtigen Moment wiederholen.</p></div>
-        <div className={v.studioProfile}><span>DU</span><div>Dein Studium<small>Dein Tempo. Dein Lernweg.</small></div></div>
+        <div className={v.studioBrand}><LernlyLogo variant="icon" size={28} alt="" /><b>Lernly</b></div>
+        <div className={v.studioCourse}><BookOpen size={18} /><div><b>Corporate Finance</b><small>Klausur in 6 Tagen</small></div></div>
+        <span className={v.sidebarLabel}>Themen nach Klausurpunkten</span>
+        {topics.slice(0, 3).map((t, i) => <div className={v.sidebarTopic + (i === 1 ? " " + v.selectedTopic : "")} key={t.name}>
+          <span className={v.topicPts}>{t.points} P</span>
+          <div><b>{t.name}</b><small>{t.done}</small></div>
+        </div>)}
+        <div className={v.sidebarScore}><span>Punkte, die du jetzt holen würdest</span><strong>38<small> / 90</small></strong><div className={v.scoreTrack}><i style={{ width: "42%" }} /></div></div>
       </aside>
       <div className={v.studioMain}>
-        <header><span>Corporate Finance <ChevronRight size={13}/> Themen</span><span><Clock3 size={13}/>Beispielansicht</span></header>
-        <div className={v.studioHeading}><div><span className={v.subjectPill}>Unternehmensbewertung</span><span className={v.examPill}>Q2 · 15 Punkte</span></div><h3>Discounted Cashflow</h3><p>Vom zukünftigen Cashflow zum Wert von heute.</p></div>
-        <div className={v.studioTabs} aria-label="Lernschritt">{[{label:"Verstehen",icon:BookOpen},{label:"Üben",icon:Target},{label:"Merken",icon:Layers}].map(({label,icon:Icon},i)=><button key={label} aria-pressed={tab===label} onClick={()=>setTab(label)}><Icon size={15}/><span><span className={v.tabNumber}>{i+1}. </span>{label}</span></button>)}</div>
+        <header><span>Corporate Finance <ChevronRight size={14} /> Discounted Cashflow</span><span><Clock3 size={14} />Beispielkurs</span></header>
+        <div className={v.studioHeading}>
+          <div><span className={v.subjectPill}>Unternehmensbewertung</span><span className={v.examPill}>Altklausur Q2 · 15 P</span></div>
+          <h3>Discounted Cashflow</h3>
+        </div>
+        <div className={v.studioTabs} role="group" aria-label="Lernschritt">{steps.map(({ label, icon: Icon }, i) =>
+          <button key={label} aria-pressed={tab === label} onClick={() => setTab(label)}><Icon size={16} /><span><span className={v.tabNumber}>{i + 1} · </span>{label}</span></button>)}</div>
         <div className={v.studioColumns}>
           <div className={v.lesson}>
-            <div className={v.lessonLabel}><span>{tab==="Merken"?"Aktives Erinnern":tab==="Üben"?"Jetzt bist du dran":"Das Grundprinzip"}</span><span>01 / 04</span></div>
-            {tab==="Merken" ? <div className={v.studioFlashcard}><Layers size={24}/><h4>{flipped?"Geld hat einen Zeitwert.":"Warum diskontieren wir?"}</h4><p>{flipped?"Wir rechnen eine zukünftige Zahlung auf ihren heutigen Wert zurück. So können wir Zahlungen zu verschiedenen Zeitpunkten vergleichen.":"Erkläre das Prinzip in deinen eigenen Worten. Decke die Antwort erst danach auf."}</p><button className={v.studioAction} onClick={()=>setFlipped(!flipped)}>{flipped?"Zur Frage":"Antwort aufdecken"}<ArrowRight size={14}/></button></div> : <>
-              <h4>{tab==="Üben"?"Was sind 1.000 € heute wert?":"Ein Euro heute ist mehr wert als ein Euro morgen."}</h4>
-              <p>{tab==="Üben"?"Du erhältst in drei Jahren 1.000 €. Der Zinssatz beträgt 10 % pro Jahr. Berechne den heutigen Barwert.":"Geld, das du heute hast, kannst du anlegen. Deshalb rechnen wir zukünftige Zahlungen zurück auf heute. Genau das bedeutet Diskontieren."}</p>
-              {tab==="Verstehen" ? <><div className={v.formula}><span>PV =</span><div><span>1.000 €</span><span>(1 + 0,10)<sup>3</sup></span></div><span>= <b>751,31 €</b></span></div><div className={v.cashflowTimeline}><div><b>751,31 €</b><span>Heute</span></div><span><i/>10 % p. a.<i/></span><div><b>1.000 €</b><span>In 3 Jahren</span></div></div><div className={v.lessonInsight}><Sparkles size={17}/><p><b>Einfach gesagt</b>751,31 € heute werden bei 10 % Zins in drei Jahren zu 1.000 €.</p></div><button className={v.studioAction} onClick={()=>setTab("Üben")}>Verstanden. Jetzt selbst rechnen<ArrowRight size={14}/></button></> : <form className={v.studioExercise} onSubmit={e=>{e.preventDefault();setChecked(true);}}><label>Dein Barwert in €<input required inputMode="decimal" value={answer} onChange={e=>{setAnswer(e.target.value);setChecked(false);}} placeholder="z. B. 750,00"/></label><button className={v.studioAction} type="submit">Antwort prüfen<ArrowRight size={14}/></button>{checked&&<p role="status" className={correct?v.correct:v.retry}>{correct?"Richtig! Der Barwert beträgt 751,31 €.":"Noch nicht ganz. Rechne 1.000 ÷ 1,10³ und versuche es erneut."}</p>}</form>}
+            {tab === "Verstehen" && <>
+              <div className={v.simple}><b>Einfach gesagt:</b> Ein Euro heute ist mehr wert als ein Euro in drei Jahren. Darum rechnen wir zukünftige Zahlungen auf heute zurück.</div>
+              <div className={v.formula}><span>PV</span><span>=</span><Frac top="1.000 €" bottom={<>(1 + 0,10)<sup>3</sup></>} /><span>=</span><b>751,31 €</b></div>
+              <div className={v.example}><b>Beispiel:</b> 751,31 € heute angelegt zu 10 % sind in drei Jahren genau 1.000 €.</div>
+              <button className={v.studioAction} onClick={() => setTab("Üben")}>Verstanden, jetzt selbst rechnen<ArrowRight size={15} /></button>
             </>}
-            <div className={v.lessonSource}><FileText size={12}/>Vorbereitetes Lernbeispiel · Corporate Finance</div>
+            {tab === "Üben" && <form className={v.studioExercise} onSubmit={e => { e.preventDefault(); setChecked(true); }}>
+              <span className={v.taskLabel}>Aufgabe · neue Zahlen</span>
+              <p>Du erhältst in drei Jahren 1.000 €. Der Zins beträgt 10 % pro Jahr. Wie viel ist die Zahlung heute wert?</p>
+              <label htmlFor="pv-answer">Barwert in €</label>
+              <div className={v.inputRow}>
+                <input id="pv-answer" required inputMode="decimal" value={answer} onChange={e => { setAnswer(e.target.value); setChecked(false); }} placeholder="z. B. 750,00" className={checked ? (correct ? v.inputOk : v.inputBad) : ""} />
+                <button className={v.studioAction} type="submit">Prüfen</button>
+              </div>
+              {checked && <p role="status" className={correct ? v.correct : v.retry}>{correct ? <><Check size={15} />Richtig. 1.000 € ÷ 1,10³ = 751,31 €.</> : <><X size={15} />Noch nicht. Teile 1.000 € durch 1,10³.</>}</p>}
+            </form>}
+            {tab === "Merken" && <div className={v.studioCard}>
+              <span className={v.taskLabel}>Karteikarte · 3 von 11</span>
+              <h4>Wie berechnest du den Barwert einer Zahlung in t Jahren?</h4>
+              {flipped
+                ? <div className={v.cardBackFace}><div className={v.formula}><span>PV</span><span>=</span><Frac top={<>CF<sub>t</sub></>} bottom={<>(1 + r)<sup>t</sup></>} /></div>
+                  <div className={v.rates}>{ratings.map(r => <button key={r.label} className={r.tone + (rated === r.label ? " " + v.rateOn : "")} onClick={() => setRated(r.label)}>{r.label}<small>{r.when}</small></button>)}</div></div>
+                : <button className={v.studioAction} onClick={() => setFlipped(true)}>Antwort aufdecken<ArrowRight size={15} /></button>}
+            </div>}
           </div>
-          <aside className={v.studioRail}><div><span>Dein Lernweg</span><h4>Schritt für Schritt.</h4>{["Verstehen","Üben","Merken"].map((label,i)=><div className={v.railStep+(tab===label?" "+v.currentStep:"")} key={label}><span>{i+1}</span><p>{label}<small>{["Das Prinzip durchblicken","Den Rechenweg anwenden","Aus dem Kopf abrufen"][i]}</small></p></div>)}</div><div className={v.railNote}><Target size={19}/><b>Typischer Klausurfehler</b><p>Diskontiere über alle drei Jahre. Der Exponent gehört zum gesamten Zinsfaktor.</p><span>(1 + r)<sup>t</sup></span></div></aside>
+          <aside className={v.studioRail}>
+            <span>Dein Lernweg</span>
+            {steps.map(({ label, text }, i) => <div className={v.railStep + (tab === label ? " " + v.currentStep : "")} key={label}><span>{i + 1}</span><p>{label}<small>{text}</small></p></div>)}
+            <div className={v.railNote}><b>Typischer Fehler</b><p>Den Exponenten vergessen. Diskontiere über alle drei Jahre.</p></div>
+          </aside>
         </div>
       </div>
     </div>
   </div>;
 }
 
-export function OrbitVisual() {
-  return <div className={v.orbitVisual} aria-hidden="true"><div className={v.orbitRing} /><div className={v.orbitRingTwo} /><div className={v.orbitRingThree} /><svg viewBox="0 0 340 240" fill="none"><path d="M170 210 L44 100 M170 210 L120 53 M170 210 L235 50 M170 210 L307 95" stroke="#e1e1e1" /></svg><div className={v.orbitClaude}><FileText size={27} color="#126dfb" /></div><div className={v.orbitQuizlet}><BrandIcon name="quizlet" size={27} /></div><div className={v.orbitAnki}><BrandIcon name="anki" size={27} /></div><div className={v.orbitFile}><span>PDF</span></div><div className={v.orbitCenter}><LernlyLogo variant="icon" size={55} alt="" /></div></div>;
+/* ---------- Feature visuals: one function each, large and readable ---------- */
+
+export function PointsVisual() {
+  return <div className={v.visual} aria-hidden="true"><div className={v.sheet}>
+    <span className={v.eyebrow}>Punkte, die du jetzt holen würdest</span>
+    <div className={v.bigScore}>38<small> / 90</small></div>
+    <div className={v.stackBar}><i style={{ width: "42%" }} /><i style={{ width: "16%" }} /></div>
+    <div className={v.legend}><span><i className={v.dotBlue} />Sitzt</span><span><i className={v.dotLight} />In Arbeit</span><span><i className={v.dotGrey} />Offen</span></div>
+    <div className={v.nextBox}>
+      <span className={v.eyebrow}>Als Nächstes</span>
+      <b>Discounted Cashflow</b>
+      <p><span className={v.ptsInline}>15 P</span>Rechenweg üben · 20 Min.</p>
+    </div>
+  </div></div>;
 }
 
-export function ActivityVisual() {
-  return <div className={v.visual}><div className={v.planSheet}><div className={v.sheetHeading}><span><BookOpen size={16}/>Dein Lernweg</span><small>DCF</small></div>{[["Verstehen","Das Prinzip, einfach erklärt"],["Üben","Ein Beispiel selbst rechnen"],["Merken","Die Formel aktiv abrufen"]].map(([title,description],i)=><div className={v.planStep} key={title}><span>{i===0?<Check size={15}/>:i+1}</span><p><b>{title}</b><small>{description}</small></p>{i===1&&<span className={v.nowPill}>Jetzt</span>}</div>)}</div></div>;
+export function ExplainVisual() {
+  return <div className={v.visual} aria-hidden="true"><div className={v.sheet}>
+    <div className={v.sheetTop}><span className={v.ptsChip}>Q2 · 15 P</span><small>Theorie</small></div>
+    <h4 className={v.sheetTitle}>Was ist ein Barwert?</h4>
+    <div className={v.simple}><b>Einfach gesagt:</b> Zukünftiges Geld, zurückgerechnet auf heute.</div>
+    <div className={v.formula}><span>PV</span><span>=</span><Frac top={<>CF<sub>t</sub></>} bottom={<>(1 + r)<sup>t</sup></>} /></div>
+    <div className={v.example}><b>Beispiel:</b> 1.000 € in 3 Jahren → heute 751,31 €</div>
+  </div></div>;
 }
 
-export function GrowthVisual() {
-  return <div className={v.visual}><div className={v.masterySheet}><div className={v.sheetHeading}><span><Target size={16}/>Das sitzt schon</span><small>Beispiel</small></div><div className={v.masteryTotal}><strong>8 <span>/ 12</span></strong><p>Aufgaben sicher gelöst</p><span className={v.masteryBadge}><Check size={13}/>Weiter so</span></div>{[["Barwert berechnen",4,4],["Cashflows diskontieren",3,4],["Terminal Value",1,4]].map(([label,done,total])=><div className={v.masteryRow} key={label}><div><span>{label}</span><b>{done}/{total}</b></div><div className={v.masterySegments}>{Array.from({length:Number(total)},(_,i)=><i key={i} className={i<Number(done)?v.filled:""}/>)}</div></div>)}</div></div>;
+export function RecallVisual() {
+  return <div className={v.visual} aria-hidden="true">
+    <span className={v.floatBadge}><Clock3 size={14} />12 Karten heute fällig</span>
+    <div className={v.sheet}>
+      <div className={v.sheetTop}><span className={v.cardTag}><Layers size={14} />Karteikarte</span><small>3 / 11</small></div>
+      <h4 className={v.sheetTitle}>Wie berechnest du den Terminal Value?</h4>
+      <div className={v.answerFace}><div className={v.formula}><span>TV</span><span>=</span><Frac top={<>CF<sub>n+1</sub></>} bottom="WACC − g" /></div></div>
+      <div className={v.rates}>{ratings.map(r => <span key={r.label} className={r.tone}>{r.label}<small>{r.when}</small></span>)}</div>
+    </div>
+  </div>;
 }
 
-export function InsightVisual() {
-  return <div className={v.visual}><div className={v.explanationSheet}><div className={v.sheetHeading}><span><Sparkles size={16}/>Einfach erklärt</span><small>Finance</small></div><h4>Was ist ein Barwert?</h4><p>Der Wert einer zukünftigen Zahlung.<br/>Zurückgerechnet auf heute.</p><div className={v.miniFormula}><span>PV =</span><div><span>CF</span><span>(1 + r)<sup>t</sup></span></div></div><div className={v.explanationNote}><span>Ein Beispiel</span><b>1.000 € in 3 Jahren → 751,31 € heute</b><small>Bei 10 % Zins pro Jahr.</small></div></div></div>;
+export function DrillVisual() {
+  return <div className={v.visual} aria-hidden="true"><div className={v.sheet}>
+    <div className={v.sheetTop}><span className={v.cardTag}><Target size={14} />Altklausur 2023 · Q2</span><small>Rechnen</small></div>
+    <p className={v.taskText}>CF<sub>1</sub> = 100 Mio. €, g = 2 %, WACC = 8 %, Fremdkapital 600 Mio. €.</p>
+    <div className={v.drillRow + " " + v.drillOk}><span>Firmenwert</span><b>1.666,67</b><i><Check size={15} /></i></div>
+    <div className={v.drillRow + " " + v.drillBad}><span>Eigenkapital</span><b>1.266,67</b><i><X size={15} /></i></div>
+    <div className={v.drillHint}>Zieh den Marktwert des Fremdkapitals ab: 1.666,67 − 600 = 1.066,67.</div>
+  </div></div>;
 }
 
-export function CardsVisual() {
-  return <div className={v.visual}><div className={v.cardStack}><div className={v.cardBack}/><div className={v.recallFront}><div className={v.sheetHeading}><span><Layers size={16}/>Marketing</span><small>01 / 12</small></div><h4>Segmentierung<br/>oder Targeting?</h4><p>Was ist der Unterschied?</p><div className={v.cardAnswer}>Erst erinnern. Dann aufdecken.<ArrowRight size={14}/></div></div></div><div className={v.recallBadge}><Clock3 size={14}/>Heute wiederholen</div></div>;
+/* ---------- Step visuals ---------- */
+
+export function MaterialsVisual() {
+  const files = [
+    { icon: FileText, name: "Vorlesung 1–12", meta: "309 Seiten" },
+    { icon: FileText, name: "Altklausuren", meta: "2019–2023 · 5 Klausuren" },
+    { icon: FileSpreadsheet, name: "Übungen DCF", meta: "3 Tabellen" },
+  ];
+  return <div className={v.visual} aria-hidden="true"><div className={v.sheet}>
+    <div className={v.sheetTop}><span className={v.cardTag}><Folder size={14} />Corporate Finance</span><small>Kursordner</small></div>
+    {files.map(({ icon: Icon, name, meta }) => <div className={v.fileRow} key={name}><span><Icon size={17} /></span><p>{name}<small>{meta}</small></p><i><Check size={14} /></i></div>)}
+    <div className={v.worksWith}><span>Erstellt mit</span><span className={v.brandPill}><BrandIcon name="claude" size={18} />Claude</span><span className={v.brandPill + " " + v.brandPlanned}><BrandIcon name="openai" size={18} />ChatGPT bald</span></div>
+  </div></div>;
 }
 
-export function EnvelopeVisual() {
-  return <div className={v.visual}><div className={v.planSheet}><div className={v.sheetHeading}><span><LernlyLogo size={20} alt=""/>Dein nächster Schritt</span></div><h4>Bereit für deinen Aha-Moment?</h4><p>Ein Thema verstehen.<br/>Eine Aufgabe selbst lösen.</p><div className={v.cardAnswer}>Mit deinem Stoff starten<ArrowRight size={14}/></div></div></div>;
+export function TopicsVisual() {
+  return <div className={v.visual} aria-hidden="true"><div className={v.sheet}>
+    <div className={v.sheetTop}><span className={v.cardTag}><Target size={14} />Deine Themen</span><small>nach Punkten</small></div>
+    {topics.map(t => <div className={v.rankRow} key={t.name}><span className={v.rankPts}>≈{t.points} P</span><div><b>{t.short}</b><div className={v.rankTrack}><i style={{ width: t.points / 19 * 100 + "%" }} /></div></div></div>)}
+  </div></div>;
+}
+
+export function TodayVisual() {
+  const rows = [
+    { time: "15 Min.", title: "DCF-Theorie", done: true },
+    { time: "20 Min.", title: "Altklausur Q2 rechnen", now: true },
+    { time: "10 Min.", title: "12 Karten" },
+  ];
+  return <div className={v.visual} aria-hidden="true"><div className={v.sheet}>
+    <div className={v.sheetTop}><span className={v.cardTag}><Clock3 size={14} />Dein Plan für heute</span><small>45 Min.</small></div>
+    {rows.map(r => <div className={v.todayRow + (r.done ? " " + v.todayDone : "") + (r.now ? " " + v.todayNow : "")} key={r.title}><span className={v.checkBox}>{r.done && <Check size={13} />}</span><small>{r.time}</small><b>{r.title}</b></div>)}
+    <div className={v.countdown}><span>Klausur in</span><b>6 Tagen</b></div>
+  </div></div>;
+}
+
+/* ---------- Learning-method visuals ---------- */
+
+export function GuideRecallVisual() {
+  return <div className={v.visual} aria-hidden="true"><div className={v.sheet + " " + v.sheetCompact}>
+    <span className={v.eyebrow}>Aus dem Gedächtnis</span>
+    <h4 className={v.sheetTitle}>Wie läuft eine DCF‑Bewertung ab?</h4>
+    <div className={v.writeLines}><i /><i /><i /></div>
+    <span className={v.softAction}>Erst antworten, dann vergleichen<ArrowRight size={14} /></span>
+  </div></div>;
+}
+
+export function GuideStepsVisual() {
+  const s = ["Formel aufschreiben", "Zahlen einsetzen", "Ergebnis einordnen"];
+  return <div className={v.visual} aria-hidden="true"><div className={v.sheet + " " + v.sheetCompact}>
+    <span className={v.eyebrow}>Dein Rechenweg</span>
+    {s.map((label, i) => <div className={v.recipeRow} key={label}><span>{i + 1}</span><b>{label}</b>{i < 2 && <Check size={15} />}</div>)}
+  </div></div>;
+}
+
+export function GuideExamVisual() {
+  const rows = [["DCF", [1, 1, 1]], ["Leverage", [1, 1, 1]], ["Ratings", [0, 1, 0]]] as const;
+  return <div className={v.visual} aria-hidden="true"><div className={v.sheet + " " + v.sheetCompact}>
+    <span className={v.eyebrow}>Was kam in den Altklausuren?</span>
+    <div className={v.examGrid}><span /><small>2021</small><small>2022</small><small>2023</small>
+      {rows.map(([name, hits]) => <div className={v.examRow} key={name}><b>{name}</b>{hits.map((h, i) => <i key={i} className={h ? v.hit : ""} />)}</div>)}
+    </div>
+  </div></div>;
+}
+
+export function NextStepVisual() {
+  return <div className={v.visual + " " + v.visualPlain} aria-hidden="true"><div className={v.sheet + " " + v.sheetCompact}>
+    <div className={v.sheetTop}><span className={v.cardTag}><Sparkles size={14} />Dein nächster Schritt</span></div>
+    <h4 className={v.sheetTitle}>Ein Thema verstehen. Eine Aufgabe selbst lösen.</h4>
+    <span className={v.softAction}>Lerntrainer ausprobieren<ArrowRight size={14} /></span>
+  </div></div>;
 }

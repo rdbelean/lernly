@@ -35,3 +35,46 @@
 .finalEnvelope{height:320px;width:320px;max-width:100%}
 @media(max-width:560px){.finalEnvelope{height:310px;width:290px}}
 @media(max-width:900px){.stepsGrid,.guides{grid-template-columns:1fr;max-width:540px;margin-left:auto;margin-right:auto}.stepVisual,.guideVisual{height:330px}}
+
+/* 2026-11 mockup refresh: frames, tools panel and comparison (Alytics layout). */
+.featureVisual{height:400px;border:8px solid #fff;border-radius:20px;background:#fff;box-shadow:0 10px 30px #1d35580a}
+.stepVisual{height:400px}.guideVisual{height:275px}
+.finalEnvelope{transform:rotate(-4deg)}
+.integrationLogos>div{width:76px;height:76px;border:5px solid #fff;background:#f7f7f7;border-radius:18px;box-shadow:0 6px 18px #1d35580d;opacity:1}
+.integrationLogos>div>img{width:40px;height:40px}
+.integrationLogos .logoClaude{top:70px;left:12%;transform:rotate(-10deg)}
+.integrationLogos .logoQuizlet{top:auto;bottom:70px;left:16%;transform:rotate(8deg)}
+.integrationLogos .logoAnki{top:70px;right:12%;transform:rotate(9deg)}
+.integrationLogos .logoLernly{top:auto;bottom:70px;right:16%;transform:rotate(-8deg)}
+.comparison{display:grid;grid-template-columns:1fr 1fr;gap:0;max-width:900px;margin:auto;align-items:stretch}
+.comparison article{background:#fff;border:1px solid #efefef;border-radius:22px;padding:34px 34px 30px;box-shadow:0 8px 25px #1d355806}
+.comparison article:first-child{border-right:0;border-radius:22px 0 0 22px;background:#fdfdfd}
+.comparison article:last-child{position:relative;z-index:1;background:#fff;border:2px solid #126dfb;border-radius:22px;padding:36px 34px 32px;margin:-12px 0;box-shadow:0 18px 40px #126dfb1a}
+.comparison h3{display:flex;align-items:center;gap:10px;font-size:28px;font-weight:500;letter-spacing:-1.1px;color:#121212;min-height:0;margin:0 0 22px}
+.comparison article:last-child h3{color:#121212}
+.comparison p{display:flex;align-items:flex-start;gap:12px;font-size:16px;line-height:1.45;letter-spacing:-.4px;margin:14px 0;color:#6f6f6f}
+.comparison article:last-child p{color:#121212}
+.comparison p svg{flex-shrink:0;margin-top:3px;color:#a5a5a5}
+.comparison article:last-child p svg{color:#126dfb}
+@media(max-width:900px){.featureVisual{height:400px}.stepVisual{height:400px}}
+@media(max-width:760px){
+  .comparison{grid-template-columns:1fr;gap:0;max-width:460px}
+  .comparison article:first-child{border-right:1px solid #efefef;border-bottom:0;border-radius:22px 22px 0 0;padding:28px 24px 34px}
+  .comparison article:last-child{margin:-14px 0 0;padding:28px 24px}
+  .comparison h3{font-size:24px}
+  .comparison p{font-size:15px}
+  .integrationLogos>div{width:60px;height:60px;border-radius:15px}
+  .integrationLogos>div>img{width:32px;height:32px}
+  .integrationLogos .logoClaude{top:28px;left:10%}.integrationLogos .logoAnki{top:34px;right:10%}
+  .integrationLogos .logoQuizlet{bottom:30px;left:12%}.integrationLogos .logoLernly{bottom:26px;right:12%}
+}
+@media(max-width:560px){.featureVisual{height:370px;border-width:6px}.stepVisual{height:390px}.guideVisual{height:270px}.finalEnvelope{width:290px;height:240px}}
+.integrationCopy>small{display:block;font-size:13px;line-height:1.5;max-width:420px;margin:18px auto 0;color:#8a8a8a}
+@media(max-width:560px){.integrationCopy>small{font-size:12px;max-width:290px}}
+.toolStrip small{font-size:13px;line-height:1.5;color:#8a8a8a}
+@media(max-width:560px){.toolStrip small{font-size:12px}}
+@media(min-width:761px) and (max-width:1100px){.featureVisual{height:440px}}
+@media(min-width:1101px) and (max-width:1200px){.stepVisual{height:420px}.guideVisual{height:290px}}
+@media(max-width:1100px){.stepsGrid,.guides{grid-template-columns:1fr;max-width:540px;margin-left:auto;margin-right:auto}.stepVisual{height:380px}.guideVisual{height:270px}}
+@media(max-width:560px){.featureVisual{height:405px}}
+@media(max-width:760px){.featureGrid{grid-template-columns:1fr;max-width:560px;margin-left:auto;margin-right:auto}}
