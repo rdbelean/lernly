@@ -19,3 +19,19 @@
 @media(max-width:560px){.heroLogos>div{width:58px;height:58px;border-width:4px;border-radius:16px}.heroLogos>div>img{width:33px;height:33px}.heroLogos .logoClaude{left:-19px;top:130px}.heroLogos .logoAnki{right:-17px;top:145px}.heroLogos .logoQuizlet{left:-15px;top:320px}.heroLogos .logoLernly{right:-15px;top:325px}.heroTop{padding-bottom:95px}.dashboardStage{height:495px;padding:0 14px 0}.featureVisual{height:275px}.toolStrip>div{gap:22px;flex-wrap:wrap}.toolStrip>div>span{font-size:18px}.stepVisual{height:260px}.pdfLogo>svg{width:23px;height:23px}.pdfLogo b{font-size:8px}}
 @media(prefers-reduced-motion:reduce){.heroLogos>div,.integrationLogos>div,.reveal.revealed{animation:none}.primaryButton:hover,.featureGrid article:hover{transform:none}}
 @media(max-width:560px){.dashboardStage{height:auto;padding-bottom:20px}.heroLogos{display:block}.heroLogos .logoQuizlet,.heroLogos .logoLernly{display:none}.heroLogos .logoClaude{top:35px;left:-24px}.heroLogos .logoAnki{top:45px;right:-25px}}
+
+/* White comparison panels, as in the reference; blue outlines the focus. */
+.comparison{max-width:830px;gap:24px;align-items:stretch}
+.comparison article{padding:30px;border:1px solid #f0f0f0;border-radius:22px;box-shadow:0 8px 25px #182b4503}
+.comparison article:last-child{background:#fff;border:3px solid #518eff;box-shadow:0 0 0 3px #e7f0ff,0 12px 25px #126dfb0b;padding:28px}
+.comparison article:last-child h3{color:#121212}.comparison article:last-child p{color:#646b76}.comparison article:last-child svg{color:#126dfb}
+.comparison h3{font-size:27px;font-weight:500;margin-bottom:24px}.comparison p{font-size:13px;line-height:1.65;gap:10px;margin:17px 0}.comparison p svg{flex-shrink:0}
+.featureVisual{height:350px;border-width:9px}.stepVisual{height:290px}.guideVisual{height:290px}
+@media(max-width:900px){.featureVisual{height:325px}.comparison{gap:18px}.comparison article{padding:24px}.comparison article:last-child{padding:22px}.comparison h3{font-size:24px}.stepVisual{height:290px}}
+@media(max-width:560px){.featureVisual{height:330px}.stepVisual,.guideVisual{height:300px}.comparison{gap:20px}.comparison article,.comparison article:last-child{padding:25px}.comparison p{font-size:13px}.dashboardStage{padding:4px 14px 24px;height:auto}.integrationCopy>small{max-width:290px;margin-left:auto;margin-right:auto}}
+.featureVisual{height:390px}.stepVisual,.guideVisual{height:330px}
+@media(max-width:560px){.featureVisual{height:370px}.stepVisual,.guideVisual{height:325px}}
+
+.finalEnvelope{height:320px;width:320px;max-width:100%}
+@media(max-width:560px){.finalEnvelope{height:310px;width:290px}}
+@media(max-width:900px){.stepsGrid,.guides{grid-template-columns:1fr;max-width:540px;margin-left:auto;margin-right:auto}.stepVisual,.guideVisual{height:330px}}

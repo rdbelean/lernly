@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowRight, ArrowUpRight, BarChart3, BookOpen, Check, CheckCheck, ChevronDown, ChevronRight, CircleHelp, Download, FileText, GraduationCap, Layers, LayoutDashboard, Menu, MessageCircle, Plus, RotateCcw, Sparkles, Target, TrendingUp, X } from "lucide-react";
+import Link from "next/link";
 import LernlyLogo from "@/components/LernlyLogo";
-import { ActivityVisual, AreaGraph, BrandIcon, CardsVisual, DashboardPreview, Donut, EnvelopeVisual, GrowthVisual, InsightVisual, OrbitVisual } from "./LearningVisuals";
+import { ActivityVisual, BrandIcon, CardsVisual, CourseVisual, DashboardPreview, EnvelopeVisual, GrowthVisual, InsightVisual, OrbitVisual } from "./LearningVisuals";
 import s from "./lernly-landing.module.css";
 
 const BETA = "mailto:info@lernly-app.de?subject=Lernly%20Beta%20testen&body=Hi%20Lernly%2C%0A%0Aich%20m%C3%B6chte%20die%20Beta%20testen.%0AMein%20Kurs%3A%20%0A";
@@ -76,10 +77,10 @@ function SectionHeading({ tag, title, description }: { tag: string; title: React
 
 function FloatingLogos({ integration = false }: { integration?: boolean }) {
   return <div className={integration ? s.integrationLogos : s.heroLogos} aria-hidden="true">
-    <div className={s.logoClaude}><span className={s.pdfLogo}><FileText size={32} /><b>PDF</b></span></div>
+    <div className={s.logoClaude}><BrandIcon name="claude" size={48} /></div>
     <div className={s.logoQuizlet}><BrandIcon name="quizlet" /></div>
     <div className={s.logoAnki}><BrandIcon name="anki" /></div>
-    <div className={s.logoLernly}><LernlyLogo variant="icon" size={49} alt="" /></div>
+    <div className={s.logoLernly}><BrandIcon name="openai" size={44} /></div>
     {integration && <><div className={s.logoFile}><FileText size={36} /></div><div className={s.logoCards}><Layers size={36} /></div><div className={s.logoClaudeSecond}><span className={s.mathLogo}>ƒx</span></div><div className={s.logoQuizletSecond}><BrandIcon name="quizlet" size={33} /></div></>}
   </div>;
 }
@@ -128,7 +129,7 @@ export default function LernlyLanding() {
     <a className={s.skipLink} href="#inhalt">Zum Inhalt springen</a>
     <header className={s.header}>
       <div className={s.nav}>
-        <a href="/" className={s.brand} aria-label="Lernly Startseite"><LernlyLogo size={29} alt="" /><span>Lernly</span></a>
+        <Link href="/" className={s.brand} aria-label="Lernly Startseite"><LernlyLogo size={29} alt="" /><span>Lernly</span></Link>
         <nav className={s.desktopNav} aria-label="Hauptnavigation">{navItems.map(([href, label]) => <a href={href} key={href}>{label}</a>)}</nav>
         <a className={s.primaryButton} href={BETA}>Beta testen</a>
         <button className={s.menuButton} onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? "Menü schließen" : "Menü öffnen"} aria-expanded={menuOpen}>{menuOpen ? <X size={22} /> : <Menu size={22} />}</button>
@@ -146,13 +147,13 @@ export default function LernlyLanding() {
           <span className={s.heroCaption}><LayoutDashboard size={16} />Ohne Anmeldung ausprobieren</span>
         </div>
         <div className={s.dashboardStage}><DashboardPreview /></div>
-        <div className={s.toolStrip}><p>Dein Stoff. Dein Lernraum. Dein nächster Schritt.</p><div><span><FileText size={26} />Deine Unterlagen</span><span><LernlyLogo size={28} alt="" />Lernly</span><span><BrandIcon name="anki" size={26} />Anki</span><span><BrandIcon name="quizlet" size={26} />Quizlet</span></div><small>Ein Lernraum für deinen Kurs. Kartenexport für Anki und Quizlet im Prototyp.</small></div>
+        <div className={s.toolStrip}><p>Dein Lernweg darf offen bleiben.</p><div><span><BrandIcon name="claude" size={28} />Claude</span><span><BrandIcon name="openai" size={26} />ChatGPT</span><span><BrandIcon name="anki" size={26} />Anki</span><span><BrandIcon name="quizlet" size={26} />Quizlet</span></div><small>Deine Tools im Blick: Kartenexport im Prototyp · weitere Verbindungen in Entwicklung.</small></div>
       </section>
 
       <section className={s.section} id="features">
         <SectionHeading tag="Funktionen" title={<>Dein Lernstoff kann<br />mehr als gelesen werden</>} description="Alles, was dich vom ersten Verstehen zum eigenen Anwenden bringt – in einem persönlichen Lerntrainer." />
         <div className={s.featureGrid}>
-          <article><div className={s.featureVisual}><DashboardPreview compact /></div><h3>Alles in einem Lernraum</h3><p>Themen, Aufgaben und Wiederholungen in einer klaren Struktur. So findest du deinen nächsten Schritt.</p></article>
+          <article><div className={s.featureVisual}><CourseVisual /></div><h3>Alles in einem Lernraum</h3><p>Themen, Aufgaben und Wiederholungen in einer klaren Struktur. So findest du deinen nächsten Schritt.</p></article>
           <article><div className={s.featureVisual}><InsightVisual /></div><h3>Erklärungen, die dich weiterbringen</h3><p>Lass dir Zusammenhänge einfach erklären. Vom Grundprinzip bis zum durchgerechneten Beispiel. Genau dort weiterlernen, wo es noch hakt.</p></article>
           <article><div className={s.featureVisual}><CardsVisual /></div><h3>Wissen aktiv abrufen</h3><p>Formeln, Begriffe und Zusammenhänge wiederholen. Erst selbst erinnern, dann mit der Antwort vergleichen.</p></article>
           <article><div className={s.featureVisual}><GrowthVisual /></div><h3>Aus Üben wird Sicherheit</h3><p>Löse Aufgaben, prüfe deinen Weg und versuche eine neue Variante. Bis aus dem Prinzip eigene Routine wird.</p></article>
@@ -174,7 +175,7 @@ export default function LernlyLanding() {
         </div>
       </section>
 
-      <section className={s.integrationSection} id="integrationen"><div className={s.integrationPanel}><FloatingLogos integration /><div className={s.integrationCopy}><span className={s.tag}>Deine Tools</span><h2>Dein Lernweg.<br />Deine liebsten Tools.</h2><p>Verstehen, rechnen, wiederholen. In Lernly.<br />Deine Karten zu Anki oder Quizlet mitnehmen.</p><button className={s.primaryButton} onClick={openDemo}>Lerntrainer entdecken</button><small>Kartenexport im Prototyp. Automatischer Fortschrittsabgleich ist noch in Planung.</small></div></div></section>
+      <section className={s.integrationSection} id="integrationen"><div className={s.integrationPanel}><FloatingLogos integration /><div className={s.integrationCopy}><span className={s.tag}>Deine Tools</span><h2>Dein Lernweg.<br />Deine liebsten Tools.</h2><p>Verstehen, rechnen, wiederholen. In Lernly.<br />Deine Karten zu Anki oder Quizlet mitnehmen.</p><button className={s.primaryButton} onClick={openDemo}>Lerntrainer entdecken</button><small>Anki & Quizlet: Kartenexport im Prototyp. Claude: lokale Connector-Beta. ChatGPT: geplante Anbindung. Keine automatische Synchronisierung.</small></div></div></section>
 
       <section className={s.section} id="faecher">
         <SectionHeading tag="Für deinen Stoff" title={<>Jedes Fach lernt<br />sich ein bisschen anders</>} description="Wir starten im BWL-Studium. Die Lernformen richten sich danach, was du verstehen und anwenden möchtest." />
@@ -196,7 +197,7 @@ export default function LernlyLanding() {
 
       <section className={s.section} id="warum-lernly">
         <SectionHeading tag="Warum Lernly" title={<>Ein roter Faden<br />für dein Lernen</>} description="Dein Stoff verdient mehr als eine Zusammenfassung. Ein klarer Ablauf bringt dich vom ersten Lesen zum eigenen Können." />
-        <div className={s.comparison}><article><h3>Dein bisheriger Lernalltag</h3>{["Viele Unterlagen, wenig Orientierung", "Erklärungen lesen, Anwendung aufschieben", "Karten und Aufgaben einzeln vorbereiten", "Den Lernablauf jedes Mal neu beschreiben", "Nicht wissen, womit du weitermachst"].map(x => <p key={x}><X size={15} />{x}</p>)}</article><article><h3><LernlyLogo size={26} alt="" />Lernen mit Lernly</h3>{["Ein strukturierter Weg durch deinen Kurs", "Vom Verstehen direkt ins Ausprobieren", "Erklärungen, Aufgaben und Karten zusammen", "Ein Lernablauf, der dich aktiv fordert", "Im vorhandenen Trainer weiterlernen"].map(x => <p key={x}><Check size={15} />{x}</p>)}</article></div>
+        <div className={s.comparison}><article><h3>Ohne roten Faden</h3>{["Unterlagen an vielen verschiedenen Orten", "Lesen, ohne das Wissen anzuwenden", "Jede Karte von Hand vorbereiten", "Bei jedem Thema wieder von vorn starten", "Unsicher, was du noch üben solltest"].map(x => <p key={x}><X size={15} />{x}</p>)}</article><article><h3><LernlyLogo variant="icon" size={29} alt="" />Lernly</h3>{["Dein Kurs in einem klaren Lernraum", "Verstehen und direkt selbst ausprobieren", "Erklärungen, Übungen und Karten zusammen", "Ein wiederkehrender Ablauf für jedes Thema", "Gezielt dort weitermachen, wo es noch hakt"].map(x => <p key={x}><Check size={15} />{x}</p>)}</article></div>
       </section>
 
       <section className={s.section} id="fragen">
@@ -206,12 +207,12 @@ export default function LernlyLanding() {
 
       <section className={s.section} id="lernmethoden">
         <SectionHeading tag="Lernmethoden" title={<>Kleine Veränderungen.<br />Ein besserer Lernablauf.</>} description="Drei Ideen, die du schon jetzt mit deinen eigenen Unterlagen ausprobieren kannst." />
-        <div className={s.guides}>{learningMethods.map(({tag,title,text,icon:Icon},i) => <details key={title}><summary><div className={s.guideVisual}>{i === 0 ? <CardsVisual /> : i === 1 ? <GrowthVisual /> : <OrbitVisual />}</div><span>{tag}</span><h3>{title}</h3><span className={s.guideRead}>Tipp lesen<ArrowUpRight size={16} /></span></summary><p>{text}</p></details>)}</div>
+        <div className={s.guides}>{learningMethods.map(({tag,title,text},i) => <details key={title}><summary><div className={s.guideVisual}>{i === 0 ? <CardsVisual /> : i === 1 ? <GrowthVisual /> : <OrbitVisual />}</div><span>{tag}</span><h3>{title}</h3><span className={s.guideRead}>Tipp lesen<ArrowUpRight size={16} /></span></summary><p>{text}</p></details>)}</div>
       </section>
 
       <section className={s.finalSection}><div className={s.finalEnvelope}><EnvelopeVisual /></div><div><h2>Dein nächster Aha-Moment<br />fängt mit einem Versuch an.</h2><p>Entdecke den Lerntrainer und probiere selbst aus,<br className={s.desktopBreak} /> wie aktives Lernen mit Lernly aussehen kann.</p><button className={s.primaryButton} onClick={openDemo}>Jetzt ausprobieren</button></div></section>
     </main>
-    <footer className={s.footer}><div className={s.footerTop}><div><a href="/" className={s.brand}><LernlyLogo size={29} alt="" /><span>Lernly</span></a><p>Aus deinen Unterlagen wird ein persönlicher Lernweg. Verstehen, selbst ausprobieren und gezielt wiederholen.</p><a className={s.primaryButton} href={BETA}>Beta testen</a></div><div><h3>Entdecken</h3><a href="#features">Funktionen</a><a href="#vorteile">Vorteile</a><a href="#integrationen">Deine Tools</a><a href="#zugang">Zugang</a><a href="#fragen">FAQ</a></div><div><h3>Lernly</h3><a href="/login">Anmelden</a><a href="/hochschulen">Für Hochschulen</a><a href="#lernmethoden">Lernmethoden</a><a href="mailto:info@lernly-app.de">Kontakt</a></div><div><h3>Rechtliches</h3><a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a><a href="/agb">AGB</a></div></div><div className={s.footerBottom}><span>Aus dem Studium. Fürs Studium.</span><span>© {new Date().getFullYear()} Lernly</span></div></footer>
+    <footer className={s.footer}><div className={s.footerTop}><div><Link href="/" className={s.brand}><LernlyLogo size={29} alt="" /><span>Lernly</span></Link><p>Aus deinen Unterlagen wird ein persönlicher Lernweg. Verstehen, selbst ausprobieren und gezielt wiederholen.</p><a className={s.primaryButton} href={BETA}>Beta testen</a></div><div><h3>Entdecken</h3><a href="#features">Funktionen</a><a href="#vorteile">Vorteile</a><a href="#integrationen">Deine Tools</a><a href="#zugang">Zugang</a><a href="#fragen">FAQ</a></div><div><h3>Lernly</h3><a href="/login">Anmelden</a><a href="/hochschulen">Für Hochschulen</a><a href="#lernmethoden">Lernmethoden</a><a href="mailto:info@lernly-app.de">Kontakt</a></div><div><h3>Rechtliches</h3><a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a><a href="/agb">AGB</a></div></div><div className={s.footerBottom}><span>Aus dem Studium. Fürs Studium.</span><span>© {new Date().getFullYear()} Lernly</span></div></footer>
     <dialog ref={dialogRef} className={s.demoDialog} onCancel={() => setDemoOpen(false)} onClose={() => setDemoOpen(false)}><div className={s.dialogHeader}><div><LernlyLogo size={27} alt="" /><span>Dein Lerntrainer zum Ausprobieren</span></div><button onClick={() => setDemoOpen(false)} aria-label="Vorschau schließen"><X size={22} /></button></div><Demo /></dialog>
   </div>;
 }

@@ -1,40 +1,60 @@
-import { useId, useState } from "react";
-import { BookOpen, Check, ChevronRight, FileText, Layers, LayoutDashboard, MoreHorizontal, Search, Sparkles, Target, TrendingUp } from "lucide-react";
+import { useState } from "react";
+import { BookOpen, Check, ChevronRight, FileText, Layers, ArrowRight, Clock3, Sparkles, Target } from "lucide-react";
 import Image from "next/image";
 import LernlyLogo from "@/components/LernlyLogo";
 import v from "./learning-visuals.module.css";
 
-export function BrandIcon({ name, size = 42 }: { name: "claude" | "anki" | "quizlet"; size?: number }) {
-  return <Image src={"/brands/" + name + (name === "claude" ? ".svg" : ".jpg")} width={size} height={size} alt={name === "claude" ? "Claude" : name === "anki" ? "Anki" : "Quizlet"} className={v.brandIcon} />;
+export function BrandIcon({ name, size = 42 }: { name: "claude" | "anki" | "quizlet" | "openai"; size?: number }) {
+  return <Image src={"/brands/" + name + (name === "claude" || name === "openai" ? ".svg" : ".jpg")} width={size} height={size} alt={name === "openai" ? "ChatGPT" : name === "claude" ? "Claude" : name === "anki" ? "Anki" : "Quizlet"} className={v.brandIcon} />;
 }
 
-function Bars({ blue = false }: { blue?: boolean }) {
-  return <div className={v.bars}>{[35, 61, 45, 70, 58, 93].map((height, i) => <div key={i}><i style={{ height: (height * .74) + "%" }} className={i === 5 || blue ? v.blueBar : ""} /><span>{["Mo", "Di", "Mi", "Do", "Fr", "Sa"][i]}</span></div>)}</div>;
+const courseTopics = [
+  { name: "Kapitalstruktur & Leverage", detail: "Modigliani–Miller · 5 Aufgaben", points: "19 P", progress: 80 },
+  { name: "Discounted Cashflow", detail: "Bewertung · 13 Aufgaben", points: "15 P", progress: 46 },
+  { name: "Agency-Konflikte", detail: "Anreize · 3 Aufgaben", points: "10 P", progress: 0 },
+];
+
+export function CourseVisual() {
+  return <div className={v.visual}><div className={v.courseSheet}>
+    <div className={v.sheetHeading}><span><BookOpen size={16}/>Deine Themen</span><small>Beispielkurs</small></div>
+    {courseTopics.map((topic,i)=><div className={v.courseRow} key={topic.name}><span className={v.topicNumber}>{i+1}</span><div><b>{topic.name}</b><small>{topic.detail}</small><div className={v.progressTrack}><i style={{width:topic.progress+"%"}}/></div></div><span className={v.points}>{topic.points}</span></div>)}
+    <div className={v.sheetFooter}><Target size={14}/>Nach Klausurrelevanz sortiert</div>
+  </div></div>;
 }
 
-export function AreaGraph({ compact = false }: { compact?: boolean }) {
-  const gradientId = useId() + (compact ? "small" : "large");
-  return <svg className={v.areaGraph} viewBox="0 0 420 190" fill="none" aria-hidden="true"><defs><linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="190" gradientUnits="userSpaceOnUse"><stop stopColor="#126dfb" stopOpacity=".35" /><stop offset="1" stopColor="#126dfb" stopOpacity=".015" /></linearGradient></defs>{[40, 85, 130, 175].map(y => <path key={y} d={"M20 " + y + " H414"} stroke="#e9e9e9" strokeDasharray="3 4" />)}<path d="M20 175 L57 132 L94 149 L131 112 L168 131 L205 98 L242 57 L279 81 L316 109 L353 62 L390 44 L414 13 V176 H20Z" fill={"url(#" + gradientId + ")"} /><path d="M20 175 L57 132 L94 149 L131 112 L168 131 L205 98 L242 57 L279 81 L316 109 L353 62 L390 44 L414 13" stroke="#126dfb" strokeWidth="2" strokeLinejoin="round" /><circle cx="414" cy="13" r="4" fill="#126dfb" /></svg>;
-}
-
-export function Donut({ large = false }: { large?: boolean }) {
-  return <div className={large ? v.donutLarge : v.donut}><svg viewBox="0 0 160 160" aria-hidden="true"><circle cx="80" cy="80" r="64" fill="none" stroke="#ededed" strokeWidth="14" /><circle cx="80" cy="80" r="64" fill="none" stroke="#126dfb" strokeWidth="14" strokeDasharray="302 403" strokeLinecap="round" transform="rotate(-90 80 80)" /></svg><div><strong>75<span>%</span></strong><small>Lernziel</small></div></div>;
-}
-
-export function DashboardPreview({ compact = false }: { compact?: boolean }) {
+export function DashboardPreview() {
   const [tab, setTab] = useState("Verstehen");
   const [flipped, setFlipped] = useState(false);
   const [answer, setAnswer] = useState("");
   const [checked, setChecked] = useState(false);
-  return <div className={v.studio + (compact ? " " + v.compactStudio : "")}>
-    <div className={v.windowBar}><div><i /><i /><i /></div><span>lernly / dein lernraum</span><span>Designvorschau</span></div>
+  const correct = answer.trim() !== "" && Math.abs(Number(answer.replace(",", "."))-751.31)<.02;
+  return <div className={v.studio}>
+    <div className={v.windowBar}><div><i/><i/><i/></div><span>Dein Lernraum</span><span>Interaktive Designvorschau</span></div>
     <div className={v.studioLayout}>
-      <aside className={v.studioSidebar}><div className={v.studioBrand}><LernlyLogo variant="icon" size={25} alt="" /><b>lernly.</b></div><div className={v.studioCourse}><span>DEIN KURS</span><b>Corporate Finance</b><small>4 Themen · Beispielinhalte</small></div>{[{label:"Verstehen",icon:BookOpen},{label:"Üben",icon:Target},{label:"Karteikarten",icon:Layers}].map(({label,icon:Icon})=><button key={label} aria-pressed={tab===label} onClick={()=>setTab(label)}><Icon size={15}/>{label}</button>)}<div className={v.studioTopics}><span>DEINE THEMEN</span>{["Zeitwert des Geldes","Discounted Cashflow","Kapitalstruktur","Markteffizienz"].map((t,i)=><div key={t}><i className={i===1?v.currentTopic:""}/>{t}</div>)}</div><div className={v.studioProfile}><span>DS</span>Dein Studium<small>Ein Schritt nach dem anderen.</small></div></aside>
-      <div className={v.studioMain}><header><span>Corporate Finance <ChevronRight size={12}/> Discounted Cashflow</span><span>Beispielkurs</span></header><div className={v.studioHeading}><span>DEIN PERSÖNLICHES STUDY OS</span><h3>Aus „irgendwie verstanden“<br/>wird „kann ich selbst“.</h3><p>Ein Prinzip. Ein Beispiel. Dann bist du dran.</p></div><div className={v.studioTabs}>{["Verstehen","Üben","Karteikarten"].map(t=><button key={t} aria-pressed={tab===t} onClick={()=>setTab(t)}>{t}</button>)}</div>
-      <div className={v.studioColumns}><div className={v.lesson}>
-      <div className={v.lessonLabel}><span><BookOpen size={13}/>{tab === "Karteikarten" ? "AKTIV ERINNERN" : "ZEITWERT DES GELDES"}</span><span>01 / 04</span></div>
-      {tab === "Karteikarten" ? <><h4>{flipped ? "Geld hat einen Zeitwert." : "Warum diskontieren wir?"}</h4><p>{flipped ? "Eine zukünftige Zahlung wird auf ihren heutigen Wert zurückgerechnet. So werden Zahlungen zu verschiedenen Zeitpunkten vergleichbar." : "Beantworte die Frage zuerst aus dem Gedächtnis."}</p><button className={v.studioAction} onClick={()=>setFlipped(!flipped)}>{flipped ? "Zur Frage" : "Antwort aufdecken"}<ChevronRight size={14}/></button></> : <><h4>{tab === "Üben" ? "Jetzt rechnest du selbst." : "Was ist Geld morgen wert?"}</h4><p>1.000 € in drei Jahren sind heute weniger wert. Bei 10 % Zins rechnest du die Zahlung auf heute zurück.</p>{tab === "Üben" && <form className={v.studioExercise} onSubmit={e=>{e.preventDefault();setChecked(true);}}><label>Dein Barwert in €<input required inputMode="decimal" value={answer} onChange={e=>{setAnswer(e.target.value);setChecked(false);}} placeholder="Dein Ergebnis" /></label><button className={v.studioAction} type="submit">Prüfen<Check size={14}/></button>{checked && <p role="status">{Math.abs(Number(answer.replace(",", "."))-751.31)<.02 ? "Richtig! Der Barwert beträgt 751,31 €." : "Noch nicht ganz. Teile 1.000 durch 1,10³."}</p>}</form>}<div className={v.formula}><span>PV =</span><div><span>1.000 €</span><span>(1 + 0,10)<sup>3</sup></span></div><span>= <b>751,31 €</b></span></div><div className={v.lessonInsight}><Sparkles size={16}/><p><b>Einfach gesagt</b>Du müsstest heute 751,31 € anlegen, um bei 10 % Zins in drei Jahren 1.000 € zu haben.</p></div><div className={v.lessonSource}><FileText size={12}/>Beispielrechnung · Schritt für Schritt</div></>}
-      </div><aside className={v.studioRail}><div><span>DEIN LERNWEG</span><h4>Ein guter nächster Schritt.</h4>{["Prinzip verstehen","Beispiel nachvollziehen","Selbst ausprobieren"].map((t,i)=><div className={v.railStep} key={t}><span>{i===0?<Check size={12}/>:i+1}</span><p>{t}<small>{["Hier fängst du an","Den Rechenweg sehen","Mit neuen Zahlen üben"][i]}</small></p></div>)}</div><div className={v.railNote}><Target size={20}/><b>Übung macht den Unterschied.</b><p>Nicht nur die Lösung lesen. Den nächsten Schritt selbst finden.</p></div></aside></div>
+      <aside className={v.studioSidebar}>
+        <div className={v.studioBrand}><LernlyLogo variant="icon" size={28} alt=""/><b>Lernly</b></div>
+        <div className={v.studioCourse}><BookOpen size={17}/><div><b>Corporate Finance</b><small>Dein Beispielkurs</small></div></div>
+        <span className={v.sidebarLabel}>Deine Themen</span>
+        {courseTopics.map((topic,i)=><div className={v.sidebarTopic + (i===1?" "+v.selectedTopic:"")} key={topic.name}><span>{i===0?<Check size={12}/>:String(i+1).padStart(2,"0")}</span><div><b>{topic.name}</b><small>{topic.points} · {i===0?"Schon geübt":i===1?"Hier lernst du weiter":"Noch offen"}</small></div></div>)}
+        <div className={v.sidebarNote}><Layers size={18}/><b>Wissen, das bleibt.</b><p>Verstehen. Selbst lösen.<br/>Im richtigen Moment wiederholen.</p></div>
+        <div className={v.studioProfile}><span>DU</span><div>Dein Studium<small>Dein Tempo. Dein Lernweg.</small></div></div>
+      </aside>
+      <div className={v.studioMain}>
+        <header><span>Corporate Finance <ChevronRight size={13}/> Themen</span><span><Clock3 size={13}/>Beispielansicht</span></header>
+        <div className={v.studioHeading}><div><span className={v.subjectPill}>Unternehmensbewertung</span><span className={v.examPill}>Q2 · 15 Punkte</span></div><h3>Discounted Cashflow</h3><p>Vom zukünftigen Cashflow zum Wert von heute.</p></div>
+        <div className={v.studioTabs} aria-label="Lernschritt">{[{label:"Verstehen",icon:BookOpen},{label:"Üben",icon:Target},{label:"Merken",icon:Layers}].map(({label,icon:Icon},i)=><button key={label} aria-pressed={tab===label} onClick={()=>setTab(label)}><Icon size={15}/><span><span className={v.tabNumber}>{i+1}. </span>{label}</span></button>)}</div>
+        <div className={v.studioColumns}>
+          <div className={v.lesson}>
+            <div className={v.lessonLabel}><span>{tab==="Merken"?"Aktives Erinnern":tab==="Üben"?"Jetzt bist du dran":"Das Grundprinzip"}</span><span>01 / 04</span></div>
+            {tab==="Merken" ? <div className={v.studioFlashcard}><Layers size={24}/><h4>{flipped?"Geld hat einen Zeitwert.":"Warum diskontieren wir?"}</h4><p>{flipped?"Wir rechnen eine zukünftige Zahlung auf ihren heutigen Wert zurück. So können wir Zahlungen zu verschiedenen Zeitpunkten vergleichen.":"Erkläre das Prinzip in deinen eigenen Worten. Decke die Antwort erst danach auf."}</p><button className={v.studioAction} onClick={()=>setFlipped(!flipped)}>{flipped?"Zur Frage":"Antwort aufdecken"}<ArrowRight size={14}/></button></div> : <>
+              <h4>{tab==="Üben"?"Was sind 1.000 € heute wert?":"Ein Euro heute ist mehr wert als ein Euro morgen."}</h4>
+              <p>{tab==="Üben"?"Du erhältst in drei Jahren 1.000 €. Der Zinssatz beträgt 10 % pro Jahr. Berechne den heutigen Barwert.":"Geld, das du heute hast, kannst du anlegen. Deshalb rechnen wir zukünftige Zahlungen zurück auf heute. Genau das bedeutet Diskontieren."}</p>
+              {tab==="Verstehen" ? <><div className={v.formula}><span>PV =</span><div><span>1.000 €</span><span>(1 + 0,10)<sup>3</sup></span></div><span>= <b>751,31 €</b></span></div><div className={v.cashflowTimeline}><div><b>751,31 €</b><span>Heute</span></div><span><i/>10 % p. a.<i/></span><div><b>1.000 €</b><span>In 3 Jahren</span></div></div><div className={v.lessonInsight}><Sparkles size={17}/><p><b>Einfach gesagt</b>751,31 € heute werden bei 10 % Zins in drei Jahren zu 1.000 €.</p></div><button className={v.studioAction} onClick={()=>setTab("Üben")}>Verstanden. Jetzt selbst rechnen<ArrowRight size={14}/></button></> : <form className={v.studioExercise} onSubmit={e=>{e.preventDefault();setChecked(true);}}><label>Dein Barwert in €<input required inputMode="decimal" value={answer} onChange={e=>{setAnswer(e.target.value);setChecked(false);}} placeholder="z. B. 750,00"/></label><button className={v.studioAction} type="submit">Antwort prüfen<ArrowRight size={14}/></button>{checked&&<p role="status" className={correct?v.correct:v.retry}>{correct?"Richtig! Der Barwert beträgt 751,31 €.":"Noch nicht ganz. Rechne 1.000 ÷ 1,10³ und versuche es erneut."}</p>}</form>}
+            </>}
+            <div className={v.lessonSource}><FileText size={12}/>Vorbereitetes Lernbeispiel · Corporate Finance</div>
+          </div>
+          <aside className={v.studioRail}><div><span>Dein Lernweg</span><h4>Schritt für Schritt.</h4>{["Verstehen","Üben","Merken"].map((label,i)=><div className={v.railStep+(tab===label?" "+v.currentStep:"")} key={label}><span>{i+1}</span><p>{label}<small>{["Das Prinzip durchblicken","Den Rechenweg anwenden","Aus dem Kopf abrufen"][i]}</small></p></div>)}</div><div className={v.railNote}><Target size={19}/><b>Typischer Klausurfehler</b><p>Diskontiere über alle drei Jahre. Der Exponent gehört zum gesamten Zinsfaktor.</p><span>(1 + r)<sup>t</sup></span></div></aside>
+        </div>
       </div>
     </div>
   </div>;
@@ -45,21 +65,21 @@ export function OrbitVisual() {
 }
 
 export function ActivityVisual() {
-  return <div className={v.activityVisual} aria-hidden="true"><div className={v.activitySheet}><div className={v.sheetHeading}><span>Dein Lernrhythmus</span><span className={v.tinyAvatars}><i /><i /><i /></span></div><div className={v.miniMetric}><span>Aufgaben geübt</span><div><strong>24</strong><small>+6</small><Bars /></div></div><div className={v.miniMetric}><span>Karten wiederholt</span><div><strong>48</strong><small>+12</small><Bars /></div></div></div></div>;
+  return <div className={v.visual}><div className={v.planSheet}><div className={v.sheetHeading}><span><BookOpen size={16}/>Dein Lernweg</span><small>DCF</small></div>{[["Verstehen","Das Prinzip, einfach erklärt"],["Üben","Ein Beispiel selbst rechnen"],["Merken","Die Formel aktiv abrufen"]].map(([title,description],i)=><div className={v.planStep} key={title}><span>{i===0?<Check size={15}/>:i+1}</span><p><b>{title}</b><small>{description}</small></p>{i===1&&<span className={v.nowPill}>Jetzt</span>}</div>)}</div></div>;
 }
 
 export function GrowthVisual() {
-  return <div className={v.growthVisual} aria-hidden="true"><div className={v.growthSheet}><div className={v.sheetHeading}><span>Schritt für Schritt sicherer</span><MoreHorizontal size={15} /></div><strong>Dein Lernfortschritt <small>Beispiel</small></strong><AreaGraph compact /><div className={v.chartDays}><span>Verstehen</span><span>Üben</span><span>Wiederholen</span></div></div></div>;
+  return <div className={v.visual}><div className={v.masterySheet}><div className={v.sheetHeading}><span><Target size={16}/>Das sitzt schon</span><small>Beispiel</small></div><div className={v.masteryTotal}><strong>8 <span>/ 12</span></strong><p>Aufgaben sicher gelöst</p><span className={v.masteryBadge}><Check size={13}/>Weiter so</span></div>{[["Barwert berechnen",4,4],["Cashflows diskontieren",3,4],["Terminal Value",1,4]].map(([label,done,total])=><div className={v.masteryRow} key={label}><div><span>{label}</span><b>{done}/{total}</b></div><div className={v.masterySegments}>{Array.from({length:Number(total)},(_,i)=><i key={i} className={i<Number(done)?v.filled:""}/>)}</div></div>)}</div></div>;
 }
 
 export function InsightVisual() {
-  return <div className={v.insightVisual} aria-hidden="true"><div className={v.insightSheet}><div className={v.sheetHeading}><span><Sparkles size={15} />Dein Lernweg</span><MoreHorizontal size={15} /></div>{[["Erst das Prinzip", "Einfach erklärt, mit einem Beispiel."], ["Dann selbst ausprobieren", "Eine Aufgabe, ein klarer Rechenweg."], ["Jetzt bleibt es hängen", "Das Wichtigste gezielt wiederholen."]].map(([title, text], i) => <div key={title}><span>{i === 2 ? <Check size={13} /> : "0" + (i + 1)}</span><p>{title}<small>{text}</small></p><ChevronRight size={13} /></div>)}</div></div>;
+  return <div className={v.visual}><div className={v.explanationSheet}><div className={v.sheetHeading}><span><Sparkles size={16}/>Einfach erklärt</span><small>Finance</small></div><h4>Was ist ein Barwert?</h4><p>Der Wert einer zukünftigen Zahlung.<br/>Zurückgerechnet auf heute.</p><div className={v.miniFormula}><span>PV =</span><div><span>CF</span><span>(1 + r)<sup>t</sup></span></div></div><div className={v.explanationNote}><span>Ein Beispiel</span><b>1.000 € in 3 Jahren → 751,31 € heute</b><small>Bei 10 % Zins pro Jahr.</small></div></div></div>;
 }
 
 export function CardsVisual() {
-  return <div className={v.cardsVisual} aria-hidden="true"><div className={v.recallBack} /><div className={v.recallMiddle} /><div className={v.recallFront}><span>DEINE FRAGE</span><h4>Segmentierung<br />oder Targeting?</h4><p>Erst erinnern. Dann umdrehen.</p><div><span>Marketing</span><span>01 / 12</span></div></div><div className={v.recallBadge}><Check size={14} />Das bleibt im Kopf.</div></div>;
+  return <div className={v.visual}><div className={v.cardStack}><div className={v.cardBack}/><div className={v.recallFront}><div className={v.sheetHeading}><span><Layers size={16}/>Marketing</span><small>01 / 12</small></div><h4>Segmentierung<br/>oder Targeting?</h4><p>Was ist der Unterschied?</p><div className={v.cardAnswer}>Erst erinnern. Dann aufdecken.<ArrowRight size={14}/></div></div></div><div className={v.recallBadge}><Clock3 size={14}/>Heute wiederholen</div></div>;
 }
 
 export function EnvelopeVisual() {
-  return <div className={v.envelopeVisual} aria-hidden="true"><div className={v.letter}><span>DEIN NÄCHSTER LERNSCHRITT</span><div><Check size={13} />Das Prinzip verstanden.</div><div><Check size={13} />Einmal selbst gerechnet.</div><div><span className={v.blueDot} />Jetzt eine neue Aufgabe.</div></div><div className={v.envelope}><div /></div><div className={v.envelopeSeal}><LernlyLogo size={31} alt="" /></div></div>;
+  return <div className={v.visual}><div className={v.planSheet}><div className={v.sheetHeading}><span><LernlyLogo size={20} alt=""/>Dein nächster Schritt</span></div><h4>Bereit für deinen Aha-Moment?</h4><p>Ein Thema verstehen.<br/>Eine Aufgabe selbst lösen.</p><div className={v.cardAnswer}>Mit deinem Stoff starten<ArrowRight size={14}/></div></div></div>;
 }
