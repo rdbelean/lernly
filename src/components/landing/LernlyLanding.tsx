@@ -5,7 +5,7 @@ import { ArrowRight, ArrowUpRight, BookOpen, Check, CheckCheck, ChevronDown, Che
 import Link from "next/link";
 import LernlyLogo from "@/components/LernlyLogo";
 import HeroScene from "./HeroScene";
-import { DrillVisual, ExplainVisual, MaterialsVisual, NextStepVisual, PointsVisual, RecallVisual, TodayVisual, TopicsVisual } from "./LearningVisuals";
+import { DrillVisual, ExplainVisual, MaterialsVisual, PointsVisual, RecallVisual, TodayVisual, TopicsVisual } from "./LearningVisuals";
 import s from "./lernly-landing.module.css";
 
 const BETA = "mailto:info@lernly-app.de?subject=Lernly%20Beta%20testen&body=Hi%20Lernly%2C%0A%0Aich%20m%C3%B6chte%20die%20Beta%20testen.%0AMein%20Kurs%3A%20%0A";
@@ -117,7 +117,7 @@ export default function LernlyLanding() {
       <section className={s.hero}>
         <div className={s.heroTop}>
           <h1>Pack deine nächste<br />BWL-Klausur</h1>
-          <p>Lernly ist für BWL-Klausuren gebaut: Es liest deine Folien und Altklausuren, zeigt dir, wo du anfangen sollst,<br className={s.desktopBreak} /> und übt mit dir Rechenaufgaben und Karten, bis es sitzt.</p>
+          <p>Lernly ist für BWL-Klausuren gebaut: Es liest deine Folien und Altklausuren, zeigt dir, wo du anfangen sollst, und übt mit dir Rechenaufgaben und Karten, bis es sitzt.</p>
           <button className={s.primaryButton} onClick={openDemo}>Gratis ausprobieren</button>
           <span className={s.heroCaption}><LayoutDashboard size={16} />Ohne Anmeldung. Für Finance, Mathe und Marketing.</span>
         </div>
@@ -166,7 +166,7 @@ export default function LernlyLanding() {
       </section>
 
 
-      <section className={s.finalSection}><div className={s.finalEnvelope}><NextStepVisual /></div><div><h2>Deine nächste BWL-Klausur<br />fängt heute an.</h2><p>Ein Thema, eine Aufgabe, eine Karte. Direkt im Browser, ohne Anmeldung.<br className={s.desktopBreak} /> Von einem BWL-Studenten gebaut.</p><button className={s.primaryButton} onClick={openDemo}>Gratis ausprobieren</button></div></section>
+      <section className={s.finalSection}><div><h2>Deine nächste BWL-Klausur<br />fängt heute an.</h2><p>Ein Thema, eine Aufgabe, eine Karte. Direkt im Browser, ohne Anmeldung. Von einem BWL-Studenten gebaut.</p><button className={s.primaryButton} onClick={openDemo}>Gratis ausprobieren</button></div></section>
     </main>
     <footer className={s.footer}><div className={s.footerTop}><div><Link href="/" className={s.brand}><LernlyLogo size={29} alt="" /><span>Lernly</span></Link><p>Gebaut für BWL-Klausuren: Lern zuerst, was Punkte bringt.</p><a className={s.primaryButton} href={BETA}>Beta testen</a></div><div><h3>Entdecken</h3><a href="#so-gehts">So funktioniert’s</a><a href="#features">Funktionen</a><a href="#zugang">Zugang</a><a href="#fragen">FAQ</a></div><div><h3>Lernly</h3><a href="/login">Anmelden</a><a href="/hochschulen">Für Hochschulen</a><a href="mailto:info@lernly-app.de">Kontakt</a></div><div><h3>Rechtliches</h3><a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a><a href="/agb">AGB</a></div></div><div className={s.footerBottom}><span>Aus dem Studium. Fürs Studium.</span><span>© {new Date().getFullYear()} Lernly</span></div></footer>
     <dialog ref={dialogRef} className={s.demoDialog} onCancel={() => setDemoOpen(false)} onClose={() => setDemoOpen(false)}><div className={s.dialogHeader}><div><LernlyLogo size={27} alt="" /><span>Dein Lerntrainer zum Ausprobieren</span></div><button onClick={() => setDemoOpen(false)} aria-label="Vorschau schließen"><X size={22} /></button></div><Demo /></dialog>

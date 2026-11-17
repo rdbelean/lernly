@@ -13,7 +13,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  height: 38px;
+  height: 44px;
   padding: 0 14px;
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-line);
@@ -21,10 +21,11 @@
 .bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--color-ink-a10); }
 .body { display: grid; grid-template-columns: 1fr; }
 .side { display: none; }
-.main { padding: 22px 18px 24px; min-width: 0; height: 480px; overflow: hidden; }
+.main { padding: 22px 18px 24px; min-width: 0; height: 500px; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
+.main > .scene { width: 100%; }
 .cols { display: grid; gap: 28px; margin-top: 24px; grid-template-columns: minmax(0, 1fr); }
 .aside { display: none; }
-@media (min-width: 760px) {
+@media (min-width: 900px) {
   .body { grid-template-columns: 200px minmax(0, 1fr); }
   .side {
     display: flex;
@@ -34,7 +35,11 @@
     background: var(--color-surface);
     border-right: 1px solid var(--color-line);
   }
-  .main { padding: 32px 36px 28px; height: 486px; }
+}
+@media (min-width: 760px) {
+  .main { padding: 32px 36px 28px; height: 470px; }
+}
+@media (min-width: 1040px) {
   .cols { grid-template-columns: minmax(0, 1fr) 230px; }
   .aside { display: grid; gap: 22px; align-content: start; }
 }
@@ -53,6 +58,7 @@
 /* ---- scene ---- */
 .scene { animation: sceneIn 260ms cubic-bezier(0.23, 1, 0.32, 1) backwards; }
 @keyframes sceneIn { from { opacity: 0; transform: translateY(6px); } }
+.lernraum { max-width: 640px; margin: 0 auto; }
 .crumb { margin: 0; font-size: 13px; color: var(--color-text-dim); }
 .title {
   margin: 6px 0 14px; font-family: var(--font-display); font-weight: 500;
@@ -65,7 +71,7 @@
 }
 .stepOn { background: var(--color-primary); color: var(--color-on-primary); }
 .card {
-  max-width: 640px; padding: 18px 20px; border-radius: 14px;
+  max-width: none; padding: 18px 20px; border-radius: 14px;
   background: var(--color-surface); border: 1px solid var(--color-line);
   display: grid; gap: 14px; font-size: 15px; line-height: 1.5; color: var(--color-text);
 }
@@ -92,7 +98,7 @@
   background: var(--color-ok-bg); color: var(--color-ok-ink); font-weight: 500;
   animation: sceneIn 260ms cubic-bezier(0.23, 1, 0.32, 1) backwards;
 }
-.flip { perspective: 900px; max-width: 520px; height: 168px; }
+.flip { perspective: 900px; max-width: none; height: 168px; }
 .flipInner { position: relative; width: 100%; height: 100%; transition: transform 520ms cubic-bezier(0.77, 0, 0.175, 1); transform-style: preserve-3d; }
 .flipOn { transform: rotateY(180deg); }
 .face {
@@ -109,7 +115,7 @@
   transition: background-color 160ms ease-out, color 160ms ease-out;
 }
 .rateOn { background: var(--color-ok-bg); color: var(--color-ok-ink); border-color: var(--color-ok-ink); }
-.chat { max-width: 640px; display: grid; gap: 10px; }
+.chat { max-width: none; display: grid; gap: 10px; }
 .chatHead { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: var(--color-text); }
 .bubble { max-width: 86%; padding: 11px 14px; border-radius: 14px; font-size: 15px; line-height: 1.5; }
 .me { justify-self: end; background: var(--color-primary); color: var(--color-on-primary); }
@@ -124,11 +130,13 @@
   animation: sceneIn 260ms cubic-bezier(0.23, 1, 0.32, 1) 200ms backwards;
 }
 .pause {
-  position: absolute; right: 12px; bottom: 12px; width: 44px; height: 44px; border-radius: 50%;
+  position: absolute; right: 6px; top: 2px; width: 40px; height: 40px; border-radius: 50%;
+  background: transparent; border-color: transparent;
   display: grid; place-items: center; cursor: pointer;
-  background: var(--color-surface); border: 1px solid var(--color-line); color: var(--color-text);
-  transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+  border: 1px solid transparent; color: var(--color-text-dim);
+  transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), background-color 160ms ease-out;
 }
+@media (hover: hover) and (pointer: fine) { .pause:hover { background: var(--color-surface-2); color: var(--color-text); } }
 .pause:active { transform: scale(0.95); }
 @media (prefers-reduced-motion: reduce) {
   .scene, .right, .toast { animation: none; }

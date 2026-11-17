@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ArrowRight, Check, Clock3, FileSpreadsheet, FileText, Folder, Layers, Sparkles, Target, X } from "lucide-react";
+import { Check, Clock3, FileSpreadsheet, FileText, Folder, Layers, Target, X } from "lucide-react";
 import v from "./learning-visuals.module.css";
 import ExamMap from "@/components/dashboard/ExamMap";
 import { SAMPLE_EXAM } from "./sampleExam";
@@ -98,11 +98,3 @@ export function TodayVisual() {
 }
 
 /* ---------- Learning-method visuals ---------- */
-
-export function NextStepVisual() {
-  return <div className={v.visual + " " + v.visualPlain} aria-hidden="true"><div className={v.sheet + " " + v.sheetCompact}>
-    <div className={v.sheetTop}><span className={v.cardTag}><Sparkles size={14} />Dein nächster Schritt</span></div>
-    <h4 className={v.sheetTitle}>Ein Thema verstehen. Eine Aufgabe selbst lösen.</h4>
-    <span className={v.softAction}>Gratis ausprobieren<ArrowRight size={14} /></span>
-  </div></div>;
-}

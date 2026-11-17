@@ -38,12 +38,12 @@ function Steps({ active }: { active: number }) {
 
 function Lernraum({ active, children }: { active: number; children: React.ReactNode }) {
   return (
-    <>
+    <div className={h.lernraum}>
       <p className={h.crumb}>Corporate Finance (Beispielkurs)</p>
       <p className={h.title}>Discounted Cashflow</p>
       <Steps active={active} />
       {children}
-    </>
+    </div>
   );
 }
 
