@@ -21,7 +21,7 @@
 .bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--color-ink-a10); }
 .body { display: grid; grid-template-columns: 1fr; }
 .side { display: none; }
-.main { padding: 22px 18px 24px; min-width: 0; height: 500px; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
+.main { padding: 22px 18px 24px; min-width: 0; min-height: 500px; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
 .main > .scene { width: 100%; }
 .cols { display: grid; gap: 28px; margin-top: 24px; grid-template-columns: minmax(0, 1fr); }
 .aside { display: none; }
@@ -31,17 +31,13 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    padding: 18px 12px;
+    padding: 20px 14px;
     background: var(--color-surface);
     border-right: 1px solid var(--color-line);
   }
-}
-@media (min-width: 760px) {
-  .main { padding: 32px 36px 28px; height: 470px; }
-}
-@media (min-width: 1040px) {
+  .main { padding: 32px 36px 32px; min-height: 520px; height: auto; }
   .cols { grid-template-columns: minmax(0, 1fr) 230px; }
-  .aside { display: grid; gap: 22px; align-content: start; }
+  .aside { display: grid; gap: 24px; align-content: start; }
 }
 .brand {
   display: flex; align-items: center; gap: 9px; padding: 2px 8px 16px;

@@ -91,7 +91,7 @@ const MATERIAL_TOO_LARGE_UPFRONT_MSG =
 
 // Soft truncation message — surfaced when material was processed but had to
 // be cut to the token budget (TOKEN_THRESHOLD_CHARS in generatePack.ts).
-export const MATERIAL_TRUNCATED_MSG =
+const MATERIAL_TRUNCATED_MSG =
   `Dein Material ist sehr groß — wir haben den wichtigsten Teil verarbeitet. ` +
   `Tipp: lade pro Paket ein Kapitel/Thema hoch, dann wird's vollständig.`;
 
