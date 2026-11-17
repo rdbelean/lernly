@@ -1,0 +1,27 @@
+{
+ "schema": "lernly.thema/1",
+ "id": "emh",
+ "theory": [
+  {"type": "simple", "md": "A market is **efficient** if prices already contain the available information. Then you cannot beat the market with that information, because it is already in the price."},
+  {"type": "table", "head": ["Form", "Information already in the price", "What does not work any more"], "rows": [
+   ["Weak", "Past prices and volumes", "Technical analysis (charts)"],
+   ["Semi-strong", "+ all **public** information", "Fundamental analysis"],
+   ["Strong", "+ private / insider information", "Even insider trading"]]},
+  {"type": "remember", "md": "Strong ⊃ semi-strong ⊃ weak. Each form includes the one below."}
+ ],
+ "standardAnswer": [{"type": "model_answer", "md": "The ==efficient market hypothesis== says that prices reflect all available information. In the ==weak form== prices contain all past prices, so ==technical analysis== cannot earn excess returns. In the ==semi-strong form== prices also contain all public information, so ==fundamental analysis== does not help. In the ==strong form== even private information is priced in, so not even insiders can earn abnormal returns."}],
+ "tasks": [
+  {"kind": "essay", "id": "emh-strong", "name": "Explain the strong form and test it", "origin": "altklausur", "originLabel": "Old exam 2021, Q1 (10 P)", "points": 10,
+   "question": "Explain the three forms of market efficiency. How could you test the **strong form**?",
+   "checklist": [
+    {"text": "Definition: prices reflect all available information", "points": 2},
+    {"text": "Weak form: past prices → no technical analysis", "points": 2},
+    {"text": "Semi-strong: + public information → no fundamental analysis", "points": 2},
+    {"text": "Strong: + private information → no insider profits", "points": 2},
+    {"text": "Test: do insiders / fund managers earn abnormal returns?", "points": 2}],
+   "modelAnswer": [{"type": "text", "md": "See the standard answer above. **Test of the strong form:** check whether insiders or professional fund managers earn ==abnormal returns==. If they do, the strong form is rejected."}]}
+ ],
+ "cards": [{"id": "emh-c1", "front": "Three forms of market efficiency", "back": "- **Weak:** past prices\n- **Semi-strong:** + public info\n- **Strong:** + private info"}],
+ "mistakes": ["Mixing up semi-strong (public) and strong (private)."],
+ "source": "Lecture slides 14–15."
+}

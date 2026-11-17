@@ -1,0 +1,475 @@
+{
+ "schema": "lernly.thema/1",
+ "id": "dcf",
+ "theory": [
+  {
+   "type": "simple",
+   "md": "A firm is worth all the money it will give in the future. But €1 later is worth less than €1 today. So we pull every future cash flow back to today (we **discount** it) and add them up. That sum is the value of the **whole firm**. The firm belongs to lenders and owners: take away what belongs to the lenders (debt) and the rest belongs to the owners (equity)."
+  },
+  {
+   "type": "example",
+   "md": "A lemonade stand pays you €10 every year, forever. You could earn 10% elsewhere. Value today = 10 / 0.10 = **€100**. If it grows 2% a year: 10 / (0.10 − 0.02) = **€125**."
+  },
+  {
+   "type": "figure",
+   "svg": "<svg viewBox=\"0 0 680 220\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"Inter, Arial, sans-serif\"><defs><marker id=\"a\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0,0 L10,5 L0,10 z\" fill=\"#2B3499\"/></marker></defs><line x1=\"60\" y1=\"40\" x2=\"640\" y2=\"40\" stroke=\"#C9D4DF\" stroke-width=\"2\"/><text x=\"110\" y=\"26\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#1D2733\">t = 0</text><text x=\"260\" y=\"26\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#1D2733\">t = 1</text><text x=\"410\" y=\"26\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#1D2733\">t = 2</text><text x=\"560\" y=\"26\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#1D2733\">t = 3</text><rect x=\"45\" y=\"138\" width=\"130\" height=\"58\" rx=\"8\" fill=\"#E4E7FB\" stroke=\"#2B3499\"/><text x=\"110\" y=\"162\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#1D2733\">Firm value</text><text x=\"110\" y=\"180\" font-size=\"12\" text-anchor=\"middle\" fill=\"#5E6B7B\">= sum of PVs</text><rect x=\"205\" y=\"55\" width=\"110\" height=\"44\" rx=\"8\" fill=\"#FFFFFF\" stroke=\"#2B3499\"/><text x=\"260\" y=\"74\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#1D2733\">CF1</text><text x=\"260\" y=\"91\" font-size=\"12\" text-anchor=\"middle\" fill=\"#5E6B7B\">10.0m</text><rect x=\"355\" y=\"55\" width=\"110\" height=\"44\" rx=\"8\" fill=\"#FFFFFF\" stroke=\"#2B3499\"/><text x=\"410\" y=\"74\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#1D2733\">CF2</text><text x=\"410\" y=\"91\" font-size=\"12\" text-anchor=\"middle\" fill=\"#5E6B7B\">10.0m</text><rect x=\"505\" y=\"55\" width=\"110\" height=\"44\" rx=\"8\" fill=\"#FFFFFF\" stroke=\"#2B3499\"/><text x=\"560\" y=\"74\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#1D2733\">CF3</text><text x=\"560\" y=\"91\" font-size=\"12\" text-anchor=\"middle\" fill=\"#5E6B7B\">10.0m</text><rect x=\"495\" y=\"138\" width=\"150\" height=\"58\" rx=\"8\" fill=\"#FDEFD9\" stroke=\"#B5651D\"/><text x=\"570\" y=\"162\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\" fill=\"#1D2733\">TV3 = CF4/(k−g)</text><text x=\"570\" y=\"180\" font-size=\"12\" text-anchor=\"middle\" fill=\"#5E6B7B\">11/(8%−1%) = 157.1m</text><line x1=\"205\" y1=\"90\" x2=\"178\" y2=\"146\" stroke=\"#2B3499\" stroke-width=\"1.6\" marker-end=\"url(#a)\"/><line x1=\"355\" y1=\"92\" x2=\"178\" y2=\"158\" stroke=\"#2B3499\" stroke-width=\"1.6\" marker-end=\"url(#a)\"/><line x1=\"505\" y1=\"94\" x2=\"178\" y2=\"166\" stroke=\"#2B3499\" stroke-width=\"1.6\" marker-end=\"url(#a)\"/><line x1=\"495\" y1=\"170\" x2=\"178\" y2=\"172\" stroke=\"#2B3499\" stroke-width=\"1.6\" marker-end=\"url(#a)\"/></svg>",
+   "caption": "Every arrow = divide by \\((1+\\text{WACC})^t\\). The terminal value sits at t = 3, so it is discounted 3 times, not 4."
+  },
+  {
+   "type": "steps",
+   "title": "The 6-step recipe (always the same)",
+   "items": [
+    "**Write the formulas first.** Old solutions give points for stating them.",
+    "**Cash flows for years 1–3.** Start with year 1, not year 0. With \\(CF_0\\) and growth \\(g\\): \\(CF_1=CF_0\\cdot(1+g)\\), \\(CF_2=CF_1\\cdot(1+g)\\), …",
+    "**Terminal value at t = 3:** \\(TV_3=\\frac{CF_4}{\\text{WACC}-g}\\) with \\(CF_4=CF_3\\cdot(1+g)\\). No growth: \\(TV_3=\\frac{CF}{\\text{WACC}}\\).",
+    "**Discount** every CF and the TV with \\((1+\\text{WACC})^t\\) and add them up = firm value. Add non-operating assets if given.",
+    "**Equity = firm value − MARKET value of debt** (never the book value).",
+    "**Compare and decide:** equity value vs market cap (or value per share vs share price). Higher → undervalued → **buy**. Lower → overvalued → **sell**."
+   ]
+  },
+  {
+   "type": "formula",
+   "tex": [
+    "PV(CF_t)=\\frac{CF_t}{(1+\\text{WACC})^t}",
+    "TV_3=\\frac{CF_4}{\\text{WACC}-g}\\qquad\\text{(no growth: }TV_3=\\tfrac{CF}{\\text{WACC}}\\text{)}",
+    "\\text{Firm value}=\\sum_{t=1}^{3}\\frac{CF_t}{(1+\\text{WACC})^t}+\\frac{TV_3}{(1+\\text{WACC})^3}",
+    "\\text{Equity}=\\text{Firm value}-\\text{market value of debt}",
+    "\\text{Value per share}=\\frac{\\text{Equity}}{\\text{number of shares}}"
+   ]
+  },
+  {
+   "type": "heading",
+   "text": "Worked example: old exam 2023 (15 points)"
+  },
+  {
+   "type": "text",
+   "md": "Market cap 80m, 12m shares, book debt 45m, **market debt 50m**, CF 10m for 3 years, then 11m growing 1%, WACC 8%."
+  },
+  {
+   "type": "table",
+   "head": [
+    "Step",
+    "Calculation",
+    "Result"
+   ],
+   "rows": [
+    [
+     "PV year 1",
+     "\\(\\frac{10}{1.08}\\)",
+     "9.259m"
+    ],
+    [
+     "PV year 2",
+     "\\(\\frac{10}{1.08^2}\\)",
+     "8.573m"
+    ],
+    [
+     "PV year 3",
+     "\\(\\frac{10}{1.08^3}\\)",
+     "7.938m"
+    ],
+    [
+     "TV at t = 3",
+     "\\(\\frac{11}{0.08-0.01}\\)",
+     "157.143m"
+    ],
+    [
+     "PV of TV",
+     "\\(\\frac{157.143}{1.08^3}\\)",
+     "124.745m"
+    ],
+    [
+     "Firm value",
+     "sum",
+     "150.516m"
+    ],
+    [
+     "Equity",
+     "\\(150.516-50\\) (market value!)",
+     "100.516m"
+    ],
+    [
+     "Per share",
+     "\\(\\frac{100.516}{12}\\)",
+     "8.38 €"
+    ],
+    [
+     "Decision",
+     "100.5m > 80m market cap",
+     "undervalued → **buy**"
+    ]
+   ],
+   "sumRows": [
+    5,
+    8
+   ]
+  },
+  {
+   "type": "more",
+   "title": "Variants that appeared in old exams",
+   "md": "- **Growth from \\(CF_0\\):** \\(CF_0=300\\)m, +1% for 3 years, then +0.5% → \\(CF_1=303\\), \\(CF_4=310.64\\), \\(TV_3=5{,}647.9\\) → equity 4,559.8m → 45.60 € per share → buy at 40.\n- **Flat CF, then a new flat level:** 6m for 3 years, then 6.5m forever, WACC 7% → \\(TV_3=\\frac{6.5}{0.07}=92.86\\) → equity 59.55m > 50m → buy.\n- **Revenue multiple:** \"peer firm value = 3.5 × sales\" → our firm value \\(=3.5\\times24\\text{m}=84\\text{m}\\). Just multiply."
+  }
+ ],
+ "standardAnswer": [
+  {
+   "type": "model_answer",
+   "md": "Since we value the firm with the ==entity method==, we discount the ==free cash flows to the firm== with the ==WACC== of 8%. The ==terminal value== at the end of year 3 is \\(TV_3=\\frac{CF_4}{\\text{WACC}-g}=\\frac{11}{0.08-0.01}=157.14\\text{m}\\), discounted to today 124.75m.\n\n\\(\\text{Firm value}=9.26+8.57+7.94+124.75=150.52\\text{m}\\). The ==value of equity== is the firm value minus the ==market value of debt==: \\(150.52-50=100.52\\text{m}\\).\n\nThe ==intrinsic value== of equity (100.52m, 8.38 € per share) is higher than the ==market capitalisation== (80m, 6.67 € per share). The share is ==undervalued==, so I recommend to ==buy==."
+  }
+ ],
+ "tasks": [
+  {
+   "kind": "drill",
+   "id": "dcf-ex23",
+   "name": "DCF → equity value → buy or sell",
+   "origin": "altklausur",
+   "originLabel": "Old exam 2023, Q2 (15 P)",
+   "variants": [
+    {
+     "text": "Market capitalisation 80m, 12m shares outstanding. Book value of debt 45m, **market value of debt 50m**. Free cash flows: 10m in each of the next 3 years, then 11m growing at 1% forever. WACC 8%.\n\nCalculate the firm value, the equity value and the value per share. Should you buy or sell the share?",
+     "fields": [
+      {
+       "label": "Firm value",
+       "answer": 150.52,
+       "rel": 0.005,
+       "unit": "m"
+      },
+      {
+       "label": "Equity value",
+       "answer": 100.52,
+       "rel": 0.005,
+       "unit": "m"
+      },
+      {
+       "label": "Value per share",
+       "answer": 8.38,
+       "tol": 0.02,
+       "unit": "€"
+      }
+     ],
+     "choice": {
+      "label": "Decision",
+      "options": [
+       "buy",
+       "sell"
+      ],
+      "answer": "buy"
+     },
+     "solution": [
+      {
+       "type": "table",
+       "head": [
+        "Step",
+        "Calculation",
+        "Result"
+       ],
+       "rows": [
+        [
+         "PV year 1",
+         "\\(\\frac{10}{1.08}\\)",
+         "9.259m"
+        ],
+        [
+         "PV year 2",
+         "\\(\\frac{10}{1.08^2}\\)",
+         "8.573m"
+        ],
+        [
+         "PV year 3",
+         "\\(\\frac{10}{1.08^3}\\)",
+         "7.938m"
+        ],
+        [
+         "TV at t = 3",
+         "\\(\\frac{11}{0.08-0.01}\\)",
+         "157.143m"
+        ],
+        [
+         "PV of TV",
+         "\\(\\frac{157.143}{1.08^3}\\)",
+         "124.745m"
+        ],
+        [
+         "Firm value",
+         "sum",
+         "150.516m"
+        ],
+        [
+         "Equity",
+         "\\(150.516-50\\) (market value!)",
+         "100.516m"
+        ],
+        [
+         "Per share",
+         "\\(\\frac{100.516}{12}\\)",
+         "8.38 €"
+        ],
+        [
+         "Decision",
+         "100.5m > 80m market cap",
+         "undervalued → **buy**"
+        ]
+       ],
+       "sumRows": [
+        5,
+        8
+       ]
+      },
+      {
+       "type": "remember",
+       "md": "Subtract the **market** value of debt (50m), never the book value (45m)."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "drill",
+   "id": "dcf-growth",
+   "name": "DCF with growth from \\(CF_0\\)",
+   "origin": "neu",
+   "hint": "new numbers every time",
+   "variants": [
+    {
+     "text": "Last year's free cash flow was \\(CF_0=300\\)m. It grows by 1% per year for the next 3 years, then by 0.5% forever. WACC 6%, market value of debt 1000m, 100m shares, share price 40 €.\n\nCalculate the firm value, the equity value and the value per share. Buy or sell?",
+     "fields": [
+      {
+       "label": "Firm value",
+       "answer": 5559.84,
+       "rel": 0.005,
+       "unit": "m"
+      },
+      {
+       "label": "Equity value",
+       "answer": 4559.84,
+       "rel": 0.005,
+       "unit": "m"
+      },
+      {
+       "label": "Value per share",
+       "answer": 45.6,
+       "rel": 0.005,
+       "unit": "€"
+      }
+     ],
+     "choice": {
+      "label": "Decision",
+      "options": [
+       "buy",
+       "sell"
+      ],
+      "answer": "buy"
+     },
+     "solution": [
+      {
+       "type": "steps",
+       "items": [
+        "Cash flows from year 1: \\(CF_1=300\\cdot1.01=303.00\\), \\(CF_2=306.03\\), \\(CF_3=309.09\\).",
+        "\\(CF_4=CF_3\\cdot1.005=310.64\\) and \\(TV_3=\\frac{310.64}{0.06-0.005}=5647.92\\).",
+        "Present values: 285.85 + 272.37 + 259.52 + \\(\\frac{5647.92}{1.06^3}=4742.10\\) → firm value **5559.84m**.",
+        "Equity = 5559.84 − 1000 = **4559.84m**, per share 4559.84 / 100 = **45.60 €**.",
+        "45.60 € > 40 € → share is undervalued → **buy**."
+       ]
+      }
+     ]
+    },
+    {
+     "text": "Last year's free cash flow was \\(CF_0=120\\)m. It grows by 2% per year for the next 3 years, then by 1% forever. WACC 7%, market value of debt 400m, 50m shares, share price 20 €.\n\nCalculate the firm value, the equity value and the value per share. Buy or sell?",
+     "fields": [
+      {
+       "label": "Firm value",
+       "answer": 2077.24,
+       "rel": 0.005,
+       "unit": "m"
+      },
+      {
+       "label": "Equity value",
+       "answer": 1677.24,
+       "rel": 0.005,
+       "unit": "m"
+      },
+      {
+       "label": "Value per share",
+       "answer": 33.54,
+       "rel": 0.005,
+       "unit": "€"
+      }
+     ],
+     "choice": {
+      "label": "Decision",
+      "options": [
+       "buy",
+       "sell"
+      ],
+      "answer": "buy"
+     },
+     "solution": [
+      {
+       "type": "steps",
+       "items": [
+        "Cash flows from year 1: \\(CF_1=120\\cdot1.02=122.40\\), \\(CF_2=124.85\\), \\(CF_3=127.34\\).",
+        "\\(CF_4=CF_3\\cdot1.01=128.62\\) and \\(TV_3=\\frac{128.62}{0.07-0.01}=2143.64\\).",
+        "Present values: 114.39 + 109.05 + 103.95 + \\(\\frac{2143.64}{1.07^3}=1749.85\\) → firm value **2077.24m**.",
+        "Equity = 2077.24 − 400 = **1677.24m**, per share 1677.24 / 50 = **33.54 €**.",
+        "33.54 € > 20 € → share is undervalued → **buy**."
+       ]
+      }
+     ]
+    },
+    {
+     "text": "Last year's free cash flow was \\(CF_0=80\\)m. It grows by 3% per year for the next 3 years, then by 1.5% forever. WACC 9%, market value of debt 250m, 20m shares, share price 50 €.\n\nCalculate the firm value, the equity value and the value per share. Buy or sell?",
+     "fields": [
+      {
+       "label": "Firm value",
+       "answer": 1128.07,
+       "rel": 0.005,
+       "unit": "m"
+      },
+      {
+       "label": "Equity value",
+       "answer": 878.07,
+       "rel": 0.005,
+       "unit": "m"
+      },
+      {
+       "label": "Value per share",
+       "answer": 43.9,
+       "rel": 0.005,
+       "unit": "€"
+      }
+     ],
+     "choice": {
+      "label": "Decision",
+      "options": [
+       "buy",
+       "sell"
+      ],
+      "answer": "sell"
+     },
+     "solution": [
+      {
+       "type": "steps",
+       "items": [
+        "Cash flows from year 1: \\(CF_1=80\\cdot1.03=82.40\\), \\(CF_2=84.87\\), \\(CF_3=87.42\\).",
+        "\\(CF_4=CF_3\\cdot1.015=88.73\\) and \\(TV_3=\\frac{88.73}{0.09-0.015}=1183.06\\).",
+        "Present values: 75.60 + 71.44 + 67.50 + \\(\\frac{1183.06}{1.09^3}=913.54\\) → firm value **1128.07m**.",
+        "Equity = 1128.07 − 250 = **878.07m**, per share 878.07 / 20 = **43.90 €**.",
+        "43.90 € < 50 € → share is overvalued → **sell**."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "essay",
+   "id": "dcf-explain",
+   "name": "Explain the entity method",
+   "origin": "probeklausur",
+   "originLabel": "Sample question 2",
+   "points": 6,
+   "question": "Explain how a firm is valued with the **entity method** (DCF) and how you get from the firm value to a buy or sell recommendation.",
+   "checklist": [
+    {
+     "text": "Discount **free cash flows to the firm** with the **WACC**",
+     "points": 1
+    },
+    {
+     "text": "Explicit forecast period plus a **terminal value** \\(TV=\\frac{CF_{T+1}}{\\text{WACC}-g}\\)",
+     "points": 1
+    },
+    {
+     "text": "Sum of present values = **firm (entity) value**",
+     "points": 1
+    },
+    {
+     "text": "Equity = firm value − **market value** of debt",
+     "points": 1
+    },
+    {
+     "text": "Compare equity value (or value per share) with market cap (or share price)",
+     "points": 1
+    },
+    {
+     "text": "Conclusion: higher → **undervalued → buy**, lower → overvalued → sell",
+     "points": 1
+    }
+   ],
+   "modelAnswer": [
+    {
+     "type": "text",
+     "md": "With the ==entity method== we discount the ==free cash flows to the firm== with the ==WACC==. We forecast the cash flows explicitly for a few years and capture everything after that with a ==terminal value==, \\(TV_T=\\frac{CF_{T+1}}{\\text{WACC}-g}\\).\n\nThe sum of all present values is the ==firm value==. Subtracting the ==market value of debt== gives the ==equity value==. If the equity value (or value per share) is higher than the market capitalisation (or share price), the share is ==undervalued== and I recommend to buy it; otherwise sell."
+    }
+   ]
+  },
+  {
+   "kind": "mc",
+   "id": "dcf-traps",
+   "name": "Quick check: the classic DCF traps",
+   "origin": "neu",
+   "questions": [
+    {
+     "q": "Cash flows are given for years 1–3. With how many periods do you discount \\(TV_3\\)?",
+     "options": [
+      "2",
+      "3",
+      "4"
+     ],
+     "answer": 1,
+     "explain": "\\(TV_3\\) sits at the end of year 3, so it is discounted with \\((1+\\text{WACC})^3\\). Using 4 is the most common mistake."
+    },
+    {
+     "q": "Which debt value do you subtract from the firm value?",
+     "options": [
+      "Book value of debt",
+      "Market value of debt",
+      "Face value of the next bond"
+     ],
+     "answer": 1,
+     "explain": "Equity is what remains after paying lenders at today's value, so you use the **market** value."
+    },
+    {
+     "q": "Value per share is …",
+     "options": [
+      "firm value / shares",
+      "equity value / shares",
+      "market cap / shares"
+     ],
+     "answer": 1,
+     "explain": "Shares are claims on equity, not on the whole firm."
+    }
+   ]
+  }
+ ],
+ "cards": [
+  {
+   "id": "dcf-c1",
+   "front": "Terminal value at t = 3 (with growth)",
+   "back": "\\(TV_3=\\frac{CF_4}{\\text{WACC}-g}\\) with \\(CF_4=CF_3\\cdot(1+g)\\). Discount with \\((1+\\text{WACC})^3\\)."
+  },
+  {
+   "id": "dcf-c2",
+   "front": "From firm value to equity value",
+   "back": "Equity = firm value − **market** value of debt (not book value)."
+  },
+  {
+   "id": "dcf-c3",
+   "front": "Buy or sell? (DCF)",
+   "back": "Equity value > market cap (or value per share > price) → undervalued → **buy**. Otherwise sell."
+  },
+  {
+   "id": "dcf-c4",
+   "front": "Entity method: which cash flows, which rate?",
+   "back": "Free cash flows **to the firm**, discounted with the **WACC**."
+  }
+ ],
+ "mistakes": [
+  "Using the **book** value of debt.",
+  "Starting with \\(CF_0\\) instead of \\(CF_1\\).",
+  "Discounting the TV with \\(1.08^4\\) instead of \\(1.08^3\\).",
+  "Growth TV with \\(CF_3\\) instead of \\(CF_4=CF_3\\cdot(1+g)\\).",
+  "Dividing the **firm** value by the number of shares (must be equity).",
+  "Forgetting the buy/sell sentence (easy points)."
+ ],
+ "hook": "**CF – TV – PV – minus D – compare**: cash flows (from year 1) → terminal value → present values → minus debt (market!) → compare with the price.",
+ "source": "Lecture slides 46–64 (steps on slide 51), Addendum II, old exams 2015, 2020, 2021, 2023."
+}

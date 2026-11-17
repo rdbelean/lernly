@@ -1,0 +1,11 @@
+{
+  "name": "lernly",
+  "version": "0.1.0",
+  "description": "Lernly macht aus deinen Kursunterlagen einen Klausur-Trainer: Bauplan aus Altklausuren, Themen nach Punkten, Rechenaufgaben, Karteikarten, Probeklausuren und Spickzettel. Claude liest deine Dateien, Lernly liefert die Methode und die fertige Oberfläche.",
+  "author": {
+    "name": "Lernly",
+    "url": "https://lernly-app.de"
+  },
+  "homepage": "https://lernly-app.de",
+  "keywords": ["lernen", "klausur", "studium", "karteikarten", "probeklausur", "study", "exam"]
+}

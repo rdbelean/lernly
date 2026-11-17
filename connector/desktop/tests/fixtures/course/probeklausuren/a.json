@@ -1,0 +1,15 @@
+{
+ "schema": "lernly.probeklausur/1", "id": "a", "name": "Probeklausur A", "subtitle": "Gerüst wie die Altklausuren", "durationMin": 30, "totalPoints": 28,
+ "items": [
+  {"id": "a1", "no": "Q1", "partId": "I", "topicId": "emh", "points": 10, "type": "open", "question": "Explain the semi-strong form of market efficiency and one way to test it.",
+   "checklist": [{"text": "Prices contain all public information", "points": 4}, {"text": "Fundamental analysis cannot earn excess returns", "points": 3}, {"text": "Test: event study around announcements", "points": 3}],
+   "solution": [{"type": "text", "md": "Semi-strong: ==all public information== is in the price. Test with an ==event study==: the price should react immediately and fully to news, with no drift afterwards."}]},
+  {"id": "a2", "no": "Q2", "partId": "I", "topicId": "dcf", "points": 15, "type": "open", "question": "CF 5m for 3 years, then 5.5m forever without growth. WACC 10%, market value of debt 20m, market cap 25m. Value the equity and give a recommendation.",
+   "checklist": [{"text": "PV of CF 1–3 = 12.43m", "points": 4}, {"text": "\\(TV_3 = 55\\)m, PV = 41.32m", "points": 4}, {"text": "Firm value 53.76m, equity 33.76m", "points": 4}, {"text": "33.76m > 25m → undervalued → buy", "points": 3}],
+   "solution": [{"type": "steps", "items": ["\\(PV = 5/1.1 + 5/1.1^2 + 5/1.1^3 = 12.43\\)m", "\\(TV_3 = 5.5/0.10 = 55\\)m, \\(PV = 55/1.1^3 = 41.32\\)m", "Firm value 53.76m − debt 20m = equity **33.76m**", "33.76m > 25m → **buy**"]}]},
+  {"id": "a3", "no": "Q3", "partId": "I", "topicId": "dcf", "points": 3, "type": "mc", "question": "Quick check",
+   "questions": [{"q": "TV at t = 3 is discounted with …", "options": ["\\(1.1^2\\)", "\\(1.1^3\\)", "\\(1.1^4\\)"], "answer": 1, "explain": "It sits at t = 3."},
+    {"q": "Subtract which debt?", "options": ["book", "market"], "answer": 1, "explain": "Market value."},
+    {"q": "Value per share = ?", "options": ["firm value / shares", "equity / shares"], "answer": 1, "explain": "Equity per share."}]}
+ ]
+}

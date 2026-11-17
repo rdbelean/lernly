@@ -1,0 +1,4 @@
+{"schema": "lernly.spickzettel/1", "sections": [
+ {"title": "DCF", "blocks": [{"type": "formula", "tex": ["TV_3=\\frac{CF_4}{\\text{WACC}-g}", "E = V - D_{\\text{market}}"]}]},
+ {"title": "Market efficiency", "blocks": [{"type": "text", "md": "- Weak: past prices\n- Semi-strong: + public\n- Strong: + private"}]}
+]}

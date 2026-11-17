@@ -2,6 +2,15 @@
 
 Pre-revenue MVP **with live users**. Read this every session and follow the Working Rules. Web app: Next.js (App Router) + Tailwind, Supabase (auth / DB / storage), Vercel (hosting + cron), Resend (email), **Stripe (Billing, live)**, PostHog (Analytics) + Sentry (Errors), Anthropic API (generation). System prompts in `src/lib/prompts.ts`, schemas in `src/lib/schema.ts`.
 
+<!-- BEGIN:handoff-rules -->
+## Handoff-Regeln (Antigravity, Claude Code und OpenAI Codex, identisch in CLAUDE.md und AGENTS.md)
+
+- **Session-Start (Pflicht):** Lies bei JEDEM neuen Chat oder Task als allerersten Schritt `STATUS.md` im Root-Verzeichnis, um Stand und nächsten Schritt zu kennen, bevor du Fragen stellst oder Code änderst.
+- **Session-Ende (Pflicht):** Aktualisiere nach JEDER abgeschlossenen Aufgabe oder größeren Code-Änderung automatisch `STATUS.md` (was erledigt wurde, welche Dateien geändert wurden, nächster Schritt), ohne dass der Nutzer dich extra auffordern muss.
+- **Ein aktiver Branch (Pflicht):** Antigravity, Claude Code und Codex arbeiten IMMER gemeinsam auf EINEM aktiven Feature-Branch. Welcher das ist, steht oben in `STATUS.md` unter „Aktiver Branch“. Kein Agent wechselt eigenmächtig den Git-Branch: Wechsel nur nach ausdrücklicher Absprache mit dem Nutzer und mit Eintrag in `STATUS.md`. Nie direkt auf `main` committen oder pushen.
+- **Arbeitsweise:** `STATUS.md` bleibt extrem präzise, aktuell und kompakt: keine langen Romane, nur harte Fakten für die schnelle Übergabe zwischen den Agenten.
+<!-- END:handoff-rules -->
+
 ---
 
 ## ⚙️ WORKING RULES — obey every session
@@ -45,15 +54,15 @@ merging to main · destructive DB changes · adding new dependencies/libraries �
 
 ---
 
-## 🎨 DESIGN SYSTEM (current in-app / dashboard)
-- Backgrounds: page `#0F1322`, sidebar `#0C0F1C`, surfaces `#141930` / `#171C30`, border `rgba(255,255,255,.06)`. Text `#EAEDF7`, dim `#9098B6`.
-- **Primary CTA: deep indigo `#2B3499`** (white text). Pure white only for text — NEVER a large fill. No near-black surfaces on the blue.
-- Fonts: **Sora** (headings), **Inter** (body).
-- Icons: **lucide-react only**, in tinted rounded containers. **NO emojis anywhere.**
-- **Color = meaning**, applied identically everywhere (priority / relevance / highlight / callout). Never a per-element rainbow; default to neutral surfaces.
-- Radius 12–16px, calm spacing.
+## 🎨 DESIGN SYSTEM (current light theme — `src/app/globals.css`)
+- **Palette (Tokens in `src/app/globals.css` `@theme inline`):** Page `--color-bg: #F3F5FB`, sidebar `--color-bg-deep: #FFFFFF`, cards/surfaces `--color-surface: #FFFFFF`, chips/inputs `--color-surface-2: #EAEEF8`, hairline `--color-line: rgba(18, 23, 43, 0.10)`. Text `--color-text: #12172B`, dim `--color-text-dim: #5A6280`, faint `--color-text-faint: #626A88` (≥ 4.5:1 contrast on white/bg).
+- **Primary CTA:** `--color-primary: #3646D6` (`--color-primary-press: #2B3499`) with `--color-on-primary: #FFFFFF`.
+- **Fonts:** **Sora** (headings, `--font-display`), **Inter** (body, `--font-sans`).
+- **Icons:** **lucide-react only**. **NO emojis anywhere.**
+- **Color = meaning** (semantic tokens): OK/sicher `--color-ok-bg: #D4F0E0` / `--color-ok-ink: #0E4A2C`; work/in Arbeit `--color-work-bg: #DCE2FA` / `--color-work-ink: #1B2A7A`; urgent/Countdown `--color-urgent-bg: #FDF0DC` / `--color-urgent-ink: #8A4B0B`; error `--color-err-bg: #FCE8E6` / `--color-err-ink: #B3261E`. Never invent ad-hoc hex colors; run `npm run check:colors -- --strict`.
+- **Radius & Layout:** Cards 14px (hairline border, no drop shadow; shadows only for popovers/modals), controls 10px, calm spacing, mobile-first (380px).
 
-**Landing (lernly-app.de Startseite):** nutzt bewusst ein eigenes **Glassmorphism-Design** (`.ln-glass-card`, Indigo-Gradient, Cyan/Teal-Akzent `rgb(91,184,216)`) — abweichend vom flachen App-Dashboard oben, aber mit denselben Fonts + Indigo-CTA. Alle Sektionen leben inline in `src/app/landing-client.tsx` (Reihenfolge: Hero → DemoPacks → HowItWorks → Showcase → BentoFeatures → ComparisonSection [Altklausur] → **ToolStackSection** [Value-Stack „Ein Tool statt fünf"] → Pricing → FAQ → BottomCta); Section-Heading über `src/components/landing/SectionHeading.tsx`. Bewusst (noch) nicht ans App-Design angeglichen.
+**Landing (`lernly-app.de` Startseite):** Light-Design-BWL-Landing in `src/components/landing/LernlyLanding.tsx` (mit `HeroScene.tsx` + `LearningVisuals.tsx` + `src/components/landing/lernly-landing.module.css`). Fokus: BWL-Klausuren (Finance, Mathe, Marketing). Veraltetes `landing-client.tsx` / `DemoPacksSection` / `FeatureBento` / `mockups/*` wurde entfernt.
 
 ---
 

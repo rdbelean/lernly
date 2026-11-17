@@ -1,0 +1,33 @@
+{
+ "schema": "lernly.kurs/1",
+ "id": "corporate-finance",
+ "title": "Corporate Finance & Valuation",
+ "subtitle": "Klausur WS 2026/27 · Teil I Corporate Finance",
+ "language": "en",
+ "subjectType": "gemischt",
+ "exam": {
+  "date": "2026-12-04", "time": "09:00", "durationMin": 60, "totalPoints": 60,
+  "aids": "Taschenrechner, keine Formelsammlung",
+  "format": "Fünf Pflichtaufgaben, bei Q5/Q6 eine wählen. Rechnen und kurze Erklärtexte.",
+  "fidelity": "strict",
+  "parts": [{"id": "I", "name": "Corporate Finance", "points": 60, "slots": [
+   {"id": "q1", "label": "Q1", "name": "Market efficiency", "points": 10, "frequency": "5 von 5 Altklausuren"},
+   {"id": "q2", "label": "Q2", "name": "DCF → equity → buy/sell", "points": 15, "frequency": "5 von 5"},
+   {"id": "q3", "label": "Q3", "name": "Ratings or convertibles", "points": 6, "frequency": "4 von 5"},
+   {"id": "q4", "label": "Q4", "name": "Leverage + Modigliani–Miller", "points": 19, "frequency": "5 von 5"},
+   {"id": "q5", "label": "Q5", "name": "Agency conflict", "points": 10, "choiceGroup": "q5q6", "frequency": "3 von 5"},
+   {"id": "q6", "label": "Q6", "name": "CFA ethics case", "points": 10, "choiceGroup": "q5q6", "frequency": "3 von 5"}]}]
+ },
+ "strategy": "Die Klausur hat immer dasselbe Gerüst. Der schnellste Weg:\n1. Für jedes Stufe-1-Thema die **Standardantwort** lernen (kurz, Klausurlänge).\n2. Die **Altklausur-Aufgaben** in den Themen rechnen, bis sie sitzen.\n3. Eine **Probeklausur** im Klausurmodus mit Timer schreiben.",
+ "topics": [
+  {"id": "dcf", "title": "DCF → equity value → buy or sell", "slotIds": ["q2"], "expectedPoints": 15, "tier": 1, "why": "5 von 5 Altklausuren, immer gleiches Muster", "effort": "mittel", "sources": "Folien 46–64, Addendum II"},
+  {"id": "mm", "title": "Leverage effect + Modigliani–Miller + optimal capital structure", "slotIds": ["q4"], "expectedPoints": 19, "tier": 1, "why": "5 von 5, größte Aufgabe", "effort": "hoch", "sources": "Folien 67–92"},
+  {"id": "emh", "title": "Market efficiency: weak, semi-strong, strong", "slotIds": ["q1"], "expectedPoints": 10, "tier": 1, "why": "5 von 5, reiner Erklärtext", "effort": "niedrig", "sources": "Folien 14–15"},
+  {"id": "agency", "title": "Agency conflicts managers vs shareholders", "slotIds": ["q5"], "expectedPoints": 10, "tier": 2, "why": "Wahlaufgabe", "effort": "mittel", "pairWith": "ethics", "sources": "Folien 86–89"},
+  {"id": "ethics", "title": "CFA ethics case", "slotIds": ["q6"], "expectedPoints": 10, "tier": 2, "why": "Wahlaufgabe, Gastvortrag", "effort": "niedrig", "sources": "Gastvortrag"},
+  {"id": "ratings", "title": "Credit rating agencies", "slotIds": ["q3"], "expectedPoints": 6, "tier": 3, "why": "4 von 5, wenige Punkte", "effort": "niedrig", "sources": "Folien 37–45"}
+ ],
+ "notation": "WACC, k_E, k_D, D/E; Beträge in Mio. (m).",
+ "sources": [{"file": "Julius Finance/Corporate Finance FT23 2.pdf", "kind": "altklausur", "pages": 3}],
+ "updatedAt": "2026-11-14"
+}
