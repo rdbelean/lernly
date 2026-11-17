@@ -109,7 +109,7 @@ export const CORPORATE_FINANCE_FLASHCARDS: StudyFlashcard[] = [
     pointValue: 2.1,
     question: "Was ist der Terminal Value?",
     answer:
-      "Der geschätzte Unternehmenswert nach der Detailplanungsphase (meist ab Jahr 6). In der Praxis macht er oft 60–80 % des gesamten DCF-Werts aus.",
+      "Der Wert aller Cashflows **nach** dem Prognosezeitraum, abgezinst auf heute.",
     visual: {
       kind: "terminal-value",
       barsLabel: "Jahr 1–5",
