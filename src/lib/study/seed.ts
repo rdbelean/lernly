@@ -289,32 +289,32 @@ export const CORPORATE_FINANCE_EXERCISES: CalcExercise[] = [
       {
         match: 7.4,
         tolerance: 0.05,
-        message: "Fast. Du hast die Steuer auf Fremdkapital vergessen.",
+        message: "**Fast.** Du hast die Steuer auf Fremdkapital vergessen.",
       },
       {
         match: 5.8,
         tolerance: 0.05,
-        message: "Fast. Der Steuersatz gilt nur für Fremdkapital, nicht für Eigenkapital.",
+        message: "**Fast.** Der Steuersatz gilt nur für Fremdkapital, nicht für Eigenkapital.",
       },
       {
         match: 5.18,
         tolerance: 0.06,
-        message: "Fast. Kürze nur die FK-Kosten um (1 − 0,30), nicht den gesamten WACC.",
+        message: "**Fast.** Kürze nur die FK-Kosten um (1 − 0,30), nicht den gesamten WACC.",
       },
     ],
-    genericError: "Noch nicht ganz. Prüfe Gewichtung (60 % EK, 40 % FK) und Tax Shield.",
+    genericError: "**Noch nicht ganz.** Prüfe Gewichtung (60 % EK, 40 % FK) und Tax Shield.",
     steps: [
       {
         num: 1,
-        text: "Gesamtkapital: 600 + 400 = 1.000 Mio. (60 % EK, 40 % FK)",
+        text: "Gewichte: **60 %** EK, **40 %** FK",
       },
       {
         num: 2,
-        text: "FK nach Steuern: 5 % × (1 − 0,30) = 3,5 %",
+        text: "FK nach Steuern: 5 % × (1 − 0,30) = **3,5 %**",
       },
       {
         num: 3,
-        text: "WACC = 0,60 × 9 % + 0,40 × 3,5 % = 5,4 % + 1,4 %",
+        text: "0,6 × 9 % + 0,4 × 3,5 % = 5,4 % + 1,4 %",
       },
     ],
   },
