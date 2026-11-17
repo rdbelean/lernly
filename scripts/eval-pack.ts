@@ -22,7 +22,7 @@ import {
   TASK_ESSAY_PREDICTIONS,
   TASK_ANALYSIS,
 } from "../src/lib/prompts";
-import { StudyPackSchema, type Flashcard, type ExamType } from "../src/lib/schema";
+import { StudyPackSchema, type Flashcard, type ExamType, type StudyPack } from "../src/lib/schema";
 import { activeTasksFor, type GenTaskKey } from "../src/lib/examTasks";
 import { shouldUseVision } from "../src/lib/pdfVision";
 import { parseModelJson } from "../src/lib/parseModelJson";
@@ -388,15 +388,15 @@ async function main() {
   }
   console.log(`raw output written: ${rawPath}`);
 
-  main_summary(merged);
+  main_summary(parsed.success ? parsed.data : (merged as Partial<StudyPack>));
 }
 
 // Human-readable digest so we can judge quality without scrolling raw JSON.
-function main_summary(pack: any) {
+function main_summary(pack: Partial<StudyPack>) {
   const line = (s: string) => console.log(s);
   line(`\ncourseTitle: ${pack.courseTitle ?? "(none)"}`);
 
-  const cards: any[] = pack.flashcards ?? [];
+  const cards = pack.flashcards ?? [];
   const diff = cards.reduce((m: Record<string, number>, c) => ((m[c.difficulty] = (m[c.difficulty] ?? 0) + 1), m), {});
   const cats = [...new Set(cards.map((c) => c.category))];
   line(`\nFLASHCARDS: ${cards.length} cards, ${cats.length} categories`);
@@ -405,39 +405,39 @@ function main_summary(pack: any) {
   line(`  sample[0] Q: ${cards[0]?.question}`);
   line(`  sample[0] A: ${cards[0]?.answer}`);
 
-  const q: any[] = pack.simulator?.questions ?? [];
+  const q = pack.simulator?.questions ?? [];
   line(`\nSIMULATOR: ${q.length} questions`);
   line(`  sample[0]: ${q[0]?.scenario ? "[scenario] " + q[0].scenario + " — " : ""}${q[0]?.question}`);
   line(`    options: ${JSON.stringify(q[0]?.options)}`);
   line(`    explanation: ${q[0]?.explanation}`);
 
-  const qz: any[] = pack.quiz?.questions ?? [];
+  const qz = pack.quiz?.questions ?? [];
   line(`\nQUIZ (MC): ${qz.length} questions`);
   line(`  sample[0] stem: ${qz[0]?.stem}`);
   line(`  sample[0] options: ${JSON.stringify(qz[0]?.options)}`);
   line(`  sample[0] correctIndex: ${qz[0]?.correctIndex}`);
   line(`  sample[0] explanation: ${qz[0]?.explanation}`);
 
-  const blocks: any[] = pack.visualMap?.blocks ?? [];
-  const kinds = blocks.flatMap((b) => (b.frameworks ?? []).map((f: any) => f.kind));
+  const blocks = pack.visualMap?.blocks ?? [];
+  const kinds = blocks.flatMap((b) => (b.frameworks ?? []).map((f) => f.kind));
   const kindCount = kinds.reduce((m: Record<string, number>, k) => ((m[k] = (m[k] ?? 0) + 1), m), {});
   line(`\nVISUAL MAP: ${blocks.length} blocks, ${kinds.length} frameworks`);
   line(`  framework kinds: ${JSON.stringify(kindCount)}`);
   line(`  block titles: ${blocks.map((b) => b.title).join(" | ")}`);
 
-  const topics: any[] = pack.overview?.topics ?? [];
+  const topics = pack.overview?.topics ?? [];
   const concepts = topics.flatMap((t) => t.concepts ?? []);
   const high = concepts.filter((c) => c.importance === "high").length;
   line(`\nOVERVIEW: ${topics.length} topics, ${concepts.length} concepts (${high} high-importance)`);
   line(`  topics: ${topics.map((t) => t.name).join(" | ")}`);
 
-  const authors: any[] = pack.authors ?? [];
+  const authors = pack.authors ?? [];
   line(`\nAUTHORS: ${authors.length} — ${authors.map((a) => a.name).join(", ")}`);
 
   const bp = pack.essayBlueprint;
   line(`\nBLUEPRINT: ${bp?.parts?.length ?? 0} parts, ${bp?.totalWords ?? 0} words, ${bp?.timeMinutes ?? 0} min`);
 
-  const days: any[] = pack.schedule?.days ?? [];
+  const days = pack.schedule?.days ?? [];
   line(`SCHEDULE: ${days.length} days (daysUntilExam=${pack.schedule?.daysUntilExam})`);
 }
 

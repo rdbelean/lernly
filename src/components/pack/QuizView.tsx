@@ -157,27 +157,22 @@ export default function QuizView({
 
   // If the parent ever swaps questions (different pack opened), full reset.
   useEffect(() => {
-    setDeck(shuffle(questions));
-    setAnswers({});
-    setChecked(false);
-    setFilter("all");
-    setOpenTheory({});
-    setSeenStems([]);
-    setIsRePractice(false);
-    setRepracticeError(null);
-    setTutorQ(null);
+    const id = setTimeout(() => {
+      setDeck(shuffle(questions));
+      setAnswers({});
+      setChecked(false);
+      setFilter("all");
+      setOpenTheory({});
+      setSeenStems([]);
+      setIsRePractice(false);
+      setRepracticeError(null);
+      setTutorQ(null);
+    }, 0);
+    return () => clearTimeout(id);
   }, [questions]);
 
-  if (deck.length === 0) {
-    return (
-      <p className="text-[14px]" style={{ color: "var(--color-ln-mute)" }}>
-        {isEn ? "No quiz questions available." : "Keine Quiz-Fragen verfügbar."}
-      </p>
-    );
-  }
-
   const answeredCount = Object.keys(answers).length;
-  const progressPct = Math.round((answeredCount / deck.length) * 100);
+  const progressPct = deck.length > 0 ? Math.round((answeredCount / deck.length) * 100) : 0;
 
   const correctCount = checked
     ? deck.filter((q) => answers[q.id] === q.correctIndex).length
@@ -188,7 +183,7 @@ export default function QuizView({
       ).length
     : 0;
   const skippedCount = checked ? deck.length - answeredCount : 0;
-  const scorePct = checked ? Math.round((correctCount / deck.length) * 100) : 0;
+  const scorePct = checked && deck.length > 0 ? Math.round((correctCount / deck.length) * 100) : 0;
   const verdict =
     scorePct >= 75 ? labels.verdictPass : scorePct >= 50 ? labels.verdictMid : labels.verdictFail;
   const verdictColor =
@@ -223,6 +218,14 @@ export default function QuizView({
         .map(([name]) => name),
     [topicEntries],
   );
+
+  if (deck.length === 0) {
+    return (
+      <p className="text-[14px]" style={{ color: "var(--color-text-dim)" }}>
+        {isEn ? "No quiz questions available." : "Keine Quiz-Fragen verfügbar."}
+      </p>
+    );
+  }
 
   const select = (qid: string, idx: number) => {
     if (checked) return;
@@ -355,7 +358,7 @@ export default function QuizView({
                 width: `${checked ? scorePct : progressPct}%`,
                 background: checked
                   ? `linear-gradient(90deg, ${verdictColor}, ${verdictColor}aa)`
-                  : "linear-gradient(90deg, var(--color-ln-cyan), var(--color-ln-violet))",
+                  : "linear-gradient(90deg, var(--color-primary), var(--color-work-ink))",
               }}
             />
           </div>
@@ -375,7 +378,7 @@ export default function QuizView({
               className={
                 "rounded-full border px-3 py-1.5 text-[12px] font-semibold transition " +
                 (filter === "all"
-                  ? "border-[color:var(--color-ln-cyan)] text-[color:var(--color-text)]"
+                  ? "border-[color:var(--color-primary)] text-[color:var(--color-text)]"
                   : "border-[color:var(--color-line)] text-[color:var(--color-text-faint)] hover:text-[color:var(--color-text)]")
               }
             >
@@ -446,7 +449,7 @@ export default function QuizView({
               className="mt-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-bold"
               style={{
                 background: "var(--color-work-bg)",
-                color: "var(--color-ln-violet)",
+                color: "var(--color-work-ink)",
                 border: "1px solid var(--color-work-bg)",
               }}
             >
@@ -591,7 +594,7 @@ export default function QuizView({
 
       {/* Questions */}
       <ol className="space-y-3 sm:space-y-4">
-        {visibleDeck.map((q, displayIdx) => {
+        {visibleDeck.map((q) => {
           const realIdx = deck.findIndex((d) => d.id === q.id);
           const picked = answers[q.id];
           const isAnswered = picked !== undefined;
@@ -629,7 +632,7 @@ export default function QuizView({
                     className="rounded px-1.5 py-0.5 text-[9.5px]"
                     style={{
                       background: "var(--color-work-bg)",
-                      color: "var(--color-ln-cyan)",
+                      color: "var(--color-work-ink)",
                     }}
                   >
                     {q.category}
@@ -660,7 +663,7 @@ export default function QuizView({
                   className={
                     "mt-3 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[12px] font-semibold transition " +
                     (theoryOpen
-                      ? "border-[color:var(--color-ln-violet)] bg-[color:var(--color-ln-violet)]/10 text-[color:var(--color-text)]"
+                      ? "border-[color:var(--color-primary)] bg-[color:var(--color-work-bg)] text-[color:var(--color-text)]"
                       : "border-[color:var(--color-line)] text-[color:var(--color-text-faint)] hover:text-[color:var(--color-text)]")
                   }
                 >
@@ -671,7 +674,7 @@ export default function QuizView({
                       className="ml-1 rounded px-1.5 py-0.5 text-[9.5px] font-bold"
                       style={{
                         background: "var(--color-work-bg)",
-                        color: "var(--color-ln-violet)",
+                        color: "var(--color-work-ink)",
                       }}
                     >
                       {concept.term}
@@ -691,7 +694,7 @@ export default function QuizView({
                 >
                   <div
                     className="mb-1 text-[12px] font-bold"
-                    style={{ color: "var(--color-ln-violet)" }}
+                    style={{ color: "var(--color-work-ink)" }}
                   >
                     {concept.term}
                     {concept.author && (
@@ -769,7 +772,7 @@ export default function QuizView({
                             ? "var(--color-work-bg)"
                             : "var(--color-ink-a06)",
                           color: selected
-                            ? "var(--color-ln-cyan)"
+                            ? "var(--color-work-ink)"
                             : "var(--color-text-dim)",
                         }}
                       >
@@ -797,7 +800,7 @@ export default function QuizView({
                   className="mt-3 rounded-lg border-l-[3px] border-y border-r px-3.5 py-2.5 text-[12.5px] leading-relaxed"
                   style={{
                     background: "var(--color-work-bg)",
-                    borderLeftColor: "var(--color-ln-cyan)",
+                    borderLeftColor: "var(--color-primary)",
                     borderTopColor: "var(--color-work-bg)",
                     borderRightColor: "var(--color-work-bg)",
                     borderBottomColor: "var(--color-work-bg)",
@@ -806,7 +809,7 @@ export default function QuizView({
                 >
                   <div
                     className="mb-1 text-[12px] font-bold"
-                    style={{ color: "var(--color-ln-cyan)" }}
+                    style={{ color: "var(--color-work-ink)" }}
                   >
                     {labels.explanationLabel}
                   </div>
@@ -820,9 +823,9 @@ export default function QuizView({
                     onClick={() => setTutorQ(q.id)}
                     className="mt-2.5 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[12px] font-semibold transition"
                     style={{
-                      background: "var(--color-work-bg)",
-                      borderColor: "var(--color-work-bg)",
-                      color: "var(--color-ln-cyan)",
+                      background: "var(--color-surface)",
+                      borderColor: "var(--color-line)",
+                      color: "var(--color-work-ink)",
                     }}
                   >
                     <Sparkles size={12} strokeWidth={1.9} aria-hidden />

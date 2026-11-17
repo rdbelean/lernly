@@ -34,14 +34,13 @@ const headingStyle = {
   fontSize: "20px",
   marginBottom: "10px",
 } as const;
-const linkStyle = { color: "var(--color-ln-cyan)" } as const;
+const linkStyle = { color: "var(--color-primary)" } as const;
 
 export default function ImpressumPage() {
   return (
     <>
       <script
         type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <ImpressumContent />

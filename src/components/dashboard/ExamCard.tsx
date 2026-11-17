@@ -238,7 +238,7 @@ export default function ExamCard({
             disabled={pending}
             aria-label="Klausur löschen"
             title="Löschen"
-            className="rounded-full p-1.5 text-[color:var(--color-text-faint)] transition hover:bg-[color:var(--color-ink-a06)] hover:text-rose-300"
+            className="rounded-full p-1.5 text-[color:var(--color-text-faint)] transition hover:bg-[color:var(--color-ink-a06)] hover:text-[color:var(--color-err-ink)]"
           >
             <svg
               width="16"
@@ -271,7 +271,7 @@ export default function ExamCard({
                 className="h-6 w-6 rounded-full border-2 transition"
                 style={{
                   background: examRgba(c, 0.85),
-                  borderColor: exam.color === c ? "white" : "var(--color-ink-a14)",
+                  borderColor: exam.color === c ? "var(--color-text)" : "var(--color-ink-a14)",
                 }}
               />
             ))}

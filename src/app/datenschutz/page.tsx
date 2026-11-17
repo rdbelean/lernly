@@ -42,14 +42,13 @@ const subHeadingStyle = {
   marginTop: "18px",
   marginBottom: "6px",
 } as const;
-const linkStyle = { color: "var(--color-ln-cyan)" } as const;
+const linkStyle = { color: "var(--color-primary)" } as const;
 
 export default function DatenschutzPage() {
   return (
     <>
       <script
         type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <DatenschutzContent />

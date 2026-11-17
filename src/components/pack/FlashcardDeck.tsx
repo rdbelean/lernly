@@ -470,7 +470,7 @@ export default function FlashcardDeck({
             style={{
               background: "var(--color-work-bg)",
               borderColor: "var(--color-work-bg)",
-              color: "var(--color-ln-cyan)",
+              color: "var(--color-work-ink)",
             }}
           >
             <span className="inline-flex items-center gap-1.5">

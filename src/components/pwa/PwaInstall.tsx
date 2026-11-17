@@ -115,13 +115,17 @@ export function PwaInstall({ autoShow = true }: { autoShow?: boolean }) {
   const [ios, setIos] = useState(false);
 
   useEffect(() => {
-    if (isStandalone()) {
-      setInstalled(true);
-      return;
-    }
-    setInstalled(false);
-    setIos(isIOS());
-    setCanPrompt(Boolean(deferredPrompt));
+    const standalone = isStandalone();
+    const mountId = setTimeout(() => {
+      if (standalone) {
+        setInstalled(true);
+        return;
+      }
+      setInstalled(false);
+      setIos(isIOS());
+      setCanPrompt(Boolean(deferredPrompt));
+    }, 0);
+    if (standalone) return () => clearTimeout(mountId);
 
     const onInstallable = () => setCanPrompt(true);
     const onOpen = () => setOpen(true);
@@ -146,6 +150,7 @@ export function PwaInstall({ autoShow = true }: { autoShow?: boolean }) {
     }
 
     return () => {
+      clearTimeout(mountId);
       window.removeEventListener("lernly:pwa-installable", onInstallable);
       window.removeEventListener(PWA_OPEN_EVENT, onOpen);
       if (timer) clearTimeout(timer);
@@ -271,7 +276,7 @@ export function PwaInstall({ autoShow = true }: { autoShow?: boolean }) {
           // Other mobile browsers — generic add-to-home hint.
           <>
             <p className="mt-6 text-[13px]" style={{ color: "var(--color-text-dim, var(--color-text-dim))" }}>
-              Öffne das Browser-Menü und wähle „Zum Startbildschirm hinzufügen".
+              Öffne das Browser-Menü und wähle &bdquo;Zum Startbildschirm hinzufügen&ldquo;.
             </p>
             <button
               onClick={() => setOpen(false)}
@@ -295,7 +300,8 @@ export function PwaInstall({ autoShow = true }: { autoShow?: boolean }) {
 export function PwaInstallEntry({ className }: { className?: string }) {
   const [show, setShow] = useState(false);
   useEffect(() => {
-    setShow(!isStandalone());
+    const id = setTimeout(() => setShow(!isStandalone()), 0);
+    return () => clearTimeout(id);
   }, []);
   if (!show) return null;
   return (

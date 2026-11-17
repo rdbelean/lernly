@@ -35,12 +35,15 @@ export default function EssayBlueprintView({
   const [checked, setChecked] = useState<Set<string>>(() => new Set());
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(storageKey);
-      if (raw) setChecked(new Set(JSON.parse(raw)));
-    } catch {
-      /* ignore */
-    }
+    const id = setTimeout(() => {
+      try {
+        const raw = localStorage.getItem(storageKey);
+        if (raw) setChecked(new Set(JSON.parse(raw)));
+      } catch {
+        /* ignore */
+      }
+    }, 0);
+    return () => clearTimeout(id);
   }, [storageKey]);
 
   const toggleChecked = (item: string) => {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { AlertTriangle } from "lucide-react";
 import * as Sentry from "@sentry/nextjs";
 import { reportClientError } from "@/lib/reportClientError";
@@ -71,12 +72,12 @@ export default function GlobalError({
           >
             Nochmal versuchen
           </button>
-          <a
+          <Link
             href="/"
             className="rounded-full border border-[color:var(--color-ink-a14)] bg-transparent px-5 py-2.5 text-[14px] font-medium text-[color:var(--color-text)] transition hover:bg-[color:var(--color-ink-a06)]"
           >
             Zur Startseite
-          </a>
+          </Link>
         </div>
       </div>
     </main>

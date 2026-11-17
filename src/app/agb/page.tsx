@@ -35,14 +35,13 @@ const headingStyle = {
   marginBottom: "12px",
   marginTop: "8px",
 } as const;
-const linkStyle = { color: "var(--color-ln-cyan)" } as const;
+const linkStyle = { color: "var(--color-primary)" } as const;
 
 export default function AgbPage() {
   return (
     <>
       <script
         type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <AgbContent />
@@ -80,7 +79,7 @@ function AgbContent() {
               <p style={bodyStyle}>
                 Diese Allgemeinen Geschäftsbedingungen (AGB) regeln die
                 Nutzung der Webseite und des Dienstes Lernly (im Folgenden
-                „Lernly"), betrieben von Rares Daniel Belean, Am Hang 4,
+                &bdquo;Lernly&ldquo;), betrieben von Rares Daniel Belean, Am Hang 4,
                 69151 Neckargemünd. Mit der Nutzung von Lernly erklärst du
                 dich mit diesen AGB einverstanden.
               </p>

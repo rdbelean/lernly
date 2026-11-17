@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Gitignored connector/plugin build & test artifacts:
+    "connector/desktop/build/**",
+    "connector/desktop/dist/**",
+    "plugin/dist/**",
+    "plugin/.test/**",
   ]),
 ]);
 

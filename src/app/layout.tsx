@@ -103,7 +103,6 @@ export default function RootLayout({
       <body className="ln-page-bg min-h-full flex flex-col text-[color:var(--color-ln-ink)]">
         <script
           type="application/ld+json"
-          // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
         <AnalyticsProvider />

@@ -659,7 +659,6 @@ JSON-SCHEMA (genau diese Struktur):
 // =========================================================================
 
 // Re-uses the schema types so allocator math has typed access to topic[].weight.
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import type { ExamProfile } from "@/lib/schema";
 
 type LensTaskKey =

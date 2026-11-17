@@ -42,7 +42,7 @@ export default function EssayPredictionsView({
         style={{ color: "var(--color-text-faint)" }}
       >
         {labels.intro}{" "}
-        <span style={{ color: "var(--color-ln-cyan)" }}>
+        <span style={{ color: "var(--color-primary)" }}>
           {predictions.length} {isEn ? "predictions" : "Fragen"}
         </span>
       </p>
@@ -66,7 +66,7 @@ export default function EssayPredictionsView({
                 className="inline-flex h-6 min-w-6 items-center justify-center rounded-full px-2 text-[12px] font-bold tabular-nums"
                 style={{
                   background: "var(--color-work-bg)",
-                  color: "var(--color-ln-violet)",
+                  color: "var(--color-work-ink)",
                 }}
               >
                 {String(i + 1).padStart(2, "0")}
@@ -82,7 +82,7 @@ export default function EssayPredictionsView({
               className="mt-3 rounded-xl border-l-[3px] border-y border-r px-3.5 py-2.5"
               style={{
                 background: "var(--color-work-bg)",
-                borderLeftColor: "var(--color-ln-cyan)",
+                borderLeftColor: "var(--color-primary)",
                 borderTopColor: "var(--color-work-bg)",
                 borderRightColor: "var(--color-work-bg)",
                 borderBottomColor: "var(--color-work-bg)",
@@ -90,7 +90,7 @@ export default function EssayPredictionsView({
             >
               <div
                 className="mb-0.5 text-[12px] font-bold"
-                style={{ color: "var(--color-ln-cyan)" }}
+                style={{ color: "var(--color-work-ink)" }}
               >
                 {labels.thesis}
               </div>

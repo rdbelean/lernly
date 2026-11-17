@@ -20,7 +20,6 @@ const ALLOW_PREFIXES = ["src/lib/email/", "src/app/opengraph-image.tsx", "src/ap
 // Counted separately; they do not fail --strict.
 const MARKETING = [
   "src/components/landing/",
-  "src/app/landing-client.tsx",
   "src/app/hochschulen/",
   "src/app/pruefungsvorbereitung/",
 ];

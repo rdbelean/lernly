@@ -148,22 +148,25 @@ export default function NewPackPage() {
   // If the user arrived here from the landing-page login-gate, restore the
   // exam-type they had picked so they don't have to re-pick it.
   useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem("lernly-pending-generation");
-      if (!raw) return;
-      const parsed = JSON.parse(raw) as { examType?: ExamType };
-      // Skip restore if the persisted choice points at a currently-locked
-      // format (essay while ESSAY_ENABLED is false) — the default holds.
-      if (
-        parsed.examType &&
-        !(parsed.examType === "essay" && !ESSAY_ENABLED)
-      ) {
-        setExamType(parsed.examType);
+    const id = setTimeout(() => {
+      try {
+        const raw = sessionStorage.getItem("lernly-pending-generation");
+        if (!raw) return;
+        const parsed = JSON.parse(raw) as { examType?: ExamType };
+        // Skip restore if the persisted choice points at a currently-locked
+        // format (essay while ESSAY_ENABLED is false) — the default holds.
+        if (
+          parsed.examType &&
+          !(parsed.examType === "essay" && !ESSAY_ENABLED)
+        ) {
+          setExamType(parsed.examType);
+        }
+        sessionStorage.removeItem("lernly-pending-generation");
+      } catch {
+        /* ignore */
       }
-      sessionStorage.removeItem("lernly-pending-generation");
-    } catch {
-      /* ignore */
-    }
+    }, 0);
+    return () => clearTimeout(id);
   }, []);
 
   const onDrop = useCallback(
@@ -578,7 +581,7 @@ export default function NewPackPage() {
                   size={22}
                   strokeWidth={2}
                   className="mx-auto animate-spin"
-                  color="var(--color-ln-cyan)"
+                  color="var(--color-primary)"
                   aria-hidden
                 />
                 <p className="mt-4 text-[15px] font-medium text-[color:var(--color-text)]">
@@ -660,7 +663,7 @@ export default function NewPackPage() {
           <button
             type="button"
             onClick={() => setMode("single")}
-            className={`rounded-lg px-4 py-2 text-[14px] font-semibold ${mode === "single" ? "bg-[color:var(--color-primary)] text-[color:var(--color-on-primary)]" : "border border-[color:var(--color-line)] text-white"}`}
+            className={`rounded-lg px-4 py-2 text-[14px] font-semibold ${mode === "single" ? "bg-[color:var(--color-primary)] text-[color:var(--color-on-primary)]" : "border border-[color:var(--color-line)] text-[color:var(--color-text)]"}`}
           >
             Ein Paket
           </button>
@@ -800,7 +803,7 @@ export default function NewPackPage() {
                 style={{ color: "var(--color-text-dim)" }}
               >
                 Hast du eine Altklausur? Lade sie hoch für Fragen im Stil
-                deiner echten Prüfung — siehe „Pfad A" unten.
+                deiner echten Prüfung — siehe &bdquo;Pfad A&ldquo; unten.
               </p>
               <NewExamForm
                 embedded
@@ -991,7 +994,7 @@ export default function NewPackPage() {
                       <opt.Icon
                         size={18}
                         strokeWidth={1.9}
-                        color={active ? "var(--color-ln-cyan)" : "var(--color-text-dim)"}
+                        color={active ? "var(--color-work-ink)" : "var(--color-text-dim)"}
                         aria-hidden
                       />
                     )}
@@ -1062,7 +1065,7 @@ export default function NewPackPage() {
                     className="mt-0.5 text-[12px] leading-snug"
                     style={{
                       color: active
-                        ? "var(--color-ln-cyan)"
+                        ? "var(--color-work-ink)"
                         : "var(--color-text-faint)",
                     }}
                   >
@@ -1081,7 +1084,7 @@ export default function NewPackPage() {
               <Link
                 href="/dashboard/settings"
                 className="font-medium underline-offset-2 hover:underline"
-                style={{ color: "var(--color-ln-cyan)" }}
+                style={{ color: "var(--color-primary)" }}
               >
                 Upgrade
               </Link>

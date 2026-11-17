@@ -20,8 +20,8 @@ export default function ClaimPage() {
         ? window.localStorage.getItem(STORAGE_KEY)
         : null;
     if (!raw) {
-      setStatus("empty");
-      return;
+      const id = setTimeout(() => setStatus("empty"), 0);
+      return () => clearTimeout(id);
     }
 
     let pack: unknown;
@@ -29,8 +29,8 @@ export default function ClaimPage() {
       pack = JSON.parse(raw);
     } catch {
       window.localStorage.removeItem(STORAGE_KEY);
-      setStatus("empty");
-      return;
+      const id = setTimeout(() => setStatus("empty"), 0);
+      return () => clearTimeout(id);
     }
 
     (async () => {

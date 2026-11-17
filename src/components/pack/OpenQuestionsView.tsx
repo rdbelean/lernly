@@ -125,7 +125,7 @@ export default function OpenQuestionsView({
                   >
                     <div
                       className="mb-2 text-[12px] font-medium tracking-[2px]"
-                      style={{ color: "var(--color-ln-cyan)" }}
+                      style={{ color: "var(--color-work-ink)" }}
                     >
                       {isEn ? "Must include" : "Das muss rein"}
                     </div>
@@ -135,7 +135,7 @@ export default function OpenQuestionsView({
                           key={i}
                           className="flex items-start gap-2 text-[13px] text-[color:var(--color-text-dim)]"
                         >
-                          <span aria-hidden style={{ color: "var(--color-ln-cyan)" }}>
+                          <span aria-hidden style={{ color: "var(--color-work-ink)" }}>
                             ✓
                           </span>
                           <span
@@ -154,7 +154,7 @@ export default function OpenQuestionsView({
                     style={{
                       background: "var(--color-work-bg)",
                       borderColor: "var(--color-work-bg)",
-                      color: "var(--color-ln-cyan)",
+                      color: "var(--color-work-ink)",
                     }}
                   >
                     <Sparkles size={13} strokeWidth={1.9} aria-hidden />

@@ -409,7 +409,7 @@ export default function ExamSimulator({
                     style={{
                       background: "var(--color-work-bg)",
                       borderColor: "var(--color-work-bg)",
-                      color: "var(--color-ln-cyan)",
+                      color: "var(--color-work-ink)",
                     }}
                   >
                     <Sparkles size={13} strokeWidth={1.9} aria-hidden />

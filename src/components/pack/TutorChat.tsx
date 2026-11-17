@@ -72,14 +72,16 @@ export default function TutorChat({
   const scopeKey = useMemo(() => JSON.stringify(scope), [scope]);
   useEffect(() => {
     if (!open) return;
-    setMessages([]);
-    setInput("");
-    setBusy(false);
-    setError(null);
-    setQuotaExhausted(false);
+    const id = setTimeout(() => {
+      setMessages([]);
+      setInput("");
+      setBusy(false);
+      setError(null);
+      setQuotaExhausted(false);
+    }, 0);
+    return () => clearTimeout(id);
     // Don't reset `usage` — we want to show the running counter across
     // multiple opens within the session.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scopeKey, open]);
 
   useEffect(() => {
@@ -385,7 +387,7 @@ export default function TutorChat({
                 width: 5px;
                 height: 5px;
                 border-radius: 50%;
-                background: var(--color-ln-cyan, var(--color-work-ink));
+                background: var(--color-work-ink);
                 animation: ln-tutor-pulse 0.9s ease-in-out infinite;
               }
             `}</style>

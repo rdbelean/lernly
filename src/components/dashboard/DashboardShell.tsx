@@ -319,11 +319,14 @@ export default function DashboardShell({
 
   // Restore persisted collapse state (client-only to avoid a hydration mismatch).
   useEffect(() => {
-    try {
-      setCollapsed(localStorage.getItem(COLLAPSE_KEY) === "1");
-    } catch {
-      /* ignore */
-    }
+    const id = setTimeout(() => {
+      try {
+        setCollapsed(localStorage.getItem(COLLAPSE_KEY) === "1");
+      } catch {
+        /* ignore */
+      }
+    }, 0);
+    return () => clearTimeout(id);
   }, []);
 
   const toggleCollapse = () => {
@@ -340,7 +343,8 @@ export default function DashboardShell({
 
   // Close the drawer whenever the user navigates.
   useEffect(() => {
-    setDrawerOpen(false);
+    const id = setTimeout(() => setDrawerOpen(false), 0);
+    return () => clearTimeout(id);
   }, [pathname]);
 
   // Lock body scroll while drawer is open on mobile.

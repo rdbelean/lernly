@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/browser";
 import LernlyLogo from "@/components/LernlyLogo";
@@ -162,7 +163,7 @@ export default function SiteNav({
       }}
     >
       <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between px-6 py-[18px]">
-        <a
+        <Link
           href="/"
           className="flex items-center gap-3 text-[color:var(--color-text)]"
           style={{
@@ -175,7 +176,7 @@ export default function SiteNav({
         >
           <LernlyLogo size={44} alt="" />
           <span>Lernly</span>
-        </a>
+        </Link>
 
         <div className="hidden items-center gap-7 md:flex">
           <a

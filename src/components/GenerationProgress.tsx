@@ -138,8 +138,10 @@ export default function GenerationProgress({
   const [internalProgress, setInternalProgress] = useState(0);
 
   useEffect(() => {
-    setInternalStep(0);
-    setInternalProgress(0);
+    const resetId = setTimeout(() => {
+      setInternalStep(0);
+      setInternalProgress(0);
+    }, 0);
     const stepTimers: ReturnType<typeof setTimeout>[] = [];
     let accumulated = 0;
 
@@ -161,6 +163,7 @@ export default function GenerationProgress({
     }, tickMs);
 
     return () => {
+      clearTimeout(resetId);
       stepTimers.forEach(clearTimeout);
       clearInterval(progressInterval);
     };
@@ -213,7 +216,7 @@ export default function GenerationProgress({
             height: "100%",
             width: `${progress}%`,
             background:
-              "linear-gradient(90deg, var(--color-ln-cyan), var(--color-ln-sky))",
+              "linear-gradient(90deg, var(--color-primary), var(--color-work-ink))",
             borderRadius: "2px",
             transition: "width 0.3s ease",
           }}
@@ -266,9 +269,9 @@ export default function GenerationProgress({
                 }}
               >
                 {isDone ? (
-                  <Check size={16} strokeWidth={2.4} color="var(--color-ln-sage)" aria-hidden />
+                  <Check size={16} strokeWidth={2.4} color="var(--color-ok-ink)" aria-hidden />
                 ) : isActive ? (
-                  <step.Icon size={16} strokeWidth={2} color="var(--color-ln-cyan)" aria-hidden />
+                  <step.Icon size={16} strokeWidth={2} color="var(--color-primary)" aria-hidden />
                 ) : (
                   <Circle size={9} strokeWidth={2} color="var(--color-ink-a14)" aria-hidden />
                 )}
@@ -296,7 +299,7 @@ export default function GenerationProgress({
                     width: "16px",
                     height: "16px",
                     border: "2px solid var(--color-ink-a10)",
-                    borderTopColor: "var(--color-ln-cyan)",
+                    borderTopColor: "var(--color-primary)",
                     borderRadius: "50%",
                     animation: "ln-progress-spin 0.8s linear infinite",
                   }}

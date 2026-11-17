@@ -1,5 +1,6 @@
 "use client";
 
+import { createElement } from "react";
 import { Clock } from "lucide-react";
 import type { z } from "zod";
 import type { VisualMapSchema } from "@/lib/schema";
@@ -68,7 +69,6 @@ export default function SectionHeader({
   accent: Accent;
   language: Language;
 }) {
-  const Icon = pickBlockIcon(block.title);
   return (
     <div className="mb-4 flex flex-wrap items-start gap-3 sm:flex-nowrap sm:items-center sm:gap-4">
       <span
@@ -76,7 +76,11 @@ export default function SectionHeader({
         className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl"
         style={{ background: accent.grad, border: `1px solid ${accent.border}` }}
       >
-        <Icon size={20} strokeWidth={1.75} color={accent.fg} />
+        {createElement(pickBlockIcon(block.title), {
+          size: 20,
+          strokeWidth: 1.75,
+          color: accent.fg,
+        })}
       </span>
       <div className="min-w-0 flex-1">
         <div

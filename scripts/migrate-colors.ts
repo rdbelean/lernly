@@ -6,7 +6,6 @@ import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const SKIP = [
-  "src/app/landing-client.tsx",
   "src/components/landing/",
   "src/app/hochschulen/",
   "src/app/pruefungsvorbereitung/",

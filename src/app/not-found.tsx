@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function NotFound() {
   return (
     <main className="flex flex-1 items-center justify-center px-6 py-16">
@@ -14,17 +16,17 @@ export default function NotFound() {
           className="mt-4 text-[28px] font-bold tracking-[-0.8px]"
           style={{ fontFamily: "var(--font-display)" }}
         >
-          Diese Seite gibt's nicht
+          Diese Seite gibt&rsquo;s nicht
         </h1>
         <p className="mt-3 text-[14px]" style={{ color: "var(--color-text-faint)" }}>
           Vielleicht ein alter Link oder ein gelöschtes Pack.
         </p>
-        <a
+        <Link
           href="/"
           className="mt-6 inline-block rounded-full bg-[color:var(--color-primary)] px-5 py-2.5 text-[14px] font-medium text-[color:var(--color-on-primary)] transition hover:bg-[color:var(--color-primary-press)]"
         >
           Zurück zur Startseite
-        </a>
+        </Link>
       </div>
     </main>
   );
