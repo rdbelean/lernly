@@ -12,7 +12,7 @@ function Frac({ top, bottom }: { top: ReactNode; bottom: ReactNode }) {
 const topics = [
   { name: "Kapitalstruktur & Leverage", short: "Leverage & MM", points: 19, done: "Schon geübt", progress: 72 },
   { name: "Discounted Cashflow", short: "Discounted Cashflow", points: 15, done: "Hier lernst du weiter", progress: 40 },
-  { name: "Ertragswertverfahren", short: "Ertragswertverfahren", points: 11, done: "Noch offen", progress: 0 },
+  { name: "Ertragswertverfahren", short: "Ertragswert", points: 11, done: "Noch offen", progress: 0 },
   { name: "Markteffizienz", short: "Markteffizienz", points: 9, done: "Noch offen", progress: 0 },
 ];
 
@@ -27,7 +27,7 @@ const ratings = [
 
 export function PointsVisual() {
   return <div className={v.visual} aria-hidden="true"><div className={v.mapSheet}>
-    <ExamMap inert maxTiles={5} topics={SAMPLE_EXAM.topics} nextKey="Discounted Cashflow" />
+    <ExamMap inert maxTiles={4} topics={SAMPLE_EXAM.topics} nextKey="Discounted Cashflow" />
   </div></div>;
 }
 
@@ -57,9 +57,9 @@ export function DrillVisual() {
   return <div className={v.visual} aria-hidden="true"><div className={v.sheet}>
     <div className={v.sheetTop}><span className={v.cardTag}><Target size={14} />Altklausur 2023 · Q2</span><small>Rechnen</small></div>
     <p className={v.taskText}>CF<sub>1</sub> = 100 Mio. €, g = 2 %, WACC = 8 %, Fremdkapital 600 Mio. €.</p>
-    <div className={v.drillRow + " " + v.drillOk}><span>Firmenwert</span><b>1.666,67</b><i><Check size={15} /></i></div>
-    <div className={v.drillRow + " " + v.drillBad}><span>Eigenkapital</span><b>1.266,67</b><i><X size={15} /></i></div>
-    <div className={v.drillHint}>Zieh den Marktwert des Fremdkapitals ab: 1.666,67 − 600 = 1.066,67.</div>
+    <div className={v.drillRow + " " + v.drillOk}><span>Firmenwert</span><b>1.666,67 €</b><i><Check size={15} /></i></div>
+    <div className={v.drillRow + " " + v.drillBad}><span>Eigenkapital</span><b>1.266,67 €</b><i><X size={15} /></i></div>
+    <div className={v.drillHint}>Zieh den Marktwert des Fremdkapitals ab: 1.666,67 − 600 = 1.066,67 €.</div>
   </div></div>;
 }
 

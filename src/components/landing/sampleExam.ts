@@ -18,7 +18,7 @@ export const SAMPLE_EXAM = {
     t("Discounted Cashflow", 22, "arbeit"),
     t("Kapitalstruktur", 18, "sicher"),
     t("WACC", 15, "arbeit"),
-    t("Leverage", 12, "sicher"),
+    t("Leverage & MM", 12, "sicher"),
     t("Ertragswert", 11, "offen"),
     t("Dividendenpolitik", 8, "offen"),
     t("Optionspreise", 7, "offen"),

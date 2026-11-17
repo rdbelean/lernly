@@ -82,13 +82,7 @@ export default function LernlyLanding() {
   const [demoOpen, setDemoOpen] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const pageRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add(s.revealed); observer.unobserve(entry.target); } });
-    }, { threshold: .12 });
-    pageRef.current?.querySelectorAll("section > div, section > article").forEach(el => { el.classList.add(s.reveal); observer.observe(el); });
-    return () => observer.disconnect();
-  }, []);
+  // Dialog modal handlers
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
@@ -125,7 +119,22 @@ export default function LernlyLanding() {
       </section>
       <section className={s.section} id="warum-lernly">
         <SectionHeading title={<>Kurz vor der BWL-Klausur<br />und kein Plan?</>} />
-        <div className={s.comparison}><article><h3>So lernst du jetzt</h3>{["Du weißt nicht, womit du in der BWL-Klausur anfangen sollst", "Du liest Folien, aber nichts bleibt hängen", "Du kennst die Formeln, aber nicht den Rechenweg", "Du weißt nicht, was wirklich geprüft wird", "Am Ende lernst du alles gleich lange"].map(x => <p key={x}><X size={15} />{x}</p>)}</article><article><h3><LernlyLogo variant="icon" size={29} alt="" />Mit Lernly</h3>{["Du siehst sofort, welche Themen die meisten Punkte bringen", "Du startest mit einem klaren nächsten Schritt", "Du rechnest Aufgaben im Stil deiner Altklausuren, statt nur zu lesen", "Die Karten sind schon da und kommen zur richtigen Zeit wieder", "Du siehst pro Thema, was schon sitzt"].map(x => <p key={x}><Check size={15} />{x}</p>)}</article></div>
+        <div className={s.comparison}>
+          <article>
+            <div className={s.comparisonHeader}>
+              <span className={s.comparisonBadgeNeutral}><X size={16} /></span>
+              <h3>So lernst du jetzt</h3>
+            </div>
+            {["Du weißt nicht, womit du in der BWL-Klausur anfangen sollst", "Du liest Folien, aber nichts bleibt hängen", "Du kennst die Formeln, aber nicht den Rechenweg", "Du weißt nicht, was wirklich geprüft wird", "Am Ende lernst du alles gleich lange"].map(x => <p key={x}><X size={15} />{x}</p>)}
+          </article>
+          <article className={s.comparisonHighlight}>
+            <div className={s.comparisonHeader}>
+              <span className={s.comparisonBadgeBrand}><LernlyLogo variant="icon" size={18} alt="" /></span>
+              <h3>Mit Lernly</h3>
+            </div>
+            {["Du siehst sofort, welche Themen die meisten Punkte bringen", "Du startest mit einem klaren nächsten Schritt", "Du rechnest Aufgaben im Stil deiner Altklausuren, statt nur zu lesen", "Die Karten sind schon da und kommen zur richtigen Zeit wieder", "Du siehst pro Thema, was schon sitzt"].map(x => <p key={x}><Check size={15} />{x}</p>)}
+          </article>
+        </div>
       </section>
 
       <section className={s.section} id="so-gehts">
@@ -143,7 +152,7 @@ export default function LernlyLanding() {
         <div className={s.featureGrid}>
           <article><div className={s.featureVisual}><PointsVisual /></div><h3>Wissen, wo du anfangen sollst</h3><p>Die Klausurkarte zeigt jedes Thema nach Gewicht und Lernstand. Dein nächster Schritt steht immer oben.</p></article>
           <article><div className={s.featureVisual}><ExplainVisual /></div><h3>Erklärt, bis du es verstehst</h3><p>Erst das Prinzip in einfachen Worten, dann ein durchgerechnetes Beispiel. Den typischen Fehler gibt es dazu.</p></article>
-          <article><div className={s.featureVisual}><RecallVisual /></div><h3>Karten, die dich im richtigen Moment fragen</h3><p>Du antwortest zuerst selbst, siehst dann die Lösung und sagst, wie sicher du warst. Lernly legt fest, wann die Karte wiederkommt.</p></article>
+          <article><div className={s.featureVisual}><RecallVisual /></div><h3>Karten im richtigen Moment</h3><p>Du antwortest zuerst selbst, siehst die Lösung und bewertest dich. Lernly plant die nächste Wiederholung.</p></article>
           <article><div className={s.featureVisual}><DrillVisual /></div><h3>Aufgaben wie in der Klausur</h3><p>Rechne Aufgaben im Stil deiner Altklausuren und sieh den Lösungsweg Schritt für Schritt.</p></article>
         </div>
         <p className={s.illustrationNote}>Beispielansichten mit einem Beispielkurs.</p>
@@ -154,8 +163,25 @@ export default function LernlyLanding() {
       <section className={s.section} id="zugang">
         <SectionHeading title={<>Probier es aus,<br />bevor du dich entscheidest</>} description="Die Demo läuft direkt im Browser. Für deinen eigenen Kurs gibt es die Beta." />
         <div className={s.pricingGrid}>
-          <article><h3>Demo</h3><div className={s.planPrice}>0 €<span>ohne Konto</span></div><p>Rechne, antworte und dreh Karten um. Sofort.</p><button className={s.outlineButton} onClick={openDemo}>Gratis ausprobieren</button><ul>{["Beispiele aus Finance, Mathe und Marketing", "Aufgaben selbst lösen", "Karteikarten umdrehen", "Ohne Anmeldung"].map(x => <li key={x}><Check size={15} />{x}</li>)}</ul></article>
-          <article className={s.highlightPlan}><span className={s.planBadge}>Beta</span><h3>Mit deinem Kurs</h3><div className={s.planPrice}>Beta<span>mit deinem eigenen Stoff</span></div><p>Teste Lernly mit deinen Folien und Altklausuren.</p><a className={s.primaryButton} href={BETA}>Beta-Zugang anfragen</a><ul>{["Interesse für deinen Kurs anmelden", "Feedback zum Trainer geben", "Preise vor dem Start transparent erfahren"].map(x => <li key={x}><Check size={15} />{x}</li>)}</ul></article>
+          <article>
+            <h3>Demo</h3>
+            <div className={s.planPrice}>0 €<span>ohne Konto · sofort im Browser</span></div>
+            <p>Rechne, antworte und dreh Karten um. Sofort im Browser testen.</p>
+            <button className={s.outlineButton} onClick={openDemo}>Gratis ausprobieren</button>
+            <ul>
+              {["Beispiele aus Finance, Mathe und Marketing", "Aufgaben selbst lösen und Rechenweg sehen", "Interaktive Karteikarten ausprobieren", "Ohne Anmeldung und komplett kostenlos"].map(x => <li key={x}><Check size={15} />{x}</li>)}
+            </ul>
+          </article>
+          <article className={s.highlightPlan}>
+            <span className={s.planBadge}>Beta</span>
+            <h3>Mit deinem Kurs</h3>
+            <div className={s.planPrice}>Kostenlos<span>in der aktuellen Beta-Phase</span></div>
+            <p>Teste Lernly mit deinen eigenen Vorlesungsfolien und Altklausuren.</p>
+            <a className={s.primaryButton} href={BETA}>Beta-Zugang anfragen</a>
+            <ul>
+              {["Eigene Folien und Altklausuren hochladen", "Persönlichen Trainer für deine Klausur testen", "Direktes Feedback an den Entwickler geben", "Preise vor dem offiziellen Start transparent erfahren"].map(x => <li key={x}><Check size={15} />{x}</li>)}
+            </ul>
+          </article>
         </div>
       </section>
 
@@ -166,7 +192,11 @@ export default function LernlyLanding() {
       </section>
 
 
-      <section className={s.finalSection}><div><h2>Deine nächste BWL-Klausur<br />fängt heute an.</h2><p>Ein Thema, eine Aufgabe, eine Karte. Direkt im Browser, ohne Anmeldung. Von einem BWL-Studenten gebaut.</p><button className={s.primaryButton} onClick={openDemo}>Gratis ausprobieren</button></div></section>
+      <section className={s.finalSection}>
+        <h2>Deine nächste BWL-Klausur<br />fängt heute an.</h2>
+        <p>Ein Thema, eine Aufgabe, eine Karte. Direkt im Browser, ohne Anmeldung.<br className={s.desktopBreak} /> Von einem BWL-Studenten gebaut.</p>
+        <button className={s.primaryButton} onClick={openDemo}>Gratis ausprobieren</button>
+      </section>
     </main>
     <footer className={s.footer}><div className={s.footerTop}><div><Link href="/" className={s.brand}><LernlyLogo size={29} alt="" /><span>Lernly</span></Link><p>Gebaut für BWL-Klausuren: Lern zuerst, was Punkte bringt.</p><a className={s.primaryButton} href={BETA}>Beta testen</a></div><div><h3>Entdecken</h3><a href="#so-gehts">So funktioniert’s</a><a href="#features">Funktionen</a><a href="#zugang">Zugang</a><a href="#fragen">FAQ</a></div><div><h3>Lernly</h3><a href="/login">Anmelden</a><a href="/hochschulen">Für Hochschulen</a><a href="mailto:info@lernly-app.de">Kontakt</a></div><div><h3>Rechtliches</h3><a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a><a href="/agb">AGB</a></div></div><div className={s.footerBottom}><span>Aus dem Studium. Fürs Studium.</span><span>© {new Date().getFullYear()} Lernly</span></div></footer>
     <dialog ref={dialogRef} className={s.demoDialog} onCancel={() => setDemoOpen(false)} onClose={() => setDemoOpen(false)}><div className={s.dialogHeader}><div><LernlyLogo size={27} alt="" /><span>Dein Lerntrainer zum Ausprobieren</span></div><button onClick={() => setDemoOpen(false)} aria-label="Vorschau schließen"><X size={22} /></button></div><Demo /></dialog>
