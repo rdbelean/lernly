@@ -27,9 +27,9 @@ function authorize(request: Request): boolean {
   // Vercel cron sends `Authorization: Bearer <CRON_SECRET>` when CRON_SECRET
   // is set on the project. Locally / for manual runs we accept the header
   // OR a `?secret=` query param so a curl can fire it without proxying
-  // through Vercel.
+  // through Vercel. Fail closed when CRON_SECRET is unset.
   const secret = process.env.CRON_SECRET;
-  if (!secret) return true; // unset → no auth (dev / first-run convenience)
+  if (!secret) return false;
   const url = new URL(request.url);
   const querySecret = url.searchParams.get("secret");
   const header = request.headers.get("authorization");

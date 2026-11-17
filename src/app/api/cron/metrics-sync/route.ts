@@ -32,9 +32,9 @@ export const maxDuration = 60;
 
 function authorize(request: Request): boolean {
   // Same pattern as exam-reminders: Vercel cron sends the Bearer header;
-  // manual runs may use ?secret=. Unset CRON_SECRET → no auth (dev).
+  // manual runs may use ?secret=. Fail closed when CRON_SECRET is unset.
   const secret = process.env.CRON_SECRET;
-  if (!secret) return true;
+  if (!secret) return false;
   const url = new URL(request.url);
   return (
     request.headers.get("authorization") === `Bearer ${secret}` ||

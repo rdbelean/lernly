@@ -13,6 +13,10 @@ import {
 } from "@/lib/examAnalysis";
 import { MAX_PAST_EXAM_FILES } from "@/lib/uploadConfig";
 import { FidelitySchema, type Fidelity } from "@/lib/schema";
+import {
+  GENERATION_MAX_CONCURRENCY,
+  slotGateOutcome,
+} from "@/lib/generationGate";
 
 const ALLOWED_COLORS = new Set([
   "cyan",
@@ -165,34 +169,45 @@ export async function attachPastExamsToExam(input: {
 
   // 1) Per-file download + extract. Bad files (scanned, download error) are
   //    skipped and named — never fail the whole batch on one bad file.
-  for (const f of files) {
-    const dl = await service.storage
-      .from(STUDY_UPLOADS_BUCKET)
-      .download(f.storagePath);
-    if (dl.error || !dl.data) {
-      skipped.push(f.filename);
-      continue;
+  //    Clean up the temporary storage objects once extraction completes.
+  try {
+    for (const f of files) {
+      const dl = await service.storage
+        .from(STUDY_UPLOADS_BUCKET)
+        .download(f.storagePath);
+      if (dl.error || !dl.data) {
+        skipped.push(f.filename);
+        continue;
+      }
+      const buffer = Buffer.from(await dl.data.arrayBuffer());
+      let extracted;
+      try {
+        extracted = await extractTextFromUpload(buffer, f.filename);
+      } catch {
+        skipped.push(f.filename);
+        continue;
+      }
+      if (!extracted.text.trim()) {
+        skipped.push(f.filename);
+        continue;
+      }
+      const { error: insErr } = await supabase.from("exam_references").insert({
+        exam_id: input.examId,
+        user_id: userId,
+        filename: f.filename,
+        extracted_text: extracted.text,
+        kind: "past_exam",
+      });
+      if (insErr) throw new Error(insErr.message);
     }
-    const buffer = Buffer.from(await dl.data.arrayBuffer());
-    let extracted;
+  } finally {
     try {
-      extracted = await extractTextFromUpload(buffer, f.filename);
+      await service.storage
+        .from(STUDY_UPLOADS_BUCKET)
+        .remove(files.map((f) => f.storagePath));
     } catch {
-      skipped.push(f.filename);
-      continue;
+      /* best-effort cleanup */
     }
-    if (!extracted.text.trim()) {
-      skipped.push(f.filename);
-      continue;
-    }
-    const { error: insErr } = await supabase.from("exam_references").insert({
-      exam_id: input.examId,
-      user_id: userId,
-      filename: f.filename,
-      extracted_text: extracted.text,
-      kind: "past_exam",
-    });
-    if (insErr) throw new Error(insErr.message);
   }
 
   // 2) Re-load ALL past-exam references (existing + just-added) so adding
@@ -217,60 +232,111 @@ export async function attachPastExamsToExam(input: {
     // References are saved, profile stays as-is. Caller can retry later.
     return { ok: false, reason: "no_api_key", skipped };
   }
-  const client = new Anthropic({ apiKey });
 
-  // 3) Per-exam analysis IN PARALLEL — wall time ≈ one analysis. Failures
-  //    drop out individually; partial evidence beats none.
-  const results = await Promise.all(
-    usable.map((r) => analyzePastExam(client, r.extracted_text as string)),
-  );
-  const perExamInputs: PerExamInput[] = [];
-  results.forEach((res, i) => {
-    if (res.ok) {
-      perExamInputs.push({
-        filename:
-          (usable[i].filename as string | null) ?? `Altklausur ${i + 1}`,
-        year: res.profile.year,
-        profile: res.profile,
-      });
-    }
+  const { data: rlAllowed, error: rlErr } = await service.rpc("check_rate_limit", {
+    p_bucket: `past_exam:user:${userId}`,
+    p_max: 5,
+    p_window_seconds: 3600,
   });
-  if (perExamInputs.length === 0) {
-    const firstFail = results.find((r) => !r.ok);
+  if (rlErr) {
+    console.error("[attachPastExamsToExam] check_rate_limit failed", rlErr);
+  } else if (rlAllowed === false) {
+    return { ok: false, reason: "rate_limited", skipped };
+  }
+
+  const { data: quota, error: qErr } = await supabase.rpc("check_card_gen_quota");
+  if (qErr) {
+    console.error("[attachPastExamsToExam] check_card_gen_quota failed", qErr);
+    return { ok: false, reason: "quota_check_failed", skipped };
+  }
+  if (quota && quota.ok === false) {
     return {
       ok: false,
-      reason: firstFail && !firstFail.ok ? firstFail.reason : "unknown",
+      reason: (quota.reason as string | undefined) ?? "quota_exceeded",
       skipped,
     };
   }
 
-  const perExamMeta = perExamInputs.map((x) => ({
-    filename: x.filename,
-    ...(x.year ? { year: x.year } : {}),
-  }));
+  let slotHeld = false;
+  let acquired: boolean | null = null;
+  try {
+    const { data } = await service.rpc("acquire_generation_slot", {
+      p_max: GENERATION_MAX_CONCURRENCY,
+    });
+    acquired = data === true ? true : data === false ? false : null;
+  } catch (e) {
+    console.error("[attachPastExamsToExam] acquire_generation_slot threw", e);
+  }
+  if (slotGateOutcome({ usesByok: false, acquired }) === "busy") {
+    return { ok: false, reason: "busy", skipped };
+  }
+  slotHeld = acquired === true;
 
-  // 4) Merge (multi-exam) or map directly (single exam). Merge failure
-  //    falls back to the newest single-exam profile at counts 1/1 —
-  //    honest, never a fabricated frequency.
+  const client = new Anthropic({ apiKey });
+
+  // 3) Per-exam analysis IN PARALLEL — wall time ≈ one analysis. Failures
+  //    drop out individually; partial evidence beats none.
+  let perExamInputs: PerExamInput[];
   let finalProfile;
-  if (perExamInputs.length === 1) {
-    finalProfile = finalizeProfile(perExamInputs[0].profile, 1, perExamMeta);
-  } else {
-    const merged = await mergeExamProfiles(client, perExamInputs);
-    if (merged.ok) {
-      finalProfile = finalizeProfile(
-        merged.profile,
-        perExamInputs.length,
-        perExamMeta,
-      );
+  try {
+    const results = await Promise.all(
+      usable.map((r) => analyzePastExam(client, r.extracted_text as string)),
+    );
+    perExamInputs = [];
+    results.forEach((res, i) => {
+      if (res.ok) {
+        perExamInputs.push({
+          filename:
+            (usable[i].filename as string | null) ?? `Altklausur ${i + 1}`,
+          year: res.profile.year,
+          profile: res.profile,
+        });
+      }
+    });
+    if (perExamInputs.length === 0) {
+      const firstFail = results.find((r) => !r.ok);
+      return {
+        ok: false,
+        reason: firstFail && !firstFail.ok ? firstFail.reason : "unknown",
+        skipped,
+      };
+    }
+
+    const perExamMeta = perExamInputs.map((x) => ({
+      filename: x.filename,
+      ...(x.year ? { year: x.year } : {}),
+    }));
+
+    // 4) Merge (multi-exam) or map directly (single exam). Merge failure
+    //    falls back to the newest single-exam profile at counts 1/1 —
+    //    honest, never a fabricated frequency.
+    if (perExamInputs.length === 1) {
+      finalProfile = finalizeProfile(perExamInputs[0].profile, 1, perExamMeta);
     } else {
-      console.warn(
-        "[attachPastExamsToExam] merge failed, falling back to newest single profile",
-        merged.reason,
-      );
-      finalProfile = finalizeProfile(perExamInputs[0].profile, 1, [
-        perExamMeta[0],
-      ]);
+      const merged = await mergeExamProfiles(client, perExamInputs);
+      if (merged.ok) {
+        finalProfile = finalizeProfile(
+          merged.profile,
+          perExamInputs.length,
+          perExamMeta,
+        );
+      } else {
+        console.warn(
+          "[attachPastExamsToExam] merge failed, falling back to newest single profile",
+          merged.reason,
+        );
+        finalProfile = finalizeProfile(perExamInputs[0].profile, 1, [
+          perExamMeta[0],
+        ]);
+      }
+    }
+  } finally {
+    if (slotHeld) {
+      try {
+        await service.rpc("release_generation_slot");
+      } catch (e) {
+        console.error("[attachPastExamsToExam] release_generation_slot threw", e);
+      }
     }
   }
 
