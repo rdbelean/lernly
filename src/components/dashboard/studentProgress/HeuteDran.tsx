@@ -8,13 +8,13 @@ export default function HeuteDran({ dueCount }: { dueCount: number }) {
     <div>
       <p
         className="m-0 text-[20px] font-medium leading-tight"
-        style={{ color: "var(--color-text)", fontFamily: "var(--font-display)" }}
+        style={{ margin: 0, color: "var(--color-text)", fontFamily: "var(--font-display)" }}
       >
         {has
           ? `${dueCount} ${dueCount === 1 ? "Karte" : "Karten"} fällig`
           : "Alles wiederholt"}
       </p>
-      <p className="mb-3 mt-1 text-[13px]" style={{ color: "var(--color-text-dim)" }}>
+      <p className="mb-3 mt-1 text-[13px]" style={{ margin: "4px 0 12px", color: "var(--color-text-dim)" }}>
         {has ? "Kurz wiederholen, bevor du Neues lernst." : "Heute ist nichts mehr fällig."}
       </p>
       {has ? (

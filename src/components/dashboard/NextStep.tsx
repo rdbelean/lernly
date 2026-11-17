@@ -22,7 +22,7 @@ export default function NextStep({ examTitle, daysLeft, topic, href, inert, as: 
   const cd = countdown(daysLeft);
   return (
     <div {...(inert ? { inert: true } : {})}>
-      <p className="m-0 text-[13px]" style={{ color: "var(--color-text-dim)" }}>
+      <p className="m-0 text-[13px]" style={{ margin: 0, color: "var(--color-text-dim)" }}>
         {examTitle}
         {cd && (
           <span
@@ -40,6 +40,7 @@ export default function NextStep({ examTitle, daysLeft, topic, href, inert, as: 
           color: "var(--color-text)",
           letterSpacing: "-0.02em",
           textWrap: "balance",
+          margin: "12px 0 20px",
         }}
       >
         {topic ? `Heute: ${topic.name}.` : "Alles sicher. Wiederhole jetzt die fälligen Karten."}

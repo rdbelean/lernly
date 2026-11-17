@@ -8,7 +8,8 @@
   padding: 0;
   list-style: none;
 }
-@media (min-width: 640px) {
+.wrap { container-type: inline-size; }
+@container (min-width: 480px) {
   .grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-auto-rows: minmax(88px, auto);
@@ -74,8 +75,9 @@ a.tile:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 
   .tile { animation: none; transition: none; }
 }
 
-@media (max-width: 639px) {
-  /* Landing hero on phones: three full-width tiles, no legend. */
+@container (max-width: 479px) {
+  /* Landing hero in narrow frames: three full-width tiles, no legend. */
   .compact > li:nth-child(n + 4) { display: none; }
   .compactWrap .more, .compactWrap .legend { display: none; }
 }
+.compactWrap .name { hyphens: manual; }

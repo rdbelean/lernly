@@ -27,7 +27,7 @@ export default function ExamMap({ topics, nextKey, hrefFor, inert, maxTiles = 8,
   const spans = tileSpans(shown.map((t) => t.share));
 
   return (
-    <div className={compact ? styles.compactWrap : undefined} {...(inert ? { inert: true } : {})}>
+    <div className={`${styles.wrap} ${compact ? styles.compactWrap : ""}`} {...(inert ? { inert: true } : {})}>
       <ol className={`${styles.grid} ${compact ? styles.compact : ""}`} aria-label="Themen der Klausur">
         {shown.map((t, i) => {
           const isNext = t.key === nextKey;
@@ -59,8 +59,8 @@ export default function ExamMap({ topics, nextKey, hrefFor, inert, maxTiles = 8,
           );
         })}
       </ol>
-      {rest > 0 && <p className={styles.more}>+ {rest} weitere Themen</p>}
-      <ul className={styles.legend}>
+      {rest > 0 && <p className={styles.more} style={{ margin: "10px 0 0" }}>+ {rest} weitere Themen</p>}
+      <ul className={styles.legend} style={{ margin: "14px 0 0", padding: 0 }}>
         <li>Grün: sicher</li>
         <li>Blau: in Arbeit</li>
         <li>Weiß: offen</li>
