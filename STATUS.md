@@ -8,24 +8,25 @@ Stand: 2026-11-17. Kompakt halten, nur Fakten. **Pflicht:** Zum Session-Start im
 `feat/bwl-mcp-unification` — einziger aktiver Feature-Branch für Antigravity, Claude Code und OpenAI Codex; kein Wechsel ohne Absprache. Nie direkt auf `main`.
 
 ## Aktuelles Ziel / Stand
-**Neue Lern-App nach `design/`-Mockups — Phasen 1–4 fertig & gebaut (2026-11-17):**
-- Additiv im Route-Group `src/app/(study)/` unter `/heute`, `/karten` und `/rechnen` umgesetzt (Bestands-App `/dashboard` und `/` unangetastet).
-- 4 saubere Phasen-Commits (`22c3728`, `64000f9`, `53a6f3e`, `ef63f33`); alle Checks grün (`tsc`, `npm test` 226/226, `npm run lint`, `npm run check:colors -- --strict` 0 Literale, `npm run build` 47/47).
-- **Wartet auf Abstimmung vor Phase 5:** Ansatz für Upload & KI-Extraktion (PDFs/Altklausuren) vor Beginn klären.
+**Neue Lern-App nach `design/`-Mockups — Phasen 1–5 fertig, live auf Preview & lokal (2026-11-17):**
+- Route-Group `src/app/(study)/`: `/heute`, `/karten`, `/rechnen` und neu `/upload` (Hybrid-Import).
+- Bestands-App (`/`, `/dashboard`) unangetastet; alle Checks grün (`tsc`, `npm test` 231/231, `npm run lint`, `npm run check:colors -- --strict` 0 Literale).
+- Lokaler Dev-Server & Vercel-Preview auf `feat/bwl-mcp-unification` bereit zum Live-Test.
 
 ## Erledigt (diese Session)
-- **Phase 1 (`22c3728`):** `design/`-Mockups eingecheckt; Radius-Tokens (`--radius-btn: 4px`, `--radius-card: 12px`) & `.study-shell` (`tabular-nums`, Sora-Headlines) in `src/app/globals.css`; Domain-Typen, Corporate-Finance-Seed (7 Themen = 100 P, 62 P gesichert, 12 Karten, 3 Rechenaufgaben) & Tauri-sichere `localStorage`-Persistenz unter `src/lib/study/`.
-- **Phase 2 (`64000f9`):** Dashboard `/heute` (`HeuteDashboard.tsx`, `StudyHeader.tsx`, `StatStrip.tsx`, `DailyPlan.tsx`) + austauschbare Visualisierung `PointsViz.tsx` mit allen 4 Mockup-Varianten (`leiste` Standard, `balken`, `karte`, `waffel`, per `?viz=...` umschaltbar).
-- **Phase 3 (`53a6f3e`):** Karteikarten `/karten` (`FlashcardSession.tsx`, `FlashcardVisual.tsx`, `src/lib/study/srs.ts`) im Anki-Stil mit 3-Stufen-SRS (`Schwer` morgen / `Mittel` in 3 Tagen / `Leicht` in 8 Tagen), Tastatursteuerung (`Leertaste`, `1`/`2`/`3`, `Esc`) & visueller Balken-/Formel-Darstellung.
-- **Phase 4 (`ef63f33`):** Rechenaufgaben `/rechnen` (`CalcExerciseView.tsx`, `src/lib/study/calcCheck.ts`) komplett ohne Kästen, WACC als erste Aufgabe, gezieltes Fehler-Feedback (z. B. `7,4 %` → vergessener Tax Shield), schrittweiser `Lösungsweg` & `Enter`/`Esc`-Steuerung.
+- **Phase 1 (`22c3728`):** `design/`-Mockups, Tailwind-v4-Tokens (`4px`/`12px`, `tabular-nums`, Sora/Inter), Layout, Corporate-Finance-Seed (7 Themen = 100 P, 62 P gesichert) & `localStorage`-Persistenz.
+- **Phase 2 (`64000f9`):** Dashboard `/heute` + austauschbare Visualisierung `PointsViz.tsx` (`leiste` Standard + `balken`, `karte`, `waffel` per `?viz=...`).
+- **Phase 3 (`53a6f3e`):** Karteikarten `/karten` im Anki-Stil mit 3-Stufen-SRS (`1` morgen / `2` in 3 Tagen / `3` in 8 Tagen), `Leertaste`/`1`/`2`/`3`/`Esc` & visuellen Karten-Grafiken.
+- **Phase 4 (`ef63f33`):** Rechenaufgaben `/rechnen` ohne Kästen, WACC als erste Aufgabe, gezieltes Fehler-Feedback (`7,4 %` → vergessener Tax Shield) & Lösungsweg.
+- **Phase 5 (Hybrid — Option 3):** Einheitliches Kurs-Schema (`src/lib/study/importCourse.ts`), aktiver Kurs-Store (`courseStore.ts`), neue `/upload`-Seite (`CourseUploadView.tsx`) mit 0-€-Claude/MCP-JSON-Dropzone (`kurs.json` + `themen/*.json` inkl. Live-`PointsBar`-Vorschau) **und** abgesichertem PDF-Extraktions-Endpunkt (`POST /api/study/extract` mit Auth, Rate-Limit, Quota & Concurrency-Slot).
 
 ## Nächster konkreter Schritt
-1. **Vor Phase 5 mit Daniel abstimmen:** Wie sollen Folien & Altklausuren extrahiert werden — (A) JSON-Import aus Claude Desktop / MCP-Connector (`kurs.json` + `themen/*.json`, 0 € KI-Kosten), (B) Server-Upload mit Anthropic-API oder (C) Hybrid?
-2. **Phase 6:** Konto, Supabase-Speicherung (Migration erst nach expliziter Freigabe) & Deployment.
+1. **Live-Review durch Daniel:** `/heute`, `/karten`, `/rechnen` und `/upload` (Desktop + iPad) auf der Preview-/Localhost-URL testen und Feedback geben.
+2. **Phase 6:** Konto, Supabase-Speicherung (Migration erst nach expliziter Freigabe) & Deployment-Vorbereitung.
 3. **Phase 7:** Neue Landingpage aus den echten `src/components/study/`-Komponenten mit Seed-Daten bauen.
 
 ## Bekannte Grenzen & Hinweise
 - Preview & Prod teilen sich eine Supabase-DB — keine Migrationen vor Phase 6 und nie ohne Freigabe.
-- `connector/desktop/`: lokal macOS, keine OCR, PDF max. 256 MB / 2.500 Seiten.
+- `POST /api/study/extract` verlangt Login + Quota (fail-closed); der Claude/MCP-JSON-Import auf `/upload` läuft 100 % lokal ohne Login und ohne KI-Kosten.
 - `.env.local` lokal enthält noch alte Stripe-v2-Price-Variablennamen (`STRIPE_PRICE_PRO_MONTHLY` etc.).
-- Änderungen sind lokal auf `feat/bwl-mcp-unification` committed, noch nicht gepusht / nicht auf `main` gemergt.
+- Änderungen auf `feat/bwl-mcp-unification` — vor Merge nach `main` immer Daniel fragen.

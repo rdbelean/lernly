@@ -2,10 +2,14 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { ArrowRight, Check, RotateCcw, X } from "lucide-react";
 import { evaluateCalcInput, type CalcEvaluation } from "@/lib/study/calcCheck";
-import { CORPORATE_FINANCE_EXERCISES } from "@/lib/study/seed";
+import {
+  getServerActiveCourseSnapshot,
+  readActiveCourseSnapshot,
+  subscribeActiveCourse,
+} from "@/lib/study/courseStore";
 import { markExerciseCompleted } from "@/lib/study/storage";
 import type { CalcExercise } from "@/lib/study/types";
 
@@ -33,7 +37,7 @@ function renderBoldInline(text: string) {
 }
 
 export function CalcExerciseView({
-  exercises = CORPORATE_FINANCE_EXERCISES,
+  exercises: explicitExercises,
   initialIndex = 0,
   initialInput = "",
   initialChecked = false,
@@ -42,6 +46,13 @@ export function CalcExerciseView({
 }: CalcExerciseViewProps) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const storedCourse = useSyncExternalStore(
+    subscribeActiveCourse,
+    readActiveCourseSnapshot,
+    getServerActiveCourseSnapshot,
+  );
+  const exercises = explicitExercises ?? storedCourse.course.exercises;
 
   const [index, setIndex] = useState(initialIndex);
   const [input, setInput] = useState(initialInput);

@@ -2,11 +2,12 @@
 
 Kurzüberblick für Solo-Founder und Agenten.
 
-## 1. Neue Lern-App nach `design/`-Mockups (Phasen 1–4)
+## 1. Neue Lern-App nach `design/`-Mockups (Phasen 1–5)
 - `design/` — Verbindliche UI-Mockups (Desktop & iPad: Heute 1–4, Karteikarte, Rechenaufgabe).
-- `src/app/(study)/` — Neue Routen `/heute`, `/karten`, `/rechnen` mit eigenem `.study-shell`-Layout.
-- `src/components/study/` — Modulare Screens (`HeuteDashboard`, `FlashcardSession`, `CalcExerciseView`, `viz/PointsViz` mit 4 Varianten).
-- `src/lib/study/` — Typen, Corporate-Finance-Seed (`seed.ts`), 3-Stufen-SRS (`srs.ts`), Rechen-Prüfung (`calcCheck.ts`), `localStorage`-Persistenz.
+- `src/app/(study)/` — Neue Routen `/heute`, `/karten`, `/rechnen`, `/upload` mit eigenem `.study-shell`-Layout.
+- `src/components/study/` — Modulare Screens (`HeuteDashboard`, `FlashcardSession`, `CalcExerciseView`, `CourseUploadView`, `viz/PointsViz` mit 4 Varianten).
+- `src/lib/study/` — Typen, Seed (`seed.ts`), 3-Stufen-SRS (`srs.ts`), Rechen-Prüfung (`calcCheck.ts`), Hybrid-Import (`importCourse.ts`), Kurs-Store (`courseStore.ts`).
+- `src/app/api/study/extract/route.ts` — Abgesicherter PDF-/Altklausur-Extraktions-Adapter (Auth + Rate-Limit + Quota).
 
 ## 2. Landingpage & Copywriting (Bestand, Ablösung in Phase 7)
 - `src/components/landing/LernlyLanding.tsx` — Haupttexte (Headline, Vergleich, 3 Schritte, Features, Beta-Zugang, FAQ, Footer, Demo).

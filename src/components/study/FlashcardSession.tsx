@@ -5,7 +5,11 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import { ArrowRight, Check, RotateCcw, X } from "lucide-react";
 import { FlashcardVisual } from "@/components/study/FlashcardVisual";
-import { CORPORATE_FINANCE_FLASHCARDS } from "@/lib/study/seed";
+import {
+  getServerActiveCourseSnapshot,
+  readActiveCourseSnapshot,
+  subscribeActiveCourse,
+} from "@/lib/study/courseStore";
 import {
   formatIntervalLabel,
   previewStudyIntervals,
@@ -22,6 +26,7 @@ import type { RatingQuality, StudyFlashcard } from "@/lib/study/types";
 
 type FlashcardSessionProps = {
   cards?: readonly StudyFlashcard[];
+  topicFilter?: string;
   initialIndex?: number;
   initialRevealed?: boolean;
   displayPositionOffset?: number;
@@ -49,7 +54,8 @@ function formatPointsDecimal(value: number): string {
 }
 
 export function FlashcardSession({
-  cards = CORPORATE_FINANCE_FLASHCARDS,
+  cards: explicitCards,
+  topicFilter,
   initialIndex = 0,
   initialRevealed = false,
   displayPositionOffset = 0,
@@ -62,11 +68,22 @@ export function FlashcardSession({
   const [revealed, setRevealed] = useState(initialRevealed);
   const [completedCount, setCompletedCount] = useState(0);
 
+  const storedCourse = useSyncExternalStore(
+    subscribeActiveCourse,
+    readActiveCourseSnapshot,
+    getServerActiveCourseSnapshot,
+  );
   const progress = useSyncExternalStore(
     subscribeStudyProgress,
     readStudyProgress,
     getServerStudyProgressSnapshot,
   );
+
+  const baseCards = explicitCards ?? storedCourse.course.flashcards;
+  const filteredCards = topicFilter
+    ? baseCards.filter((card) => card.topicId === topicFilter)
+    : baseCards;
+  const cards = filteredCards.length > 0 ? filteredCards : baseCards;
 
   const totalCards = displayTotal ?? cards.length;
   const isFinished = index >= cards.length;

@@ -1,12 +1,19 @@
 "use client";
 
+import Link from "next/link";
 import { useSyncExternalStore } from "react";
+import { RotateCcw, Upload } from "lucide-react";
 import { DailyPlan } from "@/components/study/DailyPlan";
 import { StatStrip } from "@/components/study/StatStrip";
 import { StudyHeader } from "@/components/study/StudyHeader";
 import { PointsViz } from "@/components/study/viz/PointsViz";
 import {
-  CORPORATE_FINANCE_SEED,
+  clearCustomCourse,
+  getServerActiveCourseSnapshot,
+  readActiveCourseSnapshot,
+  subscribeActiveCourse,
+} from "@/lib/study/courseStore";
+import {
   getDailyPlanMinutes,
   getPrimaryFocusTopic,
   getSecuredPoints,
@@ -23,6 +30,7 @@ type HeuteDashboardProps = {
   course?: StudyCourseSeed;
   vizMode?: DashboardVizMode;
   useLiveProgress?: boolean;
+  showUploadLink?: boolean;
 };
 
 function splitHeadline(topicName: string): [string, string] {
@@ -35,15 +43,24 @@ function splitHeadline(topicName: string): [string, string] {
 }
 
 export function HeuteDashboard({
-  course = CORPORATE_FINANCE_SEED,
+  course: explicitCourse,
   vizMode = "leiste",
   useLiveProgress = true,
+  showUploadLink = true,
 }: HeuteDashboardProps) {
+  const storedCourse = useSyncExternalStore(
+    subscribeActiveCourse,
+    readActiveCourseSnapshot,
+    getServerActiveCourseSnapshot,
+  );
   const progress = useSyncExternalStore(
     subscribeStudyProgress,
     readStudyProgress,
     getServerStudyProgressSnapshot,
   );
+
+  const course = explicitCourse ?? storedCourse.course;
+  const isCustomCourse = !explicitCourse && storedCourse.isCustom;
 
   const reviewedCount = useLiveProgress
     ? Object.keys(progress.cardReviews).length
@@ -96,13 +113,36 @@ export function HeuteDashboard({
         totalPoints={totalPoints}
         dueCardsCount={dueCardsCount}
         streakDays={streakDays}
-        ctaHref="/karten"
+        ctaHref={course.flashcards.length > 0 ? "/karten" : "/rechnen"}
         ctaLabel="Heute starten"
       />
 
       <PointsViz mode={vizMode} topics={course.topics} />
 
       <DailyPlan items={course.dailyPlan} totalMinutes={totalMinutes} />
+
+      {showUploadLink ? (
+        <footer className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-5 text-[13px] text-text-dim">
+          <Link
+            href="/upload"
+            className="inline-flex items-center gap-2 font-medium text-text-dim transition-colors hover:text-text"
+          >
+            <Upload className="h-3.5 w-3.5" aria-hidden="true" />
+            <span>Eigene Unterlagen hochladen oder Kurs importieren</span>
+          </Link>
+
+          {isCustomCourse ? (
+            <button
+              type="button"
+              onClick={() => clearCustomCourse()}
+              className="inline-flex items-center gap-1.5 font-medium text-text-dim transition-colors hover:text-text"
+            >
+              <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>Demo-Kurs laden</span>
+            </button>
+          ) : null}
+        </footer>
+      ) : null}
     </main>
   );
 }

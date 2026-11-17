@@ -14,7 +14,7 @@ Stand: 2026-11-17 · Aktiver Branch: `feat/bwl-mcp-unification`
 - [x] **Phase 2 — Dashboard „Heute“ (`/heute`):** Statistikzeile (`62/100 P`, `12`, `9 Tage`), Tagesplan (`48 Min`) & austauschbare Punkte-Visualisierung (`Leiste` Standard + `Balken`, `Mini-Karte`, `Waffel`)
 - [x] **Phase 3 — Karteikarten (`/karten`):** Anki-Stil, 3-Stufen-SRS (`1` morgen / `2` in 3 Tagen / `3` in 8 Tagen), `Leertaste`/`1`/`2`/`3`/`Esc` & visuelle Karten-Grafiken
 - [x] **Phase 4 — Rechenaufgaben (`/rechnen`):** Boxloses Layout, Eingabe + `Prüfen` (`Enter`), gezieltes Fehler-Feedback (z. B. vergessener Tax Shield bei WACC `7,4 %`) & schrittweiser Lösungsweg
-- [ ] **Phase 5 — Upload & KI-Extraktion:** Ansatz vorab klären (MCP/JSON-Import vs. Server-Upload vs. Hybrid)
+- [x] **Phase 5 — Hybrid-Upload & KI-Extraktion (`/upload`):** Einheitliches Schema + 0-€-Dropzone für Claude/MCP-Pakete (`kurs.json` + `themen/*.json`) und abgesicherter PDF-Extraktions-Adapter (`POST /api/study/extract`)
 - [ ] **Phase 6 — Konto, Speichern & Deployment:** Auth-Anbindung, Supabase-Persistenz (erst nach Migrations-Freigabe) & Live-Schaltung
 - [ ] **Phase 7 — Landingpage aus echten App-Komponenten:** Hero („62 von 100 Punkten“), Dashboard, Karteikarte, Rechenaufgabe, Preis, FAQ
 
@@ -28,7 +28,7 @@ Stand: 2026-11-17 · Aktiver Branch: `feat/bwl-mcp-unification`
 ## 3) Bestehende Web-App & Landingpage (aktiv bis Umschaltung in Phase 6/7)
 - [x] Helles Design, 20-Sekunden-Hero-Szene & Browser-Demo in `src/components/landing/LernlyLanding.tsx`
 - [x] Eingeloggtes Dashboard (`src/app/dashboard/`), Spaced Repetition (`/dashboard/review`), Auth & Stripe (mit Beta-Schutzschalter) sowie geschlossene Kosten-/Sicherheitslecks
-- [~] Übergang von Bestands-Dashboard (`/dashboard`) auf die neue reduzierte App (`/heute`, `/karten`, `/rechnen`) nach Abschluss von Phase 5 & 6
+- [~] Übergang von Bestands-Dashboard (`/dashboard`) auf die neue reduzierte App (`/heute`, `/karten`, `/rechnen`, `/upload`) nach Abschluss von Phase 6
 
 ## 4) Geparkte Themen (bewusst eingefroren, kein aktueller Fokus)
 - [x] **Alte SaaS-Vollgenerierung auf eigene KI-Kosten (`/api/generate`, Cram-Modus, BYOK):** Bestehender Code bleibt für Bestandsdaten stabil und abgesichert, wird aber nicht weiter ausgebaut (Cram deaktiviert, minütlicher Cron gestoppt)
