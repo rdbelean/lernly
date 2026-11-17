@@ -115,6 +115,8 @@
      Re-introducing `--color-primary: var(--primary)` will flip every CTA
      back to charcoal-on-blue. */
   --color-primary-bright-shadcn: var(--primary);
+  --radius-btn: 4px;
+  --radius-card: 12px;
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -290,4 +292,21 @@
 }
 .ln-mono-tag-accent {
   color: var(--color-primary);
+}
+
+/* Study app shell: tabular numerals everywhere, Sora headings, clean keyboard focus */
+.study-shell {
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+.study-shell h1,
+.study-shell h2,
+.study-shell h3 {
+  font-family: var(--font-display);
+}
+.study-shell :focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
