@@ -2,27 +2,24 @@
 
 Kurzüberblick für Solo-Founder und Agenten.
 
-## 1. Landingpage & Copywriting (Texte, Hero, Demo)
-- `src/components/landing/LernlyLanding.tsx` — Alle Haupttexte (Headline, Vergleich, 3 Schritte, Features, Beta-Zugang, FAQ, Footer, Demo-Inhalte).
+## 1. Neue Lern-App nach `design/`-Mockups (Phasen 1–4)
+- `design/` — Verbindliche UI-Mockups (Desktop & iPad: Heute 1–4, Karteikarte, Rechenaufgabe).
+- `src/app/(study)/` — Neue Routen `/heute`, `/karten`, `/rechnen` mit eigenem `.study-shell`-Layout.
+- `src/components/study/` — Modulare Screens (`HeuteDashboard`, `FlashcardSession`, `CalcExerciseView`, `viz/PointsViz` mit 4 Varianten).
+- `src/lib/study/` — Typen, Corporate-Finance-Seed (`seed.ts`), 3-Stufen-SRS (`srs.ts`), Rechen-Prüfung (`calcCheck.ts`), `localStorage`-Persistenz.
+
+## 2. Landingpage & Copywriting (Bestand, Ablösung in Phase 7)
+- `src/components/landing/LernlyLanding.tsx` — Haupttexte (Headline, Vergleich, 3 Schritte, Features, Beta-Zugang, FAQ, Footer, Demo).
 - `src/app/page.tsx` — SEO-Seitentitel, Meta-Description & Social-Preview-Texte.
-- `src/components/landing/HeroScene.tsx` (+ `heroScript.ts`, `sampleExam.ts`) — Automatische 20-Sekunden-Hero-Animation.
-- `src/components/landing/LearningVisuals.tsx` — Visuelle Kacheln (Klausurkarte, Formel, Karteikarte, Rechenaufgabe).
-- `src/components/landing/*.module.css` — Layout und Styling der Landingpage.
+- `src/components/landing/HeroScene.tsx` (+ `LearningVisuals.tsx`) — Hero-Animation und visuelle Kacheln.
 
-## 2. Claude MCP-Connector & BWL-Skills (keine eigenen KI-Kosten)
+## 3. Claude MCP-Connector & BWL-Skills (keine eigenen KI-Kosten)
 - `connector/desktop/prompts/` (`base.md`, `artifact.md`, `trainer.md`) — Live-Anweisungen an Claude für BWL/Finance/Mathe/Marketing.
-- `connector/desktop/src/` (`server.mjs`, `service.mjs`, `storage.mjs`, `bridge.py`) — Lokaler MCP-Server (11 Tools, Ordner-Schutz, Rechner, PDF/Office-Extraktor).
-- `connector/desktop/dist/` — Gebautes `.mcpb`-Installationspaket für Claude Desktop (gitignored).
-- `plugin/lernly/` — Skills, JSON-Format-Referenzen (`format.md`, `kursprofil.md`), Validator (`validate.py`) & HTML-Trainer-Vorlage (`trainer.html`).
+- `connector/desktop/src/` (`server.mjs`, `service.mjs`, `storage.mjs`, `bridge.py`) — Lokaler MCP-Server (11 Tools, Ordner-Schutz, Rechner, Extraktor).
+- `plugin/lernly/` — Skills, JSON-Format-Referenzen, Validator (`validate.py`) & HTML-Trainer-Vorlage.
 
-## 3. Web-App & Lern-Dashboard (`lernly-app.de`)
-- `src/app/dashboard/` — Eingeloggte Seiten: Start/Bibliothek (`page.tsx`), Wiederholung (`/review`), Paket-Ansicht (`/pack/[id]`), Einstellungen (`/settings`).
-- `src/components/dashboard/` — Dashboard-Bausteine (`ExamMap.tsx`, `NextStep.tsx`, `HeuteDran.tsx`, `DashboardShell.tsx`).
-- `src/components/pack/` — Lern-Ansichten (Karteikarten, Quiz, Klausur-Simulator, Study Guide).
-
-## 4. Backend, Design, Steuerung & Geparktes
-- `src/app/api/` — Server-Routen (Auth, Stripe, Cronjobs, geschützte KI-Endpunkte).
-- `src/lib/` — Kernlogik (Datenbank-Zugriff, Spaced Repetition `srs.ts`, Limits `quota.ts`, Klausurkarte `examMap.ts`).
-- `src/app/globals.css` — Zentrale helle Farb- und Design-Tokens.
-- `src/app/hochschulen/` & `src/app/pruefungsvorbereitung/` — Geparkte B2B-Seiten.
-- `STATUS.md` & `ROADMAP.md` — Aktueller Arbeitsstand, aktiver Git-Branch und Meilenstein-Plan.
+## 4. Bestands-Dashboard, Backend & Steuerung
+- `src/app/dashboard/` & `src/components/dashboard/` — Bestehende eingeloggte Web-App (aktiv bis Umschaltung in Phase 6).
+- `src/app/api/` & `src/lib/` — Auth, Stripe, Cronjobs, Quota-Schutz, Supabase-Clients.
+- `src/app/globals.css` — Zentrale Tailwind-v4-Design-Tokens (Farben, Radien `4px`/`12px`, Sora/Inter).
+- `STATUS.md`, `ROADMAP.md`, `WORKFLOW.md` — Arbeitsstand, aktiver Branch, Meilensteine & Git-Handgriffe.

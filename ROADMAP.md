@@ -1,5 +1,7 @@
 # Lernly — Produkt-Roadmap (Solo-Founder-Übersicht)
 
+> 📌 Tägliche Handgriffe (dev, Commit/Push, Pull, PR & Vercel, Notfall-Reset): **[WORKFLOW.md](WORKFLOW.md)**
+
 Stand: 2026-11-17 · Aktiver Branch: `feat/bwl-mcp-unification`
 
 **Legende:** `[x]` Fertig · `[~]` In Arbeit · `[ ]` Offen  
@@ -7,14 +9,14 @@ Stand: 2026-11-17 · Aktiver Branch: `feat/bwl-mcp-unification`
 
 ---
 
-## 1) Landingpage & Funnel (BWL/Finance-Fokus)
-- [x] Helles Design & klare Positionierung auf BWL-Studierende (Finance, Mathe, Marketing) in `src/components/landing/LernlyLanding.tsx`
-- [x] Automatisch ablaufende 20-Sekunden-Hero-Szene (`HeroScene.tsx`) mit Klausurkarte, Erklärung, Rechenaufgabe, Karteikarte und KI-Hilfe
-- [x] Interaktive Browser-Demo ohne Anmeldung (Finance, Mathe, Marketing) im Modal-Dialog
-- [x] SEO-Metadaten & Social-Preview auf BWL-Klausuren ausgerichtet (`src/app/page.tsx`)
-- [x] Alten, ungenutzten Landingpage-Code (~6.600 Zeilen) komplett entfernt
-- [~] Feinschliff am Copywriting durch Daniel & echter Onboarding-/Beta-Flow statt reinem `mailto:`-Link
-- [ ] Anleitung & Download-/Verbindungsstrecke für den Claude-Connector direkt für Beta-Tester bereitstellen
+## 1) Neue Lern-App nach `design/`-Mockups („Punkte sind die Währung“)
+- [x] **Phase 1 — Gerüst:** Tailwind-v4-Tokens (`4px`/`12px`, `tabular-nums`, Sora/Inter), Route-Group `(study)` (`/heute`, `/karten`, `/rechnen`), Corporate-Finance-Seed (7 Themen = 100 P, 62 P gesichert) & `localStorage`-Persistenz
+- [x] **Phase 2 — Dashboard „Heute“ (`/heute`):** Statistikzeile (`62/100 P`, `12`, `9 Tage`), Tagesplan (`48 Min`) & austauschbare Punkte-Visualisierung (`Leiste` Standard + `Balken`, `Mini-Karte`, `Waffel`)
+- [x] **Phase 3 — Karteikarten (`/karten`):** Anki-Stil, 3-Stufen-SRS (`1` morgen / `2` in 3 Tagen / `3` in 8 Tagen), `Leertaste`/`1`/`2`/`3`/`Esc` & visuelle Karten-Grafiken
+- [x] **Phase 4 — Rechenaufgaben (`/rechnen`):** Boxloses Layout, Eingabe + `Prüfen` (`Enter`), gezieltes Fehler-Feedback (z. B. vergessener Tax Shield bei WACC `7,4 %`) & schrittweiser Lösungsweg
+- [ ] **Phase 5 — Upload & KI-Extraktion:** Ansatz vorab klären (MCP/JSON-Import vs. Server-Upload vs. Hybrid)
+- [ ] **Phase 6 — Konto, Speichern & Deployment:** Auth-Anbindung, Supabase-Persistenz (erst nach Migrations-Freigabe) & Live-Schaltung
+- [ ] **Phase 7 — Landingpage aus echten App-Komponenten:** Hero („62 von 100 Punkten“), Dashboard, Karteikarte, Rechenaufgabe, Preis, FAQ
 
 ## 2) Claude MCP-Connector & BWL-Skills (`connector/` & `plugin/`)
 - [x] Kompaktes Kurs- & Themen-Format (`kurs.json`, `themen/*.json`, `probeklausuren/*.json`, `spickzettel.json`) mit Rechen-Drills, Zahlenvarianten, Rundungstoleranzen und Punkte-Checklisten definiert
@@ -23,13 +25,10 @@ Stand: 2026-11-17 · Aktiver Branch: `feat/bwl-mcp-unification`
 - [~] Echter End-to-End-Qualitätstest mit dem kompletten Corporate-Finance-Kurs (20 Originaldateien) in Claude Desktop und Abgleich gegen das CF-Study-OS-Referenz-Artifact
 - [ ] Reibungsloses Setup für Studierende ohne Technik-Hürden (und später Remote-MCP-Anbindung für Web/Mobile)
 
-## 3) Web-App & Lern-Dashboard (`src/app/dashboard/`)
-- [x] Komplettes Light-Redesign der App mit einheitlichen Farb-Tokens (`src/app/globals.css`), geprüften Kontrasten und 0 ESLint-/TypeScript-Fehlern
-- [x] Neues Dashboard mit „Nächster Schritt“ (`NextStep.tsx`) und gewichteter Klausurkarte (`ExamMap.tsx`)
-- [x] Spaced-Repetition-System (SM-2-lite) mit globaler Fällig-Queue (`/dashboard/review`), Streak und KaTeX-Formel-Darstellung
-- [x] Login (Google & Magic-Link/Code), Stripe-Abrechnung (mit aktivem Beta-Schutzschalter) sowie Kosten- und Sicherheitslecks geschlossen
-- [ ] Brücke zwischen Claude-Connector und Web-App schlagen: In Claude erstellte Kurse (`kurs.json` + `themen/*.json`) in die Web-App importieren/synchronisieren, damit Studierende mobil auf `lernly-app.de` lernen können
-- [ ] Web-Oberfläche für das neue BWL-Aufgabenformat (numerische Rechen-Drills mit Varianten & Toleranzprüfung) im Dashboard freischalten
+## 3) Bestehende Web-App & Landingpage (aktiv bis Umschaltung in Phase 6/7)
+- [x] Helles Design, 20-Sekunden-Hero-Szene & Browser-Demo in `src/components/landing/LernlyLanding.tsx`
+- [x] Eingeloggtes Dashboard (`src/app/dashboard/`), Spaced Repetition (`/dashboard/review`), Auth & Stripe (mit Beta-Schutzschalter) sowie geschlossene Kosten-/Sicherheitslecks
+- [~] Übergang von Bestands-Dashboard (`/dashboard`) auf die neue reduzierte App (`/heute`, `/karten`, `/rechnen`) nach Abschluss von Phase 5 & 6
 
 ## 4) Geparkte Themen (bewusst eingefroren, kein aktueller Fokus)
 - [x] **Alte SaaS-Vollgenerierung auf eigene KI-Kosten (`/api/generate`, Cram-Modus, BYOK):** Bestehender Code bleibt für Bestandsdaten stabil und abgesichert, wird aber nicht weiter ausgebaut (Cram deaktiviert, minütlicher Cron gestoppt)
