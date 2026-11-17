@@ -1,29 +1,25 @@
 # STATUS (Übergabe Antigravity ↔ Claude Code ↔ OpenAI Codex)
 
-Stand: 2026-11-17. Kompakt halten, nur Fakten.
+Stand: 2026-11-17. Kompakt halten, nur Fakten. **Pflicht:** Zum Session-Start immer `STATUS.md` + `ROADMAP.md` lesen; nach Abschluss beides aktualisieren (Ordnerstruktur: `ARCHITECTURE.md`).
 
 ## Aktiver Branch
 `feat/bwl-mcp-unification` — einziger aktiver Feature-Branch für Antigravity, Claude Code und OpenAI Codex; kein Wechsel ohne Absprache. Nie direkt auf `main`.
 
 ## Aktuelles Ziel / Stand
-**Branch-Spaltung aufgelöst, Lecks geschlossen & Codebase aufgeräumt (2026-11-17):**
-- `main` (PRs #35–#40: Light-Redesign, BWL-Landing `LernlyLanding.tsx`, `HeroScene.tsx`, `ExamMap`) und `codex/lernly-mcp-beta` (`connector/desktop/`, `plugin/lernly/`, `STATUS.md`, `docs/strategy/2026-11-14-cf-realtest-status.md`, Handoff-Regeln) auf `feat/bwl-mcp-unification` zusammengeführt.
-- Remote-Branches vorerst belassen (Aufräumen nach Rückfrage mit Daniel).
+**Git aufgeräumt, Branch gepusht & Solo-Founder-Doku (`ROADMAP.md`, `ARCHITECTURE.md`) angelegt (2026-11-17):**
+- `feat/bwl-mcp-unification` zu `origin` gepusht.
+- Branch-Friedhof bereinigt: 49 veraltete lokale Branches, der verwaiste Worktree `philadelphia`, 27 bereits entfernte Remote-Tracking-Refs und 46 obsolete Remote-Branches auf `origin` gelöscht. Nur `main` und `feat/bwl-mcp-unification` existieren lokal und remote.
 
 ## Erledigt (diese Session)
-- **Branch-Unification & Doku:** `feat/bwl-mcp-unification` ab `main` erstellt; ungetrackte Build-Reste entfernt; `connector/`, `plugin/`, `STATUS.md`, `CLAUDE.md`, `AGENTS.md` integriert. `CLAUDE.md` (Handoff + aktuelles Light-Design-System) und `AGENTS.md` (alle drei Agenten) aktualisiert.
-- **Kosten- & Sicherheitslecks geschlossen:**
-  - `vercel.json`: minütlichen `/api/cram/worker`-Cron entfernt (`CRAM_ENABLED = false`).
-  - `src/app/api/cron/exam-reminders/route.ts` & `src/app/api/cron/metrics-sync/route.ts`: `authorize()` strikt fail-closed (`if (!secret) return false;`).
-  - `src/app/api/quiz/repractice/route.ts`: Rate-Limit (`check_rate_limit`, 6/h), Quota-Gate (`check_card_gen_quota` + `bump_card_gen_usage`) und Concurrency-Slot (`acquire_generation_slot`/`release_generation_slot`) ergänzt.
-  - `src/app/dashboard/actions.ts` (`attachPastExamsToExam`): Rate-Limit (`check_rate_limit`, 5/h), `check_card_gen_quota`, Concurrency-Slot sowie Cleanup hochgeladener Dateien in `STUDY_UPLOADS_BUCKET` per `finally` ergänzt.
-- **Dead-Code-Großputz:** `src/app/landing-client.tsx`, `src/components/landing/DemoPacksSection.tsx`, `FeatureBento.tsx`, `src/components/landing/mockups/*` (12 Dateien) gelöscht; `scripts/check-colors.ts` & `scripts/migrate-colors.ts` bereinigt; `src/app/globals.css` von ~1.800 Zeilen toter Dark-Landing-Styles befreit und `.mode-row:hover` sowie `--color-ln-*` auf das helle Token-System umgestellt.
-- **UI-Kontrast- & Lint-Fixes:** `text-white`-Bugs (`dashboard/new/page.tsx`, `delete-button.tsx`, `ExamCard.tsx`) und kontrastarme `--color-ln-cyan`/`--color-ln-violet`-Textfarben in Pack-Views (`FlashcardDeck`, `ExamSimulator`, `OpenQuestionsView`, `EssayPredictionsView`, `QuizView`, `TutorChat`, `GenerationProgress`) und Rechtsseiten (`impressum`, `agb`, `datenschutz`) gefixt. React-Render-Bug in `SectionHeader.tsx` (`createElement`), Hook-Order in `QuizView.tsx`, ESLint-Errors/-Warnings in `src/` und `scripts/eval-pack.ts` sowie `eslint.config.mjs` (Ignore für Connector-/Plugin-Build-Artefakte) behoben.
-- **Verifiziert:** `npx tsc --noEmit` (0 Fehler), `npm test` (212/212), `npm run check:colors -- --strict` (`TOTAL 0 literals in 0 files`), `npm run lint` (0 Errors/Warnings), `node connector/desktop/scripts/build.mjs && node --test connector/desktop/tests/*.test.mjs` (8/8).
+- **Branch-Unification & Cleanup:** `feat/bwl-mcp-unification` ab `main` erstellt, MCP-Connector (`connector/`), `plugin/`, Doku und Light-Redesign/BWL-Landingpage zusammengeführt und nach GitHub gepusht. Alle 49 lokalen / 46 aktiven Remote-Altbranches gelöscht.
+- **Kosten- & Sicherheitslecks geschlossen:** Minütlichen `/api/cram/worker`-Cron entfernt; `exam-reminders` & `metrics-sync` fail-closed; `repractice` & `attachPastExamsToExam` mit Rate-Limit, Quota, Concurrency-Slot und Storage-Cleanup gesichert.
+- **Dead-Code & UI-Kontrast/Lint:** ~6.670 Zeilen toten Altcode entfernt; Kontrastbugs & alle ESLint-Errors/-Warnings in `src/`, `scripts/` und `eslint.config.mjs` gefixt (`tsc`, `npm test` 212/212, `check:colors --strict`, `npm run lint`, Connector-Tests 8/8 grün).
+- **Projektsteuerung:** `ROADMAP.md` (4 Bereiche mit Checkboxes) und `ARCHITECTURE.md` (29 Zeilen) im Root erstellt; Handoff-Regeln in `CLAUDE.md`, `AGENTS.md` und `STATUS.md` verankert.
 
 ## Nächster konkreter Schritt
-1. Echten Corporate-Finance-Kurstest mit `connector/desktop/` (`dist/lernly-beta-0.2.0.mcpb`) in Claude Desktop abschließen und gegen das CF Study OS prüfen.
-2. Danach schlanken Import-/MCP-Weg (`kurs.json` + `themen/*.json`) in die Web-App (`/dashboard`) bauen.
+1. **Echter Corporate-Finance-Kurstest:** `connector/desktop/dist/lernly-beta-0.2.0.mcpb` in Claude Desktop testen, CF-Kursordner (20 Originaldateien) einrichten/bauen und Output gegen das CF Study OS prüfen (`docs/strategy/2026-11-14-cf-realtest-status.md`).
+2. **Landingpage-Copy-Feinschliff:** Texte durch Daniel in `src/components/landing/LernlyLanding.tsx` und `src/app/page.tsx` prüfen/anpassen.
+3. **Brücke in die Web-App:** Import-/MCP-Sync (`kurs.json` + `themen/*.json`) ins Dashboard bauen.
 
 ## Bekannte Grenzen & Hinweise
 - `connector/desktop/`: lokal macOS (kein Remote-Connector/OAuth), keine OCR, PDF max. 256 MB / 2.500 Seiten, kein direkter Anki-/Quizlet-Sync (nur TSV-Export).
