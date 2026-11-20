@@ -38,7 +38,7 @@ export default function DesignPreview() {
         {TYPE_SCALE.map((px) => (
           <p
             key={px}
-            className="truncate text-text"
+            className="text-text [overflow-wrap:anywhere]"
             style={{
               fontSize: px,
               fontWeight: px >= 20 ? 600 : 400,

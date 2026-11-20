@@ -1548,6 +1548,15 @@
   }
 }
 
+/* Small phones: brand + header CTA + menu button must fit in one row. */
+@media (max-width: 420px) {
+  .navActions > .primaryButton {
+    min-height: 36px;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}
+
 @media (max-width: 760px) {
   .desktopNav {
     display: none;
