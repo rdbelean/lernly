@@ -90,7 +90,7 @@ export default function QuotaHitModal({ details, onClose }: Props) {
             type="button"
             onClick={() => launch("einzelklausur")}
             disabled={Boolean(pending)}
-            className="mb-3 flex w-full items-center justify-between rounded-2xl border px-5 py-4 text-left transition hover:border-[color:var(--color-ink-a14)] disabled:opacity-50"
+            className="mb-3 flex w-full items-center justify-between rounded-2xl border px-5 py-4 text-left lern-lift disabled:opacity-50"
             style={{
               background: "var(--color-work-bg)",
               borderColor: "var(--color-ink-a14)",
@@ -117,7 +117,7 @@ export default function QuotaHitModal({ details, onClose }: Props) {
             type="button"
             onClick={() => launch("semester")}
             disabled={Boolean(pending)}
-            className="flex w-full items-center justify-between rounded-2xl border px-5 py-4 text-left transition hover:border-[color:var(--color-ink-a14)] disabled:opacity-50"
+            className="flex w-full items-center justify-between rounded-2xl border px-5 py-4 text-left lern-lift disabled:opacity-50"
             style={{
               background: "var(--color-ink-a04)",
               borderColor: "var(--color-ink-a14)",

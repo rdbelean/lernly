@@ -63,3 +63,37 @@ test("no font weight above 600 in app code", () => {
     );
   assert.deepEqual(offenders, []);
 });
+
+// Value of a custom property inside the first `:root { ... }` block.
+function readRoot(name: string): string {
+  const css = read("src/app/globals.css");
+  const start = css.indexOf("\n:root {");
+  const block = css.slice(start, css.indexOf("\n}\n", start));
+  const m = block.match(new RegExp(`${name}:\\s*([^;]+);`));
+  assert.ok(m, `root var ${name} not found`);
+  return m[1].trim();
+}
+
+test("motion tokens match the rebrand spec", () => {
+  assert.equal(readRoot("--dur-fast"), "120ms");
+  assert.equal(readRoot("--dur-base"), "220ms");
+  assert.equal(readRoot("--dur-slow"), "480ms");
+  assert.equal(readRoot("--ease-out"), "cubic-bezier(.22,1,.36,1)");
+  assert.equal(readRoot("--ease-spring"), "cubic-bezier(.34,1.56,.64,1)");
+});
+
+test("press and lift are switched off for reduced motion", () => {
+  const css = read("src/app/globals.css");
+  const block = css.slice(css.lastIndexOf("prefers-reduced-motion"));
+  assert.match(block, /\.lern-press/);
+  assert.match(block, /\.lern-lift/);
+});
+
+test("shared Button uses the press primitive", () => {
+  assert.match(read("src/components/ui/button.tsx"), /lern-press/);
+});
+
+test("every filled primary control and PrimaryCTA get the press feedback", () => {
+  assert.match(read("src/app/globals.css"), /:is\(button, a\)\.bg-primary/);
+  assert.match(read("src/components/ui/PrimaryCTA.tsx"), /lern-press/);
+});

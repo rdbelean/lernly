@@ -164,7 +164,7 @@ const baseStyle = (size: Size, fullWidth: boolean): React.CSSProperties => ({
 });
 
 const baseClass =
-  "group inline-flex items-center gap-3 bg-[color:var(--color-primary)] transition-[transform,background-color] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60 [@media(hover:hover)]:hover:bg-[color:var(--color-primary-press)]";
+  "group inline-flex items-center gap-3 bg-[color:var(--color-primary)] lern-press disabled:cursor-not-allowed disabled:opacity-60 [@media(hover:hover)]:hover:bg-[color:var(--color-primary-press)]";
 
 // Native <button> variant
 type ButtonProps = CommonProps &
