@@ -27,6 +27,12 @@ function isLocalhostHost(host: string | null): boolean {
   return /^(?:localhost|127\.0\.0\.1)(?::\d+)?$/i.test(host.trim());
 }
 
+function toSupabasePassword(raw: string): string {
+  // Supabase Auth enforces a minimum length of 6 characters. Map short
+  // founder passwords (such as "12345") deterministically to >= 6 chars.
+  return raw.length < 6 ? `lernly:${raw}` : raw;
+}
+
 function getOrigin(host: string | null, proto: string | null) {
   if (!host) return null;
   return `${proto ?? "https"}://${host}`;
@@ -312,9 +318,10 @@ export async function loginWithPassword(
   if (!isAllowedAdminEmail(email)) {
     return { ok: false, error: CLOSED_BETA_LOGIN_ERROR };
   }
-  if (typeof rawPassword !== "string" || rawPassword.length === 0) {
+  if (typeof rawPassword !== "string" || rawPassword.trim().length === 0) {
     return { ok: false, error: "Bitte gib dein Passwort ein." };
   }
+  const password = rawPassword.trim();
 
   const h = await headers();
   const ip = clientIpFrom(h);
@@ -328,19 +335,19 @@ export async function loginWithPassword(
 
   const { error: pwdError } = await supabase.auth.signInWithPassword({
     email,
-    password: rawPassword,
+    password: toSupabasePassword(password),
   });
 
   if (!pwdError) {
     redirect(next);
   }
 
-  // Closed-beta admin password check: uses ADMIN_PASSWORD from env (falling back
-  // to "12345" for quick founder testing) strictly gated by isAllowedAdminEmail.
+  // Fallback for initial founder setup or un-synced admin emails: check against
+  // ADMIN_PASSWORD (falling back to "12345") and sync the password into Auth.
   const envAdminPassword = process.env.ADMIN_PASSWORD?.trim() || "12345";
   if (
     envAdminPassword.length >= 1 &&
-    safeEqualSecret(rawPassword, envAdminPassword)
+    safeEqualSecret(password, envAdminPassword)
   ) {
     const token = await ensureUserAndGetLoginToken(email);
     if (token) {
@@ -351,11 +358,10 @@ export async function loginWithPassword(
         });
       if (!verifyErr) {
         const userId = verifyData.user?.id;
-        // Supabase Auth rejects passwords < 6 chars; only sync longer passwords.
-        if (userId && envAdminPassword.length >= 6) {
+        if (userId) {
           try {
             await createServiceClient().auth.admin.updateUserById(userId, {
-              password: envAdminPassword,
+              password: toSupabasePassword(password),
               email_confirm: true,
             });
           } catch (syncErr) {
