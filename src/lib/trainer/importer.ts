@@ -19,7 +19,7 @@ export type ImportTrainerResult =
   | {
       ok: true;
       bundle: TrainerBundle;
-      sourceKind: "mcp-folder" | "trainer-html";
+      sourceKind: "mcp-folder" | "trainer-html" | "html-artifact";
       summary: {
         topics: number;
         hydratedTopics: number;
@@ -34,7 +34,7 @@ const TRAINER_HTML_DATA_RE =
 
 function summarizeBundle(
   bundle: TrainerBundle,
-  sourceKind: "mcp-folder" | "trainer-html",
+  sourceKind: "mcp-folder" | "trainer-html" | "html-artifact",
 ): ImportTrainerResult {
   const topicEntries = Object.values(bundle.topics);
   const tasks = topicEntries.reduce((sum, t) => sum + t.tasks.length, 0);
@@ -52,16 +52,87 @@ function summarizeBundle(
   };
 }
 
+function stripTagsAndEntities(raw: string): string {
+  return raw
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function titleFromFilename(filename: string): string {
+  const base = filename.split(/[\\/]/).pop() ?? filename;
+  return (
+    base
+      .replace(/\.html?$/i, "")
+      .replace(/[_-]+/g, " ")
+      .trim() || "Claude HTML-Trainer"
+  );
+}
+
+function parseStandaloneHtmlArtifact(file: ImportTrainerFile): ImportTrainerResult {
+  const html = file.content;
+  const h1Match = /<h1[^>]*>([\s\S]*?)<\/h1>/i.exec(html);
+  const titleMatch = /<title[^>]*>([\s\S]*?)<\/title>/i.exec(html);
+  const extractedTitle =
+    stripTagsAndEntities(h1Match?.[1] ?? "") ||
+    stripTagsAndEntities(titleMatch?.[1] ?? "") ||
+    titleFromFilename(file.name);
+
+  if (!html.includes("<") || html.trim().length < 20) {
+    return {
+      ok: false,
+      error: `Die HTML-Datei „${file.name}“ scheint leer oder ungültig zu sein.`,
+    };
+  }
+
+  const seenTitles = new Set<string>();
+  const detectedTopics: McpCourseProfile["topics"] = [];
+  const headingRe = /<h2[^>]*>([\s\S]*?)<\/h2>/gi;
+  let m: RegExpExecArray | null;
+  while ((m = headingRe.exec(html)) !== null && detectedTopics.length < 24) {
+    const label = stripTagsAndEntities(m[1] ?? "");
+    if (!label || seenTitles.has(label.toLowerCase())) continue;
+    seenTitles.add(label.toLowerCase());
+    detectedTopics.push({
+      id: `section-${detectedTopics.length + 1}`,
+      title: label.slice(0, 120),
+      tier: 1,
+    });
+  }
+
+  if (detectedTopics.length === 0) {
+    detectedTopics.push({
+      id: "artifact",
+      title: extractedTitle,
+      tier: 1,
+    });
+  }
+
+  const course: McpCourseProfile = {
+    schema: "lernly.kurs/1",
+    id: titleFromFilename(file.name).toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+    title: extractedTitle.slice(0, 140),
+    subtitle: "Interaktives Claude HTML-Artifact · Originalansicht",
+    topics: detectedTopics,
+  };
+
+  return summarizeBundle({ course, topics: {}, artifactHtml: html }, "html-artifact");
+}
+
 function tryImportFromHtml(
   file: ImportTrainerFile,
 ): ImportTrainerResult | null {
-  if (!file.name.toLowerCase().endsWith(".html")) return null;
+  const lower = file.name.toLowerCase();
+  if (!lower.endsWith(".html") && !lower.endsWith(".htm")) return null;
   const match = TRAINER_HTML_DATA_RE.exec(file.content);
   if (!match?.[1]) {
-    return {
-      ok: false,
-      error: `In „${file.name}“ wurden keine Lernly-Kursdaten (#lernly-data) gefunden.`,
-    };
+    return parseStandaloneHtmlArtifact(file);
   }
   try {
     const raw = JSON.parse(match[1]) as {

@@ -185,7 +185,19 @@ export type McpTopicContent = z.infer<typeof McpTopicContentSchema>;
 export type TrainerBundle = {
   course: McpCourseProfile;
   topics: Record<string, McpTopicContent>;
+  artifactHtml?: string;
 };
+
+export const TrainerBundleSchema = z.object({
+  course: McpCourseProfileSchema,
+  topics: z.record(z.string(), McpTopicContentSchema),
+  artifactHtml: z.string().optional(),
+});
+
+export const SavedTrainerPackSchema = z.object({
+  schema: z.literal("lernly.saved_trainer/1"),
+  bundle: TrainerBundleSchema,
+});
 
 export type TrainerProgressState = {
   version: 1;

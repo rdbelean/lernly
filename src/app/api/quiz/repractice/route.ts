@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
+import { isAllowedAdminEmail } from "@/lib/admin/auth";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { QuizQuestionSchema, StudyPackSchema, type QuizQuestion } from "@/lib/schema";
 import { SONNET } from "@/lib/taskModels";
@@ -154,39 +155,43 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const service = createServiceClient();
-  const { data: rlAllowed, error: rlErr } = await service.rpc("check_rate_limit", {
-    p_bucket: `repractice:user:${authData.user.id}`,
-    p_max: 6,
-    p_window_seconds: 3600,
-  });
-  if (rlErr) {
-    console.error("[/api/quiz/repractice] check_rate_limit failed", rlErr);
-  } else if (rlAllowed === false) {
-    return NextResponse.json(
-      {
-        error: "Zu viele Übungsrunden in kurzer Zeit. Bitte warte einen Moment.",
-        reason: "rate_limited",
-      },
-      { status: 429 },
-    );
-  }
+  const isAdmin = isAllowedAdminEmail(authData.user.email);
 
-  const { data: quota, error: qErr } = await supabase.rpc("check_card_gen_quota");
-  if (qErr) {
-    console.error("[/api/quiz/repractice] quota check failed", qErr);
-    return NextResponse.json(
-      { error: "Kontingent konnte nicht geprüft werden." },
-      { status: 500 },
-    );
-  }
-  if (quota && quota.ok === false) {
-    return NextResponse.json(
-      {
-        error: "Monatslimit für KI-Nachgenerierung erreicht.",
-        reason: quota.reason ?? "quota_exceeded",
-      },
-      { status: 402 },
-    );
+  if (!isAdmin) {
+    const { data: rlAllowed, error: rlErr } = await service.rpc("check_rate_limit", {
+      p_bucket: `repractice:user:${authData.user.id}`,
+      p_max: 6,
+      p_window_seconds: 3600,
+    });
+    if (rlErr) {
+      console.error("[/api/quiz/repractice] check_rate_limit failed", rlErr);
+    } else if (rlAllowed === false) {
+      return NextResponse.json(
+        {
+          error: "Zu viele Übungsrunden in kurzer Zeit. Bitte warte einen Moment.",
+          reason: "rate_limited",
+        },
+        { status: 429 },
+      );
+    }
+
+    const { data: quota, error: qErr } = await supabase.rpc("check_card_gen_quota");
+    if (qErr) {
+      console.error("[/api/quiz/repractice] quota check failed", qErr);
+      return NextResponse.json(
+        { error: "Kontingent konnte nicht geprüft werden." },
+        { status: 500 },
+      );
+    }
+    if (quota && quota.ok === false) {
+      return NextResponse.json(
+        {
+          error: "Monatslimit für KI-Nachgenerierung erreicht.",
+          reason: quota.reason ?? "quota_exceeded",
+        },
+        { status: 402 },
+      );
+    }
   }
 
   // RLS scopes the SELECT to the user's own packs — no extra ownership check needed.

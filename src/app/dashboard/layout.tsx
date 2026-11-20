@@ -45,7 +45,7 @@ export default async function DashboardLayout({
         .select("*", { count: "exact", head: true })
         .lte("due_at", new Date().toISOString()),
     ]);
-  const recent: RecentPack[] = ((recentRaw ?? []) as RecentPack[]).slice(0, 5);
+  const recent: RecentPack[] = (recentRaw ?? []) as RecentPack[];
   const dueCount = dueRaw ?? 0;
 
   // Default has_seen_welcome to TRUE on a missing/failed read so we never

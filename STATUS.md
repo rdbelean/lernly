@@ -8,19 +8,19 @@ Stand: 2026-11-20. Kompakt halten, nur Fakten. **Pflicht:** Zum Session-Start im
 `feat/bwl-mcp-unification` — gemeinsamer Arbeitsbranch für Antigravity, Claude Code und OpenAI Codex. **Auto-Live-Regel:** Nach grünen Checks (`npx tsc --noEmit`, `npm run lint`, `npm test`) immer direkt in `main` mergen und `origin/main` + `feat/bwl-mcp-unification` pushen (Vercel deployt automatisch auf `lernly-app.de`).
 
 ## Aktuelles Ziel / Stand
-**Auto-Live-Workflow aktiv & erster `lernly.kurs/1` Klausur-Trainer live auf `/dashboard` (2026-11-20):**
-- `CLAUDE.md`, `AGENTS.md` und `WORKFLOW.md` auf den direkten Auto-Live-Workflow umgestellt (Feature-Branch → grüne Checks → Merge in `main` → Push `origin/main`).
-- `/login`: Admin-Only Passwort-Login (`signInWithPassword` direkt mit `toSupabasePassword` + Fallback, `beleanrd@gmail.com` mit `12345` in Supabase Auth hinterlegt), lokaler „Schnell-Login (Dev)“ nur auf `localhost`; öffentliche Registrierung komplett gesperrt.
-- `/dashboard` & `/dashboard/trainer`: `TrainerView` ist jetzt die direkte Hauptansicht nach dem Login — mit Corporate-Finance-Beispielkurs, `_lernly/`-Ordner-/JSON-/HTML-Importer, Verstehen (SVG + KaTeX), Rechen-Drills (Zahlenvarianten + Toleranzprüfung), Punkte-Checklisten und Karteikarten.
+**Persistenter Claude-Kurs-Trainer (`_lernly/` + `HTML-Artifacts`), aufgeräumte Sidebar & Admin-Unlimited live auf `main` (2026-11-20):**
+- **Admin-Cleanup & Unlimited-Zugang:** Alte Test-Packs/Exams für `beleanrd@gmail.com` per `scripts/admin-cleanup.ts` aus Supabase gelöscht (0 Alt-Packs, 0 Alt-Exams, Zähler auf 0); `effectivePlan(..., email)` sowie alle API-/Action-Quota- & Concurrency-Checks geben für `ADMIN_EMAILS` dauerhaft `"unlimited"` (`999_999`) frei.
+- **Persistente Kursspeicherung (`/api/trainer/courses` & `/api/trainer/courses/[id]`):** `_lernly/`-Ordner (`kurs.json` + `themen/*.json`), `Lernly-Trainer.html` (`#lernly-data`) UND eigenständige Claude-HTML-Artifacts werden über `importTrainerBundle` eingelesen, dauerhaft in `study_packs` (ohne DB-Migration, 0 € KI-Kosten) gespeichert und im Dashboard unter `/dashboard?course=<id>` geladen (HTML-Artifacts sicher im `<iframe sandbox="allow-scripts">` + „In neuem Tab öffnen“).
+- **Aufgeräumte Sidebar (`DashboardShell.tsx`):** Alte SaaS-Links entfernt; neue klare Struktur: `+ Kurs aus Claude laden` (`/dashboard?upload=1#upload`), `Klausur-Trainer` (`/dashboard`), `Einstellungen`, und `Meine Kurse` mit Klick-Auswahl und Lösch-Button (`Trash2`).
 
 ## Erledigt (diese Session)
-- **Workflow & Livegang (`CLAUDE.md`, `AGENTS.md`, `WORKFLOW.md`):** Auto-Live-Workflow auf `main` verankert und kompletten Branch `feat/bwl-mcp-unification` in `main` gemerged & gepusht.
-- **Admin-Only Auth (`src/app/login/*`, `src/app/auth/*`, `src/lib/admin/auth.ts`):** Passwort-Login, Allowlist (`ADMIN_EMAILS`), OAuth-/Confirm-Sperre & Landingpage-„Anmelden“-Link.
-- **Klausur-Trainer (`src/app/dashboard/page.tsx`, `src/app/dashboard/trainer/page.tsx`, `src/components/trainer/*`, `src/lib/trainer/*`):** `lernly.kurs/1` Importer/Viewer direkt auf `/dashboard` integriert.
+- **Admin-Cleanup & Unlimited (`scripts/admin-cleanup.ts`, `src/lib/quota.ts`, `src/lib/tutorPrompt.ts`, `src/app/api/*`, `src/app/dashboard/*`):** Alt-Daten bereinigt (41 `card_reviews`, 10 `study_packs`, 4 `exams` etc. gelöscht) & unbegrenzten Admin-Plan dauerhaft verdrahtet.
+- **Persistenter Trainer & HTML-Artifact-Viewer (`src/lib/trainer/*`, `src/app/api/trainer/courses/**`, `src/components/trainer/TrainerView.tsx`, `src/app/dashboard/page.tsx`, `src/app/dashboard/pack/[id]/page.tsx`):** Dauerhafte Speicherung in Supabase inkl. Fallback-Parser für alte HTML-Artifacts und sandgeboxtem HTML-Viewer.
+- **Sidebar-Umbau (`src/components/dashboard/DashboardShell.tsx`, `src/app/dashboard/layout.tsx`):** Navigation auf `Kurs aus Claude laden`, `Klausur-Trainer`, `Einstellungen` und `Meine Kurse` inkl. Löschen umgestellt.
 
 ## Nächster konkreter Schritt
-1. **Vercel Env-Vars setzen & auf `lernly-app.de` einloggen:** `ADMIN_EMAILS` und `ADMIN_PASSWORD` in Vercel eintragen (Production + Preview + Development) und direkt auf `https://lernly-app.de/login` einloggen → `/dashboard` mit Corporate-Finance-Demo & eigenem `_lernly/`-Ordner testen.
-2. **Phase 6:** Supabase-Speicherung für Kurse/Fortschritt (Migration erst nach expliziter Freigabe).
+1. **Live-Abnahme auf `lernly-app.de`:** Mit `beleanrd@gmail.com` einloggen, `_lernly/`-Ordner sowie `Corporate Finance Klausurtrainer.html` hochladen, Sidebar-Auswahl („Meine Kurse“), Reload und Löschen testen.
+2. **Phase 6b / Fortschritt:** Spaced-Repetition- & Aufgabenfortschritt optional von `localStorage` in Supabase synchronisieren (ohne bestehendes Schema zu brechen).
 3. **Phase 7:** Neue Landingpage aus den echten App-Komponenten bauen.
 
 ## Bekannte Grenzen & Hinweise

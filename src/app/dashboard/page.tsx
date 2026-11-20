@@ -6,6 +6,7 @@ import ExamCard from "@/components/dashboard/ExamCard";
 import LoosePacksSection from "@/components/dashboard/LoosePacksSection";
 import StudentDashboard from "@/components/dashboard/studentProgress/StudentDashboard";
 import { TrainerView } from "@/components/trainer/TrainerView";
+import { SavedTrainerPackSchema, type TrainerBundle } from "@/lib/trainer/types";
 import { getStudentProgress } from "@/lib/dashboard/studentProgress";
 import { LAYOUT } from "@/lib/layout";
 import { CRAM_ENABLED } from "@/lib/features";
@@ -32,33 +33,76 @@ type Exam = {
   created_at: string;
 };
 
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ upgraded?: string; cram?: string }>;
+  searchParams: Promise<{
+    upgraded?: string;
+    cram?: string;
+    course?: string;
+    upload?: string;
+  }>;
 }) {
   const params = await searchParams;
   const supabase = await createClient();
 
-  const [packsRes, examsRes, userRowRes, creditsRes, dueRes] =
-    await Promise.all([
-      supabase.rpc("list_pack_summaries"),
-      supabase
-        .from("exams")
-        .select("id, title, exam_date, color, created_at")
-        .order("exam_date", { ascending: true, nullsFirst: false }),
-      supabase
-        .from("users")
-        .select("plan, plan_expires_at, packs_used_this_month, name")
-        .single(),
-      supabase.rpc("available_pack_credits"),
-      // Global "Fällig"-Queue count — cards whose next review is due now. RLS
-      // scopes to the current user; head:true makes it a count-only query.
-      supabase
-        .from("card_reviews")
-        .select("*", { count: "exact", head: true })
-        .lte("due_at", new Date().toISOString()),
-    ]);
+  const courseQuery =
+    params.course && UUID_RE.test(params.course)
+      ? supabase
+          .from("study_packs")
+          .select("id, pack_data")
+          .eq("id", params.course)
+          .maybeSingle()
+      : Promise.resolve({ data: null });
+
+  const [
+    packsRes,
+    examsRes,
+    userRowRes,
+    creditsRes,
+    dueRes,
+    authRes,
+    loadedCourseRes,
+  ] = await Promise.all([
+    supabase.rpc("list_pack_summaries"),
+    supabase
+      .from("exams")
+      .select("id, title, exam_date, color, created_at")
+      .order("exam_date", { ascending: true, nullsFirst: false }),
+    supabase
+      .from("users")
+      .select("plan, plan_expires_at, packs_used_this_month, name")
+      .single(),
+    supabase.rpc("available_pack_credits"),
+    // Global "Fällig"-Queue count — cards whose next review is due now. RLS
+    // scopes to the current user; head:true makes it a count-only query.
+    supabase
+      .from("card_reviews")
+      .select("*", { count: "exact", head: true })
+      .lte("due_at", new Date().toISOString()),
+    supabase.auth.getUser(),
+    courseQuery,
+  ]);
+
+  let loadedId: string | null = null;
+  let loadedBundle: TrainerBundle | undefined;
+  if (loadedCourseRes.data) {
+    const parsedCourse = SavedTrainerPackSchema.safeParse(
+      loadedCourseRes.data.pack_data,
+    );
+    if (parsedCourse.success) {
+      loadedId = loadedCourseRes.data.id as string;
+      loadedBundle = parsedCourse.data.bundle;
+      void supabase
+        .from("study_packs")
+        .update({ last_opened_at: new Date().toISOString() })
+        .eq("id", loadedId)
+        .then(() => {});
+    }
+  }
 
   const credits = typeof creditsRes.data === "number" ? creditsRes.data : 0;
 
@@ -68,7 +112,11 @@ export default async function DashboardPage({
   };
   const exams = (examsRes.data as Exam[] | null) ?? [];
   const profile = userRowRes.data;
-  const plan = effectivePlan(profile?.plan, profile?.plan_expires_at);
+  const plan = effectivePlan(
+    profile?.plan,
+    profile?.plan_expires_at,
+    authRes.data.user?.email,
+  );
   const used = profile?.packs_used_this_month ?? 0;
   const planLimit = PLAN_LIMITS[plan] ?? 0;
   const planLabel = PLAN_LABEL[plan] ?? plan;
@@ -140,7 +188,12 @@ export default async function DashboardPage({
       )}
 
       {/* Primary view: interactive lernly.kurs/1 trainer + _lernly/ importer */}
-      <TrainerView />
+      <TrainerView
+        key={loadedId ?? "demo"}
+        initialBundle={loadedBundle}
+        initialCourseId={loadedId}
+        focusUpload={params.upload === "1"}
+      />
 
       {/* Legacy packs & exams (shown collapsed below only when existing data is present) */}
       {!isEmpty ? (

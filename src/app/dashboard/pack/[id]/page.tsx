@@ -8,6 +8,8 @@ import PackHeader, {
 import type { LatestAttempt } from "@/components/pack/PackHub";
 import { createClient } from "@/lib/supabase/server";
 import { StudyPackSchema } from "@/lib/schema";
+import { TrainerView } from "@/components/trainer/TrainerView";
+import { SavedTrainerPackSchema } from "@/lib/trainer/types";
 import { MASTERY_INTERVAL_DAYS } from "@/lib/srs";
 import { LAYOUT } from "@/lib/layout";
 import { DEMO_VISUAL_MAP_V2 } from "@/lib/fixtures/visualMapDemo";
@@ -96,6 +98,19 @@ export default async function PackDetailPage({
         (attemptRow.per_topic as LatestAttempt["per_topic"]) ?? {},
       created_at: attemptRow.created_at as string,
     };
+  }
+
+  const savedTrainer = SavedTrainerPackSchema.safeParse(data.pack_data);
+  if (savedTrainer.success) {
+    return (
+      <main>
+        <TrainerView
+          key={data.id}
+          initialBundle={savedTrainer.data.bundle}
+          initialCourseId={data.id}
+        />
+      </main>
+    );
   }
 
   const parsed = StudyPackSchema.safeParse(data.pack_data);

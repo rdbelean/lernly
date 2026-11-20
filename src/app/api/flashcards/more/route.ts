@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
+import { isAllowedAdminEmail } from "@/lib/admin/auth";
 import {
   createClient as createSupabaseServer,
   createServiceClient,
@@ -53,38 +54,42 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Ungültiges Paket." }, { status: 400 });
     }
     const instructions = (body.instructions ?? "").slice(0, 500).trim();
+    const isAdmin = isAllowedAdminEmail(user.email);
 
     // Card-gen quota gate (separate monthly counter from pack quota). Also
-    // yields the effective plan for the count cap.
-    const { data: quota, error: qErr } = await supabase.rpc(
-      "check_card_gen_quota",
-    );
-    if (qErr) {
-      console.error("[/api/flashcards/more] quota check failed", qErr);
-      return NextResponse.json(
-        { error: "Kontingent konnte nicht geprüft werden." },
-        { status: 500 },
+    // yields the effective plan for the count cap. Admin emails bypass limits.
+    let plan = "unlimited";
+    if (!isAdmin) {
+      const { data: quota, error: qErr } = await supabase.rpc(
+        "check_card_gen_quota",
       );
-    }
-    if (quota && quota.ok === false) {
-      if (quota.reason === "quota_exceeded") {
+      if (qErr) {
+        console.error("[/api/flashcards/more] quota check failed", qErr);
         return NextResponse.json(
-          {
-            error: `Monatslimit für Karten-Nachgenerieren erreicht: ${quota.used}/${quota.limit} im ${quota.plan}-Plan.`,
-            reason: "quota_exceeded",
-            used: quota.used,
-            limit: quota.limit,
-            plan: quota.plan,
-          },
-          { status: 402 },
+          { error: "Kontingent konnte nicht geprüft werden." },
+          { status: 500 },
         );
       }
-      return NextResponse.json(
-        { error: "Nachgenerieren nicht erlaubt.", reason: quota.reason },
-        { status: 400 },
-      );
+      if (quota && quota.ok === false) {
+        if (quota.reason === "quota_exceeded") {
+          return NextResponse.json(
+            {
+              error: `Monatslimit für Karten-Nachgenerieren erreicht: ${quota.used}/${quota.limit} im ${quota.plan}-Plan.`,
+              reason: "quota_exceeded",
+              used: quota.used,
+              limit: quota.limit,
+              plan: quota.plan,
+            },
+            { status: 402 },
+          );
+        }
+        return NextResponse.json(
+          { error: "Nachgenerieren nicht erlaubt.", reason: quota.reason },
+          { status: 400 },
+        );
+      }
+      plan = (quota?.plan as string) ?? "free";
     }
-    const plan = (quota?.plan as string) ?? "free";
     const count = clampCardCount(body.count ?? 10, plan);
 
     // Load the pack (RLS-scoped to the owner).
@@ -116,7 +121,7 @@ export async function POST(request: Request) {
     } catch (e) {
       console.error("[/api/flashcards/more] acquire_generation_slot threw", e);
     }
-    if (slotGateOutcome({ usesByok: false, acquired }) === "busy") {
+    if (slotGateOutcome({ usesByok: isAdmin, acquired }) === "busy") {
       return NextResponse.json(
         { error: BUSY_MSG, retryable: true },
         { status: 503, headers: { "Retry-After": "20" } },
@@ -169,10 +174,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // Charge the card-gen quota exactly once, only after a successful save.
-    const { error: bumpErr } = await supabase.rpc("bump_card_gen_usage");
-    if (bumpErr) {
-      console.error("[/api/flashcards/more] usage bump failed", bumpErr);
+    if (!isAdmin) {
+      // Charge the card-gen quota exactly once, only after a successful save.
+      const { error: bumpErr } = await supabase.rpc("bump_card_gen_usage");
+      if (bumpErr) {
+        console.error("[/api/flashcards/more] usage bump failed", bumpErr);
+      }
     }
 
     return NextResponse.json({

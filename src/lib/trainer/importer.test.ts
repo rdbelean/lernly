@@ -109,3 +109,16 @@ test("sanitizeTrainerSvg strips scripts and inline event handlers", () => {
   assert.doesNotMatch(clean, /onload=/);
   assert.match(clean, /<rect/);
 });
+
+test("importTrainerBundle imports standalone Claude HTML artifacts without #lernly-data", () => {
+  const artifact = `<!doctype html><html><head><title>Corporate Finance · Klausurtrainer</title></head><body><h1>Corporate Finance · Klausurtrainer</h1><h2>Market efficiency</h2><h2>DCF (entity method)</h2><script>console.log("ok")</script></body></html>`;
+  const res = importTrainerBundle([
+    { name: "Corporate Finance Klausurtrainer.html", content: artifact },
+  ]);
+  assert.equal(res.ok, true);
+  if (!res.ok) return;
+  assert.equal(res.sourceKind, "html-artifact");
+  assert.equal(res.bundle.course.title, "Corporate Finance · Klausurtrainer");
+  assert.equal(res.bundle.course.topics.length, 2);
+  assert.equal(res.bundle.artifactHtml, artifact);
+});

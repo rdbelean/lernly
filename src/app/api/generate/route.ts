@@ -6,6 +6,7 @@ import {
   deviceCookieOptions,
 } from "@/lib/anonTrial";
 import { NextResponse } from "next/server";
+import { isAllowedAdminEmail } from "@/lib/admin/auth";
 import {
   type ExamType,
   type StudyPack,
@@ -408,14 +409,15 @@ export async function POST(request: Request) {
     }
 
     const usesByok = Boolean(storedKey || userApiKey);
+    const isAdmin = isAllowedAdminEmail(user?.email);
 
     // Whether this generation was paid for via a one-time pack_credit rather
     // than the user's monthly subscription quota. Used at the end to skip
     // bump_pack_usage so we don't double-charge.
     let willUseCredit = false;
-    let userPlan: string | null = null;
+    let userPlan: string | null = isAdmin ? "unlimited" : null;
 
-    if (user && !usesByok) {
+    if (user && !usesByok && !isAdmin) {
       // Atomic reserve closes the check-then-bump race: it increments the
       // monthly counter under the same row lock as the limit check, so
       // concurrent generations can't all slip past the cap. Falls back to the

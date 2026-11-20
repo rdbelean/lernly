@@ -8,11 +8,14 @@
 //
 // Einzelklausur's "5" is the cap across its 14-day access window (approximated
 // by the monthly counter, which is reset to 0 when the purchase is granted).
+import { isAllowedAdminEmail } from "./admin/auth";
+
 export const PLAN_LIMITS: Record<string, number> = {
   free: 2,
   einzelklausur: 5,
   monthly: 50,
   semester: 60,
+  unlimited: 999_999,
 };
 
 export const PLAN_LABEL: Record<string, string> = {
@@ -20,15 +23,19 @@ export const PLAN_LABEL: Record<string, string> = {
   einzelklausur: "Einzelklausur",
   monthly: "Monatlich",
   semester: "Semester",
+  unlimited: "Unbegrenzt (Admin)",
 };
 
 // A paid plan whose access window has lapsed behaves as free. The one-time
 // Einzelklausur never emits a Stripe cancel event, so JS read-paths must apply
 // the same lapse the DB quota function enforces. Pass users.plan_expires_at.
+// Admin allowlisted emails always resolve to "unlimited".
 export function effectivePlan(
   plan: string | null | undefined,
   planExpiresAt: string | null | undefined,
+  email?: string | null | undefined,
 ): string {
+  if (isAllowedAdminEmail(email)) return "unlimited";
   if (!plan || plan === "free") return "free";
   if (planExpiresAt && new Date(planExpiresAt).getTime() < Date.now()) {
     return "free";
@@ -56,6 +63,7 @@ export const CARD_COUNT_MAX: Record<string, number> = {
   einzelklausur: 50,
   monthly: 50,
   semester: 50,
+  unlimited: 50,
 };
 
 // Monthly "Mehr Karten" generations per plan — mirrors check_card_gen_quota.
@@ -64,6 +72,7 @@ export const CARD_GEN_LIMITS: Record<string, number> = {
   einzelklausur: 20,
   monthly: 100,
   semester: 150,
+  unlimited: 999_999,
 };
 
 /** Clamp a requested card count to the plan cap + the offered range. */

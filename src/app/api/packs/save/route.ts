@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isAllowedAdminEmail } from "@/lib/admin/auth";
 import { StudyPackSchema } from "@/lib/schema";
 import { createClient } from "@/lib/supabase/server";
 
@@ -26,39 +27,42 @@ export async function POST(request: Request) {
   if (!user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
+  const isAdmin = isAllowedAdminEmail(user.email);
 
-  const { data: quota, error: qErr } = await supabase.rpc("check_pack_quota");
-  if (qErr) {
-    console.error("[/api/packs/save] quota check failed", qErr);
-  } else if (quota && quota.ok === false) {
-    if (quota.reason === "rate_limit") {
+  if (!isAdmin) {
+    const { data: quota, error: qErr } = await supabase.rpc("check_pack_quota");
+    if (qErr) {
+      console.error("[/api/packs/save] quota check failed", qErr);
+    } else if (quota && quota.ok === false) {
+      if (quota.reason === "rate_limit") {
+        return NextResponse.json(
+          {
+            error: `Bitte warte noch ${quota.retry_after_seconds}s.`,
+            reason: "rate_limit",
+          },
+          {
+            status: 429,
+            headers: { "Retry-After": String(quota.retry_after_seconds) },
+          },
+        );
+      }
+      if (quota.reason === "quota_exceeded") {
+        return NextResponse.json(
+          {
+            error: `Monatslimit erreicht: ${quota.used}/${quota.limit} im ${quota.plan}-Plan.`,
+            reason: "quota_exceeded",
+            used: quota.used,
+            limit: quota.limit,
+            plan: quota.plan,
+          },
+          { status: 402 },
+        );
+      }
       return NextResponse.json(
-        {
-          error: `Bitte warte noch ${quota.retry_after_seconds}s.`,
-          reason: "rate_limit",
-        },
-        {
-          status: 429,
-          headers: { "Retry-After": String(quota.retry_after_seconds) },
-        },
+        { error: "Speichern nicht erlaubt.", reason: quota.reason },
+        { status: 400 },
       );
     }
-    if (quota.reason === "quota_exceeded") {
-      return NextResponse.json(
-        {
-          error: `Monatslimit erreicht: ${quota.used}/${quota.limit} im ${quota.plan}-Plan.`,
-          reason: "quota_exceeded",
-          used: quota.used,
-          limit: quota.limit,
-          plan: quota.plan,
-        },
-        { status: 402 },
-      );
-    }
-    return NextResponse.json(
-      { error: "Speichern nicht erlaubt.", reason: quota.reason },
-      { status: 400 },
-    );
   }
 
   const { data, error } = await supabase
@@ -80,9 +84,11 @@ export async function POST(request: Request) {
     );
   }
 
-  const { error: bumpErr } = await supabase.rpc("bump_pack_usage");
-  if (bumpErr) {
-    console.error("[/api/packs/save] bump failed", bumpErr);
+  if (!isAdmin) {
+    const { error: bumpErr } = await supabase.rpc("bump_pack_usage");
+    if (bumpErr) {
+      console.error("[/api/packs/save] bump failed", bumpErr);
+    }
   }
 
   return NextResponse.json({ id: data.id });

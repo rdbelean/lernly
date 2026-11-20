@@ -1,6 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import * as Sentry from "@sentry/nextjs";
 import { NextResponse } from "next/server";
+import { isAllowedAdminEmail } from "@/lib/admin/auth";
 import { createClient } from "@/lib/supabase/server";
 import { effectivePlan } from "@/lib/quota";
 import { HAIKU } from "@/lib/taskModels";
@@ -106,9 +107,11 @@ export async function POST(request: Request): Promise<Response> {
       .eq("user_id", userId)
       .maybeSingle(),
   ]);
+  const isAdmin = isAllowedAdminEmail(authData.user.email);
   const plan = effectivePlan(
     profile?.plan as string | null,
     profile?.plan_expires_at as string | null,
+    authData.user.email,
   );
   const limit = tutorLimitForPlan(plan);
   const now = new Date();
@@ -126,7 +129,7 @@ export async function POST(request: Request): Promise<Response> {
     // else: prior period — reset to 0 implicitly. We'll write the new
     // period_start on the upsert below.
   }
-  if (used >= limit) {
+  if (!isAdmin && used >= limit) {
     return NextResponse.json(
       {
         error: QUOTA_EXCEEDED_MSG_DE,

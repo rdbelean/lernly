@@ -1,20 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import LernlyLogo from "@/components/LernlyLogo";
-import { usePathname } from "next/navigation";
-import { Toaster } from "sonner";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Toaster, toast } from "sonner";
 import {
-  Library,
   Plus,
   Settings,
   Menu,
   ChevronsLeft,
   ChevronsRight,
-  ChevronDown,
-  RotateCcw,
   GraduationCap,
+  Trash2,
+  Loader2,
 } from "lucide-react";
 import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
 import WelcomeModal from "@/components/dashboard/WelcomeModal";
@@ -22,7 +21,6 @@ import ProfileMenu from "@/components/dashboard/ProfileMenu";
 import { PwaInstall } from "@/components/pwa/PwaInstall";
 
 const COLLAPSE_KEY = "lernly:sidebar-collapsed";
-const RECENT_PREVIEW = 3; // Zuletzt entries shown before "Mehr anzeigen".
 
 type RecentPack = {
   id: string;
@@ -42,10 +40,6 @@ type Props = {
 // =========================================================================
 // DashboardShell — persistent app shell (desktop sidebar / mobile drawer)
 // =========================================================================
-// Minimal-nav pass: collapsible icon rail (persisted), a bottom ProfileMenu
-// that folds away the secondary footer items + e-mail, and a trimmed "Zuletzt"
-// list. lucide icons, --color-bg-deep surface, real <LernlyLogo>, no emojis.
-// =========================================================================
 
 function NavLink({
   href,
@@ -58,7 +52,7 @@ function NavLink({
 }: {
   href: string;
   active: boolean;
-  icon: typeof Library;
+  icon: typeof GraduationCap;
   label: string;
   collapsed?: boolean;
   onClick?: () => void;
@@ -97,7 +91,6 @@ function NavLink({
             className="absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full ring-2"
             style={{
               background: "var(--color-primary-bright)",
-              // ring matches the surface so the dot reads as a notification badge
               ["--tw-ring-color" as string]: "var(--color-bg-deep)",
             }}
           />
@@ -114,7 +107,7 @@ function NavLink({
   );
 }
 
-function RecentList({
+function CoursesListInner({
   recentPacks,
   pathname,
   onClose,
@@ -123,54 +116,132 @@ function RecentList({
   pathname: string;
   onClose?: () => void;
 }) {
-  const [showAll, setShowAll] = useState(false);
-  const visible = showAll ? recentPacks : recentPacks.slice(0, RECENT_PREVIEW);
-  const hidden = recentPacks.length - visible.length;
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const activeCourseId = searchParams?.get("course") ?? null;
+
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deletedIds, setDeletedIds] = useState<Record<string, true>>({});
+
+  const visiblePacks = recentPacks.filter((p) => !deletedIds[p.id]);
+
+  const handleDelete = async (pack: RecentPack) => {
+    setDeletingId(pack.id);
+    try {
+      const res = await fetch(`/api/trainer/courses/${pack.id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        toast.error("Kurs konnte nicht gelöscht werden.");
+        return;
+      }
+      setDeletedIds((prev) => ({ ...prev, [pack.id]: true }));
+      toast.success(`„${pack.title}“ gelöscht`);
+      if (
+        activeCourseId === pack.id ||
+        pathname === `/dashboard/pack/${pack.id}`
+      ) {
+        router.push("/dashboard");
+      }
+      router.refresh();
+    } catch {
+      toast.error("Kurs konnte nicht gelöscht werden.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   return (
     <div className="mt-7">
       <p
-        className="mb-2 px-3 text-[12px]"
+        className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-[0.06em]"
         style={{ color: "var(--color-text-faint)" }}
       >
-        Zuletzt
+        Meine Kurse
       </p>
-      <div className="flex flex-col">
-        {visible.map((p) => {
-          const active = pathname === `/dashboard/pack/${p.id}`;
-          return (
-            <Link
-              key={p.id}
-              href={`/dashboard/pack/${p.id}`}
-              onClick={onClose}
-              className="group flex items-center gap-2.5 rounded-lg px-3 py-2 transition"
-              style={{
-                background: active ? "var(--color-surface-2)" : "transparent",
-                color: active ? "var(--color-text)" : "var(--color-text-dim)",
-              }}
-            >
-              <span
-                aria-hidden
-                className="inline-block h-2 w-2 shrink-0 rounded-full"
-                style={{ background: "var(--color-text-faint)" }}
-              />
-              <span className="flex-1 truncate text-[13px]">{p.title}</span>
-            </Link>
-          );
-        })}
-      </div>
-      {hidden > 0 && (
-        <button
-          type="button"
-          onClick={() => setShowAll(true)}
-          className="mt-1 flex items-center gap-1 px-3 py-1.5 text-[12px] transition hover:text-[color:var(--color-text)]"
+
+      {visiblePacks.length === 0 ? (
+        <p
+          className="px-3 text-[12.5px] leading-relaxed"
           style={{ color: "var(--color-text-faint)" }}
         >
-          <ChevronDown size={13} strokeWidth={2} aria-hidden />
-          Mehr anzeigen ({hidden})
-        </button>
+          Noch keine Kurse gespeichert.
+        </p>
+      ) : (
+        <div className="flex flex-col gap-0.5">
+          {visiblePacks.map((p) => {
+            const active =
+              activeCourseId === p.id || pathname === `/dashboard/pack/${p.id}`;
+            const isDeleting = deletingId === p.id;
+            return (
+              <div
+                key={p.id}
+                className="group flex items-center gap-1 rounded-lg pr-1 transition"
+                style={{
+                  background: active ? "var(--color-surface-2)" : "transparent",
+                }}
+              >
+                <Link
+                  href={`/dashboard?course=${p.id}`}
+                  onClick={onClose}
+                  className="flex min-w-0 flex-1 items-center gap-2.5 rounded-lg px-3 py-2 transition"
+                  style={{
+                    color: active ? "var(--color-text)" : "var(--color-text-dim)",
+                  }}
+                >
+                  <span
+                    aria-hidden
+                    className="inline-block h-2 w-2 shrink-0 rounded-full"
+                    style={{
+                      background: active
+                        ? "var(--color-primary-bright)"
+                        : "var(--color-text-faint)",
+                    }}
+                  />
+                  <span className="flex-1 truncate text-[13px]">{p.title}</span>
+                </Link>
+
+                <button
+                  type="button"
+                  disabled={isDeleting}
+                  onClick={() => void handleDelete(p)}
+                  aria-label={`${p.title} löschen`}
+                  title="Kurs löschen"
+                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md opacity-60 transition hover:bg-[color:var(--color-err-bg)] hover:text-[color:var(--color-err-ink)] hover:opacity-100 focus-visible:opacity-100 disabled:opacity-40 sm:opacity-0 sm:group-hover:opacity-100"
+                  style={{ color: "var(--color-text-faint)" }}
+                >
+                  {isDeleting ? (
+                    <Loader2 size={13} className="animate-spin" aria-hidden />
+                  ) : (
+                    <Trash2 size={13} strokeWidth={1.85} aria-hidden />
+                  )}
+                </button>
+              </div>
+            );
+          })}
+        </div>
       )}
     </div>
+  );
+}
+
+function CoursesList({
+  recentPacks,
+  pathname,
+  onClose,
+}: {
+  recentPacks: RecentPack[];
+  pathname: string;
+  onClose?: () => void;
+}) {
+  return (
+    <Suspense fallback={null}>
+      <CoursesListInner
+        recentPacks={recentPacks}
+        pathname={pathname}
+        onClose={onClose}
+      />
+    </Suspense>
   );
 }
 
@@ -179,7 +250,6 @@ function SidebarContent({
   recentPacks,
   pathname,
   name,
-  dueCount,
   collapsed = false,
   collapsible = false,
   onToggleCollapse,
@@ -195,9 +265,8 @@ function SidebarContent({
   onToggleCollapse?: () => void;
   onClose?: () => void;
 }) {
-  const isTrainer = pathname.startsWith("/dashboard/trainer");
-  const isLibrary = pathname === "/dashboard";
-  const isReview = pathname.startsWith("/dashboard/review");
+  const isTrainer =
+    pathname === "/dashboard" || pathname.startsWith("/dashboard/trainer");
   const isSettings = pathname.startsWith("/dashboard/settings");
 
   return (
@@ -239,30 +308,14 @@ function SidebarContent({
         )}
       </div>
 
-      <nav className="flex flex-col gap-1.5">
-        <NavLink
-          href="/dashboard/trainer"
-          active={isTrainer}
-          collapsed={collapsed}
-          onClick={onClose}
-          icon={GraduationCap}
-          label="Klausur-Trainer"
-        />
-        <NavLink
-          href="/dashboard"
-          active={isLibrary}
-          collapsed={collapsed}
-          onClick={onClose}
-          icon={Library}
-          label="Bibliothek"
-        />
+      <nav className="flex flex-col gap-2">
         {collapsed ? (
           <Link
-            href="/dashboard/new"
+            href="/dashboard?upload=1#upload"
             onClick={onClose}
-            title="Neues Paket"
-            aria-label="Neues Paket"
-            className="flex h-10 items-center justify-center rounded-xl text-white transition hover:opacity-90"
+            title="Kurs aus Claude laden"
+            aria-label="Kurs aus Claude laden"
+            className="flex h-10 items-center justify-center rounded-xl text-on-primary transition hover:opacity-90"
             style={{ background: "var(--color-primary)" }}
           >
             <Plus size={18} strokeWidth={2.2} aria-hidden />
@@ -270,23 +323,24 @@ function SidebarContent({
         ) : (
           <PrimaryCTALink
             size="sm"
-            href="/dashboard/new"
+            href="/dashboard?upload=1#upload"
             onClick={onClose}
             leadingIcon={Plus}
             fullWidth
           >
-            Neues Paket
+            Kurs aus Claude laden
           </PrimaryCTALink>
         )}
+
         <NavLink
-          href="/dashboard/review"
-          active={isReview}
+          href="/dashboard"
+          active={isTrainer}
           collapsed={collapsed}
           onClick={onClose}
-          icon={RotateCcw}
-          label="Wiederholen"
-          badge={dueCount}
+          icon={GraduationCap}
+          label="Klausur-Trainer"
         />
+
         <NavLink
           href="/dashboard/settings"
           active={isSettings}
@@ -297,9 +351,13 @@ function SidebarContent({
         />
       </nav>
 
-      {/* Zuletzt — hidden in the icon rail; trimmed to a short preview otherwise */}
-      {!collapsed && recentPacks.length > 0 && (
-        <RecentList recentPacks={recentPacks} pathname={pathname} onClose={onClose} />
+      {/* Meine Kurse — persistent MCP & HTML courses */}
+      {!collapsed && (
+        <CoursesList
+          recentPacks={recentPacks}
+          pathname={pathname}
+          onClose={onClose}
+        />
       )}
 
       {/* Bottom: account popover (folds away settings/feedback/install/logout/email) */}

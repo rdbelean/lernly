@@ -15,7 +15,7 @@ Stand: 2026-11-20 · Aktiver Branch: `feat/bwl-mcp-unification`
 - [x] **Phase 3 — Karteikarten (`/karten`):** Anki-Stil, 3-Stufen-SRS (`1` morgen / `2` in 3 Tagen / `3` in 8 Tagen), `Leertaste`/`1`/`2`/`3`/`Esc` & visuelle Karten-Grafiken
 - [x] **Phase 4 — Rechenaufgaben (`/rechnen`):** Boxloses Layout, Eingabe + `Prüfen` (`Enter`), gezieltes Fehler-Feedback (z. B. vergessener Tax Shield bei WACC `7,4 %`) & schrittweiser Lösungsweg
 - [x] **Phase 5 — Hybrid-Upload & KI-Extraktion (`/upload`):** Einheitliches Schema + 0-€-Dropzone für Claude/MCP-Pakete (`kurs.json` + `themen/*.json`) und abgesicherter PDF-Extraktions-Adapter (`POST /api/study/extract`)
-- [ ] **Phase 6 — Konto, Speichern & Deployment:** Auth-Anbindung, Supabase-Persistenz (erst nach Migrations-Freigabe) & Live-Schaltung
+- [~] **Phase 6 — Konto, Speichern & Deployment:** Auth-Anbindung (`ADMIN_EMAILS`), Supabase-Kursspeicherung für `/dashboard` (`/api/trainer/courses` live) & Fortschritts-Sync als Nächstes
 - [ ] **Phase 7 — Landingpage aus echten App-Komponenten:** Hero („62 von 100 Punkten“), Dashboard, Karteikarte, Rechenaufgabe, Preis, FAQ
 
 ## 2) Claude MCP-Connector & BWL-Skills (`connector/` & `plugin/`)
@@ -28,9 +28,9 @@ Stand: 2026-11-20 · Aktiver Branch: `feat/bwl-mcp-unification`
 ## 3) Bestehende Web-App & Landingpage (aktiv bis Umschaltung in Phase 6/7)
 - [x] Helles Design, 20-Sekunden-Hero-Szene, Browser-Demo & direkter „Anmelden“-Link in `src/components/landing/LernlyLanding.tsx`
 - [x] Admin-Only-Login für geschlossene Beta (`ADMIN_EMAILS`/`ADMIN_PASSWORD` inkl. Kurzpasswort-Check `12345`, `signInWithPassword`, lokaler `Schnell-Login (Dev)` auf `localhost` & Allowlist über OAuth/Confirm/Dashboard)
-- [x] Erster `lernly.kurs/1` Klausur-Trainer direkt als Hauptansicht auf `/dashboard` (und `/dashboard/trainer`) mit `_lernly/`-Ordner-Import, Verstehen-Blöcken, Rechen-Drills (Zahlenvarianten + Toleranzprüfung), Punkte-Checklisten & Corporate-Finance-Demo-Kurs
+- [x] Erster `lernly.kurs/1` Klausur-Trainer direkt als Hauptansicht auf `/dashboard` (und `/dashboard/trainer`) mit `_lernly/`-Ordner-Import, HTML-Artifact-Support (`Lernly-Trainer.html` + eigenständige Claude-HTML-Artifacts im Sandbox-Iframe), dauerhafter Supabase-Speicherung (`/api/trainer/courses`), aufgeräumter Sidebar (`Meine Kurse` + Löschen) & permanentem Admin-Unlimited-Zugang
 - [x] Eingeloggtes Dashboard (`src/app/dashboard/`), Spaced Repetition (`/dashboard/review`), Auth & Stripe (mit Beta-Schutzschalter) sowie geschlossene Kosten-/Sicherheitslecks
-- [~] Auto-Live-Workflow auf `main` aktiv (`CLAUDE.md`, `AGENTS.md`, `WORKFLOW.md`) — Übergang auf Supabase-Speicherung (Phase 6) & neue Landingpage (Phase 7) als Nächstes
+- [~] Auto-Live-Workflow auf `main` aktiv (`CLAUDE.md`, `AGENTS.md`, `WORKFLOW.md`) — Fortschritts-Sync (Phase 6) & neue Landingpage (Phase 7) als Nächstes
 
 ## 4) Geparkte Themen (bewusst eingefroren, kein aktueller Fokus)
 - [x] **Alte SaaS-Vollgenerierung auf eigene KI-Kosten (`/api/generate`, Cram-Modus, BYOK):** Bestehender Code bleibt für Bestandsdaten stabil und abgesichert, wird aber nicht weiter ausgebaut (Cram deaktiviert, minütlicher Cron gestoppt)

@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
+import { isAllowedAdminEmail } from "@/lib/admin/auth";
 import {
   BUSY_MSG,
   GENERATION_MAX_CONCURRENCY,
@@ -59,46 +60,49 @@ export async function POST(request: Request) {
   }
 
   const service = createServiceClient();
+  const isAdmin = isAllowedAdminEmail(user.email);
 
-  const { data: rlAllowed, error: rlErr } = await service.rpc("check_rate_limit", {
-    p_key: `study_extract:${user.id}`,
-    p_limit: 5,
-    p_window_seconds: 3600,
-  });
-  if (rlErr) {
-    console.error("[/api/study/extract] check_rate_limit failed", rlErr);
-    return NextResponse.json(
-      { error: "Rate-Limit konnte nicht geprüft werden." },
-      { status: 500 },
-    );
-  }
-  if (rlAllowed === false) {
-    return NextResponse.json(
-      {
-        error: "Zu viele Auswertungen in kurzer Zeit. Bitte warte einen Moment.",
-        reason: "rate_limited",
-      },
-      { status: 429 },
-    );
-  }
+  if (!isAdmin) {
+    const { data: rlAllowed, error: rlErr } = await service.rpc("check_rate_limit", {
+      p_key: `study_extract:${user.id}`,
+      p_limit: 5,
+      p_window_seconds: 3600,
+    });
+    if (rlErr) {
+      console.error("[/api/study/extract] check_rate_limit failed", rlErr);
+      return NextResponse.json(
+        { error: "Rate-Limit konnte nicht geprüft werden." },
+        { status: 500 },
+      );
+    }
+    if (rlAllowed === false) {
+      return NextResponse.json(
+        {
+          error: "Zu viele Auswertungen in kurzer Zeit. Bitte warte einen Moment.",
+          reason: "rate_limited",
+        },
+        { status: 429 },
+      );
+    }
 
-  const { data: quota, error: qErr } = await supabase.rpc("check_pack_quota");
-  if (qErr) {
-    console.error("[/api/study/extract] check_pack_quota failed", qErr);
-    return NextResponse.json(
-      { error: "Kontingent konnte nicht geprüft werden." },
-      { status: 500 },
-    );
-  }
-  if (quota && quota.ok === false) {
-    return NextResponse.json(
-      {
-        error:
-          "Monatslimit für Server-Auswertung erreicht. Nutze den kostenlosen Claude/JSON-Import.",
-        reason: quota.reason ?? "quota_exceeded",
-      },
-      { status: 402 },
-    );
+    const { data: quota, error: qErr } = await supabase.rpc("check_pack_quota");
+    if (qErr) {
+      console.error("[/api/study/extract] check_pack_quota failed", qErr);
+      return NextResponse.json(
+        { error: "Kontingent konnte nicht geprüft werden." },
+        { status: 500 },
+      );
+    }
+    if (quota && quota.ok === false) {
+      return NextResponse.json(
+        {
+          error:
+            "Monatslimit für Server-Auswertung erreicht. Nutze den kostenlosen Claude/JSON-Import.",
+          reason: quota.reason ?? "quota_exceeded",
+        },
+        { status: 402 },
+      );
+    }
   }
 
   let formData: FormData;
@@ -193,7 +197,7 @@ export async function POST(request: Request) {
   }
   if (
     slotGateOutcome({
-      usesByok: false,
+      usesByok: isAdmin,
       acquired: slotErr ? null : (slotAcquired as boolean | null),
     }) === "busy"
   ) {

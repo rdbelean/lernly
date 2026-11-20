@@ -2,6 +2,7 @@
 
 import Anthropic from "@anthropic-ai/sdk";
 import { revalidatePath } from "next/cache";
+import { isAllowedAdminEmail } from "@/lib/admin/auth";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { STUDY_UPLOADS_BUCKET } from "@/lib/uploads";
 import { extractTextFromUpload } from "@/lib/textExtract";
@@ -69,7 +70,7 @@ async function authedClient() {
   const supabase = await createClient();
   const { data } = await supabase.auth.getUser();
   if (!data.user) throw new Error("Nicht angemeldet.");
-  return { supabase, userId: data.user.id };
+  return { supabase, userId: data.user.id, email: data.user.email ?? null };
 }
 
 export async function createExam(input: {
@@ -151,7 +152,8 @@ export async function attachPastExamsToExam(input: {
   examCount?: number;
   skipped?: string[];
 }> {
-  const { userId } = await authedClient();
+  const { userId, email } = await authedClient();
+  const isAdmin = isAllowedAdminEmail(email);
   const files = input.files.slice(0, MAX_PAST_EXAM_FILES);
   if (files.length === 0) return { ok: false, reason: "no_files" };
   // Ownership guard: service-role downloads bypass RLS, so enforce that the
@@ -233,28 +235,30 @@ export async function attachPastExamsToExam(input: {
     return { ok: false, reason: "no_api_key", skipped };
   }
 
-  const { data: rlAllowed, error: rlErr } = await service.rpc("check_rate_limit", {
-    p_bucket: `past_exam:user:${userId}`,
-    p_max: 5,
-    p_window_seconds: 3600,
-  });
-  if (rlErr) {
-    console.error("[attachPastExamsToExam] check_rate_limit failed", rlErr);
-  } else if (rlAllowed === false) {
-    return { ok: false, reason: "rate_limited", skipped };
-  }
+  if (!isAdmin) {
+    const { data: rlAllowed, error: rlErr } = await service.rpc("check_rate_limit", {
+      p_bucket: `past_exam:user:${userId}`,
+      p_max: 5,
+      p_window_seconds: 3600,
+    });
+    if (rlErr) {
+      console.error("[attachPastExamsToExam] check_rate_limit failed", rlErr);
+    } else if (rlAllowed === false) {
+      return { ok: false, reason: "rate_limited", skipped };
+    }
 
-  const { data: quota, error: qErr } = await supabase.rpc("check_card_gen_quota");
-  if (qErr) {
-    console.error("[attachPastExamsToExam] check_card_gen_quota failed", qErr);
-    return { ok: false, reason: "quota_check_failed", skipped };
-  }
-  if (quota && quota.ok === false) {
-    return {
-      ok: false,
-      reason: (quota.reason as string | undefined) ?? "quota_exceeded",
-      skipped,
-    };
+    const { data: quota, error: qErr } = await supabase.rpc("check_card_gen_quota");
+    if (qErr) {
+      console.error("[attachPastExamsToExam] check_card_gen_quota failed", qErr);
+      return { ok: false, reason: "quota_check_failed", skipped };
+    }
+    if (quota && quota.ok === false) {
+      return {
+        ok: false,
+        reason: (quota.reason as string | undefined) ?? "quota_exceeded",
+        skipped,
+      };
+    }
   }
 
   let slotHeld = false;
@@ -267,7 +271,7 @@ export async function attachPastExamsToExam(input: {
   } catch (e) {
     console.error("[attachPastExamsToExam] acquire_generation_slot threw", e);
   }
-  if (slotGateOutcome({ usesByok: false, acquired }) === "busy") {
+  if (slotGateOutcome({ usesByok: isAdmin, acquired }) === "busy") {
     return { ok: false, reason: "busy", skipped };
   }
   slotHeld = acquired === true;

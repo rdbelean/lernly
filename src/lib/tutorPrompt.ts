@@ -39,6 +39,7 @@ export const TIER_LIMITS: Record<string, number> = {
   einzelklausur: 150,
   monthly: 500,
   semester: 500,
+  unlimited: 999_999,
 };
 
 export const DEFAULT_TIER = "free";

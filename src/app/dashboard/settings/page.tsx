@@ -116,8 +116,8 @@ export default async function SettingsPage() {
   const keySetAt = secretRes.data?.anthropic_key_set_at ?? null;
   const profile = profileRes.data;
   const planExpiresAt = profile?.plan_expires_at ?? null;
-  // Effective plan: a lapsed paid plan reads as free (matches the DB gate).
-  const plan = effectivePlan(profile?.plan, planExpiresAt);
+  // Effective plan: a lapsed paid plan reads as free; admin emails are always unlimited.
+  const plan = effectivePlan(profile?.plan, planExpiresAt, user.email);
   const periodEnd = plan === "free" ? null : planExpiresAt;
   const hasStripeCustomer = Boolean(profile?.stripe_customer_id);
   const billingConfigured = Boolean(process.env.STRIPE_SECRET_KEY);
