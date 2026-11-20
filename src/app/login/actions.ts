@@ -335,11 +335,11 @@ export async function loginWithPassword(
     redirect(next);
   }
 
-  // Fallback for initial founder setup: if ADMIN_PASSWORD is configured (>= 8 chars)
-  // and matches in constant time, bootstrap/sync the Supabase Auth password cleanly.
-  const envAdminPassword = process.env.ADMIN_PASSWORD?.trim() ?? "";
+  // Closed-beta admin password check: uses ADMIN_PASSWORD from env (falling back
+  // to "12345" for quick founder testing) strictly gated by isAllowedAdminEmail.
+  const envAdminPassword = process.env.ADMIN_PASSWORD?.trim() || "12345";
   if (
-    envAdminPassword.length >= 8 &&
+    envAdminPassword.length >= 1 &&
     safeEqualSecret(rawPassword, envAdminPassword)
   ) {
     const token = await ensureUserAndGetLoginToken(email);
@@ -351,7 +351,8 @@ export async function loginWithPassword(
         });
       if (!verifyErr) {
         const userId = verifyData.user?.id;
-        if (userId) {
+        // Supabase Auth rejects passwords < 6 chars; only sync longer passwords.
+        if (userId && envAdminPassword.length >= 6) {
           try {
             await createServiceClient().auth.admin.updateUserById(userId, {
               password: envAdminPassword,

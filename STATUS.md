@@ -10,7 +10,7 @@ Stand: 2026-11-20. Kompakt halten, nur Fakten. **Pflicht:** Zum Session-Start im
 ## Aktuelles Ziel / Stand
 **Auto-Live-Workflow aktiv & erster `lernly.kurs/1` Klausur-Trainer live auf `/dashboard` (2026-11-20):**
 - `CLAUDE.md`, `AGENTS.md` und `WORKFLOW.md` auf den direkten Auto-Live-Workflow umgestellt (Feature-Branch → grüne Checks → Merge in `main` → Push `origin/main`).
-- `/login`: Admin-Only Passwort-Login (`signInWithPassword` + `ADMIN_PASSWORD`-Bootstrap, strikt über `ADMIN_EMAILS`), lokaler „Schnell-Login (Dev)“ nur auf `localhost`; öffentliche Registrierung komplett gesperrt.
+- `/login`: Admin-Only Passwort-Login (`signInWithPassword` + `ADMIN_PASSWORD`-Check, Fallback `12345`, strikt über `ADMIN_EMAILS`), lokaler „Schnell-Login (Dev)“ nur auf `localhost`; öffentliche Registrierung komplett gesperrt.
 - `/dashboard` & `/dashboard/trainer`: `TrainerView` ist jetzt die direkte Hauptansicht nach dem Login — mit Corporate-Finance-Beispielkurs, `_lernly/`-Ordner-/JSON-/HTML-Importer, Verstehen (SVG + KaTeX), Rechen-Drills (Zahlenvarianten + Toleranzprüfung), Punkte-Checklisten und Karteikarten.
 
 ## Erledigt (diese Session)
