@@ -292,6 +292,8 @@ export type TrainerProgressState = {
   knownCards: Record<string, boolean>;
   taskRatings: Record<string, TrainerRating>;
   cardRatings: Record<string, TrainerRating>;
+  /** SM-2 schedule per flashcard (due date, interval, ease). */
+  cardSchedule: Record<string, import("./sm2").CardSchedule>;
   readTopics: Record<string, boolean>;
   mockHistory: TrainerMockHistoryEntry[];
 };

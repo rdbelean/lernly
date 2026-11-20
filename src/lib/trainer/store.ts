@@ -1,4 +1,5 @@
 import { DEMO_TRAINER_BUNDLE } from "./demoCourse";
+import { scheduleCard } from "./sm2";
 import type {
   TrainerBundle,
   TrainerMockHistoryEntry,
@@ -26,6 +27,7 @@ const DEFAULT_PROGRESS: TrainerProgressState = {
   knownCards: {},
   taskRatings: {},
   cardRatings: {},
+  cardSchedule: {},
   readTopics: {},
   mockHistory: [],
 };
@@ -144,6 +146,7 @@ export function readTrainerProgress(): TrainerProgressState {
       knownCards: parsed.knownCards ?? {},
       taskRatings: parsed.taskRatings ?? {},
       cardRatings: parsed.cardRatings ?? {},
+      cardSchedule: parsed.cardSchedule ?? {},
       readTopics: parsed.readTopics ?? {},
       mockHistory: Array.isArray(parsed.mockHistory) ? parsed.mockHistory : [],
     };
@@ -228,6 +231,10 @@ export function rateTrainerCard(cardId: string, rating: TrainerRating): void {
     cardRatings: {
       ...cur.cardRatings,
       [cardId]: rating,
+    },
+    cardSchedule: {
+      ...cur.cardSchedule,
+      [cardId]: scheduleCard(cur.cardSchedule[cardId], rating, new Date()),
     },
   });
 }

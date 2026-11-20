@@ -27,11 +27,12 @@ Stand: 2026-11-20 · Aktiver Branch: `feat/bwl-mcp-unification`
 - [ ] Reibungsloses Setup für Studierende ohne Technik-Hürden (und später Remote-MCP-Anbindung für Web/Mobile)
 
 ## 3) Bestehende Web-App & Landingpage (aktiv bis Umschaltung in Phase 6/7)
-- [x] Helles Design, 20-Sekunden-Hero-Szene, Browser-Demo & direkter „Anmelden“-Link in `src/components/landing/LernlyLanding.tsx`
+- [x] Helles Design, Browser-Demo & direkter „Anmelden“-Link in `src/components/landing/LernlyLanding.tsx`; **Hero-Story im Trainer-Design** (22,5 s: Klausurplan → Verstehen mit KaTeX, Klausurfalle & Mustersatz → Schritt-für-Schritt-Lösung → SM-2-Karteikarte, Kamera-Zoom, klickbare Schritte + Pause) in `HeroScene.tsx`
 - [x] Admin-Only-Login für geschlossene Beta (`ADMIN_EMAILS`/`ADMIN_PASSWORD` inkl. Kurzpasswort-Check `12345`, `signInWithPassword`, lokaler `Schnell-Login (Dev)` auf `localhost` & Allowlist über OAuth/Confirm/Dashboard)
 - [x] **5-Tab-Klausurtrainer im Tax-Mock-Stil auf `/dashboard`:** Aufgeräumtes Focus-Dashboard (`Fokus`-Sidebar-Toggle, einklappbare Upload-Box), verlustfreier Importer für `lernly.kurs/1` + `sample-data/tax-mock-trainer.html` (15 Themen, 152 Aufgaben, 3 90-Min-Mocks, Appendix) + `sample-data/corporate-finance-trainer.html` (6/6 CF-Themen), 5 dedizierte Lernmodi (`Übersicht & Klausurplan`, `Lernen & Verstehen` inkl. Sticky-Sachverhalt & Appendix, `Üben & Rechnen` Ein-Aufgaben-Fokus + 4-Stufen-Rating `1–4`, `Karteikarten` & `Probeklausur` mit Timer) sowie dauerhafte Supabase-Speicherung (`/api/trainer/courses`) & Admin-Unlimited-Zugang
 - [x] BWL-/Tax-/Finance-Landingpage (`src/components/landing/LernlyLanding.tsx`) ohne Technik-Jargon geschärft (bestehendes Claude/ChatGPT statt teurem Extra-KI-Abo, 3-Schritte-Flow & 4 Nischen-FAQs) und „Null-Aufwand“-60-Sek.-Onboarding (`TrainerOnboardingAssistant` inkl. 1-Klick-Prompt, `Cmd+V`-Paste-Importer & direktem `.mcpb`-Download) im Dashboard aktiviert
 - [x] Eingeloggtes Dashboard (`src/app/dashboard/`), Spaced Repetition (`/dashboard/review`), Auth & Stripe (mit Beta-Schutzschalter) sowie geschlossene Kosten-/Sicherheitslecks
+- [x] **Karteikarten-Tab als echter Anki-Trainer:** SM-2-Planung pro Karte (`src/lib/trainer/sm2.ts`, `cardSchedule` in `localStorage`), dynamische Intervalle auf den 4 Buttons, Fällig-Queue, Sitzungsfortschritt + „Gespeichert“
 - [~] Auto-Live-Workflow auf `main` aktiv (`CLAUDE.md`, `AGENTS.md`, `WORKFLOW.md`) — Fortschritts-Sync (Phase 6) & nächste Ausbaustufen als Nächstes
 
 ## 4) Geparkte Themen (bewusst eingefroren, kein aktueller Fokus)
