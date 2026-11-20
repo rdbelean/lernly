@@ -20,29 +20,30 @@
   /* ============================================================
      NEW DESIGN SYSTEM TOKENS (UI #3)
      ============================================================
-     Light theme (2026-11): one palette, used everywhere. Color = meaning:
+     Light theme (2026-11, rebrand Richtung 1: warm paper, warm-neutral ink,
+     indigo as the only accent): one palette, used everywhere. Color = meaning:
      ok = sicher, work = in Arbeit, urgent = Countdown, err = Fehler.
      Never add per-element colors; add a token here instead. */
-  --color-bg: #F3F5FB;          /* page background */
+  --color-bg: #F7F7F4;          /* page background, warm paper */
   --color-bg-deep: #FFFFFF;     /* sidebar / nav surface */
   --color-surface: #FFFFFF;     /* cards, panels */
-  --color-surface-2: #EAEEF8;   /* chips, nav hover, inputs */
-  --color-line: rgba(18, 23, 43, 0.10);
-  --color-text: #12172B;
-  --color-text-dim: #5A6280;
-  --color-text-faint: #626A88;  /* hints; >= 4.5:1 on surface */
+  --color-surface-2: #EFEEEA;   /* chips, nav hover, inputs */
+  --color-line: rgba(22, 24, 29, 0.10);
+  --color-text: #16181D;
+  --color-text-dim: #5B5E66;
+  --color-text-faint: #62656D;  /* hints; >= 4.5:1 on bg, surface, surface-2 */
   --color-primary: #3646D6;        /* only filled CTA, white text */
   --color-primary-press: #2B3499;  /* pressed / hover */
   --color-primary-bright: #3646D6; /* small accents: active nav, links */
   --color-on-primary: #FFFFFF;
   --color-on-primary-dim: rgba(255, 255, 255, 0.82);
   --color-on-primary-a: rgba(255, 255, 255, 0.18);
-  --shadow-pop: 0 24px 60px rgba(18, 23, 43, 0.18);
-  --color-scrim: rgba(18, 23, 43, 0.45);
-  --color-ink-a04: rgba(18, 23, 43, 0.04);
-  --color-ink-a06: rgba(18, 23, 43, 0.06);
-  --color-ink-a10: rgba(18, 23, 43, 0.10);
-  --color-ink-a14: rgba(18, 23, 43, 0.14);
+  --shadow-pop: 0 24px 60px rgba(22, 24, 29, 0.18);
+  --color-scrim: rgba(22, 24, 29, 0.45);
+  --color-ink-a04: rgba(22, 24, 29, 0.04);
+  --color-ink-a06: rgba(22, 24, 29, 0.06);
+  --color-ink-a10: rgba(22, 24, 29, 0.10);
+  --color-ink-a14: rgba(22, 24, 29, 0.14);
   --color-ok-bg: #D4F0E0;
   --color-ok-ink: #0E4A2C;
   --color-work-bg: #DCE2FA;
@@ -58,9 +59,9 @@
 
   /* Legacy aliases — mapped to high-contrast light semantic tokens so any
      remaining reference stays accessible (>= 4.5:1 on light surfaces). */
-  --color-ln-bg-top: #F3F5FB;
-  --color-ln-bg-mid: #F3F5FB;
-  --color-ln-bg-bot: #F3F5FB;
+  --color-ln-bg-top: #F7F7F4;
+  --color-ln-bg-mid: #F7F7F4;
+  --color-ln-bg-bot: #F7F7F4;
 
   --color-ln-cyan: var(--color-primary);
   --color-ln-sky: var(--color-primary);

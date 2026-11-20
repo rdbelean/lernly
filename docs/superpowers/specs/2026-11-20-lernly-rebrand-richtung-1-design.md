@@ -61,7 +61,7 @@ Das Rebrand ist gescheitert, auch wenn es technisch läuft, wenn eines davon ein
 | `--color-line` | `rgba(18,23,43,.10)` | `rgba(22,24,29,.10)` | neutrale Haarlinie |
 | `--color-text` | `#12172B` | `#16181D` | warm-neutrale Tinte statt Blauschwarz |
 | `--color-text-dim` | `#5A6280` | `#5B5E66` | |
-| `--color-text-faint` | `#626A88` | `#6A6D75` | ca. 4,8:1 auf `#F7F7F4` |
+| `--color-text-faint` | `#626A88` | `#62656D` | ≥ 5:1 auf Papier, Weiß und Chip (`#6A6D75` lag auf dem Chip nur bei 4,46:1) |
 | `--color-primary` | `#3646D6` | `#3646D6` | bleibt; Indigo ist der einzige Akzent und trägt die Markenwiedererkennung |
 | Semantik ok, work, urgent, err | unverändert | unverändert | Farbe bedeutet weiter etwas |
 
@@ -127,6 +127,7 @@ Jedes Paket durchläuft `npx tsc --noEmit`, `npm run lint`, `npm test` und `npm 
 
 - Sora fällt weg, nur noch Inter.
 - Warmes Papier `#F7F7F4` statt kühlem Blaugrau.
+- `--color-text-faint` ist `#62656D` statt `#6A6D75`, weil der hellere Wert auf dem Chip-Ton unter 4,5:1 fiel.
 - Indigo `#3646D6` bleibt als einziger Akzent. Kein Gold, Belohnung ist Indigo plus Grün.
 - Statt Uni-Logos eine Fächer-Reihe.
 - Das Duolingo-Onboarding auf der Landing endet im Beta-`mailto` mit vorausgefülltem Fach, weil der Login geschlossen ist.

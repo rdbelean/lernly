@@ -54,7 +54,7 @@ destructive DB changes · adding new dependencies/libraries · large refactors �
 ---
 
 ## 🎨 DESIGN SYSTEM (current light theme — `src/app/globals.css`)
-- **Palette (Tokens in `src/app/globals.css` `@theme inline`):** Page `--color-bg: #F3F5FB`, sidebar `--color-bg-deep: #FFFFFF`, cards/surfaces `--color-surface: #FFFFFF`, chips/inputs `--color-surface-2: #EAEEF8`, hairline `--color-line: rgba(18, 23, 43, 0.10)`. Text `--color-text: #12172B`, dim `--color-text-dim: #5A6280`, faint `--color-text-faint: #626A88` (≥ 4.5:1 contrast on white/bg).
+- **Palette (Rebrand Richtung 1 „Klar und belohnend“, Spec `docs/superpowers/specs/2026-11-20-lernly-rebrand-richtung-1-design.md`; Tokens in `src/app/globals.css` `@theme inline`):** Page `--color-bg: #F7F7F4` (warmes Papier), sidebar `--color-bg-deep: #FFFFFF`, cards/surfaces `--color-surface: #FFFFFF`, chips/inputs `--color-surface-2: #EFEEEA`, hairline `--color-line: rgba(22, 24, 29, 0.10)`. Text `--color-text: #16181D`, dim `--color-text-dim: #5B5E66`, faint `--color-text-faint: #62656D` (≥ 4.5:1 auf bg, surface und surface-2; geprüft in `src/lib/design/tokens.test.ts`). Indigo ist der einzige Akzent.
 - **Primary CTA:** `--color-primary: #3646D6` (`--color-primary-press: #2B3499`) with `--color-on-primary: #FFFFFF`.
 - **Fonts:** **Sora** (headings, `--font-display`), **Inter** (body, `--font-sans`).
 - **Icons:** **lucide-react only**. **NO emojis anywhere.**
