@@ -11,9 +11,9 @@ const server = new McpServer({ name: 'lernly', version: '0.2.0' }, {
 const text = value => ({ content: [{ type: 'text', text: JSON.stringify(value, null, 2) }] });
 // Serialize operations, including cross-file validation and atomic saves.
 let queue = Promise.resolve();
-function tool(name, description, inputSchema, action, writes = false) {
+function tool(name, description, inputSchema, action, writes = false, openWorld = false) {
   server.registerTool(name, { description, inputSchema, annotations: {
-    readOnlyHint: !writes, destructiveHint: false, idempotentHint: true, openWorldHint: false
+    readOnlyHint: !writes, destructiveHint: false, idempotentHint: true, openWorldHint: openWorld
   } }, args => {
     const run = queue.then(async () => {
       try { return text(await action(args)); }
@@ -42,6 +42,10 @@ tool('lernly_calculate', 'Berechnet arithmetische Ausdrücke zur unabhängigen P
   expression: z.string().min(1).max(500)
 }, ({ expression }) => service.bridge({ op: 'calculate', expression }));
 tool('lernly_build_trainer', 'Baut aus gespeicherten, validierten Kursdaten den lokalen HTML-Trainer. Gibt offene Themen und Dateipfad zurück. Kein natives Claude-Artifact; dieses erstellt Claude selbst.', {}, () => service.build(), true);
+tool('lernly_sync_web_course', 'Synchronisiert den lokal gespeicherten und validierten _lernly-Kurs direkt in das Lernly Web-Dashboard (lernly-app.de/dashboard). Nutzt den hinterlegten Sync-Token oder einen direkt übergebenen sync_token aus lernly-app.de/dashboard/settings.', {
+  sync_token: z.string().min(10).max(1000).optional(),
+  api_url: z.string().url().optional()
+}, args => service.syncToWeb(args), true, true);
 tool('lernly_export_cards', 'Exportiert gespeicherte Karteikarten für manuellen Anki-/Quizlet-Import. Liefert Dateien und TSV-Text. Kein Cloud-Sync.', { format: z.enum(['anki', 'quizlet', 'both']).default('both') }, ({ format }) => service.exportCards(format), true);
 server.registerPrompt('lernly-start', { title: 'Mit Lernly lernen', description: 'Kurs aus dem freigegebenen Ordner einrichten und ein Study OS erstellen.', argsSchema: { ziel: z.string().optional() } }, async ({ ziel }) => ({ messages: [{ role: 'user', content: { type: 'text', text: `${(await service.instructions()).instructions}\n\nMein Lernziel: ${ziel || 'Klausurvorbereitung. Analysiere meinen Kurs und hilf mir mit einem interaktiven Study OS.'}` } }] }));
 await server.connect(new StdioServerTransport());

@@ -9,11 +9,21 @@ const exec = promisify(execFile);
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 export class Lernly {
-  constructor({ root, assets = ROOT, python = process.env.LERNLY_PYTHON || 'python3', prompts = process.env.LERNLY_PROMPTS_DIR } = {}) {
+  constructor({
+    root,
+    assets = ROOT,
+    python = process.env.LERNLY_PYTHON || 'python3',
+    prompts = process.env.LERNLY_PROMPTS_DIR,
+    syncToken = process.env.LERNLY_SYNC_TOKEN,
+    webUrl = process.env.LERNLY_WEB_URL,
+  } = {}) {
     this.storage = new Storage(root);
     this.assets = assets;
     this.python = python;
     this.prompts = prompts && !prompts.startsWith('${') ? prompts : path.join(assets, 'prompts');
+    this.syncToken = typeof syncToken === 'string' && syncToken.trim() && !syncToken.trim().startsWith('${') ? syncToken.trim() : '';
+    const cleanedUrl = typeof webUrl === 'string' && webUrl.trim() && !webUrl.trim().startsWith('${') ? webUrl.trim() : 'https://lernly-app.de';
+    this.webUrl = cleanedUrl.replace(/\/+$/, '');
   }
 
   async init() {
@@ -53,6 +63,8 @@ export class Lernly {
       instructions = '# MCP-Eingabe: data ist ein Objekt, kein JSON-String. LaTeX genau einmal JSON-kodieren. Im gespeicherten String steht EIN Backslash vor frac, div, ( oder ). Im rohen JSON stehen dafür ZWEI. Nicht vier oder acht. Mehrfache Maskierung wird abgewiesen.\n\n';
       instructions += await fs.readFile(path.join(this.engine, 'skills/lernly-kurs-einrichten/references/kursprofil.md'), 'utf8');
       instructions += '\n\n' + await fs.readFile(path.join(this.engine, 'skills/lernly-trainer-bauen/references/format.md'), 'utf8');
+      instructions += '\n\n' + await fs.readFile(path.join(this.engine, 'skills/lernly-trainer-bauen/references/fachtypen.md'), 'utf8');
+      instructions += '\n\n' + await fs.readFile(path.join(this.engine, 'skills/lernly-trainer-bauen/references/qualitaet.md'), 'utf8');
     }
     return { mode, prompt_revision: digest(instructions).slice(0, 16), instructions };
   }
@@ -64,8 +76,10 @@ export class Lernly {
     return { version: '0.2.0', course_root: this.storage.root, node: process.version, python,
       prompt_directory: this.prompts, prompt_revision: (await this.instructions()).prompt_revision,
       course_files: Object.keys(await this.storage.courseFiles()),
+      web_sync_configured: Boolean(this.syncToken),
+      web_url: this.webUrl,
       limits: { pdf_max_mb: 256, max_pages: 2500, read_max_chars: 24000, ocr: false },
-      note: 'Lokaler Desktop-Connector. Claude erstellt Artifacts selbst. Kein Remote-Connector, kein API-Key, kein automatischer Artifact-Fortschritt-Sync.' };
+      note: 'Lokaler Desktop-Connector. Unterstützt das 4-Fragen-Klausur-Briefing und direkten Web-Sync via lernly_sync_web_course ins Lernly-Dashboard.' };
   }
 
   cacheName(file) { return `_lernly/cache/${digest(file)}.json`; }
@@ -202,7 +216,82 @@ export class Lernly {
     const output = await this.storage.resolve('_lernly/output/Lernly-Trainer.html', { createParents: true });
     const result = await this.bridge({ op: 'build', folder: path.join(this.storage.root, '_lernly'), out: output });
     return { built: result.exit_code === 0, path: output, ...check, ...result,
-      note: 'Lokale HTML-Datei im Browser öffnen. Fortschritt wird dort gespeichert, nicht automatisch im Claude-Chat.' };
+      note: 'Lokale HTML-Datei im Browser öffnen. Mit lernly_sync_web_course kannst du den Kurs direkt ins Lernly Web-Dashboard (lernly-app.de) synchronisieren.' };
+  }
+
+  async syncToWeb({ sync_token, api_url } = {}) {
+    const files = await this.storage.courseFiles();
+    const check = await this.bridge({ op: 'validate', files });
+    if (check.errors.length) return { synced: false, ...check };
+    const course = files['kurs.json'];
+    if (!course) return { synced: false, errors: ['kurs.json fehlt im _lernly-Ordner.'] };
+
+    const rawToken = typeof sync_token === 'string' ? sync_token.trim() : '';
+    const token = rawToken && !rawToken.startsWith('${') ? rawToken : this.syncToken;
+    if (!token) {
+      throw new Error(
+        `Kein Lernly Web-Sync-Token konfiguriert. Bitte kopiere deinen Token unter ${this.webUrl}/dashboard/settings und übergib ihn als sync_token (oder hinterlege ihn in den Connector-Einstellungen). Alternativ kannst du _lernly/output/Lernly-Trainer.html dort direkt hochladen.`
+      );
+    }
+
+    const baseUrl = (typeof api_url === 'string' && api_url.trim() ? api_url.trim() : this.webUrl).replace(/\/+$/, '');
+    const rawTopics = {};
+    for (const [name, content] of Object.entries(files)) {
+      if (name.startsWith('themen/') && content && typeof content === 'object') {
+        const id = content.id || name.slice('themen/'.length, -'.json'.length);
+        rawTopics[id] = content;
+      }
+    }
+    const topics = {};
+    for (const topicMeta of course.topics || []) {
+      if (topicMeta?.id && rawTopics[topicMeta.id]) topics[topicMeta.id] = rawTopics[topicMeta.id];
+    }
+    for (const [id, content] of Object.entries(rawTopics)) {
+      if (!topics[id]) topics[id] = content;
+    }
+
+    const mocks = Object.keys(files)
+      .filter(name => name.startsWith('probeklausuren/'))
+      .sort()
+      .map(name => files[name])
+      .filter(Boolean);
+    const cheatsheet = files['spickzettel.json'];
+    const bundle = {
+      course,
+      topics,
+      ...(mocks.length ? { mocks } : {}),
+      ...(cheatsheet ? { cheatsheet } : {}),
+    };
+
+    let response;
+    try {
+      response = await fetch(`${baseUrl}/api/trainer/sync`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ bundle }),
+        signal: AbortSignal.timeout(30_000),
+      });
+    } catch (e) {
+      throw new Error(`Netzwerkfehler beim Web-Sync zu ${baseUrl}: ${e.message}. Prüfe deine Verbindung oder lade _lernly/output/Lernly-Trainer.html manuell im Dashboard hoch.`);
+    }
+
+    let payload = {};
+    try { payload = await response.json(); } catch { /* Non-JSON error body */ }
+    if (!response.ok || !payload.ok) {
+      throw new Error(payload.error || `Web-Sync fehlgeschlagen (HTTP ${response.status}).`);
+    }
+
+    return {
+      synced: true,
+      course: payload.course,
+      dashboard_url: payload.dashboardUrl || `${baseUrl}/dashboard`,
+      missing_topics: check.missing_topics,
+      warnings: check.warnings,
+      note: `Kurs "${payload.course?.title || course.title}" wurde erfolgreich ins Lernly Web-Dashboard (${payload.dashboardUrl || `${baseUrl}/dashboard`}) übertragen.`,
+    };
   }
 
   async exportCards(format) {

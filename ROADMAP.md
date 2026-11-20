@@ -20,9 +20,10 @@ Stand: 2026-11-20 · Aktiver Branch: `feat/bwl-mcp-unification`
 
 ## 2) Claude MCP-Connector & BWL-Skills (`connector/` & `plugin/`)
 - [x] Kompaktes Kurs- & Themen-Format (`kurs.json`, `themen/*.json`, `probeklausuren/*.json`, `spickzettel.json`) mit Rechen-Drills, Zahlenvarianten, Rundungstoleranzen und Punkte-Checklisten definiert
-- [x] Lokaler Claude-Desktop-Connector (`connector/desktop/`, Beta 0.2.0, `.mcpb`-Paket) mit 11 Werkzeugen, Ordner-Schutz (`_lernly/`), PDF-/Office-/Excel-Extraktion, Python-Rechner und Validator gebaut (8/8 Integrationstests grün)
-- [x] BWL-/Finance-Skills und Prompts (`connector/desktop/prompts/` & `plugin/lernly/skills/`) für Klausurplan nach Punkten, Theorie, Rechenwege und Karteikarten-Export (Anki/Quizlet) erstellt
-- [~] Echter End-to-End-Qualitätstest mit dem kompletten Corporate-Finance-Kurs (20 Originaldateien) in Claude Desktop und Abgleich gegen das CF-Study-OS-Referenz-Artifact
+- [x] Lokaler Claude-Desktop-Connector (`connector/desktop/`, Beta 0.2.0, `.mcpb`-Paket) mit 12 Werkzeugen (inkl. direktem Web-Sync `lernly_sync_web_course`), Ordner-Schutz (`_lernly/`), PDF-/Office-/Excel-Extraktion, Python-Rechner und Validator gebaut (9/9 Integrationstests grün)
+- [x] Geführtes 4-Fragen-Klausur-Briefing, Fachtyp-Spezialisierungen (Rechnen, Fallstudien & Regeln, Konzepte & Transfer) und Tax-Mock-Trainer-Tiefe („Woher kommt die Zahl / Regel?“, Sachverhalt mit Signalwörtern, Merke-/Fehler-Boxen, Mustersätze) in Prompts & Skills verankert (`connector/desktop/prompts/` & `plugin/lernly/skills/`)
+- [x] Direkte Sync-Brücke von Claude Desktop ins Web-Dashboard (`POST /api/trainer/sync` + HMAC-Sync-Token unter `/dashboard/settings`, ohne DB-Migration)
+- [~] Echter End-to-End-Praxistest der neu gebauten `.mcpb` (`connector/desktop/dist/lernly-beta-0.2.0.mcpb`) in Claude Desktop mit Web-Sync ins Live-Dashboard
 - [ ] Reibungsloses Setup für Studierende ohne Technik-Hürden (und später Remote-MCP-Anbindung für Web/Mobile)
 
 ## 3) Bestehende Web-App & Landingpage (aktiv bis Umschaltung in Phase 6/7)

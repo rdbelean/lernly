@@ -33,26 +33,26 @@ Allgemein:
 }
 ```
 
-- `theory` (Pflicht): einfach erklärt → Beispiel → Grafik/Tabelle → Rezept → Formeln → durchgerechnetes Altklausur-Beispiel.
-- `standardAnswer`: was man in der Klausur genau so hinschreibt, in Klausurlänge, Punkte-Wörter mit `==…==`. Pflicht für Stufe-1-Themen mit Text- oder Rechenaufgabe.
-- `mistakes`: typische Fehler, je ein Satz. `hook`: Merkhilfe (Eselsbrücke, Kette). `source`: Folien/Seiten, z. B. „Folien 46–64, Altklausur 2023 Q2“.
-- `cards`: nur, was man 1:1 hinschreiben muss (Formeln, Definitionen, Listen, Gliederungen). 3–12 pro Thema.
+- `theory` (Pflicht): didaktischer Aufbau nach Tax-Mock-Trainer-Standard: `simple` (Intuition) → `example` (Klausur-Sachverhalt mit `==Signalwörtern==`) → `figure`/`table` → `steps` (Schritt-für-Schritt-Schema mit Formel/Rechtsgrundlage und **„Woher kommt die Zahl / Regel?“** pro Schritt) → `formula` → `remember` (Merke-Box) → durchgerechnetes Altklausur-Beispiel (und `more` für Detailherleitungen). **Keine oberflächlichen Zusammenfassungen.**
+- `standardAnswer`: ausformulierte **Mustersätze** für die Klausur in Klausurlänge (`model_answer`-Bausteine), Punkte-Wörter und Schlüsselvariablen mit `==…==` markiert. Pflicht für Stufe-1- und Stufe-2-Themen.
+- `mistakes`: typische Klausurfallen (aus Lösungen, Korrekturhinweisen, Vorzeichen-/Periodenfehlern), je ein konkreter Satz. `hook`: Merkhilfe (Eselsbrücke, Kette). `source`: Folien/Seiten, z. B. „Folien 46–64, Altklausur 2023 Q2“.
+- `cards`: nur, was man 1:1 hinschreiben muss (Formeln, Paragrafen, Schemata, Definitionen, Listen). 4–12 pro Stufe-1-Thema.
 
 ## Bausteine (Block)
 
 | type | Felder | Zweck |
 |---|---|---|
-| `simple` | `md` | „Einfach gesagt“: Alltagssprache, ohne Fachwörter |
-| `example` | `md` | Beispiel mit Zahlen oder Alltag |
-| `text` | `md` | normaler Text |
+| `simple` | `md` | „Einfach gesagt“: Alltagssprache, ohne Fachwörter (2–4 Sätze) |
+| `example` | `md` | **Klausur-Sachverhalt / Ausgangsfall** mit `==Signalwörtern==` |
+| `text` | `md` | normaler Text / Herleitung / **„Woher kommt die Zahl / Regel?“** |
 | `heading` | `text` | Zwischenüberschrift |
-| `remember` | `md` | „Merke“: der eine Satz, der hängen bleiben muss |
-| `steps` | `items: [md]`, optional `title` | nummeriertes Rezept |
+| `remember` | `md` | **Merke-Box**: die zentrale Prüfungsregel, die hängen bleiben muss |
+| `steps` | `items: [md]`, optional `title` | nummeriertes Rezept / Prüfungsschema inkl. **„Woher kommt die Zahl / Regel?“** pro Schritt |
 | `formula` | `tex: ["…"]`, optional `note` | Formelblock, **ohne** `\\(`-Begrenzer |
-| `table` | `head: [md]`, `rows: [[md]]`, optional `sumRows: [Zeilenindex]` | Tabelle; Zahlen rechtsbündig |
+| `table` | `head: [md]`, `rows: [[md]]`, optional `sumRows: [Zeilenindex]` | Rechentabelle oder Abgrenzung „A vs. B“; Zahlen rechtsbündig |
 | `figure` | `svg`, optional `caption` | Grafik als SVG (wird als Bild gezeigt) |
-| `model_answer` | `md`, optional `title` | Musterantwort-Kasten |
-| `more` | `title`, `md` | aufklappbarer Zusatz (Varianten, Details) |
+| `model_answer` | `md`, optional `title` | **Mustersätze-Kasten**: fertiger Klausursatz mit `==Punkte-Wörtern==` |
+| `more` | `title`, `md` | aufklappbarer Zusatz (Varianten, Details, Herkunft) |
 
 **SVG-Regeln:** `<svg viewBox="0 0 680 H" xmlns="http://www.w3.org/2000/svg" font-family="Inter, Arial, sans-serif">`, Breite 680, helle Farben auf hellem Grund (wird auf hellem Kasten gezeigt): Text `#1D2733`, gedämpft `#5E6B7B`, Linien `#C9D4DF`, Akzent `#2B3499` / Fläche `#E4E7FB`, Warnung `#B5651D` / `#FDEFD9`, gut `#2F7A55` / `#E2F1E8`. Kein Skript, keine Links, kein `foreignObject`. Schrift ≥ 12. Lieber einfach als vollgepackt.
 

@@ -15,7 +15,9 @@
       "env": {
         "LERNLY_COURSE_DIR": "${user_config.course_directory}",
         "LERNLY_PYTHON": "${user_config.python_path}",
-        "LERNLY_PROMPTS_DIR": "${user_config.prompt_directory}"
+        "LERNLY_PROMPTS_DIR": "${user_config.prompt_directory}",
+        "LERNLY_SYNC_TOKEN": "${user_config.sync_token}",
+        "LERNLY_WEB_URL": "${user_config.web_url}"
       }
     }
   },
@@ -30,6 +32,14 @@
     "python_path": {
       "type": "string", "title": "Python 3", "default": "python3", "required": true,
       "description": "Python 3.10+ für Office-Dateien, Inhaltsprüfung, Rechnen und HTML-Export. Falls nötig den absoluten Pfad auswählen (z. B. /opt/homebrew/bin/python3)."
+    },
+    "sync_token": {
+      "type": "string", "title": "Lernly Web-Sync-Token (optional)", "required": false,
+      "description": "Dein persönlicher Sync-Token aus lernly-app.de/dashboard/settings für den direkten Sync ins Web-Dashboard."
+    },
+    "web_url": {
+      "type": "string", "title": "Lernly Web-URL", "default": "https://lernly-app.de", "required": false,
+      "description": "Ziel-URL für den Web-Dashboard-Sync (Standard: https://lernly-app.de)."
     },
     "prompt_directory": {
       "type": "directory", "title": "Eigene Lernanweisungen (optional)", "required": false,

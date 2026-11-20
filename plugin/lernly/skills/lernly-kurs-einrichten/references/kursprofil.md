@@ -45,13 +45,13 @@ Das Kursprofil ist das Gedächtnis des Kurses: Bauplan der Klausur, Themen mit P
   - `likely`: 1 Altklausur, Beispielfragen oder klare Hinweise des Profs („Formulas will not be provided“, „Aufgabe 1 ist immer …“).
   - `broad`: keine Klausurbelege. Gewichtung aus Folienanteil und Betonung geschätzt. In `strategy` ehrlich sagen.
 - `exam.parts[].slots[]`: die Aufgabenplätze der Klausur (Q1, Q2 …, „Teil B Aufgabe 3“, „MC-Block“) mit Punkten und Häufigkeit über die Altklausuren. Ohne Altklausur: grobe Blöcke (z. B. „Rechenaufgaben“, „Verständnisfragen“) mit geschätzten Punkten.
-- `topics[]`: Lerneinheiten, die zu Slots passen. Ein Slot kann mehrere Themen haben, ein Thema mehrere Slots.
+- `topics[]`: Lerneinheiten, die zu Slots passen, **streng sortiert nach Klausur-Punkten und Häufigkeit**. Ein Slot kann mehrere Themen haben, ein Thema mehrere Slots.
   - `expectedPoints`: erwartete Punkte dieses Themas in der Klausur. Summe ≈ `exam.totalPoints` (Wahlgruppen einmal gezählt).
-  - `tier`: 1 = „sicher lernen“ (zusammen ca. 70 % der Punkte, wenig Aufwand je Punkt), 2 = „wenn Zeit ist“, 3 = „nur wenn alles sitzt“.
-  - `why`: Beleg in wenigen Wörtern („4 von 5 Altklausuren“, „Prof: kommt sicher dran“, „geschätzt“).
+  - `tier`: **Stufe 1** (`1`) = Pflichtrezepte / Top-Punktebringer (zusammen ca. 70 % der Punkte, wiederkehrend in Altklausuren — werden zuerst mit voller Tax-Mock-Trainer-Tiefe gebaut), **Stufe 2** (`2`) = häufig oder Wahlaufgaben (`pairWith`), **Stufe 3** (`3`) = Ergänzung (nur wenn alles sitzt oder bei „Komplett-Aufbau“).
+  - `why`: Beleg in wenigen Wörtern („4 von 5 Altklausuren · ø 15 P.“, „Prof: kommt sicher dran“, „geschätzt“).
   - `effort`: `niedrig` | `mittel` | `hoch`.
   - `pairWith`: das andere Thema einer Wahlaufgabe.
   - `sources`: Dateien und Folien/Seiten. Daraus liest `trainer-bauen` gezielt.
-- `notation`: wie der Prof schreibt (Symbole, Einheiten, Begriffe), damit alles zur Klausur passt.
+- `notation`: wie der Prof schreibt (Symbole, Einheiten, Gesetzeskürzel, Begriffe), damit alles exakt zur Klausur passt.
 
 IDs nie umbenennen, wenn der Trainer schon benutzt wird. Neue Themen anhängen ist ok.

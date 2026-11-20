@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
+import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -44,10 +45,13 @@ async function context(t) {
 
 test('packaged MCP: discovery, hot prompts, local reading, duplicates, search, invalidation and boundaries', async t => {
   const { course, dir, prompts, call, client } = await context(t);
-  assert.equal((await client.listTools()).tools.length, 11);
+  assert.equal((await client.listTools()).tools.length, 12);
   assert.equal((await client.listPrompts()).prompts[0].name, 'lernly-start');
   assert.ok((await client.getPrompt({ name: 'lernly-start', arguments: { ziel: 'Mathe' } })).messages[0].content.text.includes('Mathe'));
   const before = await call('lernly_instructions');
+  assert.ok(before.instructions.includes('Klausur-Briefing'));
+  const fmt = await call('lernly_instructions', { mode: 'format' });
+  assert.ok(fmt.instructions.includes('Tax-Mock-Trainer'));
   await fs.appendFile(path.join(prompts, 'base.md'), '\nTest-Prompt-Änderung');
   const after = await call('lernly_instructions');
   assert.notEqual(before.prompt_revision, after.prompt_revision);
@@ -212,4 +216,58 @@ test('MCPB has self-contained runtime assets and no test courses or credentials'
   const listing = execFileSync('/usr/bin/unzip', ['-Z1', path.join(root, 'dist/lernly-beta-0.2.0.mcpb')], { encoding: 'utf8' });
   for (const required of ['server/index.mjs', 'src/pdf-worker.mjs', 'src/bridge.py', 'prompts/base.md', 'node_modules/unpdf/dist/pdfjs.mjs', 'icon.png']) assert.ok(listing.includes(required));
   assert.ok(!/(^|\/)(\.env[^/]*|\.git|\.test|fixtures|\.DS_Store)(\/|$)/m.test(listing));
+});
+
+test('lernly_sync_web_course validates, authorizes and posts normalized bundle', async t => {
+  const { course, call } = await context(t);
+  await fs.cp(fixture, path.join(course, '_lernly'), { recursive: true });
+
+  const received = [];
+  const server = http.createServer((req, res) => {
+    let raw = '';
+    req.setEncoding('utf8');
+    req.on('data', chunk => { raw += chunk; });
+    req.on('end', () => {
+      received.push({ url: req.url, auth: req.headers.authorization, body: JSON.parse(raw) });
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        ok: true,
+        course: { id: 'pack-123', title: 'Corporate Finance & Valuation', updated: false, topicCount: 1 },
+        dashboardUrl: 'https://lernly-app.de/dashboard'
+      }));
+    });
+  });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  t.after(() => new Promise(resolve => server.close(resolve)));
+  const port = server.address().port;
+
+  const missingTokenErr = await call('lernly_sync_web_course', { api_url: `http://127.0.0.1:${port}` }, true);
+  assert.match(missingTokenErr, /Sync-Token|dashboard\/settings/);
+  assert.equal(received.length, 0);
+
+  const synced = await call('lernly_sync_web_course', {
+    sync_token: 'lny1.test-payload.test-signature',
+    api_url: `http://127.0.0.1:${port}`
+  });
+  assert.equal(synced.synced, true);
+  assert.equal(synced.course.id, 'pack-123');
+  assert.equal(synced.dashboard_url, 'https://lernly-app.de/dashboard');
+  assert.equal(received.length, 1);
+  assert.equal(received[0].url, '/api/trainer/sync');
+  assert.equal(received[0].auth, 'Bearer lny1.test-payload.test-signature');
+  assert.equal(received[0].body.bundle.course.id, 'corporate-finance');
+  assert.ok(received[0].body.bundle.topics.dcf);
+  assert.equal(received[0].body.bundle.mocks.length, 1);
+
+  const topicPath = path.join(course, '_lernly/themen/dcf.json');
+  const bad = JSON.parse(await fs.readFile(topicPath, 'utf8'));
+  bad.schema = 'wrong.schema';
+  await fs.writeFile(topicPath, JSON.stringify(bad));
+  const blocked = await call('lernly_sync_web_course', {
+    sync_token: 'lny1.test-payload.test-signature',
+    api_url: `http://127.0.0.1:${port}`
+  });
+  assert.equal(blocked.synced, false);
+  assert.ok(blocked.errors.length > 0);
+  assert.equal(received.length, 1);
 });

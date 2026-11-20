@@ -19,8 +19,8 @@ Erzeuge das interaktive Artifact selbst mit den in diesem Chat verfügbaren Arti
 - Ein Artifact kann den lokalen Desktop-MCP-Server nicht einfach per fetch aufrufen. Kein erfundener localhost-Endpunkt, kein automatischer Sync. Der Chat nutzt MCP; das Artifact nutzt eingebettete Kursdaten. Für spätere Änderungen lädt Claude die Kursdateien und aktualisiert das Artifact.
 - Karteikarten als TSV exportieren (Term<TAB>Definition). Anki versteht LaTeX, Quizlet in diesem Export nur Text; diese Grenze anzeigen.
 
-## Dauerhaftes Gedächtnis
+## Dauerhaftes Gedächtnis & Web-Sync
 
-Lade `mode=format`. Speichere Kursprofil und ausgearbeitete Themen mit `lernly_save_course_file` im gemeinsamen Lernly-Format, bevor du sie in das Artifact einbaust. Das ermöglicht spätere Chats, Export und den lokalen Fallbacktrainer. Bereits gelesene Revision bei Änderungen mitgeben. Bei Konflikten neu lesen statt fremde Änderungen überschreiben.
+Lade `mode=format`. Speichere zuerst das 4-Fragen-Klausur-Briefing in `kurs.json` sowie ausgearbeitete Themen (`themen/<id>.json`), Probeklausuren (`probeklausuren/<id>.json`) und Spickzettel (`spickzettel.json`) mit `lernly_save_course_file` im gemeinsamen Lernly-Format (`lernly.kurs/1` / `lernly.thema/1` auf Tax-Mock-Trainer-Niveau), bevor oder während du sie ins Artifact einbaust. Das ermöglicht spätere Chats, den lokalen HTML-Trainer, Export und den direkten Sync ins Lernly Web-Dashboard über `lernly_sync_web_course` (`lernly-app.de/dashboard`). Bereits gelesene Revision bei Änderungen mitgeben. Bei Konflikten neu lesen statt fremde Änderungen überschreiben.
 
-Nicht das komplette Kursmaterial in einen einzigen riesigen Prompt pressen. Zuerst einen nutzbaren ersten Abschnitt erzeugen, dann weitere Abschnitte ergänzen. Bei Nutzerwunsch nach einem kompletten Kurs selbstständig fortsetzen, soweit das Kontextbudget reicht, und verbleibende Themen konkret benennen.
+Nicht das komplette Kursmaterial in einen einzigen riesigen Prompt pressen. Zuerst das wichtigste Stufe-1-Thema vollständig ausarbeiten, speichern und bei Bedarf syncen (`lernly_sync_web_course`), dann schrittweise ergänzen. Bei Nutzerwunsch nach einem kompletten Kurs selbstständig fortsetzen, soweit das Kontextbudget reicht, und verbleibende Themen konkret benennen.

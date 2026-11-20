@@ -4,6 +4,7 @@ import {
   isAllowedAdminEmail,
 } from "@/lib/admin/auth";
 import { createClient } from "@/lib/supabase/server";
+import { upsertTrainerBundleForUser } from "@/lib/trainer/syncPersistence";
 import { TrainerBundleSchema } from "@/lib/trainer/types";
 
 export const runtime = "nodejs";
@@ -91,84 +92,22 @@ export async function POST(request: Request) {
     );
   }
 
-  const bundle = parsed.data;
-  const title = bundle.course.title.trim().slice(0, 200) || "Kurs";
-  const examType = bundle.artifactHtml ? "html_artifact" : "mcp_course";
-  const packData = {
-    schema: "lernly.saved_trainer/1" as const,
-    bundle,
-  };
-  const nowIso = new Date().toISOString();
-
-  // Upsert by (user_id, title) across trainer course rows so re-uploading updates cleanly.
-  const { data: existing, error: findErr } = await supabase
-    .from("study_packs")
-    .select("id")
-    .eq("user_id", user.id)
-    .eq("title", title)
-    .in("exam_type", ["mcp_course", "html_artifact"])
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  if (findErr) {
-    console.error("[/api/trainer/courses POST] lookup failed", findErr);
-  }
-
-  if (existing?.id) {
-    const { data: updated, error: updErr } = await supabase
-      .from("study_packs")
-      .update({
-        exam_type: examType,
-        pack_data: packData,
-        last_opened_at: nowIso,
-      })
-      .eq("id", existing.id)
-      .eq("user_id", user.id)
-      .select("id, title, exam_type")
-      .single();
-
-    if (updErr || !updated) {
-      console.error("[/api/trainer/courses POST] update failed", updErr);
-      return NextResponse.json(
-        { error: "Kurs konnte nicht aktualisiert werden." },
-        { status: 500 },
-      );
-    }
-
-    return NextResponse.json({
-      id: updated.id,
-      title: updated.title,
-      examType: updated.exam_type,
-      updated: true,
-    });
-  }
-
-  const { data: inserted, error: insErr } = await supabase
-    .from("study_packs")
-    .insert({
-      user_id: user.id,
-      title,
-      exam_type: examType,
-      status: "ready",
-      pack_data: packData,
-      last_opened_at: nowIso,
-    })
-    .select("id, title, exam_type")
-    .single();
-
-  if (insErr || !inserted) {
-    console.error("[/api/trainer/courses POST] insert failed", insErr);
+  const result = await upsertTrainerBundleForUser(
+    supabase,
+    user.id,
+    parsed.data,
+  );
+  if (!result.ok) {
     return NextResponse.json(
-      { error: "Kurs konnte nicht gespeichert werden." },
-      { status: 500 },
+      { error: result.error },
+      { status: result.status },
     );
   }
 
   return NextResponse.json({
-    id: inserted.id,
-    title: inserted.title,
-    examType: inserted.exam_type,
-    updated: false,
+    id: result.id,
+    title: result.title,
+    examType: result.examType,
+    updated: result.updated,
   });
 }

@@ -6,6 +6,7 @@ import {
   Clock,
   CreditCard,
   Key,
+  Laptop,
   Mail,
   ShieldAlert,
 } from "lucide-react";
@@ -14,10 +15,12 @@ import { getUser } from "@/lib/dal";
 import { createServiceClient } from "@/lib/supabase/server";
 import { PLAN_LIMITS, PLAN_LABEL, effectivePlan } from "@/lib/quota";
 import { tutorLimitForPlan } from "@/lib/tutorPrompt";
+import { createTrainerSyncToken } from "@/lib/trainer/syncToken";
 import BYOKForm from "./byok-form";
 import BillingSection from "./billing-section";
 import AccountSection from "./account-section";
 import UsageSection from "./usage-section";
+import TrainerSyncSection from "./trainer-sync-section";
 import NotificationsSection from "./notifications-section";
 import DangerZone from "./danger-zone";
 import LegalLinks from "./legal-links";
@@ -150,6 +153,11 @@ export default async function SettingsPage() {
   // "Bald verfügbar" teaser until BYOK_ENABLED=true (set in all Vercel scopes).
   const byokEnabled = process.env.BYOK_ENABLED === "true";
 
+  const syncToken = createTrainerSyncToken({
+    id: user.id,
+    email: user.email,
+  });
+
   return (
     <main className="px-6 py-12 sm:py-16">
       <div className="mx-auto max-w-[720px]">
@@ -206,6 +214,10 @@ export default async function SettingsPage() {
               hasStripeCustomer={hasStripeCustomer}
               billingConfigured={billingConfigured}
             />
+          </SectionCard>
+
+          <SectionCard icon={Laptop} title="Claude Desktop & MCP-Sync">
+            <TrainerSyncSection syncToken={syncToken} />
           </SectionCard>
 
           <SectionCard icon={Key} title="Anthropic API-Key (BYOK)">
