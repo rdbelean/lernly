@@ -4,6 +4,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email/send";
 import { renderMagicLinkEmail, renderMagicLinkText } from "@/lib/email/magicLink";
 import { APP_URL } from "@/lib/email/brand";
+import { normalizeEmail } from "@/lib/security/validation";
 
 // Ensure an auth user exists for `email` and return a one-time token_hash the
 // caller can verifyOtp() to establish a session. No email is sent — this powers
@@ -13,8 +14,9 @@ import { APP_URL } from "@/lib/email/brand";
 export async function ensureUserAndGetLoginToken(
   email: string,
 ): Promise<{ tokenHash: string; type: EmailOtpType } | null> {
+  const clean = normalizeEmail(email);
+  if (!clean) return null;
   const service = createServiceClient();
-  const clean = email.trim();
   const redirectTo = `${APP_URL}/auth/confirm`;
 
   let { data, error } = await service.auth.admin.generateLink({
@@ -68,7 +70,8 @@ export async function provisionUserAndSendLogin(opts: {
   // logged-in purchase) and just resolve the user id.
   sendLogin?: boolean;
 }): Promise<{ userId: string | null }> {
-  const email = opts.email.trim();
+  const email = normalizeEmail(opts.email);
+  if (!email) return { userId: null };
   const next = opts.next ?? "/dashboard";
   const sendLogin = opts.sendLogin ?? true;
   const service = createServiceClient();

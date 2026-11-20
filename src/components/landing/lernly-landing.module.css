@@ -750,13 +750,20 @@
   margin-bottom: 6px;
 }
 
-.footerTop > div:not(:first-child) > a {
+.footerTop > div:not(:first-child) > a,
+.footerTop > div:not(:first-child) > button {
   font-size: 14px;
   color: var(--copy);
   transition: color 0.15s;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 
-.footerTop a:hover {
+.footerTop a:hover,
+.footerTop > div:not(:first-child) > button:hover {
   color: var(--blue);
 }
 

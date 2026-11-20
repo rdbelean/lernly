@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import BetaCheckoutHost from "@/components/beta/BetaCheckoutHost";
+import CookieConsentBanner from "@/components/CookieConsentBanner";
 import ErrorReporter from "@/components/ErrorReporter";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
@@ -101,6 +102,7 @@ export default function RootLayout({
         <ErrorReporter />
         {children}
         <BetaCheckoutHost />
+        <CookieConsentBanner />
       </body>
     </html>
   );

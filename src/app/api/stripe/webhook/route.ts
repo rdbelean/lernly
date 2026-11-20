@@ -8,6 +8,7 @@ import {
 } from "@/lib/stripe";
 import { createServiceClient } from "@/lib/supabase/server";
 import { provisionUserAndSendLogin } from "@/lib/auth/provision";
+import { normalizeEmail } from "@/lib/security/validation";
 
 export const runtime = "nodejs";
 
@@ -135,8 +136,9 @@ export async function POST(request: Request) {
       null;
     if (existing) return existing;
 
-    const email =
+    const rawEmail =
       session.customer_details?.email ?? session.customer_email ?? null;
+    const email = normalizeEmail(rawEmail);
     if (!email) {
       console.error(
         "[stripe webhook] completed session has no email — cannot provision",

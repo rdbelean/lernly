@@ -3,6 +3,11 @@ import {
   CLOSED_BETA_LOGIN_ERROR,
   isAllowedAdminEmail,
 } from "@/lib/admin/auth";
+import {
+  enforceRateLimit,
+  extractClientIp,
+  readJsonBodyWithLimit,
+} from "@/lib/security/rateLimit";
 import { createServiceClient } from "@/lib/supabase/server";
 import {
   resolveSyncBundlePayload,
@@ -12,7 +17,7 @@ import { verifyTrainerSyncToken } from "@/lib/trainer/syncToken";
 
 export const runtime = "nodejs";
 
-const MAX_SYNC_JSON_BYTES = 8 * 1024 * 1024; // 8 MB ceiling matching /api/trainer/courses
+const MAX_SYNC_JSON_BYTES = 5 * 1024 * 1024; // 5 MB ceiling matching /api/trainer/courses
 
 function corsHeaders(): Record<string, string> {
   return {
@@ -44,32 +49,34 @@ export function OPTIONS() {
 }
 
 export async function POST(request: Request) {
-  let rawText: string;
-  try {
-    rawText = await request.text();
-  } catch {
+  const ip = extractClientIp(request.headers);
+  const preRl = await enforceRateLimit({
+    scope: "trainer_sync",
+    ip,
+    maxIp: 60,
+    windowSeconds: 600,
+  });
+  if (!preRl.allowed) {
     return NextResponse.json(
-      { error: "Anfrage konnte nicht gelesen werden." },
-      { status: 400, headers: corsHeaders() },
+      { error: "Zu viele Sync-Anfragen. Bitte warte einen Moment." },
+      {
+        status: 429,
+        headers: {
+          ...corsHeaders(),
+          "Retry-After": String(preRl.retryAfterSeconds),
+        },
+      },
     );
   }
 
-  if (Buffer.byteLength(rawText, "utf-8") > MAX_SYNC_JSON_BYTES) {
+  const read = await readJsonBodyWithLimit(request, MAX_SYNC_JSON_BYTES);
+  if (!read.ok) {
     return NextResponse.json(
-      { error: "Der Kurs ist zu groß (maximal 8 MB)." },
-      { status: 413, headers: corsHeaders() },
+      { error: read.error },
+      { status: read.status, headers: corsHeaders() },
     );
   }
-
-  let body: unknown;
-  try {
-    body = JSON.parse(rawText);
-  } catch {
-    return NextResponse.json(
-      { error: "Ungültiges JSON." },
-      { status: 400, headers: corsHeaders() },
-    );
-  }
+  const body = read.data;
 
   const token = extractBearerToken(request, body);
   const verified = verifyTrainerSyncToken(token);
@@ -80,6 +87,25 @@ export async function POST(request: Request) {
           "Ungültiger oder fehlender Sync-Token. Bitte kopiere deinen persönlichen Token aus lernly-app.de/dashboard/settings.",
       },
       { status: 401, headers: corsHeaders() },
+    );
+  }
+
+  const userRl = await enforceRateLimit({
+    scope: "trainer_sync_user",
+    userId: verified.userId,
+    maxUser: 30,
+    windowSeconds: 600,
+  });
+  if (!userRl.allowed) {
+    return NextResponse.json(
+      { error: "Zu viele Sync-Anfragen für diesen Account." },
+      {
+        status: 429,
+        headers: {
+          ...corsHeaders(),
+          "Retry-After": String(userRl.retryAfterSeconds),
+        },
+      },
     );
   }
 

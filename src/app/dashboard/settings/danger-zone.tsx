@@ -25,6 +25,28 @@ export default function DangerZone({ email }: { email: string }) {
     setError(null);
     startTransition(async () => {
       try {
+        try {
+          const explicitKeys = [
+            "lernly.trainer.bundle.v1",
+            "lernly.trainer.progress.v1",
+            "lernly.study.course.v1",
+            "lernly.study.progress.v1",
+          ];
+          for (const k of explicitKeys) {
+            window.localStorage.removeItem(k);
+          }
+          for (const k of Object.keys(window.localStorage)) {
+            if (
+              k.startsWith("lernly.") ||
+              k.startsWith("lernly:") ||
+              k.startsWith("ph_")
+            ) {
+              window.localStorage.removeItem(k);
+            }
+          }
+        } catch {
+          // Ignore private-mode storage exceptions; server deletion still runs.
+        }
         await deleteAccount();
       } catch (e) {
         setError(e instanceof Error ? e.message : "Löschung fehlgeschlagen.");
@@ -59,16 +81,16 @@ export default function DangerZone({ email }: { email: string }) {
           style={{ color: "var(--color-cat-coral)" }}
         >
           <AlertTriangle size={13} strokeWidth={2.2} aria-hidden />
-          Konto löschen
+          Account &amp; alle Lerndaten endgültig löschen
         </div>
         <p
           className="text-[13px] leading-relaxed"
           style={{ color: "var(--color-text-dim)" }}
         >
-          Alle deine Pakete, Klausuren, Quiz-Versuche und Tutor-Verläufe
-          werden unwiderruflich gelöscht. Ein aktives Abo wird gekündigt
-          (kein anteiliger Refund). Dieser Schritt kann nicht rückgängig
-          gemacht werden.
+          Gemäß Art. 17 DSGVO werden alle deine Kontodaten, Kurse, Pakete,
+          Klausuren, hochgeladenen Dateien, Quiz-Versuche und Tutor-Verläufe
+          unwiderruflich gelöscht (auch lokal im Browser). Ein aktives Abo wird
+          beendet. Dieser Schritt kann nicht rückgängig gemacht werden.
         </p>
 
         {!confirming ? (
@@ -82,7 +104,7 @@ export default function DangerZone({ email }: { email: string }) {
             }}
           >
             <Trash2 size={13} strokeWidth={2} aria-hidden />
-            Konto endgültig löschen
+            Account &amp; alle Lerndaten endgültig löschen
           </button>
         ) : (
           <div className="mt-4 space-y-3">
@@ -119,7 +141,10 @@ export default function DangerZone({ email }: { email: string }) {
               <button
                 type="button"
                 onClick={onDelete}
-                disabled={pending || typedEmail.trim() !== email}
+                disabled={
+                  pending ||
+                  typedEmail.trim().toLowerCase() !== email.trim().toLowerCase()
+                }
                 className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-semibold transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
                 style={{
                   background: "var(--color-cat-coral)",

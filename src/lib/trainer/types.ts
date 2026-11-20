@@ -1,57 +1,57 @@
 import { z } from "zod";
 
 export const McpSlotSchema = z.object({
-  id: z.string().min(1),
-  label: z.string().min(1),
-  name: z.string().min(1),
-  points: z.number().nonnegative().optional(),
-  choiceGroup: z.string().optional(),
-  frequency: z.string().optional(),
+  id: z.string().min(1).max(120),
+  label: z.string().min(1).max(120),
+  name: z.string().min(1).max(300),
+  points: z.number().nonnegative().max(10_000).optional(),
+  choiceGroup: z.string().max(120).optional(),
+  frequency: z.string().max(200).optional(),
 });
 
 export const McpExamPartSchema = z.object({
-  id: z.string().min(1),
-  name: z.string().min(1),
-  points: z.number().nonnegative().optional(),
-  slots: z.array(McpSlotSchema).optional(),
+  id: z.string().min(1).max(120),
+  name: z.string().min(1).max(300),
+  points: z.number().nonnegative().max(10_000).optional(),
+  slots: z.array(McpSlotSchema).max(100).optional(),
 });
 
 export const McpCourseTopicSchema = z.object({
-  id: z.string().min(1),
-  title: z.string().min(1),
-  slotIds: z.array(z.string()).optional(),
-  expectedPoints: z.number().nonnegative().optional(),
-  points: z.number().nonnegative().optional(),
+  id: z.string().min(1).max(120),
+  title: z.string().min(1).max(300),
+  slotIds: z.array(z.string().max(120)).max(50).optional(),
+  expectedPoints: z.number().nonnegative().max(10_000).optional(),
+  points: z.number().nonnegative().max(10_000).optional(),
   tier: z.number().int().min(1).max(3).optional(),
-  why: z.string().optional(),
-  effort: z.string().optional(),
-  pairWith: z.string().optional(),
-  sources: z.string().optional(),
+  why: z.string().max(1_000).optional(),
+  effort: z.string().max(200).optional(),
+  pairWith: z.string().max(120).optional(),
+  sources: z.string().max(1_000).optional(),
 });
 
 export const McpCourseProfileSchema = z.object({
   schema: z.literal("lernly.kurs/1"),
-  id: z.string().optional(),
-  title: z.string().min(1),
-  subtitle: z.string().optional(),
-  language: z.string().optional(),
-  subjectType: z.string().optional(),
+  id: z.string().max(120).optional(),
+  title: z.string().min(1).max(300),
+  subtitle: z.string().max(500).optional(),
+  language: z.string().max(32).optional(),
+  subjectType: z.string().max(64).optional(),
   exam: z
     .object({
-      date: z.string().optional(),
-      time: z.string().optional(),
-      durationMin: z.number().positive().optional(),
-      totalPoints: z.number().positive().optional(),
-      aids: z.string().optional(),
-      format: z.string().optional(),
+      date: z.string().max(64).optional(),
+      time: z.string().max(64).optional(),
+      durationMin: z.number().positive().max(1_440).optional(),
+      totalPoints: z.number().positive().max(10_000).optional(),
+      aids: z.string().max(500).optional(),
+      format: z.string().max(1_000).optional(),
       fidelity: z.enum(["strict", "likely", "broad"]).optional(),
-      parts: z.array(McpExamPartSchema).optional(),
+      parts: z.array(McpExamPartSchema).max(30).optional(),
     })
     .optional(),
-  strategy: z.string().optional(),
-  topics: z.array(McpCourseTopicSchema).min(1),
-  notation: z.string().optional(),
-  updatedAt: z.string().optional(),
+  strategy: z.string().max(10_000).optional(),
+  topics: z.array(McpCourseTopicSchema).min(1).max(100),
+  notation: z.string().max(2_000).optional(),
+  updatedAt: z.string().max(64).optional(),
 });
 
 export const McpBlockSchema = z.object({
@@ -69,95 +69,95 @@ export const McpBlockSchema = z.object({
     "more",
     "html",
   ]),
-  md: z.string().optional(),
-  html: z.string().optional(),
-  text: z.string().optional(),
-  title: z.string().optional(),
-  items: z.array(z.string()).optional(),
-  tex: z.array(z.string()).optional(),
-  note: z.string().optional(),
-  head: z.array(z.string()).optional(),
-  rows: z.array(z.array(z.string())).optional(),
-  sumRows: z.array(z.number().int().nonnegative()).optional(),
-  svg: z.string().optional(),
-  caption: z.string().optional(),
+  md: z.string().max(150_000).optional(),
+  html: z.string().max(250_000).optional(),
+  text: z.string().max(5_000).optional(),
+  title: z.string().max(500).optional(),
+  items: z.array(z.string().max(20_000)).max(150).optional(),
+  tex: z.array(z.string().max(5_000)).max(100).optional(),
+  note: z.string().max(5_000).optional(),
+  head: z.array(z.string().max(1_000)).max(30).optional(),
+  rows: z.array(z.array(z.string().max(5_000)).max(30)).max(300).optional(),
+  sumRows: z.array(z.number().int().nonnegative()).max(50).optional(),
+  svg: z.string().max(200_000).optional(),
+  caption: z.string().max(2_000).optional(),
 });
 
 export const McpDrillFieldSchema = z.object({
-  label: z.string().min(1),
+  label: z.string().min(1).max(300),
   answer: z.number(),
-  rel: z.number().positive().optional(),
-  tol: z.number().positive().optional(),
-  unit: z.string().optional(),
+  rel: z.number().positive().max(1).optional(),
+  tol: z.number().positive().max(1_000_000).optional(),
+  unit: z.string().max(64).optional(),
 });
 
 export const McpDrillChoiceSchema = z.object({
-  label: z.string().min(1),
-  options: z.array(z.string()).min(2),
-  answer: z.string().min(1),
+  label: z.string().min(1).max(300),
+  options: z.array(z.string().max(500)).min(2).max(20),
+  answer: z.string().min(1).max(500),
 });
 
 export const McpDrillVariantSchema = z.object({
-  text: z.string().min(1),
-  fields: z.array(McpDrillFieldSchema).min(1),
+  text: z.string().min(1).max(20_000),
+  fields: z.array(McpDrillFieldSchema).min(1).max(30),
   choice: McpDrillChoiceSchema.optional(),
-  solution: z.array(McpBlockSchema).optional(),
+  solution: z.array(McpBlockSchema).max(60).optional(),
 });
 
 const TaskDidacticFields = {
-  caseTitle: z.string().optional(),
-  caseHtml: z.string().optional(),
-  whyHtml: z.string().optional(),
-  merke: z.string().optional(),
-  trap: z.string().optional(),
-  fullAnswerHtml: z.string().optional(),
+  caseTitle: z.string().max(500).optional(),
+  caseHtml: z.string().max(250_000).optional(),
+  whyHtml: z.string().max(150_000).optional(),
+  merke: z.string().max(20_000).optional(),
+  trap: z.string().max(20_000).optional(),
+  fullAnswerHtml: z.string().max(250_000).optional(),
 };
 
 export const McpDrillTaskSchema = z.object({
   kind: z.literal("drill"),
-  id: z.string().min(1),
-  name: z.string().min(1),
-  origin: z.string().optional(),
-  originLabel: z.string().optional(),
-  hint: z.string().optional(),
-  variants: z.array(McpDrillVariantSchema).min(1),
+  id: z.string().min(1).max(120),
+  name: z.string().min(1).max(500),
+  origin: z.string().max(100).optional(),
+  originLabel: z.string().max(200).optional(),
+  hint: z.string().max(5_000).optional(),
+  variants: z.array(McpDrillVariantSchema).min(1).max(30),
   ...TaskDidacticFields,
 });
 
 export const McpEssayChecklistItemSchema = z.object({
-  text: z.string().min(1),
-  points: z.number().positive(),
+  text: z.string().min(1).max(5_000),
+  points: z.number().positive().max(1_000),
 });
 
 export const McpEssayTaskSchema = z.object({
   kind: z.literal("essay"),
-  id: z.string().min(1),
-  name: z.string().min(1),
-  origin: z.string().optional(),
-  originLabel: z.string().optional(),
-  hint: z.string().optional(),
-  points: z.number().positive(),
-  question: z.string().min(1),
-  checklist: z.array(McpEssayChecklistItemSchema).min(1),
-  modelAnswer: z.array(McpBlockSchema).optional(),
+  id: z.string().min(1).max(120),
+  name: z.string().min(1).max(500),
+  origin: z.string().max(100).optional(),
+  originLabel: z.string().max(200).optional(),
+  hint: z.string().max(5_000).optional(),
+  points: z.number().positive().max(1_000),
+  question: z.string().min(1).max(40_000),
+  checklist: z.array(McpEssayChecklistItemSchema).min(1).max(50),
+  modelAnswer: z.array(McpBlockSchema).max(60).optional(),
   ...TaskDidacticFields,
 });
 
 export const McpMcQuestionSchema = z.object({
-  q: z.string().min(1),
-  options: z.array(z.string()).min(2),
-  answer: z.number().int().nonnegative(),
-  explain: z.string().optional(),
+  q: z.string().min(1).max(10_000),
+  options: z.array(z.string().max(2_000)).min(2).max(12),
+  answer: z.number().int().nonnegative().max(11),
+  explain: z.string().max(10_000).optional(),
 });
 
 export const McpMcTaskSchema = z.object({
   kind: z.literal("mc"),
-  id: z.string().min(1),
-  name: z.string().min(1),
-  origin: z.string().optional(),
-  originLabel: z.string().optional(),
-  hint: z.string().optional(),
-  questions: z.array(McpMcQuestionSchema).min(1),
+  id: z.string().min(1).max(120),
+  name: z.string().min(1).max(500),
+  origin: z.string().max(100).optional(),
+  originLabel: z.string().max(200).optional(),
+  hint: z.string().max(5_000).optional(),
+  questions: z.array(McpMcQuestionSchema).min(1).max(60),
   ...TaskDidacticFields,
 });
 
@@ -168,74 +168,74 @@ export const McpTaskSchema = z.discriminatedUnion("kind", [
 ]);
 
 export const McpCardSchema = z.object({
-  id: z.string().min(1),
-  front: z.string().min(1),
-  back: z.string().min(1),
-  topicId: z.string().optional(),
-  hint: z.string().optional(),
-  merke: z.string().optional(),
+  id: z.string().min(1).max(120),
+  front: z.string().min(1).max(20_000),
+  back: z.string().min(1).max(50_000),
+  topicId: z.string().max(120).optional(),
+  hint: z.string().max(5_000).optional(),
+  merke: z.string().max(20_000).optional(),
   isHtml: z.boolean().optional(),
 });
 
 export const McpTopicContentSchema = z.object({
   schema: z.literal("lernly.thema/1"),
-  id: z.string().min(1),
-  caseTitle: z.string().optional(),
-  caseHtml: z.string().optional(),
-  appendixHtml: z.string().optional(),
-  theory: z.array(McpBlockSchema).default([]),
-  standardAnswer: z.array(McpBlockSchema).optional(),
-  tasks: z.array(McpTaskSchema).default([]),
-  cards: z.array(McpCardSchema).default([]),
-  mistakes: z.array(z.string()).optional(),
-  hook: z.string().optional(),
-  source: z.string().optional(),
+  id: z.string().min(1).max(120),
+  caseTitle: z.string().max(500).optional(),
+  caseHtml: z.string().max(250_000).optional(),
+  appendixHtml: z.string().max(500_000).optional(),
+  theory: z.array(McpBlockSchema).max(200).default([]),
+  standardAnswer: z.array(McpBlockSchema).max(60).optional(),
+  tasks: z.array(McpTaskSchema).max(300).default([]),
+  cards: z.array(McpCardSchema).max(300).default([]),
+  mistakes: z.array(z.string().max(5_000)).max(50).optional(),
+  hook: z.string().max(10_000).optional(),
+  source: z.string().max(2_000).optional(),
 });
 
 export const McpMockExamItemSchema = z.object({
-  id: z.string().min(1),
-  no: z.string().optional(),
-  partId: z.string().optional(),
-  topicId: z.string().optional(),
-  taskId: z.string().optional(),
-  points: z.number().nonnegative(),
+  id: z.string().min(1).max(120),
+  no: z.string().max(200).optional(),
+  partId: z.string().max(120).optional(),
+  topicId: z.string().max(120).optional(),
+  taskId: z.string().max(120).optional(),
+  points: z.number().nonnegative().max(1_000),
   type: z.enum(["open", "mc"]).default("open"),
-  question: z.string().min(1),
-  checklist: z.array(McpEssayChecklistItemSchema).optional(),
-  solution: z.array(McpBlockSchema).optional(),
-  questions: z.array(McpMcQuestionSchema).optional(),
-  whyHtml: z.string().optional(),
+  question: z.string().min(1).max(40_000),
+  checklist: z.array(McpEssayChecklistItemSchema).max(50).optional(),
+  solution: z.array(McpBlockSchema).max(60).optional(),
+  questions: z.array(McpMcQuestionSchema).max(60).optional(),
+  whyHtml: z.string().max(150_000).optional(),
 });
 
 export const McpMockExamPartSchema = z.object({
-  id: z.string().min(1),
-  title: z.string().min(1),
-  topicId: z.string().optional(),
-  caseHtml: z.string().optional(),
-  items: z.array(McpMockExamItemSchema).min(1),
+  id: z.string().min(1).max(120),
+  title: z.string().min(1).max(500),
+  topicId: z.string().max(120).optional(),
+  caseHtml: z.string().max(250_000).optional(),
+  items: z.array(McpMockExamItemSchema).min(1).max(100),
 });
 
 export const McpMockExamSchema = z.object({
-  schema: z.string().optional(),
-  id: z.string().min(1),
-  name: z.string().min(1),
-  subtitle: z.string().optional(),
-  durationMin: z.number().positive().default(90),
-  totalPoints: z.number().nonnegative(),
-  items: z.array(McpMockExamItemSchema).default([]),
-  parts: z.array(McpMockExamPartSchema).optional(),
+  schema: z.string().max(64).optional(),
+  id: z.string().min(1).max(120),
+  name: z.string().min(1).max(300),
+  subtitle: z.string().max(500).optional(),
+  durationMin: z.number().positive().max(1_440).default(90),
+  totalPoints: z.number().nonnegative().max(10_000),
+  items: z.array(McpMockExamItemSchema).max(150).default([]),
+  parts: z.array(McpMockExamPartSchema).max(50).optional(),
 });
 
 export const McpCheatsheetSectionSchema = z.object({
-  title: z.string().min(1),
-  blocks: z.array(McpBlockSchema).default([]),
+  title: z.string().min(1).max(300),
+  blocks: z.array(McpBlockSchema).max(200).default([]),
 });
 
 export const McpCheatsheetSchema = z.object({
-  schema: z.string().optional(),
-  title: z.string().optional(),
-  html: z.string().optional(),
-  sections: z.array(McpCheatsheetSectionSchema).optional(),
+  schema: z.string().max(64).optional(),
+  title: z.string().max(300).optional(),
+  html: z.string().max(1_500_000).optional(),
+  sections: z.array(McpCheatsheetSectionSchema).max(100).optional(),
 });
 
 export type McpCourseTopic = z.infer<typeof McpCourseTopicSchema>;
@@ -274,10 +274,10 @@ export type TrainerBundle = {
 
 export const TrainerBundleSchema = z.object({
   course: McpCourseProfileSchema,
-  topics: z.record(z.string(), McpTopicContentSchema),
-  mocks: z.array(McpMockExamSchema).optional(),
+  topics: z.record(z.string().max(120), McpTopicContentSchema),
+  mocks: z.array(McpMockExamSchema).max(30).optional(),
   cheatsheet: McpCheatsheetSchema.optional(),
-  artifactHtml: z.string().optional(),
+  artifactHtml: z.string().max(5_000_000).optional(),
 });
 
 export const SavedTrainerPackSchema = z.object({

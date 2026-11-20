@@ -63,7 +63,9 @@ function ImpressumContent() {
 
           <div className="mt-10">
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>Angaben gemäß § 5 TMG</h2>
+              <h2 style={headingStyle}>
+                Angaben gemäß § 5 DDG (vormals § 5 TMG)
+              </h2>
               <p style={bodyStyle}>
                 {PROVIDER.name}
                 <br />
@@ -100,7 +102,7 @@ function ImpressumContent() {
 
             <section style={sectionStyle}>
               <h2 style={headingStyle}>
-                Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV
+                Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV (vormals § 55 Abs. 2 RStV)
               </h2>
               <p style={bodyStyle}>
                 {PROVIDER.name}
@@ -142,13 +144,13 @@ function ImpressumContent() {
             <section style={sectionStyle}>
               <h2 style={headingStyle}>Haftung für Inhalte</h2>
               <p style={bodyStyle}>
-                Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene
-                Inhalte auf diesen Seiten nach den allgemeinen Gesetzen
-                verantwortlich. Nach §§ 8 bis 10 TMG sind wir als
-                Diensteanbieter jedoch nicht verpflichtet, übermittelte oder
-                gespeicherte fremde Informationen zu überwachen oder nach
-                Umständen zu forschen, die auf eine rechtswidrige Tätigkeit
-                hinweisen.
+                Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG in Verbindung
+                mit den allgemeinen Gesetzen für eigene Inhalte auf diesen
+                Seiten verantwortlich. Nach Art. 4 bis 8 des Digital Services
+                Act (DSA) sind wir als Diensteanbieter jedoch nicht verpflichtet,
+                übermittelte oder gespeicherte fremde Informationen allgemein zu
+                überwachen oder nach Umständen zu forschen, die auf eine
+                rechtswidrige Tätigkeit hinweisen.
               </p>
             </section>
 

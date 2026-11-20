@@ -9,6 +9,7 @@ import {
 } from "@/lib/supabase/server";
 import { getStripe } from "@/lib/stripe";
 import { STUDY_UPLOADS_BUCKET } from "@/lib/uploads";
+import { normalizeEmail } from "@/lib/security/validation";
 
 // =========================================================================
 // Settings page — server actions
@@ -37,8 +38,8 @@ export async function changeEmail(
   _prev: ActionResult,
   formData: FormData,
 ): Promise<ActionResult> {
-  const email = formData.get("email");
-  if (typeof email !== "string" || !email.includes("@")) {
+  const email = normalizeEmail(formData.get("email"));
+  if (!email) {
     return { ok: false, error: "Bitte gib eine gültige E-Mail-Adresse ein." };
   }
   const supabase = await createSupabaseServer();
@@ -46,7 +47,7 @@ export async function changeEmail(
   const origin =
     h.get("origin") ?? getOrigin(h.get("host"), h.get("x-forwarded-proto"));
   const { error } = await supabase.auth.updateUser(
-    { email: email.trim() },
+    { email },
     { emailRedirectTo: `${origin}/auth/callback?next=/dashboard/settings` },
   );
   if (error) {

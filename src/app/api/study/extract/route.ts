@@ -12,6 +12,7 @@ import {
   buildStudyExtractUserPrompt,
   STUDY_EXTRACT_SYSTEM_PROMPT,
 } from "@/lib/study/extractPrompt";
+import { enforceRateLimit, extractClientIp } from "@/lib/security/rateLimit";
 import { normalizeNativeStudyCourse } from "@/lib/study/importCourse";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { HAIKU } from "@/lib/taskModels";
@@ -63,25 +64,21 @@ export async function POST(request: Request) {
   const isAdmin = isAllowedAdminEmail(user.email);
 
   if (!isAdmin) {
-    const { data: rlAllowed, error: rlErr } = await service.rpc("check_rate_limit", {
-      p_key: `study_extract:${user.id}`,
-      p_limit: 5,
-      p_window_seconds: 3600,
+    const rl = await enforceRateLimit({
+      scope: "study_extract",
+      ip: extractClientIp(request.headers),
+      userId: user.id,
+      maxIp: 10,
+      maxUser: 5,
+      windowSeconds: 3600,
     });
-    if (rlErr) {
-      console.error("[/api/study/extract] check_rate_limit failed", rlErr);
-      return NextResponse.json(
-        { error: "Rate-Limit konnte nicht geprüft werden." },
-        { status: 500 },
-      );
-    }
-    if (rlAllowed === false) {
+    if (!rl.allowed) {
       return NextResponse.json(
         {
           error: "Zu viele Auswertungen in kurzer Zeit. Bitte warte einen Moment.",
           reason: "rate_limited",
         },
-        { status: 429 },
+        { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } },
       );
     }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { track } from "@/lib/analytics";
 import { PrimaryCTAButton } from "@/components/ui/PrimaryCTA";
@@ -32,6 +32,7 @@ export default function BillingSection({
 }) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const inFlightRef = useRef(false);
 
   // Active recurring subscription → self-service via the Stripe portal.
   const isSubscription = plan === "semester" || plan === "monthly";
@@ -41,6 +42,12 @@ export default function BillingSection({
       openBetaCheckout(target);
       return;
     }
+    if (inFlightRef.current || pending) return;
+    inFlightRef.current = true;
+    const idempotencyKey =
+      typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     setError(null);
     track("checkout_started", { plan: target, source: "settings_billing" });
     startTransition(async () => {
@@ -48,7 +55,7 @@ export default function BillingSection({
         const res = await fetch("/api/stripe/checkout", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ plan: target }),
+          body: JSON.stringify({ plan: target, idempotencyKey }),
         });
         const json = await res.json();
         if (!res.ok || !json.url) {
@@ -56,12 +63,15 @@ export default function BillingSection({
         }
         window.location.href = json.url;
       } catch (e) {
+        inFlightRef.current = false;
         setError(e instanceof Error ? e.message : "Unbekannter Fehler");
       }
     });
   };
 
   const openPortal = () => {
+    if (inFlightRef.current || pending) return;
+    inFlightRef.current = true;
     setError(null);
     startTransition(async () => {
       try {
@@ -72,6 +82,7 @@ export default function BillingSection({
         }
         window.location.href = json.url;
       } catch (e) {
+        inFlightRef.current = false;
         setError(e instanceof Error ? e.message : "Unbekannter Fehler");
       }
     });

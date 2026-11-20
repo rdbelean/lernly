@@ -3,8 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { markStudyDay } from "@/lib/studyDay";
+import { isUuid } from "@/lib/security/validation";
 
 export async function deletePack(id: string) {
+  if (!isUuid(id)) {
+    throw new Error("Ungültige Paket-ID.");
+  }
   const supabase = await createClient();
   // Explicit auth gate (defense-in-depth on top of RLS): never run the mutation
   // for an unauthenticated caller. RLS (study_packs_delete_own) still scopes the
@@ -15,7 +19,11 @@ export async function deletePack(id: string) {
   if (!user) {
     throw new Error("Nicht angemeldet.");
   }
-  const { error } = await supabase.from("study_packs").delete().eq("id", id);
+  const { error } = await supabase
+    .from("study_packs")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", user.id);
   if (error) {
     throw new Error(error.message);
   }
@@ -87,6 +95,7 @@ export async function setCardFavorite(input: {
   cardId: string;
   favorite: boolean;
 }): Promise<void> {
+  if (!isUuid(input.packId)) throw new Error("Ungültige Paket-ID.");
   const supabase = await createClient();
   const {
     data: { user },
@@ -112,6 +121,7 @@ export async function deleteCard(input: {
   packId: string;
   cardId: string;
 }): Promise<void> {
+  if (!isUuid(input.packId)) throw new Error("Ungültige Paket-ID.");
   const supabase = await createClient();
   const {
     data: { user },
@@ -122,6 +132,7 @@ export async function deleteCard(input: {
     .from("study_packs")
     .select("pack_data")
     .eq("id", input.packId)
+    .eq("user_id", user.id)
     .maybeSingle();
   if (loadErr) throw new Error(loadErr.message);
   if (!row) throw new Error("Paket nicht gefunden.");
@@ -135,13 +146,15 @@ export async function deleteCard(input: {
   const { error: saveErr } = await supabase
     .from("study_packs")
     .update({ pack_data: { ...pack, flashcards: next } })
-    .eq("id", input.packId);
+    .eq("id", input.packId)
+    .eq("user_id", user.id);
   if (saveErr) throw new Error(saveErr.message);
 
   // Best-effort cleanup of the SRS row; failure mustn't block the delete.
   await supabase
     .from("card_reviews")
     .delete()
+    .eq("user_id", user.id)
     .eq("pack_id", input.packId)
     .eq("card_id", input.cardId);
 
@@ -155,6 +168,7 @@ export async function renamePack(input: {
   id: string;
   title: string;
 }): Promise<void> {
+  if (!isUuid(input.id)) throw new Error("Ungültige Paket-ID.");
   const supabase = await createClient();
   const {
     data: { user },
@@ -165,7 +179,8 @@ export async function renamePack(input: {
   const { error } = await supabase
     .from("study_packs")
     .update({ title })
-    .eq("id", input.id);
+    .eq("id", input.id)
+    .eq("user_id", user.id);
   if (error) throw new Error(error.message);
   revalidatePath(`/dashboard/pack/${input.id}`);
   revalidatePath("/dashboard");

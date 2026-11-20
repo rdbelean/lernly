@@ -6,6 +6,7 @@ import {
   isDuplicateError,
   FEEDBACK_TYPES,
 } from "@/lib/feedback";
+import { normalizeDisplayName, normalizeEmail } from "@/lib/security/validation";
 
 export const runtime = "nodejs";
 
@@ -19,8 +20,8 @@ const bodySchema = z.object({
   nachricht: z.string().trim().min(3).max(4000),
   typ: z.enum(FEEDBACK_TYPES),
   email: z.preprocess(
-    (v) => (typeof v === "string" && v.trim() ? v.trim() : undefined),
-    z.string().email().max(200).optional(),
+    (v) => normalizeEmail(v) ?? undefined,
+    z.string().email().max(254).optional(),
   ),
   person: z.string().max(200).optional(),
   quelle: z.string().max(100).default("In-App"),
@@ -99,7 +100,7 @@ export async function POST(request: Request) {
       nachricht: data.nachricht,
       typ: data.typ,
       email: data.email,
-      person: data.person,
+      person: normalizeDisplayName(data.person, 200) ?? undefined,
       quelle: data.quelle,
       kontext: data.kontext,
     });

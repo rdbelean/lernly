@@ -2,22 +2,28 @@ import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 import { encryptApiKey } from "@/lib/byok";
 import {
+  enforceRateLimit,
+  extractClientIp,
+  readJsonBodyWithLimit,
+} from "@/lib/security/rateLimit";
+import {
   createClient as createSupabaseServer,
   createServiceClient,
 } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 
-export async function POST(request: Request) {
-  let body: { apiKey?: string };
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
-  }
-  const apiKey = typeof body.apiKey === "string" ? body.apiKey.trim() : "";
+const MAX_BYOK_BYTES = 16 * 1024;
 
-  if (!apiKey.startsWith("sk-ant-")) {
+export async function POST(request: Request) {
+  const read = await readJsonBodyWithLimit(request, MAX_BYOK_BYTES);
+  if (!read.ok) {
+    return NextResponse.json({ error: read.error }, { status: read.status });
+  }
+  const body = read.data as { apiKey?: unknown };
+  const apiKey = typeof body?.apiKey === "string" ? body.apiKey.trim() : "";
+
+  if (!apiKey.startsWith("sk-ant-") || apiKey.length > 512) {
     return NextResponse.json(
       { error: "Ungültiger Anthropic-Key — beginnt mit sk-ant-." },
       { status: 400 },
@@ -30,6 +36,21 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
+
+  const rl = await enforceRateLimit({
+    scope: "byok_save",
+    ip: extractClientIp(request.headers),
+    userId: user.id,
+    maxIp: 20,
+    maxUser: 10,
+    windowSeconds: 600,
+  });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Zu viele Versuche. Bitte warte einen Moment." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } },
+    );
   }
 
   try {

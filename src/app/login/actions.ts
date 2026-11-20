@@ -13,6 +13,7 @@ import {
   getAllowedAdminEmails,
   isAllowedAdminEmail,
 } from "@/lib/admin/auth";
+import { normalizeEmail } from "@/lib/security/validation";
 
 export type MagicLinkState = { ok: boolean; error?: string; sentTo?: string };
 
@@ -119,8 +120,8 @@ export async function requestMagicLink(
   _prev: MagicLinkState,
   formData: FormData,
 ): Promise<MagicLinkState> {
-  const email = formData.get("email");
-  if (typeof email !== "string" || !email.includes("@")) {
+  const email = normalizeEmail(formData.get("email"));
+  if (!email) {
     return { ok: false, error: "Bitte gib eine gültige E-Mail-Adresse ein." };
   }
   if (!isAllowedAdminEmail(email)) {
@@ -256,13 +257,10 @@ export async function verifyMagicCode(
   _prev: MagicLinkState,
   formData: FormData,
 ): Promise<MagicLinkState> {
-  const rawEmail = formData.get("email");
-  if (typeof rawEmail !== "string" || !rawEmail.includes("@")) {
+  const email = normalizeEmail(formData.get("email"));
+  if (!email) {
     return { ok: false, error: "Etwas ist schiefgelaufen — fordere einen neuen Code an." };
   }
-  // Normalize — Supabase stores emails lowercased, but this field can arrive
-  // mixed-case (e.g. from the Stripe checkout session on /checkout/success).
-  const email = rawEmail.trim().toLowerCase();
   if (!isAllowedAdminEmail(email)) {
     return { ok: false, error: CLOSED_BETA_LOGIN_ERROR };
   }
@@ -309,12 +307,11 @@ export async function loginWithPassword(
   _prev: MagicLinkState,
   formData: FormData,
 ): Promise<MagicLinkState> {
-  const rawEmail = formData.get("email");
+  const email = normalizeEmail(formData.get("email"));
   const rawPassword = formData.get("password");
-  if (typeof rawEmail !== "string" || !rawEmail.includes("@")) {
+  if (!email) {
     return { ok: false, error: "Bitte gib eine gültige E-Mail-Adresse ein." };
   }
-  const email = rawEmail.trim().toLowerCase();
   if (!isAllowedAdminEmail(email)) {
     return { ok: false, error: CLOSED_BETA_LOGIN_ERROR };
   }

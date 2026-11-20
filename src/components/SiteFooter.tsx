@@ -1,4 +1,5 @@
 import LernlyLogo from "@/components/LernlyLogo";
+import CookieSettingsButton from "@/components/CookieSettingsButton";
 
 type Language = "en" | "de";
 
@@ -8,6 +9,7 @@ const FOOTER_COPY: Record<
     legalNotice: string;
     privacy: string;
     terms: string;
+    cookieSettings: string;
     contact: string;
     feedback: string;
     forUniversities: string;
@@ -18,6 +20,7 @@ const FOOTER_COPY: Record<
     legalNotice: "Legal notice",
     privacy: "Privacy",
     terms: "Terms",
+    cookieSettings: "Cookie settings",
     contact: "Contact",
     feedback: "Give feedback",
     forUniversities: "For universities",
@@ -27,6 +30,7 @@ const FOOTER_COPY: Record<
     legalNotice: "Impressum",
     privacy: "Datenschutz",
     terms: "AGB",
+    cookieSettings: "Cookie-Einstellungen",
     contact: "Kontakt",
     feedback: "Feedback geben",
     forUniversities: "Für Hochschulen",
@@ -108,6 +112,9 @@ export default function SiteFooter({ language = "de" }: { language?: Language })
             <a href="/agb" className="transition hover:text-[color:var(--color-text)]">
               {copy.terms}
             </a>
+            <CookieSettingsButton className="transition hover:text-[color:var(--color-text)]">
+              {copy.cookieSettings}
+            </CookieSettingsButton>
             <a
               href="mailto:info@lernly-app.de"
               className="transition hover:text-[color:var(--color-text)]"

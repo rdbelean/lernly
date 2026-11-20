@@ -1,4 +1,5 @@
-import { FileText } from "lucide-react";
+import { FileText, ShieldCheck } from "lucide-react";
+import CookieSettingsButton from "@/components/CookieSettingsButton";
 
 // Footer-style row of legal page links — required for any paid B2C
 // service in Germany.
@@ -29,6 +30,17 @@ export default function LegalLinks() {
           </a>
         </li>
       ))}
+      <li>
+        <CookieSettingsButton className="inline-flex items-center gap-1.5 text-[13px] transition hover:text-[color:var(--color-text)] text-[color:var(--color-text-dim)]">
+          <ShieldCheck
+            size={12}
+            strokeWidth={1.75}
+            color="var(--color-text-faint)"
+            aria-hidden
+          />
+          <span>Cookie-Einstellungen</span>
+        </CookieSettingsButton>
+      </li>
     </ul>
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
+import CookieSettingsButton from "@/components/CookieSettingsButton";
 
 export const metadata: Metadata = {
   title: "Datenschutz",
@@ -189,6 +190,97 @@ function DatenschutzContent() {
                 </a>
               </p>
 
+              <h3 style={subHeadingStyle}>Stripe (Zahlungsabwicklung)</h3>
+              <p style={bodyStyle}>
+                Bei kostenpflichtigen Plänen erfolgt die Zahlungsabwicklung über
+                Stripe Payments Europe, Ltd. (Irland). Zahlungsdaten wie
+                Kartennummern oder SEPA-Daten werden direkt bei Stripe
+                verarbeitet und nicht auf unseren Servern gespeichert.
+                Datenschutz­erklärung:{" "}
+                <a
+                  href="https://stripe.com/de/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={linkStyle}
+                  className="underline-offset-2 hover:underline"
+                >
+                  https://stripe.com/de/privacy
+                </a>
+              </p>
+
+              <h3 style={subHeadingStyle}>Resend (E-Mail-Versand)</h3>
+              <p style={bodyStyle}>
+                Für den Versand von Login-Codes, Magic-Links und optionalen
+                Klausur-Erinnerungen nutzen wir Resend Inc. Es wird
+                ausschließlich deine E-Mail-Adresse sowie der jeweilige
+                E-Mail-Inhalt zur Zustellung übermittelt. Datenschutz­erklärung:{" "}
+                <a
+                  href="https://resend.com/legal/privacy-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={linkStyle}
+                  className="underline-offset-2 hover:underline"
+                >
+                  https://resend.com/legal/privacy-policy
+                </a>
+              </p>
+
+              <h3 style={subHeadingStyle}>Cloudflare Turnstile (Bot-Schutz)</h3>
+              <p style={bodyStyle}>
+                Zum Schutz unserer Anmelde- und API-Endpunkte vor
+                automatisierten Zugriffen und Missbrauch setzen wir Cloudflare
+                Turnstile ein (berechtigtes Interesse nach Art. 6 Abs. 1 lit. f
+                DSGVO). Datenschutz­erklärung:{" "}
+                <a
+                  href="https://www.cloudflare.com/privacypolicy/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={linkStyle}
+                  className="underline-offset-2 hover:underline"
+                >
+                  https://www.cloudflare.com/privacypolicy/
+                </a>
+              </p>
+
+              <h3 style={subHeadingStyle}>Sentry (Fehler-Monitoring)</h3>
+              <p style={bodyStyle}>
+                Zur technischen Fehleranalyse und Stabilität der Anwendung
+                verwenden wir Sentry (Functional Software, Inc., berechtigtes
+                Interesse nach Art. 6 Abs. 1 lit. f DSGVO). Es werden technische
+                Fehlermeldungen erfasst, jedoch keine persönlichen Lerninhalte
+                aufgezeichnet. Datenschutz­erklärung:{" "}
+                <a
+                  href="https://sentry.io/privacy/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={linkStyle}
+                  className="underline-offset-2 hover:underline"
+                >
+                  https://sentry.io/privacy/
+                </a>
+              </p>
+
+              <h3 style={subHeadingStyle}>
+                PostHog (Optionale Produktanalyse nach Opt-In)
+              </h3>
+              <p style={bodyStyle}>
+                Sofern du im Cookie-Banner ausdrücklich zustimmst (§ 25 Abs. 1
+                TDDDG, Art. 6 Abs. 1 lit. a DSGVO), nutzen wir PostHog zur
+                anonymisierten Auswertung von Seitenaufrufen und
+                Produkt-Meilensteinen, um Lernly zu verbessern. Ohne deine
+                Einwilligung wird PostHog nicht initialisiert und es werden
+                keine Analyse-Cookies gesetzt. Datenschutz­erklärung:{" "}
+                <a
+                  href="https://posthog.com/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={linkStyle}
+                  className="underline-offset-2 hover:underline"
+                >
+                  https://posthog.com/privacy
+                </a>
+              </p>
+
               <h3 style={subHeadingStyle}>Google Sign-In</h3>
               <p style={bodyStyle}>
                 Wenn du dich mit Google anmeldest, werden deine E-Mail-Adresse,
@@ -212,12 +304,27 @@ function DatenschutzContent() {
             <section style={sectionStyle}>
               <h2 style={headingStyle}>5. Deine Rechte</h2>
               <p style={bodyStyle}>
-                Du hast jederzeit das Recht auf Auskunft, Berichtigung,
-                Löschung und Einschränkung der Verarbeitung deiner
-                personenbezogenen Daten. Außerdem hast du das Recht auf
-                Datenübertragbarkeit und das Recht, Beschwerde bei einer
-                Aufsichtsbehörde einzulegen. Für die Ausübung deiner Rechte
-                schreib einfach eine Mail an:{" "}
+                Du hast jederzeit das Recht auf Auskunft (Art. 15 DSGVO),
+                Berichtigung (Art. 16 DSGVO), Löschung (Art. 17 DSGVO),
+                Einschränkung der Verarbeitung (Art. 18 DSGVO), Datenübertragbarkeit
+                (Art. 20 DSGVO) sowie den Widerruf erteilter Einwilligungen
+                (Art. 7 Abs. 3 DSGVO). Außerdem hast du das Recht, Beschwerde bei
+                einer Datenschutz-Aufsichtsbehörde einzulegen.
+              </p>
+              <p style={{ ...bodyStyle, marginTop: "10px" }}>
+                In deinen{" "}
+                <a
+                  href="/dashboard/settings"
+                  style={linkStyle}
+                  className="underline-offset-2 hover:underline"
+                >
+                  Kontoeinstellungen
+                </a>{" "}
+                kannst du jederzeit alle deine Daten als JSON exportieren
+                („Meine Daten exportieren (JSON)“) oder deinen Account inklusive
+                aller Kurse, Klausuren, Uploads und Lernstände sofort
+                unwiderruflich entfernen („Account &amp; alle Lerndaten
+                endgültig löschen“). Alternativ schreib eine Mail an:{" "}
                 <a
                   href="mailto:info@lernly-app.de"
                   style={linkStyle}
@@ -229,12 +336,23 @@ function DatenschutzContent() {
             </section>
 
             <section style={sectionStyle}>
-              <h2 style={headingStyle}>6. Cookies</h2>
+              <h2 style={headingStyle}>
+                6. Cookies &amp; Einwilligungsverwaltung (§ 25 TDDDG)
+              </h2>
               <p style={bodyStyle}>
-                Lernly nutzt ausschließlich technisch notwendige
-                Session-Cookies, die von Supabase Auth gesetzt werden, damit
-                du eingeloggt bleibst. Keine Tracking-Cookies, keine
-                Analyse-Tools, keine Werbung.
+                Lernly setzt technisch notwendige Session-Cookies (Supabase Auth)
+                und speichert deine Datenschutz-Auswahl lokal
+                („lernly_consent“), damit Login, Sicherheit und deine
+                Cookie-Einstellungen funktionieren (§ 25 Abs. 2 Nr. 2 TDDDG).
+                Optionale Analyse-Cookies (PostHog) werden ausschließlich nach
+                deiner aktiven Einwilligung im Cookie-Banner gesetzt (§ 25 Abs. 1
+                TDDDG). Du kannst deine Auswahl jederzeit mit Wirkung für die
+                Zukunft anpassen oder widerrufen:
+              </p>
+              <p style={{ ...bodyStyle, marginTop: "10px" }}>
+                <CookieSettingsButton className="font-semibold underline underline-offset-2 text-[color:var(--color-primary)] hover:opacity-80">
+                  Cookie-Einstellungen öffnen
+                </CookieSettingsButton>
               </p>
             </section>
 

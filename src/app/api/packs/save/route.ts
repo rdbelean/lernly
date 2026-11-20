@@ -1,20 +1,25 @@
 import { NextResponse } from "next/server";
 import { isAllowedAdminEmail } from "@/lib/admin/auth";
 import { StudyPackSchema } from "@/lib/schema";
+import {
+  enforceRateLimit,
+  extractClientIp,
+  readJsonBodyWithLimit,
+} from "@/lib/security/rateLimit";
 import { createClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 
+const MAX_PACK_SAVE_BYTES = 5 * 1024 * 1024; // 5 MB ceiling
+
 export async function POST(request: Request) {
-  let body: unknown;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  const read = await readJsonBodyWithLimit(request, MAX_PACK_SAVE_BYTES);
+  if (!read.ok) {
+    return NextResponse.json({ error: read.error }, { status: read.status });
   }
 
   const parsed = StudyPackSchema.safeParse(
-    (body as { pack?: unknown })?.pack,
+    (read.data as { pack?: unknown })?.pack,
   );
   if (!parsed.success) {
     return NextResponse.json({ error: "Pack-Schema ungültig" }, { status: 400 });
@@ -28,6 +33,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
   const isAdmin = isAllowedAdminEmail(user.email);
+
+  const rl = await enforceRateLimit({
+    scope: "packs_save",
+    ip: extractClientIp(request.headers),
+    userId: user.id,
+    maxIp: 60,
+    maxUser: 30,
+    windowSeconds: 600,
+  });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Zu viele Speicher-Anfragen. Bitte warte einen Moment." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } },
+    );
+  }
 
   if (!isAdmin) {
     const { data: quota, error: qErr } = await supabase.rpc("check_pack_quota");

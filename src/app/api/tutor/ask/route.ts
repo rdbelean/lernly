@@ -1,7 +1,13 @@
 import Anthropic from "@anthropic-ai/sdk";
 import * as Sentry from "@sentry/nextjs";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { isAllowedAdminEmail } from "@/lib/admin/auth";
+import {
+  enforceRateLimit,
+  extractClientIp,
+  readJsonBodyWithLimit,
+} from "@/lib/security/rateLimit";
 import { createClient } from "@/lib/supabase/server";
 import { effectivePlan } from "@/lib/quota";
 import { HAIKU } from "@/lib/taskModels";
@@ -12,7 +18,6 @@ import {
   tutorLimitForPlan,
   trimHistory,
   type TutorMessage,
-  type TutorScope,
 } from "@/lib/tutorPrompt";
 
 export const runtime = "nodejs";
@@ -28,13 +33,6 @@ export const maxDuration = 30;
 // implicitly when the stored period_start is before this month's start.
 // =========================================================================
 
-type AskBody = {
-  packId?: string;
-  scope?: TutorScope;
-  history?: TutorMessage[];
-  question?: string;
-};
-
 const QUOTA_EXCEEDED_MSG_DE =
   "Dein KI-Hilfe-Kontingent für diesen Monat ist aufgebraucht. Upgrade für mehr Nachrichten.";
 
@@ -49,43 +47,47 @@ function inSameMonth(a: Date, b: Date): boolean {
   );
 }
 
-function isValidScope(scope: unknown): scope is TutorScope {
-  if (!scope || typeof scope !== "object") return false;
-  const s = scope as Record<string, unknown>;
-  if (s.kind === "flashcard") {
-    return typeof s.question === "string" && typeof s.answer === "string";
-  }
-  if (s.kind === "concept") {
-    return typeof s.term === "string" && typeof s.definition === "string";
-  }
-  return false;
-}
+const MAX_TUTOR_BODY_BYTES = 64 * 1024;
 
-function isValidHistory(h: unknown): h is TutorMessage[] {
-  if (!Array.isArray(h)) return false;
-  return h.every(
-    (m) =>
-      m &&
-      typeof m === "object" &&
-      (m.role === "user" || m.role === "assistant") &&
-      typeof m.content === "string",
-  );
-}
+const TutorScopeSchema = z.union([
+  z.object({
+    kind: z.literal("flashcard"),
+    question: z.string().max(4_000),
+    answer: z.string().max(8_000),
+  }),
+  z.object({
+    kind: z.literal("concept"),
+    term: z.string().max(500),
+    definition: z.string().max(8_000),
+  }),
+]);
+
+const TutorHistoryItemSchema = z.object({
+  role: z.enum(["user", "assistant"]),
+  content: z.string().max(4_000),
+});
+
+const AskBodySchema = z.object({
+  packId: z.string().max(120).optional(),
+  scope: TutorScopeSchema,
+  history: z.array(TutorHistoryItemSchema).max(20).optional(),
+  question: z.string().trim().min(1).max(2_000),
+});
 
 export async function POST(request: Request): Promise<Response> {
-  let body: AskBody;
-  try {
-    body = (await request.json()) as AskBody;
-  } catch {
-    return NextResponse.json({ error: "Ungültige Anfrage." }, { status: 400 });
+  const read = await readJsonBodyWithLimit(request, MAX_TUTOR_BODY_BYTES);
+  if (!read.ok) {
+    return NextResponse.json({ error: read.error }, { status: read.status });
   }
-  if (!body.scope || !isValidScope(body.scope)) {
-    return NextResponse.json({ error: "Scope fehlt." }, { status: 400 });
+  const parsed = AskBodySchema.safeParse(read.data);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Frage oder Kontext ungültig bzw. zu lang (max. 2.000 Zeichen)." },
+      { status: 400 },
+    );
   }
-  if (typeof body.question !== "string" || body.question.trim().length === 0) {
-    return NextResponse.json({ error: "Frage fehlt." }, { status: 400 });
-  }
-  const history = isValidHistory(body.history) ? body.history : [];
+  const body = parsed.data;
+  const history = (body.history ?? []) as TutorMessage[];
 
   const supabase = await createClient();
   const { data: authData } = await supabase.auth.getUser();
@@ -93,6 +95,21 @@ export async function POST(request: Request): Promise<Response> {
     return NextResponse.json({ error: "Nicht angemeldet." }, { status: 401 });
   }
   const userId = authData.user.id;
+
+  const rl = await enforceRateLimit({
+    scope: "tutor_ask",
+    ip: extractClientIp(request.headers),
+    userId,
+    maxIp: 40,
+    maxUser: 20,
+    windowSeconds: 600,
+  });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Zu viele Tutor-Anfragen. Bitte warte einen Moment." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } },
+    );
+  }
 
   // Load plan + current usage. Two queries, both RLS-scoped.
   const [{ data: profile }, { data: usage }] = await Promise.all([

@@ -1,5 +1,14 @@
 import { NextResponse } from "next/server";
-import { createHash } from "node:crypto";
+import { createHash, timingSafeEqual } from "node:crypto";
+import {
+  enforceRateLimit,
+  extractClientIp,
+  readJsonBodyWithLimit,
+} from "@/lib/security/rateLimit";
+import {
+  normalizeEmail,
+  sanitizeIdempotencyKey,
+} from "@/lib/security/validation";
 import {
   getEinzelklausurPriceId,
   getStripe,
@@ -14,16 +23,21 @@ import { BETA_CHECKOUT_LOCKED, BETA_CHECKOUT_BODY } from "@/lib/betaGate";
 
 export const runtime = "nodejs";
 
+const MAX_CHECKOUT_BODY_BYTES = 16 * 1024;
 const SUBSCRIPTION_PLANS: SubscriptionPlan[] = ["semester", "monthly"];
 
 // Beta curtain: while BETA_CHECKOUT_LOCKED, checkout only proceeds with the
-// founder password (validated here so the plaintext never ships to the client).
+// founder password (validated here in constant time so plaintext never ships).
 const BETA_PW_SHA256 =
   "f7c8e198931985b6eae4a7fe1b1f76169240ddbba766e3e003f64374ffc8dc33";
 
 function betaPasswordOk(input: unknown): boolean {
-  if (typeof input !== "string" || input.length === 0) return false;
-  return createHash("sha256").update(input).digest("hex") === BETA_PW_SHA256;
+  if (typeof input !== "string" || input.length === 0 || input.length > 256) {
+    return false;
+  }
+  const actual = createHash("sha256").update(input).digest();
+  const expected = Buffer.from(BETA_PW_SHA256, "hex");
+  return actual.length === expected.length && timingSafeEqual(actual, expected);
 }
 
 export async function POST(request: Request) {
@@ -35,12 +49,29 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: { plan?: string; betaPassword?: string };
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  const ip = extractClientIp(request.headers);
+  const ipRl = await enforceRateLimit({
+    scope: "stripe_checkout_ip",
+    ip,
+    maxIp: 15,
+    windowSeconds: 600,
+  });
+  if (!ipRl.allowed) {
+    return NextResponse.json(
+      { error: "Zu viele Checkout-Anfragen. Bitte warte einen Moment." },
+      { status: 429, headers: { "Retry-After": String(ipRl.retryAfterSeconds) } },
+    );
   }
+
+  const read = await readJsonBodyWithLimit(request, MAX_CHECKOUT_BODY_BYTES);
+  if (!read.ok) {
+    return NextResponse.json({ error: read.error }, { status: read.status });
+  }
+  const body = (read.data ?? {}) as {
+    plan?: string;
+    betaPassword?: string;
+    idempotencyKey?: string;
+  };
 
   // Beta curtain — the real gate. Blocks every purchase (any surface, incl.
   // direct API calls) unless the founder password is supplied.
@@ -84,6 +115,19 @@ export async function POST(request: Request) {
 
   let customerId: string | undefined;
   if (user) {
+    const userRl = await enforceRateLimit({
+      scope: "stripe_checkout_user",
+      userId: user.id,
+      maxUser: 15,
+      windowSeconds: 600,
+    });
+    if (!userRl.allowed) {
+      return NextResponse.json(
+        { error: "Zu viele Checkout-Anfragen. Bitte warte einen Moment." },
+        { status: 429, headers: { "Retry-After": String(userRl.retryAfterSeconds) } },
+      );
+    }
+
     const service = createServiceClient();
     const { data: profile } = await service
       .from("users")
@@ -93,8 +137,9 @@ export async function POST(request: Request) {
 
     customerId = (profile?.stripe_customer_id as string | null) ?? undefined;
     if (!customerId) {
+      const normalizedEmail = normalizeEmail(user.email);
       const customer = await stripe.customers.create({
-        email: user.email ?? undefined,
+        email: normalizedEmail ?? undefined,
         metadata: { user_id: user.id },
       });
       customerId = customer.id;
@@ -142,6 +187,13 @@ export async function POST(request: Request) {
     after_submit: { message: afterSubmitMessage },
   };
 
+  const clientKey = sanitizeIdempotencyKey(body.idempotencyKey);
+  const idempotencyKey =
+    clientKey ??
+    (user
+      ? `checkout:${user.id}:${plan}:${Math.floor(Date.now() / 30_000)}`
+      : undefined);
+
   // Subscriptions stay in subscription mode; Einzelklausur uses payment mode
   // and never auto-renews. For guests we omit customer/client_reference_id so
   // Stripe creates the customer and collects the email itself.
@@ -181,6 +233,7 @@ export async function POST(request: Request) {
             ...(loginNonce ? { login_nonce: loginNonce } : {}),
           },
         },
+    idempotencyKey ? { idempotencyKey } : undefined,
   );
 
   if (!session.url) {

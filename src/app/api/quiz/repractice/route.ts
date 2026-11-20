@@ -1,6 +1,13 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { isAllowedAdminEmail } from "@/lib/admin/auth";
+import {
+  enforceRateLimit,
+  extractClientIp,
+  readJsonBodyWithLimit,
+} from "@/lib/security/rateLimit";
+import { isUuid } from "@/lib/security/validation";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { QuizQuestionSchema, StudyPackSchema, type QuizQuestion } from "@/lib/schema";
 import { SONNET } from "@/lib/taskModels";
@@ -103,8 +110,6 @@ const REPRACTICE_TOOL = {
   },
 };
 
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
 function buildLanguageLockEN(): string {
   return `=== OUTPUT LANGUAGE LOCK: ENGLISH ===
 Write every stem, every option, and every explanation in English. The task instructions above are in German for you as the model — do not mirror them in the output. Source material was English; output is English. Exceptions (never translate): the "category" field must match the weak topic name verbatim (case + spelling) so the UI can group correctly; "type" enum stays English; proper nouns stay original.
@@ -117,36 +122,35 @@ Alle Stems, Optionen und Erklärungen auf Deutsch. "category" exakt wie im Topic
 === ENDE ===`;
 }
 
-type RepracticeBody = {
-  packId?: string;
-  weakTopics?: string[];
-  seenStems?: string[];
-};
+const MAX_REPRACTICE_BODY_BYTES = 64 * 1024;
+
+const RepracticeBodySchema = z.object({
+  packId: z.string().refine(isUuid, "packId ungültig"),
+  weakTopics: z
+    .array(z.string().trim().min(1).max(200))
+    .min(1)
+    .max(30),
+  seenStems: z
+    .array(z.string().trim().max(500))
+    .max(60)
+    .optional(),
+});
 
 export async function POST(request: Request): Promise<Response> {
-  let body: RepracticeBody;
-  try {
-    body = (await request.json()) as RepracticeBody;
-  } catch {
-    return NextResponse.json({ error: "Ungültige Anfrage." }, { status: 400 });
+  const read = await readJsonBodyWithLimit(request, MAX_REPRACTICE_BODY_BYTES);
+  if (!read.ok) {
+    return NextResponse.json({ error: read.error }, { status: read.status });
   }
-  if (!body.packId || typeof body.packId !== "string" || !UUID_RE.test(body.packId)) {
-    return NextResponse.json({ error: "packId fehlt oder ungültig." }, { status: 400 });
-  }
-  const weakTopics = Array.isArray(body.weakTopics)
-    ? body.weakTopics.filter((t): t is string => typeof t === "string" && t.trim() !== "")
-    : [];
-  if (weakTopics.length === 0) {
+  const parsedBody = RepracticeBodySchema.safeParse(read.data);
+  if (!parsedBody.success) {
     return NextResponse.json(
-      { error: "Keine schwachen Themen übergeben." },
+      { error: "Ungültige Anfrage-Parameter." },
       { status: 400 },
     );
   }
-  const seenStems = Array.isArray(body.seenStems)
-    ? body.seenStems
-        .filter((s): s is string => typeof s === "string")
-        .slice(0, 60) // protect token budget
-    : [];
+  const body = parsedBody.data;
+  const weakTopics = body.weakTopics;
+  const seenStems = body.seenStems ?? [];
 
   const supabase = await createClient();
   const { data: authData } = await supabase.auth.getUser();
@@ -158,20 +162,21 @@ export async function POST(request: Request): Promise<Response> {
   const isAdmin = isAllowedAdminEmail(authData.user.email);
 
   if (!isAdmin) {
-    const { data: rlAllowed, error: rlErr } = await service.rpc("check_rate_limit", {
-      p_bucket: `repractice:user:${authData.user.id}`,
-      p_max: 6,
-      p_window_seconds: 3600,
+    const rl = await enforceRateLimit({
+      scope: "repractice",
+      ip: extractClientIp(request.headers),
+      userId: authData.user.id,
+      maxIp: 15,
+      maxUser: 6,
+      windowSeconds: 3600,
     });
-    if (rlErr) {
-      console.error("[/api/quiz/repractice] check_rate_limit failed", rlErr);
-    } else if (rlAllowed === false) {
+    if (!rl.allowed) {
       return NextResponse.json(
         {
           error: "Zu viele Übungsrunden in kurzer Zeit. Bitte warte einen Moment.",
           reason: "rate_limited",
         },
-        { status: 429 },
+        { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } },
       );
     }
 

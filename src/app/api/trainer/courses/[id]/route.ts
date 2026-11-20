@@ -3,20 +3,19 @@ import {
   CLOSED_BETA_LOGIN_ERROR,
   isAllowedAdminEmail,
 } from "@/lib/admin/auth";
+import { enforceRateLimit, extractClientIp } from "@/lib/security/rateLimit";
+import { isUuid } from "@/lib/security/validation";
 import { createClient } from "@/lib/supabase/server";
 import { SavedTrainerPackSchema } from "@/lib/trainer/types";
 
 export const runtime = "nodejs";
 
-const UUID_RE =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
 export async function GET(
-  _request: Request,
+  request: Request,
   context: { params: Promise<{ id: string }> },
 ) {
   const { id } = await context.params;
-  if (!UUID_RE.test(id)) {
+  if (!isUuid(id)) {
     return NextResponse.json({ error: "Ungültige Kurs-ID." }, { status: 400 });
   }
 
@@ -31,6 +30,21 @@ export async function GET(
     return NextResponse.json(
       { error: CLOSED_BETA_LOGIN_ERROR },
       { status: 403 },
+    );
+  }
+
+  const rl = await enforceRateLimit({
+    scope: "trainer_course_get",
+    ip: extractClientIp(request.headers),
+    userId: user.id,
+    maxIp: 120,
+    maxUser: 60,
+    windowSeconds: 600,
+  });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Zu viele Abrufe. Bitte warte einen Moment." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } },
     );
   }
 
@@ -72,11 +86,11 @@ export async function GET(
 }
 
 export async function DELETE(
-  _request: Request,
+  request: Request,
   context: { params: Promise<{ id: string }> },
 ) {
   const { id } = await context.params;
-  if (!UUID_RE.test(id)) {
+  if (!isUuid(id)) {
     return NextResponse.json({ error: "Ungültige Kurs-ID." }, { status: 400 });
   }
 
@@ -91,6 +105,21 @@ export async function DELETE(
     return NextResponse.json(
       { error: CLOSED_BETA_LOGIN_ERROR },
       { status: 403 },
+    );
+  }
+
+  const rl = await enforceRateLimit({
+    scope: "trainer_course_delete",
+    ip: extractClientIp(request.headers),
+    userId: user.id,
+    maxIp: 40,
+    maxUser: 20,
+    windowSeconds: 600,
+  });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Zu viele Lösch-Anfragen. Bitte warte einen Moment." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } },
     );
   }
 

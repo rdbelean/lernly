@@ -14,6 +14,7 @@ import {
 } from "@/lib/examAnalysis";
 import { MAX_PAST_EXAM_FILES } from "@/lib/uploadConfig";
 import { FidelitySchema, type Fidelity } from "@/lib/schema";
+import { isUuid, normalizeDisplayName } from "@/lib/security/validation";
 import {
   GENERATION_MAX_CONCURRENCY,
   slotGateOutcome,
@@ -107,7 +108,8 @@ export async function updateExam(input: {
   instructor_hints?: string | null;
   fidelity?: string | null;
 }) {
-  const { supabase } = await authedClient();
+  if (!isUuid(input.id)) throw new Error("Ungültige Klausur-ID.");
+  const { supabase, userId } = await authedClient();
   const patch: Record<string, unknown> = {};
   if (input.title !== undefined) patch.title = normalizeTitle(input.title);
   if (input.exam_date !== undefined)
@@ -120,16 +122,25 @@ export async function updateExam(input: {
     if (fid) patch.fidelity = fid;
   }
   if (Object.keys(patch).length === 0) return;
-  const { error } = await supabase.from("exams").update(patch).eq("id", input.id);
+  const { error } = await supabase
+    .from("exams")
+    .update(patch)
+    .eq("id", input.id)
+    .eq("user_id", userId);
   if (error) throw new Error(error.message);
   revalidatePath("/dashboard");
 }
 
 export async function deleteExam(id: string) {
-  const { supabase } = await authedClient();
+  if (!isUuid(id)) throw new Error("Ungültige Klausur-ID.");
+  const { supabase, userId } = await authedClient();
   // FK uses ON DELETE SET NULL on study_packs.exam_id — packs survive their
   // exam and reappear in the "Nicht zugeordnet" section.
-  const { error } = await supabase.from("exams").delete().eq("id", id);
+  const { error } = await supabase
+    .from("exams")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", userId);
   if (error) throw new Error(error.message);
   revalidatePath("/dashboard");
 }
@@ -153,6 +164,7 @@ export async function attachPastExamsToExam(input: {
   skipped?: string[];
 }> {
   const { userId, email } = await authedClient();
+  if (!isUuid(input.examId)) throw new Error("Ungültige Klausur-ID.");
   const isAdmin = isAllowedAdminEmail(email);
   const files = input.files.slice(0, MAX_PAST_EXAM_FILES);
   if (files.length === 0) return { ok: false, reason: "no_files" };
@@ -365,11 +377,18 @@ export async function assignPackToExam(input: {
   packId: string;
   examId: string | null;
 }) {
-  const { supabase } = await authedClient();
+  if (
+    !isUuid(input.packId) ||
+    (input.examId !== null && !isUuid(input.examId))
+  ) {
+    throw new Error("Ungültige ID.");
+  }
+  const { supabase, userId } = await authedClient();
   const { error } = await supabase
     .from("study_packs")
     .update({ exam_id: input.examId })
-    .eq("id", input.packId);
+    .eq("id", input.packId)
+    .eq("user_id", userId);
   if (error) throw new Error(error.message);
   revalidatePath("/dashboard");
 }
@@ -387,11 +406,11 @@ export async function saveWelcome(
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const { userId } = await authedClient();
 
-  const trimmed = (name ?? "").trim().slice(0, 80);
+  const cleanName = normalizeDisplayName(name, 80);
   const patch: { has_seen_welcome: true; name?: string } = {
     has_seen_welcome: true,
   };
-  if (trimmed) patch.name = trimmed;
+  if (cleanName) patch.name = cleanName;
 
   const service = createServiceClient();
   const { error } = await service.from("users").update(patch).eq("id", userId);

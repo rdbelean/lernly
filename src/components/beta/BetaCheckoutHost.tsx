@@ -19,6 +19,7 @@ export default function BetaCheckoutHost() {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const inFlightRef = useRef(false);
 
   useEffect(
     () =>
@@ -48,14 +49,19 @@ export default function BetaCheckoutHost() {
   };
 
   const submit = async () => {
-    if (pending || pw.length === 0) return;
+    if (inFlightRef.current || pending || pw.length === 0) return;
+    inFlightRef.current = true;
     setPending(true);
     setError(null);
+    const idempotencyKey =
+      typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     try {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan, betaPassword: pw }),
+        body: JSON.stringify({ plan, betaPassword: pw, idempotencyKey }),
       });
       const json = (await res.json().catch(() => ({}))) as {
         url?: string;
@@ -71,7 +77,9 @@ export default function BetaCheckoutHost() {
           ? "Falsches Passwort."
           : (json.error ?? "Etwas ist schiefgelaufen — bitte erneut versuchen."),
       );
+      inFlightRef.current = false;
     } catch {
+      inFlightRef.current = false;
       setError("Verbindung fehlgeschlagen — bitte erneut versuchen.");
     } finally {
       setPending(false);

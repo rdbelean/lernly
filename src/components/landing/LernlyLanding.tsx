@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowRight, ArrowUpRight, BookOpen, Check, CheckCheck, ChevronDown, ChevronRight, CircleHelp, FileText, GraduationCap, Layers, LayoutDashboard, Menu, Plus, RotateCcw, Sparkles, Target, X } from "lucide-react";
 import Link from "next/link";
 import LernlyLogo from "@/components/LernlyLogo";
+import CookieSettingsButton from "@/components/CookieSettingsButton";
 import HeroScene from "./HeroScene";
 import { DrillVisual, ExplainVisual, MaterialsVisual, PointsVisual, RecallVisual, TodayVisual, TopicsVisual } from "./LearningVisuals";
 import s from "./lernly-landing.module.css";
@@ -225,7 +226,7 @@ export default function LernlyLanding() {
         <button className={s.primaryButton} onClick={openDemo}>Gratis ausprobieren</button>
       </section>
     </main>
-    <footer className={s.footer}><div className={s.footerTop}><div><Link href="/" className={s.brand}><LernlyLogo size={29} alt="" /><span>Lernly</span></Link><p>Gebaut für BWL-Klausuren: Lern zuerst, was Punkte bringt.</p><a className={s.primaryButton} href={BETA}>Beta testen</a></div><div><h3>Entdecken</h3><a href="#so-gehts">So funktioniert’s</a><a href="#features">Funktionen</a><a href="#zugang">Zugang</a><a href="#fragen">FAQ</a></div><div><h3>Lernly</h3><a href="/login">Anmelden</a><a href="/hochschulen">Für Hochschulen</a><a href="mailto:info@lernly-app.de">Kontakt</a></div><div><h3>Rechtliches</h3><a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a><a href="/agb">AGB</a></div></div><div className={s.footerBottom}><span>Aus dem Studium. Fürs Studium.</span><span>© {new Date().getFullYear()} Lernly</span></div></footer>
+    <footer className={s.footer}><div className={s.footerTop}><div><Link href="/" className={s.brand}><LernlyLogo size={29} alt="" /><span>Lernly</span></Link><p>Gebaut für BWL-Klausuren: Lern zuerst, was Punkte bringt.</p><a className={s.primaryButton} href={BETA}>Beta testen</a></div><div><h3>Entdecken</h3><a href="#so-gehts">So funktioniert’s</a><a href="#features">Funktionen</a><a href="#zugang">Zugang</a><a href="#fragen">FAQ</a></div><div><h3>Lernly</h3><a href="/login">Anmelden</a><a href="/hochschulen">Für Hochschulen</a><a href="mailto:info@lernly-app.de">Kontakt</a></div><div><h3>Rechtliches</h3><a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a><a href="/agb">AGB</a><CookieSettingsButton /></div></div><div className={s.footerBottom}><span>Aus dem Studium. Fürs Studium.</span><span>© {new Date().getFullYear()} Lernly</span></div></footer>
     <dialog ref={dialogRef} className={s.demoDialog} onCancel={() => setDemoOpen(false)} onClose={() => setDemoOpen(false)}><div className={s.dialogHeader}><div><LernlyLogo size={27} alt="" /><span>Dein Lerntrainer zum Ausprobieren</span></div><button onClick={() => setDemoOpen(false)} aria-label="Vorschau schließen"><X size={22} /></button></div><Demo /></dialog>
   </div>;
 }

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { enforceRateLimit, extractClientIp } from "@/lib/security/rateLimit";
 import { getStripe } from "@/lib/stripe";
 import {
   createClient as createSupabaseServer,
@@ -22,6 +23,21 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
+
+  const rl = await enforceRateLimit({
+    scope: "stripe_portal",
+    ip: extractClientIp(request.headers),
+    userId: user.id,
+    maxIp: 15,
+    maxUser: 15,
+    windowSeconds: 600,
+  });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Zu viele Portal-Aufrufe. Bitte warte einen Moment." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } },
+    );
   }
 
   const service = createServiceClient();

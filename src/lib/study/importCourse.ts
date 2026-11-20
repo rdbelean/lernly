@@ -194,18 +194,36 @@ export function formatExamCountdown(
   now: Date = new Date(),
 ): string {
   if (!examDateIso) return "KLAUSURPLAN AKTIV";
-  const parsed = new Date(examDateIso);
-  if (Number.isNaN(parsed.getTime())) return "KLAUSURPLAN AKTIV";
-  const startOfToday = new Date(
+  let startOfExam: number | null = null;
+  const ymd = /^(\d{4})-(\d{2})-(\d{2})/.exec(examDateIso.trim());
+  if (ymd) {
+    const year = Number(ymd[1]);
+    const month = Number(ymd[2]);
+    const day = Number(ymd[3]);
+    const candidate = new Date(Date.UTC(year, month - 1, day));
+    if (
+      candidate.getUTCFullYear() === year &&
+      candidate.getUTCMonth() === month - 1 &&
+      candidate.getUTCDate() === day
+    ) {
+      startOfExam = candidate.getTime();
+    }
+  } else {
+    const parsed = new Date(examDateIso);
+    if (!Number.isNaN(parsed.getTime())) {
+      startOfExam = Date.UTC(
+        parsed.getUTCFullYear(),
+        parsed.getUTCMonth(),
+        parsed.getUTCDate(),
+      );
+    }
+  }
+  if (startOfExam === null) return "KLAUSURPLAN AKTIV";
+  const startOfToday = Date.UTC(
     now.getFullYear(),
     now.getMonth(),
     now.getDate(),
-  ).getTime();
-  const startOfExam = new Date(
-    parsed.getFullYear(),
-    parsed.getMonth(),
-    parsed.getDate(),
-  ).getTime();
+  );
   const diffDays = Math.round((startOfExam - startOfToday) / 86_400_000);
   if (diffDays < 0) return "KLAUSUR VORBEI";
   if (diffDays === 0) return "KLAUSUR HEUTE";
