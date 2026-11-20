@@ -129,12 +129,12 @@ export function TrainerMockExamTab({
     return (
       <div className="mx-auto max-w-[900px] space-y-6">
         <section className="rounded-2xl border border-line bg-surface p-6 sm:p-8">
-          <div className="flex flex-wrap items-center gap-2 text-[12px] font-bold uppercase tracking-[0.06em] text-text-dim">
+          <div className="flex flex-wrap items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.06em] text-text-dim">
             <ClipboardCheck className="h-4 w-4 text-primary" aria-hidden="true" />
             <span>Klausursimulation unter Echtzeit-Bedingungen</span>
           </div>
 
-          <h2 className="mt-2 font-display text-[26px] font-bold tracking-[-0.02em] text-text">
+          <h2 className="mt-2 font-display text-[26px] font-semibold tracking-[-0.02em] text-text">
             Probeklausur schreiben ({activeMock.durationMin} Min ·{" "}
             {formatPtsDe(activeMock.totalPoints)} P)
           </h2>
@@ -161,7 +161,7 @@ export function TrainerMockExamTab({
                       : "border-line bg-bg hover:bg-surface-2"
                   }`}
                 >
-                  <p className="font-display text-[16px] font-bold text-text">
+                  <p className="font-display text-[16px] font-semibold text-text">
                     {mock.name}
                   </p>
                   {mock.subtitle ? (
@@ -169,7 +169,7 @@ export function TrainerMockExamTab({
                       {mock.subtitle}
                     </p>
                   ) : null}
-                  <p className="mt-2 text-[12.5px] font-bold tabular-nums text-primary">
+                  <p className="mt-2 text-[12.5px] font-semibold tabular-nums text-primary">
                     {mock.durationMin} Min · {formatPtsDe(mock.totalPoints)} P
                   </p>
                 </button>
@@ -180,7 +180,7 @@ export function TrainerMockExamTab({
           {historyForMock.length > 0 ? (
             <div className="mt-5 rounded-xl border border-line bg-bg px-4 py-3 text-[14px] text-text">
               <span className="font-semibold">Letztes Ergebnis: </span>
-              <span className="font-bold tabular-nums text-primary">
+              <span className="font-semibold tabular-nums text-primary">
                 {formatPtsDe(historyForMock[0].score)} /{" "}
                 {formatPtsDe(historyForMock[0].total)} P
               </span>
@@ -221,7 +221,7 @@ export function TrainerMockExamTab({
         <div className="sticky top-2 z-20 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-surface px-5 py-3.5 shadow-sm">
           <div className="flex items-center gap-3">
             <Clock className="h-5 w-5 text-urgent-ink" aria-hidden="true" />
-            <span className="font-display text-[26px] font-bold tabular-nums text-urgent-ink">
+            <span className="font-display text-[26px] font-semibold tabular-nums text-urgent-ink">
               {formatCountdown(msLeft)}
             </span>
             <span className="text-[14px] text-text-dim">
@@ -255,7 +255,7 @@ export function TrainerMockExamTab({
             key={part.id}
             className="rounded-2xl border border-line bg-surface p-6 sm:p-8"
           >
-            <h3 className="font-display text-[20px] font-bold text-text">
+            <h3 className="font-display text-[20px] font-semibold text-text">
               {part.title}
             </h3>
 
@@ -275,7 +275,7 @@ export function TrainerMockExamTab({
                     <div className="text-[15.5px] leading-relaxed text-text">
                       <InlineRichText md={item.question} />
                     </div>
-                    <span className="shrink-0 font-bold tabular-nums text-urgent-ink">
+                    <span className="shrink-0 font-semibold tabular-nums text-urgent-ink">
                       ({formatPtsDe(item.points)} P)
                     </span>
                   </div>
@@ -293,7 +293,7 @@ export function TrainerMockExamTab({
     <div className="mx-auto max-w-[900px] space-y-6">
       <div className="sticky top-2 z-20 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-surface px-5 py-3.5 shadow-sm">
         <div>
-          <span className="font-display text-[24px] font-bold tabular-nums text-primary">
+          <span className="font-display text-[24px] font-semibold tabular-nums text-primary">
             {formatPtsDe(totalScore)} / {formatPtsDe(activeMock.totalPoints)} P
           </span>
           <span className="ml-3 text-[13.5px] text-text-dim tabular-nums">
@@ -327,7 +327,7 @@ export function TrainerMockExamTab({
           key={part.id}
           className="rounded-2xl border border-line bg-surface p-6 sm:p-8"
         >
-          <h3 className="font-display text-[20px] font-bold text-text">
+          <h3 className="font-display text-[20px] font-semibold text-text">
             {part.title}
           </h3>
 
@@ -340,7 +340,7 @@ export function TrainerMockExamTab({
                     <div className="text-[15.5px] font-medium text-text">
                       <InlineRichText md={item.question} />
                     </div>
-                    <span className="shrink-0 font-bold tabular-nums text-urgent-ink">
+                    <span className="shrink-0 font-semibold tabular-nums text-urgent-ink">
                       ({formatPtsDe(item.points)} P)
                     </span>
                   </div>
@@ -370,7 +370,7 @@ export function TrainerMockExamTab({
                       onClick={() =>
                         setGrades((prev) => ({ ...prev, [item.id]: 0 }))
                       }
-                      className={`inline-flex items-center gap-1 rounded-lg border px-3.5 py-1.5 text-[13px] font-bold transition ${
+                      className={`inline-flex items-center gap-1 rounded-lg border px-3.5 py-1.5 text-[13px] font-semibold transition ${
                         g === 0
                           ? "border-err-ink bg-err-ink text-on-primary"
                           : "border-line bg-surface text-err-ink hover:bg-err-bg"
@@ -384,7 +384,7 @@ export function TrainerMockExamTab({
                       onClick={() =>
                         setGrades((prev) => ({ ...prev, [item.id]: 1 }))
                       }
-                      className={`rounded-lg border px-3.5 py-1.5 text-[13px] font-bold transition ${
+                      className={`rounded-lg border px-3.5 py-1.5 text-[13px] font-semibold transition ${
                         g === 1
                           ? "border-urgent-ink bg-urgent-ink text-on-primary"
                           : "border-line bg-surface text-urgent-ink hover:bg-urgent-bg"
@@ -397,7 +397,7 @@ export function TrainerMockExamTab({
                       onClick={() =>
                         setGrades((prev) => ({ ...prev, [item.id]: 2 }))
                       }
-                      className={`inline-flex items-center gap-1 rounded-lg border px-3.5 py-1.5 text-[13px] font-bold transition ${
+                      className={`inline-flex items-center gap-1 rounded-lg border px-3.5 py-1.5 text-[13px] font-semibold transition ${
                         g === 2
                           ? "border-ok-ink bg-ok-ink text-on-primary"
                           : "border-line bg-surface text-ok-ink hover:bg-ok-bg"

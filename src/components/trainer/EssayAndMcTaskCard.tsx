@@ -23,15 +23,15 @@ export function EssayTaskCard({
   return (
     <article className="rounded-2xl border border-line bg-surface p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <span className="rounded-full bg-work-bg px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-[0.05em] text-work-ink">
+        <span className="rounded-full bg-work-bg px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.05em] text-work-ink">
           {task.originLabel ?? `Textaufgabe · ${task.points} P`}
         </span>
-        <span className="font-display text-[14px] font-bold tabular-nums text-primary">
+        <span className="font-display text-[14px] font-semibold tabular-nums text-primary">
           Checkliste: {earnedPoints} / {task.points} P
         </span>
       </div>
 
-      <h3 className="mt-3 font-display text-[19px] font-bold text-text">
+      <h3 className="mt-3 font-display text-[19px] font-semibold text-text">
         <InlineRichText md={task.name} />
       </h3>
 
@@ -40,7 +40,7 @@ export function EssayTaskCard({
       </p>
 
       <div className="mt-5 border-t border-line pt-4">
-        <p className="mb-2.5 text-[12px] font-bold uppercase tracking-[0.06em] text-text-dim">
+        <p className="mb-2.5 text-[12px] font-semibold uppercase tracking-[0.06em] text-text-dim">
           Wo die Klausurpunkte liegen (zum Abhaken)
         </p>
         <ul className="space-y-2">
@@ -71,7 +71,7 @@ export function EssayTaskCard({
                     )}
                     <InlineRichText md={item.text} />
                   </span>
-                  <span className="shrink-0 font-bold tabular-nums text-urgent-ink">
+                  <span className="shrink-0 font-semibold tabular-nums text-urgent-ink">
                     +{item.points} P
                   </span>
                 </button>
@@ -107,11 +107,11 @@ export function McTaskCard({ task }: { task: McpMcTask }) {
 
   return (
     <article className="rounded-2xl border border-line bg-surface p-6">
-      <span className="rounded-full bg-work-bg px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-[0.05em] text-work-ink">
+      <span className="rounded-full bg-work-bg px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.05em] text-work-ink">
         Multiple Choice · {task.questions.length} Fragen
       </span>
 
-      <h3 className="mt-3 font-display text-[19px] font-bold text-text">
+      <h3 className="mt-3 font-display text-[19px] font-semibold text-text">
         <InlineRichText md={task.name} />
       </h3>
 

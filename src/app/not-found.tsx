@@ -13,7 +13,7 @@ export default function NotFound() {
       >
         <div className="text-[44px]">🤷</div>
         <h1
-          className="mt-4 text-[28px] font-bold tracking-[-0.8px]"
+          className="mt-4 text-[28px] font-semibold tracking-[-0.8px]"
           style={{ fontFamily: "var(--font-display)" }}
         >
           Diese Seite gibt&rsquo;s nicht

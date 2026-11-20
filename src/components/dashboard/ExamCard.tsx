@@ -163,7 +163,7 @@ export default function ExamCard({
                   }
                 }}
                 disabled={pending}
-                className="w-full rounded-md border bg-transparent px-1.5 py-0.5 text-[17px] font-bold leading-tight text-[color:var(--color-text)] outline-none"
+                className="w-full rounded-md border bg-transparent px-1.5 py-0.5 text-[17px] font-semibold leading-tight text-[color:var(--color-text)] outline-none"
                 style={{ borderColor: examRgba(exam.color, 0.5) }}
               />
             ) : (
@@ -173,7 +173,7 @@ export default function ExamCard({
                   setTitleDraft(exam.title);
                   setEditingTitle(true);
                 }}
-                className="w-full rounded-md px-0 py-0 text-left text-[17px] font-bold leading-tight text-[color:var(--color-text)] transition hover:text-[color:var(--color-text)]"
+                className="w-full rounded-md px-0 py-0 text-left text-[17px] font-semibold leading-tight text-[color:var(--color-text)] transition hover:text-[color:var(--color-text)]"
                 title="Umbenennen"
               >
                 {exam.title}

@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
+import { join } from "node:path";
 import { contrastRatio } from "./contrast";
 
 const read = (path: string) => readFileSync(path, "utf8");
@@ -34,4 +35,31 @@ test("text tokens meet 4.5:1 on every surface", () => {
 
 test("contrastRatio of black on white is 21", () => {
   assert.equal(contrastRatio("#000000", "#FFFFFF"), 21);
+});
+
+function walkSrc(dir = "src"): string[] {
+  const out: string[] = [];
+  for (const name of readdirSync(dir)) {
+    const p = join(dir, name);
+    if (statSync(p).isDirectory()) out.push(...walkSrc(p));
+    else if (/\.(tsx|css)$/.test(name)) out.push(p);
+  }
+  return out;
+}
+
+test("Sora is gone and display font is Inter", () => {
+  assert.doesNotMatch(read("src/app/layout.tsx"), /Sora/);
+  assert.match(readToken("--font-display"), /^var\(--font-inter\)/);
+});
+
+test("no font weight above 600 in app code", () => {
+  const offenders = walkSrc()
+    .filter((f) => !f.startsWith("src/lib/email/"))
+    // Legal pages need Daniel's sign-off before any edit (CLAUDE.md); they
+    // still get Inter through the tokens.
+    .filter((f) => !/^src\/app\/(impressum|datenschutz|agb|widerruf)\//.test(f))
+    .filter((f) =>
+      /font-(bold|extrabold|black)\b|font-weight:\s*[789]00|fontWeight:\s*"?[789]00/.test(read(f)),
+    );
+  assert.deepEqual(offenders, []);
 });

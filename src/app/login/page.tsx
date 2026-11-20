@@ -60,7 +60,7 @@ export default async function LoginPage({
           style={{
             fontFamily: "var(--font-display)",
             fontSize: "22px",
-            fontWeight: 700,
+            fontWeight: 600,
             letterSpacing: "-0.6px",
           }}
         >
@@ -73,7 +73,7 @@ export default async function LoginPage({
           style={{
             fontFamily: "var(--font-display)",
             fontSize: "32px",
-            fontWeight: 700,
+            fontWeight: 600,
             letterSpacing: "-1px",
             lineHeight: 1.1,
           }}

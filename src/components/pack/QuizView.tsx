@@ -416,13 +416,13 @@ export default function QuizView({
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <div
-                className="text-[12px] font-bold"
+                className="text-[12px] font-semibold"
                 style={{ color: "var(--color-text-faint)" }}
               >
                 {labels.results}
               </div>
               <div
-                className="mt-1 text-[44px] font-extrabold leading-none sm:text-[56px]"
+                className="mt-1 text-[44px] font-semibold leading-none sm:text-[56px]"
                 style={{ color: verdictColor }}
               >
                 {scorePct}%
@@ -446,7 +446,7 @@ export default function QuizView({
           </div>
           {isRePractice && (
             <div
-              className="mt-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-bold"
+              className="mt-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-semibold"
               style={{
                 background: "var(--color-work-bg)",
                 color: "var(--color-work-ink)",
@@ -468,7 +468,7 @@ export default function QuizView({
               }}
             >
               <div
-                className="text-[12px] font-bold"
+                className="text-[12px] font-semibold"
                 style={{ color: "var(--color-err-ink)" }}
               >
                 <span className="inline-flex items-center gap-1.5">
@@ -498,7 +498,7 @@ export default function QuizView({
           {topicEntries.length > 0 && (
             <div className="mt-5">
               <div
-                className="mb-2 text-[12px] font-bold"
+                className="mb-2 text-[12px] font-semibold"
                 style={{ color: "var(--color-text-faint)" }}
               >
                 {labels.breakdownHeader}
@@ -530,7 +530,7 @@ export default function QuizView({
                         {score.correct}/{answered || score.skipped} {answered === 0 ? labels.skipped.toLowerCase() : ""}
                       </span>
                       <span
-                        className="rounded-full px-2 py-0.5 text-[12px] font-bold tabular-nums"
+                        className="rounded-full px-2 py-0.5 text-[12px] font-semibold tabular-nums"
                         style={{
                           background: `color-mix(in srgb, ${color} 12%, transparent)`,
                           color,
@@ -621,7 +621,7 @@ export default function QuizView({
               }}
             >
               <div
-                className="mb-2 flex flex-wrap items-center gap-2 text-[12px] font-bold"
+                className="mb-2 flex flex-wrap items-center gap-2 text-[12px] font-semibold"
                 style={{ color: "var(--color-text-faint)" }}
               >
                 <span>
@@ -671,7 +671,7 @@ export default function QuizView({
                   {theoryOpen ? labels.hideTheory : labels.showTheory}
                   {!theoryOpen && (
                     <span
-                      className="ml-1 rounded px-1.5 py-0.5 text-[9.5px] font-bold"
+                      className="ml-1 rounded px-1.5 py-0.5 text-[9.5px] font-semibold"
                       style={{
                         background: "var(--color-work-bg)",
                         color: "var(--color-work-ink)",
@@ -693,7 +693,7 @@ export default function QuizView({
                   }}
                 >
                   <div
-                    className="mb-1 text-[12px] font-bold"
+                    className="mb-1 text-[12px] font-semibold"
                     style={{ color: "var(--color-work-ink)" }}
                   >
                     {concept.term}
@@ -766,7 +766,7 @@ export default function QuizView({
                       }}
                     >
                       <span
-                        className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[13px] font-bold"
+                        className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold"
                         style={{
                           background: selected
                             ? "var(--color-work-bg)"
@@ -784,7 +784,7 @@ export default function QuizView({
                       />
                       {mark && (
                         <span
-                          className="ml-1 mt-0.5 shrink-0 text-[14px] font-bold"
+                          className="ml-1 mt-0.5 shrink-0 text-[14px] font-semibold"
                           style={{ color: markColor }}
                         >
                           {mark}
@@ -808,7 +808,7 @@ export default function QuizView({
                   }}
                 >
                   <div
-                    className="mb-1 text-[12px] font-bold"
+                    className="mb-1 text-[12px] font-semibold"
                     style={{ color: "var(--color-work-ink)" }}
                   >
                     {labels.explanationLabel}
@@ -844,11 +844,11 @@ export default function QuizView({
           <button
             onClick={checkAll}
             disabled={answeredCount === 0}
-            className="rounded-full bg-[color:var(--color-primary)] px-6 py-3 text-[14px] font-bold text-[color:var(--color-on-primary)] shadow-lg shadow-black/30 transition hover:bg-[color:var(--color-primary-press)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-full bg-[color:var(--color-primary)] px-6 py-3 text-[14px] font-semibold text-[color:var(--color-on-primary)] shadow-lg shadow-black/30 transition hover:bg-[color:var(--color-primary-press)] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {labels.checkAll}
             <span
-              className="ml-2 rounded-full px-2 py-0.5 text-[12px] font-bold"
+              className="ml-2 rounded-full px-2 py-0.5 text-[12px] font-semibold"
               style={{
                 background:
                   answeredCount === deck.length
@@ -910,11 +910,11 @@ function ScoreStat({
 }) {
   return (
     <div>
-      <div className="text-[24px] font-bold sm:text-[28px]" style={{ color }}>
+      <div className="text-[24px] font-semibold sm:text-[28px]" style={{ color }}>
         {n}
       </div>
       <div
-        className="text-[12px] font-bold"
+        className="text-[12px] font-semibold"
         style={{ color: "var(--color-text-faint)" }}
       >
         {label}

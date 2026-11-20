@@ -70,7 +70,7 @@ function Node({ index, accent }: { index: number; accent?: "result" }) {
       }}
     >
       <span
-        className="flex h-full w-full items-center justify-center rounded-full bg-white text-[15px] font-bold"
+        className="flex h-full w-full items-center justify-center rounded-full bg-white text-[15px] font-semibold"
         style={{
           fontFamily: "var(--font-display)",
           color: accent === "result" ? "#15803D" : "var(--hs-accent)",
@@ -105,7 +105,7 @@ function PhaseCard({ phase }: { phase: (typeof PHASES)[number] }) {
         </span>
       </div>
       <h3
-        className="mt-3 text-[16px] font-bold leading-snug"
+        className="mt-3 text-[16px] font-semibold leading-snug"
         style={{
           fontFamily: "var(--font-display)",
           letterSpacing: "-0.01em",

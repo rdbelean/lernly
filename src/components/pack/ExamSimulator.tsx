@@ -96,7 +96,7 @@ export default function ExamSimulator({
           <TierIcon size={30} strokeWidth={2} color={tier.color} />
         </motion.div>
         <div>
-          <h3 className="text-[28px] font-bold tracking-[-0.6px] text-[color:var(--color-text)]">
+          <h3 className="text-[28px] font-semibold tracking-[-0.6px] text-[color:var(--color-text)]">
             {isEn ? "Finished" : "Fertig"}
           </h3>
           <p className="mt-2 text-[14px]" style={{ color: "var(--color-ln-mute)" }}>

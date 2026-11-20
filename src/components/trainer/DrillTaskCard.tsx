@@ -59,7 +59,7 @@ export function DrillTaskCard({ task, solved }: DrillTaskCardProps) {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <span
-            className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-[0.05em] ${
+            className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.05em] ${
               task.origin === "altklausur"
                 ? "bg-urgent-bg text-urgent-ink"
                 : "bg-work-bg text-work-ink"
@@ -69,7 +69,7 @@ export function DrillTaskCard({ task, solved }: DrillTaskCardProps) {
               (task.origin === "altklausur" ? "Altklausur" : "Rechen-Drill")}
           </span>
           {solved ? (
-            <span className="inline-flex items-center gap-1 rounded-full bg-ok-bg px-2.5 py-0.5 text-[11px] font-bold text-ok-ink">
+            <span className="inline-flex items-center gap-1 rounded-full bg-ok-bg px-2.5 py-0.5 text-[11px] font-semibold text-ok-ink">
               <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
               <span>Gelöst</span>
             </span>
@@ -90,7 +90,7 @@ export function DrillTaskCard({ task, solved }: DrillTaskCardProps) {
         ) : null}
       </div>
 
-      <h3 className="mt-3 font-display text-[19px] font-bold text-text">
+      <h3 className="mt-3 font-display text-[19px] font-semibold text-text">
         <InlineRichText md={task.name} />
       </h3>
 
@@ -143,7 +143,7 @@ export function DrillTaskCard({ task, solved }: DrillTaskCardProps) {
                       }));
                       if (checked) setChecked(false);
                     }}
-                    className="w-full min-w-0 bg-transparent font-display text-[20px] font-bold text-text tabular-nums outline-none"
+                    className="w-full min-w-0 bg-transparent font-display text-[20px] font-semibold text-text tabular-nums outline-none"
                   />
                   {field.unit ? (
                     <span className="shrink-0 text-[14px] font-medium text-text-dim">

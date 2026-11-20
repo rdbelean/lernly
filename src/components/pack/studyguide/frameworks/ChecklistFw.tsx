@@ -52,7 +52,7 @@ export default function ChecklistFw({
           >
             <span
               aria-hidden
-              className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-[12px] font-bold"
+              className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-[12px] font-semibold"
               style={{ background: tint, color: fg }}
             >
               {marker(i)}

@@ -50,7 +50,7 @@ export function BlockRenderer({ blocks }: { blocks: readonly McpBlock[] }) {
                 key={index}
                 className="rounded-r-xl border-l-4 border-primary bg-work-bg px-4 py-3 text-[15px] text-text"
               >
-                <p className="mb-1 flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-[0.06em] text-work-ink">
+                <p className="mb-1 flex items-center gap-1.5 text-[12px] font-semibold uppercase tracking-[0.06em] text-work-ink">
                   <Lightbulb className="h-3.5 w-3.5" aria-hidden="true" />
                   <span>Einfach gesagt</span>
                 </p>
@@ -64,7 +64,7 @@ export function BlockRenderer({ blocks }: { blocks: readonly McpBlock[] }) {
                 key={index}
                 className="rounded-r-xl border-l-4 border-ok-ink bg-ok-bg px-4 py-3 text-[15px] text-text"
               >
-                <p className="mb-1 flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-[0.06em] text-ok-ink">
+                <p className="mb-1 flex items-center gap-1.5 text-[12px] font-semibold uppercase tracking-[0.06em] text-ok-ink">
                   <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
                   <span>Merke</span>
                 </p>
@@ -78,7 +78,7 @@ export function BlockRenderer({ blocks }: { blocks: readonly McpBlock[] }) {
                 key={index}
                 className="rounded-xl border border-line bg-surface-2 px-4 py-3 text-[15px] text-text"
               >
-                <p className="mb-1 text-[12px] font-bold uppercase tracking-[0.06em] text-text-dim">
+                <p className="mb-1 text-[12px] font-semibold uppercase tracking-[0.06em] text-text-dim">
                   Beispiel
                 </p>
                 {block.md ? <InlineRichText md={block.md} /> : null}
@@ -91,7 +91,7 @@ export function BlockRenderer({ blocks }: { blocks: readonly McpBlock[] }) {
                 key={index}
                 className="rounded-xl border border-dashed border-primary bg-surface px-5 py-4 text-[15px] text-text"
               >
-                <p className="mb-2 flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-[0.06em] text-primary">
+                <p className="mb-2 flex items-center gap-1.5 text-[12px] font-semibold uppercase tracking-[0.06em] text-primary">
                   <FileCheck2 className="h-3.5 w-3.5" aria-hidden="true" />
                   <span>{block.title ?? "Musterantwort"}</span>
                 </p>
@@ -106,7 +106,7 @@ export function BlockRenderer({ blocks }: { blocks: readonly McpBlock[] }) {
                 className="rounded-xl border border-line bg-surface px-5 py-4"
               >
                 {block.title ? (
-                  <p className="mb-3 text-[13px] font-bold uppercase tracking-[0.06em] text-primary">
+                  <p className="mb-3 text-[13px] font-semibold uppercase tracking-[0.06em] text-primary">
                     {block.title}
                   </p>
                 ) : null}
@@ -116,7 +116,7 @@ export function BlockRenderer({ blocks }: { blocks: readonly McpBlock[] }) {
                       key={idx}
                       className="grid grid-cols-[24px_1fr] items-baseline gap-3 text-[15px] text-text"
                     >
-                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary text-[12px] font-bold text-on-primary">
+                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary text-[12px] font-semibold text-on-primary">
                         {idx + 1}
                       </span>
                       <InlineRichText md={item} />
@@ -159,7 +159,7 @@ export function BlockRenderer({ blocks }: { blocks: readonly McpBlock[] }) {
                 <table className="w-full border-collapse text-left text-[14px] tabular-nums">
                   {block.head && block.head.length > 0 ? (
                     <thead>
-                      <tr className="border-b border-line bg-surface-2 text-[12px] font-bold uppercase tracking-[0.05em] text-text-dim">
+                      <tr className="border-b border-line bg-surface-2 text-[12px] font-semibold uppercase tracking-[0.05em] text-text-dim">
                         {block.head.map((h, i) => (
                           <th key={i} className="px-4 py-2.5">
                             <InlineRichText md={h} />
@@ -278,7 +278,7 @@ export function TopicMetaFooter({
     <div className="mt-6 space-y-4 border-t border-line pt-6">
       {hook ? (
         <div className="rounded-r-xl border-l-4 border-work-ink bg-work-bg px-4 py-3 text-[15px] text-text">
-          <p className="mb-1 flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-[0.06em] text-work-ink">
+          <p className="mb-1 flex items-center gap-1.5 text-[12px] font-semibold uppercase tracking-[0.06em] text-work-ink">
             <Bookmark className="h-3.5 w-3.5" aria-hidden="true" />
             <span>Merkhilfe</span>
           </p>
@@ -288,7 +288,7 @@ export function TopicMetaFooter({
 
       {mistakes && mistakes.length > 0 ? (
         <div className="rounded-r-xl border-l-4 border-err-ink bg-err-bg px-4 py-3 text-[14px] text-err-ink">
-          <p className="mb-1.5 flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-[0.06em]">
+          <p className="mb-1.5 flex items-center gap-1.5 text-[12px] font-semibold uppercase tracking-[0.06em]">
             <AlertTriangle className="h-3.5 w-3.5" aria-hidden="true" />
             <span>Typische Klausurfehler</span>
           </p>

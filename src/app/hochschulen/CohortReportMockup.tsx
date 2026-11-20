@@ -64,7 +64,7 @@ export default function CohortReportMockup() {
               style={{ borderColor: "var(--hs-line)" }}
             >
               <span
-                className={`hs-chip ${s.chip} text-[13px] font-bold`}
+                className={`hs-chip ${s.chip} text-[13px] font-semibold`}
                 style={{ fontFamily: "var(--font-display)" }}
               >
                 {s.value}

@@ -103,7 +103,7 @@
 .trap { background: var(--color-err-bg); border-left: 4px solid var(--color-err-ink); }
 .muster { background: var(--color-ok-bg); border-left: 4px solid var(--color-ok-ink); }
 .woher { background: var(--color-work-bg); border-left: 4px solid var(--color-primary); }
-.boxLabelErr, .boxLabelOk, .boxLabelWork { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 12.5px; font-weight: 700; }
+.boxLabelErr, .boxLabelOk, .boxLabelWork { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 12.5px; font-weight: 600; }
 .boxLabelErr { color: var(--color-err-ink); } .boxLabelOk { color: var(--color-ok-ink); } .boxLabelWork { color: var(--color-work-ink); }
 .mark { background: var(--color-urgent-bg); color: var(--color-urgent-ink); border-radius: 4px; padding: 0 4px; font-weight: 600; }
 
@@ -112,7 +112,7 @@
 .task { font-size: 14.5px; line-height: 1.55; color: var(--color-text); }
 .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .step { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 10px; align-items: start; animation: sceneIn 260ms cubic-bezier(0.23, 1, 0.32, 1) backwards; }
-.stepNum { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--color-primary); color: var(--color-on-primary); font-size: 12px; font-weight: 700; }
+.stepNum { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--color-primary); color: var(--color-on-primary); font-size: 12px; font-weight: 600; }
 .calc { display: block; font-size: 13.5px; color: var(--color-text-dim); font-variant-numeric: tabular-nums; }
 .result { padding: 14px 16px; border-radius: 14px; background: var(--color-surface); border: 2px solid var(--color-primary); font-size: 17px; color: var(--color-text); overflow: hidden; }
 .result :global(.katex-display) { margin: 4px 0 2px; }
@@ -129,7 +129,7 @@
   display: grid; justify-items: center; gap: 1px; padding: 8px 4px; border-radius: 10px; border: 2px solid; background: var(--color-surface);
   transition: background-color 200ms ease-out, color 200ms ease-out, transform 160ms cubic-bezier(0.23, 1, 0.32, 1), opacity 200ms ease-out;
 }
-.rateLabel { font-family: var(--font-display); font-size: 14px; font-weight: 700; }
+.rateLabel { font-family: var(--font-display); font-size: 14px; font-weight: 600; }
 .rateSub { font-size: 12px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .rateRed { border-color: var(--color-err-ink); color: var(--color-err-ink); }
 .rateUrgent { border-color: var(--color-urgent-ink); color: var(--color-urgent-ink); }

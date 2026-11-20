@@ -92,7 +92,7 @@ function IosStep({ n, icon: Icon, text }: { n: number; icon: typeof Share; text:
   return (
     <li className="flex items-center gap-3">
       <span
-        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[12px] font-bold text-[color:var(--color-text)]"
+        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold text-[color:var(--color-text)]"
         style={{ background: "var(--color-ink-a10)" }}
       >
         {n}

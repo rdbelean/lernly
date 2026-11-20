@@ -117,7 +117,7 @@ export function HsQuizResultCard() {
 
       <div className="mt-4 flex items-end gap-3">
         <p
-          className="text-[44px] font-bold leading-none"
+          className="text-[44px] font-semibold leading-none"
           style={{ fontFamily: "var(--font-display)", color: "var(--hs-ink)" }}
         >
           88 %
@@ -252,7 +252,7 @@ export function HsTopicConceptCard() {
       </div>
 
       <p
-        className="mt-3 text-[19px] font-bold"
+        className="mt-3 text-[19px] font-semibold"
         style={{ fontFamily: "var(--font-display)", color: "var(--hs-ink)" }}
       >
         Porter&rsquo;s Five Forces

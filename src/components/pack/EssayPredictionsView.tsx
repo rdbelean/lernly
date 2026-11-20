@@ -63,7 +63,7 @@ export default function EssayPredictionsView({
             {/* Question */}
             <div className="flex items-baseline gap-2.5">
               <span
-                className="inline-flex h-6 min-w-6 items-center justify-center rounded-full px-2 text-[12px] font-bold tabular-nums"
+                className="inline-flex h-6 min-w-6 items-center justify-center rounded-full px-2 text-[12px] font-semibold tabular-nums"
                 style={{
                   background: "var(--color-work-bg)",
                   color: "var(--color-work-ink)",
@@ -72,7 +72,7 @@ export default function EssayPredictionsView({
                 {String(i + 1).padStart(2, "0")}
               </span>
               <h3
-                className="flex-1 text-[15.5px] font-bold leading-snug text-[color:var(--color-text)] sm:text-[16.5px]"
+                className="flex-1 text-[15.5px] font-semibold leading-snug text-[color:var(--color-text)] sm:text-[16.5px]"
                 dangerouslySetInnerHTML={{ __html: renderRichText(p.question) }}
               />
             </div>
@@ -89,7 +89,7 @@ export default function EssayPredictionsView({
               }}
             >
               <div
-                className="mb-0.5 text-[12px] font-bold"
+                className="mb-0.5 text-[12px] font-semibold"
                 style={{ color: "var(--color-work-ink)" }}
               >
                 {labels.thesis}
@@ -103,7 +103,7 @@ export default function EssayPredictionsView({
             {/* Structure — numbered argument steps */}
             <div className="mt-4">
               <div
-                className="mb-2 text-[12px] font-bold"
+                className="mb-2 text-[12px] font-semibold"
                 style={{ color: "var(--color-text-faint)" }}
               >
                 {labels.structure}
@@ -116,7 +116,7 @@ export default function EssayPredictionsView({
                     style={{ color: "var(--color-text-dim)" }}
                   >
                     <span
-                      className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[12px] font-bold tabular-nums"
+                      className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold tabular-nums"
                       style={{
                         background: "var(--color-ink-a10)",
                         color: "var(--color-text-dim)",
@@ -137,7 +137,7 @@ export default function EssayPredictionsView({
             {p.paragraphCues.length > 0 && (
               <div className="mt-4">
                 <div
-                  className="mb-2 text-[12px] font-bold"
+                  className="mb-2 text-[12px] font-semibold"
                   style={{ color: "var(--color-text-faint)" }}
                 >
                   {labels.cues}
@@ -170,7 +170,7 @@ export default function EssayPredictionsView({
             {p.examples.length > 0 && (
               <div className="mt-4">
                 <div
-                  className="mb-2 text-[12px] font-bold"
+                  className="mb-2 text-[12px] font-semibold"
                   style={{ color: "var(--color-text-faint)" }}
                 >
                   {labels.examples}

@@ -27,7 +27,7 @@ function renderBoldInline(text: string) {
   return parts.map((part, idx) => {
     if (part.startsWith("**") && part.endsWith("**")) {
       return (
-        <strong key={idx} className="font-bold">
+        <strong key={idx} className="font-semibold">
           {part.slice(2, -2)}
         </strong>
       );
@@ -124,7 +124,7 @@ export function CalcExerciseView({
         <div className="inline-flex h-11 w-11 items-center justify-center rounded-card bg-ok-bg text-ok-ink">
           <Check className="h-5 w-5" aria-hidden="true" />
         </div>
-        <h1 className="mt-6 font-display text-[40px] font-bold leading-[1.08] tracking-[-0.03em] text-text sm:text-[48px]">
+        <h1 className="mt-6 font-display text-[40px] font-semibold leading-[1.08] tracking-[-0.03em] text-text sm:text-[48px]">
           Rechenblock fertig
           <span
             aria-hidden="true"
@@ -178,7 +178,7 @@ export function CalcExerciseView({
       {/* Top progress header */}
       <header>
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 pb-4">
-          <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-text">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-text">
             Aufgabe {index + 1} / {exercises.length}
           </p>
           <p className="text-center text-[11px] font-semibold uppercase tracking-[0.08em] text-text-dim">
@@ -218,7 +218,7 @@ export function CalcExerciseView({
         <section aria-labelledby="calc-heading">
           <h1
             id="calc-heading"
-            className="font-display text-[44px] font-bold leading-[1.05] tracking-[-0.035em] text-text sm:text-[54px] lg:text-[56px]"
+            className="font-display text-[44px] font-semibold leading-[1.05] tracking-[-0.035em] text-text sm:text-[54px] lg:text-[56px]"
           >
             {exercise.headlineLine1}{" "}
             <br className="hidden lg:inline" />
@@ -236,7 +236,7 @@ export function CalcExerciseView({
                 className="flex items-baseline justify-between gap-4 py-3.5 text-[15px]"
               >
                 <dt className="text-text-dim">{param.label}</dt>
-                <dd className="font-bold text-text">{param.value}</dd>
+                <dd className="font-semibold text-text">{param.value}</dd>
               </div>
             ))}
           </dl>
@@ -266,7 +266,7 @@ export function CalcExerciseView({
                       setEvaluation(null);
                     }
                   }}
-                  className={`w-full min-w-0 bg-transparent font-display text-[50px] font-bold leading-none tracking-[-0.03em] outline-none placeholder:text-text-faint/35 sm:text-[58px] ${inputColorClass}`}
+                  className={`w-full min-w-0 bg-transparent font-display text-[50px] font-semibold leading-none tracking-[-0.03em] outline-none placeholder:text-text-faint/35 sm:text-[58px] ${inputColorClass}`}
                 />
                 <span className="shrink-0 text-[18px] font-medium text-text-dim sm:text-[20px]">
                   {exercise.unit}
@@ -302,7 +302,7 @@ export function CalcExerciseView({
 
           {showSolution ? (
             <div className="mt-8 border-t border-text pt-6">
-              <h2 className="font-sans text-[11px] font-bold uppercase tracking-[0.08em] text-primary">
+              <h2 className="font-sans text-[11px] font-semibold uppercase tracking-[0.08em] text-primary">
                 Lösungsweg
               </h2>
 
@@ -321,10 +321,10 @@ export function CalcExerciseView({
               </ol>
 
               <div className="mt-7 flex items-end justify-between gap-4">
-                <span className="pb-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-ok-ink">
+                <span className="pb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-ok-ink">
                   Ergebnis
                 </span>
-                <p className="font-display text-[54px] font-bold leading-none tracking-[-0.035em] text-ok-ink sm:text-[64px]">
+                <p className="font-display text-[54px] font-semibold leading-none tracking-[-0.035em] text-ok-ink sm:text-[64px]">
                   {exercise.formattedAnswer}
                 </p>
               </div>

@@ -1,27 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Sora } from "next/font/google";
+import { Inter } from "next/font/google";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import BetaCheckoutHost from "@/components/beta/BetaCheckoutHost";
 import ErrorReporter from "@/components/ErrorReporter";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
-// Body / UI typeface. Inter at the standard set of weights we use across
-// nav, buttons, body text, captions.
+// The only typeface (rebrand Richtung 1, Pentagram/Linear principle): Inter
+// for headings, UI and body. Weights 400/500/600.
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
 });
 
-// Display / heading typeface. Sora - geometric humanist, calmer than the
-// system-stack we had. Weight 600 is the primary heading weight per spec.
-const sora = Sora({
-  subsets: ["latin"],
-  variable: "--font-sora",
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -98,7 +90,7 @@ export default function RootLayout({
   return (
     <html
       lang="de"
-      className={`h-full antialiased ${inter.variable} ${sora.variable}`}
+      className={`h-full antialiased ${inter.variable}`}
     >
       <body className="ln-page-bg min-h-full flex flex-col text-[color:var(--color-ln-ink)]">
         <script

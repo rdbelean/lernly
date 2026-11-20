@@ -3,7 +3,7 @@ import { type ReactNode } from "react";
 // Light "Academic Editorial" section heading for /hochschulen. The shared
 // SectionHeading hardcodes white text for the dark landing, so this route
 // gets its own. GradBlueprint treatment: eyebrow as white pill with accent
-// dot, big tight Sora heading (700, -0.025em, lh ~1.05), muted sub.
+// dot, big tight Inter heading (600, -0.025em, lh ~1.05), muted sub.
 export default function HsSectionHeading({
   eyebrow,
   title,
@@ -31,7 +31,7 @@ export default function HsSectionHeading({
         </p>
       )}
       <h2
-        className="font-bold"
+        className="font-semibold"
         style={{
           fontFamily: "var(--font-display)",
           fontSize: "clamp(2rem, 4vw, 3rem)",

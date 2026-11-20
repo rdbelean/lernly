@@ -44,7 +44,7 @@ export default function GlobalError({
           </span>
         </div>
         <h1
-          className="mt-4 text-[28px] font-bold tracking-[-0.8px]"
+          className="mt-4 text-[28px] font-semibold tracking-[-0.8px]"
           style={{ fontFamily: "var(--font-display)" }}
         >
           Da lief was schief

@@ -192,7 +192,7 @@ function PracticeSessionRunner({
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-ok-bg text-ok-ink">
           <CheckCircle2 className="h-6 w-6" aria-hidden="true" />
         </div>
-        <h2 className="mt-4 font-display text-[24px] font-bold text-text">
+        <h2 className="mt-4 font-display text-[24px] font-semibold text-text">
           {scopeTitle}: Runde abgeschlossen
         </h2>
         <p className="mt-2 text-[15px] text-text-dim tabular-nums">
@@ -295,7 +295,7 @@ function PracticeSessionRunner({
           open
           className="group sticky top-3 z-20 rounded-2xl border-2 border-urgent-ink bg-surface shadow-sm"
         >
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-3 text-[14px] font-bold text-urgent-ink">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-3 text-[14px] font-semibold text-urgent-ink">
             <span className="flex items-center gap-2">
               <FileText className="h-4 w-4 shrink-0" aria-hidden="true" />
               <span>Sachverhalt · {caseTitle}</span>
@@ -318,11 +318,11 @@ function PracticeSessionRunner({
       <article className="rounded-2xl border border-line bg-surface p-6 sm:p-8">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-urgent-bg px-2.5 py-0.5 text-[11.5px] font-bold text-urgent-ink">
+            <span className="rounded-full bg-urgent-bg px-2.5 py-0.5 text-[11.5px] font-semibold text-urgent-ink">
               {task.originLabel ?? currentEntry.topicTitle}
             </span>
             <span
-              className={`rounded-full px-2.5 py-0.5 text-[11.5px] font-bold ${badge.className}`}
+              className={`rounded-full px-2.5 py-0.5 text-[11.5px] font-semibold ${badge.className}`}
             >
               {badge.label}
             </span>
@@ -371,7 +371,7 @@ function PracticeSessionRunner({
           </div>
         ) : (
           <>
-            <h2 className="mt-4 font-display text-[21px] font-bold leading-snug text-text sm:text-[23px]">
+            <h2 className="mt-4 font-display text-[21px] font-semibold leading-snug text-text sm:text-[23px]">
               <InlineRichText md={task.question} />
             </h2>
 
@@ -423,7 +423,7 @@ function PracticeSessionRunner({
             task.modelAnswer &&
             task.modelAnswer.length > 0 ? (
               <div>
-                <p className="mb-2 text-[12px] font-bold uppercase tracking-[0.06em] text-text-dim">
+                <p className="mb-2 text-[12px] font-semibold uppercase tracking-[0.06em] text-text-dim">
                   Musterlösung &amp; Rechenschritte
                 </p>
                 <BlockRenderer blocks={task.modelAnswer} />
@@ -455,7 +455,7 @@ function PracticeSessionRunner({
 
             {task.kind === "essay" && task.checklist.length > 0 ? (
               <div className="rounded-xl border border-line bg-bg p-4">
-                <p className="mb-2.5 flex items-center justify-between text-[12px] font-bold uppercase tracking-[0.06em] text-text-dim">
+                <p className="mb-2.5 flex items-center justify-between text-[12px] font-semibold uppercase tracking-[0.06em] text-text-dim">
                   <span>Punkte-Checkliste ({task.points} P)</span>
                   <span className="tabular-nums text-primary">
                     {formatPtsDe(
@@ -502,7 +502,7 @@ function PracticeSessionRunner({
                             )}
                             <InlineRichText md={item.text} />
                           </span>
-                          <span className="shrink-0 font-bold tabular-nums text-urgent-ink">
+                          <span className="shrink-0 font-semibold tabular-nums text-urgent-ink">
                             +{formatPtsDe(item.points)} P
                           </span>
                         </button>
@@ -515,7 +515,7 @@ function PracticeSessionRunner({
 
             {task.merke ? (
               <div className="rounded-r-xl border-l-4 border-ok-ink bg-ok-bg px-4 py-3 text-[15px] text-text">
-                <p className="mb-1 flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-[0.06em] text-ok-ink">
+                <p className="mb-1 flex items-center gap-1.5 text-[12px] font-semibold uppercase tracking-[0.06em] text-ok-ink">
                   <Bookmark className="h-3.5 w-3.5" aria-hidden="true" />
                   <span>Merke</span>
                 </p>
@@ -525,7 +525,7 @@ function PracticeSessionRunner({
 
             {task.trap ? (
               <div className="rounded-r-xl border-l-4 border-err-ink bg-err-bg px-4 py-3 text-[14.5px] text-text">
-                <p className="mb-1 flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-[0.06em] text-err-ink">
+                <p className="mb-1 flex items-center gap-1.5 text-[12px] font-semibold uppercase tracking-[0.06em] text-err-ink">
                   <AlertTriangle className="h-3.5 w-3.5" aria-hidden="true" />
                   <span>Typische Klausurfalle</span>
                 </p>
@@ -546,7 +546,7 @@ function PracticeSessionRunner({
                     onClick={() => handleRate(btn.rating)}
                     className={`rounded-xl border-2 bg-surface px-3 py-2.5 text-center transition ${btn.style}`}
                   >
-                    <span className="block font-display text-[15px] font-bold">
+                    <span className="block font-display text-[15px] font-semibold">
                       {btn.keyLabel} · {btn.label}
                     </span>
                     <span className="mt-0.5 block text-[11.5px] font-medium opacity-85">

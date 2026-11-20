@@ -278,7 +278,7 @@ export function TrainerView({
               ) : null}
             </div>
 
-            <h1 className="mt-1.5 font-display text-[26px] font-bold tracking-[-0.03em] text-text sm:text-[32px]">
+            <h1 className="mt-1.5 font-display text-[26px] font-semibold tracking-[-0.03em] text-text sm:text-[32px]">
               {bundle.course.title}
             </h1>
             {bundle.course.subtitle ? (
@@ -394,7 +394,7 @@ export function TrainerView({
               <span>Üben &amp; Rechnen</span>
               {openTaskCount > 0 ? (
                 <span
-                  className={`rounded-full px-2 py-0.5 text-[11px] font-bold tabular-nums ${
+                  className={`rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums ${
                     activeTab === "ueben"
                       ? "bg-surface/20 text-on-primary"
                       : "bg-urgent-bg text-urgent-ink"
@@ -418,7 +418,7 @@ export function TrainerView({
               <span>Karteikarten</span>
               {allCards.length > 0 ? (
                 <span
-                  className={`rounded-full px-2 py-0.5 text-[11px] font-bold tabular-nums ${
+                  className={`rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums ${
                     activeTab === "karten"
                       ? "bg-surface/20 text-on-primary"
                       : "bg-surface-2 text-text-dim"
@@ -442,7 +442,7 @@ export function TrainerView({
               <span>Probeklausur</span>
               {mockExams.length > 0 ? (
                 <span
-                  className={`rounded-full px-2 py-0.5 text-[11px] font-bold tabular-nums ${
+                  className={`rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums ${
                     activeTab === "probeklausur"
                       ? "bg-surface/20 text-on-primary"
                       : "bg-surface-2 text-text-dim"

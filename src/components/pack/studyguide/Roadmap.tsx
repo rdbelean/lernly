@@ -67,7 +67,7 @@ export default function Roadmap({
                 }}
               >
                 <div
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[14px] font-bold"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[14px] font-semibold"
                   style={{ background: accent.tint, color: accent.fg }}
                 >
                   {i + 1}

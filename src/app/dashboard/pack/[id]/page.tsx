@@ -129,7 +129,7 @@ export default async function PackDetailPage({
             <span aria-hidden>›</span>
             <span style={{ color: "var(--color-text-dim)" }}>{data.title}</span>
           </nav>
-          <h1 className="mt-4 text-[28px] font-bold text-[color:var(--color-text)]">{data.title}</h1>
+          <h1 className="mt-4 text-[28px] font-semibold text-[color:var(--color-text)]">{data.title}</h1>
           <p
             className="mt-3 text-[14px]"
             style={{ color: "var(--color-urgent-ink)" }}

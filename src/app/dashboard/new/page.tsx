@@ -638,7 +638,7 @@ export default function NewPackPage() {
           style={{
             fontFamily: "var(--font-display)",
             fontSize: "44px",
-            fontWeight: 700,
+            fontWeight: 600,
             letterSpacing: "-1.4px",
             lineHeight: 1.05,
           }}
@@ -972,7 +972,7 @@ export default function NewPackPage() {
                 >
                   {locked && (
                     <span
-                      className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[12px] font-bold"
+                      className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[12px] font-semibold"
                       style={{
                         background: "var(--color-ink-a10)",
                         color: "var(--color-text-dim)",
@@ -1058,7 +1058,7 @@ export default function NewPackPage() {
                       className="absolute right-2.5 top-2.5"
                     />
                   )}
-                  <div className="text-[17px] font-bold tabular-nums text-[color:var(--color-text)]">
+                  <div className="text-[17px] font-semibold tabular-nums text-[color:var(--color-text)]">
                     {n}
                   </div>
                   <div

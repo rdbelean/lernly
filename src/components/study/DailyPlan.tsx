@@ -28,7 +28,7 @@ export function DailyPlan({ items, totalMinutes }: DailyPlanProps) {
                   {item.title}
                 </span>
               </div>
-              <span className="shrink-0 text-[15px] font-bold text-text">
+              <span className="shrink-0 text-[15px] font-semibold text-text">
                 {item.minutes} Min
               </span>
             </Link>

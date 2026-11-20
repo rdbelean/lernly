@@ -40,7 +40,7 @@ function renderFormattedText(text: string) {
   return parts.map((part, idx) => {
     if (part.startsWith("**") && part.endsWith("**")) {
       return (
-        <strong key={idx} className="font-bold text-text">
+        <strong key={idx} className="font-semibold text-text">
           {part.slice(2, -2)}
         </strong>
       );
@@ -169,7 +169,7 @@ export function FlashcardSession({
         <div className="inline-flex h-11 w-11 items-center justify-center rounded-card bg-ok-bg text-ok-ink">
           <Check className="h-5 w-5" aria-hidden="true" />
         </div>
-        <h1 className="mt-6 font-display text-[40px] font-bold leading-[1.08] tracking-[-0.03em] text-text sm:text-[48px]">
+        <h1 className="mt-6 font-display text-[40px] font-semibold leading-[1.08] tracking-[-0.03em] text-text sm:text-[48px]">
           Alle Karten durch
           <span
             aria-hidden="true"
@@ -230,7 +230,7 @@ export function FlashcardSession({
 
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline justify-between gap-4 text-[13px]">
-            <span className="font-bold text-text">
+            <span className="font-semibold text-text">
               Karte {displayCardNumber} von {totalCards}
             </span>
             <span className="font-semibold text-text-dim">
@@ -264,7 +264,7 @@ export function FlashcardSession({
           <div className="flex flex-col justify-start self-start">
             <div className="flex items-center justify-between gap-4">
               <span
-                className={`inline-flex items-center rounded-full px-3 py-1 text-[12px] font-bold ${STATUS_BG_SOFT[currentCard.topicStatus]} ${STATUS_TEXT_INK[currentCard.topicStatus]}`}
+                className={`inline-flex items-center rounded-full px-3 py-1 text-[12px] font-semibold ${STATUS_BG_SOFT[currentCard.topicStatus]} ${STATUS_TEXT_INK[currentCard.topicStatus]}`}
               >
                 {currentCard.topicLabel}
               </span>
@@ -273,13 +273,13 @@ export function FlashcardSession({
               </span>
             </div>
 
-            <h1 className="mt-5 font-display text-[32px] font-bold leading-[1.12] tracking-[-0.03em] text-text sm:text-[38px]">
+            <h1 className="mt-5 font-display text-[32px] font-semibold leading-[1.12] tracking-[-0.03em] text-text sm:text-[38px]">
               {currentCard.question}
             </h1>
 
             {revealed ? (
               <div className="mt-6 border-t border-line pt-6">
-                <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-primary">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-primary">
                   Antwort
                 </p>
                 <p className="mt-3 text-[17px] leading-[1.55] text-text sm:text-[18px]">
@@ -315,10 +315,10 @@ export function FlashcardSession({
           onClick={() => handleRate(1)}
           className="relative flex flex-col items-center justify-center rounded-card bg-err-bg px-4 py-5 text-err-ink transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-45"
         >
-          <span className="absolute left-3.5 top-3.5 inline-flex h-6 w-6 items-center justify-center rounded-[6px] bg-surface text-[12px] font-bold text-err-ink">
+          <span className="absolute left-3.5 top-3.5 inline-flex h-6 w-6 items-center justify-center rounded-[6px] bg-surface text-[12px] font-semibold text-err-ink">
             1
           </span>
-          <span className="font-display text-[17px] font-bold sm:text-[18px]">
+          <span className="font-display text-[17px] font-semibold sm:text-[18px]">
             Schwer
           </span>
           <span className="mt-1 text-[13px] font-medium">
@@ -332,10 +332,10 @@ export function FlashcardSession({
           onClick={() => handleRate(2)}
           className="relative flex flex-col items-center justify-center rounded-card bg-urgent-bg px-4 py-5 text-urgent-ink transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-45"
         >
-          <span className="absolute left-3.5 top-3.5 inline-flex h-6 w-6 items-center justify-center rounded-[6px] bg-surface text-[12px] font-bold text-urgent-ink">
+          <span className="absolute left-3.5 top-3.5 inline-flex h-6 w-6 items-center justify-center rounded-[6px] bg-surface text-[12px] font-semibold text-urgent-ink">
             2
           </span>
-          <span className="font-display text-[17px] font-bold sm:text-[18px]">
+          <span className="font-display text-[17px] font-semibold sm:text-[18px]">
             Mittel
           </span>
           <span className="mt-1 text-[13px] font-medium">
@@ -349,10 +349,10 @@ export function FlashcardSession({
           onClick={() => handleRate(3)}
           className="relative flex flex-col items-center justify-center rounded-card bg-ok-bg px-4 py-5 text-ok-ink transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-45"
         >
-          <span className="absolute left-3.5 top-3.5 inline-flex h-6 w-6 items-center justify-center rounded-[6px] bg-surface text-[12px] font-bold text-ok-ink">
+          <span className="absolute left-3.5 top-3.5 inline-flex h-6 w-6 items-center justify-center rounded-[6px] bg-surface text-[12px] font-semibold text-ok-ink">
             3
           </span>
-          <span className="font-display text-[17px] font-bold sm:text-[18px]">
+          <span className="font-display text-[17px] font-semibold sm:text-[18px]">
             Leicht
           </span>
           <span className="mt-1 text-[13px] font-medium">
@@ -362,9 +362,9 @@ export function FlashcardSession({
       </div>
 
       <p className="mt-4 text-center text-[13px] text-text-dim">
-        Bewerte mit <strong className="font-bold text-text">1</strong>,{" "}
-        <strong className="font-bold text-text">2</strong> oder{" "}
-        <strong className="font-bold text-text">3</strong> · Leertaste zeigt die
+        Bewerte mit <strong className="font-semibold text-text">1</strong>,{" "}
+        <strong className="font-semibold text-text">2</strong> oder{" "}
+        <strong className="font-semibold text-text">3</strong> · Leertaste zeigt die
         Antwort
       </p>
     </div>

@@ -168,7 +168,7 @@ function FlashcardRunner({
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-ok-bg text-ok-ink">
           <CheckCircle2 className="h-6 w-6" aria-hidden="true" />
         </div>
-        <h2 className="mt-4 font-display text-[22px] font-bold text-text">
+        <h2 className="mt-4 font-display text-[22px] font-semibold text-text">
           Für heute ist alles wiederholt
         </h2>
         {days !== null ? (
@@ -254,7 +254,7 @@ function FlashcardRunner({
             }}
             className="mt-5 flex min-h-[150px] cursor-pointer flex-col items-center justify-center rounded-xl bg-bg/60 p-6 text-center transition hover:bg-bg"
           >
-            <div className="max-w-[560px] font-display text-[20px] font-bold leading-snug text-text sm:text-[24px]">
+            <div className="max-w-[560px] font-display text-[20px] font-semibold leading-snug text-text sm:text-[24px]">
               <InlineRichText md={card.front} />
             </div>
             {!flipped ? (
@@ -316,7 +316,7 @@ function FlashcardRunner({
                     onClick={() => handleRate(btn.rating)}
                     className={`flex flex-col items-center rounded-xl border-2 bg-surface px-3 py-2 text-center transition active:scale-[0.97] ${btn.style}`}
                   >
-                    <span className="font-display text-[14.5px] font-bold">{btn.label}</span>
+                    <span className="font-display text-[14.5px] font-semibold">{btn.label}</span>
                     <span className="text-[12px] font-medium tabular-nums opacity-90">
                       {intervals[btn.rating]}
                     </span>

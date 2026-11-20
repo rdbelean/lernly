@@ -26,7 +26,7 @@ export function StatStrip({
             <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-text-dim">
               Gesichert
             </p>
-            <p className="mt-1.5 font-display text-[36px] font-bold leading-none tracking-[-0.03em] text-text sm:text-[40px]">
+            <p className="mt-1.5 font-display text-[36px] font-semibold leading-none tracking-[-0.03em] text-text sm:text-[40px]">
               {securedPoints}
               <span className="ml-1 font-sans text-[16px] font-medium tracking-normal text-text-dim sm:text-[18px]">
                 /{totalPoints} P
@@ -38,7 +38,7 @@ export function StatStrip({
             <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-text-dim">
               Karten fällig
             </p>
-            <p className="mt-1.5 font-display text-[36px] font-bold leading-none tracking-[-0.03em] text-text sm:text-[40px]">
+            <p className="mt-1.5 font-display text-[36px] font-semibold leading-none tracking-[-0.03em] text-text sm:text-[40px]">
               {dueCardsCount}
             </p>
           </div>
@@ -47,7 +47,7 @@ export function StatStrip({
             <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-text-dim">
               Serie
             </p>
-            <p className="mt-1.5 font-display text-[36px] font-bold leading-none tracking-[-0.03em] text-text sm:text-[40px]">
+            <p className="mt-1.5 font-display text-[36px] font-semibold leading-none tracking-[-0.03em] text-text sm:text-[40px]">
               {streakDays}
               <span className="ml-1.5 font-sans text-[16px] font-medium tracking-normal text-text-dim sm:text-[18px]">
                 Tage

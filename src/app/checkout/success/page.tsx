@@ -58,7 +58,7 @@ export default async function CheckoutSuccessPage({
           style={{
             fontFamily: "var(--font-display)",
             fontSize: "22px",
-            fontWeight: 700,
+            fontWeight: 600,
             letterSpacing: "-0.6px",
           }}
         >
@@ -80,7 +80,7 @@ export default async function CheckoutSuccessPage({
               style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "28px",
-                fontWeight: 700,
+                fontWeight: 600,
                 letterSpacing: "-0.8px",
                 lineHeight: 1.1,
               }}
@@ -133,7 +133,7 @@ export default async function CheckoutSuccessPage({
               style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "28px",
-                fontWeight: 700,
+                fontWeight: 600,
                 letterSpacing: "-0.8px",
                 lineHeight: 1.1,
               }}

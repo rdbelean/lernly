@@ -162,7 +162,7 @@ export function CourseUploadView() {
     <div className="mx-auto w-full max-w-[1120px] px-8 py-8 sm:px-12 sm:py-10 lg:px-14">
       <header>
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 pb-4">
-          <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-text">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-text">
             Unterlagen
           </p>
           <p className="text-center text-[11px] font-semibold uppercase tracking-[0.08em] text-text-dim">
@@ -182,7 +182,7 @@ export function CourseUploadView() {
       </header>
 
       <section className="mt-10 sm:mt-12">
-        <h1 className="font-display text-[44px] font-bold leading-[1.04] tracking-[-0.035em] text-text sm:text-[58px]">
+        <h1 className="font-display text-[44px] font-semibold leading-[1.04] tracking-[-0.035em] text-text sm:text-[58px]">
           Eigener Kurs
           <br />
           in 30 Sekunden
@@ -424,11 +424,11 @@ export function CourseUploadView() {
         >
           <div className="flex flex-wrap items-baseline justify-between gap-4">
             <div>
-              <p className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-ok-ink">
+              <p className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-ok-ink">
                 <Check className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>{preview.sourceLabel} erkannt</span>
               </p>
-              <h2 className="mt-2 font-display text-[32px] font-bold leading-tight tracking-[-0.03em] text-text">
+              <h2 className="mt-2 font-display text-[32px] font-semibold leading-tight tracking-[-0.03em] text-text">
                 {preview.course.courseName}
               </h2>
             </div>

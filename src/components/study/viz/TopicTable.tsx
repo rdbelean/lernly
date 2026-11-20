@@ -29,7 +29,7 @@ export function TopicTable({ topics }: TopicTableProps) {
             >
               {STATUS_LABEL[topic.status]}
             </span>
-            <span className="text-right text-[14px] font-bold text-text">
+            <span className="text-right text-[14px] font-semibold text-text">
               {formatTopicPoints(topic)}
             </span>
           </li>

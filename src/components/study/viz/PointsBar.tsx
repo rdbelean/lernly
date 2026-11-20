@@ -43,7 +43,7 @@ export function PointsBar({ topics }: PointsVizVariantProps) {
               ) : null}
             </div>
             <p
-              className={`mt-2 text-[14px] font-bold sm:text-[15px] ${STATUS_TEXT_INK[topic.status]}`}
+              className={`mt-2 text-[14px] font-semibold sm:text-[15px] ${STATUS_TEXT_INK[topic.status]}`}
             >
               {formatTopicPoints(topic)}
             </p>

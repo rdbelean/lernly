@@ -216,7 +216,7 @@ export function PvMcResultCard() {
 
       <div className="mt-4 flex items-end gap-3">
         <p
-          className="text-[44px] font-bold leading-none"
+          className="text-[44px] font-semibold leading-none"
           style={{ fontFamily: "var(--font-display)", color: "var(--hs-ink)" }}
         >
           48 / 60
@@ -393,7 +393,7 @@ export function PvCohortReport() {
               style={{ borderColor: "var(--hs-line)" }}
             >
               <span
-                className={`hs-chip ${s.chip} text-[13px] font-bold`}
+                className={`hs-chip ${s.chip} text-[13px] font-semibold`}
                 style={{ fontFamily: "var(--font-display)" }}
               >
                 {s.value}

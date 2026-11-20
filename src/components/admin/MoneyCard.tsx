@@ -10,7 +10,7 @@ export function formatEur(cents: number, currency: string): string {
   }).format(cents / 100);
 }
 
-// Money tile for the GELD row. Bigger Sora value, currency-formatted; optional
+// Money tile for the GELD row. Bigger Inter value, currency-formatted; optional
 // honest MoM trend pill; `accent` makes the MRR hero stand out; `unavailable`
 // degrades to "—" when Stripe isn't configured.
 export default function MoneyCard({

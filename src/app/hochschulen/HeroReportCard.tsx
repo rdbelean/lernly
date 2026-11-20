@@ -52,7 +52,7 @@ export default function HeroReportCard() {
               {s.label}
             </p>
             <p
-              className="text-[17px] font-bold leading-tight"
+              className="text-[17px] font-semibold leading-tight"
               style={{ fontFamily: "var(--font-display)", color: "var(--hs-ink)" }}
             >
               {s.value}

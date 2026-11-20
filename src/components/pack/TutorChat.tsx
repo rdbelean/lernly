@@ -180,7 +180,7 @@ export default function TutorChat({
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <LernlyLogo variant="symbol" size={18} alt="" />
-                  <h2 className="text-[15px] font-bold text-[color:var(--color-text)] sm:text-[16px]">
+                  <h2 className="text-[15px] font-semibold text-[color:var(--color-text)] sm:text-[16px]">
                     {labels.title}
                   </h2>
                 </div>
@@ -196,7 +196,7 @@ export default function TutorChat({
                   className="hidden flex-col items-end text-right sm:flex"
                   style={{ color: "var(--color-text-faint)" }}
                 >
-                  <span className="text-[12px] font-bold tabular-nums">
+                  <span className="text-[12px] font-semibold tabular-nums">
                     {usage.used}/{usage.limit}
                   </span>
                   <span className="text-[12px] opacity-80">
@@ -318,7 +318,7 @@ export default function TutorChat({
                     color: "var(--color-urgent-ink)",
                   }}
                 >
-                  <div className="flex items-center gap-1.5 text-[13px] font-bold text-[color:var(--color-text)]">
+                  <div className="flex items-center gap-1.5 text-[13px] font-semibold text-[color:var(--color-text)]">
                     <Lock size={13} strokeWidth={2.2} aria-hidden />
                     {labels.quotaExhaustedTitle}
                   </div>
@@ -329,7 +329,7 @@ export default function TutorChat({
                   </p>
                   <Link
                     href="/dashboard/settings"
-                    className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[color:var(--color-primary)] px-4 py-1.5 text-[12.5px] font-bold text-[color:var(--color-on-primary)] transition hover:bg-[color:var(--color-primary-press)]"
+                    className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[color:var(--color-primary)] px-4 py-1.5 text-[12.5px] font-semibold text-[color:var(--color-on-primary)] transition hover:bg-[color:var(--color-primary-press)]"
                   >
                     {labels.upgrade} →
                   </Link>
@@ -361,7 +361,7 @@ export default function TutorChat({
                   <button
                     type="submit"
                     disabled={busy || input.trim().length === 0}
-                    className="rounded-xl bg-[color:var(--color-primary)] px-4 py-2.5 text-[13px] font-bold text-[color:var(--color-on-primary)] transition hover:bg-[color:var(--color-primary-press)] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-xl bg-[color:var(--color-primary)] px-4 py-2.5 text-[13px] font-semibold text-[color:var(--color-on-primary)] transition hover:bg-[color:var(--color-primary-press)] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {busy ? "…" : labels.send}
                   </button>

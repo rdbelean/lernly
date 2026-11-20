@@ -22,7 +22,7 @@ export function FlashcardVisual({ visual }: FlashcardVisualProps) {
               ))}
             </div>
             <div className="flex h-[132px] flex-col items-center justify-center rounded-t-[6px] bg-primary px-3 text-center">
-              <span className="font-display text-[22px] font-bold leading-none text-on-primary">
+              <span className="font-display text-[22px] font-semibold leading-none text-on-primary">
                 {visual.tvBadge}
               </span>
               <span className="mt-1 text-[12px] font-medium text-on-primary-dim">
@@ -37,7 +37,7 @@ export function FlashcardVisual({ visual }: FlashcardVisualProps) {
           </div>
         </div>
 
-        <div className="mt-6 w-full rounded-[8px] bg-bg px-5 py-3.5 text-center font-display text-[16px] font-bold tracking-[-0.01em] text-text sm:text-[17px]">
+        <div className="mt-6 w-full rounded-[8px] bg-bg px-5 py-3.5 text-center font-display text-[16px] font-semibold tracking-[-0.01em] text-text sm:text-[17px]">
           TV = FCF<sub className="text-[11px] font-semibold">n+1</sub> ÷ (WACC − g)
         </div>
       </div>
@@ -51,13 +51,13 @@ export function FlashcardVisual({ visual }: FlashcardVisualProps) {
           <div className="flex h-12 w-full overflow-hidden rounded-[6px]">
             <div
               style={{ width: `${visual.equityPct}%` }}
-              className="flex items-center justify-center bg-primary text-[13px] font-bold text-on-primary"
+              className="flex items-center justify-center bg-primary text-[13px] font-semibold text-on-primary"
             >
               EK {visual.equityPct} %
             </div>
             <div
               style={{ width: `${visual.debtPct}%` }}
-              className="flex items-center justify-center bg-work-bg text-[13px] font-bold text-work-ink"
+              className="flex items-center justify-center bg-work-bg text-[13px] font-semibold text-work-ink"
             >
               FK {visual.debtPct} %
             </div>
@@ -67,7 +67,7 @@ export function FlashcardVisual({ visual }: FlashcardVisualProps) {
           </p>
         </div>
 
-        <div className="mt-6 w-full rounded-[8px] bg-bg px-5 py-3.5 text-center font-display text-[15px] font-bold tracking-[-0.01em] text-text sm:text-[16px]">
+        <div className="mt-6 w-full rounded-[8px] bg-bg px-5 py-3.5 text-center font-display text-[15px] font-semibold tracking-[-0.01em] text-text sm:text-[16px]">
           {visual.formula}
         </div>
       </div>
@@ -77,7 +77,7 @@ export function FlashcardVisual({ visual }: FlashcardVisualProps) {
   return (
     <div className="flex w-full flex-col items-center">
       <p className="text-[12px] font-medium text-text-dim">{visual.caption}</p>
-      <div className="mt-3 w-full rounded-[8px] bg-bg px-5 py-4 text-center font-display text-[15px] font-bold tracking-[-0.01em] text-text sm:text-[16px]">
+      <div className="mt-3 w-full rounded-[8px] bg-bg px-5 py-4 text-center font-display text-[15px] font-semibold tracking-[-0.01em] text-text sm:text-[16px]">
         {visual.formula}
       </div>
     </div>

@@ -1,7 +1,7 @@
 /* =========================================================================
    /hochschulen — route-local "Academic Editorial" light theme.
    Structure/layout/component treatment per the GradBlueprint reference;
-   colors, logo and fonts are Lernly (indigo #1421C5 accent, Sora/Inter).
+   colors, logo and fonts are Lernly (indigo #1421C5 accent, Inter).
    Imported by src/app/hochschulen/page.tsx. Next bundles route CSS
    globally, so EVERY rule here is scoped under .hs-root to avoid leaking
    into the dark B2C app.

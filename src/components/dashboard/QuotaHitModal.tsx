@@ -69,7 +69,7 @@ export default function QuotaHitModal({ details, onClose }: Props) {
       >
         <div className="relative">
           <h2
-            className="mb-3 text-balance text-[26px] font-bold leading-tight"
+            className="mb-3 text-balance text-[26px] font-semibold leading-tight"
             style={{
               fontFamily: "var(--font-display)",
               letterSpacing: "-0.6px",

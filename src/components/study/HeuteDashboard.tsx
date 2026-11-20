@@ -87,7 +87,7 @@ export function HeuteDashboard({
       <section aria-labelledby="heute-heading">
         <h1
           id="heute-heading"
-          className="font-display text-[48px] font-bold leading-[1.03] tracking-[-0.035em] text-text sm:text-[64px] lg:text-[72px]"
+          className="font-display text-[48px] font-semibold leading-[1.03] tracking-[-0.035em] text-text sm:text-[64px] lg:text-[72px]"
         >
           {line1}
           {line2 ? (

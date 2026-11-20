@@ -120,7 +120,7 @@ export default function BetaCheckoutHost() {
 
         <h2
           id="beta-checkout-title"
-          className="mt-4 text-[22px] font-bold tracking-[-0.4px]"
+          className="mt-4 text-[22px] font-semibold tracking-[-0.4px]"
           style={{ fontFamily: "var(--font-display)" }}
         >
           {BETA_CHECKOUT_TITLE}

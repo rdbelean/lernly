@@ -169,7 +169,7 @@ export default function SiteNav({
           style={{
             fontFamily: "var(--font-display)",
             fontSize: "26px",
-            fontWeight: 700,
+            fontWeight: 600,
             letterSpacing: "-0.9px",
             lineHeight: 1,
           }}

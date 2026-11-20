@@ -320,7 +320,7 @@ function ProductModule({
       <div className={reverse ? "lg:order-2" : undefined}>
         <p className="hs-eyebrow">{kicker}</p>
         <h3
-          className="mt-3 text-[24px] font-bold leading-[1.15] md:text-[27px]"
+          className="mt-3 text-[24px] font-semibold leading-[1.15] md:text-[27px]"
           style={{ fontFamily: "var(--font-display)", letterSpacing: "-0.02em", color: "var(--hs-ink)" }}
         >
           {title}
@@ -391,7 +391,7 @@ export default function HochschulenPage() {
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "21px",
-              fontWeight: 700,
+              fontWeight: 600,
               letterSpacing: "-0.6px",
               lineHeight: 1,
               color: "var(--hs-ink)",
@@ -451,7 +451,7 @@ export default function HochschulenPage() {
                   <SegmentTabs />
                 </div>
                 <h1
-                  className="font-bold"
+                  className="font-semibold"
                   style={{
                     fontFamily: "var(--font-display)",
                     fontSize: "clamp(2.4rem, 4.2vw, 3.4rem)",
@@ -527,7 +527,7 @@ export default function HochschulenPage() {
             <div className="hs-reveal mx-auto max-w-[860px] text-center">
               <p className="hs-eyebrow mb-4">Der Business-Case</p>
               <h2
-                className="font-bold leading-[1.15] tracking-[-0.7px]"
+                className="font-semibold leading-[1.15] tracking-[-0.7px]"
                 style={{
                   fontFamily: "var(--font-display)",
                   fontSize: "clamp(26px, 3vw, 34px)",
@@ -654,7 +654,7 @@ export default function HochschulenPage() {
                 }
               >
                 <p
-                  className="font-bold leading-none"
+                  className="font-semibold leading-none"
                   style={{
                     fontFamily: "var(--font-display)",
                     fontSize: s.highlight ? "44px" : "34px",

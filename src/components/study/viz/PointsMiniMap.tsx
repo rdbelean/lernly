@@ -69,7 +69,7 @@ export function PointsMiniMap({ topics }: PointsVizVariantProps) {
                       />
                     ) : null}
                     <span
-                      className={`relative z-10 font-display font-bold leading-none ${labelSize} ${
+                      className={`relative z-10 font-display font-semibold leading-none ${labelSize} ${
                         labelOnFill ? "text-on-primary" : "text-text"
                       }`}
                     >

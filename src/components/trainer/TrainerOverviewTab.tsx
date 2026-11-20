@@ -121,11 +121,11 @@ export function TrainerOverviewTab({
       <section className="rounded-2xl border border-line bg-surface p-6 sm:p-8">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p className="text-[12px] font-bold uppercase tracking-[0.07em] text-text-dim">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.07em] text-text-dim">
               Aktueller Lernstand
             </p>
             <div className="mt-1 flex items-baseline gap-2.5">
-              <span className="font-display text-[44px] font-bold leading-none tracking-[-0.03em] text-ok-ink tabular-nums sm:text-[52px]">
+              <span className="font-display text-[44px] font-semibold leading-none tracking-[-0.03em] text-ok-ink tabular-nums sm:text-[52px]">
                 {formatPtsDe(poolTotals.ok)}
               </span>
               <span className="font-display text-[20px] font-semibold text-text-dim tabular-nums">
@@ -207,7 +207,7 @@ export function TrainerOverviewTab({
 
         {bundle.course.strategy ? (
           <div className="mt-6 rounded-xl border border-line bg-bg px-4 py-3 text-[14.5px] leading-relaxed text-text">
-            <span className="mr-2 font-bold uppercase tracking-[0.05em] text-primary">
+            <span className="mr-2 font-semibold uppercase tracking-[0.05em] text-primary">
               Klausurstrategie:
             </span>
             <InlineRichText md={bundle.course.strategy} />
@@ -218,7 +218,7 @@ export function TrainerOverviewTab({
       {/* Recent Mock Simulation Results */}
       {latestMocks.length > 0 ? (
         <section className="rounded-2xl border border-line bg-surface p-5">
-          <p className="text-[12px] font-bold uppercase tracking-[0.07em] text-text-dim">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.07em] text-text-dim">
             Letzte Probeklausuren
           </p>
           <div className="mt-3 flex flex-wrap gap-3">
@@ -229,7 +229,7 @@ export function TrainerOverviewTab({
               >
                 <span className="font-semibold text-text">{entry.mockName}</span>
                 <span className="mx-2 text-text-faint">·</span>
-                <span className="font-bold text-primary">
+                <span className="font-semibold text-primary">
                   {formatPtsDe(entry.score)} / {formatPtsDe(entry.total)} P
                 </span>
               </div>
@@ -241,7 +241,7 @@ export function TrainerOverviewTab({
       {/* Topic Grid sorted by points / priority */}
       <section>
         <div className="mb-4 flex items-center justify-between gap-2">
-          <h2 className="font-display text-[20px] font-bold tracking-[-0.02em] text-text">
+          <h2 className="font-display text-[20px] font-semibold tracking-[-0.02em] text-text">
             Themen nach Klausurpunkten ({sortedTopics.length})
           </h2>
           <p className="text-[13px] text-text-dim">
@@ -273,7 +273,7 @@ export function TrainerOverviewTab({
                 <div>
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span
-                      className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-[0.04em] ${
+                      className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.04em] ${
                         meta.tier === 1
                           ? "bg-urgent-bg text-urgent-ink"
                           : meta.tier === 2
@@ -285,20 +285,20 @@ export function TrainerOverviewTab({
                     </span>
                     <div className="flex items-center gap-2">
                       {isNext ? (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-0.5 text-[11px] font-bold text-on-primary">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-0.5 text-[11px] font-semibold text-on-primary">
                           <Sparkles className="h-3 w-3" aria-hidden="true" />
                           <span>Nächster Schritt</span>
                         </span>
                       ) : null}
                       {bd.total > 0 ? (
-                        <span className="text-[14px] font-bold tabular-nums text-text">
+                        <span className="text-[14px] font-semibold tabular-nums text-text">
                           {formatPtsDe(bd.total)} {bd.unit}
                         </span>
                       ) : null}
                     </div>
                   </div>
 
-                  <h3 className="mt-3 font-display text-[17px] font-bold leading-snug text-text">
+                  <h3 className="mt-3 font-display text-[17px] font-semibold leading-snug text-text">
                     {meta.title}
                   </h3>
 

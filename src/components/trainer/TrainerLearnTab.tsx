@@ -155,7 +155,7 @@ export function TrainerLearnTab({
       {/* Mode A: Appendix / Cheatsheet */}
       {viewMode === "appendix" && cheatsheet ? (
         <section className="rounded-2xl border border-line bg-surface p-6 sm:p-8">
-          <h2 className="font-display text-[24px] font-bold tracking-[-0.02em] text-text">
+          <h2 className="font-display text-[24px] font-semibold tracking-[-0.02em] text-text">
             {cheatsheet.title ?? "Formelsammlung & Gesetzes-Kompass"}
           </h2>
 
@@ -173,7 +173,7 @@ export function TrainerLearnTab({
                   key={idx}
                   className="rounded-xl border border-line bg-bg p-5"
                 >
-                  <h3 className="mb-3 font-display text-[17px] font-bold text-primary">
+                  <h3 className="mb-3 font-display text-[17px] font-semibold text-primary">
                     {sec.title}
                   </h3>
                   <BlockRenderer blocks={sec.blocks} />
@@ -195,7 +195,7 @@ export function TrainerLearnTab({
               open
               className="group sticky top-3 z-20 rounded-2xl border-2 border-urgent-ink bg-surface shadow-sm"
             >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-3 text-[14.5px] font-bold text-urgent-ink">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-3 text-[14.5px] font-semibold text-urgent-ink">
                 <span className="flex items-center gap-2">
                   <FileText className="h-4 w-4 shrink-0" aria-hidden="true" />
                   <span>
@@ -220,17 +220,17 @@ export function TrainerLearnTab({
             <div className="flex flex-wrap items-start justify-between gap-4 border-b border-line pb-5">
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-work-bg px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-[0.05em] text-work-ink">
+                  <span className="rounded-full bg-work-bg px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.05em] text-work-ink">
                     Stufe {activeMeta.tier ?? 1}
                   </span>
                   {typeof (activeMeta.expectedPoints ?? activeMeta.points) ===
                   "number" ? (
-                    <span className="rounded-full bg-urgent-bg px-2.5 py-0.5 text-[11px] font-bold tabular-nums text-urgent-ink">
+                    <span className="rounded-full bg-urgent-bg px-2.5 py-0.5 text-[11px] font-semibold tabular-nums text-urgent-ink">
                       {activeMeta.expectedPoints ?? activeMeta.points} Punkte
                     </span>
                   ) : null}
                 </div>
-                <h2 className="mt-2 font-display text-[24px] font-bold tracking-[-0.02em] text-text sm:text-[28px]">
+                <h2 className="mt-2 font-display text-[24px] font-semibold tracking-[-0.02em] text-text sm:text-[28px]">
                   {activeMeta.title}
                 </h2>
                 {activeMeta.why ? (
