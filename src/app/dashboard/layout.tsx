@@ -1,4 +1,8 @@
 import { redirect } from "next/navigation";
+import {
+  CLOSED_BETA_LOGIN_ERROR,
+  isAllowedAdminEmail,
+} from "@/lib/admin/auth";
 import { getUser } from "@/lib/dal";
 import { createClient } from "@/lib/supabase/server";
 import UserIdentifier from "@/components/UserIdentifier";
@@ -24,6 +28,9 @@ export default async function DashboardLayout({
   const user = await getUser();
   if (!user) {
     redirect("/login");
+  }
+  if (!isAllowedAdminEmail(user.email)) {
+    redirect(`/login?error=${encodeURIComponent(CLOSED_BETA_LOGIN_ERROR)}`);
   }
 
   const supabase = await createClient();

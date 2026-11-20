@@ -6,6 +6,7 @@ import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email/send";
 import { renderMagicLinkEmail, renderMagicLinkText } from "@/lib/email/magicLink";
 import { verifyTurnstile } from "@/lib/turnstile";
+import { CLOSED_BETA_LOGIN_ERROR, isAllowedAdminEmail } from "@/lib/admin/auth";
 
 export type MagicLinkState = { ok: boolean; error?: string; sentTo?: string };
 
@@ -98,6 +99,9 @@ export async function requestMagicLink(
   const email = formData.get("email");
   if (typeof email !== "string" || !email.includes("@")) {
     return { ok: false, error: "Bitte gib eine gültige E-Mail-Adresse ein." };
+  }
+  if (!isAllowedAdminEmail(email)) {
+    return { ok: false, error: CLOSED_BETA_LOGIN_ERROR };
   }
   const h = await headers();
   const ip = clientIpFrom(h);
@@ -236,6 +240,9 @@ export async function verifyMagicCode(
   // Normalize — Supabase stores emails lowercased, but this field can arrive
   // mixed-case (e.g. from the Stripe checkout session on /checkout/success).
   const email = rawEmail.trim().toLowerCase();
+  if (!isAllowedAdminEmail(email)) {
+    return { ok: false, error: CLOSED_BETA_LOGIN_ERROR };
+  }
   const codeRaw = formData.get("code");
   // OTP length follows the Supabase project setting (6 OR 8 digits) — never
   // hardcode 6. Strip non-digits and let verifyOtp be the source of truth.

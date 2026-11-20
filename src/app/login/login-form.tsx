@@ -331,27 +331,7 @@ export default function LoginForm({
         className="mt-6 text-center text-[13px]"
         style={{ color: "var(--color-text-faint)" }}
       >
-        {register ? (
-          <>
-            Schon ein Konto?{" "}
-            <a
-              href={`/login?next=${encodeURIComponent(next)}`}
-              className="underline underline-offset-2 hover:text-[color:var(--color-text)]"
-            >
-              Anmelden
-            </a>
-          </>
-        ) : (
-          <>
-            Neu hier?{" "}
-            <a
-              href={`/login?mode=register&next=${encodeURIComponent(next)}`}
-              className="underline underline-offset-2 hover:text-[color:var(--color-text)]"
-            >
-              Kostenlos registrieren
-            </a>
-          </>
-        )}
+        Geschlossene Beta · Zugang nur für freigeschaltete Accounts.
       </p>
     </>
   );

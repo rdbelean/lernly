@@ -102,10 +102,13 @@ export default function LernlyLanding() {
       <div className={s.nav}>
         <Link href="/" className={s.brand} aria-label="Lernly Startseite"><LernlyLogo size={29} alt="" /><span>Lernly</span></Link>
         <nav className={s.desktopNav} aria-label="Hauptnavigation">{navItems.map(([href, label]) => <a href={href} key={href}>{label}</a>)}</nav>
-        <button className={s.primaryButton} onClick={openDemo}>Gratis ausprobieren</button>
+        <div className={s.navActions}>
+          <Link href="/login" className={s.loginLink}>Anmelden</Link>
+          <button className={s.primaryButton} onClick={openDemo}>Gratis ausprobieren</button>
+        </div>
         <button className={s.menuButton} onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? "Menü schließen" : "Menü öffnen"} aria-expanded={menuOpen}>{menuOpen ? <X size={22} /> : <Menu size={22} />}</button>
       </div>
-      {menuOpen && <nav className={s.mobileMenu} aria-label="Mobile Navigation">{navItems.map(([href, label]) => <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}<ChevronRight size={15} /></a>)}<a href="/login">Anmelden<ArrowUpRight size={15} /></a></nav>}
+      {menuOpen && <nav className={s.mobileMenu} aria-label="Mobile Navigation">{navItems.map(([href, label]) => <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}<ChevronRight size={15} /></a>)}<Link href="/login" onClick={() => setMenuOpen(false)}>Anmelden<ArrowUpRight size={15} /></Link></nav>}
     </header>
     <main id="inhalt">
       <section className={s.hero}>

@@ -2,7 +2,7 @@
 
 > 📌 Tägliche Handgriffe (dev, Commit/Push, Pull, PR & Vercel, Notfall-Reset): **[WORKFLOW.md](WORKFLOW.md)**
 
-Stand: 2026-11-17 · Aktiver Branch: `feat/bwl-mcp-unification`
+Stand: 2026-11-20 · Aktiver Branch: `feat/bwl-mcp-unification`
 
 **Legende:** `[x]` Fertig · `[~]` In Arbeit · `[ ]` Offen  
 **Regel für alle Agenten:** Vor jedem Task `STATUS.md` und `ROADMAP.md` lesen (Ordnerübersicht in `ARCHITECTURE.md`) und nach jedem abgeschlossenen Meilenstein aktualisieren.
@@ -26,7 +26,8 @@ Stand: 2026-11-17 · Aktiver Branch: `feat/bwl-mcp-unification`
 - [ ] Reibungsloses Setup für Studierende ohne Technik-Hürden (und später Remote-MCP-Anbindung für Web/Mobile)
 
 ## 3) Bestehende Web-App & Landingpage (aktiv bis Umschaltung in Phase 6/7)
-- [x] Helles Design, 20-Sekunden-Hero-Szene & Browser-Demo in `src/components/landing/LernlyLanding.tsx`
+- [x] Helles Design, 20-Sekunden-Hero-Szene, Browser-Demo & direkter „Anmelden“-Link in `src/components/landing/LernlyLanding.tsx`
+- [x] Admin-Only-Login für geschlossene Beta (`ADMIN_EMAILS`/`ADMIN_EMAIL` Allowlist über Login-Actions, OAuth-Callback, Token-Confirm & `/dashboard`)
 - [x] Eingeloggtes Dashboard (`src/app/dashboard/`), Spaced Repetition (`/dashboard/review`), Auth & Stripe (mit Beta-Schutzschalter) sowie geschlossene Kosten-/Sicherheitslecks
 - [~] Übergang von Bestands-Dashboard (`/dashboard`) auf die neue reduzierte App (`/heute`, `/karten`, `/rechnen`, `/upload`) nach Abschluss von Phase 6
 

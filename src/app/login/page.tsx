@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { isAllowedAdminEmail } from "@/lib/admin/auth";
 import { getUser } from "@/lib/dal";
 import LoginForm from "./login-form";
 import LernlyLogo from "@/components/LernlyLogo";
@@ -28,7 +29,7 @@ export default async function LoginPage({
   const isRegister = params.mode === "register";
 
   const user = await getUser();
-  if (user) {
+  if (user && isAllowedAdminEmail(user.email)) {
     redirect(next);
   }
 

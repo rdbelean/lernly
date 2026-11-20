@@ -133,6 +133,25 @@
   color: var(--blue);
 }
 
+.navActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.loginLink {
+  color: var(--copy);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  transition: color 0.15s;
+  white-space: nowrap;
+}
+
+.loginLink:hover {
+  color: var(--ink);
+}
+
 .primaryButton,
 .outlineButton {
   display: inline-flex;
@@ -1515,8 +1534,11 @@
   .desktopNav {
     display: none;
   }
-  .nav > .primaryButton {
+  .nav > .navActions {
     margin-left: auto;
+  }
+  .loginLink {
+    display: none;
   }
   .menuButton {
     display: flex;

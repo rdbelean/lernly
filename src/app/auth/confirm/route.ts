@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 import type { EmailOtpType } from "@supabase/supabase-js";
+import {
+  CLOSED_BETA_LOGIN_ERROR,
+  isAllowedAdminEmail,
+} from "@/lib/admin/auth";
 import { createClient } from "@/lib/supabase/server";
 
 // Token-hash confirm route — the device-independent magic-link target.
@@ -33,7 +37,7 @@ export async function GET(request: Request) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.verifyOtp({
+  const { data, error } = await supabase.auth.verifyOtp({
     token_hash: tokenHash,
     type,
   });
@@ -41,6 +45,17 @@ export async function GET(request: Request) {
   if (error) {
     return NextResponse.redirect(
       new URL(`/login?error=${encodeURIComponent(expired)}`, url.origin),
+    );
+  }
+
+  const user = data?.user ?? (await supabase.auth.getUser()).data.user;
+  if (!user || !isAllowedAdminEmail(user.email)) {
+    await supabase.auth.signOut();
+    return NextResponse.redirect(
+      new URL(
+        `/login?error=${encodeURIComponent(CLOSED_BETA_LOGIN_ERROR)}`,
+        url.origin,
+      ),
     );
   }
 
