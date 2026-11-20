@@ -20,8 +20,8 @@ Kurzüberblick für Solo-Founder und Agenten.
 - `plugin/lernly/` — Skills, JSON-Format-Referenzen, Validator (`validate.py`) & HTML-Trainer-Vorlage.
 
 ## 4. Bestands-Dashboard, Trainer, Backend & Steuerung
-- `src/app/dashboard/trainer/`, `src/app/api/trainer/courses/`, `src/components/trainer/`, `src/lib/trainer/` — Interaktiver `lernly.kurs/1` Trainer, `_lernly/`- & HTML-Artifact-Importer sowie dauerhafte Supabase-Kursspeicherung.
-- `sample-data/` — Echte Referenz-Kursexporte (z. B. `corporate-finance-trainer.html`) für Importer-Tests.
+- `src/app/dashboard/trainer/`, `src/app/api/trainer/courses/`, `src/components/trainer/`, `src/lib/trainer/` — 5-Tab-Klausurtrainer (`Overview`, `Verstehen`, `Üben`, `Karteikarten`, `Probeklausur`), `_lernly/`- & `Tax Mock Trainer.html`-Importer sowie Supabase-Kursspeicherung.
+- `sample-data/` — Echte Referenz-Kursexporte (`corporate-finance-trainer.html`, `tax-mock-trainer.html`) für Importer-Tests.
 - `src/app/dashboard/` & `src/components/dashboard/` — Bestehende eingeloggte Web-App (aktiv bis Umschaltung in Phase 6).
 - `src/app/api/` & `src/lib/` — Auth, Stripe, Cronjobs, Quota-Schutz, Supabase-Clients.
 - `src/app/globals.css` — Zentrale Tailwind-v4-Design-Tokens (Farben, Radien `4px`/`12px`, Sora/Inter).

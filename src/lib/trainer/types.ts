@@ -67,8 +67,10 @@ export const McpBlockSchema = z.object({
     "figure",
     "model_answer",
     "more",
+    "html",
   ]),
   md: z.string().optional(),
+  html: z.string().optional(),
   text: z.string().optional(),
   title: z.string().optional(),
   items: z.array(z.string()).optional(),
@@ -102,6 +104,15 @@ export const McpDrillVariantSchema = z.object({
   solution: z.array(McpBlockSchema).optional(),
 });
 
+const TaskDidacticFields = {
+  caseTitle: z.string().optional(),
+  caseHtml: z.string().optional(),
+  whyHtml: z.string().optional(),
+  merke: z.string().optional(),
+  trap: z.string().optional(),
+  fullAnswerHtml: z.string().optional(),
+};
+
 export const McpDrillTaskSchema = z.object({
   kind: z.literal("drill"),
   id: z.string().min(1),
@@ -110,6 +121,7 @@ export const McpDrillTaskSchema = z.object({
   originLabel: z.string().optional(),
   hint: z.string().optional(),
   variants: z.array(McpDrillVariantSchema).min(1),
+  ...TaskDidacticFields,
 });
 
 export const McpEssayChecklistItemSchema = z.object({
@@ -128,6 +140,7 @@ export const McpEssayTaskSchema = z.object({
   question: z.string().min(1),
   checklist: z.array(McpEssayChecklistItemSchema).min(1),
   modelAnswer: z.array(McpBlockSchema).optional(),
+  ...TaskDidacticFields,
 });
 
 export const McpMcQuestionSchema = z.object({
@@ -145,6 +158,7 @@ export const McpMcTaskSchema = z.object({
   originLabel: z.string().optional(),
   hint: z.string().optional(),
   questions: z.array(McpMcQuestionSchema).min(1),
+  ...TaskDidacticFields,
 });
 
 export const McpTaskSchema = z.discriminatedUnion("kind", [
@@ -157,11 +171,18 @@ export const McpCardSchema = z.object({
   id: z.string().min(1),
   front: z.string().min(1),
   back: z.string().min(1),
+  topicId: z.string().optional(),
+  hint: z.string().optional(),
+  merke: z.string().optional(),
+  isHtml: z.boolean().optional(),
 });
 
 export const McpTopicContentSchema = z.object({
   schema: z.literal("lernly.thema/1"),
   id: z.string().min(1),
+  caseTitle: z.string().optional(),
+  caseHtml: z.string().optional(),
+  appendixHtml: z.string().optional(),
   theory: z.array(McpBlockSchema).default([]),
   standardAnswer: z.array(McpBlockSchema).optional(),
   tasks: z.array(McpTaskSchema).default([]),
@@ -169,6 +190,52 @@ export const McpTopicContentSchema = z.object({
   mistakes: z.array(z.string()).optional(),
   hook: z.string().optional(),
   source: z.string().optional(),
+});
+
+export const McpMockExamItemSchema = z.object({
+  id: z.string().min(1),
+  no: z.string().optional(),
+  partId: z.string().optional(),
+  topicId: z.string().optional(),
+  taskId: z.string().optional(),
+  points: z.number().nonnegative(),
+  type: z.enum(["open", "mc"]).default("open"),
+  question: z.string().min(1),
+  checklist: z.array(McpEssayChecklistItemSchema).optional(),
+  solution: z.array(McpBlockSchema).optional(),
+  questions: z.array(McpMcQuestionSchema).optional(),
+  whyHtml: z.string().optional(),
+});
+
+export const McpMockExamPartSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  topicId: z.string().optional(),
+  caseHtml: z.string().optional(),
+  items: z.array(McpMockExamItemSchema).min(1),
+});
+
+export const McpMockExamSchema = z.object({
+  schema: z.string().optional(),
+  id: z.string().min(1),
+  name: z.string().min(1),
+  subtitle: z.string().optional(),
+  durationMin: z.number().positive().default(90),
+  totalPoints: z.number().nonnegative(),
+  items: z.array(McpMockExamItemSchema).default([]),
+  parts: z.array(McpMockExamPartSchema).optional(),
+});
+
+export const McpCheatsheetSectionSchema = z.object({
+  title: z.string().min(1),
+  blocks: z.array(McpBlockSchema).default([]),
+});
+
+export const McpCheatsheetSchema = z.object({
+  schema: z.string().optional(),
+  title: z.string().optional(),
+  html: z.string().optional(),
+  sections: z.array(McpCheatsheetSectionSchema).optional(),
 });
 
 export type McpCourseTopic = z.infer<typeof McpCourseTopicSchema>;
@@ -181,16 +248,35 @@ export type McpMcTask = z.infer<typeof McpMcTaskSchema>;
 export type McpTask = z.infer<typeof McpTaskSchema>;
 export type McpCard = z.infer<typeof McpCardSchema>;
 export type McpTopicContent = z.infer<typeof McpTopicContentSchema>;
+export type McpMockExamItem = z.infer<typeof McpMockExamItemSchema>;
+export type McpMockExamPart = z.infer<typeof McpMockExamPartSchema>;
+export type McpMockExam = z.infer<typeof McpMockExamSchema>;
+export type McpCheatsheet = z.infer<typeof McpCheatsheetSchema>;
+
+export type TrainerRating = 0 | 1 | 2 | 3;
+
+export type TrainerMockHistoryEntry = {
+  id: string;
+  mockId: string;
+  mockName: string;
+  score: number;
+  total: number;
+  dateIso: string;
+};
 
 export type TrainerBundle = {
   course: McpCourseProfile;
   topics: Record<string, McpTopicContent>;
+  mocks?: McpMockExam[];
+  cheatsheet?: McpCheatsheet;
   artifactHtml?: string;
 };
 
 export const TrainerBundleSchema = z.object({
   course: McpCourseProfileSchema,
   topics: z.record(z.string(), McpTopicContentSchema),
+  mocks: z.array(McpMockExamSchema).optional(),
+  cheatsheet: McpCheatsheetSchema.optional(),
   artifactHtml: z.string().optional(),
 });
 
@@ -204,4 +290,8 @@ export type TrainerProgressState = {
   solvedDrills: Record<string, boolean>;
   checkedChecklist: Record<string, number[]>;
   knownCards: Record<string, boolean>;
+  taskRatings: Record<string, TrainerRating>;
+  cardRatings: Record<string, TrainerRating>;
+  readTopics: Record<string, boolean>;
+  mockHistory: TrainerMockHistoryEntry[];
 };

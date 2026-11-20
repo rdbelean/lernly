@@ -1,5 +1,10 @@
 import { DEMO_TRAINER_BUNDLE } from "./demoCourse";
-import type { TrainerBundle, TrainerProgressState } from "./types";
+import type {
+  TrainerBundle,
+  TrainerMockHistoryEntry,
+  TrainerProgressState,
+  TrainerRating,
+} from "./types";
 
 const BUNDLE_KEY = "lernly.trainer.bundle.v1";
 const PROGRESS_KEY = "lernly.trainer.progress.v1";
@@ -19,6 +24,10 @@ const DEFAULT_PROGRESS: TrainerProgressState = {
   solvedDrills: {},
   checkedChecklist: {},
   knownCards: {},
+  taskRatings: {},
+  cardRatings: {},
+  readTopics: {},
+  mockHistory: [],
 };
 
 let cachedBundleRaw: string | null = null;
@@ -133,6 +142,10 @@ export function readTrainerProgress(): TrainerProgressState {
       solvedDrills: parsed.solvedDrills ?? {},
       checkedChecklist: parsed.checkedChecklist ?? {},
       knownCards: parsed.knownCards ?? {},
+      taskRatings: parsed.taskRatings ?? {},
+      cardRatings: parsed.cardRatings ?? {},
+      readTopics: parsed.readTopics ?? {},
+      mockHistory: Array.isArray(parsed.mockHistory) ? parsed.mockHistory : [],
     };
     return cachedProgressSnapshot;
   } catch {
@@ -155,10 +168,11 @@ function writeTrainerProgress(next: TrainerProgressState): void {
 
 export function markTrainerDrillSolved(taskId: string): void {
   const cur = readTrainerProgress();
-  if (cur.solvedDrills[taskId]) return;
+  if (cur.solvedDrills[taskId] && (cur.taskRatings[taskId] ?? 0) >= 2) return;
   writeTrainerProgress({
     ...cur,
     solvedDrills: { ...cur.solvedDrills, [taskId]: true },
+    taskRatings: { ...cur.taskRatings, [taskId]: 2 },
   });
 }
 
@@ -180,9 +194,73 @@ export function toggleTrainerChecklistItem(
 
 export function toggleTrainerCardKnown(cardId: string): void {
   const cur = readTrainerProgress();
+  const nextKnown = !cur.knownCards[cardId];
   writeTrainerProgress({
     ...cur,
-    knownCards: { ...cur.knownCards, [cardId]: !cur.knownCards[cardId] },
+    knownCards: { ...cur.knownCards, [cardId]: nextKnown },
+    cardRatings: { ...cur.cardRatings, [cardId]: nextKnown ? 2 : 0 },
+  });
+}
+
+export function rateTrainerTask(taskId: string, rating: TrainerRating): void {
+  const cur = readTrainerProgress();
+  writeTrainerProgress({
+    ...cur,
+    solvedDrills: {
+      ...cur.solvedDrills,
+      [taskId]: rating >= 2,
+    },
+    taskRatings: {
+      ...cur.taskRatings,
+      [taskId]: rating,
+    },
+  });
+}
+
+export function rateTrainerCard(cardId: string, rating: TrainerRating): void {
+  const cur = readTrainerProgress();
+  writeTrainerProgress({
+    ...cur,
+    knownCards: {
+      ...cur.knownCards,
+      [cardId]: rating >= 2,
+    },
+    cardRatings: {
+      ...cur.cardRatings,
+      [cardId]: rating,
+    },
+  });
+}
+
+export function toggleTrainerTopicRead(topicId: string): void {
+  const cur = readTrainerProgress();
+  writeTrainerProgress({
+    ...cur,
+    readTopics: {
+      ...cur.readTopics,
+      [topicId]: !cur.readTopics[topicId],
+    },
+  });
+}
+
+export function recordTrainerMockResult(
+  entry: Omit<TrainerMockHistoryEntry, "id" | "dateIso"> & {
+    id?: string;
+    dateIso?: string;
+  },
+): void {
+  const cur = readTrainerProgress();
+  const fullEntry: TrainerMockHistoryEntry = {
+    id: entry.id ?? `${entry.mockId}-${Date.now()}`,
+    dateIso: entry.dateIso ?? new Date().toISOString(),
+    mockId: entry.mockId,
+    mockName: entry.mockName,
+    score: entry.score,
+    total: entry.total,
+  };
+  writeTrainerProgress({
+    ...cur,
+    mockHistory: [...cur.mockHistory, fullEntry].slice(-30),
   });
 }
 

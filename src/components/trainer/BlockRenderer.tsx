@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import {
   formatTrainerInlineHtml,
+  formatTrainerRichHtml,
   renderTexFormulaHtml,
   sanitizeTrainerSvg,
 } from "@/lib/trainer/importer";
@@ -238,10 +239,21 @@ export function BlockRenderer({ blocks }: { blocks: readonly McpBlock[] }) {
               </details>
             );
 
+          case "html":
+            return (
+              <div
+                key={index}
+                className="trainer-rich-html"
+                dangerouslySetInnerHTML={{
+                  __html: formatTrainerRichHtml(block.html ?? block.md ?? ""),
+                }}
+              />
+            );
+
           case "text":
           default:
             return block.md ? (
-              <p key={index} className="text-[15px] text-text">
+              <p key={index} className="text-[16px] leading-relaxed text-text">
                 <InlineRichText md={block.md} />
               </p>
             ) : null;

@@ -310,3 +310,412 @@
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
+
+/* Rich HTML content imported from Tax Mock Trainer & Claude trainers */
+.trainer-rich-html {
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+.trainer-rich-html p {
+  margin: 0.65rem 0;
+}
+.trainer-rich-html ul,
+.trainer-rich-html ol {
+  margin: 0.65rem 0;
+  padding-left: 1.4rem;
+}
+.trainer-rich-html li {
+  margin: 0.35rem 0;
+}
+.trainer-rich-html .h3,
+.trainer-rich-html h3 {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 1.15rem 0 0.45rem;
+}
+.trainer-rich-html .card {
+  border: 1px solid var(--color-line);
+  border-radius: 14px;
+  background: var(--color-surface);
+  padding: 1.1rem 1.25rem;
+  margin-top: 1rem;
+}
+.trainer-rich-html .tw {
+  overflow-x: auto;
+  margin: 0.75rem 0;
+}
+.trainer-rich-html table.t,
+.trainer-rich-html table.map {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14.5px;
+  font-variant-numeric: tabular-nums;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.trainer-rich-html table.t th,
+.trainer-rich-html table.t td,
+.trainer-rich-html table.map th,
+.trainer-rich-html table.map td {
+  border: 1px solid var(--color-line);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+.trainer-rich-html table.t th,
+.trainer-rich-html table.map th {
+  background: var(--color-surface-2);
+  font-weight: 700;
+  color: var(--color-text-dim);
+  font-size: 12.5px;
+}
+.trainer-rich-html table.t td.n {
+  text-align: right;
+  white-space: nowrap;
+}
+.trainer-rich-html table.t tr.sum td {
+  font-weight: 700;
+  border-top: 2px solid var(--color-text-dim);
+  background: var(--color-surface-2);
+}
+.trainer-rich-html .ta {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.trainer-rich-html ol.steps {
+  list-style: none;
+  padding-left: 0;
+  counter-reset: tr-step;
+  margin: 0.75rem 0;
+}
+.trainer-rich-html ol.steps li {
+  counter-increment: tr-step;
+  position: relative;
+  padding-left: 2.25rem;
+  margin: 0.55rem 0;
+}
+.trainer-rich-html ol.steps li::before {
+  content: counter(tr-step);
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+  width: 1.55rem;
+  height: 1.55rem;
+  border-radius: 9999px;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: 12px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+.trainer-rich-html .res {
+  display: inline-block;
+  border: 2px solid var(--color-ok-ink);
+  background: var(--color-ok-bg);
+  color: var(--color-ok-ink);
+  border-radius: 10px;
+  padding: 0.35rem 0.85rem;
+  font-weight: 700;
+  margin: 0.4rem 0;
+}
+.trainer-rich-html .wo {
+  display: block;
+  background: var(--color-surface-2);
+  color: var(--color-text-dim);
+  border-radius: 8px;
+  padding: 0.35rem 0.75rem;
+  font-size: 14px;
+  margin: 0.35rem 0;
+}
+.trainer-rich-html .wo::before {
+  content: "Woher? ";
+  font-weight: 700;
+  color: var(--color-text);
+}
+.trainer-rich-html .ms {
+  background: var(--color-bg);
+  border: 1px dashed var(--color-primary);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  margin: 0.75rem 0;
+}
+.trainer-rich-html .ms::before {
+  content: "Mustersatz";
+  display: block;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 0.25rem;
+}
+.trainer-rich-html .ms .v {
+  background: var(--color-urgent-bg);
+  color: var(--color-urgent-ink);
+  border-radius: 4px;
+  padding: 0 4px;
+  font-weight: 600;
+}
+.trainer-rich-html .ms .k {
+  background: var(--color-ok-bg);
+  color: var(--color-ok-ink);
+  border-radius: 4px;
+  padding: 0 4px;
+  font-weight: 700;
+}
+.trainer-rich-html .ex {
+  border: 1px solid var(--color-ok-ink);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--color-surface);
+  margin: 0.75rem 0;
+}
+.trainer-rich-html .ex .exh {
+  background: var(--color-ok-bg);
+  color: var(--color-ok-ink);
+  font-weight: 700;
+  font-size: 13px;
+  padding: 0.5rem 0.9rem;
+}
+.trainer-rich-html .ex ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: tr-ex;
+}
+.trainer-rich-html .ex li {
+  counter-increment: tr-ex;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  gap: 0.65rem;
+  align-items: start;
+  padding: 0.6rem 0.9rem;
+  border-top: 1px solid var(--color-line);
+  margin: 0;
+  font-size: 15px;
+}
+.trainer-rich-html .ex li::before {
+  content: counter(tr-ex);
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: var(--color-ok-bg);
+  color: var(--color-ok-ink);
+  font-weight: 700;
+  font-size: 12px;
+  display: grid;
+  place-items: center;
+  margin-top: 2px;
+}
+.trainer-rich-html .ex .ep {
+  color: var(--color-urgent-ink);
+  font-weight: 700;
+  white-space: nowrap;
+  font-size: 13px;
+}
+.trainer-rich-html .ex .exf {
+  font-size: 12.5px;
+  color: var(--color-text-dim);
+  padding: 0.45rem 0.9rem;
+  background: var(--color-surface-2);
+}
+.trainer-rich-html .why {
+  margin: 0.85rem 0;
+  border: 1px solid var(--color-line);
+  border-left: 4px solid var(--color-primary);
+  border-radius: 0 12px 12px 0;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+.trainer-rich-html .why .wh {
+  background: var(--color-work-bg);
+  color: var(--color-work-ink);
+  font-weight: 700;
+  padding: 0.5rem 0.9rem;
+  font-size: 13px;
+}
+.trainer-rich-html .why .wi {
+  padding: 0.7rem 0.9rem;
+  border-top: 1px solid var(--color-line);
+  display: grid;
+  gap: 0.45rem;
+  font-size: 14.5px;
+}
+.trainer-rich-html .why .wi > div > span {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+.trainer-rich-html .why .ws {
+  background: var(--color-urgent-bg);
+  color: var(--color-text);
+  border-radius: 6px;
+  padding: 0.35rem 0.6rem;
+}
+.trainer-rich-html .why .wl i {
+  display: block;
+  color: var(--color-text-dim);
+  border-left: 3px solid var(--color-line);
+  padding-left: 0.6rem;
+  margin-top: 0.2rem;
+}
+.trainer-rich-html .info {
+  background: var(--color-work-bg);
+  border-left: 4px solid var(--color-primary);
+  border-radius: 0 10px 10px 0;
+  padding: 0.75rem 1rem;
+  margin: 0.75rem 0;
+  font-size: 14.5px;
+}
+.trainer-rich-html .trap {
+  background: var(--color-err-bg);
+  border-left: 4px solid var(--color-err-ink);
+  border-radius: 0 10px 10px 0;
+  padding: 0.75rem 1rem;
+  margin: 0.75rem 0;
+  font-size: 14.5px;
+}
+.trainer-rich-html .trap b {
+  color: var(--color-err-ink);
+}
+.trainer-rich-html .pp {
+  margin-top: 0.75rem;
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 14px;
+}
+.trainer-rich-html .pph {
+  background: var(--color-surface-2);
+  font-weight: 700;
+  padding: 0.45rem 0.85rem;
+  font-size: 12.5px;
+  color: var(--color-text-dim);
+}
+.trainer-rich-html .ppr {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.4rem 0.85rem;
+  border-top: 1px solid var(--color-line);
+}
+.trainer-rich-html .ppr b {
+  color: var(--color-urgent-ink);
+  white-space: nowrap;
+}
+.trainer-rich-html .fig {
+  margin: 0.85rem 0;
+  overflow-x: auto;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background: var(--color-surface);
+  padding: 0.75rem;
+}
+.trainer-rich-html .fig svg {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
+.trainer-rich-html .lc {
+  display: inline-block;
+  background: var(--b, var(--color-work-bg));
+  color: var(--c, var(--color-work-ink));
+  border: 1px solid var(--c, var(--color-line));
+  border-radius: 7px;
+  padding: 1px 8px;
+  font-weight: 700;
+  font-size: 13px;
+  margin: 2px;
+}
+.trainer-rich-html .legend2 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.6rem 0;
+}
+.trainer-rich-html table.map td.dot {
+  text-align: center;
+  width: 30px;
+}
+.trainer-rich-html table.map td.dot i {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+}
+.trainer-rich-html .tchips {
+  display: grid;
+  gap: 0.5rem;
+}
+.trainer-rich-html .tch {
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  padding: 0.6rem 0.85rem;
+}
+.trainer-rich-html .tch > div {
+  margin-top: 0.35rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+.trainer-rich-html details.sig {
+  border-top: 1px solid var(--color-line);
+  padding: 0.5rem 0;
+}
+.trainer-rich-html details.sig summary {
+  cursor: pointer;
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+  list-style: none;
+}
+.trainer-rich-html details.sig > div {
+  margin-top: 0.35rem;
+  padding-left: 2.2rem;
+}
+.trainer-rich-html .tn2 {
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--color-urgent-bg);
+  color: var(--color-urgent-ink);
+  border-radius: 6px;
+  padding: 1px 7px;
+  white-space: nowrap;
+}
+.trainer-rich-html .tpl {
+  background: var(--color-urgent-bg);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  margin-top: 0.4rem;
+  font-style: italic;
+}
+.trainer-rich-html .fbx {
+  border-top: 1px solid var(--color-line);
+  padding: 0.65rem 0;
+}
+.trainer-rich-html .fbh {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+.trainer-rich-html .fbq {
+  font-size: 14.5px;
+  color: var(--color-text-dim);
+  border-left: 3px solid var(--color-line);
+  padding-left: 0.6rem;
+  margin-top: 0.3rem;
+}
+.trainer-rich-html .fba {
+  margin-top: 0.3rem;
+  font-size: 15px;
+}

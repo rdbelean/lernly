@@ -246,3 +246,26 @@ test("importTrainerBundle guards against lernly-0.1.0 plugin folder and empty as
     assert.equal(skippedAlongsideCourse.summary.hydratedTopics, 1);
   }
 });
+
+test("importTrainerBundle imports Tax Mock Trainer.html losslessly (15 topics, 152 tasks, 3 mocks, appendix)", () => {
+  const html = readFileSync(
+    join(process.cwd(), "sample-data/tax-mock-trainer.html"),
+    "utf-8",
+  );
+  const res = importTrainerBundle([
+    { name: "tax-mock-trainer.html", content: html },
+  ]);
+
+  assert.equal(res.ok, true);
+  if (!res.ok) return;
+  assert.equal(res.sourceKind, "trainer-html");
+  assert.match(res.bundle.course.title, /Tax/i);
+  assert.equal(res.summary.topics, 15);
+  assert.equal(res.summary.hydratedTopics, 15);
+  assert.equal(res.summary.tasks, 152);
+  assert.equal(res.summary.cards, 152);
+  assert.equal(res.bundle.mocks?.length, 3);
+  assert.ok(Boolean(res.bundle.cheatsheet?.html));
+  assert.ok(res.bundle.topics["task-1"]?.caseHtml);
+  assert.ok(res.bundle.topics["task-6"]?.tasks[0]?.kind === "essay");
+});

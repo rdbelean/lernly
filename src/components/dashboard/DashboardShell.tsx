@@ -294,15 +294,18 @@ function SidebarContent({
           <button
             type="button"
             onClick={onToggleCollapse}
-            aria-label={collapsed ? "Sidebar ausklappen" : "Sidebar einklappen"}
-            title={collapsed ? "Ausklappen" : "Einklappen"}
-            className={`flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-[color:var(--color-ink-a06)] ${collapsed ? "" : "ml-auto"}`}
+            aria-label={collapsed ? "Sidebar einblenden" : "Fokus-Modus aktivieren (Sidebar einklappen)"}
+            title={collapsed ? "Sidebar einblenden" : "Fokus-Modus (Sidebar einklappen)"}
+            className={`inline-flex h-8 items-center justify-center gap-1 rounded-lg px-2 text-[12px] font-medium transition hover:bg-[color:var(--color-ink-a06)] hover:text-[color:var(--color-text)] ${collapsed ? "w-8 px-0" : "ml-auto"}`}
             style={{ color: "var(--color-text-faint)" }}
           >
             {collapsed ? (
               <ChevronsRight size={16} strokeWidth={2} aria-hidden />
             ) : (
-              <ChevronsLeft size={16} strokeWidth={2} aria-hidden />
+              <>
+                <ChevronsLeft size={15} strokeWidth={2} aria-hidden />
+                <span>Fokus</span>
+              </>
             )}
           </button>
         )}
