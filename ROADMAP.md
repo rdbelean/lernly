@@ -28,9 +28,9 @@ Stand: 2026-11-20 · Aktiver Branch: `feat/bwl-mcp-unification`
 ## 3) Bestehende Web-App & Landingpage (aktiv bis Umschaltung in Phase 6/7)
 - [x] Helles Design, 20-Sekunden-Hero-Szene, Browser-Demo & direkter „Anmelden“-Link in `src/components/landing/LernlyLanding.tsx`
 - [x] Admin-Only-Login für geschlossene Beta (`ADMIN_EMAILS`/`ADMIN_PASSWORD`, `signInWithPassword`, lokaler `Schnell-Login (Dev)` auf `localhost` & Allowlist über OAuth/Confirm/Dashboard)
-- [x] Erster `lernly.kurs/1` Klausur-Trainer (`/dashboard/trainer`) mit `_lernly/`-Ordner-Import, Verstehen-Blöcken, Rechen-Drills (Zahlenvarianten + Toleranzprüfung), Punkte-Checklisten & Demo-Kurs
+- [x] Erster `lernly.kurs/1` Klausur-Trainer direkt als Hauptansicht auf `/dashboard` (und `/dashboard/trainer`) mit `_lernly/`-Ordner-Import, Verstehen-Blöcken, Rechen-Drills (Zahlenvarianten + Toleranzprüfung), Punkte-Checklisten & Corporate-Finance-Demo-Kurs
 - [x] Eingeloggtes Dashboard (`src/app/dashboard/`), Spaced Repetition (`/dashboard/review`), Auth & Stripe (mit Beta-Schutzschalter) sowie geschlossene Kosten-/Sicherheitslecks
-- [~] Übergang von Bestands-Dashboard (`/dashboard`) auf die neue reduzierte App (`/dashboard/trainer` bzw. `/heute`, `/karten`, `/rechnen`, `/upload`) nach Abschluss von Phase 6
+- [~] Auto-Live-Workflow auf `main` aktiv (`CLAUDE.md`, `AGENTS.md`, `WORKFLOW.md`) — Übergang auf Supabase-Speicherung (Phase 6) & neue Landingpage (Phase 7) als Nächstes
 
 ## 4) Geparkte Themen (bewusst eingefroren, kein aktueller Fokus)
 - [x] **Alte SaaS-Vollgenerierung auf eigene KI-Kosten (`/api/generate`, Cram-Modus, BYOK):** Bestehender Code bleibt für Bestandsdaten stabil und abgesichert, wird aber nicht weiter ausgebaut (Cram deaktiviert, minütlicher Cron gestoppt)

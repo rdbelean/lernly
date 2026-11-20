@@ -5,16 +5,14 @@ import NewExamForm from "@/components/dashboard/NewExamForm";
 import ExamCard from "@/components/dashboard/ExamCard";
 import LoosePacksSection from "@/components/dashboard/LoosePacksSection";
 import StudentDashboard from "@/components/dashboard/studentProgress/StudentDashboard";
-import ProgressEmptyState from "@/components/dashboard/studentProgress/ProgressEmptyState";
+import { TrainerView } from "@/components/trainer/TrainerView";
 import { getStudentProgress } from "@/lib/dashboard/studentProgress";
 import { LAYOUT } from "@/lib/layout";
 import { CRAM_ENABLED } from "@/lib/features";
 import { PLAN_LABEL, PLAN_LIMITS, effectivePlan } from "@/lib/quota";
-import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
-import { dashboardGreeting } from "@/lib/greeting";
 import { getExamMap } from "@/lib/dashboard/examMap.server";
 import { berlinDay } from "@/lib/studyDay";
-import { ArrowRight, Check, GraduationCap } from "lucide-react";
+import { Check } from "lucide-react";
 
 type PackSummary = {
   id: string;
@@ -74,7 +72,6 @@ export default async function DashboardPage({
   const used = profile?.packs_used_this_month ?? 0;
   const planLimit = PLAN_LIMITS[plan] ?? 0;
   const planLabel = PLAN_LABEL[plan] ?? plan;
-  const greeting = dashboardGreeting(profile?.name as string | null | undefined);
   const quotaReached = used >= planLimit;
 
   const dueCount = dueRes.count ?? 0;
@@ -130,113 +127,68 @@ export default async function DashboardPage({
 
   return (
     <main>
-      <div className={LAYOUT.pageContainerClass}>
-        {params.upgraded === "1" && (
+      {params.upgraded === "1" && (
+        <div className={LAYOUT.pageContainerClass}>
           <div
-            className="mb-6 flex items-center gap-2 rounded-[14px] p-4 text-[14px]"
+            className="mb-4 flex items-center gap-2 rounded-[14px] p-4 text-[14px]"
             style={{ background: "var(--color-ok-bg)", color: "var(--color-ok-ink)" }}
           >
             <Check size={16} strokeWidth={2.2} aria-hidden />
-            <span>Zugang freigeschaltet. Du kannst wieder Lernpakete erstellen.</span>
+            <span>Zugang freigeschaltet.</span>
           </div>
-        )}
-
-        <section
-          aria-label="Neuer Klausur-Trainer"
-          className="mb-8 flex flex-col items-start justify-between gap-4 rounded-2xl border border-line bg-surface p-6 sm:flex-row sm:items-center"
-        >
-          <div className="space-y-1">
-            <p className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-primary">
-              <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Neu · lernly.kurs/1 &amp; MCP-Connector</span>
-            </p>
-            <h2
-              className="m-0 text-[20px] font-bold tracking-[-0.02em] text-text"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              Interaktiver Klausur-Trainer
-            </h2>
-            <p className="text-[14px] text-text-dim">
-              Lade deinen <code>_lernly/</code>-Ordner aus Claude Desktop (
-              <code>kurs.json</code> + <code>themen/*.json</code>) direkt rein
-              — inklusive Rechen-Drills, Zahlenvarianten und Punkte-Checklisten.
-            </p>
-          </div>
-          <Link
-            href="/dashboard/trainer"
-            className="inline-flex h-11 shrink-0 items-center gap-2 rounded-xl bg-primary px-5 text-[14px] font-semibold text-on-primary transition hover:bg-primary-press"
-          >
-            <span>Trainer öffnen</span>
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
-        </section>
-
-        <div className="mb-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
-          <div
-            className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px]"
-            style={{ color: "var(--color-text-dim)" }}
-          >
-            <span>{greeting}</span>
-            <span aria-hidden>·</span>
-            <span>
-              {planLabel}, <span className="tabular-nums">{used}/{planLimit}</span> Pakete
-              {credits > 0 && ` + ${credits} Extra`}
-              {quotaReached && credits === 0 && (
-                <span style={{ color: "var(--color-err-ink)" }}> (Limit erreicht)</span>
-              )}
-            </span>
-            {plan === "free" && (
-              <Link
-                href="/dashboard/settings"
-                className="font-medium underline underline-offset-2"
-                style={{ color: "var(--color-primary)" }}
-              >
-                Upgrade
-              </Link>
-            )}
-          </div>
-          <PrimaryCTALink
-            size="sm"
-            href="/dashboard/new"
-            leadingIconName="plus"
-            className="hidden sm:inline-flex"
-          >
-            Neues Paket
-          </PrimaryCTALink>
         </div>
+      )}
 
-        {progress && <StudentDashboard progress={progress} focus={focus} today={today} />}
+      {/* Primary view: interactive lernly.kurs/1 trainer + _lernly/ importer */}
+      <TrainerView />
 
-        {CRAM_ENABLED && <CramJobsPanel />}
+      {/* Legacy packs & exams (shown collapsed below only when existing data is present) */}
+      {!isEmpty ? (
+        <div className={LAYOUT.pageContainerClass}>
+          <details className="rounded-2xl border border-line bg-surface p-5">
+            <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-2 text-[14px] font-semibold text-text-dim hover:text-text">
+              <span>Bisherige KI-Pakete &amp; Bibliothek ({allPacks.length})</span>
+              <span className="text-[12px] font-normal">
+                {planLabel} · {used}/{planLimit}
+                {credits > 0 ? ` + ${credits} Extra` : ""}
+                {quotaReached && credits === 0 ? " (Limit erreicht)" : ""}
+                {plan === "free" ? (
+                  <>
+                    {" · "}
+                    <Link
+                      href="/dashboard/settings"
+                      className="font-medium underline"
+                      style={{ color: "var(--color-primary)" }}
+                    >
+                      Einstellungen
+                    </Link>
+                  </>
+                ) : null}
+              </span>
+            </summary>
 
-        {isEmpty ? (
-          <ProgressEmptyState />
-        ) : (
-          <div className="space-y-10">
-            <h2
-              className="m-0 text-[22px] font-medium"
-              style={{ fontFamily: "var(--font-display)", color: "var(--color-text)" }}
-            >
-              Bibliothek
-            </h2>
-            <NewExamForm />
-            {exams.length > 0 && (
-              <div className="grid grid-cols-1 gap-5">
-                {exams.map((e) => (
-                  <ExamCard
-                    key={e.id}
-                    exam={e}
-                    packs={packsByExam.get(e.id) ?? []}
-                  />
-                ))}
-              </div>
-            )}
-            {loosePacks.length > 0 && (
-              <LoosePacksSection packs={loosePacks} exams={examMenuOptions} />
-            )}
-          </div>
-        )}
-      </div>
+            <div className="mt-6 space-y-10 border-t border-line pt-6">
+              {progress && <StudentDashboard progress={progress} focus={focus} today={today} />}
+              {CRAM_ENABLED && <CramJobsPanel />}
+              <NewExamForm />
+              {exams.length > 0 && (
+                <div className="grid grid-cols-1 gap-5">
+                  {exams.map((e) => (
+                    <ExamCard
+                      key={e.id}
+                      exam={e}
+                      packs={packsByExam.get(e.id) ?? []}
+                    />
+                  ))}
+                </div>
+              )}
+              {loosePacks.length > 0 && (
+                <LoosePacksSection packs={loosePacks} exams={examMenuOptions} />
+              )}
+            </div>
+          </details>
+        </div>
+      ) : null}
     </main>
   );
 }

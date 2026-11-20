@@ -7,7 +7,7 @@ Pre-revenue MVP **with live users**. Read this every session and follow the Work
 
 - **Session-Start (Pflicht):** Lies bei JEDEM neuen Chat oder Task als allerersten Schritt `STATUS.md` und `ROADMAP.md` im Root-Verzeichnis (sowie bei Bedarf `ARCHITECTURE.md`), um Stand und nächsten Schritt zu kennen, bevor du Fragen stellst oder Code änderst.
 - **Session-Ende (Pflicht):** Aktualisiere nach JEDER abgeschlossenen Aufgabe oder größeren Code-Änderung automatisch `STATUS.md` (was erledigt wurde, welche Dateien geändert wurden, nächster Schritt) sowie `ROADMAP.md` (abgeschlossene oder neue Meilensteine), ohne dass der Nutzer dich extra auffordern muss.
-- **Ein aktiver Branch (Pflicht):** Antigravity, Claude Code und Codex arbeiten IMMER gemeinsam auf EINEM aktiven Feature-Branch. Welcher das ist, steht oben in `STATUS.md` unter „Aktiver Branch“. Kein Agent wechselt eigenmächtig den Git-Branch: Wechsel nur nach ausdrücklicher Absprache mit dem Nutzer und mit Eintrag in `STATUS.md`. Nie direkt auf `main` committen oder pushen.
+- **Ein aktiver Branch + Auto-Live auf `main` (Pflicht):** Antigravity, Claude Code und Codex arbeiten gemeinsam auf dem aktiven Feature-Branch (`feat/bwl-mcp-unification`, siehe `STATUS.md`) und wechseln ihn nicht eigenmächtig. Daniel testet alles direkt live auf `lernly-app.de` über Vercel: Sobald eine Änderung abgeschlossen und lokal mit `npx tsc --noEmit`, `npm run lint` und `npm test` (alle grün) verifiziert ist, merged der Agent sauber in `main` und pusht sowohl `origin/main` als auch den aktiven Feature-Branch, damit Vercel sofort live stellt.
 - **Arbeitsweise:** `STATUS.md` bleibt extrem präzise, aktuell und kompakt: keine langen Romane, nur harte Fakten für die schnelle Übergabe zwischen den Agenten.
 <!-- END:handoff-rules -->
 
@@ -15,11 +15,10 @@ Pre-revenue MVP **with live users**. Read this every session and follow the Work
 
 ## ⚙️ WORKING RULES — obey every session
 
-### Release workflow
-- **NEVER commit or push directly to `main`.** `main` = production (lernly-app.de), real users see it instantly.
-- Always: branch → commit → push → I test the Vercel **preview URL** before it goes live.
-- **ASK me before merging to `main` / promoting to production.**
-- Keep commits small (easy rollback).
+### Release workflow (Auto-Live auf `main`)
+- **Test-Umgebung = `lernly-app.de` (Production über Vercel):** Nach Abschluss einer Aufgabe auf dem Feature-Branch (`feat/bwl-mcp-unification`) zuerst `npx tsc --noEmit`, `npm run lint` und `npm test` ausführen.
+- **Wenn alle Checks grün sind:** Sauber nach `main` mergen (`git checkout main && git pull origin main && git merge --ff-only <branch>`), sofort `git push origin main <branch>` ausführen (damit Vercel live auf `lernly-app.de` baut) und anschließend wieder auf den Feature-Branch wechseln.
+- Keep commits small (easy rollback). Never merge or push to `main` if checks failed.
 
 ### Database & migrations (Supabase)
 - **Migration filenames: ALWAYS 14-digit timestamp** (`YYYYMMDDhhmmss_<name>.sql`, e.g. `20260601094530_add_foo.sql`). 8-digit date prefixes collide on `supabase_migrations.schema_migrations.version` (PK) when multiple land the same day → `supabase db push` fails. Leave old 8-digit files as-is (already applied); only new ones 14-digit.
@@ -35,7 +34,7 @@ Pre-revenue MVP **with live users**. Read this every session and follow the Work
 - When you add or require a new env var, tell me explicitly to set it in all scopes.
 
 ### ASK me first before:
-merging to main · destructive DB changes · adding new dependencies/libraries · large refactors · anything touching auth, billing/Stripe, or legal pages.
+destructive DB changes · adding new dependencies/libraries · large refactors · anything touching billing/Stripe or legal pages.
 
 ### How to work
 - **Diagnose before fixing** — find and report the real root cause first (logs / local repro), then fix. No guess-and-patch.

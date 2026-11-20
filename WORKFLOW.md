@@ -2,50 +2,40 @@
 
 Kurz & praktisch. Details zum Stand: [STATUS.md](STATUS.md) · [ROADMAP.md](ROADMAP.md) · [ARCHITECTURE.md](ARCHITECTURE.md)
 
-**Goldene Regel:** Nie direkt auf `main` arbeiten. Aktiver Branch: `feat/bwl-mcp-unification`.
+**Goldene Regel (Auto-Live):** Entwickelt wird auf dem gemeinsamen Branch `feat/bwl-mcp-unification`. Sobald `npx tsc --noEmit`, `npm run lint` und `npm test` grün sind, wird direkt sauber nach `main` gemerged und zu `origin/main` gepusht, damit Vercel sofort auf **lernly-app.de** deployed.
 
 ---
 
-## 1) Lokal starten
+## 1) Standard-Flow für alle Agenten (Auto-Live auf `main`)
 
-Terminal in VS Code öffnen (`` Ctrl+` ``):
+1. Änderungen auf `feat/bwl-mcp-unification` sauber committen.
+2. Lokal verifizieren:
+   ```bash
+   npx tsc --noEmit && npm run lint && npm test
+   ```
+3. Nur wenn alle 3 Checks grün sind: sauber nach `main` mergen, pushen & zurück auf den Feature-Branch:
+   ```bash
+   git checkout main && git pull origin main && git merge --ff-only feat/bwl-mcp-unification && git push origin main feat/bwl-mcp-unification && git checkout feat/bwl-mcp-unification
+   ```
+4. Kurz auf **https://lernly-app.de** gegenprüfen (Vercel baut automatisch bei jedem Push auf `main`).
+
+## 2) Täglicher Ablauf in VS Code (falls du selbst etwas änderst)
+
+1. **Vor dem Arbeiten: Pull** (Source Control → `...` → **Pull** oder `git pull`).
+2. Änderungen prüfen, stagen (**+**) und committen.
+3. Vor dem Live-Push kurz `npx tsc --noEmit && npm run lint && npm test` ausführen.
+4. Auf `main` mergen und pushen (oder auf `feat/bwl-mcp-unification` pushen und den Agenten mergen lassen).
+
+## 3) Wann lokal starten (optional)?
 
 ```bash
 npm install      # nur nach Pull, wenn package.json sich geändert hat
 npm run dev      # Dev-Server -> http://localhost:3000
 ```
 
-Stoppen: `Ctrl+C`. Vor dem Commit optional: `npm run lint` und `npm test`.
+Stoppen: `Ctrl+C`. Im neuen Solo-Workflow testest du in der Regel direkt live auf `lernly-app.de`.
 
-## 2) Täglicher Ablauf: Commit & Push in VS Code
-
-1. **Vor dem Arbeiten: Pull** (siehe Abschnitt 3).
-2. Source Control öffnen (`Cmd+Shift+G`).
-3. Änderungen prüfen (Klick auf Datei = Diff), mit **+** stagen.
-4. Commit-Message eingeben (z. B. `feat: Hero-Szene angepasst`) und **Commit** klicken.
-5. **Sync Changes** bzw. **Push** klicken, damit es auf GitHub landet.
-
-Branch prüfen: unten links in der Statusleiste. Muss `feat/bwl-mcp-unification` (oder dein Feature-Branch) sein, nie `main`.
-
-## 3) Wann Pull?
-
-- **Immer beim Start des Tages**, bevor du etwas änderst.
-- Bevor du einen Pull Request erstellst.
-- Nachdem ein Agent (Antigravity, Claude Code, Codex) gepusht hat.
-
-In VS Code: Source Control, dann `...`, dann **Pull**. Oder im Terminal: `git pull`.
-
-## 4) Pull Request auf `main` und Vercel-Livegang
-
-1. Alles committet und gepusht? Dann auf GitHub **Compare & pull request** klicken
-   (oder in VS Code: GitHub-Pull-Requests-Extension, **Create Pull Request**).
-2. Base: `main`, Compare: dein Feature-Branch.
-3. Vercel baut automatisch eine **Preview-URL** zum PR. Preview kurz durchklicken.
-4. Build grün und Preview ok? **Merge pull request**.
-5. Der Merge auf `main` löst automatisch das **Production-Deployment auf Vercel** aus. Live-Seite danach kurz prüfen.
-6. Lokal zurück: `git checkout main && git pull`, dann neuen Branch oder weiter auf dem Feature-Branch (vorher `git pull origin main`).
-
-## 5) Notfall-Reset
+## 4) Notfall-Reset
 
 **Zuerst:** `git status` und `git log --oneline -5` ansehen, nichts überstürzen.
 
@@ -55,7 +45,7 @@ In VS Code: Source Control, dann `...`, dann **Pull**. Oder im Terminal: `git pu
 | Alle lokalen, nicht committeten Änderungen verwerfen | `git restore .` (Achtung: unwiderruflich) |
 | Letzten Commit rückgängig, Änderungen behalten | `git reset --soft HEAD~1` |
 | Branch exakt wie auf GitHub (lokal alles verwerfen) | `git fetch origin && git reset --hard origin/<branch>` |
-| Fehler schon gepusht, sauber zurückdrehen | `git revert <commit>` und pushen |
+| Fehler schon auf `main` gepusht, sauber zurückdrehen | `git revert <commit>` und pushen |
 | Dev-Server spinnt / komisches Verhalten | `rm -rf .next && npm run dev` |
 | Dependencies kaputt | `rm -rf node_modules && npm install` |
 
