@@ -62,10 +62,22 @@ function Demo() {
 
 
 const faqs = [
-  ["Kann ich meinen eigenen Kurs schon ausprobieren?", "Die Demo verwendet vorbereitete Beispiele und speichert deine Eingaben nicht dauerhaft. Für einen Test mit eigenen Unterlagen kannst du dein Interesse per E-Mail anmelden. Welche Einrichtung aktuell unterstützt wird, klären wir vor dem Test."],
-  ["Was kostet Lernly?", "Die neue Version ist in der Testphase. Preise und Verfügbarkeit werden vor dem Start veröffentlicht. Eine Beta-Anfrage ist unverbindlich und schließt kein Abo ab."],
-  ["Brauche ich ein zusätzliches KI-Abo?", "Für die neue Lernly-App ist kein separates KI-Abo vorgesehen. Du sollst direkt in Lernly mit deinen Unterlagen lernen können. Der vollständige neue Erstellungsablauf wird aktuell entwickelt."],
-  ["Ist Lernly nur für BWL?", "Aktuell ja: Lernly ist für BWL-Klausuren gebaut. Wir starten mit Finance und Mathe (Rechenwege und Übungen) und Marketing (Verständnisfragen und Karteikarten). Die Vorschau zeigt diese Lernformen; sie ist kein Nachweis für die Abdeckung jedes Kurses."],
+  [
+    "Funktioniert das nur mit Claude oder auch mit ChatGPT?",
+    "Es funktioniert mit beiden! Mit unserem 1-Klick-Prompt kannst du sowohl ChatGPT als auch Claude nutzen: Folien und Altklausuren reinladen, 4 kurze Fragen zu deiner Klausur beantworten und das Ergebnis direkt in Lernly einfügen. Wenn du Claude auf deinem Mac nutzt, verbindet sich deine Lernly-Erweiterung auf Wunsch sogar direkt mit deinem Uni-Ordner und synchronisiert deinen Kurs vollautomatisch.",
+  ],
+  [
+    "Warum soll ich nicht einfach direkt in ChatGPT oder Claude lernen?",
+    "Normale KI-Chats werden nach 20 Nachrichten unübersichtlich: Du scrollst ewig nach Formeln, verlierst die Übersicht über deine Altklausur-Punkte und übst passiv statt aktiv. Lernly baut dir aus dem Stoff einen ruhigen Klausur-Trainer mit echter Punkte-Gewichtung, interaktiven Rechen-Drills mit Zahlenvarianten, Mustersätzen, Spaced-Repetition-Karteikarten und einem Probeklausur-Timer mit Selbst-Bepunktung.",
+  ],
+  [
+    "Für welche Fächer funktioniert Lernly am besten?",
+    "Lernly ist speziell für rechen- und falllastige BWL- und WiWi-Fächer gebaut: Corporate Finance, Steuerrecht (Tax), Bilanzierung & Accounting, Mathe/Statistik, VWL (Mikro/Makro) sowie Marketing, Strategy und Management. Für Rechenfächer gibt es Schritt-für-Schritt-Drills mit Zahlenvarianten, für Fallstudien prüfungsfertige Mustersätze und für Konzeptfächer echte Transferaufgaben.",
+  ],
+  [
+    "Was kostet Lernly und brauche ich ein teures KI-Abo?",
+    "Lernly ist bewusst kein überteuertes 30-€-KI-Wrapper-Abo, weil die KI-Rechenleistung einfach über deinen eigenen Claude- oder ChatGPT-Account läuft (auch in den kostenlosen bzw. günstigen Standard-Tarifen). Du zahlst nicht doppelt für KI-Tokens, sondern bekommst den fertigen Klausur-Trainer – in der aktuellen Beta kostenlos.",
+  ],
 ];
 
 
@@ -113,39 +125,51 @@ export default function LernlyLanding() {
     <main id="inhalt">
       <section className={s.hero}>
         <div className={s.heroTop}>
-          <h1>Pack deine nächste<br />BWL-Klausur</h1>
-          <p>Lernly ist für BWL-Klausuren gebaut: Es liest deine Folien und Altklausuren, zeigt dir, wo du anfangen sollst, und übt mit dir Rechenaufgaben und Karten, bis es sitzt.</p>
+          <h1>Pack deine nächste<br />BWL-Klausur.</h1>
+          <p>Lernly verwandelt chaotische Vorlesungsfolien und Altklausuren in einen interaktiven Klausur-Trainer mit Rechen-Drills, Schritt-für-Schritt-Lösungen, Mustersätzen, Klausurfallen und Probeklausur-Timer – ohne teures extra KI-Abo, weil du einfach deine bestehende KI (Claude oder ChatGPT) nutzt.</p>
           <button className={s.primaryButton} onClick={openDemo}>Gratis ausprobieren</button>
-          <span className={s.heroCaption}><LayoutDashboard size={16} />Ohne Anmeldung. Für Finance, Mathe und Marketing.</span>
+          <span className={s.heroCaption}><LayoutDashboard size={16} />Sofort im Browser testen · Für Finance, Steuerrecht, Bilanzierung, Mathe, VWL &amp; Marketing.</span>
         </div>
         <div className={s.dashboardStage}><HeroScene /></div>
       </section>
       <section className={s.section} id="warum-lernly">
-        <SectionHeading title={<>Kurz vor der BWL-Klausur<br />und kein Plan?</>} />
+        <SectionHeading title={<>500 Folien, 3 Altklausuren und kein Plan,<br />wo die Punkte liegen?</>} />
         <div className={s.comparison}>
           <article>
             <div className={s.comparisonHeader}>
               <span className={s.comparisonBadgeNeutral}><X size={16} /></span>
-              <h3>So lernst du jetzt</h3>
+              <h3>So lernst du bisher</h3>
             </div>
-            {["Du weißt nicht, womit du in der BWL-Klausur anfangen sollst", "Du liest Folien, aber nichts bleibt hängen", "Du kennst die Formeln, aber nicht den Rechenweg", "Du weißt nicht, was wirklich geprüft wird", "Am Ende lernst du alles gleich lange"].map(x => <p key={x}><X size={15} />{x}</p>)}
+            {[
+              "Du liest stundenlang Folien, weißt aber nicht, was in der Klausur wirklich Punkte bringt",
+              "In langen ChatGPT- oder Claude-Chats verlierst du nach 20 Nachrichten komplett den Faden",
+              "Du kennst die Formel oder den Paragrafen, scheiterst aber am Rechenweg in der Klausur",
+              "Typische Klausurfallen und fehlende Mustersätze kosten dich sichere Teilpunkte",
+              "Am Ende lernst du unwichtige Randthemen genauso lange wie die großen Punktebringer",
+            ].map(x => <p key={x}><X size={15} />{x}</p>)}
           </article>
           <article className={s.comparisonHighlight}>
             <div className={s.comparisonHeader}>
               <span className={s.comparisonBadgeBrand}><LernlyLogo variant="icon" size={18} alt="" /></span>
               <h3>Mit Lernly</h3>
             </div>
-            {["Du siehst sofort, welche Themen die meisten Punkte bringen", "Du startest mit einem klaren nächsten Schritt", "Du rechnest Aufgaben im Stil deiner Altklausuren, statt nur zu lesen", "Die Karten sind schon da und kommen zur richtigen Zeit wieder", "Du siehst pro Thema, was schon sitzt"].map(x => <p key={x}><Check size={15} />{x}</p>)}
+            {[
+              "Deine Themen sind streng nach Altklausur-Punkten und Häufigkeit gewichtet",
+              "Jeder Lösungsschritt zeigt dir exakt: Woher kommt die Zahl oder Regel?",
+              "Du rechnest interaktive Aufgaben mit neuen Zahlenvarianten statt nur passiv zu lesen",
+              "Klausurfertige Mustersätze, Merke-Boxen und typische Klausurfallen sitzen auf Abruf",
+              "Karteikarten-Wiederholung und Probeklausur-Timer mit Selbst-Bepunktung an einem Ort",
+            ].map(x => <p key={x}><Check size={15} />{x}</p>)}
           </article>
         </div>
       </section>
 
       <section className={s.section} id="so-gehts">
-        <SectionHeading title={<>In drei Schritten von<br />Folien zu Punkten</>} description="Du bringst deinen Stoff. Lernly macht den Plan." />
+        <SectionHeading title={<>In drei Schritten von<br />Folien zu Klausurpunkten</>} description="Kein Technik-Aufwand. Du nutzt einfach dein bestehendes Claude oder ChatGPT." />
         <div className={s.stepsGrid}>
-          <article><div className={s.stepVisual}><MaterialsVisual /></div><h3>Kurs reingeben</h3><p>Folien, Übungen und Altklausuren. Mehr braucht Lernly nicht.</p></article>
-          <article><div className={s.stepVisual}><TopicsVisual /></div><h3>Sehen, was Punkte bringt</h3><p>Lernly gewichtet deine Themen nach den Altklausuren und zeigt dir, wo du anfangen sollst.</p></article>
-          <article><div className={s.stepVisual}><TodayVisual /></div><h3>Üben, bis es sitzt</h3><p>Erst erklären lassen, dann selbst rechnen, dann Karten wiederholen. Jeden Tag das, was fällig ist.</p></article>
+          <article><div className={s.stepVisual}><MaterialsVisual /></div><h3>1. Unterlagen wählen &amp; 4 Fragen beantworten</h3><p>Gib deine Folien und Altklausuren mit unserem 1-Klick-Prompt in Claude oder ChatGPT und beantworte 4 kurze Fragen zu deiner Klausur.</p></article>
+          <article><div className={s.stepVisual}><TopicsVisual /></div><h3>2. In Lernly öffnen</h3><p>Zieh das fertige Lernpaket in Lernly oder füge es per Copy-Paste ein – mit der Claude-Erweiterung landet dein Kursordner sogar automatisch im Dashboard.</p></article>
+          <article><div className={s.stepVisual}><TodayVisual /></div><h3>3. Bam-Bam-Bam trainieren</h3><p>Rechne Aufgaben mit Lösungsweg, lerne Mustersätze und Karteikarten mit Wiederholungs-System und schreib Probeklausuren auf Zeit.</p></article>
         </div>
       </section>
 
@@ -153,12 +177,12 @@ export default function LernlyLanding() {
       <section className={s.section} id="features">
         <SectionHeading title={<>Alles, was du bis<br />zur Klausur brauchst</>} />
         <div className={s.featureGrid}>
-          <article><div className={s.featureVisual}><PointsVisual /></div><h3>Wissen, wo du anfangen sollst</h3><p>Die Klausurkarte zeigt jedes Thema nach Gewicht und Lernstand. Dein nächster Schritt steht immer oben.</p></article>
-          <article><div className={s.featureVisual}><ExplainVisual /></div><h3>Erklärt, bis du es verstehst</h3><p>Erst das Prinzip in einfachen Worten, dann ein durchgerechnetes Beispiel. Den typischen Fehler gibt es dazu.</p></article>
-          <article><div className={s.featureVisual}><RecallVisual /></div><h3>Karten im richtigen Moment</h3><p>Du antwortest zuerst selbst, siehst die Lösung und bewertest dich. Lernly plant die nächste Wiederholung.</p></article>
-          <article><div className={s.featureVisual}><DrillVisual /></div><h3>Aufgaben wie in der Klausur</h3><p>Rechne Aufgaben im Stil deiner Altklausuren und sieh den Lösungsweg Schritt für Schritt.</p></article>
+          <article><div className={s.featureVisual}><PointsVisual /></div><h3>Wissen, was wirklich Punkte bringt</h3><p>Dein Klausurplan sortiert jedes Thema nach Altklausur-Punkten und Häufigkeit. Du siehst sofort, womit du die meisten Punkte sicherst.</p></article>
+          <article><div className={s.featureVisual}><ExplainVisual /></div><h3>Schritt für Schritt &amp; Mustersätze</h3><p>Zu jedem Thema bekommst du einen klaren Sachverhalt, Rechen- oder Prüfungsschema inkl. „Woher kommt die Zahl?“ sowie Merke-Box und Mustersätze.</p></article>
+          <article><div className={s.featureVisual}><RecallVisual /></div><h3>Karteikarten mit Wiederholungs-System</h3><p>Antworte zuerst selbst, deck die Lösung auf und bewerte dich in 4 Stufen. Lernly plant die nächste Wiederholung automatisch vor der Klausur.</p></article>
+          <article><div className={s.featureVisual}><DrillVisual /></div><h3>Rechen-Drills &amp; Probeklausur auf Zeit</h3><p>Übe Rechenaufgaben mit immer neuen Zahlenvarianten und Rundungstoleranz – und schreib komplette Probeklausuren mit Timer und Punkte-Checkliste.</p></article>
         </div>
-        <p className={s.illustrationNote}>Beispielansichten mit einem Beispielkurs.</p>
+        <p className={s.illustrationNote}>Beispielansichten aus dem interaktiven BWL-Klausur-Trainer.</p>
       </section>
 
 
@@ -177,12 +201,12 @@ export default function LernlyLanding() {
           </article>
           <article className={s.highlightPlan}>
             <span className={s.planBadge}>Beta</span>
-            <h3>Mit deinem Kurs</h3>
-            <div className={s.planPrice}>Kostenlos<span>in der aktuellen Beta-Phase</span></div>
-            <p>Teste Lernly mit deinen eigenen Vorlesungsfolien und Altklausuren.</p>
+            <h3>Mit deinen eigenen Kursen</h3>
+            <div className={s.planPrice}>0 €<span>mit deinem eigenen Claude oder ChatGPT</span></div>
+            <p>Verwandle deine eigenen Folien und Altklausuren in deinen persönlichen Klausur-Trainer – ohne extra KI-Abo.</p>
             <a className={s.primaryButton} href={BETA}>Beta-Zugang anfragen</a>
             <ul>
-              {["Eigene Folien und Altklausuren hochladen", "Persönlichen Trainer für deine Klausur testen", "Direktes Feedback an den Entwickler geben", "Preise vor dem offiziellen Start transparent erfahren"].map(x => <li key={x}><Check size={15} />{x}</li>)}
+              {["1-Klick-Prompt für Claude & ChatGPT", "Automatische Synchronisation für Claude Desktop", "Rechen-Drills, Mustersätze, Klausurfallen & Timer", "Kein 30-€-KI-Wrapper-Abo notwendig"].map(x => <li key={x}><Check size={15} />{x}</li>)}
             </ul>
           </article>
         </div>

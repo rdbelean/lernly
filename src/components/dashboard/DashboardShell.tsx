@@ -316,8 +316,8 @@ function SidebarContent({
           <Link
             href="/dashboard?upload=1#upload"
             onClick={onClose}
-            title="Kurs aus Claude laden"
-            aria-label="Kurs aus Claude laden"
+            title="Neuen Kurs erstellen"
+            aria-label="Neuen Kurs erstellen"
             className="flex h-10 items-center justify-center rounded-xl text-on-primary transition hover:opacity-90"
             style={{ background: "var(--color-primary)" }}
           >
@@ -331,7 +331,7 @@ function SidebarContent({
             leadingIcon={Plus}
             fullWidth
           >
-            Kurs aus Claude laden
+            Neuen Kurs erstellen
           </PrimaryCTALink>
         )}
 

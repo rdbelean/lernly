@@ -40,4 +40,5 @@ await fs.writeFile(path.join(output, 'package.json'), JSON.stringify({ name: 'le
 const artifact = path.join(root, 'dist/lernly-beta-0.2.0.mcpb');
 await fs.rm(artifact, { force: true });
 execFileSync('/usr/bin/zip', ['-qr', artifact, '.'], { cwd: output });
+await fs.copyFile(artifact, path.join(repo, 'public/lernly-beta-0.2.0.mcpb'));
 console.log(JSON.stringify({ artifact, bytes: (await fs.stat(artifact)).size, bundled: versions }, null, 2));

@@ -8,19 +8,20 @@ Stand: 2026-11-20. Kompakt halten, nur Fakten. **Pflicht:** Zum Session-Start im
 `feat/bwl-mcp-unification` — gemeinsamer Arbeitsbranch für Antigravity, Claude Code und OpenAI Codex. **Auto-Live-Regel:** Nach grünen Checks (`npx tsc --noEmit`, `npm run lint`, `npm test`) immer direkt in `main` mergen und `origin/main` + `feat/bwl-mcp-unification` pushen (Vercel deployt automatisch auf `lernly-app.de`).
 
 ## Aktuelles Ziel / Stand
-**Autonomer Uni-Ordner-Modus (`lernly_select_course`), Tax-Mock-Trainer-Didaktik & direkter Web-Sync (`lernly_sync_web_course`) live auf `main` (2026-11-20):**
-- **Uni-Ordner & Multi-Fach-Support (`connector/desktop/src/{storage,service,server}.mjs`, `manifest.json`):** Studenten verbinden einmalig ihren gesamten Uni-/Semester-Ordner; `lernly_status` listet alle Fach-Unterordner (`available_courses`), und mit **`lernly_select_course`** (13 MCP-Tools gesamt) wechselt Claude isoliert in genau ein Fach (`<Fach>/_lernly/`, inkl. Symlink-/Traversal-Schutz).
-- **Selbstständige Klausur- & Folien-Analyse ohne Fragebogen-Blockade (`connector/desktop/prompts/*`, `plugin/lernly/{skills,commands}/`):** Nach Fachwahl analysiert Claude eigenständig alle Altklausuren, Musterlösungen und relevanten Folienabschnitte, bestimmt Fachtyp, Punkte-Gewichtung und Stufen 1–3 selbst, baut direkt Themen in Tax-Mock-Trainer-Tiefe (`simple`, Sachverhalt mit `==Signalwörtern==`, Schritt-für-Schritt + „Woher kommt die Zahl / Regel?“, Merke-Box, Klausurfallen, Mustersätze, Rechen-Drills) und synct automatisch nach `lernly-app.de`.
-- **Nahtloser Direkt-Sync zu `lernly-app.de` (`src/lib/trainer/sync{Token,Persistence}.ts`, `src/app/api/trainer/sync/route.ts`, `src/app/dashboard/settings/trainer-sync-section.tsx`):** Zustandslos per HMAC-SHA256 signierter Sync-Token unter `/dashboard/settings` (ohne DB-Migration); `lernly_sync_web_course` überträgt den Kurs direkt in Supabase. `.mcpb`-Bundle (`connector/desktop/dist/lernly-beta-0.2.0.mcpb`) neu gebaut.
+**BWL-Landingpage-Schärfung, Nischen-FAQs & „Null-Aufwand“-60-Sekunden-Onboarding live auf `main` (2026-11-20):**
+- **Studentennahe Landingpage (`src/components/landing/LernlyLanding.tsx`, `src/app/page.tsx`):** Headlines, Problem-vs-Lösung-Vergleich, 3-Schritte-Ablauf, Feature-Karten und Beta-Plan komplett auf BWL/Finance/Tax ohne Technik-Sprech ausgerichtet (Positionierung: bestehendes Claude oder ChatGPT statt teurem 30-€-KI-Wrapper-Abo) inkl. 4 schlagkräftiger Nischen-FAQs.
+- **Geführter „Null-Aufwand“-3-Schritte-Assistent im Dashboard (`src/components/trainer/TrainerOnboardingAssistant.tsx`, `TrainerView.tsx`, `DashboardShell.tsx`, `src/app/dashboard/page.tsx`):** Öffnet bei leerem Dashboard oder Klick auf `+ Neuen Kurs erstellen` mit zwei Wegen:
+  1. *Schnellstart in 60 Sek. (Claude & ChatGPT):* 1-Klick-Kopieren von `LERNLY_MASTER_PROMPT` (`src/lib/trainer/masterPrompt.ts`), Dropzone + direktes `Cmd+V`-Textfeld (`importTrainerFromText` in `src/lib/trainer/importer.ts` parst gepastete Codeblöcke/JSONs/HTMLs sofort).
+  2. *Vollautomatik (Mac Power-User):* Direkter `.mcpb`-Download (`public/lernly-beta-0.2.0.mcpb`), 1-Klick Sync-Token & Chat-Starter-Befehl.
 
 ## Erledigt (diese Session)
-- **Uni-Ordner Multi-Fach-Architektur (`connector/desktop/`):** `Storage.listCourses`, `Storage.selectCourse`, `lernly_select_course`, isolierter Unterordner-Kontext & Escape-Schutz umgesetzt und getestet (`10/10` Integrationstests grün).
-- **Autonome Analyse + Web-Sync-Brücke (`prompts/*`, `plugin/lernly/*`, `src/app/api/trainer/sync/route.ts`, `/dashboard/settings`):** Ohne Vorab-Fragebogen-Blockade direkt von Fachauswahl über Altklausur-/Folienanalyse in den Web-Trainer (245/245 Unit-Tests, `tsc`, `eslint` & `check:colors --strict` grün).
+- **Landingpage & Meta (`src/components/landing/LernlyLanding.tsx`, `src/app/page.tsx`):** BWL-Klausur-Positionierung, 3-Schritte-Flow und die 4 Nischen-FAQs umgesetzt.
+- **Dashboard-Onboarding & Paste-Importer (`src/components/trainer/TrainerOnboardingAssistant.tsx`, `src/lib/trainer/{masterPrompt,importer,importer.test}.ts`, `connector/desktop/scripts/build.mjs`, `public/lernly-beta-0.2.0.mcpb`):** 1-Klick-Prompt, Copy-Paste-Importer & `.mcpb`-Download eingebaut und getestet.
 
 ## Nächster konkreter Schritt
-1. **Desktop-E2E-Test mit der neuen `.mcpb` (`connector/desktop/dist/lernly-beta-0.2.0.mcpb`):** gesamten Uni-Ordner + Sync-Token aus `lernly-app.de/dashboard/settings` einmalig in Claude Desktop hinterlegen und direkt ein Fach starten („Lass uns mit Corporate Finance starten“).
+1. **Live-Check auf `lernly-app.de` & `lernly-app.de/dashboard`:** Landingpage, Nischen-FAQs und beide Wege im `+ Neuen Kurs erstellen`-Assistenten (Schnellstart `Cmd+V` + Vollautomatik Mac) durchgehen.
 2. **Phase 6b / Fortschritt:** Aufgaben-Ratings (`taskRatings`), Karteikarten-Ratings (`cardRatings`) und `mockHistory` optional von `localStorage` nach Supabase synchronisieren.
-3. **Phase 7:** Neue Landingpage aus den echten App-Komponenten bauen.
+3. **Phase 7:** Neue Landingpage bei Bedarf noch stärker direkt aus Live-App-Komponenten speisen.
 
 ## Bekannte Grenzen & Hinweise
 - Preview & Prod teilen sich eine Supabase-DB — keine Migrationen ohne explizite Freigabe.

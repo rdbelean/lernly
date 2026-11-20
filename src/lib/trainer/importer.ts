@@ -384,6 +384,48 @@ function parseStandaloneHtmlArtifact(file: ImportTrainerFile): ImportTrainerResu
   return summarizeBundle({ course, topics: {}, artifactHtml: html }, "html-artifact");
 }
 
+function normalizeCombinedTrainerObject(
+  rawObj: Record<string, unknown>,
+  label: string,
+  sourceKind: "mcp-folder" | "trainer-html" | "html-artifact",
+): ImportTrainerResult {
+  const rawCourseCandidate = rawObj.course ?? rawObj.kurs;
+  const courseWithSchema =
+    rawCourseCandidate &&
+    typeof rawCourseCandidate === "object" &&
+    !Array.isArray(rawCourseCandidate) &&
+    !("schema" in rawCourseCandidate)
+      ? { schema: "lernly.kurs/1", ...rawCourseCandidate }
+      : rawCourseCandidate;
+
+  const courseRes = McpCourseProfileSchema.safeParse(courseWithSchema);
+  if (!courseRes.success) {
+    return {
+      ok: false,
+      error: `Kursprofil in „${label}“ ungültig: ${courseRes.error.issues[0]?.message ?? "Fehler"}.`,
+    };
+  }
+
+  const parsedTopics = collectNormalizedTopics(rawObj.topics ?? rawObj.themen);
+  const rawMocks = rawObj.mocks ?? rawObj.probeklausuren;
+  const rawCheatsheet = rawObj.cheatsheet ?? rawObj.spickzettel;
+  const hydrated = hydrateMissingCourseTopics(
+    courseRes.data,
+    parsedTopics,
+    rawMocks,
+    rawCheatsheet,
+  );
+
+  return summarizeBundle(
+    {
+      ...hydrated,
+      mocks: normalizeMockExams(rawMocks),
+      cheatsheet: normalizeCheatsheet(rawCheatsheet),
+    },
+    sourceKind,
+  );
+}
+
 function tryImportFromHtml(
   file: ImportTrainerFile,
 ): ImportTrainerResult | null {
@@ -399,40 +441,8 @@ function tryImportFromHtml(
     return parseStandaloneHtmlArtifact(file);
   }
   try {
-    const raw = JSON.parse(match[1]) as {
-      course?: unknown;
-      kurs?: unknown;
-      topics?: unknown;
-      themen?: unknown;
-      mocks?: unknown;
-      probeklausuren?: unknown;
-      cheatsheet?: unknown;
-      spickzettel?: unknown;
-    };
-    const courseRes = McpCourseProfileSchema.safeParse(raw.course ?? raw.kurs);
-    if (!courseRes.success) {
-      return {
-        ok: false,
-        error: `Kursprofil in „${file.name}“ ungültig: ${courseRes.error.issues[0]?.message ?? "Fehler"}.`,
-      };
-    }
-
-    const parsedTopics = collectNormalizedTopics(raw.topics ?? raw.themen);
-    const hydrated = hydrateMissingCourseTopics(
-      courseRes.data,
-      parsedTopics,
-      raw.mocks ?? raw.probeklausuren,
-      raw.cheatsheet ?? raw.spickzettel,
-    );
-
-    return summarizeBundle(
-      {
-        ...hydrated,
-        mocks: normalizeMockExams(raw.mocks ?? raw.probeklausuren),
-        cheatsheet: normalizeCheatsheet(raw.cheatsheet ?? raw.spickzettel),
-      },
-      "trainer-html",
-    );
+    const raw = JSON.parse(match[1]) as Record<string, unknown>;
+    return normalizeCombinedTrainerObject(raw, file.name, "trainer-html");
   } catch {
     return {
       ok: false,
@@ -999,7 +1009,12 @@ export function importTrainerBundle(
     }
 
     if (!parsedJson || typeof parsedJson !== "object") continue;
-    const schema = (parsedJson as { schema?: unknown }).schema;
+    const obj = parsedJson as Record<string, unknown>;
+    const schema = obj.schema;
+
+    if (!schema && (obj.course || obj.kurs)) {
+      return normalizeCombinedTrainerObject(obj, file.name, "mcp-folder");
+    }
 
     if (schema === "lernly.kurs/1") {
       const res = McpCourseProfileSchema.safeParse(parsedJson);
@@ -1070,6 +1085,67 @@ export function importTrainerBundle(
     },
     "mcp-folder",
   );
+}
+
+const CODE_FENCE_RE = /```(?:json|html|htm)?\s*\n?([\s\S]*?)```/gi;
+
+/**
+ * Parses directly pasted AI responses (`Cmd+V`) from ChatGPT or Claude — supporting
+ * fenced markdown code blocks (`json`/`html`), raw JSON bundles (`{ course, topics, ... }`),
+ * multiple `lernly.kurs/1` / `lernly.thema/1` JSON blocks, or standalone HTML trainer code.
+ */
+export function importTrainerFromText(rawText: string): ImportTrainerResult {
+  const trimmed = rawText.trim();
+  if (!trimmed) {
+    return {
+      ok: false,
+      error:
+        "Bitte füge zuerst das Lernpaket (JSON oder HTML) aus Claude oder ChatGPT ein.",
+    };
+  }
+
+  const fencedFiles: ImportTrainerFile[] = [];
+  let match: RegExpExecArray | null;
+  const fenceRe = new RegExp(CODE_FENCE_RE.source, CODE_FENCE_RE.flags);
+  while ((match = fenceRe.exec(trimmed)) !== null) {
+    const inner = match[1]?.trim();
+    if (!inner) continue;
+    const isHtml = inner.startsWith("<");
+    fencedFiles.push({
+      name: `eingefuegt-${fencedFiles.length + 1}.${isHtml ? "html" : "json"}`,
+      content: inner,
+    });
+  }
+  if (fencedFiles.length > 0) {
+    return importTrainerBundle(fencedFiles);
+  }
+
+  if (trimmed.startsWith("<")) {
+    return importTrainerBundle([
+      { name: "Lernly-Trainer.html", content: trimmed },
+    ]);
+  }
+
+  if (trimmed.startsWith("{")) {
+    return importTrainerBundle([{ name: "kurs-paket.json", content: trimmed }]);
+  }
+
+  const firstBrace = trimmed.indexOf("{");
+  const lastBrace = trimmed.lastIndexOf("}");
+  if (firstBrace !== -1 && lastBrace > firstBrace) {
+    return importTrainerBundle([
+      {
+        name: "kurs-paket.json",
+        content: trimmed.slice(firstBrace, lastBrace + 1),
+      },
+    ]);
+  }
+
+  return {
+    ok: false,
+    error:
+      "Kein gültiges Lernly-Lernpaket erkannt. Bitte kopiere den kompletten JSON- oder HTML-Block aus Claude bzw. ChatGPT.",
+  };
 }
 
 export type DrillFieldEvalResult = {

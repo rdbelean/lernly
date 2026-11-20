@@ -4,14 +4,14 @@ import { getUser } from "@/lib/dal";
 import LandingClient from "@/components/landing/LernlyLanding";
 
 const META_DE = {
-  title: "BWL-Klausur packen: dein Lerntrainer | Lernly",
+  title: "BWL-Klausuren gezielt knacken: dein KI-Klausur-Trainer | Lernly",
   description:
-    "Lernly ist für BWL-Klausuren gebaut: Folien und Altklausuren rein, sehen was Punkte bringt, Rechenaufgaben üben und Karteikarten wiederholen. Demo ohne Anmeldung.",
-  ogTitle: "Pack deine nächste BWL-Klausur | Lernly",
+    "Lernly verwandelt chaotische Vorlesungsfolien und Altklausuren in einen interaktiven Klausur-Trainer mit Rechen-Drills, Schritt-für-Schritt-Lösungen, Mustersätzen, Klausurfallen und Probeklausur-Timer – ohne teures extra KI-Abo.",
+  ogTitle: "Pack deine nächste BWL-Klausur – ohne teures KI-Abo | Lernly",
   ogDescription:
-    "Aus deinen Folien und Altklausuren wird dein Lerntrainer für Finance, Mathe und Marketing. Jetzt gratis ausprobieren.",
+    "Aus deinen Vorlesungsfolien und Altklausuren wird dein interaktiver Klausur-Trainer für Finance, Tax, Bilanzierung, Mathe, VWL & Marketing. Einfach mit deinem bestehenden Claude oder ChatGPT.",
   twitterDescription:
-    "Pack deine nächste BWL-Klausur: lern zuerst, was Punkte bringt. Gratis ausprobieren.",
+    "Folien & Altklausuren in deinen interaktiven BWL-Klausur-Trainer verwandeln – mit Rechen-Drills, Mustersätzen, Klausurfallen & Timer.",
   locale: "de_DE",
 } as const;
 

@@ -8,18 +8,16 @@ import {
   CheckCircle2,
   ClipboardCheck,
   ExternalLink,
-  FolderOpen,
   Layers,
   LayoutDashboard,
-  Loader2,
   Plus,
   RotateCcw,
-  Upload,
   X,
 } from "lucide-react";
 import { TrainerFlashcardsTab } from "@/components/trainer/TrainerFlashcardsTab";
 import { TrainerLearnTab } from "@/components/trainer/TrainerLearnTab";
 import { TrainerMockExamTab } from "@/components/trainer/TrainerMockExamTab";
+import { TrainerOnboardingAssistant } from "@/components/trainer/TrainerOnboardingAssistant";
 import { TrainerOverviewTab } from "@/components/trainer/TrainerOverviewTab";
 import { TrainerPracticeTab } from "@/components/trainer/TrainerPracticeTab";
 import {
@@ -29,7 +27,11 @@ import {
   getTaskStatus,
   resolveMockExams,
 } from "@/components/trainer/trainerHelpers";
-import { importTrainerBundle } from "@/lib/trainer/importer";
+import {
+  importTrainerBundle,
+  importTrainerFromText,
+  type ImportTrainerResult,
+} from "@/lib/trainer/importer";
 import {
   getServerTrainerBundleSnapshot,
   getServerTrainerProgressSnapshot,
@@ -54,6 +56,7 @@ export interface TrainerViewProps {
   initialCourseId?: string | null;
   focusUpload?: boolean;
   hasSavedCourses?: boolean;
+  syncToken?: string | null;
 }
 
 const DIRECTORY_INPUT_ATTRS = {
@@ -66,6 +69,7 @@ export function TrainerView({
   initialCourseId = null,
   focusUpload = false,
   hasSavedCourses = false,
+  syncToken = null,
 }: TrainerViewProps = {}) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -95,7 +99,6 @@ export function TrainerView({
   const [importError, setImportError] = useState<string | null>(null);
   const [importStatus, setImportStatus] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [dragging, setDragging] = useState(false);
 
   const bundle = localOverrideBundle ?? initialBundle ?? stored.bundle;
   const isCustom = Boolean(localOverrideBundle || initialBundle || stored.isCustom);
@@ -135,6 +138,60 @@ export function TrainerView({
     window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
   }, [bundle.artifactHtml]);
 
+  const persistImportResult = useCallback(
+    async (res: ImportTrainerResult) => {
+      if (!res.ok) {
+        setImportError(res.error);
+        return;
+      }
+
+      saveTrainerBundle(res.bundle);
+      setLocalOverrideBundle(res.bundle);
+      const firstHydrated = res.bundle.course.topics.find((t) =>
+        Boolean(res.bundle.topics[t.id]),
+      );
+      setSelectedTopicId(
+        firstHydrated?.id ?? res.bundle.course.topics[0]?.id ?? null,
+      );
+      setActiveTab("plan");
+      setLearnShowAppendix(false);
+
+      const resp = await fetch("/api/trainer/courses", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bundle: res.bundle }),
+      });
+
+      const detailSuffix = res.bundle.artifactHtml
+        ? "als HTML-Trainer"
+        : `(${res.summary.hydratedTopics}/${res.summary.topics} Themen, ${res.summary.tasks} Aufgaben, ${res.summary.cards} Karten)`;
+
+      if (!resp.ok) {
+        const errPayload = (await resp.json().catch(() => null)) as
+          | { error?: string }
+          | null;
+        setImportError(
+          errPayload?.error ??
+            "Kurs lokal geladen, konnte aber nicht in deinem Account gespeichert werden.",
+        );
+        return;
+      }
+
+      const saved = (await resp.json()) as {
+        id: string;
+        updated?: boolean;
+      };
+      const verb = saved.updated ? "aktualisiert" : "dauerhaft gespeichert";
+      setImportStatus(
+        `Kurs „${res.bundle.course.title}“ ${verb} ${detailSuffix}.`,
+      );
+      setShowUploadBox(false);
+      router.replace(`/dashboard?course=${saved.id}`);
+      router.refresh();
+    },
+    [router],
+  );
+
   const handleFiles = useCallback(
     async (fileList: FileList | File[]) => {
       setImportError(null);
@@ -149,7 +206,7 @@ export function TrainerView({
       });
       if (candidates.length === 0) {
         setImportError(
-          "Keine `.json` oder `Lernly-Trainer.html` gefunden. Wähle den `_lernly`-Ordner oder eine HTML-Datei aus Claude.",
+          "Keine `.json` oder `Lernly-Trainer.html` gefunden. Wähle den `_lernly`-Ordner oder eine Datei aus Claude/ChatGPT.",
         );
         return;
       }
@@ -162,62 +219,30 @@ export function TrainerView({
             content: await f.text(),
           })),
         );
-        const res = importTrainerBundle(loaded);
-        if (!res.ok) {
-          setImportError(res.error);
-          return;
-        }
-
-        saveTrainerBundle(res.bundle);
-        setLocalOverrideBundle(res.bundle);
-        const firstHydrated = res.bundle.course.topics.find((t) =>
-          Boolean(res.bundle.topics[t.id]),
-        );
-        setSelectedTopicId(
-          firstHydrated?.id ?? res.bundle.course.topics[0]?.id ?? null,
-        );
-        setActiveTab("plan");
-        setLearnShowAppendix(false);
-
-        const resp = await fetch("/api/trainer/courses", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ bundle: res.bundle }),
-        });
-
-        const detailSuffix = res.bundle.artifactHtml
-          ? "als HTML-Trainer"
-          : `(${res.summary.hydratedTopics}/${res.summary.topics} Themen, ${res.summary.tasks} Aufgaben, ${res.summary.cards} Karten)`;
-
-        if (!resp.ok) {
-          const errPayload = (await resp.json().catch(() => null)) as
-            | { error?: string }
-            | null;
-          setImportError(
-            errPayload?.error ??
-              "Kurs lokal geladen, konnte aber nicht in deinem Account gespeichert werden.",
-          );
-          return;
-        }
-
-        const saved = (await resp.json()) as {
-          id: string;
-          updated?: boolean;
-        };
-        const verb = saved.updated ? "aktualisiert" : "dauerhaft gespeichert";
-        setImportStatus(
-          `Kurs „${res.bundle.course.title}“ ${verb} ${detailSuffix}.`,
-        );
-        setShowUploadBox(false);
-        router.replace(`/dashboard?course=${saved.id}`);
-        router.refresh();
+        await persistImportResult(importTrainerBundle(loaded));
       } catch {
         setImportError("Dateien konnten nicht gelesen oder gespeichert werden.");
       } finally {
         setIsSaving(false);
       }
     },
-    [router],
+    [persistImportResult],
+  );
+
+  const handlePasteSubmit = useCallback(
+    async (rawText: string) => {
+      setImportError(null);
+      setImportStatus(null);
+      setIsSaving(true);
+      try {
+        await persistImportResult(importTrainerFromText(rawText));
+      } catch {
+        setImportError("Eingefügter Kurs konnte nicht gespeichert werden.");
+      } finally {
+        setIsSaving(false);
+      }
+    },
+    [persistImportResult],
   );
 
   const badgeLabel = bundle.artifactHtml
@@ -288,12 +313,12 @@ export function TrainerView({
               {showUploadBox ? (
                 <>
                   <X className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span>Upload ausblenden</span>
+                  <span>Assistent ausblenden</span>
                 </>
               ) : (
                 <>
                   <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span>Kurs hochladen</span>
+                  <span>Neuen Kurs erstellen</span>
                 </>
               )}
             </button>
@@ -461,59 +486,17 @@ export function TrainerView({
         />
 
         {showUploadBox ? (
-          <div
-            onDragOver={(e) => {
-              e.preventDefault();
-              setDragging(true);
-            }}
-            onDragLeave={() => setDragging(false)}
-            onDrop={(e) => {
-              e.preventDefault();
-              setDragging(false);
-              if (e.dataTransfer.files) void handleFiles(e.dataTransfer.files);
-            }}
-            className={`mt-5 flex flex-col items-start justify-between gap-4 rounded-2xl border border-dashed p-5 transition sm:flex-row sm:items-center ${
-              dragging || focusUpload
-                ? "border-primary bg-work-bg/40"
-                : "border-ink-a14 bg-surface"
-            }`}
-          >
-            <div>
-              <p className="text-[15px] font-semibold text-text">
-                Eigenen Kurs aus Claude/MCP laden
-              </p>
-              <p className="mt-0.5 text-[13.5px] text-text-dim">
-                Lade hier den <code>_lernly</code>-Ordner aus deinem
-                Kursverzeichnis oder deine fertige{" "}
-                <code>Lernly-Trainer.html</code>-Datei aus Claude hoch.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-2.5">
-              <button
-                type="button"
-                disabled={isSaving}
-                onClick={() => folderInputRef.current?.click()}
-                className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-[13.5px] font-semibold text-on-primary transition hover:bg-primary-press disabled:opacity-60"
-              >
-                {isSaving ? (
-                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-                ) : (
-                  <FolderOpen className="h-4 w-4" aria-hidden="true" />
-                )}
-                <span>_lernly-Ordner wählen</span>
-              </button>
-              <button
-                type="button"
-                disabled={isSaving}
-                onClick={() => fileInputRef.current?.click()}
-                className="inline-flex h-10 items-center gap-2 rounded-xl border border-line bg-surface-2 px-4 text-[13.5px] font-semibold text-text transition hover:opacity-85 disabled:opacity-60"
-              >
-                <Upload className="h-4 w-4" aria-hidden="true" />
-                <span>JSON / HTML wählen</span>
-              </button>
-            </div>
-          </div>
+          <TrainerOnboardingAssistant
+            isSaving={isSaving}
+            focusUpload={focusUpload}
+            syncToken={syncToken}
+            canDismiss={hasSavedCourses || isCustom}
+            fileInputRef={fileInputRef}
+            folderInputRef={folderInputRef}
+            onFiles={(files) => void handleFiles(files)}
+            onPasteSubmit={(text) => void handlePasteSubmit(text)}
+            onClose={() => setShowUploadBox(false)}
+          />
         ) : null}
 
         {importError ? (

@@ -6,8 +6,10 @@ import {
   evaluateDrillField,
   formatTrainerInlineHtml,
   importTrainerBundle,
+  importTrainerFromText,
   sanitizeTrainerSvg,
 } from "./importer";
+import { LERNLY_MASTER_PROMPT } from "./masterPrompt";
 
 test("importTrainerBundle loads kurs.json and real beispiel-dcf.json", () => {
   const kursJson = JSON.stringify({
@@ -268,4 +270,61 @@ test("importTrainerBundle imports Tax Mock Trainer.html losslessly (15 topics, 1
   assert.ok(Boolean(res.bundle.cheatsheet?.html));
   assert.ok(res.bundle.topics["task-1"]?.caseHtml);
   assert.ok(res.bundle.topics["task-6"]?.tasks[0]?.kind === "essay");
+});
+
+test("importTrainerFromText parses Markdown-fenced combined JSON and multi-block pastes from ChatGPT/Claude", () => {
+  const dcfJson = JSON.parse(
+    readFileSync(
+      join(
+        process.cwd(),
+        "plugin/lernly/skills/lernly-trainer-bauen/references/beispiel-dcf.json",
+      ),
+      "utf-8",
+    ),
+  );
+  const kursJson = {
+    schema: "lernly.kurs/1",
+    id: "cf-paste",
+    title: "Corporate Finance Paste",
+    exam: { totalPoints: 60, durationMin: 60 },
+    topics: [{ id: "dcf", title: "DCF Valuation", expectedPoints: 20, tier: 1 }],
+  };
+
+  const singleFencePaste = `Hier ist dein kompletter Kurs-Trainer für Corporate Finance:
+
+\`\`\`json
+${JSON.stringify({ course: kursJson, topics: { dcf: dcfJson } })}
+\`\`\`
+
+Viel Erfolg beim Lernen!`;
+
+  const parsedSingle = importTrainerFromText(singleFencePaste);
+  assert.equal(parsedSingle.ok, true);
+  if (parsedSingle.ok) {
+    assert.equal(parsedSingle.bundle.course.title, "Corporate Finance Paste");
+    assert.equal(parsedSingle.summary.hydratedTopics, 1);
+  }
+
+  const multiFencePaste = `Datei 1:
+\`\`\`json
+${JSON.stringify(kursJson)}
+\`\`\`
+Datei 2:
+\`\`\`json
+${JSON.stringify(dcfJson)}
+\`\`\``;
+
+  const parsedMulti = importTrainerFromText(multiFencePaste);
+  assert.equal(parsedMulti.ok, true);
+  if (parsedMulti.ok) {
+    assert.equal(parsedMulti.summary.hydratedTopics, 1);
+    assert.ok(parsedMulti.bundle.topics.dcf);
+  }
+
+  const emptyPaste = importTrainerFromText("   ");
+  assert.equal(emptyPaste.ok, false);
+
+  assert.match(LERNLY_MASTER_PROMPT, /4-Fragen-Klausur-Briefing/);
+  assert.match(LERNLY_MASTER_PROMPT, /lernly\.kurs\/1/);
+  assert.match(LERNLY_MASTER_PROMPT, /lernly\.thema\/1/);
 });

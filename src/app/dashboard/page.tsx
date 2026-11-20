@@ -1,7 +1,9 @@
 import { Check } from "lucide-react";
+import { getUser } from "@/lib/dal";
 import { createClient } from "@/lib/supabase/server";
 import { TrainerView } from "@/components/trainer/TrainerView";
 import { LAYOUT } from "@/lib/layout";
+import { createTrainerSyncToken } from "@/lib/trainer/syncToken";
 import { SavedTrainerPackSchema, type TrainerBundle } from "@/lib/trainer/types";
 
 type PackSummary = {
@@ -35,10 +37,14 @@ export default async function DashboardPage({
           .maybeSingle()
       : Promise.resolve({ data: null });
 
-  const [packsRes, loadedCourseRes] = await Promise.all([
+  const [user, packsRes, loadedCourseRes] = await Promise.all([
+    getUser(),
     supabase.rpc("list_pack_summaries"),
     courseQuery,
   ]);
+  const syncToken = user
+    ? createTrainerSyncToken({ id: user.id, email: user.email })
+    : null;
 
   let loadedId: string | null = null;
   let loadedBundle: TrainerBundle | undefined;
@@ -96,6 +102,7 @@ export default async function DashboardPage({
         initialCourseId={loadedId}
         focusUpload={params.upload === "1"}
         hasSavedCourses={hasSavedCourses}
+        syncToken={syncToken}
       />
     </main>
   );
