@@ -1,10 +1,10 @@
 # Fachtypen & Tax-Mock-Trainer-Tiefe pro Thema
 
-`kurs.json.subjectType` bestimmt die Grundmischung (geklärt im 4-Fragen-Klausur-Briefing). Pro Thema zählt zusätzlich, **wie die Klausur dieses Thema konkret abfragt**.
+`kurs.json.subjectType` bestimmt die Grundmischung (selbstständig aus Altklausuren und Folien abgeleitet). Pro Thema zählt zusätzlich, **wie die Klausur dieses Thema konkret abfragt**.
 
 ## 1. Die drei Fachtypen im Detail
 
-| Fachtyp (Briefing) | `subjectType` | Didaktischer Schwerpunkt (Vorbild: Tax Mock Trainer & Corporate Finance) | Pflicht-Aufgabentypen & Karten |
+| Fachtyp | `subjectType` | Didaktischer Schwerpunkt (Vorbild: Tax Mock Trainer & Corporate Finance) | Pflicht-Aufgabentypen & Karten |
 |---|---|---|---|
 | **Rechnen & Formeln** (Finance, Mathe, Statistik, VWL, Kostenrechnung) | `rechnen` | **Rechenrezepte & Zahlenherkunft:** `steps` mit Formel + **„Woher kommt die Zahl?“** (Zuweisung aus Angabe/Tabelle), `formula`-Blöcke, durchgerechnetes Altklausur-Musterbeispiel in `table`, `remember` (Merke-Box für Rundung/Einheiten), `mistakes` (Vorzeichen-, Perioden-, Diskontierungsfehler). | Alle Altklausur-Rechnungen (`origin: "altklausur"`) + pro Muster ein **`drill` mit 3–5 realistischen Zahlenvarianten**, klaren Einheiten (`unit`), Rundungstoleranz (`rel`/`tol`), Entscheidung (`choice`) und Lösungsweg. 1 `mc` zu Rechenfallen. Karten für Pflichtformeln ohne Formelsammlung. |
 | **Fallstudien & Regeln** (Steuerrecht, Wirtschaftsrecht, Bilanzierung/Accounting) | `argumentieren` oder `gemischt` | **Sachverhalt → Schema → Mustersätze:** Ausgangs-Sachverhalt (`example`) mit **`==Signalwörtern==`**, schrittweises Prüfungs-/Berechnungsschema (`steps` / `table`) mit Rechtsgrundlage (`§`, IFRS, HGB) und **„Woher kommt die Zahl / Regel?“**, `remember` (Merke-Box), `mistakes` (typische Klausurfallen) und **ausformulierte Mustersätze** (`standardAnswer` / `model_answer` mit `==Punkte-Wörtern==`). | Fallbasierte **`drill`**-Berechnungen (z. B. Steuer/Bilanzwert mit „Woher kommt die Zahl?“) + **`essay`**-Falllösungen mit Punkte-Checkliste und vollständigen Mustersätzen. Karten für Prüfungsschemata, Paragrafen und Schwellenwerte. |

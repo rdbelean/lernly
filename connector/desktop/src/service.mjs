@@ -73,13 +73,26 @@ export class Lernly {
     let python;
     try { python = (await exec(this.python, ['--version'], { timeout: 5000 })).stdout.trim(); }
     catch { python = 'NICHT VERFÜGBAR: Python 3.10+ auswählen. PDF/TXT funktionieren; Office/Validierung/Trainer benötigen Python.'; }
-    return { version: '0.2.0', course_root: this.storage.root, node: process.version, python,
+    const listed = await this.storage.listCourses();
+    return { version: '0.2.0', base_root: listed.base_root, active_course: listed.active_course, course_root: this.storage.root,
+      available_courses: listed.courses,
+      node: process.version, python,
       prompt_directory: this.prompts, prompt_revision: (await this.instructions()).prompt_revision,
       course_files: Object.keys(await this.storage.courseFiles()),
       web_sync_configured: Boolean(this.syncToken),
       web_url: this.webUrl,
       limits: { pdf_max_mb: 256, max_pages: 2500, read_max_chars: 24000, ocr: false },
-      note: 'Lokaler Desktop-Connector. Unterstützt das 4-Fragen-Klausur-Briefing und direkten Web-Sync via lernly_sync_web_course ins Lernly-Dashboard.' };
+      note: 'Lokaler Desktop-Connector für Uni- und Kursordner. Wähle bei Bedarf ein Fach mit lernly_select_course und übertrage den fertigen Kurs per lernly_sync_web_course nach lernly-app.de.' };
+  }
+
+  async selectCourse({ course } = {}) {
+    if (course !== undefined) await this.storage.selectCourse(course);
+    const listed = await this.storage.listCourses();
+    return {
+      ...listed,
+      inventory: await this.storage.inventory(),
+      course_files: Object.keys(await this.storage.courseFiles()),
+    };
   }
 
   cacheName(file) { return `_lernly/cache/${digest(file)}.json`; }

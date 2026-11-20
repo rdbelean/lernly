@@ -8,90 +8,64 @@ description: Richtet einen Kurs für Lernly ein. Erfasst den Kursordner oder die
 Ziel: aus einem Kursordner (oft hunderte Folien) mit wenig Tokens ein belastbares **Kursprofil** `_lernly/kurs.json` machen. Darauf baut `lernly-trainer-bauen` den Trainer.
 
 Grundsätze:
-- **Erst 4-Fragen-Klausur-Briefing, nicht blind bauen.** Scanne zuerst den Ordner (`inventory.py` / `lernly_inventory`) und kläre die 4 kurzen Briefing-Fragen in einer kompakten Nachricht mit sinnvollen Standard-Vorschlägen, bevor `kurs.json` endgültig geschrieben oder Themen gebaut werden.
-- **Klausur zuerst.** Altklausuren, Probeklausuren, Beispielfragen und Hinweise des Profs bestimmen, was wichtig ist. Folien werden nur gezielt gelesen.
+- **Uni-Ordner pro Fach abarbeiten:** Ist ein ganzer Uni-/Semester-Ordner verbunden, wähle immer zuerst gezielt das eine gewünschte Fach (`lernly_select_course` im MCP-Connector bzw. den jeweiligen Unterordner). Arbeite erst dieses Fach vollständig aus, statt mehrere Fächer zu vermischen.
+- **Selbstständig analysieren statt Fragebogen-Blockade:** Lies Altklausuren, Probeklausuren, Musterlösungen und die relevanten Vorlesungsfolien selbst, erkenne Fachtyp, Klausur-Rahmen und Aufgabenhäufigkeiten eigenständig und entscheide, was wirklich klausurrelevant ist. Nur nachfragen, wenn der Ordner leer ist oder entscheidende Dokumente nicht lesbar sind.
+- **Klausur zuerst.** Altklausuren, Probeklausuren, Beispielfragen und Hinweise des Profs bestimmen, was wichtig ist. Folien werden nur gezielt über Agenda/Suche gelesen.
 - **Text statt PDF.** Erst Text extrahieren, dann nur Text lesen. Seiten als Bild nur ansehen, wenn dort eine wichtige Grafik oder Formel ohne Text steht.
-- **Nichts erfinden.** Was nicht belegt ist, als Schätzung markieren.
+- **Nichts erfinden.** Was nicht belegt ist, ehrlich als Schätzung markieren.
 - Mit dem Studenten auf Deutsch („du“) reden, kurz und präzise. Inhalte in der Sprache des Materials (`kurs.json.language`).
 
 `$SKILL` = der Ordner, in dem diese SKILL.md liegt (in Claude Code `${CLAUDE_SKILL_DIR}`). Skripte: `$SKILL/scripts/`. Validator und Build liegen im Nachbar-Skill: `$SKILL/../lernly-trainer-bauen/scripts/`.
 
-## 0. Arbeitsort klären
+## 0. Arbeitsort & Fach im Uni-Ordner wählen
 
-- **Ordnerzugriff** (Cowork, Claude Code, MCP-Connector): Kursordner = der Ordner, den der Student nennt oder freigegeben hat. Arbeitsordner = `<Kursordner>/_lernly/`.
-- **Chat mit hochgeladenen Dateien:** Lege einen Arbeitsordner an (z. B. `lernly-<kurs>/`), kopiere die Dateien hinein und arbeite dort. Gib den fertigen Trainer am Ende als Datei zum Herunterladen aus.
-- **Schon eingerichtet?** Gibt es `_lernly/kurs.json`, nicht neu anfangen: zeig den Stand und biete `/lernly:kurs-aktualisieren` oder `/lernly:trainer-bauen` an. Lädt der Student eine `Lernly-Trainer.html` hoch, stelle die Kursdateien daraus wieder her: `python3 "$SKILL/../lernly-trainer-bauen/scripts/build_trainer.py" --unpack Lernly-Trainer.html --to _lernly`.
+- **Uni-Ordner / Ordnerzugriff** (MCP-Connector, Cowork, Claude Code):
+  - Im MCP-Connector prüfst du mit `lernly_status` die erkannten Unterordner (`available_courses`). Hat der Student ein Fach genannt, wähle sofort `lernly_select_course(course="<Fach>")`. Ist kein Fach genannt und es gibt mehrere Fächer, liste sie kurz auf und frag in einem Satz, mit welchem Fach ihr startet.
+  - Direkt mit Pfad: Kursordner = der jeweilige Fach-Unterordner, Arbeitsordner = `<Fachordner>/_lernly/`.
+- **Chat mit hochgeladenen Dateien:** Lege einen Arbeitsordner an (z. B. `lernly-<kurs>/`), kopiere die Dateien hinein und arbeite dort.
+- **Schon eingerichtet?** Gibt es `<Fachordner>/_lernly/kurs.json`, nicht neu anfangen: zeig den Stand und baue fehlende Themen weiter oder synce neu (`lernly_sync_web_course`). Lädt der Student eine `Lernly-Trainer.html` hoch, stelle die Kursdateien daraus wieder her: `python3 "$SKILL/../lernly-trainer-bauen/scripts/build_trainer.py" --unpack Lernly-Trainer.html --to _lernly`.
 
-## 1. Inventar & Geführtes 4-Fragen-Klausur-Briefing
+## 1. Inventar & Rollen selbstständig erkennen
 
 ```bash
-python3 "$SKILL/scripts/inventory.py" "<Kursordner>" --out "<Kursordner>/_lernly/inventar.md"
+python3 "$SKILL/scripts/inventory.py" "<Fachordner>" --out "<Fachordner>/_lernly/inventar.md"
 ```
-(Im MCP-Connector stattdessen `lernly_inventory` verwenden.)
+(Im MCP-Connector stattdessen `lernly_inventory` im aktiven Fachordner verwenden.)
 
-Lies `inventar.md` (bzw. das `lernly_inventory`-Ergebnis). Bevor du Unmengen von Folien extrahierst oder blind `kurs.json` schreibst, schicke dem Studenten **in einer einzigen kompakten Nachricht genau 4 kurze Fragen** — jeweils mit deiner vorläufigen Empfehlung aus dem Ordner-Scan, damit er einfach mit „Passt so“ bestätigen kann:
-
-```markdown
-Kurzer Check vor dem Kurs-Aufbau (einfach mit „Passt so“ bestätigen oder kurz anpassen):
-
-1. **Fachtyp:** [Vorschlag, z. B. Rechnen & Formeln (`rechnen`) / Fallstudien & Regeln (`argumentieren`/`gemischt`) / Konzepte & Transfer (`verstehen`)]?
-2. **Vorhandene Unterlagen im Ordner:**
-   - **Altklausuren / Lösungen:** [...]
-   - **Übungen / Cases:** [...]
-   - **Vorlesungsfolien / Skript:** [...]
-   - **Ausklammern:** [...] — passt diese Zuordnung?
-3. **Klausur-Rahmen:** [Vorschlag oder „unklar“: z. B. 60 Punkte / 60 Min.; Hilfsmittel: Taschenrechner / Gesetzestexte / Formelsammlung]?
-4. **Lern-Ziel & Umfang:** Soll ich (a) **Komplett-Aufbau** (alle Themen Stufen 1–3), (b) **Klausur-Drill** *(Empfehlung: Fokus auf Altklausur-Schemata, Mustersätze & Stufe 1+2)* oder (c) **Crash-Kurs** (nur Top-Punktebringer Stufe 1) bauen?
-```
-
-*(Falls der Student bereits alle 4 Punkte vorab klar angegeben hat, bestätige sie in 2 Zeilen und fahre direkt fort.)*
+Lies `inventar.md` (bzw. das `lernly_inventory`-Ergebnis). Ordne Dateien eigenständig zu (Altklausur/Lösung vs. Übung/Case vs. Folien/Skript). Wo der Dateiname unklar ist (`2021.pdf`), entscheidet die erste Seite — kein Fragebogen nötig. Nur eindeutig fachfremde Unterordner (falls der Student ausnahmsweise einen Sammelordner gewählt hat) konsequent ignorieren und kurz erwähnen.
 
 ## 2. Text extrahieren
 
 ```bash
-python3 "$SKILL/scripts/extract_text.py" "<Kursordner>"
+python3 "$SKILL/scripts/extract_text.py" "<Fachordner>"
 ```
 (Im MCP-Connector: `lernly_index_material` zuerst für Altklausuren/Lösungen.)
 Schreibt `_lernly/text/<Datei>.txt` mit `=== Seite N ===` und `_lernly/text/_uebersicht.md` (Seiten, Zeichen, ≈ Tokens, Seiten mit wenig Text). Bereits extrahierte Dateien werden übersprungen.
 - Kein PDF-Werkzeug? In der Sandbox `pip install pypdf` und erneut starten. Geht das nicht, PDFs direkt lesen, aber nur die nötigen Seiten.
-- Alte Formate (`.ppt`, `.doc`, `.key`) und verschlüsselte PDFs: dem Studenten klar sagen, dass er sie als PDF exportieren soll.
+- Alte Formate (`.ppt`, `.doc`, `.key`) und verschlüsselte PDFs: dem Studenten kurz melden, falls sie fehlen oder unlesbar sind.
 
-## 3. Klausurbelege finden und gründlich lesen
+## 3. Klausurbelege finden & selbst entscheiden, was rankommt
 
-1. Rollen anhand der Briefing-Antwort festzurren; wo noch unklar: nur die ersten ~40 Zeilen lesen.
-2. Ausgeklammerte Ordner (anderes Fach / nicht relevant) konsequent überspringen.
-3. **Komplett lesen:** alle Altklausuren, Probeklausuren, Beispielfragen und deren Musterlösungen. Das ist meist wenig Text und die wichtigste Quelle für Punkte, Rechenwege und Mustersätze.
-4. **Gezielt suchen** in allen Textdateien statt alles zu lesen:
+1. Rollen prüfen, wo unklar: nur die ersten ~40 Zeilen lesen.
+2. **Altklausuren, Probeklausuren & Lösungen komplett lesen:** Das ist die wichtigste Grundlage für Punkte, Aufgabenstellungen, Rechenschemata und Mustersätze.
+3. **Gezielt in Folien & Übungen suchen** (statt alles durchzublättern):
    ```bash
-   grep -rn -i -E "klausur|prüfung|exam|points|punkte|hilfsmittel|formelsammlung|formula sheet|calculator|taschenrechner|relevant|wichtig|will be asked|kommt dran|bonus" "<Kursordner>/_lernly/text" --include="*.txt" | head -80
+   grep -rn -i -E "klausur|prüfung|exam|points|punkte|hilfsmittel|formelsammlung|formula sheet|calculator|taschenrechner|relevant|wichtig|will be asked|kommt dran|bonus" "<Fachordner>/_lernly/text" --include="*.txt" | head -80
    ```
-   Dazu Agenda-, Inhalts- und Zusammenfassungsfolien jeder Vorlesung lesen (meist die ersten und letzten Seiten).
-5. Pro Altklausur notieren: Aufgabe, Thema, Punkte, Aufgabentyp (rechnen, Fall/Schema, erklären, MC). Dann über alle Klausuren zählen: Was kommt wie oft mit wie vielen Punkten?
+   Dazu Agenda-, Inhalts- und Zusammenfassungsfolien jeder Vorlesung lesen (meist erste und letzte Seiten).
+4. **Eigenständige Relevanz-Entscheidung:** Leite pro Thema ab: Wie oft kam es in Altklausuren vor, wie viele Punkte bringt es, welchen Fachtyp hat es (`rechnen` | `argumentieren` | `verstehen` | `gemischt`), welche Hilfsmittel gelten und welche Folienbereiche sind wirklich prüfungsrelevant (und welche Folien können weggelassen werden)?
 
-## 4. Bauplan und Themen
+## 4. Bauplan (`kurs.json`) schreiben & direkt bauen
 
-Erstelle `_lernly/kurs.json` nach `references/kursprofil.md` — abgestimmt auf Fachtyp und Lern-Ziel aus dem 4-Fragen-Briefing:
+Erstelle `_lernly/kurs.json` nach `references/kursprofil.md`:
 - `exam`: Dauer, Punkte, Hilfsmittel, Aufbau (`parts` mit `slots`), `fidelity` (strict / likely / broad, ehrlich).
-- `topics`: Lerneinheiten, die den Slots zugeordnet sind, mit `expectedPoints`, `tier`, `why`, `effort`, `sources` (Datei + Folien/Seiten).
-  - **Stufe 1 (`tier: 1`):** die Top-Punktebringer (zusammen ca. 70 % der Punkte, höchste Altklausur-Frequenz) → bekommen volle Tax-Mock-Trainer-Tiefe.
+- `topics`: Lerneinheiten, sortiert nach Klausur-Punkten & Häufigkeit:
+  - **Stufe 1 (`tier: 1`):** die Top-Punktebringer (~70 % der Punkte, wiederkehrend in Altklausuren) → volle Tax-Mock-Trainer-Tiefe.
   - **Stufe 2 (`tier: 2`):** häufige Aufgaben / Wahlaufgaben → Rezept, Mustersätze & gezielte Aufgaben.
-  - **Stufe 3 (`tier: 3`):** Ergänzungsthemen → beim Ziel „Crash-Kurs“ nur als Hinweis im Plan markieren, bei „Komplett-Aufbau“ kompakt ausarbeiten.
-  - Folienbereiche pro Thema über die Agenda und `grep` nach Schlüsselbegriffen finden, nicht durch Lesen aller Folien.
-- `strategy`: der schnellste Weg zur guten Note für genau diese Klausur (2–4 Sätze oder kurze Liste, passend zum gewählten Lern-Ziel).
-- `subjectType` (`rechnen` | `verstehen` | `argumentieren` | `gemischt`) und `language` (Sprache des Materials).
-- `notation`: Symbole und Begriffe des Profs (z. B. verwendete Gesetzeskürzel, Variablen, Einheiten).
+  - **Stufe 3 (`tier: 3`):** Rand-/Ergänzungsthemen → nur kompakt, falls nach Stufe 1+2 sinnvoll.
+- `strategy`, `subjectType`, `language` (Sprache des Materials) und `notation` (Symbole/Begriffe des Profs).
 
-Prüfen:
-```bash
-python3 "$SKILL/../lernly-trainer-bauen/scripts/validate.py" "<Kursordner>/_lernly"
-```
-(Hinweise „Themen ohne Datei“ sind an dieser Stelle normal.)
-
-Mit Ordnerzugriff zusätzlich `<Kursordner>/00_LERNLY.md` schreiben: kurze, lesbare Fassung des Bauplans (Tabelle Aufgabe · Punkte · Thema · Stufe), Quellen und der Hinweis, dass die Kursdaten in `_lernly/` liegen. Höchstens eine Seite.
-
-## 5. Bauplan kurz zeigen & direkt in `lernly-trainer-bauen` übergehen
-
-Zeig die kompakte Tabelle (`Aufgabe · Punkte · Häufigkeit · Thema · Stufe`), nenne erkannte Textlücken/Scans (falls vorhanden) und starte sofort mit dem wichtigsten Stufe-1-Thema über den Skill **lernly-trainer-bauen** (bei „Crash-Kurs“ nur Stufe 1).
+Prüfen (`validate.py`), optional `<Fachordner>/00_LERNLY.md` schreiben, dem Studenten kurz die kompakte **Klausur-Diagnose** (`Aufgabe · Punkte · Häufigkeit · Thema · Stufe`) zeigen und **direkt im Anschluss ohne erneute Rückfrage** mit **lernly-trainer-bauen** die Themen ausarbeiten und per **`lernly_sync_web_course`** ins Lernly Web-Dashboard (`lernly-app.de`) syncen!
 
 ## Token-Regeln
 

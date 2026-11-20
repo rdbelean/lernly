@@ -26,8 +26,8 @@
   "compatibility": { "platforms": ["darwin"], "runtimes": { "node": ">=20", "python": ">=3.10" } },
   "user_config": {
     "course_directory": {
-      "type": "directory", "title": "Kursordner", "required": true,
-      "description": "Wähle genau den Kurs, den du lernen möchtest. Rohunterlagen werden gelesen; neue Dateien entstehen ausschließlich im Unterordner _lernly."
+      "type": "directory", "title": "Uni-Ordner oder Kursordner", "required": true,
+      "description": "Wähle deinen gesamten Uni-/Semester-Ordner (mit Unterordnern für deine Fächer) oder einen einzelnen Kursordner. Claude kann jedes Fach einzeln auswählen und direkt mit lernly-app.de synchronisieren."
     },
     "python_path": {
       "type": "string", "title": "Python 3", "default": "python3", "required": true,

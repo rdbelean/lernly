@@ -45,11 +45,12 @@ async function context(t) {
 
 test('packaged MCP: discovery, hot prompts, local reading, duplicates, search, invalidation and boundaries', async t => {
   const { course, dir, prompts, call, client } = await context(t);
-  assert.equal((await client.listTools()).tools.length, 12);
+  assert.equal((await client.listTools()).tools.length, 13);
   assert.equal((await client.listPrompts()).prompts[0].name, 'lernly-start');
   assert.ok((await client.getPrompt({ name: 'lernly-start', arguments: { ziel: 'Mathe' } })).messages[0].content.text.includes('Mathe'));
   const before = await call('lernly_instructions');
-  assert.ok(before.instructions.includes('Klausur-Briefing'));
+  assert.ok(before.instructions.includes('Uni-/Semester-Ordner'));
+  assert.ok(before.instructions.includes('lernly_select_course'));
   const fmt = await call('lernly_instructions', { mode: 'format' });
   assert.ok(fmt.instructions.includes('Tax-Mock-Trainer'));
   await fs.appendFile(path.join(prompts, 'base.md'), '\nTest-Prompt-Änderung');
@@ -270,4 +271,52 @@ test('lernly_sync_web_course validates, authorizes and posts normalized bundle',
   assert.equal(blocked.synced, false);
   assert.ok(blocked.errors.length > 0);
   assert.equal(received.length, 1);
+});
+
+test('uni-folder multi-subject mode discovers subfolders, switches isolated roots and blocks escapes', async t => {
+  const { course: uniRoot, dir, call } = await context(t);
+  const cfDir = path.join(uniRoot, 'Corporate-Finance');
+  const taxDir = path.join(uniRoot, 'Steuerrecht');
+  await fs.mkdir(path.join(cfDir, 'Altklausuren'), { recursive: true });
+  await fs.mkdir(taxDir, { recursive: true });
+  await fs.writeFile(path.join(cfDir, 'Altklausuren', 'Exam23.txt'), 'DCF WACC 15 points.');
+  await fs.writeFile(path.join(cfDir, 'Slides.txt'), 'Lecture slides.');
+  await fs.writeFile(path.join(taxDir, 'Fall1.txt'), 'Paragraph 8b KStG.');
+  const cfKurs = JSON.parse(await fs.readFile(path.join(fixture, 'kurs.json'), 'utf8'));
+  await fs.mkdir(path.join(cfDir, '_lernly'), { recursive: true });
+  await fs.writeFile(path.join(cfDir, '_lernly', 'kurs.json'), JSON.stringify(cfKurs));
+
+  const outside = path.join(dir, 'outside-subject');
+  await fs.mkdir(outside);
+  await fs.symlink(outside, path.join(uniRoot, 'Link-Fach'));
+
+  const initialStatus = await call('lernly_status');
+  assert.equal(initialStatus.active_course, '.');
+  assert.ok(initialStatus.available_courses.some(c => c.course === 'Corporate-Finance' && c.has_lernly_course === true && c.supported_files === 2 && c.title === cfKurs.title));
+  assert.ok(initialStatus.available_courses.some(c => c.course === 'Steuerrecht' && c.has_lernly_course === false && c.supported_files === 1));
+  assert.ok(!initialStatus.available_courses.some(c => c.course === 'Link-Fach'));
+
+  const selectedTax = await call('lernly_select_course', { course: 'Steuerrecht' });
+  assert.equal(selectedTax.active_course, 'Steuerrecht');
+  assert.deepEqual(selectedTax.inventory.files.map(f => f.file), ['Fall1.txt']);
+
+  const taxKurs = {
+    ...cfKurs,
+    id: 'tax-law',
+    title: 'Steuerrecht I',
+    topics: [{ id: 'kstg', title: 'Körperschaftsteuer', expectedPoints: 20, tier: 1 }]
+  };
+  const savedTax = await call('lernly_save_course_file', { file: 'kurs.json', data: taxKurs, expected_revision: null });
+  assert.equal(savedTax.saved, true);
+  assert.equal(JSON.parse(await fs.readFile(path.join(taxDir, '_lernly', 'kurs.json'), 'utf8')).title, 'Steuerrecht I');
+  assert.equal(JSON.parse(await fs.readFile(path.join(cfDir, '_lernly', 'kurs.json'), 'utf8')).title, cfKurs.title);
+
+  const selectedCf = await call('lernly_select_course', { course: 'Corporate-Finance' });
+  assert.equal(selectedCf.active_course, 'Corporate-Finance');
+  assert.ok(selectedCf.inventory.files.some(f => f.file === 'Altklausuren/Exam23.txt'));
+  assert.ok(selectedCf.course_files.includes('kurs.json'));
+
+  await call('lernly_select_course', { course: '../outside-subject' }, true);
+  await call('lernly_select_course', { course: 'Link-Fach' }, true);
+  await call('lernly_select_course', { course: 'Corporate-Finance/_lernly' }, true);
 });

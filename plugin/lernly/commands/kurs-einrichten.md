@@ -1,13 +1,11 @@
 ---
-description: Kurs für Lernly einrichten – Ordner scannen, 4-Fragen-Klausur-Briefing klären, Altklausuren auswerten und Bauplan der Klausur erstellen
-argument-hint: "[Kursordner oder Kursname]"
+description: Fach aus dem Uni-Ordner auswählen, Altklausuren & Folien selbstständig analysieren, Klausur-Bauplan erstellen und nach Lernly syncen
+argument-hint: "[Fachname oder Kursordner]"
 ---
 
-Richte diesen Kurs für Lernly ein. Folge dem Skill **lernly-kurs-einrichten** Schritt für Schritt:
+Richte das gewünschte Fach für Lernly ein und baue es direkt bis in das Web-Dashboard auf. Folge den Skills **lernly-kurs-einrichten** und **lernly-trainer-bauen**:
 
-1. Zuerst den Ordner scannen (`inventory.py` bzw. `lernly_inventory`) und das **geführte 4-Fragen-Klausur-Briefing** (Fachtyp, Unterlagen-Zuordnung, Klausur-Rahmen, Lern-Ziel & Umfang) mit sinnvollen Standard-Vorschlägen in einer einzigen kompakten Nachricht klären.
-2. Danach Altklausuren zuerst auswerten, Themen streng nach Klausur-Punkten & Häufigkeit in Stufen 1–3 gewichten und `_lernly/kurs.json` speichern.
+1. Ist ein ganzer Uni-Ordner verbunden (`lernly_status`), wähle mit `lernly_select_course` zuerst gezielt das Fach aus `$ARGUMENTS` (falls noch kein Fach genannt wurde und mehrere Unterordner vorhanden sind, frage in einem Satz nach dem Fach).
+2. Analysiere alle Altklausuren, Lösungen und die relevanten Vorlesungsfolien **selbstständig**, entscheide eigenständig über Fachtyp, Punkte-Gewichtung und Stufen 1–3, speichere `_lernly/kurs.json` sowie die Themen in Tax-Mock-Trainer-Tiefe und synce alles mit `lernly_sync_web_course` nach `lernly-app.de/dashboard`.
 
-Kursordner oder Hinweis des Studenten: $ARGUMENTS
-
-Ist nichts angegeben: Nutze den freigegebenen Ordner oder die hochgeladenen Dateien. Gibt es beides nicht, bitte den Studenten in einem Satz, den Kursordner freizugeben oder die Dateien hochzuladen (Altklausuren mit Lösungen, Folien, Übungsblätter).
+Gewünschtes Fach / Hinweis des Studenten: $ARGUMENTS

@@ -11,4 +11,4 @@ Auftrag: $ARGUMENTS
 - Themen-IDs (z. B. `dcf mm`): nur diese Themen (neu) bauen.
 - `probeklausur` oder `spickzettel`: nur das.
 
-Gibt es noch kein `_lernly/kurs.json`, starte mit dem Skill **lernly-kurs-einrichten** (inkl. 4-Fragen-Klausur-Briefing).
+Gibt es noch kein `_lernly/kurs.json`, starte mit dem Skill **lernly-kurs-einrichten** (Fach im Uni-Ordner wählen und Unterlagen selbstständig analysieren).

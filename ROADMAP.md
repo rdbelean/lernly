@@ -20,8 +20,8 @@ Stand: 2026-11-20 · Aktiver Branch: `feat/bwl-mcp-unification`
 
 ## 2) Claude MCP-Connector & BWL-Skills (`connector/` & `plugin/`)
 - [x] Kompaktes Kurs- & Themen-Format (`kurs.json`, `themen/*.json`, `probeklausuren/*.json`, `spickzettel.json`) mit Rechen-Drills, Zahlenvarianten, Rundungstoleranzen und Punkte-Checklisten definiert
-- [x] Lokaler Claude-Desktop-Connector (`connector/desktop/`, Beta 0.2.0, `.mcpb`-Paket) mit 12 Werkzeugen (inkl. direktem Web-Sync `lernly_sync_web_course`), Ordner-Schutz (`_lernly/`), PDF-/Office-/Excel-Extraktion, Python-Rechner und Validator gebaut (9/9 Integrationstests grün)
-- [x] Geführtes 4-Fragen-Klausur-Briefing, Fachtyp-Spezialisierungen (Rechnen, Fallstudien & Regeln, Konzepte & Transfer) und Tax-Mock-Trainer-Tiefe („Woher kommt die Zahl / Regel?“, Sachverhalt mit Signalwörtern, Merke-/Fehler-Boxen, Mustersätze) in Prompts & Skills verankert (`connector/desktop/prompts/` & `plugin/lernly/skills/`)
+- [x] Lokaler Claude-Desktop-Connector (`connector/desktop/`, Beta 0.2.0, `.mcpb`-Paket) mit 13 Werkzeugen (inkl. Multi-Fach-Umschalter `lernly_select_course` für ganze Uni-Ordner & direktem Web-Sync `lernly_sync_web_course`), Ordner-Schutz (`_lernly/`), PDF-/Office-/Excel-Extraktion, Python-Rechner und Validator gebaut (10/10 Integrationstests grün)
+- [x] Autonome Klausur-/Folienanalyse nach Fachwahl (ohne Fragebogen-Blockade), Fachtyp-Spezialisierungen (Rechnen, Fallstudien & Regeln, Konzepte & Transfer) und Tax-Mock-Trainer-Tiefe („Woher kommt die Zahl / Regel?“, Sachverhalt mit Signalwörtern, Merke-/Fehler-Boxen, Mustersätze) in Prompts & Skills verankert (`connector/desktop/prompts/` & `plugin/lernly/skills/`)
 - [x] Direkte Sync-Brücke von Claude Desktop ins Web-Dashboard (`POST /api/trainer/sync` + HMAC-Sync-Token unter `/dashboard/settings`, ohne DB-Migration)
 - [~] Echter End-to-End-Praxistest der neu gebauten `.mcpb` (`connector/desktop/dist/lernly-beta-0.2.0.mcpb`) in Claude Desktop mit Web-Sync ins Live-Dashboard
 - [ ] Reibungsloses Setup für Studierende ohne Technik-Hürden (und später Remote-MCP-Anbindung für Web/Mobile)
