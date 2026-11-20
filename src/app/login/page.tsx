@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { isAllowedAdminEmail } from "@/lib/admin/auth";
+import { getAllowedAdminEmails, isAllowedAdminEmail } from "@/lib/admin/auth";
 import { getUser } from "@/lib/dal";
 import LoginForm from "./login-form";
 import LernlyLogo from "@/components/LernlyLogo";
@@ -32,6 +33,13 @@ export default async function LoginPage({
   if (user && isAllowedAdminEmail(user.email)) {
     redirect(next);
   }
+
+  const h = await headers();
+  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "";
+  const isDevLocal =
+    process.env.NODE_ENV === "development" &&
+    /^(?:localhost|127\.0\.0\.1)(?::\d+)?$/i.test(host.trim());
+  const defaultAdminEmail = getAllowedAdminEmails()[0] ?? "beleanrd@gmail.com";
 
   const errorMessage = params.error;
 
@@ -91,7 +99,12 @@ export default async function LoginPage({
           </div>
         ) : null}
 
-        <LoginForm next={next} register={isRegister} />
+        <LoginForm
+          next={next}
+          register={isRegister}
+          isDevLocal={isDevLocal}
+          defaultAdminEmail={defaultAdminEmail}
+        />
 
         <p
           className="mt-8 text-center text-[13px]"

@@ -14,7 +14,7 @@ import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
 import { dashboardGreeting } from "@/lib/greeting";
 import { getExamMap } from "@/lib/dashboard/examMap.server";
 import { berlinDay } from "@/lib/studyDay";
-import { Check } from "lucide-react";
+import { ArrowRight, Check, GraduationCap } from "lucide-react";
 
 type PackSummary = {
   id: string;
@@ -140,6 +140,36 @@ export default async function DashboardPage({
             <span>Zugang freigeschaltet. Du kannst wieder Lernpakete erstellen.</span>
           </div>
         )}
+
+        <section
+          aria-label="Neuer Klausur-Trainer"
+          className="mb-8 flex flex-col items-start justify-between gap-4 rounded-2xl border border-line bg-surface p-6 sm:flex-row sm:items-center"
+        >
+          <div className="space-y-1">
+            <p className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-primary">
+              <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>Neu · lernly.kurs/1 &amp; MCP-Connector</span>
+            </p>
+            <h2
+              className="m-0 text-[20px] font-bold tracking-[-0.02em] text-text"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              Interaktiver Klausur-Trainer
+            </h2>
+            <p className="text-[14px] text-text-dim">
+              Lade deinen <code>_lernly/</code>-Ordner aus Claude Desktop (
+              <code>kurs.json</code> + <code>themen/*.json</code>) direkt rein
+              — inklusive Rechen-Drills, Zahlenvarianten und Punkte-Checklisten.
+            </p>
+          </div>
+          <Link
+            href="/dashboard/trainer"
+            className="inline-flex h-11 shrink-0 items-center gap-2 rounded-xl bg-primary px-5 text-[14px] font-semibold text-on-primary transition hover:bg-primary-press"
+          >
+            <span>Trainer öffnen</span>
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </section>
 
         <div className="mb-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
           <div

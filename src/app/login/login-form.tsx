@@ -3,10 +3,12 @@
 import { useActionState, useEffect, useRef, useState } from "react";
 import GoogleLogo from "@/components/GoogleLogo";
 import { useFormStatus } from "react-dom";
-import { Inbox } from "lucide-react";
+import { Inbox, KeyRound, Zap } from "lucide-react";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import {
+  devQuickLogin,
   loginWithGoogle,
+  loginWithPassword,
   requestMagicLink,
   verifyMagicCode,
   type MagicLinkState,
@@ -15,27 +17,47 @@ import {
 function PendingButton({
   idle,
   pending,
+  primary = false,
+  icon,
 }: {
   idle: string;
   pending: string;
+  primary?: boolean;
+  icon?: React.ReactNode;
 }) {
   const { pending: isPending } = useFormStatus();
   return (
     <button
       type="submit"
       disabled={isPending}
-      className="flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[15px] font-medium text-[color:var(--color-text)] transition hover:bg-[color:var(--color-ink-a14)] disabled:opacity-50"
-      style={{
-        background: "var(--color-ink-a10)",
-        border: "1px solid var(--color-ink-a14)",
-      }}
+      className={
+        primary
+          ? "flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-[15px] font-semibold transition hover:opacity-90 disabled:opacity-50"
+          : "flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-[15px] font-medium text-[color:var(--color-text)] transition hover:bg-[color:var(--color-ink-a14)] disabled:opacity-50"
+      }
+      style={
+        primary
+          ? {
+              background: "var(--color-primary)",
+              color: "var(--color-on-primary)",
+            }
+          : {
+              background: "var(--color-ink-a10)",
+              border: "1px solid var(--color-ink-a14)",
+            }
+      }
     >
-      {isPending && (
+      {isPending ? (
         <span
           className="inline-block h-4 w-4 animate-spin rounded-full"
-          style={{ border: "2px solid var(--color-ink-a14)", borderTopColor: "var(--color-primary)" }}
+          style={{
+            border: "2px solid var(--color-ink-a14)",
+            borderTopColor: primary ? "var(--color-on-primary)" : "var(--color-primary)",
+          }}
           aria-hidden
         />
+      ) : (
+        icon
       )}
       {isPending ? pending : idle}
     </button>
@@ -60,10 +82,18 @@ function ErrorBox({ children }: { children: React.ReactNode }) {
 export default function LoginForm({
   next,
   register = false,
+  isDevLocal = false,
+  defaultAdminEmail = "",
 }: {
   next: string;
   register?: boolean;
+  isDevLocal?: boolean;
+  defaultAdminEmail?: string;
 }) {
+  const [pwdState, pwdAction] = useActionState<MagicLinkState, FormData>(
+    loginWithPassword,
+    { ok: false },
+  );
   const [reqState, reqAction] = useActionState<MagicLinkState, FormData>(
     requestMagicLink,
     { ok: false },
@@ -258,9 +288,81 @@ export default function LoginForm({
     );
   }
 
+  const combinedError = pwdState.error ?? reqState.error;
+
   return (
     <>
-      {reqState.error ? <ErrorBox>{reqState.error}</ErrorBox> : null}
+      {combinedError ? <ErrorBox>{combinedError}</ErrorBox> : null}
+
+      {isDevLocal ? (
+        <form action={devQuickLogin} className="mb-5">
+          <input type="hidden" name="next" value={next} />
+          <PendingButton
+            primary
+            idle={`Schnell-Login (Dev) → ${defaultAdminEmail}`}
+            pending="Logge ein…"
+            icon={<Zap size={16} strokeWidth={2} aria-hidden />}
+          />
+        </form>
+      ) : null}
+
+      <form action={pwdAction} noValidate className="mb-5 flex flex-col gap-3">
+        <input type="hidden" name="next" value={next} />
+        <label
+          htmlFor="pwd-email"
+          className="text-[12px]"
+          style={{ color: "var(--color-text-faint)" }}
+        >
+          Admin-E-Mail
+        </label>
+        <input
+          id="pwd-email"
+          name="email"
+          type="email"
+          autoComplete="email"
+          defaultValue={defaultAdminEmail}
+          placeholder="beleanrd@gmail.com"
+          className="rounded-2xl px-4 py-3 text-[15px] text-[color:var(--color-text)] outline-none transition focus:border-[color:var(--color-ink-a14)]"
+          style={{
+            background: "var(--color-ink-a06)",
+            border: "1px solid var(--color-ink-a14)",
+          }}
+        />
+        <label
+          htmlFor="pwd-input"
+          className="text-[12px]"
+          style={{ color: "var(--color-text-faint)" }}
+        >
+          Passwort
+        </label>
+        <input
+          id="pwd-input"
+          name="password"
+          type="password"
+          autoComplete="current-password"
+          placeholder="••••••••"
+          className="rounded-2xl px-4 py-3 text-[15px] text-[color:var(--color-text)] outline-none transition focus:border-[color:var(--color-ink-a14)]"
+          style={{
+            background: "var(--color-ink-a06)",
+            border: "1px solid var(--color-ink-a14)",
+          }}
+        />
+        <PendingButton
+          primary={!isDevLocal}
+          idle="Mit Passwort anmelden"
+          pending="Wird angemeldet…"
+          icon={<KeyRound size={15} strokeWidth={2} aria-hidden />}
+        />
+      </form>
+
+      <div
+        className="mb-4 flex items-center gap-3 text-[12px]"
+        style={{ color: "var(--color-text-faint)" }}
+      >
+        <span className="h-px flex-1" style={{ background: "var(--color-line)" }} />
+        <span>oder</span>
+        <span className="h-px flex-1" style={{ background: "var(--color-line)" }} />
+      </div>
 
       <form action={loginWithGoogle} className="mb-4">
         <input type="hidden" name="next" value={next} />
@@ -282,10 +384,10 @@ export default function LoginForm({
             // Focus the field after it mounts.
             setTimeout(() => emailInputRef.current?.focus(), 0);
           }}
-          className="mt-6 w-full text-center text-[13px] transition hover:text-[color:var(--color-text)]"
+          className="mt-4 w-full text-center text-[13px] transition hover:text-[color:var(--color-text)]"
           style={{ color: "var(--color-text-faint)" }}
         >
-          {register ? "oder mit E-Mail registrieren" : "oder mit E-Mail anmelden"}
+          {register ? "oder Einmal-Code anfordern" : "oder Einmal-Code per E-Mail"}
         </button>
       ) : (
         <form

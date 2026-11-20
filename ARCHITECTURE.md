@@ -19,7 +19,8 @@ Kurzüberblick für Solo-Founder und Agenten.
 - `connector/desktop/src/` (`server.mjs`, `service.mjs`, `storage.mjs`, `bridge.py`) — Lokaler MCP-Server (11 Tools, Ordner-Schutz, Rechner, Extraktor).
 - `plugin/lernly/` — Skills, JSON-Format-Referenzen, Validator (`validate.py`) & HTML-Trainer-Vorlage.
 
-## 4. Bestands-Dashboard, Backend & Steuerung
+## 4. Bestands-Dashboard, Trainer, Backend & Steuerung
+- `src/app/dashboard/trainer/` & `src/components/trainer/`, `src/lib/trainer/` — Interaktiver `lernly.kurs/1` Trainer & `_lernly/`-Ordner-Importer (Demo-Kurs + Verstehen/Drills/Checklisten/Karten).
 - `src/app/dashboard/` & `src/components/dashboard/` — Bestehende eingeloggte Web-App (aktiv bis Umschaltung in Phase 6).
 - `src/app/api/` & `src/lib/` — Auth, Stripe, Cronjobs, Quota-Schutz, Supabase-Clients.
 - `src/app/globals.css` — Zentrale Tailwind-v4-Design-Tokens (Farben, Radien `4px`/`12px`, Sora/Inter).

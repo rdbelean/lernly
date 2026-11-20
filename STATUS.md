@@ -8,19 +8,19 @@ Stand: 2026-11-20. Kompakt halten, nur Fakten. **Pflicht:** Zum Session-Start im
 `feat/bwl-mcp-unification` — einziger aktiver Feature-Branch für Antigravity, Claude Code und OpenAI Codex; kein Wechsel ohne Absprache. Nie direkt auf `main`.
 
 ## Aktuelles Ziel / Stand
-**Landingpage Login-Link & Admin-Only Login für geschlossene Beta eingerichtet (2026-11-20):**
-- Navigation auf `/` (`LernlyLanding.tsx`) hat jetzt einen direkten „Anmelden“-Link zu `/login` (Desktop + Mobile).
-- Registrierung/Login strikt über `ADMIN_EMAILS` / `ADMIN_EMAIL` (Fallback: `beleanrd@gmail.com`) in `src/lib/admin/auth.ts` gesperrt — geprüft bei Magic-Link-Anfrage/Code (`login/actions.ts`), Google OAuth (`/auth/callback`), Token-Confirm (`/auth/confirm`), `/dashboard/layout.tsx` und `/login/page.tsx`.
-- `.env.local.example` dokumentiert `ADMIN_EMAILS`.
+**1-Klick-Admin-Login + erster `lernly.kurs/1` Klausur-Trainer im Dashboard (2026-11-20):**
+- `/login`: E-Mail + Passwort (`signInWithPassword` + `ADMIN_PASSWORD`-Bootstrap) für `ADMIN_EMAILS`, plus lokaler „Schnell-Login (Dev)“-Button (nur `NODE_ENV=development` auf `localhost`).
+- `/dashboard/trainer`: Neuer interaktiver Viewer & `_lernly/`-Ordner-Importer (`kurs.json` + `themen/*.json` oder `Lernly-Trainer.html`) mit Verstehen (inkl. SVG & KaTeX), Rechen-Drills (Zahlenvarianten + Toleranzprüfung), Klausur-Aufgaben (Punkte-Checkliste + MC), Karteikarten & Demo-Kurs („Corporate Finance & Valuation“).
 
 ## Erledigt (diese Session)
-- **Landingpage + Admin-Only Auth:** Login-Link in `LernlyLanding.tsx` + `lernly-landing.module.css`; zentrale Allowlist (`getAllowedAdminEmails`, `isAllowedAdminEmail`) in `src/lib/admin/auth.ts` + Unit-Tests in `auth.test.ts`; geschlossene Beta-Sperre in Login-Actions, OAuth/Confirm-Callbacks & Dashboard-Layout.
-- **Zuvor auf diesem Branch (`22c3728`..`a9e6407`):** Phasen 1–5 der `design/`-App unter `/heute`, `/karten`, `/rechnen`, `/upload`.
+- **Admin-Login (`login/actions.ts`, `login-form.tsx`, `page.tsx`):** `loginWithPassword` & `devQuickLogin` ergänzt; `.env.local.example` um `ADMIN_PASSWORD` erweitert.
+- **Dashboard-Trainer (`src/app/dashboard/trainer/page.tsx`, `src/components/trainer/*`, `src/lib/trainer/*`):** Kompletter `lernly.kurs/1` + `lernly.thema/1` Importer/Viewer in `DashboardShell.tsx` & `/dashboard` verlinkt.
+- **Davor (`74fc83c`, `22c3728`..`a9e6407`):** Landingpage „Anmelden“-Link, Admin-Only Beta-Sperre & Phasen 1–5 unter `/heute`, `/karten`, `/rechnen`, `/upload`.
 
 ## Nächster konkreter Schritt
-1. **Live-Review durch Daniel:** `/heute`, `/karten`, `/rechnen` und `/upload` (Desktop + iPad) auf der Preview-/Localhost-URL testen und Feedback geben.
-2. **Phase 6:** Konto, Supabase-Speicherung (Migration erst nach expliziter Freigabe) & Deployment-Vorbereitung.
-3. **Phase 7:** Neue Landingpage aus den echten `src/components/study/`-Komponenten mit Seed-Daten bauen.
+1. **Live testen:** In `.env.local` (und Vercel) `ADMIN_EMAILS` & `ADMIN_PASSWORD` setzen → `/login` testen (lokal „Schnell-Login (Dev)“) → unter `/dashboard/trainer` mit dem echten Corporate-Finance-`_lernly/`-Ordner testen.
+2. **Phase 6:** Supabase-Speicherung für Kurse/Fortschritt (Migration erst nach expliziter Freigabe) & Live-Vorbereitung.
+3. **Phase 7:** Neue Landingpage aus den echten App-Komponenten bauen.
 
 ## Bekannte Grenzen & Hinweise
 - Preview & Prod teilen sich eine Supabase-DB — keine Migrationen vor Phase 6 und nie ohne Freigabe.

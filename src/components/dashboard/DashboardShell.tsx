@@ -14,6 +14,7 @@ import {
   ChevronsRight,
   ChevronDown,
   RotateCcw,
+  GraduationCap,
 } from "lucide-react";
 import { PrimaryCTALink } from "@/components/ui/PrimaryCTA";
 import WelcomeModal from "@/components/dashboard/WelcomeModal";
@@ -194,6 +195,7 @@ function SidebarContent({
   onToggleCollapse?: () => void;
   onClose?: () => void;
 }) {
+  const isTrainer = pathname.startsWith("/dashboard/trainer");
   const isLibrary = pathname === "/dashboard";
   const isReview = pathname.startsWith("/dashboard/review");
   const isSettings = pathname.startsWith("/dashboard/settings");
@@ -238,6 +240,14 @@ function SidebarContent({
       </div>
 
       <nav className="flex flex-col gap-1.5">
+        <NavLink
+          href="/dashboard/trainer"
+          active={isTrainer}
+          collapsed={collapsed}
+          onClick={onClose}
+          icon={GraduationCap}
+          label="Klausur-Trainer"
+        />
         <NavLink
           href="/dashboard"
           active={isLibrary}

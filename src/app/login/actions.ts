@@ -1,14 +1,31 @@
 "use server";
 
+import { createHash, timingSafeEqual } from "node:crypto";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email/send";
 import { renderMagicLinkEmail, renderMagicLinkText } from "@/lib/email/magicLink";
 import { verifyTurnstile } from "@/lib/turnstile";
-import { CLOSED_BETA_LOGIN_ERROR, isAllowedAdminEmail } from "@/lib/admin/auth";
+import { ensureUserAndGetLoginToken } from "@/lib/auth/provision";
+import {
+  CLOSED_BETA_LOGIN_ERROR,
+  getAllowedAdminEmails,
+  isAllowedAdminEmail,
+} from "@/lib/admin/auth";
 
 export type MagicLinkState = { ok: boolean; error?: string; sentTo?: string };
+
+function safeEqualSecret(a: string, b: string): boolean {
+  const hashA = createHash("sha256").update(a).digest();
+  const hashB = createHash("sha256").update(b).digest();
+  return timingSafeEqual(hashA, hashB);
+}
+
+function isLocalhostHost(host: string | null): boolean {
+  if (!host) return false;
+  return /^(?:localhost|127\.0\.0\.1)(?::\d+)?$/i.test(host.trim());
+}
 
 function getOrigin(host: string | null, proto: string | null) {
   if (!host) return null;
@@ -279,5 +296,110 @@ export async function verifyMagicCode(
     };
   }
   // Session cookies are set; leave the login page.
+  redirect(next);
+}
+
+export async function loginWithPassword(
+  _prev: MagicLinkState,
+  formData: FormData,
+): Promise<MagicLinkState> {
+  const rawEmail = formData.get("email");
+  const rawPassword = formData.get("password");
+  if (typeof rawEmail !== "string" || !rawEmail.includes("@")) {
+    return { ok: false, error: "Bitte gib eine gültige E-Mail-Adresse ein." };
+  }
+  const email = rawEmail.trim().toLowerCase();
+  if (!isAllowedAdminEmail(email)) {
+    return { ok: false, error: CLOSED_BETA_LOGIN_ERROR };
+  }
+  if (typeof rawPassword !== "string" || rawPassword.length === 0) {
+    return { ok: false, error: "Bitte gib dein Passwort ein." };
+  }
+
+  const h = await headers();
+  const ip = clientIpFrom(h);
+  const allowed = await otpVerifyAllowed(ip, `pwd:${email}`);
+  if (!allowed) {
+    return { ok: false, error: "Zu viele Versuche. Bitte warte einen Moment." };
+  }
+
+  const next = sanitizeNext(formData.get("next") as string | null);
+  const supabase = await createClient();
+
+  const { error: pwdError } = await supabase.auth.signInWithPassword({
+    email,
+    password: rawPassword,
+  });
+
+  if (!pwdError) {
+    redirect(next);
+  }
+
+  // Fallback for initial founder setup: if ADMIN_PASSWORD is configured (>= 8 chars)
+  // and matches in constant time, bootstrap/sync the Supabase Auth password cleanly.
+  const envAdminPassword = process.env.ADMIN_PASSWORD?.trim() ?? "";
+  if (
+    envAdminPassword.length >= 8 &&
+    safeEqualSecret(rawPassword, envAdminPassword)
+  ) {
+    const token = await ensureUserAndGetLoginToken(email);
+    if (token) {
+      const { data: verifyData, error: verifyErr } =
+        await supabase.auth.verifyOtp({
+          token_hash: token.tokenHash,
+          type: token.type,
+        });
+      if (!verifyErr) {
+        const userId = verifyData.user?.id;
+        if (userId) {
+          try {
+            await createServiceClient().auth.admin.updateUserById(userId, {
+              password: envAdminPassword,
+              email_confirm: true,
+            });
+          } catch (syncErr) {
+            console.error("[login] admin password sync failed", syncErr);
+          }
+        }
+        redirect(next);
+      }
+    }
+  }
+
+  return { ok: false, error: "E-Mail oder Passwort ungültig." };
+}
+
+export async function devQuickLogin(formData: FormData): Promise<void> {
+  if (process.env.NODE_ENV !== "development") {
+    redirect("/login?error=Not+allowed");
+  }
+
+  const h = await headers();
+  const host = h.get("x-forwarded-host") ?? h.get("host");
+  if (!isLocalhostHost(host)) {
+    redirect("/login?error=Dev-Login+nur+auf+localhost");
+  }
+
+  const next = sanitizeNext(formData.get("next") as string | null);
+  const adminEmail = getAllowedAdminEmails()[0] ?? "beleanrd@gmail.com";
+
+  const token = await ensureUserAndGetLoginToken(adminEmail);
+  if (!token) {
+    redirect(
+      `/login?error=${encodeURIComponent("Dev-Login fehlgeschlagen (Token konnte nicht erstellt werden).")}`,
+    );
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.verifyOtp({
+    token_hash: token.tokenHash,
+    type: token.type,
+  });
+  if (error) {
+    redirect(
+      `/login?error=${encodeURIComponent("Dev-Login fehlgeschlagen: " + error.message)}`,
+    );
+  }
+
   redirect(next);
 }
