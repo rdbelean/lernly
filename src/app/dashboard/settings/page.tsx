@@ -8,6 +8,7 @@ import {
   Key,
   Laptop,
   Mail,
+  Palette,
   ShieldAlert,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -24,6 +25,8 @@ import TrainerSyncSection from "./trainer-sync-section";
 import NotificationsSection from "./notifications-section";
 import DangerZone from "./danger-zone";
 import LegalLinks from "./legal-links";
+import DesignPreview from "@/components/settings/DesignPreview";
+import { isFounder } from "@/lib/admin/auth";
 
 // =========================================================================
 // /dashboard/settings  —  Konto
@@ -35,7 +38,8 @@ import LegalLinks from "./legal-links";
 //   4. API-Key      — BYOK
 //   5. Benachrichtigungen — exam-reminder toggle
 //   6. Daten & Konto — DSGVO export + delete
-//   7. Rechtliches   — footer-style legal page links
+//   7. Design-Vorschau — founder only, rebrand tokens and primitives
+//   8. Rechtliches   — footer-style legal page links
 // =========================================================================
 
 function SectionCard({
@@ -275,6 +279,12 @@ export default async function SettingsPage() {
           <SectionCard icon={ShieldAlert} title="Daten & Konto">
             <DangerZone email={user.email ?? ""} />
           </SectionCard>
+
+          {isFounder(user.email) && (
+            <SectionCard icon={Palette} title="Design-Vorschau">
+              <DesignPreview />
+            </SectionCard>
+          )}
 
           <div
             className="border-t pt-6"

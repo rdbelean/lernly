@@ -24,5 +24,11 @@ Kurzüberblick für Solo-Founder und Agenten.
 - `sample-data/` — Echte Referenz-Kursexporte (`corporate-finance-trainer.html`, `tax-mock-trainer.html`) für Importer-Tests.
 - `src/app/dashboard/` & `src/components/dashboard/` — Bestehende eingeloggte Web-App (aktiv bis Umschaltung in Phase 6).
 - `src/app/api/` & `src/lib/` — Auth, Stripe, Cronjobs, Quota-Schutz, Supabase-Clients.
-- `src/app/globals.css` — Zentrale Tailwind-v4-Design-Tokens (Farben, Radien `4px`/`12px`, Sora/Inter).
+- `src/app/globals.css` — Zentrale Tailwind-v4-Design-Tokens (Rebrand Richtung 1: warmes Papier, nur Inter, Bewegungs-Tokens `--dur-*`/`--ease-*`, Primitives `lern-press`/`lern-lift`). Vorschau für Founder unter `/dashboard/settings` (`src/components/settings/DesignPreview.tsx`).
 - `STATUS.md`, `ROADMAP.md`, `WORKFLOW.md` — Arbeitsstand, aktiver Branch, Meilensteine & Git-Handgriffe.
+
+## 5. Lern-Grafik-Stil (Rebrand Richtung 1)
+- Flache, geometrische SVGs: Indigo (`--color-primary`), Grün (`--color-ok-ink`/`--color-ok-bg`) und Tinte (`--color-text`) auf Papier (`--color-bg`) oder Weiß.
+- 2 px Linien, runde Enden, keine Verläufe, keine Schatten, keine Fotos.
+- Eine Idee pro Grafik; Zahlen in `tabular-nums`, Beschriftungen ab 12 px.
+- Bewegung nur, wenn sie einen Zustand erklärt (z. B. Balken wächst beim Sichern), sonst statisch.
