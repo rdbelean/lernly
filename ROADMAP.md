@@ -28,7 +28,7 @@ Stand: 2026-11-20 · Aktiver Branch: `feat/bwl-mcp-unification`
 ## 3) Bestehende Web-App & Landingpage (aktiv bis Umschaltung in Phase 6/7)
 - [x] Helles Design, 20-Sekunden-Hero-Szene, Browser-Demo & direkter „Anmelden“-Link in `src/components/landing/LernlyLanding.tsx`
 - [x] Admin-Only-Login für geschlossene Beta (`ADMIN_EMAILS`/`ADMIN_PASSWORD` inkl. Kurzpasswort-Check `12345`, `signInWithPassword`, lokaler `Schnell-Login (Dev)` auf `localhost` & Allowlist über OAuth/Confirm/Dashboard)
-- [x] Erster `lernly.kurs/1` Klausur-Trainer direkt als Hauptansicht auf `/dashboard` (und `/dashboard/trainer`) mit `_lernly/`-Ordner-Import, HTML-Artifact-Support (`Lernly-Trainer.html` + eigenständige Claude-HTML-Artifacts im Sandbox-Iframe), dauerhafter Supabase-Speicherung (`/api/trainer/courses`), aufgeräumter Sidebar (`Meine Kurse` + Löschen) & permanentem Admin-Unlimited-Zugang
+- [x] Erster `lernly.kurs/1` Klausur-Trainer direkt als Hauptansicht auf `/dashboard` (und `/dashboard/trainer`) mit `_lernly/`-Ordner-Import, vollständigem HTML-Trainer-Upload (`sample-data/corporate-finance-trainer.html` mit allen 6 CF-Themen, `Lernly-Trainer.html` + HTML-Artifacts im Sandbox-Iframe, Schutz gegen Plugin-Ordner & leere Templates), dauerhafter Supabase-Speicherung (`/api/trainer/courses`), aufgeräumter Sidebar (`Meine Kurse` + Löschen) & permanentem Admin-Unlimited-Zugang
 - [x] Eingeloggtes Dashboard (`src/app/dashboard/`), Spaced Repetition (`/dashboard/review`), Auth & Stripe (mit Beta-Schutzschalter) sowie geschlossene Kosten-/Sicherheitslecks
 - [~] Auto-Live-Workflow auf `main` aktiv (`CLAUDE.md`, `AGENTS.md`, `WORKFLOW.md`) — Fortschritts-Sync (Phase 6) & neue Landingpage (Phase 7) als Nächstes
 

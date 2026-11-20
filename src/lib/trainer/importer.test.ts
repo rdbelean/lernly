@@ -122,3 +122,127 @@ test("importTrainerBundle imports standalone Claude HTML artifacts without #lern
   assert.equal(res.bundle.course.topics.length, 2);
   assert.equal(res.bundle.artifactHtml, artifact);
 });
+
+test("importTrainerBundle loads all 6 CF topics from sample-data/corporate-finance-trainer.html", () => {
+  const html = readFileSync(
+    join(process.cwd(), "sample-data/corporate-finance-trainer.html"),
+    "utf-8",
+  );
+  const res = importTrainerBundle([
+    { name: "corporate-finance-trainer.html", content: html },
+  ]);
+
+  assert.equal(res.ok, true);
+  if (!res.ok) return;
+  assert.equal(res.sourceKind, "trainer-html");
+  assert.equal(res.summary.topics, 6);
+  assert.equal(res.summary.hydratedTopics, 6);
+
+  for (const id of ["dcf", "mm", "emh", "agency", "ethics", "ratings"]) {
+    const topic = res.bundle.topics[id];
+    assert.ok(topic, `Missing topic ${id}`);
+    assert.ok(topic.theory.length > 0, `Empty theory for ${id}`);
+    assert.ok(topic.tasks.length > 0, `Empty tasks for ${id}`);
+    assert.ok(topic.cards.length > 0, `Empty cards for ${id}`);
+  }
+});
+
+test("importTrainerBundle backfills missing CF topics in older partial Lernly-Trainer.html", () => {
+  const partialHtml = `<!doctype html><html><body><script type="application/json" id="lernly-data">${JSON.stringify({
+    course: {
+      schema: "lernly.kurs/1",
+      id: "corporate-finance",
+      title: "Corporate Finance & Valuation",
+      topics: [
+        { id: "dcf", title: "DCF", tier: 1 },
+        { id: "mm", title: "Leverage & MM", tier: 1 },
+        { id: "emh", title: "EMH", tier: 1 },
+        { id: "agency", title: "Agency", tier: 2 },
+        { id: "ethics", title: "Ethics", tier: 2 },
+        { id: "ratings", title: "Ratings", tier: 3 },
+      ],
+    },
+    topics: {
+      emh: {
+        schema: "lernly.thema/1",
+        id: "emh",
+        theory: [{ type: "simple", md: "Existing EMH" }],
+        tasks: [],
+        cards: [],
+      },
+    },
+  })}</script></body></html>`;
+
+  const res = importTrainerBundle([
+    { name: "Lernly-Trainer.html", content: partialHtml },
+  ]);
+  assert.equal(res.ok, true);
+  if (!res.ok) return;
+  assert.equal(res.summary.topics, 6);
+  assert.equal(res.summary.hydratedTopics, 6);
+  assert.equal(res.bundle.topics.emh.theory[0]?.md, "Existing EMH");
+  assert.ok(res.bundle.topics.mm.tasks.length > 0);
+  assert.ok(res.bundle.topics.ethics.cards.length > 0);
+});
+
+test("importTrainerBundle guards against lernly-0.1.0 plugin folder and empty assets/trainer.html", () => {
+  const templateHtml = readFileSync(
+    join(
+      process.cwd(),
+      "plugin/lernly/skills/lernly-trainer-bauen/assets/trainer.html",
+    ),
+    "utf-8",
+  );
+  const dcfJson = readFileSync(
+    join(
+      process.cwd(),
+      "plugin/lernly/skills/lernly-trainer-bauen/references/beispiel-dcf.json",
+    ),
+    "utf-8",
+  );
+  const pluginJson = readFileSync(
+    join(process.cwd(), "plugin/lernly/.claude-plugin/plugin.json"),
+    "utf-8",
+  );
+
+  const pluginUpload = importTrainerBundle([
+    { name: "lernly-0.1.0/.claude-plugin/plugin.json", content: pluginJson },
+    {
+      name: "lernly-0.1.0/skills/lernly-trainer-bauen/assets/trainer.html",
+      content: templateHtml,
+    },
+    {
+      name: "lernly-0.1.0/skills/lernly-trainer-bauen/references/beispiel-dcf.json",
+      content: dcfJson,
+    },
+  ]);
+  assert.equal(pluginUpload.ok, false);
+  if (!pluginUpload.ok) {
+    assert.match(pluginUpload.error, /Plugin-Ordner/i);
+  }
+
+  const singleTemplate = importTrainerBundle([
+    { name: "assets/trainer.html", content: templateHtml },
+  ]);
+  assert.equal(singleTemplate.ok, false);
+  if (!singleTemplate.ok) {
+    assert.match(singleTemplate.error, /Vorlage/i);
+  }
+
+  const kursJson = JSON.stringify({
+    schema: "lernly.kurs/1",
+    id: "cf",
+    title: "Corporate Finance",
+    topics: [{ id: "dcf", title: "DCF", expectedPoints: 15, tier: 1 }],
+  });
+  const skippedAlongsideCourse = importTrainerBundle([
+    { name: "assets/trainer.html", content: templateHtml },
+    { name: "_lernly/kurs.json", content: kursJson },
+    { name: "_lernly/themen/dcf.json", content: dcfJson },
+  ]);
+  assert.equal(skippedAlongsideCourse.ok, true);
+  if (skippedAlongsideCourse.ok) {
+    assert.equal(skippedAlongsideCourse.sourceKind, "mcp-folder");
+    assert.equal(skippedAlongsideCourse.summary.hydratedTopics, 1);
+  }
+});
