@@ -8,6 +8,14 @@ Stand: 2026-11-20 (Abend). Kompakt halten, nur Fakten. **Pflicht:** Zum Session-
 `feat/bwl-mcp-unification` — gemeinsamer Arbeitsbranch für Antigravity, Claude Code und OpenAI Codex. **Auto-Live-Regel:** Nach grünen Checks (`npx tsc --noEmit`, `npm run lint`, `npm test`) immer direkt in `main` mergen und `origin/main` + `feat/bwl-mcp-unification` pushen (Vercel deployt automatisch auf `lernly-app.de`).
 
 ## Aktuelles Ziel / Stand
+**Rebrand „Klar und belohnend“ (Richtung 1), Paket 1 Fundament (2026-11-20, Claude Code):** Spec `docs/superpowers/specs/2026-11-20-lernly-rebrand-richtung-1-design.md`, Plan `docs/superpowers/plans/2026-11-20-rebrand-paket-1-fundament.md`.
+- **Palette (`src/app/globals.css`, Landing-Module):** warmes Papier `#F7F7F4`, Tinte `#16181D`, Chip `#EFEEEA`, faint `#62656D`; Indigo bleibt einziger Akzent. Kontrast-Test `src/lib/design/tokens.test.ts`.
+- **Schrift:** nur noch Inter (Sora entfernt), Gewichte max. 600 (Rechtsseiten ausgenommen, Freigabe offen).
+- **Bewegung:** `--dur-*`/`--ease-*`, `lern-press` (alle `bg-primary`-Buttons + `PrimaryCTA`), `lern-lift`; Reduced-Motion aus.
+- **Founder-Vorschau** unter `/dashboard/settings` (`src/components/settings/DesignPreview.tsx`), Lern-Grafik-Regel in `ARCHITECTURE.md`.
+- **Fix:** Header-CTA überlappte bei 380 px das Logo (seit `c2317ba`), jetzt kompakt unter 420 px.
+- **Nächste Pakete:** 2 Landing (Stripe/Apple/Duolingo), 3 Dashboard (Notion/Airbnb/Linear), 4 Trainer (Framer/Brilliant, gleitende Tabs), 5 Onboarding, danach Logo.
+
 **Hero-Story im Trainer-Design + SM-2-Karteikarten live auf `main` (2026-11-20, Claude Code):**
 - **Karteikarten (`src/components/trainer/TrainerFlashcardsTab.tsx`, `src/lib/trainer/sm2.ts` + Test, `store.ts`, `types.ts`):** Echte SM-2-Planung pro Karte (`cardSchedule` in `localStorage`, abwärtskompatibel), 4 Buttons mit dynamischen Intervallen (neu: `< 1 Min` / `1 Tag` / `3 Tage` / `7 Tage`), Standardfilter „Fällig“, „Nochmal“ kommt 2 Karten später in derselben Sitzung wieder, große zentrierte Karte, Sitzungs-Fortschrittsbalken + „Gespeichert“. Lokal im Dashboard geprüft (Rating → Schedule gespeichert, Fällig 4 → 3).
 - **Hero (`src/components/landing/HeroScene.tsx`, `heroScript.ts` + Test, `hero-scene.module.css`):** 22,5-s-Story im Trainer-UI (Tabs Übersicht/Verstehen/Üben/Karteikarten/Probeklausur) mit Beispielkurs Steuerlehre (Gewerbesteuer): Klausurplan nach Altklausur-Punkten → Formel (KaTeX), Klausurfalle, Mustersatz → Schritt-für-Schritt-Lösung, „Woher kommt die Zahl?“, Ergebnis → Karteikarte mit SM-2-Buttons, „Gut · 4 Tage“, „Gespeichert“. Kamera-Zoom/Schwenk auf das Fokus-Element (nie abgeschnitten), 4 klickbare Schritte + Pause, Reduced-Motion ohne Autoplay. Geprüft bei 1440 und 390 px.

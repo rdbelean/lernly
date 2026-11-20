@@ -2,7 +2,7 @@
 
 > 📌 Tägliche Handgriffe (dev, Commit/Push, Pull, PR & Vercel, Notfall-Reset): **[WORKFLOW.md](WORKFLOW.md)**
 
-Stand: 2026-11-20 · Aktiver Branch: `feat/bwl-mcp-unification`
+Stand: 2026-11-20 (Rebrand) · Aktiver Branch: `feat/bwl-mcp-unification`
 
 **Legende:** `[x]` Fertig · `[~]` In Arbeit · `[ ]` Offen  
 **Regel für alle Agenten:** Vor jedem Task `STATUS.md` und `ROADMAP.md` lesen (Ordnerübersicht in `ARCHITECTURE.md`) und nach jedem abgeschlossenen Meilenstein aktualisieren.
@@ -34,6 +34,15 @@ Stand: 2026-11-20 · Aktiver Branch: `feat/bwl-mcp-unification`
 - [x] Eingeloggtes Dashboard (`src/app/dashboard/`), Spaced Repetition (`/dashboard/review`), Auth & Stripe (mit Beta-Schutzschalter) sowie geschlossene Kosten-/Sicherheitslecks
 - [x] **Karteikarten-Tab als echter Anki-Trainer:** SM-2-Planung pro Karte (`src/lib/trainer/sm2.ts`, `cardSchedule` in `localStorage`), dynamische Intervalle auf den 4 Buttons, Fällig-Queue, Sitzungsfortschritt + „Gespeichert“
 - [~] Auto-Live-Workflow auf `main` aktiv (`CLAUDE.md`, `AGENTS.md`, `WORKFLOW.md`) — Fortschritts-Sync (Phase 6) & nächste Ausbaustufen als Nächstes
+
+## 3b) Rebrand „Klar und belohnend“ (Richtung 1, Spec `docs/superpowers/specs/2026-11-20-lernly-rebrand-richtung-1-design.md`)
+- [x] Paket 1 — Fundament: warme Palette, nur Inter (max. 600), Bewegungs-Tokens + `lern-press`/`lern-lift`, Founder-Vorschau
+- [ ] Paket 2 — Landing: zweifarbige Headline + Bento aus echter Trainer-UI (Stripe), Scroll-Einblendung (Apple), „Welche Klausur?“-Einstieg mit Beta-Mail (Duolingo)
+- [ ] Paket 3 — Dashboard: Kurs als Seite (Notion), Suchpille Fach · Thema · Typ + Cmd+K (Airbnb/Linear)
+- [ ] Paket 4 — Trainer: Mikro-Interaktionen + gleitende Tabs (Framer), Belohnungsmoment „Thema gesichert“ (Brilliant)
+- [ ] Paket 5 — Onboarding-Assistent: eine Frage pro Schritt mit Fortschrittsbalken
+- [ ] Logo: 3 flache Entwürfe auf Basis der neuen Palette
+- [ ] Offen: Freigabe für Gewicht 600 auf den Rechtsseiten-Überschriften
 
 ## 4) Geparkte Themen (bewusst eingefroren, kein aktueller Fokus)
 - [x] **Alte SaaS-Vollgenerierung auf eigene KI-Kosten (`/api/generate`, Cram-Modus, BYOK):** Bestehender Code bleibt für Bestandsdaten stabil und abgesichert, wird aber nicht weiter ausgebaut (Cram deaktiviert, minütlicher Cron gestoppt)
