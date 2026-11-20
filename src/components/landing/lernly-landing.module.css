@@ -850,7 +850,7 @@
 .demoChooser > div {
   display: flex;
   gap: 4px;
-  background: #EFF2F7;
+  background: var(--chip);
   padding: 4px;
   border-radius: 10px;
 }
@@ -878,14 +878,14 @@
   background: var(--bg);
   border-radius: 14px;
   overflow: hidden;
-  color: #33415D;
+  color: var(--ink);
 }
 
 .appSidebar {
   width: 190px;
   padding: 22px 14px;
   border-right: 1px solid var(--line);
-  background: #F4F6FA;
+  background: var(--chip);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -1103,7 +1103,7 @@
 
 .courseIcon {
   padding: 10px;
-  background: #EEF3FE;
+  background: var(--tint);
   border-radius: 12px;
   color: var(--blue);
 }
@@ -1309,7 +1309,7 @@
   width: 90px;
   height: 90px;
   margin: 16px auto 14px;
-  background: conic-gradient(var(--blue) var(--progress), #EDF0F6 0);
+  background: conic-gradient(var(--blue) var(--progress), var(--chip) 0);
   padding: 6px;
   border-radius: 50%;
   transform: rotate(-35deg);
@@ -1357,8 +1357,8 @@
 }
 
 .tip {
-  border: 1px solid #E2ECFE;
-  background: #F2F7FF;
+  border: 1px solid var(--line);
+  background: var(--tint);
   padding: 16px;
   border-radius: 12px;
   color: var(--blue);
@@ -1489,13 +1489,13 @@
   font-size: 11px;
   font-weight: 600;
   padding: 2px 7px;
-  background: #E8EDF5;
+  background: var(--chip);
   border-radius: 5px;
 }
 
 .options > button.selectedOption {
   border-color: var(--blue);
-  background: #EEF4FF;
+  background: var(--tint);
   color: var(--blue);
 }
 
@@ -1605,7 +1605,7 @@
   }
   .mobileTabs > button {
     border: 1px solid var(--line);
-    background: #F3F5FA;
+    background: var(--chip);
     color: var(--copy);
     font-size: 12px;
     border-radius: 6px;

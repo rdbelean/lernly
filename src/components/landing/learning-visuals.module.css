@@ -17,7 +17,7 @@
 /* Shared content blocks (same family as the Study OS) */
 .simple{background:var(--blue-bg);border-left:4px solid var(--blue);border-radius:0 10px 10px 0;padding:12px 14px;font-size:14px;color:#22406b}
 .simple b{color:var(--blue-ink);font-weight:600}
-.example{background:#f2f4f7;border-radius:10px;padding:12px 14px;font-size:14px;color:var(--soft)}
+.example{background:var(--chip);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--soft)}
 .example b{color:var(--ink);font-weight:600}
 .formula{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:nowrap;white-space:nowrap;font-family:"Times New Roman",Georgia,serif;font-size:24px;color:var(--ink);padding:12px 10px;margin:6px 0;background:var(--stage);border:1px solid var(--line);border-radius:10px;line-height:1.15}
 .formula>b{font-weight:400;color:var(--blue)}
@@ -71,7 +71,7 @@
 .studioExercise>p{font-size:15px;color:var(--soft)}
 .studioExercise label{font-size:13px;color:var(--muted);margin-top:4px}
 .inputRow{display:flex;gap:8px}
-.inputRow input{flex:1;min-width:0;padding:10px 12px;border:1.5px solid #cfd8e5;border-radius:10px;font-size:16px;color:var(--ink);background:#fbfcfe}
+.inputRow input{flex:1;min-width:0;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:16px;color:var(--ink);background:#fff}
 .inputRow input:focus{border-color:var(--blue);outline:none}
 .inputOk{border-color:var(--green)!important;background:var(--green-bg)!important}
 .inputBad{border-color:var(--red)!important;background:var(--red-bg)!important}
@@ -84,7 +84,7 @@
 .studioRail{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 16px;display:flex;flex-direction:column;gap:14px}
 .studioRail>span{font-size:12px;color:var(--muted)}
 .railStep{display:flex;gap:10px;align-items:flex-start}
-.railStep>span{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#f0f3f7;color:var(--muted);font-size:13px;font-weight:600;flex-shrink:0}
+.railStep>span{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--chip);color:var(--muted);font-size:13px;font-weight:600;flex-shrink:0}
 .railStep p{font-size:14px;font-weight:500;color:var(--soft)}
 .railStep small{display:block;font-size:12px;font-weight:400;color:var(--muted);margin-top:1px}
 .currentStep>span{background:var(--blue);color:#fff}.currentStep p{color:var(--blue-ink)}
@@ -98,7 +98,7 @@
 .rates small{font-size:11.5px;font-weight:400;opacity:.85}
 .rateRed{border-color:#e7a29b;color:var(--red)}.rateOrange{border-color:#e9b98a;color:var(--orange)}
 .rateGreen{border-color:#93cdb0;color:var(--green)}.rateBlue{border-color:#93bdfb;color:var(--blue-ink)}
-.rateOn{background:#f2f5f9}
+.rateOn{background:var(--chip)}
 
 /* ---------- Small visuals ---------- */
 .visual{container-type:inline-size;position:relative;width:100%;height:100%;background:var(--stage);border-radius:12px;overflow:hidden;display:flex;justify-content:center;align-items:flex-start;padding:26px 28px 0}

@@ -159,4 +159,6 @@
 @media (prefers-reduced-motion: reduce) {
   .scene, .step, .cardBack { animation: none; }
   .camera { transition: none; }
+  .control, .pause, .cta, .rate { transition-duration: 0ms; }
+  .control:active, .pause:active, .pressed, .rateChosen { transform: none; }
 }

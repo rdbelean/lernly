@@ -8,10 +8,10 @@ Stand: 2026-11-20 (Abend). Kompakt halten, nur Fakten. **Pflicht:** Zum Session-
 `feat/bwl-mcp-unification` — gemeinsamer Arbeitsbranch für Antigravity, Claude Code und OpenAI Codex. **Auto-Live-Regel:** Nach grünen Checks (`npx tsc --noEmit`, `npm run lint`, `npm test`) immer direkt in `main` mergen und `origin/main` + `feat/bwl-mcp-unification` pushen (Vercel deployt automatisch auf `lernly-app.de`).
 
 ## Aktuelles Ziel / Stand
-**Rebrand „Klar und belohnend“ (Richtung 1), Paket 1 Fundament (2026-11-20, Claude Code):** Spec `docs/superpowers/specs/2026-11-20-lernly-rebrand-richtung-1-design.md`, Plan `docs/superpowers/plans/2026-11-20-rebrand-paket-1-fundament.md`.
-- **Palette (`src/app/globals.css`, Landing-Module):** warmes Papier `#F7F7F4`, Tinte `#16181D`, Chip `#EFEEEA`, faint `#62656D`; Indigo bleibt einziger Akzent. Kontrast-Test `src/lib/design/tokens.test.ts`.
+**Rebrand „Klar und belohnend“ (Richtung 1), Paket 1 Fundament live auf `main` (2026-11-20):** Spec `docs/superpowers/specs/2026-11-20-lernly-rebrand-richtung-1-design.md`, Plan `docs/superpowers/plans/2026-11-20-rebrand-paket-1-fundament.md`.
+- **Palette (`src/app/globals.css`, Landing-Module):** warmes Papier `#F7F7F4`, Tinte `#16181D`, Chip `#EFEEEA`, faint `#62656D`; Indigo bleibt einziger Akzent. Restliche kühle Blaugrau-Flächen in Demo/Visuals auf `--chip`/`--tint` vereinheitlicht. Kontrast-Test `src/lib/design/tokens.test.ts`.
 - **Schrift:** nur noch Inter (Sora entfernt), Gewichte max. 600 (Rechtsseiten ausgenommen, Freigabe offen).
-- **Bewegung:** `--dur-*`/`--ease-*`, `lern-press` (alle `bg-primary`-Buttons + `PrimaryCTA`), `lern-lift`; Reduced-Motion aus.
+- **Bewegung:** `--dur-*`/`--ease-*`, `lern-press` (alle `bg-primary`-Buttons + `PrimaryCTA`), `lern-lift`; Reduced-Motion deaktiviert (inkl. `HeroScene`-Buttons/Stufen).
 - **Founder-Vorschau** unter `/dashboard/settings` (`src/components/settings/DesignPreview.tsx`), Lern-Grafik-Regel in `ARCHITECTURE.md`.
 - **Fix:** Header-CTA überlappte bei 380 px das Logo (seit `c2317ba`), jetzt kompakt unter 420 px.
 - **Nächste Pakete:** 2 Landing (Stripe/Apple/Duolingo), 3 Dashboard (Notion/Airbnb/Linear), 4 Trainer (Framer/Brilliant, gleitende Tabs), 5 Onboarding, danach Logo.
@@ -27,7 +27,8 @@ Stand: 2026-11-20 (Abend). Kompakt halten, nur Fakten. **Pflicht:** Zum Session-
   2. *Vollautomatik (Mac Power-User):* Direkter `.mcpb`-Download (`public/lernly-beta-0.2.0.mcpb`), 1-Klick Sync-Token & Chat-Starter-Befehl.
 
 ## Erledigt (diese Session)
-- **SM-2-Karteikarten & neue Hero-Story** (siehe oben): `npx tsc --noEmit`, `npm run lint`, `npm test` (254/254) und `npm run check:colors -- --strict` grün.
+- **Rebrand Paket 1 Review-Finish & Live-Release (`lernly-landing.module.css`, `learning-visuals.module.css`, `hero-scene.module.css`):** Restliche kühle Blaugrau-Flächen auf `--chip`/`--tint`/`--ink` umgestellt, Reduced-Motion-Press-Regeln in `HeroScene` ergänzt; `npx tsc --noEmit`, `npm run lint`, `npm test` (263/263), `npm run check:colors -- --strict` (0 Literale) und `npm run build` grün.
+- **SM-2-Karteikarten & neue Hero-Story** (siehe oben): live auf `main`.
 - **Landingpage & Meta (`src/components/landing/LernlyLanding.tsx`, `src/app/page.tsx`):** BWL-Klausur-Positionierung, 3-Schritte-Flow und die 4 Nischen-FAQs umgesetzt.
 - **Dashboard-Onboarding & Paste-Importer (`src/components/trainer/TrainerOnboardingAssistant.tsx`, `src/lib/trainer/{masterPrompt,importer,importer.test}.ts`, `connector/desktop/scripts/build.mjs`, `public/lernly-beta-0.2.0.mcpb`):** 1-Klick-Prompt, Copy-Paste-Importer & `.mcpb`-Download eingebaut und getestet.
 
